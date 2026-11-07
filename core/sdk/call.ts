@@ -37,6 +37,8 @@ export interface Op {
   noAuth?: boolean;
   /** Refused until its sign-in is mapped; the reason says why. */
   authUnsupported?: string;
+  /** Headers the vendor requires on this endpoint (Graph's ConsistencyLevel for $count). */
+  fixedHeaders?: Record<string, string>;
 }
 export interface Auth {
   type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported";
@@ -349,7 +351,8 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   }
   return {
     method, url: u.toString(), json, form, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
-    headers: { ...headers, ...auth },
+    // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
+    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))) },
   };
 }
 

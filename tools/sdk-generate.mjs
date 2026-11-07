@@ -48,7 +48,7 @@ const P = {
   "fergus": { name: "Fergus", auth: { type: "bearer", env: "FERGUS_ACCESS_TOKEN" }, keys: ["FERGUS_ACCESS_TOKEN"], proof: "docs" },
   "aroflo": { name: "AroFlo", auth: { type: "unsupported", note: "AroFlo signs each request with HMAC; the signer is not built yet" }, keys: ["AROFLO_ORG_ENCODED", "AROFLO_USER_ENCODED", "AROFLO_SECRET"], proof: "docs", server: "https://api.aroflo.com" },
   "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs" },
-  "cliniko": { name: "Cliniko", auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
+  "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
   "dropbox": { name: "Dropbox", style: "rpc", auth: { type: "bearer", env: "DROPBOX_ACCESS_TOKEN" }, keys: ["DROPBOX_ACCESS_TOKEN"], proof: "docs" },
   "wordpress": { name: "WordPress (core REST API)", auth: { type: "basic", user: "WORDPRESS_USER", pass: "WORDPRESS_APP_PASSWORD" }, keys: ["WORDPRESS_SITE", "WORDPRESS_USER", "WORDPRESS_APP_PASSWORD"], proof: "docs",
     server: "https://{site}/wp-json", hostFromEnv: true, serverVars: { site: { env: "WORDPRESS_SITE", pattern: "[a-z0-9-]+(\\.[a-z0-9-]+)+", envOnly: true } } },
@@ -149,7 +149,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     const oldApi = String(o.api);
     const bare = String(o.id).startsWith(oldApi + ".") ? String(o.id).slice(oldApi.length + 1) : String(o.id);
     o = { ...o, api: apis.length > 1 ? cleanApi(oldApi) : "", id: apis.length > 1 ? `${cleanApi(oldApi)}.${bare}` : bare };
-    let server = cfg.server && (!o.server || /^https:\/\/\s/.test(o.server) || o.server === "") ? cfg.server : (o.server || cfg.server || "");
+    let server = cfg.server && (cfg.forceServer || !o.server || /^https:\/\/\s/.test(o.server) || o.server === "") ? cfg.server : (o.server || cfg.server || "");
     server = server.replace(/:443(?=\/|$)/, "");
     // Headers the sign-in layer supplies are never caller inputs (several specs list them as required params).
     const authHeaders = new Set(["authorization", "cookie", "x-api-key", "x-shopify-access-token", "xero-tenant-id",
@@ -168,7 +168,19 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
              kind: readKind(id, o) };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
+  // Dropbox routes its own spec marks host="content"/"notify" or style upload/download (endpoint-map/raw/dropbox/spec/*.stone).
+  const DROPBOX_SPECIAL = new Set(["/account/get_photo", "/files/download", "/files/download_zip", "/files/export", "/files/list_folder/longpoll",
+    "/files/paper/create", "/files/paper/update", "/files/get_preview", "/files/get_thumbnail", "/files/get_thumbnail_batch", "/files/get_thumbnail_v2",
+    "/files/upload", "/files/upload_session/start", "/files/upload_session/append", "/files/upload_session/append_v2", "/files/upload_session/append_batch",
+    "/files/upload_session/finish", "/files/alpha/upload", "/paper/docs/download", "/paper/docs/create", "/paper/docs/update",
+    "/riviera/download_transform_output", "/sharing/get_shared_link_file"]);
   for (const o of ops) {
+    if (id === "dropbox" && DROPBOX_SPECIAL.has(o.path))
+      o.authUnsupported = "Dropbox content or notify route: needs content.dropboxapi.com or notify.dropboxapi.com and the Dropbox-API-Arg header; not wired yet";
+    if (id === "servicem8" && (o.api === "addon-sdk-api" || /AddonDiary/i.test(o.id)))
+      o.authUnsupported = "ServiceM8 add-on route: needs an OAuth add-on token, not the API key; not wired yet";
+    if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
+    if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
     if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
     if (id === "docusign" && !["esignature", "sdk"].includes(o.api))
       o.authUnsupported = `DocuSign ${o.api}: its sign-in scope and production host are not mapped yet (the published spec points at a demo host)`;

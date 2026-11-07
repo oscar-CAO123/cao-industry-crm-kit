@@ -36,12 +36,24 @@
   {
    "url": "https://developer.zendesk.com/zendesk/oas.yaml",
    "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/help_center/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/collaboration_api/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/voice/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
   }
  ],
  "gaps": [],
  "counts": {
-  "operations": 676,
-  "read": 323,
-  "write": 353
+  "operations": 935,
+  "read": 464,
+  "write": 471
  }
 }

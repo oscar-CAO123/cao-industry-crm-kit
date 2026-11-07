@@ -99,7 +99,7 @@
   },
   {
    "id": "gohighlevel",
-   "ops": 584,
+   "ops": 1614,
    "status": "spec",
    "auth": "docs"
   },
@@ -189,7 +189,7 @@
   },
   {
    "id": "slack",
-   "ops": 295,
+   "ops": 355,
    "status": "spec",
    "auth": "docs"
   },
@@ -231,7 +231,7 @@
   },
   {
    "id": "zendesk",
-   "ops": 676,
+   "ops": 935,
    "status": "spec",
    "auth": "docs"
   },

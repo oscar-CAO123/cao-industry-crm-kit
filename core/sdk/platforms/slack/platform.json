@@ -21,16 +21,16 @@
  ],
  "sources": [
   {
-   "url": "https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json",
-   "official": "vendor-link: https://docs.slack.dev/ links github.com/slackapi"
+   "url": "https://docs.slack.dev/reference/methods.json",
+   "official": "vendor-domain: docs.slack.dev"
   }
  ],
  "gaps": [
-  "Slack: 121 methods added from slackapi/node-slack-sdk by name only (spec repo archived 2024)"
+  "Slack: 0 methods added from slackapi/node-slack-sdk by name only (spec repo archived 2024)"
  ],
  "counts": {
-  "operations": 295,
-  "read": 75,
-  "write": 220
+  "operations": 355,
+  "read": 40,
+  "write": 315
  }
 }

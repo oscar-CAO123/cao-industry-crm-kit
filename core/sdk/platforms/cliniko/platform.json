@@ -5,13 +5,19 @@
  "tested": "offline only (fake network); not yet run against a real account",
  "authProof": "docs",
  "style": "rest",
- "hosts": [
-  "api.au1.cliniko.com"
- ],
+ "hosts": [],
  "hostFromEnv": false,
- "hostPatterns": [],
+ "hostPatterns": [
+  "api\\.(?:[a-z]{2}[0-9])\\.cliniko\\.com"
+ ],
  "pinned": {},
- "serverVars": {},
+ "serverVars": {
+  "shard": {
+   "env": "CLINIKO_SHARD",
+   "default": "au1",
+   "pattern": "[a-z]{2}[0-9]"
+  }
+ },
  "auth": {
   "type": "basic",
   "user": "CLINIKO_API_KEY",
