@@ -1,0 +1,16 @@
+{
+  "id": "procore",
+  "name": "Procore",
+  "docs": "https://developers.procore.com/",
+  "account_to_test": "Free developer sandbox",
+  "cost_to_test": "$0",
+  "capabilities": [
+    "jobs.list",
+    "documents.list",
+    "tasks.list"
+  ],
+  "fallback": "mcp",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

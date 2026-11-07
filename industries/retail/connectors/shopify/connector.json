@@ -1,0 +1,17 @@
+{
+  "id": "shopify",
+  "name": "Shopify",
+  "docs": "https://shopify.dev/docs/api",
+  "account_to_test": "Free development store",
+  "cost_to_test": "$0",
+  "capabilities": [
+    "products.list",
+    "products.update",
+    "orders.list",
+    "contacts.list"
+  ],
+  "fallback": "composio",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

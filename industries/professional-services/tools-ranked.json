@@ -1,0 +1,45 @@
+{
+  "source": "CAO discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
+  "tools": [
+    {
+      "name": "Microsoft 365",
+      "calls": 4
+    },
+    {
+      "name": "Xero",
+      "calls": 3
+    },
+    {
+      "name": "GoHighLevel",
+      "calls": 3
+    },
+    {
+      "name": "Google Workspace",
+      "calls": 2
+    },
+    {
+      "name": "Meta Ads",
+      "calls": 2
+    },
+    {
+      "name": "Ignition",
+      "calls": 2
+    },
+    {
+      "name": "ATO Mate",
+      "calls": 2
+    },
+    {
+      "name": "Asana",
+      "calls": 2
+    },
+    {
+      "name": "Smokeball",
+      "calls": 2
+    },
+    {
+      "name": "Excel",
+      "calls": 2
+    }
+  ]
+}

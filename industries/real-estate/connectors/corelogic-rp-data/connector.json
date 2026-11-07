@@ -1,0 +1,14 @@
+{
+  "id": "corelogic-rp-data",
+  "name": "CoreLogic RP Data",
+  "docs": null,
+  "account_to_test": "Ask the vendor",
+  "cost_to_test": "Not found",
+  "capabilities": [
+    "properties.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

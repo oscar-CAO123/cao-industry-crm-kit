@@ -1,0 +1,57 @@
+{
+  "source": "CAO discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
+  "tools": [
+    {
+      "name": "Xero",
+      "calls": 4
+    },
+    {
+      "name": "Meta Ads",
+      "calls": 4
+    },
+    {
+      "name": "Roller",
+      "calls": 3
+    },
+    {
+      "name": "Google Workspace",
+      "calls": 3
+    },
+    {
+      "name": "Microsoft 365",
+      "calls": 3
+    },
+    {
+      "name": "BigQuery",
+      "calls": 2
+    },
+    {
+      "name": "Employment Hero",
+      "calls": 2
+    },
+    {
+      "name": "Zendesk",
+      "calls": 2
+    },
+    {
+      "name": "WordPress",
+      "calls": 2
+    },
+    {
+      "name": "Excel",
+      "calls": 2
+    },
+    {
+      "name": "Canva",
+      "calls": 2
+    },
+    {
+      "name": "Axify",
+      "calls": 2
+    },
+    {
+      "name": "Deputy",
+      "calls": 2
+    }
+  ]
+}

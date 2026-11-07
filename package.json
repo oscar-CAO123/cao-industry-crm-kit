@@ -1,0 +1,9 @@
+{
+  "name": "cao-industry-kit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/kit.test.mjs",
+    "check": "node tools/check.mjs"
+  }
+}

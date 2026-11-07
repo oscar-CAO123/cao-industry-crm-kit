@@ -1,0 +1,33 @@
+{
+  "source": "CAO discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
+  "tools": [
+    {
+      "name": "Meta Ads",
+      "calls": 4
+    },
+    {
+      "name": "Shopify",
+      "calls": 3
+    },
+    {
+      "name": "Microsoft 365",
+      "calls": 3
+    },
+    {
+      "name": "HubSpot",
+      "calls": 2
+    },
+    {
+      "name": "Xero",
+      "calls": 2
+    },
+    {
+      "name": "GoHighLevel",
+      "calls": 2
+    },
+    {
+      "name": "Podium",
+      "calls": 2
+    }
+  ]
+}

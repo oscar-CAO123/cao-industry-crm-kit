@@ -1,0 +1,8 @@
+.env
+.env.*
+*.key
+*token*.json
+*oauth*.json
+stack.json
+node_modules/
+.DS_Store

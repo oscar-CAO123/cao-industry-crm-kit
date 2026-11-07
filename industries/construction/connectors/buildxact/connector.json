@@ -1,0 +1,16 @@
+{
+  "id": "buildxact",
+  "name": "Buildxact",
+  "docs": "https://developer.buildxact.com/",
+  "account_to_test": "Paid plan plus requested key",
+  "cost_to_test": "About A$169 to A$199 a month",
+  "capabilities": [
+    "quotes.list",
+    "jobs.list",
+    "leads.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

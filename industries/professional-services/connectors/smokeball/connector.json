@@ -1,0 +1,16 @@
+{
+  "id": "smokeball",
+  "name": "Smokeball",
+  "docs": "https://docs.smokeball.com/",
+  "account_to_test": "Partner program, staging credentials",
+  "cost_to_test": "Not found",
+  "capabilities": [
+    "matters.list",
+    "contacts.list",
+    "documents.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

@@ -1,0 +1,15 @@
+{
+  "id": "deputy",
+  "name": "Deputy",
+  "docs": "https://developer.deputy.com/",
+  "account_to_test": "31-day free trial",
+  "cost_to_test": "$0 during trial",
+  "capabilities": [
+    "rosters.list",
+    "timesheets.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

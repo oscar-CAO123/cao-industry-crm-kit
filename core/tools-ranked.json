@@ -1,0 +1,515 @@
+{
+  "source": "CAO discovery calls, read 7 Nov 2026. Sum of the industry files.",
+  "tools": [
+    {
+      "name": "Microsoft 365",
+      "calls": 123,
+      "industries": [
+        "agencies",
+        "agriculture-mining",
+        "automotive",
+        "construction",
+        "financial-services",
+        "hospitality",
+        "manufacturing",
+        "professional-services",
+        "real-estate",
+        "retail",
+        "transport"
+      ]
+    },
+    {
+      "name": "Xero",
+      "calls": 98,
+      "industries": [
+        "agencies",
+        "agriculture-mining",
+        "automotive",
+        "construction",
+        "financial-services",
+        "fitness-beauty",
+        "health-care",
+        "hospitality",
+        "manufacturing",
+        "professional-services",
+        "real-estate",
+        "retail",
+        "transport"
+      ]
+    },
+    {
+      "name": "Google Workspace",
+      "calls": 47,
+      "industries": [
+        "agencies",
+        "construction",
+        "financial-services",
+        "fitness-beauty",
+        "hospitality",
+        "manufacturing",
+        "professional-services",
+        "real-estate",
+        "retail",
+        "transport"
+      ]
+    },
+    {
+      "name": "HubSpot",
+      "calls": 40,
+      "industries": [
+        "automotive",
+        "construction",
+        "financial-services",
+        "health-care",
+        "manufacturing",
+        "retail",
+        "transport"
+      ]
+    },
+    {
+      "name": "Meta Ads",
+      "calls": 35,
+      "industries": [
+        "automotive",
+        "construction",
+        "financial-services",
+        "fitness-beauty",
+        "hospitality",
+        "professional-services",
+        "real-estate",
+        "retail"
+      ]
+    },
+    {
+      "name": "Shopify",
+      "calls": 29,
+      "industries": [
+        "automotive",
+        "retail"
+      ]
+    },
+    {
+      "name": "GoHighLevel",
+      "calls": 28,
+      "industries": [
+        "automotive",
+        "construction",
+        "financial-services",
+        "fitness-beauty",
+        "health-care",
+        "professional-services",
+        "real-estate"
+      ]
+    },
+    {
+      "name": "ServiceM8",
+      "calls": 18,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Excel",
+      "calls": 16,
+      "industries": [
+        "construction",
+        "financial-services",
+        "hospitality",
+        "professional-services",
+        "real-estate",
+        "transport"
+      ]
+    },
+    {
+      "name": "WhatsApp",
+      "calls": 16,
+      "industries": [
+        "construction",
+        "financial-services",
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Monday.com",
+      "calls": 15,
+      "industries": [
+        "construction",
+        "real-estate",
+        "retail"
+      ]
+    },
+    {
+      "name": "Google Ads",
+      "calls": 15,
+      "industries": [
+        "construction",
+        "retail"
+      ]
+    },
+    {
+      "name": "Klaviyo",
+      "calls": 12,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Procore",
+      "calls": 12,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Simpro",
+      "calls": 12,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "CoreLogic RP Data",
+      "calls": 9,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Slack",
+      "calls": 9,
+      "industries": [
+        "agencies",
+        "financial-services",
+        "retail"
+      ]
+    },
+    {
+      "name": "Asana",
+      "calls": 9,
+      "industries": [
+        "construction",
+        "professional-services",
+        "retail"
+      ]
+    },
+    {
+      "name": "Dropbox",
+      "calls": 9,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Canva",
+      "calls": 8,
+      "industries": [
+        "hospitality",
+        "retail"
+      ]
+    },
+    {
+      "name": "Bluebeam",
+      "calls": 8,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "WordPress",
+      "calls": 5,
+      "industries": [
+        "hospitality",
+        "retail"
+      ]
+    },
+    {
+      "name": "Buildertrend",
+      "calls": 5,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Rex",
+      "calls": 4,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "DocuSign",
+      "calls": 4,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Zapier",
+      "calls": 4,
+      "industries": [
+        "financial-services",
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Ignition",
+      "calls": 4,
+      "industries": [
+        "financial-services",
+        "professional-services"
+      ]
+    },
+    {
+      "name": "Groundplan",
+      "calls": 4,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Evolve",
+      "calls": 4,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Buildxact",
+      "calls": 4,
+      "industries": [
+        "construction"
+      ]
+    },
+    {
+      "name": "Roller",
+      "calls": 3,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "RealWorks",
+      "calls": 3,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "WooCommerce",
+      "calls": 3,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Power BI",
+      "calls": 3,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "BigQuery",
+      "calls": 2,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "Employment Hero",
+      "calls": 2,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "Zendesk",
+      "calls": 2,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "Axify",
+      "calls": 2,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "Deputy",
+      "calls": 2,
+      "industries": [
+        "hospitality"
+      ]
+    },
+    {
+      "name": "realestate.com",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Zoho",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Console Cloud",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Inspection Express",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "AgentBox",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Realtair",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "PropertyMe",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Google Forms",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Trello",
+      "calls": 2,
+      "industries": [
+        "real-estate"
+      ]
+    },
+    {
+      "name": "Google Analytics",
+      "calls": 2,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Fishbowl",
+      "calls": 2,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Starship",
+      "calls": 2,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Airtable",
+      "calls": 2,
+      "industries": [
+        "retail"
+      ]
+    },
+    {
+      "name": "Podium",
+      "calls": 2,
+      "industries": [
+        "automotive"
+      ]
+    },
+    {
+      "name": "Salesforce CRM",
+      "calls": 2,
+      "industries": [
+        "manufacturing"
+      ]
+    },
+    {
+      "name": "ATO Mate",
+      "calls": 2,
+      "industries": [
+        "professional-services"
+      ]
+    },
+    {
+      "name": "Smokeball",
+      "calls": 2,
+      "industries": [
+        "professional-services"
+      ]
+    },
+    {
+      "name": "Ambition Cloud",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Apply Online",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Power Automate",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Cradle",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Sync Hub",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Mailchimp",
+      "calls": 2,
+      "industries": [
+        "financial-services"
+      ]
+    },
+    {
+      "name": "Cliniko",
+      "calls": 2,
+      "industries": [
+        "health-care"
+      ]
+    }
+  ]
+}

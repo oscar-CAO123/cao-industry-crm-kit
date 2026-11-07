@@ -1,0 +1,16 @@
+{
+  "id": "docusign",
+  "name": "DocuSign",
+  "docs": "https://developers.docusign.com/",
+  "account_to_test": "Free developer sandbox",
+  "cost_to_test": "$0",
+  "capabilities": [
+    "documents.create",
+    "documents.sign",
+    "documents.list"
+  ],
+  "fallback": "composio",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

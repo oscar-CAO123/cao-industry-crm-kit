@@ -1,0 +1,15 @@
+{
+  "id": "sevenrooms",
+  "name": "SevenRooms",
+  "docs": null,
+  "account_to_test": "Partner approval",
+  "cost_to_test": "Not found",
+  "capabilities": [
+    "bookings.list",
+    "contacts.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

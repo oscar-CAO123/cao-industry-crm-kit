@@ -1,0 +1,85 @@
+{
+  "source": "CAO discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
+  "tools": [
+    {
+      "name": "Microsoft 365",
+      "calls": 82
+    },
+    {
+      "name": "Xero",
+      "calls": 52
+    },
+    {
+      "name": "ServiceM8",
+      "calls": 18
+    },
+    {
+      "name": "HubSpot",
+      "calls": 17
+    },
+    {
+      "name": "Google Workspace",
+      "calls": 13
+    },
+    {
+      "name": "Procore",
+      "calls": 12
+    },
+    {
+      "name": "Simpro",
+      "calls": 12
+    },
+    {
+      "name": "Monday.com",
+      "calls": 10
+    },
+    {
+      "name": "Dropbox",
+      "calls": 9
+    },
+    {
+      "name": "Meta Ads",
+      "calls": 9
+    },
+    {
+      "name": "GoHighLevel",
+      "calls": 8
+    },
+    {
+      "name": "Bluebeam",
+      "calls": 8
+    },
+    {
+      "name": "Google Ads",
+      "calls": 7
+    },
+    {
+      "name": "WhatsApp",
+      "calls": 7
+    },
+    {
+      "name": "Excel",
+      "calls": 5
+    },
+    {
+      "name": "Buildertrend",
+      "calls": 5
+    },
+    {
+      "name": "Groundplan",
+      "calls": 4
+    },
+    {
+      "name": "Evolve",
+      "calls": 4
+    },
+    {
+      "name": "Buildxact",
+      "calls": 4
+    },
+    {
+      "name": "Asana",
+      "calls": 4
+    }
+  ]
+}
