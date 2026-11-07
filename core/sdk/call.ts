@@ -24,7 +24,7 @@ import { secret, optional } from "../lib/secrets.ts";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "platforms");
 
-export interface Param { name: string; in: string; required: boolean; type: string; /** may hold "/" (Google resource names) */ reserved?: boolean; /** the vendor's pattern a reserved value must match */ pattern?: string }
+export interface Param { name: string; in: string; required: boolean; type: string; /** may hold "/" (Google resource names) */ reserved?: boolean; /** the vendor's pattern a reserved value must match */ pattern?: string; /** values the vendor accepts that the kit refuses (Klaviyo push tokens) */ deny?: string }
 export interface Op {
   id: string; api: string; method: string; path: string; server: string; summary: string; tags: string[];
   params: Param[]; body: boolean; scopes: string[]; deprecated: boolean; doc_url: string; kind: "read" | "write";
@@ -39,6 +39,8 @@ export interface Op {
   authUnsupported?: string;
   /** Headers the vendor requires on this endpoint (Graph's ConsistencyLevel for $count). */
   fixedHeaders?: Record<string, string>;
+  /** Signs in with this key instead of the platform's (Slack methods that take only a user token). Set by the generator, never by a caller. */
+  tokenEnv?: string;
 }
 export interface Auth {
   type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported";
@@ -215,7 +217,7 @@ function authPreview(p: Platform, o?: Op): Record<string, string> {
   const h: Record<string, string> = {};
   for (const [k, env] of Object.entries(a.extraHeaders ?? {})) h[k] = env.startsWith("=") ? env.slice(1) : `[from ${env}]`;
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) h[k] = `[from ${env}, if set]`;
-  if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${a.env ?? [a.user, a.pass].filter(Boolean).join(" + ")}]`;
+  if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${(a.type === "bearer" && o?.tokenEnv) || a.env || [a.user, a.pass].filter(Boolean).join(" + ")}]`;
   if (a.type === "header") h[a.header!] = `[from ${a.env}]`;
   if (a.type === "custom") h.Authorization = `[from the ${a.provider} sign-in]`;
   return h;
@@ -229,7 +231,7 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
   for (const [k, env] of Object.entries(a.extraHeaders ?? {})) h[k] = env.startsWith("=") ? env.slice(1) : secret(env);
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) { const v = optional(env); if (v) h[k] = v; }
   switch (a.type) {
-    case "bearer": h.Authorization = `Bearer ${secret(a.env!)}`; break;
+    case "bearer": h.Authorization = `Bearer ${secret(o.tokenEnv ?? a.env!)}`; break;
     case "header": h[a.header!] = `${a.prefix ?? ""}${secret(a.env!)}`; break;
     case "basic": {
       const user = a.user!.split("+").map((part) => (part.startsWith("=") ? part.slice(1) : secret(part))).join("");
@@ -324,6 +326,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null) continue;
     const x = known.get(k)!;
+    if (x.deny && new RegExp(x.deny, "i").test(typeof v === "object" ? JSON.stringify(v) : String(v))) throw new Error(`${id} ${opId}: ${k} may not ask for that (refused by the kit)`);
     if (x.in === "path") {
       const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       route = route.replace(new RegExp(`\\{${esc}\\}|:${esc}\\b`, "g"), encodePathValue(k, v, x.reserved === true, x.pattern ?? ""));

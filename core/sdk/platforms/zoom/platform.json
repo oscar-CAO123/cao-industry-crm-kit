@@ -12,7 +12,13 @@
  "hostFromEnv": false,
  "hostPatterns": [],
  "pinned": {},
- "serverVars": {},
+ "serverVars": {
+  "keyConnectorLb": {
+   "env": "ZOOM_KEY_CONNECTOR_HOST",
+   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "envOnly": true
+  }
+ },
  "auth": {
   "type": "custom",
   "provider": "zoom"
@@ -154,14 +160,24 @@
   {
    "url": "https://developers.zoom.us/api/zoap/cobrowse-sdk/methods",
    "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/scim2/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/workforce-management/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/customer-managed-keys-hybrid/methods",
+   "official": "vendor-domain: developers.zoom.us"
   }
  ],
- "gaps": [
-  "zoom: 4 endpoints added from zoom/rivet-javascript (in the official SDK, not the published spec)"
- ],
+ "gaps": [],
  "counts": {
-  "operations": 2012,
-  "read": 874,
-  "write": 1138
+  "operations": 2039,
+  "read": 887,
+  "write": 1152
  }
 }

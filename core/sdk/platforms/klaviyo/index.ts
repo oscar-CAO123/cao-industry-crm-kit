@@ -573,11 +573,11 @@ export const getCustomMetricForMappedMetric = (input: CallInput & { params?: { "
 /** GET /api/mapped-metrics/{id}/relationships/custom-metric: Get Custom Metric ID for Mapped Metric [read] */
 export const getCustomMetricIdForMappedMetric = (input: CallInput & { params?: { "id": string; "revision": string } } = {}) => sdk.call("get_custom_metric_id_for_mapped_metric", input);
 /** GET /api/profiles: Get Profiles [read] */
-export const getProfiles = (input: CallInput & { params?: { "additional-fields[profile]"?: unknown[]; "fields[conversation]"?: unknown[]; "fields[profile]"?: unknown[]; "fields[push-token]"?: unknown[]; "filter"?: string; "include"?: unknown[]; "page[cursor]"?: string; "page[size]"?: number; "sort"?: string; "revision": string } } = {}) => sdk.call("get_profiles", input);
+export const getProfiles = (input: CallInput & { params?: { "additional-fields[profile]"?: unknown[]; "fields[conversation]"?: unknown[]; "fields[profile]"?: unknown[]; "filter"?: string; "include"?: unknown[]; "page[cursor]"?: string; "page[size]"?: number; "sort"?: string; "revision": string } } = {}) => sdk.call("get_profiles", input);
 /** POST /api/profiles: Create Profile [write] */
 export const createProfile = (input: CallInput & { params?: { "additional-fields[profile]"?: unknown[]; "fields[profile]"?: unknown[]; "revision": string } } = {}) => sdk.call("create_profile", input);
 /** GET /api/profiles/{id}: Get Profile [read] */
-export const getProfile = (input: CallInput & { params?: { "id": string; "additional-fields[profile]"?: unknown[]; "fields[conversation]"?: unknown[]; "fields[list]"?: unknown[]; "fields[profile]"?: unknown[]; "fields[push-token]"?: unknown[]; "fields[segment]"?: unknown[]; "include"?: unknown[]; "revision": string } } = {}) => sdk.call("get_profile", input);
+export const getProfile = (input: CallInput & { params?: { "id": string; "additional-fields[profile]"?: unknown[]; "fields[conversation]"?: unknown[]; "fields[list]"?: unknown[]; "fields[profile]"?: unknown[]; "fields[segment]"?: unknown[]; "include"?: unknown[]; "revision": string } } = {}) => sdk.call("get_profile", input);
 /** PATCH /api/profiles/{id}: Update Profile [write] */
 export const updateProfile = (input: CallInput & { params?: { "id": string; "additional-fields[profile]"?: unknown[]; "fields[profile]"?: unknown[]; "revision": string } } = {}) => sdk.call("update_profile", input);
 /** GET /api/profile-bulk-import-jobs: Get Bulk Import Profiles Jobs [write] */
@@ -599,11 +599,11 @@ export const bulkUnsuppressProfiles = (input: CallInput & { params?: { "fields[p
 /** GET /api/profile-suppression-bulk-delete-jobs/{job_id}: Get Bulk Unsuppress Profiles Job [write] */
 export const getBulkUnsuppressProfilesJob = (input: CallInput & { params?: { "job_id": string; "fields[profile-suppression-bulk-delete-job]"?: unknown[]; "revision": string } } = {}) => sdk.call("get_bulk_unsuppress_profiles_job", input);
 /** GET /api/push-tokens: Get Push Tokens [write] */
-export const getPushTokens = (input: CallInput & { params?: { "fields[profile]"?: unknown[]; "fields[push-token]"?: unknown[]; "filter"?: string; "include"?: unknown[]; "page[cursor]"?: string; "page[size]"?: number; "revision": string } } = {}) => sdk.call("get_push_tokens", input);
+export const getPushTokens = (input: CallInput & { params?: { "fields[profile]"?: unknown[]; "filter"?: string; "include"?: unknown[]; "page[cursor]"?: string; "page[size]"?: number; "revision": string } } = {}) => sdk.call("get_push_tokens", input);
 /** POST /api/push-tokens: Create or Update Push Token [write] */
 export const createPushToken = (input: CallInput & { params?: { "revision": string } } = {}) => sdk.call("create_push_token", input);
 /** GET /api/push-tokens/{id}: Get Push Token [write] */
-export const getPushToken = (input: CallInput & { params?: { "id": string; "fields[profile]"?: unknown[]; "fields[push-token]"?: unknown[]; "include"?: unknown[]; "revision": string } } = {}) => sdk.call("get_push_token", input);
+export const getPushToken = (input: CallInput & { params?: { "id": string; "fields[profile]"?: unknown[]; "include"?: unknown[]; "revision": string } } = {}) => sdk.call("get_push_token", input);
 /** DELETE /api/push-tokens/{id}: Delete Push Token [write] */
 export const deletePushToken = (input: CallInput & { params?: { "id": string; "revision": string } } = {}) => sdk.call("delete_push_token", input);
 /** POST /api/profile-import: Create or Update Profile [write] */
@@ -615,7 +615,7 @@ export const bulkSubscribeProfiles = (input: CallInput & { params?: { "revision"
 /** POST /api/profile-subscription-bulk-delete-jobs: Bulk Unsubscribe Profiles [write] */
 export const bulkUnsubscribeProfiles = (input: CallInput & { params?: { "revision": string } } = {}) => sdk.call("bulk_unsubscribe_profiles", input);
 /** GET /api/profiles/{id}/push-tokens: Get Push Tokens for Profile [write] */
-export const getPushTokensForProfile = (input: CallInput & { params?: { "id": string; "fields[push-token]"?: unknown[]; "revision": string } } = {}) => sdk.call("get_push_tokens_for_profile", input);
+export const getPushTokensForProfile = (input: CallInput & { params?: { "id": string; "revision": string } } = {}) => sdk.call("get_push_tokens_for_profile", input);
 /** GET /api/profiles/{id}/relationships/push-tokens: Get Push Token IDs for Profile [write] */
 export const getPushTokenIdsForProfile = (input: CallInput & { params?: { "id": string; "revision": string } } = {}) => sdk.call("get_push_token_ids_for_profile", input);
 /** GET /api/profiles/{id}/lists: Get Lists for Profile [read] */

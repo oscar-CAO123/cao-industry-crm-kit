@@ -17,7 +17,8 @@
   "env": "SLACK_BOT_TOKEN"
  },
  "keys": [
-  "SLACK_BOT_TOKEN"
+  "SLACK_BOT_TOKEN",
+  "SLACK_USER_TOKEN (for methods that take only a user token)"
  ],
  "sources": [
   {

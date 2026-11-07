@@ -19,6 +19,7 @@
  "keys": [
   "AROFLO_ORG_ENCODED",
   "AROFLO_USER_ENCODED",
+  "AROFLO_PASSWORD_ENCODED",
   "AROFLO_SECRET"
  ],
  "sources": [

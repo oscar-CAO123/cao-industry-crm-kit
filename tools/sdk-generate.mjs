@@ -17,7 +17,8 @@ const SUB = "[a-z0-9-]+";
 // "crm" = the same sign-in our CRM runs in production; "docs" = from the vendor's docs, unproven until a sandbox run.
 const P = {
   "xero": { name: "Xero", auth: { type: "custom", provider: "xero" }, keys: ["XERO_CLIENT_ID", "XERO_CLIENT_SECRET", "XERO_TENANT_ID", "XERO_REFRESH_TOKEN"], proof: "crm" },
-  "zoom": { name: "Zoom", auth: { type: "custom", provider: "zoom" }, keys: ["ZOOM_ACCOUNT_ID", "ZOOM_CLIENT_ID", "ZOOM_CLIENT_SECRET"], proof: "crm" },
+  "zoom": { name: "Zoom", auth: { type: "custom", provider: "zoom" }, keys: ["ZOOM_ACCOUNT_ID", "ZOOM_CLIENT_ID", "ZOOM_CLIENT_SECRET"], proof: "crm",
+    serverVars: { keyConnectorLb: { env: "ZOOM_KEY_CONNECTOR_HOST", pattern: "[a-z0-9-]+(\\.[a-z0-9-]+)+", envOnly: true } } },
   "google-workspace": { name: "Google Workspace", auth: { type: "custom", provider: "google" },
     pinned: { userId: { allow: ["me"], env: "GOOGLE_MAILBOX", envList: "GOOGLE_ALLOWED_MAILBOXES", fill: "me" } }, keys: ["GOOGLE_MAILBOX", "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"], proof: "crm" },
   "google-ads": { name: "Google Ads", defaultScope: "https://www.googleapis.com/auth/adwords", auth: { type: "custom", provider: "google", extraHeaders: { "developer-token": "GOOGLE_ADS_DEVELOPER_TOKEN" }, optionalHeaders: { "login-customer-id": "GOOGLE_ADS_LOGIN_CUSTOMER_ID" } }, keys: ["GOOGLE_MAILBOX", "GOOGLE_ADS_DEVELOPER_TOKEN", "GOOGLE_ADS_LOGIN_CUSTOMER_ID (optional)"], proof: "docs" },
@@ -34,19 +35,21 @@ const P = {
   "hubspot": { name: "HubSpot", auth: { type: "bearer", env: "HUBSPOT_ACCESS_TOKEN" }, keys: ["HUBSPOT_ACCESS_TOKEN"], proof: "docs" },
   "microsoft-365": { name: "Microsoft 365 (Graph)", auth: { type: "bearer", env: "M365_ACCESS_TOKEN", note: "token flow not built yet: supply a Graph access token" }, keys: ["M365_ACCESS_TOKEN"], proof: "docs" },
   "gohighlevel": { name: "GoHighLevel", auth: { type: "bearer", env: "GHL_ACCESS_TOKEN", extraHeaders: { Version: "=2021-07-28" } }, keys: ["GHL_ACCESS_TOKEN"], proof: "docs" },
-  "slack": { name: "Slack", auth: { type: "bearer", env: "SLACK_BOT_TOKEN" }, keys: ["SLACK_BOT_TOKEN"], proof: "docs" },
+  "slack": { name: "Slack", auth: { type: "bearer", env: "SLACK_BOT_TOKEN" }, keys: ["SLACK_BOT_TOKEN", "SLACK_USER_TOKEN (for methods that take only a user token)"], proof: "docs" },
   "asana": { name: "Asana", auth: { type: "bearer", env: "ASANA_ACCESS_TOKEN" }, keys: ["ASANA_ACCESS_TOKEN"], proof: "docs" },
   "klaviyo": { name: "Klaviyo", auth: { type: "header", header: "Authorization", prefix: "Klaviyo-API-Key ", env: "KLAVIYO_API_KEY" }, keys: ["KLAVIYO_API_KEY"], proof: "docs" },
-  "zendesk": { name: "Zendesk", auth: { type: "basic", user: "ZENDESK_EMAIL+=/token", pass: "ZENDESK_API_TOKEN" }, keys: ["ZENDESK_SUBDOMAIN", "ZENDESK_EMAIL", "ZENDESK_API_TOKEN"], proof: "docs",
+  "zendesk": { name: "Zendesk", server: "https://{subdomain}.{domain}.com", auth: { type: "basic", user: "ZENDESK_EMAIL+=/token", pass: "ZENDESK_API_TOKEN" }, keys: ["ZENDESK_SUBDOMAIN", "ZENDESK_EMAIL", "ZENDESK_API_TOKEN"], proof: "docs",
     serverVars: { subdomain: { env: "ZENDESK_SUBDOMAIN", pattern: SUB }, domain: { env: "ZENDESK_DOMAIN", default: "zendesk", pattern: "zendesk" } } },
   "monday": { name: "monday.com", style: "graphql", auth: { type: "header", header: "Authorization", env: "MONDAY_API_TOKEN" }, keys: ["MONDAY_API_TOKEN"], proof: "docs" },
   "servicem8": { name: "ServiceM8", auth: { type: "header", header: "X-API-Key", env: "SERVICEM8_API_KEY" }, keys: ["SERVICEM8_API_KEY"], proof: "docs" },
   "deputy": { name: "Deputy", auth: { type: "bearer", env: "DEPUTY_ACCESS_TOKEN" }, keys: ["DEPUTY_ACCESS_TOKEN", "DEPUTY_SUBDOMAIN", "DEPUTY_REGION"], proof: "docs",
     serverVars: { subdomain: { env: "DEPUTY_SUBDOMAIN", pattern: SUB }, region: { env: "DEPUTY_REGION", pattern: "[a-z]{2,6}" }, install: { env: "DEPUTY_SUBDOMAIN", pattern: SUB }, geo: { env: "DEPUTY_REGION", pattern: "[a-z]{2,6}" } } },
-  "smokeball": { name: "Smokeball", auth: { type: "bearer", env: "SMOKEBALL_ACCESS_TOKEN", extraHeaders: { "x-api-key": "SMOKEBALL_API_KEY" } }, keys: ["SMOKEBALL_ACCESS_TOKEN", "SMOKEBALL_API_KEY"], proof: "docs" },
+  "smokeball": { name: "Smokeball", server: "https://api.smokeball.{tld}", forceServer: true,
+    // The spec's servers list the US, AU and UK production hosts; the client's region picks one (staging hosts are left out).
+    serverVars: { tld: { env: "SMOKEBALL_REGION_TLD", default: "com.au", pattern: "com|com\\.au|co\\.uk" } }, auth: { type: "bearer", env: "SMOKEBALL_ACCESS_TOKEN", extraHeaders: { "x-api-key": "SMOKEBALL_API_KEY" } }, keys: ["SMOKEBALL_ACCESS_TOKEN", "SMOKEBALL_API_KEY", "SMOKEBALL_REGION_TLD (optional: com.au default, com, co.uk)"], proof: "docs" },
   "canva": { name: "Canva Connect", auth: { type: "bearer", env: "CANVA_ACCESS_TOKEN" }, keys: ["CANVA_ACCESS_TOKEN"], proof: "docs" },
   "fergus": { name: "Fergus", auth: { type: "bearer", env: "FERGUS_ACCESS_TOKEN" }, keys: ["FERGUS_ACCESS_TOKEN"], proof: "docs" },
-  "aroflo": { name: "AroFlo", auth: { type: "unsupported", note: "AroFlo signs each request with HMAC; the signer is not built yet" }, keys: ["AROFLO_ORG_ENCODED", "AROFLO_USER_ENCODED", "AROFLO_SECRET"], proof: "docs", server: "https://api.aroflo.com" },
+  "aroflo": { name: "AroFlo", auth: { type: "unsupported", note: "AroFlo signs each request with HMAC; the signer is not built yet" }, keys: ["AROFLO_ORG_ENCODED", "AROFLO_USER_ENCODED", "AROFLO_PASSWORD_ENCODED", "AROFLO_SECRET"], proof: "docs", server: "https://api.aroflo.com" },
   "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs" },
   "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
   "dropbox": { name: "Dropbox", style: "rpc", auth: { type: "bearer", env: "DROPBOX_ACCESS_TOKEN" }, keys: ["DROPBOX_ACCESS_TOKEN"], proof: "docs" },
@@ -138,7 +141,11 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     let x = String(api);
     const mk = x.match(/_(?:master|main|HEAD|latest)_(.+)$/);
     if (mk) x = mk[1];
-    else if (/\.(com|dev|io|ai|org|net)_/.test(x)) x = x.split("_").pop();
+    else if (/\.(com|dev|io|ai|org|net)_/.test(x)) {
+      // A generic file name (Zendesk's <product>/oas.yaml) takes its name from the folder, so files never share an api name.
+      const g = x.replace(/^.*?\.(com|dev|io|ai|org|net)_/, "").match(/^(.+)_(oas|openapi|swagger|spec)\.(ya?ml|json)$/i);
+      x = g ? (g[1].toLowerCase() === id ? "core" : g[1]) : x.split("_").pop();
+    }
     x = x.replace(/\.(ya?ml|json)$/i, "");
     x = x.replace(new RegExp(`^(${id.split("-")[0]})[-_]`, "i"), "");
     if (/\.rest\.|swagger/.test(x)) x = x.split(".")[0];
@@ -164,7 +171,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     for (const mm of String(o.path).matchAll(/\{([^}]+)\}/g)) if (!have.has(mm[1])) { params.push({ name: mm[1], in: "path", required: true, type: "string" }); have.add(mm[1]); }
     return { id: clean(o.id), api: clean(o.api), method: clean(o.method).toUpperCase(), path: clean(o.path), server, summary: clean(o.summary).slice(0, 200),
              tags: (o.tags ?? []).map(clean), params, body: !!o.body, scopes: o.scopes ?? [], deprecated: !!o.deprecated, doc_url: clean(o.doc_url),
-             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}),
+             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
              kind: readKind(id, o) };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
@@ -179,17 +186,52 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       o.authUnsupported = "Dropbox content or notify route: needs content.dropboxapi.com or notify.dropboxapi.com and the Dropbox-API-Arg header; not wired yet";
     if (id === "servicem8" && (o.api === "addon-sdk-api" || /AddonDiary/i.test(o.id)))
       o.authUnsupported = "ServiceM8 add-on route: needs an OAuth add-on token, not the API key; not wired yet";
+    // Slack lists the token types each method takes: user-only methods sign in with the user token, and methods that
+    // take only an app configuration token are refused until that sign-in is mapped.
+    if (id === "slack" && o.tokens?.includes("user") && !o.tokens.includes("bot")) o.tokenEnv = "SLACK_USER_TOKEN";
+    if (id === "slack" && o.tokens?.length && o.tokens.every((t) => t === "configuration"))
+      o.authUnsupported = "Slack app configuration method: needs an app configuration token, not the bot or user token; not wired yet";
+    // Klaviyo profile reads can include raw device push tokens; the kit never asks for them.
+    if (id === "klaviyo") {
+      o.params = o.params.filter((p) => p.name !== "fields[push-token]");
+      for (const p of o.params) if (p.name === "include") p.deny = "push[-_ ]?token";
+    }
+    if (id === "zoom" && o.server.includes("{keyConnectorLb}"))
+      o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";
     if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
     if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
     if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
     if (id === "docusign" && !["esignature", "sdk"].includes(o.api))
       o.authUnsupported = `DocuSign ${o.api}: its sign-in scope and production host are not mapped yet (the published spec points at a demo host)`;
   }
+  // Overrides are keyed by the endpoint id the assessment saw. The api prefix on an id comes and goes as a platform
+  // gains or loses spec files, so a key matches the full id or the bare id (api prefix removed), and must match exactly one.
   const ov = OVERRIDES[id] ?? {};
-  if (ov.drop) for (let i = ops.length - 1; i >= 0; i--) if (ov.drop[ops[i].id]) ops.splice(i, 1);
+  const bareId = (o) => (o.api && o.id.startsWith(o.api + ".") ? o.id.slice(o.api.length + 1) : o.id);
+  const resolve = (kind) => {
+    const hit = new Map();
+    for (const [k, why] of Object.entries(ov[kind] ?? {})) {
+      const pre = k.split(".")[0];
+      const kb = k.includes(".") && (pre === "core" || ops.some((o) => o.api === pre)) ? k.slice(pre.length + 1) : k;
+      let m = ops.filter((o) => o.id === k);
+      if (!m.length) m = ops.filter((o) => bareId(o) === k || bareId(o) === kb);
+      if (m.length > 1) { console.error(`${id}: override ${kind} "${k}" matches ${m.length} endpoints`); process.exit(1); }
+      if (!m.length) {
+        // A gate that matches nothing is a gate silently not applied: fail. A stale drop or read-only POST is only noted.
+        if (kind === "forceWrite") { console.error(`${id}: forceWrite override "${k}" matches no endpoint`); process.exit(1); }
+        console.warn(`${id}: ${kind} override "${k}" matches no endpoint (ignored)`);
+        continue;
+      }
+      hit.set(m[0], why);
+    }
+    return hit;
+  };
+  const drops = resolve("drop");
+  for (let i = ops.length - 1; i >= 0; i--) if (drops.has(ops[i])) ops.splice(i, 1);
+  const gates = resolve("forceWrite"), readPosts = resolve("readPost");
   for (const o of ops) {
-    if (ov.forceWrite?.[o.id]) { o.kind = "write"; o.override = `gated: ${clean(ov.forceWrite[o.id])}`; }
-    else if (ov.readPost?.[o.id] && o.method === "POST" && READPOST_PATH.test(o.path) && !CREDENTIAL.test(words(`${o.id} ${o.path}`))) { o.kind = "read"; o.readPost = true; o.override = `read-only POST: ${clean(ov.readPost[o.id])}`; }
+    if (gates.has(o)) { o.kind = "write"; o.override = `gated: ${clean(gates.get(o))}`; }
+    else if (readPosts.has(o) && o.method === "POST" && READPOST_PATH.test(o.path) && !CREDENTIAL.test(words(`${o.id} ${o.path}`))) { o.kind = "read"; o.readPost = true; o.override = `read-only POST: ${clean(readPosts.get(o))}`; }
   }
   const seenIds = new Map();
   for (const o of ops) {  // every id unique, so no endpoint is shadowed
@@ -201,7 +243,8 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
   const servers = [...new Set(ops.map((o) => o.server))];
   const vars = { ...(cfg.serverVars ?? {}) };
   for (const s of servers) for (const mm of s.matchAll(/\{([A-Za-z_]+)\}/g)) if (!vars[mm[1]]) { console.error(`${id}: server variable ${mm[1]} has no config`); process.exit(1); }
-  const { hosts, patterns } = hostRules(servers, vars);
+  // Only routes the kit can call add to the host allowlist; a refused route's host (a client's own server) never does.
+  const { hosts, patterns } = hostRules([...new Set(ops.filter((o) => !o.authUnsupported).map((o) => o.server))], vars);
   const platform = {
     id, name: cfg.name, status: m.status, tested: "offline only (fake network); not yet run against a real account",
     authProof: cfg.proof, style: cfg.style ?? "rest", hosts: cfg.hostFromEnv ? [] : hosts, hostFromEnv: !!cfg.hostFromEnv,

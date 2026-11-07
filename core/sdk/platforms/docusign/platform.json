@@ -6,12 +6,6 @@
  "authProof": "crm",
  "style": "rest",
  "hosts": [
-  "api-d.docusign.com",
-  "api.docusign.com",
-  "api.docusign.net",
-  "apps-d.docusign.com",
-  "demo.rooms.docusign.com",
-  "www.demo.docusign.net",
   "www.docusign.net"
  ],
  "hostFromEnv": false,

@@ -35,7 +35,7 @@ const ENV: Record<string, string> = {
   ZOOM_ACCOUNT_ID: "a", ZOOM_CLIENT_ID: "b", ZOOM_CLIENT_SECRET: "c", GOOGLE_MAILBOX: "ops-mailbox", GOOGLE_CLIENT_ID: "g", GOOGLE_CLIENT_SECRET: "h",
   GOOGLE_ADS_DEVELOPER_TOKEN: "dev", DOCUSIGN_INTEGRATION_KEY: "ik", DOCUSIGN_USER_ID: "u1", DOCUSIGN_ACCOUNT_ID: "acct-1",
   AIRCALL_API_ID: "a", AIRCALL_API_TOKEN: "b", CALENDLY_API_TOKEN: "c", META_ADS_TOKEN: "m", WHATSAPP_ACCESS_TOKEN: "w", M365_ACCESS_TOKEN: "ms",
-  GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
+  GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
   BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk",
@@ -362,4 +362,58 @@ test("review 5: more key-shaped names are refused, and refresh tokens never ride
   if (sb) for (const k of ["pwd", "code", "sig", "refresh"]) await assert.rejects(() => plan("slack", sb.id, { params: { [k]: "x" } }), /not allowed/);
   const { checkUrl } = await import("../core/lib/http.ts");
   assert.throws(() => checkUrl({ app: "t", hosts: ["api.hubapi.com"] }, new URL("https://api.hubapi.com/oauth/v1/token?refresh_token=rt")), /key in the query/);
+});
+
+test("coverage: Zendesk files without a server reach the account host, and assessment gates survive an api prefix", async () => {
+  for (const api of ["help_center", "voice", "collaboration_api"]) {
+    const z = firstOp("zendesk", (x) => x.api === api && x.kind === "read");
+    hits = [];
+    await callOperation("zendesk", z.id, { params: Object.fromEntries(z.params.filter((p) => p.required).map((p) => [p.name, "1"])) });
+    assert.equal(new URL(hits[0].url).hostname, "acme.zendesk.com");
+  }
+  const zops = load("zendesk").ops;
+  for (const id of ["core.ListTargets", "core.ShowTarget", "core.RenewCurrentSession", "core.ShowCurrentUser", "core.ListSupportAddresses", "core.ShowSupportAddress"])
+    assert.equal(zops.get(id)?.kind, "write", id);
+  assert.equal(load("slack").ops.get("slackLists_download_get")?.override?.startsWith("gated:"), true);
+});
+
+test("coverage: no platform's host allowlist accepts an outside domain, and Zoom's key-decrypt route is refused", async () => {
+  for (const id of listPlatforms()) {
+    for (const pat of load(id).platform.hostPatterns) for (const h of ["attacker.example", "evil.com", "zoom.us.evil.com"])
+      assert.ok(!new RegExp(`^(?:${pat})$`).test(h), `${id}: ${pat} accepts ${h}`);
+  }
+  process.env.ZOOM_KEY_CONNECTOR_HOST = "kc.client.example";
+  const cmk = "customer-managed-keys-hybrid.hybrid-cmk-archival-decrypt";
+  await assert.rejects(() => callOperation("zoom", cmk), /write blocked/);
+  process.env.KIT_ALLOW_WRITES = "1";
+  try { await assert.rejects(() => callOperation("zoom", cmk), /never called/); }
+  finally { delete process.env.KIT_ALLOW_WRITES; delete process.env.ZOOM_KEY_CONNECTOR_HOST; }
+  assert.equal(hits.length, 0);
+});
+
+test("coverage: Slack user-only methods sign in with the user token, config methods refuse, Smokeball follows region, Klaviyo never asks for push tokens", async () => {
+  const sl = load("slack").ops;
+  await callOperation("slack", "search_messages", { params: { query: "x" } });
+  assert.equal(hits[0].headers.Authorization, "Bearer slu");
+  await callOperation("slack", "conversations_list");
+  assert.equal(hits[1].headers.Authorization, "Bearer sl");
+  const cfg = [...sl.values()].find((o) => o.authUnsupported?.includes("configuration"))!;
+  process.env.KIT_ALLOW_WRITES = "1";
+  try { await assert.rejects(() => callOperation("slack", cfg.id), /not wired yet/); } finally { delete process.env.KIT_ALLOW_WRITES; }
+  assert.equal(hits.length, 2);
+  const sb = firstOp("smokeball", (x) => x.kind === "read" && !x.params.some((p) => p.required));
+  await callOperation("smokeball", sb.id);
+  assert.equal(new URL(hits[2].url).hostname, "api.smokeball.com.au");
+  process.env.SMOKEBALL_REGION_TLD = "co.uk";
+  await callOperation("smokeball", sb.id);
+  assert.equal(new URL(hits[3].url).hostname, "api.smokeball.co.uk");
+  process.env.SMOKEBALL_REGION_TLD = "evil.com";
+  await assert.rejects(() => callOperation("smokeball", sb.id), /unexpected value/);
+  delete process.env.SMOKEBALL_REGION_TLD;
+  const kp = [...load("klaviyo").ops.values()].find((o) => o.path === "/api/profiles" && o.method === "GET")!;
+  await assert.rejects(() => plan("klaviyo", kp.id, { params: { revision: "2026-10-15", include: "lists,push-tokens" } }), /refused by the kit/);
+  await assert.rejects(() => plan("klaviyo", kp.id, { params: { revision: "2026-10-15", "fields[push-token]": "token" } }), /unknown param/);
+  await plan("klaviyo", kp.id, { params: { revision: "2026-10-15", include: "lists" } });
+  const bx = load("buildxact").ops.get("oauth.token")!;
+  assert.equal(bx.server, "https://login.buildxact.com");
 });

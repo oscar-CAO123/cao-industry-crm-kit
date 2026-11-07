@@ -195,7 +195,7 @@
   },
   {
    "id": "smokeball",
-   "ops": 202,
+   "ops": 249,
    "status": "spec",
    "auth": "docs"
   },
@@ -237,7 +237,7 @@
   },
   {
    "id": "zoom",
-   "ops": 2012,
+   "ops": 2039,
    "status": "spec",
    "auth": "crm"
   }

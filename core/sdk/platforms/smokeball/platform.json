@@ -5,13 +5,19 @@
  "tested": "offline only (fake network); not yet run against a real account",
  "authProof": "docs",
  "style": "rest",
- "hosts": [
-  "api.smokeball.com"
- ],
+ "hosts": [],
  "hostFromEnv": false,
- "hostPatterns": [],
+ "hostPatterns": [
+  "api\\.smokeball\\.(?:com|com\\.au|co\\.uk)"
+ ],
  "pinned": {},
- "serverVars": {},
+ "serverVars": {
+  "tld": {
+   "env": "SMOKEBALL_REGION_TLD",
+   "default": "com.au",
+   "pattern": "com|com\\.au|co\\.uk"
+  }
+ },
  "auth": {
   "type": "bearer",
   "env": "SMOKEBALL_ACCESS_TOKEN",
@@ -21,18 +27,19 @@
  },
  "keys": [
   "SMOKEBALL_ACCESS_TOKEN",
-  "SMOKEBALL_API_KEY"
+  "SMOKEBALL_API_KEY",
+  "SMOKEBALL_REGION_TLD (optional: com.au default, com, co.uk)"
  ],
  "sources": [
   {
-   "url": "https://api.smokeball.com/swagger/docs/swagger.json",
-   "official": "vendor-domain: api.smokeball.com"
+   "url": "https://docs.smokeball.com/openapi.json",
+   "official": "vendor-domain: docs.smokeball.com"
   }
  ],
  "gaps": [],
  "counts": {
-  "operations": 202,
-  "read": 85,
-  "write": 117
+  "operations": 249,
+  "read": 108,
+  "write": 141
  }
 }

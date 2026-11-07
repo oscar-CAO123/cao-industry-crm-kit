@@ -6,7 +6,8 @@
  "authProof": "docs",
  "style": "rest",
  "hosts": [
-  "api-v3.buildxact.com"
+  "api-v3.buildxact.com",
+  "login.buildxact.com"
  ],
  "hostFromEnv": false,
  "hostPatterns": [],
