@@ -1,0 +1,17 @@
+{
+  "id": "aroflo",
+  "name": "AroFlo",
+  "docs": "https://apidocs.aroflo.com/",
+  "account_to_test": "Account, API access by support request",
+  "cost_to_test": "Not found",
+  "capabilities": [
+    "jobs.list",
+    "quotes.list",
+    "invoices.list",
+    "timesheets.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

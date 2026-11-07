@@ -1,0 +1,19 @@
+{
+  "id": "hubspot",
+  "name": "HubSpot",
+  "docs": "https://developers.hubspot.com/docs",
+  "account_to_test": "Free developer test account",
+  "cost_to_test": "$0",
+  "capabilities": [
+    "contacts.list",
+    "contacts.upsert",
+    "companies.list",
+    "companies.upsert",
+    "leads.list",
+    "tasks.create"
+  ],
+  "fallback": "composio",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

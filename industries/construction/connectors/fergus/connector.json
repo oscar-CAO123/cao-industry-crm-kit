@@ -1,0 +1,16 @@
+{
+  "id": "fergus",
+  "name": "Fergus",
+  "docs": "https://api.fergus.com/docs",
+  "account_to_test": "Token from an account",
+  "cost_to_test": "Not found",
+  "capabilities": [
+    "jobs.list",
+    "quotes.list",
+    "invoices.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

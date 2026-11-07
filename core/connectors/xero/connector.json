@@ -1,0 +1,19 @@
+{
+  "id": "xero",
+  "name": "Xero",
+  "docs": "https://developer.xero.com/",
+  "account_to_test": "Demo company on a free login",
+  "cost_to_test": "$0 on the entry tier",
+  "capabilities": [
+    "contacts.list",
+    "contacts.upsert",
+    "invoices.list",
+    "invoices.create",
+    "payments.list",
+    "reports.run"
+  ],
+  "fallback": "composio",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

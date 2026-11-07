@@ -1,0 +1,16 @@
+{
+  "id": "cliniko",
+  "name": "Cliniko",
+  "docs": "https://docs.api.cliniko.com/",
+  "account_to_test": "API key from a free trial",
+  "cost_to_test": "$0 during trial",
+  "capabilities": [
+    "patients.list",
+    "bookings.list",
+    "invoices.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

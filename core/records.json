@@ -1,0 +1,64 @@
+{
+  "contact": [
+    "id",
+    "name",
+    "email",
+    "phone",
+    "company_id",
+    "source"
+  ],
+  "company": [
+    "id",
+    "name",
+    "abn",
+    "address"
+  ],
+  "job": [
+    "id",
+    "title",
+    "status",
+    "contact_id",
+    "value",
+    "start",
+    "end"
+  ],
+  "quote": [
+    "id",
+    "job_id",
+    "status",
+    "total_ex_gst",
+    "gst",
+    "sent_at"
+  ],
+  "invoice": [
+    "id",
+    "job_id",
+    "status",
+    "total_ex_gst",
+    "gst",
+    "due",
+    "paid_at"
+  ],
+  "task": [
+    "id",
+    "title",
+    "owner",
+    "due",
+    "status"
+  ],
+  "document": [
+    "id",
+    "title",
+    "kind",
+    "url",
+    "signed_at"
+  ],
+  "activity": [
+    "id",
+    "kind",
+    "at",
+    "contact_id",
+    "job_id",
+    "summary"
+  ]
+}

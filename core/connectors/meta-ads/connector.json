@@ -1,0 +1,16 @@
+{
+  "id": "meta-ads",
+  "name": "Meta Ads",
+  "docs": "https://developers.facebook.com/docs/marketing-apis",
+  "account_to_test": "Business account",
+  "cost_to_test": "Not checked",
+  "capabilities": [
+    "campaigns.list",
+    "campaigns.report",
+    "leads.list"
+  ],
+  "fallback": "mcp",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

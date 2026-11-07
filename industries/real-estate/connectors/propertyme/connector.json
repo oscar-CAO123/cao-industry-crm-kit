@@ -1,0 +1,16 @@
+{
+  "id": "propertyme",
+  "name": "PropertyMe",
+  "docs": "https://www.propertyme.com.au/apiapplication",
+  "account_to_test": "Application at their discretion",
+  "cost_to_test": "From A$1,000 a month for API access",
+  "capabilities": [
+    "properties.list",
+    "tenancies.list",
+    "invoices.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

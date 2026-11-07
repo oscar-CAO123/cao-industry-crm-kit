@@ -1,0 +1,93 @@
+{
+  "source": "CAO discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
+  "tools": [
+    {
+      "name": "Microsoft 365",
+      "calls": 14
+    },
+    {
+      "name": "CoreLogic RP Data",
+      "calls": 9
+    },
+    {
+      "name": "WhatsApp",
+      "calls": 7
+    },
+    {
+      "name": "Google Workspace",
+      "calls": 6
+    },
+    {
+      "name": "GoHighLevel",
+      "calls": 4
+    },
+    {
+      "name": "Rex",
+      "calls": 4
+    },
+    {
+      "name": "DocuSign",
+      "calls": 4
+    },
+    {
+      "name": "Meta Ads",
+      "calls": 3
+    },
+    {
+      "name": "Excel",
+      "calls": 3
+    },
+    {
+      "name": "RealWorks",
+      "calls": 3
+    },
+    {
+      "name": "realestate.com",
+      "calls": 2
+    },
+    {
+      "name": "Zoho",
+      "calls": 2
+    },
+    {
+      "name": "Console Cloud",
+      "calls": 2
+    },
+    {
+      "name": "Inspection Express",
+      "calls": 2
+    },
+    {
+      "name": "AgentBox",
+      "calls": 2
+    },
+    {
+      "name": "Realtair",
+      "calls": 2
+    },
+    {
+      "name": "PropertyMe",
+      "calls": 2
+    },
+    {
+      "name": "Xero",
+      "calls": 2
+    },
+    {
+      "name": "Google Forms",
+      "calls": 2
+    },
+    {
+      "name": "Monday.com",
+      "calls": 2
+    },
+    {
+      "name": "Trello",
+      "calls": 2
+    },
+    {
+      "name": "Zapier",
+      "calls": 2
+    }
+  ]
+}

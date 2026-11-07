@@ -1,0 +1,18 @@
+{
+  "id": "gohighlevel",
+  "name": "GoHighLevel",
+  "docs": "https://marketplace.gohighlevel.com/docs",
+  "account_to_test": "Paid account, private integration token",
+  "cost_to_test": "US$97 to US$297 a month, API tier unclear",
+  "capabilities": [
+    "contacts.list",
+    "contacts.upsert",
+    "leads.list",
+    "calendar.list",
+    "messages.draft"
+  ],
+  "fallback": "mcp",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

@@ -1,0 +1,17 @@
+{
+  "id": "simpro",
+  "name": "Simpro",
+  "docs": "https://developer.simprogroup.com/",
+  "account_to_test": "Partner approval, or a client's build",
+  "cost_to_test": "Quote only, trial unconfirmed",
+  "capabilities": [
+    "jobs.list",
+    "quotes.list",
+    "invoices.list",
+    "contacts.list"
+  ],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}
