@@ -9,12 +9,17 @@
     "messages.draft",
     "calendar.list",
     "calendar.create",
-    "files.list",
-    "files.read",
-    "files.write"
+    "calendar.freebusy",
+    "sheets.read",
+    "sheets.append"
   ],
   "fallback": "composio",
-  "script": null,
-  "status": "record-only",
-  "terms_checked": false
+  "script": "core/connectors/google-workspace/gmail.ts",
+  "status": "code-built",
+  "terms_checked": false,
+  "keys": [
+    "GOOGLE_SERVICE_ACCOUNT_JSON",
+    "or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET + a saved refresh token"
+  ],
+  "source": "Ported from the CAO CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
 }
