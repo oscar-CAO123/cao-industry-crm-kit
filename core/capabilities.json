@@ -42,8 +42,9 @@
     "messages.draft"
   ],
   "calendar": [
-    "calendar.list",
-    "calendar.create"
+    "calendar.create",
+    "calendar.freebusy",
+    "calendar.list"
   ],
   "timesheets": [
     "timesheets.list"
@@ -88,5 +89,34 @@
   ],
   "reports": [
     "reports.run"
+  ],
+  "calls": [
+    "calls.list",
+    "calls.transcript"
+  ],
+  "sms": [
+    "sms.send"
+  ],
+  "recordings": [
+    "attendance.read",
+    "recordings.list",
+    "recordings.transcript"
+  ],
+  "transcripts": [
+    "transcripts.list",
+    "transcripts.read"
+  ],
+  "conversions": [
+    "conversions.send"
+  ],
+  "ads": [
+    "ads.insights"
+  ],
+  "notify": [
+    "notify.send"
+  ],
+  "sheets": [
+    "sheets.append",
+    "sheets.read"
   ]
 }
