@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/kit.test.mjs tests/helpers.test.ts",
+    "test": "node --test tests/kit.test.mjs tests/helpers.test.ts tests/security.test.ts",
     "check": "node tools/check.mjs"
   },
   "engines": {

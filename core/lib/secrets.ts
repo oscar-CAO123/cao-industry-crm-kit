@@ -31,7 +31,8 @@ export interface TokenStore {
   set(key: string, value: string): Promise<void>;
 }
 
-const SAFE_KEY = /^[a-z0-9._-]+$/i;
+// Starts with a letter or digit and never holds "..", so a key name cannot leave the token folder.
+const SAFE_KEY = /^[a-z0-9][a-z0-9._-]*$/i;
 
 export class FileTokenStore implements TokenStore {
   dir: string;
@@ -39,7 +40,7 @@ export class FileTokenStore implements TokenStore {
     this.dir = dir;
   }
   private file(key: string): string {
-    if (!SAFE_KEY.test(key)) throw new Error(`bad token key ${key}`);
+    if (!SAFE_KEY.test(key) || key.includes("..")) throw new Error("bad token key");
     return path.join(this.dir, key);
   }
   async get(key: string): Promise<string | null> {

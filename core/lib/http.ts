@@ -94,6 +94,8 @@ export function setTransport(t: Partial<Transport> | null): void {
 export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1";
 
 const TOKEN_IN_QUERY = /(^|[?&])(access_token|token|access-token|api_key|apikey|key)=/i;
+/** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
+const KEY_NAMES = new Set(["accesstoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
 const RETRY_STATUS = new Set([429, 502, 503, 504]);
 
 function buildUrl(o: CallOptions): URL {
@@ -102,16 +104,26 @@ function buildUrl(o: CallOptions): URL {
   return u;
 }
 
+/** Email addresses in a path (Zoom users, calendar ids) are client data, so logs and errors show [email]. */
+function redactPath(p: string): string {
+  let d = p;
+  try { d = decodeURIComponent(p); } catch { /* keep as is */ }
+  return d.replace(/[^\s/@]+@[^\s/@]+\.[^\s/@]+/g, "[email]");
+}
+
 function where(spec: AppSpec, method: Method, u: URL): string {
   const path = spec.keyInPath ? u.pathname.replace(spec.keyInPath, "/***") : u.pathname;
-  return `${method} ${u.hostname}${path}`;
+  return `${method} ${u.hostname}${redactPath(path)}`;
 }
 
 /** Throws unless the URL is one this app may reach. Exported for tests and for links an API hands back. */
 export function checkUrl(spec: AppSpec, u: URL): void {
   if (u.protocol !== "https:") throw new Error(`${spec.app}: ${u.protocol} refused, https only`);
+  if (u.port !== "") throw new Error(`${spec.app}: port ${u.port} refused, standard https only`);
+  if (u.username || u.password) throw new Error(`${spec.app}: credentials in a URL are refused`);
   if (!spec.hosts.includes(u.hostname) && !spec.hostPattern?.test(u.hostname)) throw new Error(`${spec.app}: host ${u.hostname} is not one of this app's hosts`);
-  if (TOKEN_IN_QUERY.test(u.search)) throw new Error(`${spec.app}: a key in the query string is refused, use a header`);
+  const keyish = [...u.searchParams.keys()].some((k) => KEY_NAMES.has(k.toLowerCase().replace(/[^a-z]/g, "")));
+  if (TOKEN_IN_QUERY.test(u.search) || keyish) throw new Error(`${spec.app}: a key in the query string is refused, use a header`);
 }
 
 export function isRead(spec: AppSpec, method: Method, u: URL): boolean {
