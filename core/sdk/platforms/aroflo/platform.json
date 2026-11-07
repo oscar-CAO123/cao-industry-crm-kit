@@ -1,0 +1,36 @@
+{
+ "id": "aroflo",
+ "name": "AroFlo",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.aroflo.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "AroFlo signs each request with HMAC; the signer is not built yet"
+ },
+ "keys": [
+  "AROFLO_ORG_ENCODED",
+  "AROFLO_USER_ENCODED",
+  "AROFLO_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://apidocs.aroflo.com/api/collections/625909/RWgqUe1k?segregateAuth=true&versionTag=latest",
+   "official": "vendor-domain: apidocs.aroflo.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 183,
+  "read": 132,
+  "write": 51
+ }
+}

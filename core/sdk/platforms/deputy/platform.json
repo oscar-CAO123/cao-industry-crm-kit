@@ -1,0 +1,77 @@
+{
+ "id": "deputy",
+ "name": "Deputy",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.(?:[a-z]{2,6})\\.deputy\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "subdomain": {
+   "env": "DEPUTY_SUBDOMAIN",
+   "pattern": "[a-z0-9-]+"
+  },
+  "region": {
+   "env": "DEPUTY_REGION",
+   "pattern": "[a-z]{2,6}"
+  },
+  "install": {
+   "env": "DEPUTY_SUBDOMAIN",
+   "pattern": "[a-z0-9-]+"
+  },
+  "geo": {
+   "env": "DEPUTY_REGION",
+   "pattern": "[a-z]{2,6}"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "DEPUTY_ACCESS_TOKEN"
+ },
+ "keys": [
+  "DEPUTY_ACCESS_TOKEN",
+  "DEPUTY_SUBDOMAIN",
+  "DEPUTY_REGION"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.deputy.com/llms.txt",
+   "official": ""
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/g5xriltd4olxw",
+   "official": "vendor-link: https://developer.deputy.com/reference/getlocations names #g5xriltd4olxw"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/xvpl11ktmohf75pw",
+   "official": "vendor-link: https://developer.deputy.com/reference/listcompany-1 names #xvpl11ktmohf75pw"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/15gnbf1xmoda582i",
+   "official": "vendor-link: https://developer.deputy.com/reference/accountstatsv2controller_getpaycalendarcoverage names #15gnbf1xmoda582i"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/adhjmodcidhb",
+   "official": "vendor-link: https://developer.deputy.com/reference/supervise_company__put names #adhjmodcidhb"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/1fzr61gmodcj0p1",
+   "official": "vendor-link: https://developer.deputy.com/reference/my_colleague__get names #1fzr61gmodcj0p1"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/1elr3jmod9p56y",
+   "official": "vendor-link: https://developer.deputy.com/reference/userinfov2controller_get names #1elr3jmod9p56y"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 1713,
+  "read": 690,
+  "write": 1023
+ }
+}

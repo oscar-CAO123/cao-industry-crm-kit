@@ -1,0 +1,167 @@
+{
+ "id": "zoom",
+ "name": "Zoom",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.zoom.us",
+  "fileapi.zoom.us"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "zoom"
+ },
+ "keys": [
+  "ZOOM_ACCOUNT_ID",
+  "ZOOM_CLIENT_ID",
+  "ZOOM_CLIENT_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.zoom.us/api/zoap/meetings/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/users/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/accounts/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/phone/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/chat/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/mail/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/calendar/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/rooms/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/scheduler/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/clips/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/contact-center/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/events/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/video-management/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/whiteboard/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/tasks/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/my-notes/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/number-management/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/quality-management/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/ai-companion/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/iq/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/hub/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/commerce/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/auto-dialer/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/virtual-agent/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/marketplace/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/healthcare/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/crc/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/qss/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/canvas/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/chatbot/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/ai-services/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/video-sdk/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  },
+  {
+   "url": "https://developers.zoom.us/api/zoap/cobrowse-sdk/methods",
+   "official": "vendor-domain: developers.zoom.us"
+  }
+ ],
+ "gaps": [
+  "zoom: 4 endpoints added from zoom/rivet-javascript (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 2012,
+  "read": 874,
+  "write": 1138
+ }
+}

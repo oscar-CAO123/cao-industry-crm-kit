@@ -6,7 +6,7 @@
 // 1. Workspace domain-wide delegation (GOOGLE_SERVICE_ACCOUNT_JSON, raw or base64): a service
 //    account acts as one mailbox. This is how the CAO CRM reads and drafts (scripts/lib-google-dwd.ts).
 // 2. A user's OAuth refresh token (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and the token saved in the
-//    token store as google.refresh_token.<mailbox>), for businesses without Workspace admin access.
+//    token store as google.refresh_token.<mailbox with @ as _>), for businesses without Workspace admin access.
 // Ask for the narrowest scope a workflow needs. DWD scope matching is exact, so the admin console
 // must list the same scope string.
 
@@ -31,6 +31,9 @@ export const SCOPES = {
 
 const cache = new Map<string, { token: string; until: number }>();
 
+/** Token store key for a mailbox. An email address is not a safe file name, so "@" and other characters become "_". */
+export const refreshKey = (mailbox: string): string => `google.refresh_token.${mailbox.toLowerCase().replace(/[^a-z0-9._-]/g, "_")}`;
+
 export async function accessToken(mailbox: string, scope: string): Promise<string> {
   const key = `${mailbox}|${scope}`;
   const hit = cache.get(key);
@@ -43,7 +46,7 @@ export async function accessToken(mailbox: string, scope: string): Promise<strin
     const assertion = signJwt({ iss: acct.client_email, sub: mailbox, scope, aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 }, pem(acct.private_key));
     data = (await call<any>(spec, { method: "POST", url: "https://oauth2.googleapis.com/token", json: { grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion }, retries: 1 })).data;
   } else {
-    const refresh = await tokenStore().get(`google.refresh_token.${mailbox.toLowerCase()}`);
+    const refresh = await tokenStore().get(refreshKey(mailbox));
     if (!refresh) throw new Error(`No Google login for ${mailbox}: set GOOGLE_SERVICE_ACCOUNT_JSON for Workspace, or save that user's refresh token.`);
     data = (await call<any>(spec, {
       method: "POST", url: "https://oauth2.googleapis.com/token",

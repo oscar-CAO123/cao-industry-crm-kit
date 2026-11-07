@@ -1,0 +1,69 @@
+{
+ "id": "buildxact",
+ "name": "Buildxact",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api-v3.buildxact.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "BUILDXACT_ACCESS_TOKEN",
+  "extraHeaders": {
+   "Ocp-Apim-Subscription-Key": "BUILDXACT_SUBSCRIPTION_KEY"
+  }
+ },
+ "keys": [
+  "BUILDXACT_ACCESS_TOKEN",
+  "BUILDXACT_SUBSCRIPTION_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.buildxact.com/",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/authorization",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/getting-started",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/webhooks",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/estimate-data",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/apis",
+   "official": "vendor-domain: developer.buildxact.com"
+  },
+  {
+   "url": "https://developer.buildxact.com/plans",
+   "official": "vendor-domain: developer.buildxact.com"
+  }
+ ],
+ "gaps": [
+  "Public REST reference not reachable: api.buildxact.com/rest/docs returns 404 (body names an internal Azure host, not used).",
+  "Subscription key needs Buildxact approval (sign-up gate, getting-started page). Reference pages are gated behind it.",
+  "Most endpoints (estimates, leads, jobs, webhooks registration) are not listed on any saved public page, so not mapped.",
+  "Webhook event names are listed on the webhooks page but no registration endpoint path is shown.",
+  "Swagger path on the API host returned 200 with empty body; no spec obtained.",
+  "Dropped as not grounded: none"
+ ],
+ "counts": {
+  "operations": 5,
+  "read": 1,
+  "write": 4
+ }
+}

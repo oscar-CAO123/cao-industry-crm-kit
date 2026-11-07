@@ -93,9 +93,9 @@ export function setTransport(t: Partial<Transport> | null): void {
 
 export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1";
 
-const TOKEN_IN_QUERY = /(^|[?&])(access_token|token|access-token|api_key|apikey|key)=/i;
+const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
-const KEY_NAMES = new Set(["accesstoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
+const KEY_NAMES = new Set(["accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
 const RETRY_STATUS = new Set([429, 502, 503, 504]);
 
 function buildUrl(o: CallOptions): URL {

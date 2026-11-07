@@ -1,0 +1,36 @@
+{
+ "id": "slack",
+ "name": "Slack",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "slack.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "SLACK_BOT_TOKEN"
+ },
+ "keys": [
+  "SLACK_BOT_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json",
+   "official": "vendor-link: https://docs.slack.dev/ links github.com/slackapi"
+  }
+ ],
+ "gaps": [
+  "Slack: 121 methods added from slackapi/node-slack-sdk by name only (spec repo archived 2024)"
+ ],
+ "counts": {
+  "operations": 295,
+  "read": 75,
+  "write": 220
+ }
+}

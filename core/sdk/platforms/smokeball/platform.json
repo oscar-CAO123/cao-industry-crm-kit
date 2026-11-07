@@ -1,0 +1,38 @@
+{
+ "id": "smokeball",
+ "name": "Smokeball",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.smokeball.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "SMOKEBALL_ACCESS_TOKEN",
+  "extraHeaders": {
+   "x-api-key": "SMOKEBALL_API_KEY"
+  }
+ },
+ "keys": [
+  "SMOKEBALL_ACCESS_TOKEN",
+  "SMOKEBALL_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://api.smokeball.com/swagger/docs/swagger.json",
+   "official": "vendor-domain: api.smokeball.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 202,
+  "read": 85,
+  "write": 117
+ }
+}

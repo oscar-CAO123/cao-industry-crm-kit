@@ -1,0 +1,38 @@
+{
+ "id": "bluebeam",
+ "name": "Bluebeam Studio",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.bluebeam.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "BLUEBEAM_ACCESS_TOKEN",
+  "extraHeaders": {
+   "client_id": "BLUEBEAM_CLIENT_ID"
+  }
+ },
+ "keys": [
+  "BLUEBEAM_ACCESS_TOKEN",
+  "BLUEBEAM_CLIENT_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.bluebeam.com/assets/index-Bofq0a2J.js",
+   "official": "vendor-domain: developers.bluebeam.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 133,
+  "read": 36,
+  "write": 97
+ }
+}

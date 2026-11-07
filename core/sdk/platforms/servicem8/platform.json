@@ -1,0 +1,55 @@
+{
+ "id": "servicem8",
+ "name": "ServiceM8",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.servicem8.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-API-Key",
+  "env": "SERVICEM8_API_KEY"
+ },
+ "keys": [
+  "SERVICEM8_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.servicem8.com/llms.txt",
+   "official": ""
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/c0rxrwq3mvz0b3ma",
+   "official": "vendor-link: https://developer.servicem8.com/reference/listallocationwindows names #c0rxrwq3mvz0b3ma"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/4inqt6smj2eznt5",
+   "official": "vendor-link: https://developer.servicem8.com/reference/send_email names #4inqt6smj2eznt5"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/4mtpe10kyi6qyu4",
+   "official": "vendor-link: https://developer.servicem8.com/reference/produce_templated_document names #4mtpe10kyi6qyu4"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/8n17jw5xmtjn78dh",
+   "official": "vendor-link: https://developer.servicem8.com/reference/post_object_webhook_subscription names #8n17jw5xmtjn78dh"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/3evjcmungf6ie",
+   "official": "vendor-link: https://developer.servicem8.com/reference/list_job_key_values names #3evjcmungf6ie"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 241,
+  "read": 100,
+  "write": 141
+ }
+}

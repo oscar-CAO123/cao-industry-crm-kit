@@ -1,0 +1,199 @@
+{
+ "id": "gohighlevel",
+ "name": "GoHighLevel",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "services.leadconnectorhq.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "GHL_ACCESS_TOKEN",
+  "extraHeaders": {
+   "Version": "=2021-07-28"
+  }
+ },
+ "keys": [
+  "GHL_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org GoHighLevel controls gohighlevel.com"
+  }
+ ],
+ "gaps": [
+  "gohighlevel: 8 endpoints added from GoHighLevel/highlevel-api-sdk (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 584,
+  "read": 232,
+  "write": 352
+ }
+}

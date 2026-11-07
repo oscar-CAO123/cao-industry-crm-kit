@@ -1,0 +1,34 @@
+{
+ "id": "fergus",
+ "name": "Fergus",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.fergus.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "FERGUS_ACCESS_TOKEN"
+ },
+ "keys": [
+  "FERGUS_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://api.fergus.com/docs/json",
+   "official": "vendor-domain: api.fergus.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 94,
+  "read": 45,
+  "write": 49
+ }
+}

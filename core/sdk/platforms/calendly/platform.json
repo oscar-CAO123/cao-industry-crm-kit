@@ -1,0 +1,39 @@
+{
+ "id": "calendly",
+ "name": "Calendly",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.calendly.com",
+  "auth.calendly.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "CALENDLY_API_TOKEN"
+ },
+ "keys": [
+  "CALENDLY_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.calendly.com/openapi/calendly-api.json",
+   "official": "vendor-domain: developer.calendly.com"
+  },
+  {
+   "url": "https://developer.calendly.com/openapi/calendly-oauth.json",
+   "official": "vendor-domain: developer.calendly.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 72,
+  "read": 44,
+  "write": 28
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "id": "aircall",
+ "name": "Aircall",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.aircall.io"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "AIRCALL_API_ID",
+  "pass": "AIRCALL_API_TOKEN"
+ },
+ "keys": [
+  "AIRCALL_API_ID",
+  "AIRCALL_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.aircall.io/api-references/",
+   "official": "vendor-domain: developer.aircall.io"
+  }
+ ],
+ "gaps": [
+  "Single long reference page: operations and parameters are split by section heading, so a section that documents more than one operation shares its parameter list across them.",
+  "Required flag is read from the docs text ('Mandatory' or 'required'), not from a schema.",
+  "Webhook event payloads are not operations and are not mapped."
+ ],
+ "counts": {
+  "operations": 140,
+  "read": 57,
+  "write": 83
+ }
+}

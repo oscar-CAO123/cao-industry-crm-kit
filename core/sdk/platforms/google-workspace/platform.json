@@ -1,0 +1,128 @@
+{
+ "id": "google-workspace",
+ "name": "Google Workspace",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "admin.googleapis.com",
+  "businessprofileperformance.googleapis.com",
+  "chat.googleapis.com",
+  "docs.googleapis.com",
+  "forms.googleapis.com",
+  "gmail.googleapis.com",
+  "keep.googleapis.com",
+  "meet.googleapis.com",
+  "mybusinessaccountmanagement.googleapis.com",
+  "mybusinessbusinessinformation.googleapis.com",
+  "mybusinessnotifications.googleapis.com",
+  "mybusinessverifications.googleapis.com",
+  "people.googleapis.com",
+  "sheets.googleapis.com",
+  "slides.googleapis.com",
+  "tasks.googleapis.com",
+  "www.googleapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {
+  "userId": {
+   "allow": [
+    "me"
+   ],
+   "env": "GOOGLE_MAILBOX",
+   "envList": "GOOGLE_ALLOWED_MAILBOXES",
+   "fill": "me"
+  }
+ },
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "google"
+ },
+ "keys": [
+  "GOOGLE_MAILBOX",
+  "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://gmail.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: gmail.googleapis.com"
+  },
+  {
+   "url": "https://calendar-json.googleapis.com/$discovery/rest?version=v3",
+   "official": "vendor-domain: calendar-json.googleapis.com"
+  },
+  {
+   "url": "https://sheets.googleapis.com/$discovery/rest?version=v4",
+   "official": "vendor-domain: sheets.googleapis.com"
+  },
+  {
+   "url": "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
+   "official": "vendor-domain: www.googleapis.com"
+  },
+  {
+   "url": "https://docs.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: docs.googleapis.com"
+  },
+  {
+   "url": "https://slides.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: slides.googleapis.com"
+  },
+  {
+   "url": "https://people.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: people.googleapis.com"
+  },
+  {
+   "url": "https://tasks.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: tasks.googleapis.com"
+  },
+  {
+   "url": "https://forms.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: forms.googleapis.com"
+  },
+  {
+   "url": "https://chat.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: chat.googleapis.com"
+  },
+  {
+   "url": "https://meet.googleapis.com/$discovery/rest?version=v2",
+   "official": "vendor-domain: meet.googleapis.com"
+  },
+  {
+   "url": "https://admin.googleapis.com/$discovery/rest?version=directory_v1",
+   "official": "vendor-domain: admin.googleapis.com"
+  },
+  {
+   "url": "https://keep.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: keep.googleapis.com"
+  },
+  {
+   "url": "https://mybusinessbusinessinformation.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: mybusinessbusinessinformation.googleapis.com"
+  },
+  {
+   "url": "https://mybusinessaccountmanagement.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: mybusinessaccountmanagement.googleapis.com"
+  },
+  {
+   "url": "https://businessprofileperformance.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: businessprofileperformance.googleapis.com"
+  },
+  {
+   "url": "https://mybusinessverifications.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: mybusinessverifications.googleapis.com"
+  },
+  {
+   "url": "https://mybusinessnotifications.googleapis.com/$discovery/rest?version=v1",
+   "official": "vendor-domain: mybusinessnotifications.googleapis.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 510,
+  "read": 194,
+  "write": 316
+ }
+}

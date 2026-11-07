@@ -1,0 +1,43 @@
+{
+ "id": "fireflies",
+ "name": "Fireflies",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "graphql",
+ "hosts": [
+  "api.fireflies.ai"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "FIREFLIES_API_KEY"
+ },
+ "keys": [
+  "FIREFLIES_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.fireflies.ai/llms.txt",
+   "official": "vendor-domain: docs.fireflies.ai"
+  },
+  {
+   "url": "https://docs.fireflies.ai/llms-full.txt",
+   "official": "vendor-domain: docs.fireflies.ai"
+  }
+ ],
+ "gaps": [
+  "GraphQL field arguments are mapped one level deep. Fields of input object types (for example CreateAskFredThreadInput, ShareMeetingInput) are documented on /schema/input/* pages that were not mapped.",
+  "Every GraphQL argument is recorded with in 'body' because GraphQL sends all arguments in the request body. The body flag is true for every operation for the same reason.",
+  "Realtime API (WebSocket event stream), Webhooks V1 and V2 (event subscriptions, not request endpoints) and the MCP server tools are not mapped.",
+  "Response selection sets are not mapped."
+ ],
+ "counts": {
+  "operations": 36,
+  "read": 18,
+  "write": 18
+ }
+}

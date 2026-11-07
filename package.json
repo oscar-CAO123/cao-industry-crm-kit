@@ -3,8 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/kit.test.mjs tests/helpers.test.ts tests/security.test.ts",
-    "check": "node tools/check.mjs"
+    "test": "node --test tests/kit.test.mjs tests/helpers.test.ts tests/security.test.ts tests/sdk.test.ts",
+    "check": "node tools/check.mjs",
+    "sdk:generate": "node tools/sdk-generate.mjs",
+    "sdk": "node tools/sdk.mjs"
   },
   "engines": {
     "node": ">=22.18"
