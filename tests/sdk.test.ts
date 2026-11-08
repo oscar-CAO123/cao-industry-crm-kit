@@ -41,9 +41,20 @@ const ENV: Record<string, string> = {
   BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk",
 };
 
+// Every key and host variable a platform declares gets a fake value, so new platforms need no hand-written entry here.
+const AUTO_ENV: Record<string, string> = {};
+for (const id of listPlatforms()) {
+  const pl = load(id).platform;
+  // Only what the platform signs in with (never its documentation list, which names optional files like a service account).
+  const authEnvs = [pl.auth, ...[...load(id).ops.values()].map((o: any) => o.auth).filter(Boolean)];
+  for (const m of JSON.stringify(authEnvs).matchAll(/\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b/g)) AUTO_ENV[m[1]] ??= `t-${m[1].toLowerCase()}`;
+  for (const v of Object.values(pl.serverVars) as any[]) AUTO_ENV[v.env] = v.example ?? v.default ?? "acme";
+  for (const pin of Object.values(pl.pinned ?? {}) as any[]) if (pin.env) AUTO_ENV[pin.env] ??= `t-${pin.env.toLowerCase()}`;
+}
+
 beforeEach(async () => {
   fakeNetwork();
-  for (const [k, v] of Object.entries(ENV)) process.env[k] = v;
+  for (const [k, v] of Object.entries({ ...AUTO_ENV, ...ENV })) process.env[k] = v;
   delete process.env.KIT_ALLOW_WRITES;
   const store = new MemoryTokenStore();
   await store.set("google.refresh_token.ops-mailbox", "gr");
@@ -57,7 +68,7 @@ const firstOp = (id: string, f: (o: Op) => boolean) => [...load(id).ops.values()
 
 test("every generated platform loads and has unique operation ids", () => {
   const ids = listPlatforms();
-  assert.equal(ids.length, 32);
+  assert.equal(ids.length, JSON.parse(fs.readFileSync(new URL("../core/sdk/platforms/index.json", import.meta.url), "utf8")).platforms.filter((x: any) => x.ops).length);
   let total = 0;
   for (const id of ids) {
     const { platform, ops } = load(id);
@@ -173,11 +184,11 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
   const problems: string[] = [];
   for (const id of listPlatforms()) {
     const { platform, ops } = load(id);
-    const hostOk = (h: string) => (platform.hostFromEnv && h === process.env.WORDPRESS_SITE) || platform.hosts.includes(h) || platform.hostPatterns.some((p) => new RegExp(`^(?:${p})$`).test(h)) || /(^|\.)docusign\.net$/.test(h) && id === "docusign";
+    const hostOk = (h: string) => (platform.hostFromEnv && Object.values(platform.serverVars).some((v: any) => h === process.env[v.env])) || platform.hosts.includes(h) || platform.hostPatterns.some((p) => new RegExp(`^(?:${p})$`).test(h)) || /(^|\.)docusign\.net$/.test(h) && id === "docusign";
     for (const o of ops.values()) {
       const sample = (p: { pattern?: string; type: string; reserved?: boolean }) => p.reserved && p.pattern
         ? p.pattern.replace(/^\^|\$$/g, "").replace(/\[\^\/\]\+/g, "x1").replace(/\.\*|\.\+/g, "x1").replace(/\\/g, "")
-        : dummy(p.type);
+        : p.in === "path" ? "v1" : dummy(p.type);  // a path part is one plain segment
       const params = Object.fromEntries(o.params.filter((p) => p.required && !(platform.pinned ?? {})[p.name]).map((p) => [p.name, sample(p)]));
       const input = platform.status === "index-only" ? { document: `${o.method === "MUTATION" ? "mutation" : "query"} { ${o.path} { __typename } }` } : { params, body: o.body && o.method !== "GET" ? {} : undefined };
       hits = [];
@@ -189,11 +200,12 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
         if (api.length !== 1) { problems.push(`${id} ${o.id}: ${api.length} api calls`); continue; }
         const u = new URL(api[0].url);
         if (!hostOk(u.hostname)) problems.push(`${id} ${o.id}: host ${u.hostname}`);
+        if (/[{}%]/.test(u.hostname) || /[{}]/.test(decodeURIComponent(api[0].url.split("/")[2] ?? ""))) problems.push(`${id} ${o.id}: unfilled host ${u.hostname}`);
         if (/[{}]/.test(decodeURIComponent(u.pathname))) problems.push(`${id} ${o.id}: unfilled path ${u.pathname}`);
         reads++;
       } catch (e: any) {
         if (e instanceof WriteBlocked && o.kind === "write") { if (hits.length) problems.push(`${id} ${o.id}: write touched the network`); writes++; continue; }
-        if (/not wired yet/.test(e.message) && (id === "aroflo" || o.authUnsupported)) { refused++; continue; }
+        if (/not wired yet|not supported|no envelope builder|signer is not built/.test(e.message) && (platform.auth.type === "unsupported" || (o as any).auth?.type === "unsupported" || o.authUnsupported)) { refused++; continue; }
         if (/no sign-in scope is mapped/.test(e.message) && id === "google-workspace") { refused++; continue; }
         problems.push(`${id} ${o.id}: ${e.message.slice(0, 120)}`);
       }
@@ -379,6 +391,7 @@ test("coverage: Zendesk files without a server reach the account host, and asses
 
 test("coverage: no platform's host allowlist accepts an outside domain, and Zoom's key-decrypt route is refused", async () => {
   for (const id of listPlatforms()) {
+    for (const h of [...load(id).platform.hosts, ...load(id).platform.hostPatterns]) assert.ok(!/[{}]/.test(h.replace(/\{\d+(,\d*)?\}/g, "")), `${id}: host rule holds a variable: ${h}`);
     for (const pat of load(id).platform.hostPatterns) for (const h of ["attacker.example", "evil.com", "zoom.us.evil.com"])
       assert.ok(!new RegExp(`^(?:${pat})$`).test(h), `${id}: ${pat} accepts ${h}`);
   }
@@ -416,4 +429,75 @@ test("coverage: Slack user-only methods sign in with the user token, config meth
   await plan("klaviyo", kp.id, { params: { revision: "2026-10-15", include: "lists" } });
   const bx = load("buildxact").ops.get("oauth.token")!;
   assert.equal(bx.server, "https://login.buildxact.com");
+});
+
+test("wave 3: template sign-in, per-endpoint sign-in, refused hosts, regional and tenant hosts", async () => {
+  // Trello: both values in one header, never in the URL
+  const tr = firstOp("trello", (x) => x.kind === "read" && !x.params.some((p) => p.required));
+  await callOperation("trello", tr.id);
+  const th = hits[0];
+  assert.match(th.headers.Authorization, /^OAuth oauth_consumer_key="t-trello_api_key", oauth_token="t-trello_token"$/);
+  assert.ok(!th.url.includes("t-trello"));
+  // Twilio uses its account sign-in; SendGrid endpoints inside it use SendGrid's key
+  const tw = firstOp("twilio", (x) => x.kind === "read" && x.server.startsWith("https://api.twilio.com") && !x.params.some((p) => p.required));
+  const sg = firstOp("twilio", (x) => x.kind === "read" && x.server.startsWith("https://api.sendgrid.com") && !x.params.some((p) => p.required));
+  hits = [];
+  await callOperation("twilio", tw.id);
+  await callOperation("twilio", sg.id);
+  assert.match(hits[0].headers.Authorization, /^Basic /);
+  assert.equal(hits[1].headers.Authorization, "Bearer t-sendgrid_api_key");
+  // Mandrill (key in the body) and a vendor's localhost server are refused before any network call
+  const mandrill = firstOp("mailchimp", (x) => x.server.startsWith("https://mandrillapp.com"));
+  const local = firstOp("cloudbeds", (x) => x.server.includes("localhost"));
+  process.env.KIT_ALLOW_WRITES = "1";
+  hits = [];
+  try {
+    await assert.rejects(() => callOperation("mailchimp", mandrill.id, { body: {} }), /not wired yet/);
+    await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /no public production host/);
+  } finally { delete process.env.KIT_ALLOW_WRITES; }
+  assert.equal(hits.length, 0);
+  // Clio defaults to its Australian host; Mailchimp goes to the client's data centre
+  const cl = firstOp("clio", (x) => x.kind === "read" && x.server.includes("app.clio.com") && !x.params.some((p) => p.required));
+  delete process.env.CLIO_REGION;
+  await callOperation("clio", cl.id);
+  assert.equal(new URL(hits[0].url).hostname, "au.app.clio.com");
+  const mc = firstOp("mailchimp", (x) => x.kind === "read" && x.server.includes("api.mailchimp.com") && !x.params.some((p) => p.required));
+  await callOperation("mailchimp", mc.id);
+  assert.equal(new URL(hits[1].url).hostname, "us1.api.mailchimp.com");
+  // WooCommerce's host comes only from the secret store
+  const wc = firstOp("woocommerce", (x) => x.kind === "read" && !x.params.some((p) => p.required));
+  hits = [];
+  await callOperation("woocommerce", wc.id, { server: { site: "attacker.example" } });  // a caller's host is ignored
+  assert.equal(new URL(hits[0].url).hostname, "shop.example.org");
+  delete process.env.WOOCOMMERCE_SITE;
+  await assert.rejects(() => callOperation("woocommerce", wc.id));
+});
+
+test("wave 3: a declared path part named like a record (keyId) is allowed, one named exactly like a key is refused", async () => {
+  const mk = [...load("make").ops.values()].find((o) => o.paramsUnmapped && o.kind === "read" && o.params.some((p) => p.in === "path" && /key/i.test(p.name)));
+  if (mk) {
+    await callOperation("make", mk.id, { params: Object.fromEntries(mk.params.filter((p) => p.required).map((p) => [p.name, "v1"])) });
+    assert.equal(hits.length, 1);
+  }
+  const any = [...load("podio").ops.values()].find((o) => o.paramsUnmapped && o.kind === "read")!;
+  await assert.rejects(() => plan("podio", any.id, { params: { token: "x" } }), /not allowed/);
+  assert.ok(![...load("jotform").ops.values()].some((o) => o.params.some((p) => /^(key|token|secret|password)$/.test(p.name))));
+});
+
+test("review 6: a download redirect to another host carries no sign-in header of any kind; placeholder hosts are refused", async () => {
+  const { call: httpCall } = await import("../core/lib/http.ts");
+  setTransport({
+    fetch: (async (url: any, init: any) => {
+      hits.push({ url: String(url), method: init?.method ?? "GET", headers: init?.headers ?? {} });
+      return hits.length === 1 ? new Response("", { status: 302, headers: { location: "https://storage.example.net/file" } }) : new Response("ok", { status: 200 });
+    }) as any, sleep: async () => {}, log: () => {},
+  });
+  hits = [];
+  await httpCall({ app: "t", hosts: ["api.vendor.com"] } as any, { method: "GET", url: "https://api.vendor.com/file", headers: { "X-Api-Key": "k1", Authorization: "Bearer k2", "PLAID-SECRET": "k3", Accept: "application/json" }, followDownloadRedirects: true } as any).catch(() => {});
+  assert.equal(hits.length, 2);
+  assert.deepEqual(Object.keys(hits[1].headers).map((k) => k.toLowerCase()), ["accept"]);
+  fakeNetwork();
+  const ota = [...load("cloudbeds").ops.values()].filter((o) => o.server.includes("your-ota"));
+  assert.ok(ota.length > 0 && ota.every((o) => o.authUnsupported));
+  assert.ok(!load("cloudbeds").platform.hosts.some((h) => h.includes("your-ota")));
 });

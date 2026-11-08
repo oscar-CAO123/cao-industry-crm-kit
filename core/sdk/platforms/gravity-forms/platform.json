@@ -1,0 +1,142 @@
+{
+ "id": "gravity-forms",
+ "name": "Gravity Forms",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": true,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "site": {
+   "env": "GRAVITY_FORMS_SITE",
+   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "envOnly": true,
+   "example": "example.org"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "GRAVITY_FORMS_CONSUMER_KEY",
+  "pass": "GRAVITY_FORMS_CONSUMER_SECRET"
+ },
+ "keys": [
+  "GRAVITY_FORMS_CONSUMER_KEY",
+  "GRAVITY_FORMS_CONSUMER_SECRET",
+  "GRAVITY_FORMS_SITE"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.gravityforms.com/category/developers/rest-api/rest-api-endpoints/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/wp-json/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/wp-json/wp/v2/categories/19478",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/xmlrpc.php?rsd",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/gravityforms-change-log/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/submitting-forms-with-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/searching-and-getting-entries-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/creating-entries-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/updating-entries-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/deleting-entries-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/getting-forms-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/creating-forms-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/updating-forms-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/validating-forms-with-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/getting-the-form-field-filters-with-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/deleting-forms-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/sending-notifications-with-the-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/getting-results-with-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/managing-add-on-feeds-with-rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/rest-api-v2/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/rest-api-v2-authentication/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/rest-api-v2-basic-authentication/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/gravity-forms-rest-api-settings/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/web-api/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  },
+  {
+   "url": "https://docs.gravityforms.com/web-api-examples/",
+   "official": "vendor-domain: docs.gravityforms.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 9,
+  "read": 2,
+  "write": 7
+ }
+}

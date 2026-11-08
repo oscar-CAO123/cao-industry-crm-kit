@@ -1,0 +1,151 @@
+{
+ "id": "trackunit",
+ "name": "Trackunit",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "iris.trackunit.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "TRACKUNIT_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "TRACKUNIT_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.trackunit.com/openapi/assets.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/accounts.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/customer-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/emissions.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/sites-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/service-management.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/telematics-device.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/time-series-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/alerts.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/groups.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/users.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/machines.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/operators.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/access-management.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/custom-fields-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/can-faults-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/compaction-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/rental-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/aemp-iso-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/excessive-usage-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/bluetooth-tag-configuration.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/ownership-visibility.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/data-ingestion.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/device-health-issues.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/asset-event-api.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/locations.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/account-connections.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/machine-onboarding-events.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/machine-onboarding.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  },
+  {
+   "url": "https://developers.trackunit.com/openapi/inspections.json",
+   "official": "vendor-domain: developers.trackunit.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 427,
+  "read": 178,
+  "write": 249
+ }
+}

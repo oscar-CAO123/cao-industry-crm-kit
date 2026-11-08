@@ -1,0 +1,38 @@
+{
+ "id": "vaultre",
+ "name": "VaultRE",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "ap-southeast-2.api.vaultre.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "VAULTRE_ACCESS_TOKEN",
+  "extraHeaders": {
+   "X-Api-Key": "VAULTRE_API_KEY"
+  }
+ },
+ "keys": [
+  "VAULTRE_ACCESS_TOKEN",
+  "VAULTRE_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.api.vaultre.com.au/swagger/vaultre.yaml",
+   "official": "vendor-domain: docs.api.vaultre.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 469,
+  "read": 284,
+  "write": 185
+ }
+}

@@ -1,6 +1,18 @@
 {
- "generated": "2026-11-07",
+ "generated": "2026-11-08",
  "platforms": [
+  {
+   "id": "activecampaign",
+   "ops": 342,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "afterpay",
+   "ops": 60,
+   "status": "spec",
+   "auth": "docs"
+  },
   {
    "id": "agentbox",
    "ops": 8,
@@ -8,10 +20,34 @@
    "auth": "docs"
   },
   {
+   "id": "agriwebb",
+   "ops": 24,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "ahrefs",
+   "ops": 160,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "aircall",
    "ops": 140,
    "status": "docs-read",
    "auth": "crm"
+  },
+  {
+   "id": "airtable",
+   "ops": 88,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "apollo",
+   "ops": 85,
+   "status": "spec",
+   "auth": "docs"
   },
   {
    "id": "aroflo",
@@ -26,8 +62,32 @@
    "auth": "docs"
   },
   {
+   "id": "bigquery",
+   "ops": 47,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "bluebeam",
    "ops": 133,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "bookeo",
+   "ops": 52,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "booking-com",
+   "ops": 102,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "brighthr",
+   "ops": 4,
    "status": "spec",
    "auth": "docs"
   },
@@ -44,6 +104,18 @@
    "auth": "docs"
   },
   {
+   "id": "bullhorn",
+   "ops": 90,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "calendesk",
+   "ops": 301,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "calendly",
    "ops": 72,
    "status": "spec",
@@ -56,9 +128,57 @@
    "auth": "docs"
   },
   {
+   "id": "chidesk",
+   "ops": 34,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "cin7",
+   "ops": 75,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "clay",
+   "ops": 18,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "clickup",
+   "ops": 173,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "cliniko",
    "ops": 223,
    "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "clio",
+   "ops": 402,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "cloudbeds",
+   "ops": 673,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "cloudtalk",
+   "ops": 129,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "confluence",
+   "ops": 382,
+   "status": "spec",
    "auth": "docs"
   },
   {
@@ -68,8 +188,20 @@
    "note": "nothing public to map"
   },
   {
+   "id": "ctrack",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
    "id": "deputy",
    "ops": 1713,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "discord",
+   "ops": 250,
    "status": "spec",
    "auth": "docs"
   },
@@ -80,9 +212,33 @@
    "auth": "crm"
   },
   {
+   "id": "domain",
+   "ops": 80,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
    "id": "dropbox",
    "ops": 284,
    "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "employment-hero",
+   "ops": 241,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "eventbrite",
+   "ops": 102,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "fathom-notetaker",
+   "ops": 11,
+   "status": "spec",
    "auth": "docs"
   },
   {
@@ -92,10 +248,40 @@
    "auth": "docs"
   },
   {
+   "id": "fieldwire",
+   "ops": 633,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "fireflies",
    "ops": 36,
    "status": "docs-read",
    "auth": "crm"
+  },
+  {
+   "id": "first-aml",
+   "ops": 39,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "forms-live",
+   "ops": 37,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "front",
+   "ops": 258,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "gocanvas-quarries-and-mines-compliance-templates",
+   "ops": 94,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "gohighlevel",
@@ -110,10 +296,34 @@
    "auth": "docs"
   },
   {
+   "id": "google-analytics",
+   "ops": 232,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "google-workspace",
    "ops": 510,
    "status": "spec",
    "auth": "crm"
+  },
+  {
+   "id": "gorgias",
+   "ops": 111,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "granola",
+   "ops": 19,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "gravity-forms",
+   "ops": 9,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "hubspot",
@@ -122,9 +332,63 @@
    "auth": "docs"
   },
   {
+   "id": "idashboard-trust",
+   "ops": 70,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "jane-app",
+   "ops": 5,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "jotform",
+   "ops": 36,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "justcall",
+   "ops": 101,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "kajabi",
+   "ops": 77,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "keeper",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
    "id": "klaviyo",
    "ops": 436,
    "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "linkedin",
+   "ops": 28,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "mailchimp",
+   "ops": 405,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "make",
+   "ops": 257,
+   "status": "docs-read",
    "auth": "docs"
   },
   {
@@ -140,8 +404,116 @@
    "auth": "docs"
   },
   {
+   "id": "microsoft-advertising",
+   "ops": 236,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "midwinter-adviceos",
+   "ops": 132,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "mobile-message",
+   "ops": 33,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "monday",
    "ops": 335,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "mrpeasy",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "myob",
+   "ops": 55,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "n8n",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "notion",
+   "ops": 80,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "odoo",
+   "ops": 1,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "onfleet",
+   "ops": 73,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "pandadoc",
+   "ops": 122,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "phorest",
+   "ops": 81,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "pipedrive",
+   "ops": 371,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "plaid",
+   "ops": 351,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "podio",
+   "ops": 260,
+   "status": "sdk",
+   "auth": "docs"
+  },
+  {
+   "id": "podium",
+   "ops": 98,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "power-automate",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "power-bi",
+   "ops": 287,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "pracsuite",
+   "ops": 168,
    "status": "spec",
    "auth": "docs"
   },
@@ -152,16 +524,70 @@
    "note": "nothing public to map"
   },
   {
+   "id": "productive",
+   "ops": 837,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "propertyme",
    "ops": 0,
    "status": "gated",
    "note": "nothing public to map"
   },
   {
+   "id": "proworkflow",
+   "ops": 415,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "pylon",
+   "ops": 170,
+   "status": "sdk",
+   "auth": "docs"
+  },
+  {
+   "id": "quickbooks",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "re-leased",
+   "ops": 64,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "rex",
    "ops": 0,
    "status": "gated",
    "note": "nothing public to map"
+  },
+  {
+   "id": "rezdy",
+   "ops": 87,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "richpanel",
+   "ops": 50,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "safetyculture",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "semrush",
+   "ops": 73,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "servicem8",
@@ -188,6 +614,18 @@
    "note": "nothing public to map"
   },
   {
+   "id": "sitebook",
+   "ops": 531,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "siteminder",
+   "ops": 33,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
    "id": "slack",
    "ops": 355,
    "status": "spec",
@@ -200,10 +638,52 @@
    "auth": "docs"
   },
   {
+   "id": "square",
+   "ops": 335,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "stripe",
+   "ops": 650,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "supermetrics",
+   "ops": 102,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "tally",
+   "ops": 38,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "tanda",
+   "ops": 289,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "telegram",
    "ops": 185,
    "status": "docs-read",
    "auth": "crm"
+  },
+  {
+   "id": "time-doctor",
+   "ops": 0,
+   "status": "docs-read",
+   "note": "nothing public to map"
+  },
+  {
+   "id": "trackunit",
+   "ops": 427,
+   "status": "spec",
+   "auth": "docs"
   },
   {
    "id": "tradify",
@@ -212,14 +692,62 @@
    "note": "nothing public to map"
   },
   {
+   "id": "trello",
+   "ops": 261,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "twilio",
+   "ops": 1985,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "typeform",
+   "ops": 29,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "unleashed",
+   "ops": 146,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "vaultre",
+   "ops": 469,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "webflow",
+   "ops": 381,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "whatsapp",
    "ops": 113,
    "status": "spec",
    "auth": "docs"
   },
   {
+   "id": "woocommerce",
+   "ops": 318,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
    "id": "wordpress",
    "ops": 157,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "workflowmax",
+   "ops": 21,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -230,8 +758,32 @@
    "auth": "crm"
   },
   {
+   "id": "yotpo",
+   "ops": 199,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "zapier",
+   "ops": 32,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
    "id": "zendesk",
    "ops": 935,
+   "status": "spec",
+   "auth": "docs"
+  },
+  {
+   "id": "zenoti",
+   "ops": 214,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "zoho",
+   "ops": 506,
    "status": "spec",
    "auth": "docs"
   },

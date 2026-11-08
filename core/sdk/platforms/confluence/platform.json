@@ -1,0 +1,47 @@
+{
+ "id": "confluence",
+ "name": "Confluence",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+\\.atlassian\\.net)"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "your-domain": {
+   "env": "CONFLUENCE_SITE",
+   "pattern": "[a-z0-9-]+\\.atlassian\\.net",
+   "example": "acme.atlassian.net"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "CONFLUENCE_EMAIL",
+  "pass": "CONFLUENCE_API_TOKEN"
+ },
+ "keys": [
+  "CONFLUENCE_EMAIL",
+  "CONFLUENCE_API_TOKEN",
+  "CONFLUENCE_SITE"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.atlassian.com/cloud/confluence/openapi-v2.v3.json",
+   "official": "vendor-domain: developer.atlassian.com"
+  },
+  {
+   "url": "https://developer.atlassian.com/cloud/confluence/swagger.v3.json",
+   "official": "vendor-domain: developer.atlassian.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 382,
+  "read": 213,
+  "write": 169
+ }
+}

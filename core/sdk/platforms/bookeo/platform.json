@@ -1,0 +1,39 @@
+{
+ "id": "bookeo",
+ "name": "Bookeo",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.bookeo.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-Bookeo-apiKey",
+  "env": "BOOKEO_API_KEY",
+  "extraHeaders": {
+   "X-Bookeo-secretKey": "BOOKEO_SECRET_KEY"
+  }
+ },
+ "keys": [
+  "BOOKEO_API_KEY",
+  "BOOKEO_SECRET_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://www.bookeo.com/apiref/openapi.json",
+   "official": "vendor-domain: www.bookeo.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 52,
+  "read": 27,
+  "write": 25
+ }
+}

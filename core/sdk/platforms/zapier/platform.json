@@ -1,0 +1,47 @@
+{
+ "id": "zapier",
+ "name": "Zapier",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.zapier.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "ZAPIER_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "ZAPIER_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.zapier.com/api-reference/specs/actions.yaml",
+   "official": "vendor-domain: docs.zapier.com"
+  },
+  {
+   "url": "https://docs.zapier.com/api-reference/specs/connections.yaml",
+   "official": "vendor-domain: docs.zapier.com"
+  },
+  {
+   "url": "https://docs.zapier.com/api-reference/specs/agentic-management.yaml",
+   "official": "vendor-domain: docs.zapier.com"
+  },
+  {
+   "url": "https://docs.zapier.com/api-reference/specs/trigger-inbox.yaml",
+   "official": "vendor-domain: docs.zapier.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 32,
+  "read": 7,
+  "write": 25
+ }
+}

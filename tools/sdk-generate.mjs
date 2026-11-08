@@ -61,6 +61,20 @@ const P = {
     serverVars: { shop: { env: "SHOPIFY_SHOP", pattern: SUB }, version: { env: "SHOPIFY_API_VERSION", default: "2026-10", pattern: "[0-9]{4}-[0-9]{2}", callerMay: true } } },
 };
 
+// Wave 3 platforms (8 Nov): their sign-in and hosts live in their own file.
+import { W3 } from "./sdk-platforms-wave3.mjs";
+for (const [k, v] of Object.entries(W3)) if (!P[k]) P[k] = v;
+// Every key a platform reads, for platforms that do not list them by hand.
+function autoKeys(cfg) {
+  const names = new Set();
+  const a = cfg.auth ?? {};
+  for (const x of [a.env, a.user, a.pass, ...Object.values(a.extraHeaders ?? {}), ...Object.values(a.optionalHeaders ?? {})]) if (x && !String(x).startsWith("=")) for (const n of String(x).split("+")) if (/^[A-Z][A-Z0-9_]+$/.test(n)) names.add(n);
+  for (const m of String(a.template ?? "").matchAll(/\{([A-Z][A-Z0-9_]+)\}/g)) names.add(m[1]);
+  for (const r of cfg.opRules ?? []) if (r.auth?.env) names.add(`${r.auth.env} (for ${r.server})`);
+  for (const v of Object.values(cfg.serverVars ?? {})) names.add(v.default !== undefined ? `${v.env} (optional: ${v.default || "empty"} default)` : v.env);
+  return [...names];
+}
+
 const HIDDEN = /[­​-‏‪-‮⁠-⁯﻿\u{e0000}-\u{e0fff}]/u;
 const SECRET = /AKIA[0-9A-Z]{16}|\bgh[pousr]_[A-Za-z0-9]{30,}|\bxox[abposr]-[A-Za-z0-9-]{10,}|\b(sk|rk)_(live|test)_[A-Za-z0-9]{16,}|\bsk-(ant-)?[A-Za-z0-9_-]{24,}|\bAIza[0-9A-Za-z_-]{35}|\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.|PRIVATE KEY-----/;
 const EMAIL = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
@@ -120,7 +134,7 @@ function hostRules(servers, vars) {
     const host = u.replace(/^https:\/\//, "").split("/")[0];
     if (!host) continue;
     if (!host.includes("{")) hosts.add(host);
-    else patterns.add(host.replace(/\./g, "\\.").replace(/\{([A-Za-z_]+)\}/g, (_, n) => `(?:${vars?.[n]?.pattern ?? SUB})`));
+    else patterns.add(host.replace(/\./g, "\\.").replace(/\{([A-Za-z_][A-Za-z0-9_-]*)\}/g, (_, n) => `(?:${vars?.[n]?.pattern ?? SUB})`));
   }
   return { hosts: [...hosts].sort(), patterns: [...patterns].sort() };
 }
@@ -157,10 +171,12 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     const bare = String(o.id).startsWith(oldApi + ".") ? String(o.id).slice(oldApi.length + 1) : String(o.id);
     o = { ...o, api: apis.length > 1 ? cleanApi(oldApi) : "", id: apis.length > 1 ? `${cleanApi(oldApi)}.${bare}` : bare };
     let server = cfg.server && (cfg.forceServer || !o.server || /^https:\/\/\s/.test(o.server) || o.server === "") ? cfg.server : (o.server || cfg.server || "");
+    for (const [from, to] of Object.entries(cfg.rewrite ?? {})) if (server.startsWith(from)) server = to + server.slice(from.length);
     server = server.replace(/:443(?=\/|$)/, "");
     // Headers the sign-in layer supplies are never caller inputs (several specs list them as required params).
     const authHeaders = new Set(["authorization", "cookie", "x-api-key", "x-shopify-access-token", "xero-tenant-id",
-      ...Object.keys(cfg.auth.extraHeaders ?? {}), ...Object.keys(cfg.auth.optionalHeaders ?? {})].map((h) => h.toLowerCase()));
+      ...Object.keys(cfg.auth.extraHeaders ?? {}), ...Object.keys(cfg.auth.optionalHeaders ?? {}),
+      ...(cfg.auth.header ? [cfg.auth.header] : []), ...(cfg.opRules ?? []).map((r) => r.auth?.header).filter(Boolean)].map((h) => h.toLowerCase()));
     // Keys never travel in a URL: query params that are keys (Slack's old token param, Meta's access_token) are dropped;
     // the sign-in layer sends the key in a header instead.
     const keyLike = (n) => ["token", "accesstoken", "apikey", "key", "secret", "clientsecret", "password"].includes(String(n).toLowerCase().replace(/[^a-z]/g, ""));
@@ -195,6 +211,17 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     if (id === "klaviyo") {
       o.params = o.params.filter((p) => p.name !== "fields[push-token]");
       for (const p of o.params) if (p.name === "include") p.deny = "push[-_ ]?token";
+    }
+    // A placeholder host from a spec's example (api.your-ota.com, example.com) is never called or allowlisted.
+    if (/(^|[.\/])(your[-_.]|example\.(com|org|net)\b|placeholder|sample)/i.test(o.server.replace(/\{[^}]*\}/g, "")))
+      o.authUnsupported = "the published spec names a placeholder host for this endpoint";
+    // A published server that is not a public https host (a vendor's localhost or dev box) is never called.
+    if (!/^https:\/\/[^/\s]+/i.test(o.server) || /^https:\/\/(localhost|127\.|0\.0\.0\.0|\[|10\.|192\.168\.|[^/]*\.local(\/|:|$))/i.test(o.server))
+      o.authUnsupported = "the published spec names no public production host for this endpoint";
+    for (const r of cfg.opRules ?? []) {  // a different sign-in, or a refusal, for endpoints on one server
+      if (!o.server.startsWith(r.server)) continue;
+      if (r.unsupported) o.authUnsupported = r.unsupported;
+      if (r.auth) o.auth = r.auth;
     }
     if (id === "zoom" && o.server.includes("{keyConnectorLb}"))
       o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";
@@ -242,15 +269,17 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
   if (new Set(ops.map((o) => o.id)).size !== ops.length) { console.error(`${id}: duplicate operation ids remain`); process.exit(1); }
   const servers = [...new Set(ops.map((o) => o.server))];
   const vars = { ...(cfg.serverVars ?? {}) };
-  for (const s of servers) for (const mm of s.matchAll(/\{([A-Za-z_]+)\}/g)) if (!vars[mm[1]]) { console.error(`${id}: server variable ${mm[1]} has no config`); process.exit(1); }
+  for (const s of servers) for (const mm of s.matchAll(/\{([A-Za-z_][A-Za-z0-9_-]*)\}/g)) if (!vars[mm[1]]) { console.error(`${id}: server variable ${mm[1]} has no config`); process.exit(1); }
   // Only routes the kit can call add to the host allowlist; a refused route's host (a client's own server) never does.
   const { hosts, patterns } = hostRules([...new Set(ops.filter((o) => !o.authUnsupported).map((o) => o.server))], vars);
+  // A host rule never holds an unfilled variable: a broken host would match its own broken rule.
+  if ([...hosts, ...patterns].some((h) => /[{}]/.test(h.replace(/\{\d+(,\d*)?\}/g, "")))) { console.error(`${id}: a host rule still holds a variable: ${[...hosts, ...patterns].join(" ")}`); process.exit(1); }
   const platform = {
     id, name: cfg.name, status: m.status, tested: "offline only (fake network); not yet run against a real account",
     authProof: cfg.proof, style: cfg.style ?? "rest", hosts: cfg.hostFromEnv ? [] : hosts, hostFromEnv: !!cfg.hostFromEnv,
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
     pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope,
-    serverVars: vars, auth: cfg.auth, keys: cfg.keys, keyInPath: cfg.keyInPath,
+    serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
     sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: m.gaps ?? [],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };

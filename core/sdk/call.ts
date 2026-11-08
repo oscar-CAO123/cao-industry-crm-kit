@@ -41,9 +41,13 @@ export interface Op {
   fixedHeaders?: Record<string, string>;
   /** Signs in with this key instead of the platform's (Slack methods that take only a user token). Set by the generator, never by a caller. */
   tokenEnv?: string;
+  /** A different sign-in for this endpoint (SendGrid inside Twilio). Set by the generator, never by a caller. */
+  auth?: Auth;
 }
 export interface Auth {
-  type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported";
+  type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported" | "template";
+  /** template: the header value with {ENV_NAME} placeholders, each filled from the secret store (Trello, JustCall). */
+  template?: string;
   env?: string; user?: string; pass?: string; passEmpty?: boolean; header?: string; prefix?: string;
   provider?: string; extraHeaders?: Record<string, string>; optionalHeaders?: Record<string, string>; note?: string;
 }
@@ -117,7 +121,7 @@ const FORBIDDEN_HEADERS = /^(authorization|cookie|host|proxy-authorization|x-api
 
 function serverUrl(p: Platform, o: Op, input: CallInput, withKeys = true): string {
   let s = o.server.replace(/:443(?=\/|$)/, "");
-  s = s.replace(/\{([A-Za-z_]+)\}/g, (_, name: string) => {
+  s = s.replace(/\{([A-Za-z_][A-Za-z0-9_-]*)\}/g, (_, name: string) => {
     const v = p.serverVars[name];
     if (!v) throw new Error(`${p.id}: server variable ${name} is not configured`);
     // Tenant-like variables (subdomain, shop, site, token) come only from the secret store, so a caller can never
@@ -213,20 +217,21 @@ export function checkDocument(doc: string, kind: "query" | "mutation", field?: s
 /** What a preview shows instead of keys: where each sign-in header would come from. Reads no secret. */
 function authPreview(p: Platform, o?: Op): Record<string, string> {
   if (o?.noAuth) return {};
-  const a = p.auth;
+  const a = o?.auth ?? p.auth;
   const h: Record<string, string> = {};
   for (const [k, env] of Object.entries(a.extraHeaders ?? {})) h[k] = env.startsWith("=") ? env.slice(1) : `[from ${env}]`;
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) h[k] = `[from ${env}, if set]`;
   if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${(a.type === "bearer" && o?.tokenEnv) || a.env || [a.user, a.pass].filter(Boolean).join(" + ")}]`;
   if (a.type === "header") h[a.header!] = `[from ${a.env}]`;
   if (a.type === "custom") h.Authorization = `[from the ${a.provider} sign-in]`;
+  if (a.type === "template") h[a.header!] = `[from ${[...String(a.template).matchAll(/\{([A-Z][A-Z0-9_]+)\}/g)].map((m) => m[1]).join(" + ")}]`;
   return h;
 }
 
 async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: string }): Promise<Record<string, string>> {
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   if (o.noAuth) return {};
-  const a = p.auth;
+  const a = o.auth ?? p.auth;
   const h: Record<string, string> = {};
   for (const [k, env] of Object.entries(a.extraHeaders ?? {})) h[k] = env.startsWith("=") ? env.slice(1) : secret(env);
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) { const v = optional(env); if (v) h[k] = v; }
@@ -240,6 +245,7 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
       break;
     }
     case "path-token": break; // filled into the server URL; logs redact it
+    case "template": h[a.header!] = String(a.template).replace(/\{([A-Z][A-Z0-9_]+)\}/g, (_, n: string) => secret(n)); break;
     case "custom": Object.assign(h, await customAuth(a.provider!, p, o, input, base)); break;
     case "unsupported": throw new Error(`${p.id}: calls are not wired yet (${a.note ?? "auth not supported"})`);
   }
@@ -306,6 +312,9 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   const known = new Map<string, Param>();
   for (const x of o.params) if (!known.has(x.name) || x.in === "path") known.set(x.name, x);
   if (o.paramsUnmapped) for (const k of Object.keys(params)) {
+    // A declared path part (keyId, code) names a record, so only an exact key name is refused there; any other input is checked in full.
+    const declaredPath = o.params.some((x) => x.name === k && x.in === "path");
+    if (declaredPath && /^[A-Za-z_][A-Za-z0-9_]*$/.test(k) && !/^(token|access_?token|api_?key|key|secret|client_?secret|password|passwd|pwd)$/i.test(k)) continue;
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k) || (/token|secret|pass(word|wd)?|key|auth|credential|session|cookie|signature|jwt|bearer|refresh/i.test(k) || /(^|_)(pwd|code|sig)(_|$)/i.test(k))) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
     if (!known.has(k)) known.set(k, { name: k, in: o.method === "GET" ? "query" : "body", required: false, type: "unknown" });
   }

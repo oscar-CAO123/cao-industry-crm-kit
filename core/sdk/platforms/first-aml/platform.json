@@ -1,0 +1,35 @@
+{
+ "id": "first-aml",
+ "name": "First AML",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "graphql",
+ "hosts": [
+  "api.firstaml.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "FIRST_AML_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "FIRST_AML_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://public-api-sandbox.firstaml.com/graphql?sdl",
+   "official": "vendor-domain: public-api-sandbox.firstaml.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 39,
+  "read": 4,
+  "write": 35
+ }
+}

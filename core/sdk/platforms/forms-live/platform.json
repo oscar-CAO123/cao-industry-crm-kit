@@ -1,0 +1,43 @@
+{
+ "id": "forms-live",
+ "name": "Forms Live",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:nsw|vic|qld|wa|sa|tas|act|nt)\\.api\\.formslive\\.com\\.au"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "state": {
+   "env": "FORMS_LIVE_STATE",
+   "pattern": "nsw|vic|qld|wa|sa|tas|act|nt",
+   "example": "nsw"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "FORMS_LIVE_API_KEY",
+  "pass": "FORMS_LIVE_ACCESS_TOKEN"
+ },
+ "keys": [
+  "FORMS_LIVE_API_KEY",
+  "FORMS_LIVE_ACCESS_TOKEN",
+  "FORMS_LIVE_STATE"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.formslive.com.au/openapi.json",
+   "official": "vendor-domain: developer.formslive.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 37,
+  "read": 17,
+  "write": 20
+ }
+}

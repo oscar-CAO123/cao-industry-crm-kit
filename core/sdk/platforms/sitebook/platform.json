@@ -1,0 +1,35 @@
+{
+ "id": "sitebook",
+ "name": "SiteBook",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "rpt.sitebook.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "x-api-key",
+  "env": "SITEBOOK_API_KEY"
+ },
+ "keys": [
+  "SITEBOOK_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.sitebook.com.au",
+   "official": "vendor-domain: developer.sitebook.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 531,
+  "read": 362,
+  "write": 169
+ }
+}

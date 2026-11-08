@@ -1,0 +1,153 @@
+{
+ "id": "semrush",
+ "name": "Semrush",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.semrush.com",
+  "oauth.semrush.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "SEMRUSH_API_KEY",
+  "prefix": "Apikey "
+ },
+ "keys": [
+  "SEMRUSH_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.semrush.com/api/v4/llms.txt",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v3/llms.txt",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/quick-start/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/semrush-api-overview/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/api-versions/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/glossary/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/release-notes/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/api-access/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/authorization/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/api-units-balance/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/api-usage-restrictions/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/available-data/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/seo/overview/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/seo/backlinks/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/seo/keyword-reports/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/projects/overview/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/projects/projects/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/overview/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/listing-management/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/review-management/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/gbp-tool/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/map-rank-tracker/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/resources/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/deprecated/projects-oauth/projects/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/deprecated/local/listing-management/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/local/tutorials/listing-management-api/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/introduction/use-cases/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/troubleshooting/",
+   "official": "vendor-domain: developer.semrush.com"
+  },
+  {
+   "url": "https://developer.semrush.com/api/v4/get-started/errors/",
+   "official": "vendor-domain: developer.semrush.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 73,
+  "read": 40,
+  "write": 33
+ }
+}

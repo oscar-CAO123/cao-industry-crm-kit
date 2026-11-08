@@ -1,0 +1,36 @@
+{
+ "id": "trello",
+ "name": "Trello",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.trello.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "template",
+  "header": "Authorization",
+  "template": "OAuth oauth_consumer_key=\"{TRELLO_API_KEY}\", oauth_token=\"{TRELLO_TOKEN}\""
+ },
+ "keys": [
+  "TRELLO_API_KEY",
+  "TRELLO_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.atlassian.com/cloud/trello/swagger.v3.json",
+   "official": "vendor-domain: developer.atlassian.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 261,
+  "read": 123,
+  "write": 138
+ }
+}

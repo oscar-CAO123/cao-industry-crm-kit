@@ -1,0 +1,428 @@
+{
+ "id": "make",
+ "name": "Make",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "www.make.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:eu1|eu2|us1|us2)\\.make\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "zone": {
+   "env": "MAKE_ZONE",
+   "default": "eu1",
+   "pattern": "eu1|eu2|us1|us2",
+   "example": "eu1"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "MAKE_API_TOKEN",
+  "prefix": "Token "
+ },
+ "keys": [
+  "MAKE_API_TOKEN",
+  "MAKE_ZONE (optional: eu1 default)"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.make.com/llms.txt",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/readme.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started/api-structure.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started/http-methods.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started/making-your-first-api-request.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started/rate-limiting.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/getting-started/resources.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/api-scopes-overview.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/create-authentication-token.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/authentication-managing.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/requesting-an-oauth-2.0-client.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/oauth-flow.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/oauth-flow/authorization-code-flow-with-refresh-token-confidential-clients.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/oauth-flow/authorization-code-flow-with-pkce-public-clients.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/oauth-flow/token-expiration.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/authentication/oauth-flow/best-practices-and-error-handling.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/pagination-sorting-filtering.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/pagination-sorting-filtering/pagination-and-sorting.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/pagination-sorting-filtering/filtering.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/troubleshooting.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/troubleshooting/http-status-codes.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/troubleshooting/common-issues.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/client-libraries.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/affiliate.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/on-prem-agents.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/ai-agents.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/ai-agents/context.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/ai-agents/llm-providers.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/analytics.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/audit-logs.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/cashier.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/connections.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/connections/access-list.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/credential-requests.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/custom-properties.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/custom-properties/structure-items.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/data-stores.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/data-stores/data.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/data-structures.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/devices.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/devices/incomings.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/devices/outgoings.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/incomplete-executions.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/enums.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/event-subscriptions.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/custom-functions.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/general.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/hooks.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/hooks/incomings.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/hooks/logs.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/keys.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/keys/access-list.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/notifications.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/organizations.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/organizations/user-organization-roles.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/mms.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/private-spaces.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/remote-procedures.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios/logs.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios/blueprints.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios/consumptions.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios/tools.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios/custom-properties-data.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios-folders.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenario-labels.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/invites.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/modules.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/rpcs.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/functions.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/connections.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps/webhooks.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sso-certificates.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/teams.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/teams/user-team-roles.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/templates.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/templates/public.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/me.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/api-tokens.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/user-team-roles.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/user-team-notifications.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/user-organization-roles.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/roles.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/unread-notifications.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users/user-email-preferences-mailhub.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/imt.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios-notes.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/scenarios-shared.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/sdk-apps-greater-than-modules.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://developers.make.com/api-documentation/api-reference/users-oauth-connections.md",
+   "official": "vendor-domain: developers.make.com"
+  },
+  {
+   "url": "https://github.com/integromat/make-typescript-sdk",
+   "official": "vendor-link: https://developers.make.com/make-sdk/make-typescript-sdk links github.com/integromat"
+  }
+ ],
+ "gaps": [
+  "make: 186 endpoints added from integromat/make-typescript-sdk (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 257,
+  "read": 132,
+  "write": 125
+ }
+}

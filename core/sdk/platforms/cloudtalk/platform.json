@@ -1,0 +1,39 @@
+{
+ "id": "cloudtalk",
+ "name": "CloudTalk",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "analytics-api.cloudtalk.io",
+  "api.cloudtalk.io",
+  "my.cloudtalk.io",
+  "platform-api.cloudtalk.io"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "CLOUDTALK_ACCESS_KEY_ID",
+  "pass": "CLOUDTALK_ACCESS_KEY_SECRET"
+ },
+ "keys": [
+  "CLOUDTALK_ACCESS_KEY_ID",
+  "CLOUDTALK_ACCESS_KEY_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://help.cloudtalk.io/api-reference/openapi.json",
+   "official": "vendor-domain: help.cloudtalk.io"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 129,
+  "read": 54,
+  "write": 75
+ }
+}

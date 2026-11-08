@@ -1,0 +1,39 @@
+{
+ "id": "clickup",
+ "name": "ClickUp",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.clickup.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "CLICKUP_API_TOKEN"
+ },
+ "keys": [
+  "CLICKUP_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.clickup.com/openapi/ClickUp_PUBLIC_API_V3.yaml",
+   "official": "vendor-domain: developer.clickup.com"
+  },
+  {
+   "url": "https://developer.clickup.com/openapi/clickup-api-v2-reference.json",
+   "official": "vendor-domain: developer.clickup.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 173,
+  "read": 64,
+  "write": 109
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "midwinter-adviceos",
+ "name": "Midwinter AdviceOS",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "adviceos.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "the published spec names no sign-in scheme; not wired until Midwinter confirms it"
+ },
+ "keys": [
+  "MIDWINTER_CREDENTIALS"
+ ],
+ "sources": [
+  {
+   "url": "https://adviceos.com.au/appapidocs/v1/swagger",
+   "official": "vendor-domain: adviceos.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 132,
+  "read": 57,
+  "write": 75
+ }
+}

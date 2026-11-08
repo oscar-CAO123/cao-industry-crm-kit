@@ -1,0 +1,36 @@
+{
+ "id": "pylon",
+ "name": "Pylon",
+ "status": "sdk",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.usepylon.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "PYLON_API_TOKEN"
+ },
+ "keys": [
+  "PYLON_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://github.com/pylon-labs/pylon-typescript",
+   "official": "vendor-link: https://docs.usepylon.com/pylon-docs/developer/api/sdks links github.com/pylon-labs"
+  }
+ ],
+ "gaps": [
+  "pylon: 170 endpoints added from pylon-labs/pylon-typescript (its official SDK; no published spec)"
+ ],
+ "counts": {
+  "operations": 170,
+  "read": 58,
+  "write": 112
+ }
+}

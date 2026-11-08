@@ -1,0 +1,39 @@
+{
+ "id": "plaid",
+ "name": "Plaid",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "production.plaid.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "PLAID-SECRET",
+  "env": "PLAID_SECRET",
+  "extraHeaders": {
+   "PLAID-CLIENT-ID": "PLAID_CLIENT_ID"
+  }
+ },
+ "keys": [
+  "PLAID_SECRET",
+  "PLAID_CLIENT_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml",
+   "official": "vendor-link: https://plaid.com/docs/api/libraries/ links github.com/plaid"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 351,
+  "read": 5,
+  "write": 346
+ }
+}

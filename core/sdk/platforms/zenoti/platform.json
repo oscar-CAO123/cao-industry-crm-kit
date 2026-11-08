@@ -1,0 +1,1167 @@
+{
+ "id": "zenoti",
+ "name": "Zenoti",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.zenoti.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "ZENOTI_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "ZENOTI_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.zenoti.com/llms.txt",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/generate-an-access-token.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/refresh-an-access-token.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/revoke-an-existing-access-token.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/centers.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-centers.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-list-of-centers-based-on-parameters.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-campaignintro-pricing-along-with-services.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/deactivate-or-disable-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-categories.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-category.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-rooms-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-room-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-employees-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-therapists-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-blockout-times-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/center-attendance-for-a-date.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-schedules-of-employees-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-therapist-pricing-and-price-scaling-for-a-service-at-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-services-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-service-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-packages-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-products-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-memberships-in-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-details-of-all-the-members-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-v1-online-guest-creation.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-new-guests-using-referral-codes.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-a-creditdebit-card-for-a-guest-service-booking-and-billing.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-guest-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-saved-creditdebit-cards-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/search-for-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-appointments-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-products-purchased-by-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-gift-cards-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-prepaid-cards-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-coupons-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-the-series-packages-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-relationships-belonging-to-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-guests-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/verify-the-payable-loyalty-points-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-loyalty-points-history-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-merge-history-of-guest-records.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-loyalty-points-of-a-guest-earnedredeemed.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/changecancel-auto-renewal-of-guest-membership.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-billing-address-from-the-guest-profile.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-a-guests-saved-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-relationship-between-guests.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/merge-guests.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-loyalty-points-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/registering-guest-for-loyalty-points-tier.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/activate-guest-email.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/check-aveda-birthday-gift-availability.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/claim-aveda-birthday-gift.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-guest-note.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-guest-note.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-notes-for-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-a-guest-note.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-a-guest-note.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-guest-form.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-guest-form.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-a-guest-form.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-memberships-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-change-log.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-the-pending-membership-collection-amount-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-the-membership-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/freeze-the-membership-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/unfreeze-the-membership-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-membership-notifications-in-bulk.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/reset-the-password-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-the-password-of-a-guest-using-the-old-password.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-the-password-of-a-guest-using-otp.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-employee-with-catalog-information.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-employee-details-with-payroll-information.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-employee-of-the-center-with-given-catalog-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/check-in-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/check-out-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-the-schedule-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-attendance-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-api-for-creating-custom-field-images.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-custom-fields-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-employee-medical-licenses.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-employees-with-form-review-or-supervisor-access.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-blockout-time-for-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-recurring-employee-blockout-time.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-blockout-time-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-all-blockout-times-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-blockout-times-of-a-center-1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-blockout-times-types.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-the-blockout-time-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/remove-the-blockout-time-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-the-security-role-for-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-security-roles-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-the-role-of-an-employee.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-the-blockout-time-of-a-room.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-recurring-room-blockout-time.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-block-out-time-of-a-room.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-all-blockout-times-of-a-room.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-the-blockout-time-of-a-room.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/remove-a-room-blockout-time.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/api-end-points-3.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-service-booking-copy.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/implement-single-therapist-bookings-for-v1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-available-slots-for-a-service-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/reserve-a-slot-for-a-service-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/confirm-a-service-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/reschedule-a-service-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-bookings-of-service-bundles-and-day-packages.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-gift-card-sale-invoice-after-using-a-gift-card-template.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-occasions.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/verify-the-balance-of-a-gift-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-gift-card-template-with-custom-amount.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-gift-card-template-with-services-or-day-packages.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-templates.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-center-predefined-gift-card-templates.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-opportunity.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/metadata-of-the-opportunities.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-an-opportunity.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-opportunities.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/edit-an-opportunity.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-notes-to-an-opportunity.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-the-notes-of-an-opportunity.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/insert-guests-feedback-into-zenoti.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-appointments-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-forms-associated-with-an-appointment.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-data-of-an-appointment-form.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-details-of-an-appointment.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/mark-an-appointment-as-no-show.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/mark-the-status-of-an-appointment-as-checked-in.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/undo-the-status-of-a-checked-in-appointment.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-appointment-progress-start-open-or-complete.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-reasons.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-all-countries.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-all-states-of-a-country.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-security-roles-in-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-list-of-all-security-profiles.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/list-all-blockout-times-types-1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-pay-cycle-settings-of-multiple-centers.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-organization-settings.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-collections-report-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-sales-report-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/email-notifications-report-api.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/text-notifications-report-api.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/report-to-fetch-the-class-details-of-an-organization.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-employee-audit-report.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/sales-accrual-report.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-collections-report.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-membership-tries-report.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-all-vendors-for-an-organization.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-all-products-associated-to-a-vendor.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-stock-quantities-of-products.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-consumption-details-of-products-for-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-purchase-orders-for-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-transfer-orders-for-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-details-of-a-purchase-order.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-details-of-a-transfer-order.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/associate-products-with-centers-in-bulk.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-list-of-users.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-class-registrations.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-guest-registration.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/register-a-guest-on-gympass.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-a-guests-registration-to-a-class.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-a-guests-registration-to-a-workshop.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/check-in-registered-guests-to-classes.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/undo-the-check-in-of-a-guest-to-a-class.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/check-in-registered-guests-to-workshops.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/undo-check-in-of-a-guest-to-a-workshop.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-a-list-of-booked-users-of-a-workshop-event.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/register-a-guest-to-a-workshop.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-user-registrations-for-classesworkshops.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/enroll-or-register-a-guest-for-a-class-session-by-an-admin.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-class-session-registrations-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-the-registration-of-a-class-session.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-invoice-for-the-sale-of-a-membership.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-invoice-for-the-sale-of-a-series-package.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/book-a-class-session.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/close-a-series-package-sale-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-payment-for-a-class-booking-by-using-the-guests-saved-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/close-a-membership-sale-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-payment-methods.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-saved-creditdebit-cards-of-a-guest-1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-schedules-of-classes-in-multiple-centers.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-session-registrations-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-memberships-associated-with-classes.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-packages-associated-with-classes.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-the-payment-transaction-of-a-class-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-payment-for-a-class-booking-by-using-a-new-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-session-registrations-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-a-booking-registration.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-a-guest-pass-user.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-list-of-all-the-guest-pass-users.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/redeem-a-guests-guest-pass.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-a-list-of-all-the-guest-passes-sent-from-or-received-by-a-user.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/generate-shopify-multipass-url.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-invoice-for-the-sale-of-a-gift-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/apply-a-media-campaign-offer-code-on-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/redeem-the-loyalty-points-of-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/send-a-gift-card-email-to-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-invoice-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-invoice-details-1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/cancel-a-service-booking.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/send-an-email-to-a-guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/mark-an-appointment-as-confirm-or-undo-confirm.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-day-packages-information.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-a-group-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/send-a-group-invoice-email.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-group-invoice-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-invoice-for-memberships.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-a-membership-to-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-a-membership-from-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-an-invoice-for-products.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-a-product-to-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-a-product-from-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/ability-to-redeem-series-regular-package-in-api.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/ability-to-sell-series-regular-packages-in-api.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-invoice-payment-by-using-a-guests-saved-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-invoice-payment-by-redeeming-a-guests-gift-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-invoice-payment-by-using-a-guests-unsaved-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/collect-tip-amount-by-using-a-guests-creditdebit-card.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/close-an-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-wait-times-of-available-stylists-for-a-selected-service.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/fetch-wait-times-of-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-a-guest-or-group-of-guests-to-the-queue.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-the-list-of-all-appointments-in-queue-for-a-center.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/webhook-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/invoice-closed-event.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-updated.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-deleted.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-communication-opted-in.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-communication-opted-out.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/classes-schedule.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/schedule-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/schedule-updated.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/schedule-cancelled.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/schedule-deleted.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/classes-booking-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-deleted.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-cancelled.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-no-show.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-approved.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/booking-rejected.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-freeze.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-unfreeze.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-cancelled.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-membership-reinstate.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guestpass-redemption.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-started.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-completed.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-feedback-event.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/feedback-started-feedback-v2.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/feedback-started-feedback-v1.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-group-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-group-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/appointment-group-status.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/employee-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/employee-deleted.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/employee-created.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/employee-updated.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-events.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-creation.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-redemption.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-redemption-reversal.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-status-update.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/guest-package-validity-update.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/validate-npi-details-of-a-prescriber.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-compliance-statistics.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-the-guest-consent-for-zenscribe.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/add-the-guest-consent-for-zenscribe.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-guest-form-details.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-guest-emr-data.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/retrieve-open-invoices.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/lock-invoice.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/update-group-invoice-properties.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/delete-membership-advanced-booking-rule.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/create-membership-advanced-booking-rules.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  },
+  {
+   "url": "https://docs.zenoti.com/reference/get-all-membership-advanced-booking-rules.md",
+   "official": "vendor-domain: docs.zenoti.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 214,
+  "read": 102,
+  "write": 112
+ }
+}

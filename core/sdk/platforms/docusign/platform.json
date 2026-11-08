@@ -79,6 +79,10 @@
   {
    "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/workflowbuilder.rest.swagger-1.0.0.json",
    "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://github.com/docusign/docusign-esign-node-client",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
   }
  ],
  "gaps": [

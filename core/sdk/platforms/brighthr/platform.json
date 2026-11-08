@@ -1,0 +1,35 @@
+{
+ "id": "brighthr",
+ "name": "BrightHR",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.bright.hr"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "BRIGHTHR_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "BRIGHTHR_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.bright.hr/_bundle/api/customer-api-v1.yaml",
+   "official": "vendor-domain: docs.bright.hr"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 4,
+  "read": 0,
+  "write": 4
+ }
+}

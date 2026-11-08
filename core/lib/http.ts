@@ -159,7 +159,8 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
         const next = new URL(loc, at);
         if (next.protocol !== "https:") throw new Error(`${spec.app}: redirect to ${next.protocol} refused`);
         const own = spec.hosts.includes(next.hostname) || !!spec.hostPattern?.test(next.hostname);
-        const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => k.toLowerCase() !== "authorization"));
+        // Another host gets only harmless headers: every sign-in header (Authorization, X-Api-Key, any vendor key header) stays behind.
+        const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => /^(accept|accept-encoding|accept-language|user-agent|range|if-none-match|if-modified-since)$/i.test(k)));
         res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal: o.signal });
         transport.log(`[${spec.app}] redirect to ${own ? next.hostname : "storage host"} ${res.status}`);
         at = next;
