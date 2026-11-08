@@ -95,7 +95,7 @@ const CREDENTIAL = /token|secret|password|passcode|private[ _-]?key|access[ _-]?
 const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set)(?=[^a-z]|$)/i;
 // A reviewed POST may be a read only if its own path says search, batch read or query.
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
-const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|recovery key|access key/i;  // summaries: only clear credential words
+const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|upload (url|link|path)|recovery key|access key/i;  // upload links added 8 Nov 2026 (Smokeball, Trackunit)  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
 // DocuSign API families: production host (developers.docusign.com/platform/api-endpoint-base-paths) and, where the
 // family's own spec names no per-endpoint scope, the scopes DocuSign lists for it (/platform/auth/reference/scopes).
