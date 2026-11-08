@@ -4,16 +4,16 @@ import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("gravity-forms");
 /** PUT /feeds/: Gravity Forms Changelog - Gravity Forms Documentation [write] */
 export const docsPutFeeds = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_feeds", input);
-/** POST /entries/: Gravity Forms Changelog - Gravity Forms Documentation [write] */
-export const docsPostEntries = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_entries", input);
-/** GET /entries/: Gravity Forms Changelog - Gravity Forms Documentation [read] */
-export const docsGetEntries = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_entries", input);
-/** GET /forms/: Gravity Forms Changelog - Gravity Forms Documentation [read] */
-export const docsGetForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_forms", input);
+/** POST /entries: Creating an Entry [write] */
+export const docsPostEntries = (input: CallInput & { params?: { "form_id": number; "created_by"?: number; "date_created"?: string; "ip"?: string; "is_fulfilled"?: number; "is_read"?: number; "is_starred"?: number; "source_url"?: string; "user_agent"?: string; "payment_amount"?: string; "transaction_id"?: string; "transaction_type"?: string } } = {}) => sdk.call("docs.post_entries", input);
+/** GET /entries: Searching Entries [read] */
+export const docsGetEntries = (input: CallInput & { params?: { "_field_ids"?: string; "_labels"?: number; "form_ids"?: unknown[]; "include"?: unknown[]; "search"?: unknown[]; "sorting"?: unknown[]; "paging"?: unknown[] } } = {}) => sdk.call("docs.get_entries", input);
+/** GET /forms: Getting a Form [read] */
+export const docsGetForms = (input: CallInput & { params?: { "include"?: unknown[] } } = {}) => sdk.call("docs.get_forms", input);
 /** PUT /entries/: Gravity Forms Changelog - Gravity Forms Documentation [write] */
 export const docsPutEntries = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_entries", input);
-/** POST /forms/: Gravity Forms Changelog - Gravity Forms Documentation [write] */
-export const docsPostForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_forms", input);
+/** POST /forms: Creating a Form [write] */
+export const docsPostForms = (input: CallInput & { params?: { "fields": unknown[]; "title": string } } = {}) => sdk.call("docs.post_forms", input);
 /** PUT /forms/: REST API v1 Guide - Gravity Forms Documentation [write] */
 export const docsPutForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_forms", input);
 /** DELETE /forms/: REST API v1 Guide - Gravity Forms Documentation [write] */

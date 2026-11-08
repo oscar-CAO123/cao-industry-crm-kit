@@ -22,8 +22,8 @@ export const docsGetApiV3Dispatches = (input: CallInput & { params?: { "page"?: 
 export const docsGetApiV3DispatchesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_dispatches_id", input);
 /** DELETE /api/v3/dispatches/{id}: Delete a Dispatch [write] */
 export const docsDeleteApiV3DispatchesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_api_v3_dispatches_id", input);
-/** GET /api/v3/forms/{id}: GoCanvas API Reference [read] */
-export const docsGetApiV3FormsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_forms_id", input);
+/** GET /api/v3/forms/{id}: Retrieve a Form [read] */
+export const docsGetApiV3FormsId = (input: CallInput & { params?: { "id": string; "format"?: string } } = {}) => sdk.call("docs.get_api_v3_forms_id", input);
 /** GET /api/v3/forms/{id}/basic_pdf: Retrieve a Basic Form PDF [read] */
 export const docsGetApiV3FormsIdBasicPdf = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_forms_id_basic_pdf", input);
 /** GET /api/v3/forms/{id}/assigned_users: Assigned Users for Form [read] */
@@ -64,10 +64,10 @@ export const docsGetApiV3ReferenceImages = (input: CallInput & { params?: { "for
 export const docsGetApiV3ReferenceImagesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_reference_images_id", input);
 /** GET /api/v3/reference_images/bulk: Retrieve Multiple Reference Images [read] */
 export const docsGetApiV3ReferenceImagesBulk = (input: CallInput & { params?: { "ids": unknown[] } } = {}) => sdk.call("docs.get_api_v3_reference_images_bulk", input);
-/** GET /api/v3/forms/{id}/reports: GoCanvas API Reference [read] */
-export const docsGetApiV3FormsIdReports = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_forms_id_reports", input);
-/** GET /api/v3/forms/{id}/reports/{id}: GoCanvas API Reference [read] */
-export const docsGetApiV3FormsIdReportsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_forms_id_reports_id", input);
+/** GET /api/v3/forms/{formId}/reports: List of Reports by Form [read] */
+export const docsGetApiV3FormsIdReports = (input: CallInput & { params?: { "formId": string; "page"?: number } } = {}) => sdk.call("docs.get_api_v3_forms_id_reports", input);
+/** GET /api/v3/forms/{formId}/reports/{reportId}: Single Report by Form [read] */
+export const docsGetApiV3FormsIdReportsId = (input: CallInput & { params?: { "formId": string; "reportId": string } } = {}) => sdk.call("docs.get_api_v3_forms_id_reports_id", input);
 /** GET /api/v3/sites: List all Sites [read] */
 export const docsGetApiV3Sites = (input: CallInput & { params?: { "page"?: number } } = {}) => sdk.call("docs.get_api_v3_sites", input);
 /** GET /api/v3/sites/{id}: Retrieve a Site [read] */
@@ -92,7 +92,7 @@ export const docsGetApiV3Users = (input: CallInput & { params?: { "page"?: numbe
 export const docsGetApiV3UsersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_users_id", input);
 /** POST /api/v3/values: Upload a Binary Value [write] */
 export const docsPostApiV3Values = (input: CallInput & { params?: { "submission_id"?: number; "submission_guid": string; "response.content_guid"?: string; "response.content_guids"?: unknown[]; "response.displayed"?: boolean; "response.entry_id"?: number } } = {}) => sdk.call("docs.post_api_v3_values", input);
-/** GET /api/v3/webhooks: GoCanvas API Reference [read] */
+/** GET /api/v3/webhooks: List all Webhooks [read] */
 export const docsGetApiV3Webhooks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_api_v3_webhooks", input);
 /** GET /api/v3/forms/{id}/webhooks/{id}: Retrieve a Webhook [read] */
 export const docsGetApiV3FormsIdWebhooksId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_api_v3_forms_id_webhooks_id", input);
@@ -160,10 +160,10 @@ export const docsPostValues = (input: CallInput & { params?: { "submission_id"?:
 export const docsPutApiV3SubmissionsId = (input: CallInput & { params?: { "body"?: unknown; "submission"?: unknown; "next_assigned_workflow_user_id"?: number; "workflow.handoff_id"?: number; "workflow.handoff_user_id"?: number; "workflow.handoff_email"?: string; "workflow.handoff_rejected"?: boolean; "workflow.handoff_rejected_note"?: string; "responses[]"?: unknown[]; "responses[].value_id"?: number; "responses[].entry_id"?: number; "responses[].value"?: string; "responses[].displayed"?: boolean; "responses[].delete"?: boolean; "id": string } } = {}) => sdk.call("docs.put_api_v3_submissions_id", input);
 /** POST /api/v3/users: Create a User [write] */
 export const docsPostApiV3Users = (input: CallInput & { params?: { "first_name"?: string; "last_name"?: string; "email"?: string; "phone"?: string } } = {}) => sdk.call("docs.post_api_v3_users", input);
-/** PATCH /api/v3/users/{id}/change_password: GoCanvas API Reference [write] */
+/** PATCH /api/v3/users/{id}/change_password: Change User password [write] */
 export const docsPatchApiV3UsersIdChangePassword = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.patch_api_v3_users_id_change_password", input);
-/** PATCH /api/v3/users/{id}: GoCanvas API Reference [write] */
-export const docsPatchApiV3UsersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.patch_api_v3_users_id", input);
+/** PATCH /api/v3/users/{id}: Update User [write] */
+export const docsPatchApiV3UsersId = (input: CallInput & { params?: { "id": string; "first_name"?: string; "last_name"?: string; "phone"?: string; "enabled"?: boolean } } = {}) => sdk.call("docs.patch_api_v3_users_id", input);
 /** POST /submissions: Advance a Workflow Handoff [write] */
 export const docsPostSubmissions = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_submissions", input);
 /** PATCH /submissions/{id}: Assign a Submission [write] */

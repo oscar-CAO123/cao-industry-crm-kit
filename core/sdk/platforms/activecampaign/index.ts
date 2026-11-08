@@ -329,9 +329,9 @@ export const docsGetContactConversionsIdConversion = (input: CallInput & { param
 /** GET /contactConversions/{id}/conversiontrigger: Retrieve the trigger of a contact conversion [read] */
 export const docsGetContactConversionsIdConversiontrigger = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_contactConversions_id_conversiontrigger", input);
 /** GET /customObjects/schemas: Paging, Ordering, Sorting, and Filtering [read] */
-export const docsGetCustomObjectsSchemas = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_customObjects_schemas", input);
+export const docsGetCustomObjectsSchemas = (input: CallInput & { params?: { "limit"?: number; "offset"?: number; "orders"?: unknown } } = {}) => sdk.call("docs.get_customObjects_schemas", input);
 /** GET /customObjects/records/{id}: Paging, Ordering, Sorting, and Filtering [read] */
-export const docsGetCustomObjectsRecordsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_customObjects_records_id", input);
+export const docsGetCustomObjectsRecordsId = (input: CallInput & { params?: { "id": string; "filters"?: unknown; "orders"?: unknown } } = {}) => sdk.call("docs.get_customObjects_records_id", input);
 /** POST /deals: Create a deal [write] */
 export const docsPostDeals = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_deals", input);
 /** GET /dealGroup/get_inaccessible_deal_groups: Retrieve inaccessible pipelines by user [read] */

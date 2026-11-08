@@ -271,11 +271,12 @@
   }
  ],
  "gaps": [
-  "onfleet: 39 endpoints added from onfleet/node-onfleet (in the official SDK, not the published spec)"
+  "onfleet: 39 endpoints added from onfleet/node-onfleet (in the official SDK, not the published spec)",
+  "onfleet: 0 truncated path-only entries replaced by 1 endpoints the vendor's reference documents in full"
  ],
  "counts": {
-  "operations": 73,
+  "operations": 74,
   "read": 23,
-  "write": 50
+  "write": 51
  }
 }

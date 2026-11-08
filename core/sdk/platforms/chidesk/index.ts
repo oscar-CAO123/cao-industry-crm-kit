@@ -2,8 +2,8 @@
 // ChiDesk: 34 endpoints (20 read, 14 write). Source status: docs-read. Sign-in: from vendor docs, unproven.
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("chidesk");
-/** GET /appointments: ChiDesk Developers | ChiDesk Salon & Spa Software [read] */
-export const docsGetAppointments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_appointments", input);
+/** GET /appointments: List appointments for a given date range [read] */
+export const docsGetAppointments = (input: CallInput & { params?: { "SiteId"?: string; "StateId"?: string; "Start"?: string; "End"?: string; "Find"?: string; "ClientId"?: string } } = {}) => sdk.call("docs.get_appointments", input);
 /** POST /appointments/availableTimes: List available start times for a given service [write] */
 export const docsPostAppointmentsAvailableTimes = (input: CallInput & { params?: { "SiteId"?: string; "Day"?: string; "Services"?: unknown[]; "PackageId"?: string; "EmployeeIds"?: unknown[]; "ClientId"?: string; "CartItems"?: unknown[]; "ServiceSequence"?: number } } = {}) => sdk.call("docs.post_appointments_availableTimes", input);
 /** POST /appointments/validate: Validate a cart of items to ensure they are still available. Use this before posting a new appointment. [write] */
@@ -22,8 +22,8 @@ export const docsGetClassbookings = (input: CallInput & { params?: { "SiteId"?: 
 export const docsPostClassbookings = (input: CallInput & { params?: { "ClassBooking"?: unknown } } = {}) => sdk.call("docs.post_classbookings", input);
 /** PUT /classbookings: Update an existing class booking [write] */
 export const docsPutClassbookings = (input: CallInput & { params?: { "ClassBookingId"?: string; "ClassBooking"?: unknown } } = {}) => sdk.call("docs.put_classbookings", input);
-/** GET /clients: ChiDesk Developers | ChiDesk Salon & Spa Software [read] */
-export const docsGetClients = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_clients", input);
+/** GET /clients: List clients [read] */
+export const docsGetClients = (input: CallInput & { params?: { "SiteId"?: string; "ItemState"?: number; "Find"?: string; "CreationDate"?: string } } = {}) => sdk.call("docs.get_clients", input);
 /** GET /clients/emailexists: Checks if a client with the specified email exists [read] */
 export const docsGetClientsEmailexists = (input: CallInput & { params?: { "SiteId"?: string; "Email"?: string } } = {}) => sdk.call("docs.get_clients_emailexists", input);
 /** GET /clients/mobileexists: Checks if a client with the specified mobile number exists [read] */
@@ -56,8 +56,8 @@ export const docsPostAccountingentries = (input: CallInput & { params?: { "SiteI
 export const docsPutAccountingentries = (input: CallInput & { params?: { "AccountingEntryId"?: string; "AccountingEntry"?: unknown } } = {}) => sdk.call("docs.put_accountingentries", input);
 /** GET /reports/sales: List all sales that took place over a given date range [read] */
 export const docsGetReportsSales = (input: CallInput & { params?: { "SiteId"?: string; "Start"?: string; "End"?: string } } = {}) => sdk.call("docs.get_reports_sales", input);
-/** GET /accountingdocuments: ChiDesk Developers | ChiDesk Salon & Spa Software [read] */
-export const docsGetAccountingdocuments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_accountingdocuments", input);
+/** GET /accountingdocuments: List accounting documents [read] */
+export const docsGetAccountingdocuments = (input: CallInput & { params?: { "SiteId"?: string; "ClientDocuments"?: boolean; "Start"?: string; "End"?: string; "Find"?: string } } = {}) => sdk.call("docs.get_accountingdocuments", input);
 /** GET /services: List services [read] */
 export const docsGetServices = (input: CallInput & { params?: { "SiteId"?: string; "ItemState"?: number; "Find"?: string; "ShowPackageServices"?: boolean } } = {}) => sdk.call("docs.get_services", input);
 /** GET /sites: List sites [read] */

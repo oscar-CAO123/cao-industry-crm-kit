@@ -226,7 +226,8 @@
   }
  ],
  "gaps": [
-  "typeform: 27 endpoints added from typeform/js-api-client (in the official SDK, not the published spec)"
+  "typeform: 27 endpoints added from typeform/js-api-client (in the official SDK, not the published spec)",
+  "typeform: 1 truncated path-only entries replaced by 1 endpoints the vendor's reference documents in full"
  ],
  "counts": {
   "operations": 29,

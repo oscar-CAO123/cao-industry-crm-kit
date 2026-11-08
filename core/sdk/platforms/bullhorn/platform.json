@@ -42,10 +42,12 @@
    "official": "vendor-domain: bullhorn.github.io"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "bullhorn: 32 truncated path-only entries replaced by 58 endpoints the vendor's reference documents in full"
+ ],
  "counts": {
-  "operations": 90,
-  "read": 35,
-  "write": 55
+  "operations": 116,
+  "read": 36,
+  "write": 80
  }
 }

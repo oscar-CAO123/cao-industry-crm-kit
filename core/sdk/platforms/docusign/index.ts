@@ -1367,7 +1367,7 @@ export const sdkGetV21AccountsAccountIdUsersUserIdSocial = (input: CallInput & {
 /** GET /v2.1/current_user/notary/jurisdictions/{jurisdictionId}/seal: From docusign/docusign-esign-node-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkGetV21CurrentUserNotaryJurisdictionsJurisdictionIdSeal = (input: CallInput & { params?: { "jurisdictionId": string } } = {}) => sdk.call("sdk.get_v2_1_current_user_notary_jurisdictions_jurisdictionId_seal", input);
 /** GET /v2.1/login_information: From docusign/docusign-esign-node-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV21LoginInformation = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_1_login_information", input);
+export const sdkGetV21LoginInformation = (input: CallInput & { params?: { "api_password"?: string; "embed_account_id_guid"?: string; "include_account_id_guid"?: string; "login_settings"?: string } } = {}) => sdk.call("sdk.get_v2_1_login_information", input);
 /** GET /v2.1/organization_reporting/{organizationId}/reportsv2/{reportCorrelationId}: From docusign/docusign-esign-node-client; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetV21OrganizationReportingOrganizationIdReportsv2ReportCorrelationId = (input: CallInput & { params?: { "organizationId": string; "reportCorrelationId": string } } = {}) => sdk.call("sdk.get_v2_1_organization_reporting_organizationId_reportsv2_reportCorrelationId", input);
 /** GET /v2.1/signature/userInfo: From docusign/docusign-esign-node-client; not in the published spec; inputs not mapped yet [read] */

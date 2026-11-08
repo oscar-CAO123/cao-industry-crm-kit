@@ -3211,7 +3211,7 @@ export const index2021072820210728GetCommentList = (input: CallInput & { params?
 /** GET /social-media-posting/{locationId}/community/accounts/{accountId}/users: Get Community Members [read] */
 export const index2021072820210728GetCommunityUsers = (input: CallInput & { params?: { "locationId": string; "accountId": string; "searchText"?: string; "pageNo"?: number; "limit"?: number } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-community-users", input);
 /** GET /social-media-posting/oauth/{locationId}/{platform}/accounts/{accountId}: Get Available Accounts (Step 2 of 3) [write] */
-export const index2021072820210728GetOauthAccounts = (input: CallInput & { params?: { "locationId": string; "platform": string; "accountId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-oauth-accounts", input);
+export const index2021072820210728GetOauthAccounts = (input: CallInput & { params?: { "platform": string; "locationId": string; "accountId": string; "search"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-oauth-accounts", input);
 /** GET /social-media-posting/{locationId}/watermarks/{templateId}: Get a watermark template by ID [read] */
 export const index2021072820210728GetWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-watermark", input);
 /** PUT /social-media-posting/category/queues/{queueId}/items/{itemId}/reset: Reset an item in a queue [write] */
@@ -3221,7 +3221,7 @@ export const index2021072820210728SaveEditSession = (input: CallInput & { params
 /** POST /social-media-posting/category/queues/{queueId}/edit/start: Start or resume an edit session [write] */
 export const index2021072820210728StartEditSession = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.start-edit-session", input);
 /** GET /social-media-posting/oauth/{platform}/start: Start OAuth Flow (Step 1 of 3) [write] */
-export const index2021072820210728StartOauth = (input: CallInput & { params?: { "platform": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.start-oauth", input);
+export const index2021072820210728StartOauth = (input: CallInput & { params?: { "platform": string; "locationId": string; "userId": string; "page"?: string; "reconnect"?: string; "loginType"?: string; "returnUrl"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.start-oauth", input);
 /** PUT /social-media-posting/category/queues/{queueId}: Update queue settings or status [write] */
 export const index2021072820210728UpdateQueue = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-queue", input);
 /** PUT /social-media-posting/category/queues/{queueId}/items/{itemId}: Update an item in a queue [write] */

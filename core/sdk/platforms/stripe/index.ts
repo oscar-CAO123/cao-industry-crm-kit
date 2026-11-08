@@ -1228,77 +1228,77 @@ export const openapiSpec3GetWebhookEndpointsWebhookEndpoint = (input: CallInput 
 export const openapiSpec3PostWebhookEndpointsWebhookEndpoint = (input: CallInput & { params?: { "webhook_endpoint": string } } = {}) => sdk.call("openapi_spec3.PostWebhookEndpointsWebhookEndpoint", input);
 /** DELETE /v2/core/event_destinations: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteV2CoreEventDestinations = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.delete_v2_core_event_destinations", input);
-/** GET /v2/commerce/product_catalog/imports: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2CommerceProductCatalogImports = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_commerce_product_catalog_imports", input);
-/** GET /v2/core/accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2CoreAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_core_accounts", input);
-/** GET /v2/core/events: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2CoreEvents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_core_events", input);
-/** GET /v2/core/vault/gb_bank_accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2CoreVaultGbBankAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_core_vault_gb_bank_accounts", input);
-/** GET /v2/core/vault/us_bank_accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2CoreVaultUsBankAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_core_vault_us_bank_accounts", input);
-/** GET /v2/money_management/adjustments: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementAdjustments = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_adjustments", input);
-/** GET /v2/money_management/financial_accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementFinancialAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_financial_accounts", input);
-/** GET /v2/money_management/financial_addresses: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementFinancialAddresses = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_financial_addresses", input);
-/** GET /v2/money_management/inbound_transfers: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementInboundTransfers = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_inbound_transfers", input);
-/** GET /v2/money_management/outbound_payments: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementOutboundPayments = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_outbound_payments", input);
-/** GET /v2/money_management/outbound_setup_intents: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementOutboundSetupIntents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_outbound_setup_intents", input);
-/** GET /v2/money_management/payout_intents: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementPayoutIntents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_payout_intents", input);
-/** GET /v2/money_management/payout_methods: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementPayoutMethods = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_payout_methods", input);
-/** GET /v2/money_management/payout_methods_bank_account_spec: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementPayoutMethodsBankAccountSpec = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_payout_methods_bank_account_spec", input);
-/** GET /v2/money_management/received_credits: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementReceivedCredits = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_received_credits", input);
+/** GET /v2/commerce/product_catalog/imports: List Product Catalog Imports [read] */
+export const sdkGetV2CommerceProductCatalogImports = (input: CallInput & { params?: { "created"?: string; "created_gt"?: string; "created_gte"?: string; "created_lt"?: string; "created_lte"?: string; "feed_type"?: string; "limit"?: number; "status"?: string } } = {}) => sdk.call("sdk.get_v2_commerce_product_catalog_imports", input);
+/** GET /v2/core/accounts: List accounts [read] */
+export const sdkGetV2CoreAccounts = (input: CallInput & { params?: { "applied_configurations"?: unknown[]; "closed"?: boolean; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_core_accounts", input);
+/** GET /v2/core/events: List Events [read] */
+export const sdkGetV2CoreEvents = (input: CallInput & { params?: { "created"?: unknown; "limit"?: number; "object_id"?: string; "types"?: unknown[] } } = {}) => sdk.call("sdk.get_v2_core_events", input);
+/** GET /v2/core/vault/gb_bank_accounts: List GB Bank Accounts [read] */
+export const sdkGetV2CoreVaultGbBankAccounts = (input: CallInput & { params?: { "limit"?: number } } = {}) => sdk.call("sdk.get_v2_core_vault_gb_bank_accounts", input);
+/** GET /v2/core/vault/us_bank_accounts: List US Bank Accounts [read] */
+export const sdkGetV2CoreVaultUsBankAccounts = (input: CallInput & { params?: { "limit"?: number; "verification_status"?: string } } = {}) => sdk.call("sdk.get_v2_core_vault_us_bank_accounts", input);
+/** GET /v2/money_management/adjustments: List Adjustments [read] */
+export const sdkGetV2MoneyManagementAdjustments = (input: CallInput & { params?: { "adjusted_flow"?: string; "created"?: unknown; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_adjustments", input);
+/** GET /v2/money_management/financial_accounts: List Financial Accounts [read] */
+export const sdkGetV2MoneyManagementFinancialAccounts = (input: CallInput & { params?: { "include"?: unknown[]; "limit"?: number; "statuses"?: unknown[] } } = {}) => sdk.call("sdk.get_v2_money_management_financial_accounts", input);
+/** GET /v2/money_management/financial_addresses: List Financial Addresses [read] */
+export const sdkGetV2MoneyManagementFinancialAddresses = (input: CallInput & { params?: { "financial_account"?: string; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_financial_addresses", input);
+/** GET /v2/money_management/inbound_transfers: List Inbound Transfers [read] */
+export const sdkGetV2MoneyManagementInboundTransfers = (input: CallInput & { params?: { "created"?: unknown; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_inbound_transfers", input);
+/** GET /v2/money_management/outbound_payments: List Outbound Payments [read] */
+export const sdkGetV2MoneyManagementOutboundPayments = (input: CallInput & { params?: { "created"?: unknown; "limit"?: number; "recipient"?: string; "status"?: unknown[] } } = {}) => sdk.call("sdk.get_v2_money_management_outbound_payments", input);
+/** GET /v2/money_management/outbound_setup_intents: List Outbound Setup Intents [read] */
+export const sdkGetV2MoneyManagementOutboundSetupIntents = (input: CallInput & { params?: { "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_outbound_setup_intents", input);
+/** GET /v2/money_management/payout_intents: List Payout Intents [read] */
+export const sdkGetV2MoneyManagementPayoutIntents = (input: CallInput & { params?: { "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_payout_intents", input);
+/** GET /v2/money_management/payout_methods: List Payout Methods [read] */
+export const sdkGetV2MoneyManagementPayoutMethods = (input: CallInput & { params?: { "limit"?: number; "usage_status"?: unknown } } = {}) => sdk.call("sdk.get_v2_money_management_payout_methods", input);
+/** GET /v2/money_management/payout_methods_bank_account_spec: Retrieve Bank Account Specification by country [read] */
+export const sdkGetV2MoneyManagementPayoutMethodsBankAccountSpec = (input: CallInput & { params?: { "countries"?: unknown[] } } = {}) => sdk.call("sdk.get_v2_money_management_payout_methods_bank_account_spec", input);
+/** GET /v2/money_management/received_credits: List Received Credits [read] */
+export const sdkGetV2MoneyManagementReceivedCredits = (input: CallInput & { params?: { "created"?: unknown; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_received_credits", input);
 /** GET /v2/money_management/recipient_verifications: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetV2MoneyManagementRecipientVerifications = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_recipient_verifications", input);
-/** GET /v2/money_management/transaction_entries: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementTransactionEntries = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_transaction_entries", input);
-/** GET /v2/money_management/transactions: From stripe/stripe-node; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetV2MoneyManagementTransactions = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_v2_money_management_transactions", input);
+/** GET /v2/money_management/transaction_entries: List Transaction Entries [read] */
+export const sdkGetV2MoneyManagementTransactionEntries = (input: CallInput & { params?: { "created"?: unknown; "limit"?: number; "transaction"?: string } } = {}) => sdk.call("sdk.get_v2_money_management_transaction_entries", input);
+/** GET /v2/money_management/transactions: List Transactions [read] */
+export const sdkGetV2MoneyManagementTransactions = (input: CallInput & { params?: { "created"?: unknown; "financial_account"?: string; "flow"?: string; "limit"?: number } } = {}) => sdk.call("sdk.get_v2_money_management_transactions", input);
 /** POST /oauth/deauthorize: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostOauthDeauthorize = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_oauth_deauthorize", input);
 /** POST /oauth/token: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostOauthToken = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_oauth_token", input);
-/** POST /v2/billing/meter_event_adjustments: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/billing/meter_event_adjustments: Create a Meter Event Adjustment [write] */
 export const sdkPostV2BillingMeterEventAdjustments = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_billing_meter_event_adjustments", input);
-/** POST /v2/billing/meter_event_session: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/billing/meter_event_session: Create a Meter Event Stream Authentication Session [write] */
 export const sdkPostV2BillingMeterEventSession = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_billing_meter_event_session", input);
-/** POST /v2/billing/meter_event_stream: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/billing/meter_event_stream: Create a Meter Event with asynchronous validation [write] */
 export const sdkPostV2BillingMeterEventStream = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_billing_meter_event_stream", input);
-/** POST /v2/billing/meter_events: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/billing/meter_events: Create a Meter Event with synchronous validation [write] */
 export const sdkPostV2BillingMeterEvents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_billing_meter_events", input);
-/** POST /v2/commerce/product_catalog/imports: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/commerce/product_catalog/imports: Create a Product Catalog Import [write] */
 export const sdkPostV2CommerceProductCatalogImports = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_commerce_product_catalog_imports", input);
-/** POST /v2/core/account_links: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/account_links: Create an account link [write] */
 export const sdkPostV2CoreAccountLinks = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_account_links", input);
-/** POST /v2/core/account_tokens: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/account_tokens: Create an account token [write] */
 export const sdkPostV2CoreAccountTokens = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_account_tokens", input);
-/** POST /v2/core/accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/accounts: Create an account [write] */
 export const sdkPostV2CoreAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_accounts", input);
-/** POST /v2/core/event_destinations: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/event_destinations: Create an Event Destination [write] */
 export const sdkPostV2CoreEventDestinations = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_event_destinations", input);
-/** POST /v2/core/vault/gb_bank_accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/vault/gb_bank_accounts: Create a GB Bank Account [write] */
 export const sdkPostV2CoreVaultGbBankAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_vault_gb_bank_accounts", input);
-/** POST /v2/core/vault/us_bank_accounts: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/core/vault/us_bank_accounts: Create a US Bank Account [write] */
 export const sdkPostV2CoreVaultUsBankAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_core_vault_us_bank_accounts", input);
-/** POST /v2/money_management/financial_addresses: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/money_management/financial_addresses: Create a Financial Address [write] */
 export const sdkPostV2MoneyManagementFinancialAddresses = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_money_management_financial_addresses", input);
-/** POST /v2/money_management/inbound_transfers: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/money_management/inbound_transfers: Create an Inbound Transfer [write] */
 export const sdkPostV2MoneyManagementInboundTransfers = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_money_management_inbound_transfers", input);
-/** POST /v2/money_management/outbound_payments: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/money_management/outbound_payments: Create an Outbound Payment [write] */
 export const sdkPostV2MoneyManagementOutboundPayments = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_money_management_outbound_payments", input);
-/** POST /v2/money_management/outbound_setup_intents: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/money_management/outbound_setup_intents: Create an Outbound Setup Intent [write] */
 export const sdkPostV2MoneyManagementOutboundSetupIntents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_money_management_outbound_setup_intents", input);
-/** POST /v2/money_management/payout_intents: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/money_management/payout_intents: Create a Payout Intent [write] */
 export const sdkPostV2MoneyManagementPayoutIntents = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_money_management_payout_intents", input);
-/** POST /v2/test_helpers/money_management/recipient_verifications: From stripe/stripe-node; not in the published spec; inputs not mapped yet [write] */
+/** POST /v2/test_helpers/money_management/recipient_verifications: Create a test recipient verification [write] */
 export const sdkPostV2TestHelpersMoneyManagementRecipientVerifications = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_v2_test_helpers_money_management_recipient_verifications", input);

@@ -502,10 +502,12 @@
    "official": "vendor-domain: developer.domain.com.au"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "domain: removed GET /v, DELETE /v: truncated docs-index entries (GET /v, DELETE /v); the full endpoints are mapped from the reference pages"
+ ],
  "counts": {
-  "operations": 80,
-  "read": 56,
-  "write": 24
+  "operations": 78,
+  "read": 55,
+  "write": 23
  }
 }

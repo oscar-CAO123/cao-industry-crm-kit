@@ -6,9 +6,9 @@ export const sdk = platform("jane-app");
 export const docsGetAuth = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_auth", input);
 /** GET /callback: Jane Developer Platform API Quick Start Guide [read] */
 export const docsGetCallback = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_callback", input);
-/** POST /patients/search: Get a list of patients [write] */
-export const docsPostPatientsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_patients_search", input);
-/** GET /patients: Search patients by free text [read] */
-export const docsGetPatients = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_patients", input);
-/** GET /treatments: List Appointments [read] */
-export const docsGetTreatments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_treatments", input);
+/** POST /api/2026-01-01/patients/search: Search patients by free text [write] */
+export const docsPostPatientsSearch = (input: CallInput & { params?: { "search": unknown; "sort"?: string; "page"?: unknown } } = {}) => sdk.call("docs.post_patients_search", input);
+/** GET /api/2026-01-01/patients: Get a list of patients [read] */
+export const docsGetPatients = (input: CallInput & { params?: { "sort"?: string; "public_id"?: string; "created_at"?: string; "updated_at"?: string; "page[cursor]"?: string; "page[limit]"?: number } } = {}) => sdk.call("docs.get_patients", input);
+/** GET /api/2026-01-01/treatments: List Treatments [read] */
+export const docsGetTreatments = (input: CallInput & { params?: { "sort"?: string; "public_id"?: string; "staff_member_ids"?: string; "created_at"?: string; "updated_at"?: string; "page[cursor]"?: string; "page[limit]"?: number } } = {}) => sdk.call("docs.get_treatments", input);

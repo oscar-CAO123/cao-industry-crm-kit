@@ -154,10 +154,12 @@
    "official": "vendor-domain: learn.microsoft.com"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "linkedin: 0 truncated path-only entries replaced by 7 endpoints the vendor's reference documents in full"
+ ],
  "counts": {
-  "operations": 28,
-  "read": 14,
-  "write": 14
+  "operations": 35,
+  "read": 17,
+  "write": 18
  }
 }
