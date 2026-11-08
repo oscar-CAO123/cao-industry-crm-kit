@@ -1,0 +1,55 @@
+{
+  "id": "call-insights",
+  "name": "Mine sales calls for pains, objections, offers and buying signals",
+  "industry": "all",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Mines sales calls for pains, objections, offers and buying signals. Crons pull new Fireflies transcripts, keep only the agent's quotes that appear word for word in each call, and look up the outside attendees as HubSpot contacts. Every operation is a read, and the findings stay in the workflow's own store: nothing is written to Fireflies or HubSpot, and nothing is sent or shared.",
+  "families": {
+    "all": {
+      "evidence": "40 calls read; 5 describe a call-insight process (wholesale import, construction project, membership platform, agency and landscaping sales)",
+      "steps": ["call-capture", "transcribe", "tag-pains", "tag-objections", "tag-offers", "tag-buying-signals", "match-contacts", "review-later"],
+      "covered_by": {
+        "call-capture": "capture (Fireflies transcripts, stored once each)",
+        "transcribe": "capture (transcript read with speaker names)",
+        "tag-pains": "skill (the agent quotes the call), tag cron keeps the quotes that check",
+        "tag-objections": "skill and tag cron, as for pains",
+        "tag-offers": "skill and tag cron, as for pains",
+        "tag-buying-signals": "skill and tag cron, as for pains",
+        "match-contacts": "match (HubSpot contacts by attendee email, read only)",
+        "review-later": "not built (the findings are in the store; no review view or digest yet)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "capture", "schedule": "*/30 * * * *", "entry": "capture", "summary": "New Fireflies transcripts, stored once each. Reads only."},
+    {"name": "tag", "schedule": "0 22 * * *", "entry": "tag", "summary": "Keeps the agent's quotes that appear in each call and records the finding. No platform call."},
+    {"name": "match", "schedule": "30 22 * * *", "entry": "match", "summary": "Looks up each outside attendee as a HubSpot contact and keeps the contact ids. Reads only; does nothing unless match_crm is set."}
+  ],
+  "draft_ops": {
+    "fireflies": ["query.transcripts", "query.transcript"],
+    "hubspot": ["crm-contacts-3.post-/crm/v3/objects/contacts/search_doSearch"]
+  },
+  "live_ops": {},
+  "draft_ops_note": "Every operation here is a read. The findings and contact ids stay in this workflow's store. No live operation is mapped for this job, so no cron can queue an approval.",
+  "capabilities": ["transcripts.list", "transcripts.read", "contacts.list"],
+  "adapters": {
+    "fireflies": {"status": "docs-only", "covers": "transcript list and one transcript read (speakers, text, summary, attendee emails)"},
+    "hubspot": {"status": "docs-only", "covers": "contact lookup by email (read only)"}
+  },
+  "gaps": [
+    "Otter: the mining pass found it names call capture and transcripts, but the kit has no ops file for it, so no adapter is built.",
+    "Aircall AI, GoHighLevel, the SMS agent, the ERP and Zoho are named in these calls, but no platform support evidence was mined for them in this pass, so no adapter is built.",
+    "Pains, objections, offers and buying signals are not a feature of Fireflies or HubSpot in the pages read. The tagging is the agent's reading, and each quote is checked against the transcript before it is kept.",
+    "Writing a HubSpot note on the contact is not built: the note body property and the note-to-contact association type are not confirmed in the vendor spec mapped here. Confirm on a live account before adding it.",
+    "Fireflies sharing (shareMeeting) and live action items (createLiveActionItem) are not built. Their input shapes are not mapped, and a share reaches people outside the business, so it would need a live approval flow first.",
+    "No review view or digest across calls yet. The findings sit in the workflow store.",
+    "Both adapters are tested offline against a fake network only. Neither has run against a real account. Keys are FIREFLIES_API_KEY and HUBSPOT_ACCESS_TOKEN."
+  ],
+  "evidence": {
+    "calls": "40 calls read, 0 rejected; 5 describe a call-insight process",
+    "platforms": "Fireflies and HubSpot vendor docs mapped step by step; Otter has docs only, with no ops file in the kit"
+  }
+}

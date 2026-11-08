@@ -1,0 +1,49 @@
+{
+ "id": "automotive:service",
+ "name": "Service and recall reminders",
+ "industry": "automotive",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Service and recall reminders: works out when each completed job's next service falls due, queues a reminder to the customer for approval, and records any text they send back. Crons read and queue; a person approves every message. Recall checks and bookings are not covered yet (see gaps).",
+ "families": {
+  "fleet-account-reminders": {
+   "evidence": "1 dealer service discovery call describes reminders and customer replies sent through a messaging tool, with bookings in the diary",
+   "steps": ["due-list-build", "reminder-send", "customer-reply", "booking-diary", "record-keeping"],
+   "covered_by": {"due-list-build": "due-list (completed jobs past the service interval)", "reminder-send": "remind (queued for approval)", "customer-reply": "replies (records inbound texts; the answer is a skill step)", "booking-diary": "not built (a person books the visit in ServiceM8's diary)", "record-keeping": "due records and replies in the workflow's store"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "due-list", "schedule": "0 21 * * *", "entry": "due-list", "summary": "Once a day (21:00 UTC is 7 or 8 am in eastern Australia): completed jobs whose next service falls due in the window, with their contact."},
+  {"name": "remind", "schedule": "15 * * * *", "entry": "remind", "summary": "Hourly: queue a service reminder for each due job, oldest due first, for a person to approve. Nothing is sent by the cron."},
+  {"name": "replies", "schedule": "*/30 * * * *", "entry": "replies", "summary": "Record any text a customer sends back on a job whose reminder was approved and sent. Reads only."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobContacts", "servicem8-api.listSMSMessages"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_sms", "messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations here are reads: completed jobs, their contacts, and inbound texts on a job. Nothing read leaves the business. Every reminder reaches a customer, so each one is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "contacts.list", "messages.list", "messages.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "completed jobs, job contacts and inbound texts (read); reminder SMS and email (approval only)"}
+ },
+ "gaps": [
+  "Service-due reminders by kilometres or by service schedule, recall checks and VIN lookups: not in the captured pages or the kit. This workflow uses one interval in months from the last completed job.",
+  "MechanicDesk and WorkshopMate: their help pages are captured, but the kit has no folder for either, so no operation is mapped. Their pages cover appointment reminders only.",
+  "Podium: the one call named it for reminders and replies. The kit maps its messaging operations, but no platform evidence was captured for it, so no adapter is built.",
+  "Vehicles are not separate records in ServiceM8's job fields, so a customer with two vehicles gets one reminder per completed job. The approver sees each job.",
+  "Booking the visit (booking-diary) and phone follow-up: not built. A person books in ServiceM8's diary.",
+  "Declined or deferred work and a due-date log: not built.",
+  "Customer replies by email: the replies cron reads SMS only. Answering a reply is a skill step, not a cron.",
+  "Marketing rule: ServiceM8's messaging docs say marketing and promotional SMS is not permitted. A service reminder is a service message, but confirm the customer consent wording with the client before the first live send.",
+  "Send window: ServiceM8's own booking reminders send SMS only between 7am and 7pm. The window for API sends is not confirmed, so approve reminders in business hours.",
+  "Docs-only until a ServiceM8 trial account proves the reminder sends, the job contact fields and the inbound SMS records."
+ ],
+ "evidence": {
+  "calls": "1 automotive service discovery call, which described reminders and replies sent by a messaging tool and bookings in a diary",
+  "platforms": "ServiceM8, MechanicDesk and WorkshopMate help pages on service reminders; only ServiceM8 has mapped operations in the kit"
+ }
+}

@@ -373,6 +373,10 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     else (bodyFields ??= {})[k] = v; // body, argument
   }
   if (/[{}]/.test(route)) throw new Error(`${id} ${opId}: path still has unfilled parts: ${route}`);
+  // Some vendor specs put the base path in both the server and every op path (Productive /api/v2, Cin7 /api,
+  // Supermetrics /enterprise/v2). Join them once, never twice.
+  const basePath = new URL(base).pathname.replace(/\/+$/, "");
+  if (basePath && route.startsWith(basePath + "/")) route = route.slice(basePath.length);
   const target = { url: `${base}/${route.replace(/^\/+/, "")}` };
   const auth = withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
   const method = (o.method === "QUERY" || o.method === "MUTATION" ? "POST" : o.method) as Method;

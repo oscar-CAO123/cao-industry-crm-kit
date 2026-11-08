@@ -1,0 +1,8 @@
+{
+  "business_name": "Example Realty",
+  "microsoft_365": {"mailbox": "sales@example.com.au"},
+  "owners_per_run": 25,
+  "daily_limit": 20,
+  "outreach_subject": "Checking in about your property",
+  "outreach_body": "Hi {first_name}, this is {business_name}. If you would like a no-obligation chat about your property's options, reply to this email. To be removed from our list, reply STOP and we will take you off."
+}

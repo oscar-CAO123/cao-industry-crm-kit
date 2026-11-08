@@ -1,0 +1,64 @@
+{
+ "id": "payroll-timesheets",
+ "name": "Turn timesheets into payroll",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns timesheets into a payroll run: approved Deputy shifts become draft Xero Payroll timesheets, each person's timesheet is queued for approval once its shifts are clean, and a draft pay run is created in Xero with its posting queued for the owner. Crons read and draft only; no timesheet is approved, no pay run is posted and nobody is paid without a person's approval.",
+ "families": {
+  "all": {
+   "evidence": "24 of 33 calls describe how they run payroll from timesheets; 58 to 100 percent of each measured step is manual",
+   "steps": ["hours-captured", "collect-timesheets", "check-hours", "approve-timesheets", "apply-rates", "enter-payroll", "pay-run-review", "approve-pay-run", "job-costing"],
+   "covered_by": {
+    "hours-captured": "draft (approved Deputy shifts mirrored into Xero draft timesheets; capture stays in the time app)",
+    "collect-timesheets": "gap (paper photos and emailed timesheets have no intake here)",
+    "check-hours": "cron (a shift over the daily limit is held; the owner checks the rest)",
+    "approve-timesheets": "approval (each clean Xero timesheet is queued for approval)",
+    "apply-rates": "skill (awards, pay rates and allowances stay in Xero and the time app, set by the owner)",
+    "enter-payroll": "draft (a DRAFT pay run is created in Xero once every timesheet is approved)",
+    "pay-run-review": "skill (the owner or bookkeeper reviews the draft pay run in Xero)",
+    "approve-pay-run": "approval (posting the pay run is queued for the owner, with its net pay)",
+    "job-costing": "gap (allowances split across jobs are not mapped here)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "mirror", "schedule": "*/30 * * * *", "entry": "mirror", "summary": "Approved Deputy shifts in the pay period become draft lines on each person's Xero timesheet. Internal draft; shifts over the daily limit are held."},
+  {"name": "approve", "schedule": "15 * * * *", "entry": "approve", "summary": "Queue each Draft Xero timesheet with hours for approval, except those held. Approval runs only when a person approves it."},
+  {"name": "pay-run", "schedule": "20 */2 * * *", "entry": "pay-run", "summary": "When every timesheet in the period is approved, create a DRAFT pay run in Xero and queue its posting, with the net pay, for the owner."}
+ ],
+ "draft_ops": {
+  "deputy": ["deputy-v1-resource-api.searchTimesheet"],
+  "xero": ["payroll-au-v2.getTimesheets", "payroll-au-v2.createTimesheet", "payroll-au-v2.createTimesheetLine", "payroll-au.createPayRun", "payroll-au.getPayRun"]
+ },
+ "live_ops": {
+  "xero": ["payroll-au-v2.approveTimesheet", "payroll-au.updatePayRun"]
+ },
+ "draft_ops_note": "Reads of approved shifts and of Xero timesheets and pay runs, draft Xero timesheets and lines, and a DRAFT pay run. Nothing here is approved or posted, so nobody is paid by a cron. Approving a timesheet and posting a pay run change what gets paid, so both are live: a cron only queues them, and a person approves them in the CRM shell.",
+ "capabilities": ["timesheets.list", "timesheets.create", "timesheets.approve", "pay-runs.create", "pay-runs.post"],
+ "adapters": {
+  "deputy": {"status": "docs-only", "covers": "approved, kept, finished shifts read for a pay period (resource timesheet query)"},
+  "xero": {"status": "docs-only", "covers": "timesheets read by period, draft timesheets and lines, timesheet approval queued, DRAFT pay run, pay run read, posting queued"}
+ },
+ "gaps": [
+  "MYOB: three operations are mapped (Payroll Timesheet read and write, and the super fund read), and the pages say STP and super only. No adapter is built; the MYOB pages do not confirm hours capture or a pay run approval step.",
+  "Deputy's timesheet and payroll help-centre articles returned HTTP 403 during mining, so Deputy's own approval flow and pay run screens are not confirmed. The adapter uses the resource timesheet fields in Deputy's published spec only.",
+  "Deputy's TotalTime is a number with no unit in the spec. It is read as hours and must be confirmed on a live Deputy account before the first run.",
+  "Deputy's date filter format is not confirmed on a live account. The period is sent as YYYY-MM-DD.",
+  "Deputy to Xero needs two settings the owner fills in: employee_map (Deputy employee id to Xero employeeID) and earnings_rate_id. No cron matches people by name.",
+  "The pay period is set in settings for each cycle. The workflow does not calculate it from the Xero calendar.",
+  "A shift edited in Deputy after it was mirrored is not updated in Xero. A shift marked needs-check after an unclear write stays that way until a person checks Xero and clears it in the store; no command for that exists yet.",
+  "Approval is one per timesheet, so a roster of about 1,300 casuals means about 1,300 approvals in the queue. Bulk approval is not built.",
+  "A pay run made by hand in Xero for the same period is not detected, so the owner must not create one alongside this workflow.",
+  "Allowances split across jobs (job costing, AroFlo, Xero tracking categories) and award rate changes are not written by any cron. They stay manual.",
+  "Collecting timesheets from photos, paper and email has no intake adapter here.",
+  "Xero Payroll NZ and UK are not covered. Only the AU Payroll endpoints are mapped for this workflow.",
+  "Every adapter is docs-only until a Xero demo organisation and a Deputy trial account prove the request shapes on a live account."
+ ],
+ "evidence": {
+  "calls": "33 calls for this workflow, 24 of them describe a process; the most named tools are Xero, Salesforce and Deputy",
+  "platforms": "Deputy, MYOB and Xero platform pages read; Deputy and Xero have the mapped operations used here, MYOB has three and no adapter"
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "id": "real-estate:bond-lodgement",
+ "name": "Lodge and claim rental bonds",
+ "industry": "real-estate",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the rental bond register from the property system and queues a reminder when a receipted bond's tenancy ends, so the team lodges the claim or releases the bond with the state bond authority. Lodging itself is not automated: no mapped platform can lodge a bond.",
+ "steps": {
+  "lease-signed": {"covered_by": "register (tenancy read from VaultRE)"},
+  "collect-bond": {"covered_by": "not covered"},
+  "lodge-bond": {"covered_by": "person, not automated (see gaps)"},
+  "confirm-receipt": {"covered_by": "register (bond receipt read from VaultRE)"},
+  "record-bond": {"covered_by": "draft (bond register row)"},
+  "trust-deposit": {"covered_by": "not covered"},
+  "bond-changes": {"covered_by": "not covered"},
+  "exit-inspection": {"covered_by": "not covered"},
+  "claim-or-refund": {"covered_by": "approval (reminder to the team)"},
+  "dispute": {"covered_by": "not covered"},
+  "release-funds": {"covered_by": "person, not automated (see gaps)"},
+  "reconcile": {"covered_by": "not covered"},
+  "record-keeping": {"covered_by": "draft (bond register row)"},
+  "other": {"covered_by": "not covered"}
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "register", "schedule": "5 * * * *", "entry": "register", "summary": "Read tenancies and their bond receipts from VaultRE and draft one bond register row per tenancy."},
+  {"name": "release-check", "schedule": "0 22 * * *", "entry": "release-check", "summary": "Queue a reminder to claim or release each receipted bond whose tenancy has ended (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "vaultre": ["getResidentialLeaseTenancies"],
+  "microsoft-365": ["users.CreateMessages", "drives.items.workbook.tables.CreateRows"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a tenancy read, an Outlook draft in the bonds mailbox, a bond register row. The only send is a reminder to the team's own address, and it is queued for approval.",
+ "capabilities": ["tenancies.list", "bonds.register", "messages.draft", "messages.send"],
+ "adapters": {
+  "vaultre": {"status": "docs-only", "covers": "tenancy list and bond receipt read"},
+  "microsoft-365": {"status": "docs-only", "covers": "bonds mailbox drafts and reminder sends, bond register workbook rows"}
+ },
+ "gaps": [
+  "Lodging, claiming and releasing a bond with a state authority (NSW Rental Bonds Online, VIC RTBA and others) is not automated: no mapped platform can do it. The reminder asks a person to do it.",
+  "Console (now Reapit PM): no kit adapter. The pages read were feature and marketing pages with no bond lodgement, claim or trust documentation. The help centre was not read.",
+  "PropertyMe: no kit adapter. Its pages cover holding deposits and trust accounts but not bond lodgement or claims. The help centre was not read.",
+  "Re-Leased: mapped with tenancy, trust account and inspection reads, but its spec has no bond field, so no adapter was built.",
+  "Rental Bonds Online (NSW) and RTBA (VIC): government portals with no API in the kit. Only the NSW landlord release page was read.",
+  "Not covered: bond top-ups, transfers and amendments, exit inspections, disputes, reconciliation against authority statements, and trust deposit allocation.",
+  "The register writes one row per tenancy. A later bond receipt does not update that row, because no workbook update operation is in the draft list.",
+  "No call evidence: the variants file (real-estate-bond-lodgement-variants.json) does not exist, so the steps were not confirmed by any owner.",
+  "Both adapters are docs-only until a VaultRE sandbox and a Microsoft 365 developer tenant prove them."
+ ],
+ "evidence": {
+  "calls": "0 discovery calls: no variants file exists for this workflow",
+  "platforms": "3 bond platform files checked (console-cloud, propertyme, rental-bonds-online-nsw): 0 operations, no bond lodgement described; 2 mapped property platforms used (VaultRE, Re-Leased), with VaultRE holding the bond fields"
+ }
+}

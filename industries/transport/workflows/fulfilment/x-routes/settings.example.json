@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Transport",
+ "timezone": "Australia/Sydney",
+ "teams": ["TEAM_ID_FROM_ONFLEET"],
+ "route_end": "teams://DEFAULT",
+ "lookback_hours": 24
+}

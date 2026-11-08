@@ -1,0 +1,41 @@
+{
+  "id": "professional-services:x-duedates",
+  "name": "Due dates",
+  "industry": "professional-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Due dates: reads the invoices still owed and the open project deadlines in Xero, drafts one internal task in Xero Projects for each deadline coming up, and queues a chase email for each overdue invoice. Crons read, draft and queue; a person approves every client email before Xero sends it.",
+  "families": {},
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "scan", "schedule": "0 21 * * *", "entry": "scan", "summary": "Read invoices owed and open project deadlines; draft an internal Xero Projects task for each deadline inside the window (21:00 UTC is 7 or 8 am in eastern Australia)."},
+    {"name": "chase", "schedule": "15 21 * * *", "entry": "chase", "summary": "Queue Xero's invoice email for each invoice overdue by the set days, for a person to approve."}
+  ],
+  "draft_ops": {
+    "xero": ["accounting.getInvoices", "projects.getProjects", "projects.createTask"]
+  },
+  "live_ops": {
+    "xero": ["accounting.emailInvoice"]
+  },
+  "draft_ops_note": "Draft operations are reads, plus one internal task in Xero Projects per project deadline. A task reaches nobody outside the business. Emailing an invoice reaches a client, so it is a live operation: the chase cron only queues it and a person approves it.",
+  "capabilities": ["invoices.read", "projects.read", "deadlines.task.draft", "invoices.chase.request"],
+  "adapters": {
+    "xero": {"status": "docs-only", "covers": "invoices awaiting payment and their due dates (reads); open project deadlines (reads); one internal task per deadline in Xero Projects (drafted); Xero's invoice email for an overdue invoice (queued for approval)"}
+  },
+  "gaps": [
+    "Ignition and Karbon: their help pages were read, but neither platform has operations mapped in the kit, so deadline capture, diary entries, reminders and work allocation there stay manual.",
+    "Statutory and tax due dates (BAS, PAYG, lodgments with the ATO) are not in Xero's API or the mapped docs. They stay on the practice's own compliance calendar.",
+    "Xero Projects tasks have no due date field. The deadline sits on the project (deadlineUtc), and the task carries the date in its name only.",
+    "Moving a project deadline after a client agrees a new date needs a person's decision and a full project update (projects.updateProject). Not built: no cron queues it.",
+    "Xero's invoice reminder settings are read-only in the kit (accounting.getInvoiceReminders). Xero's own automatic reminders cannot be switched on from this workflow.",
+    "The chase email is Xero's standard invoice email. A chase written in the practice's own words needs a mailbox adapter, which this build does not include.",
+    "Xero's date format (/Date(ms)/ or ISO text) is handled in code but not yet confirmed against a live or demo organisation. Confirm before a live run.",
+    "Docs-only until a Xero demo organisation proves the reads, the task draft and the invoice email. A contact with no email address fails at approval, so check contacts first.",
+    "Judgment steps stay with the practice: confirming work is done, asking a client for an extension, escalating a missed deadline, and assigning work to a person."
+  ],
+  "evidence": {
+    "calls": "variants file: 9 calls read, 0 describe the process in enough detail to build steps; worklist: 0",
+    "platforms": "Ignition, Karbon and Xero docs read (mining run). Xero is the only platform with mapped operations for this job: invoice reminder settings, projects and tasks."
+  }
+}

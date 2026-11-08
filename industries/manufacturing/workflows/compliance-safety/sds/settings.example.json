@@ -1,0 +1,9 @@
+{
+  "business_name": "Example Manufacturing",
+  "review_window_days": 30,
+  "airtable": {
+    "base_id": "appYOUR_BASE_ID",
+    "chemicals_table": "tblCHEMICALS_TABLE",
+    "drafts_table": "tblSDS_DRAFTS_TABLE"
+  }
+}

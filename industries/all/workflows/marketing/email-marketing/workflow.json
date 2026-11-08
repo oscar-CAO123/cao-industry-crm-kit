@@ -1,0 +1,61 @@
+{
+ "id": "email-marketing",
+ "name": "Send newsletters and automated email flows",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Writes and schedules newsletters, and starts or pauses automated email flows, in the business's own email platform. Crons read, draft and queue; a person approves every scheduled send and every flow change.",
+ "families": {
+  "all": {
+   "evidence": "31 of the 40 email marketing calls describe how they run it",
+   "steps": ["list-building", "write-copy", "approve", "schedule-send", "automation-build", "track-results", "follow-up-replies", "record-keeping"],
+   "covered_by": {
+    "list-building": "gap (lists come from property and lead platforms that are not mapped)",
+    "write-copy": "draft (the agent writes the newsletter into the store; the draft cron creates the campaign)",
+    "approve": "approval (every scheduled send and flow change waits in the CRM shell)",
+    "schedule-send": "approval (Mailchimp schedule, after the draft is in place)",
+    "automation-build": "approval (start or pause a flow email); writing flow email content is a gap",
+    "track-results": "sync (open and click rates against the owner's targets)",
+    "follow-up-replies": "skill (replies are read and drafted by the agent; no reply operation is mapped)",
+    "record-keeping": "gap (HubSpot is not built)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "sync", "schedule": "0 22 * * *", "entry": "sync", "summary": "Read recent campaign results and each platform's flows. Flag sends under the owner's targets. Changes nothing."},
+  {"name": "draft", "schedule": "0 20 * * *", "entry": "draft", "summary": "Create a Mailchimp draft campaign for each newsletter the agent has written, then queue its scheduled send for approval."},
+  {"name": "flows", "schedule": "30 22 * * *", "entry": "flows", "summary": "Queue each flow start, pause, live or manual change the agent has proposed, for approval."}
+ ],
+ "draft_ops": {
+  "mailchimp": ["core.reports_list", "core.automations_list", "core.automations_list-emails", "core.campaigns_create", "core.campaigns_upsert-content"],
+  "klaviyo": ["get_flows"]
+ },
+ "live_ops": {
+  "mailchimp": ["core.campaigns_create-action-schedule", "core.automations_create-email-action-start", "core.automations_create-email-action-pause"],
+  "klaviyo": ["update_flow"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, a campaign saved in Mailchimp's draft state, and its content. Anything that schedules, sends, starts or pauses an email, or changes a flow's status, is a live operation and waits for a person.",
+ "capabilities": ["campaigns.list", "campaigns.report", "messages.draft"],
+ "adapters": {
+  "mailchimp": {"status": "docs-only", "covers": "newsletter as a draft campaign, schedule for approval, reports, automated email start and pause for approval"},
+  "klaviyo": {"status": "docs-only", "covers": "flow list, and flow live or manual change for approval"}
+ },
+ "gaps": [
+  "Klaviyo newsletters: creating a campaign needs its message details (subject, sender, template) mapped first; only flows are drafted and changed for Klaviyo.",
+  "Klaviyo results: query_campaign_values is a POST that the kit marks as a write, so the cron cannot read Klaviyo open and click rates until the kit reads it as a read.",
+  "ActiveCampaign: its pages are blog articles only (status docs-read); it has no adapter. Build it after a sandbox account is confirmed.",
+  "HubSpot record-keeping, list building from property or lead platforms (ID4Me and similar), and reply handling are not mapped; they stay with the owner or the agent skill.",
+  "Writing automated flow email content (the email body, not its status) is not mapped for Mailchimp or Klaviyo here; flow copy is written in the platform by a person.",
+  "Mailchimp schedule_time format and whether a campaign passes the send checklist are unconfirmed on a live account; confirm on a Mailchimp test account before the first approval.",
+  "Mailchimp and Klaviyo are status spec: offline tests only. Neither adapter has run against a real account.",
+  "core/capabilities.json has no campaign create or schedule capability; the capabilities above are the nearest existing names.",
+  "tools/deploy.ts reads only the quoting keys from settings (intake, quotes, rate_card, messages), so a deploy of this workflow would render no secret names until secretNames covers platforms; that is a core change.",
+  "There is no CLI command to write a newsletter or flow proposal into the store; the agent (or the CRM shell) must write them to the newsletters and flow-changes namespaces until a propose command exists."
+ ],
+ "evidence": {
+  "calls": "40 email marketing calls read, 31 describe the process; schedule-send, automation-build, approval, tracking and follow-up are 88 to 100 percent manual, write-copy 33 percent",
+  "platforms": "Mailchimp and Klaviyo mapped step by step from their official specs in the endpoint map; ActiveCampaign from its help articles only"
+ }
+}

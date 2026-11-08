@@ -1,0 +1,65 @@
+{
+ "id": "sops-training",
+ "name": "Turn know-how and videos into SOPs and training",
+ "industry": "all",
+ "department": "people",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns know-how pages and walkthrough videos into SOP pages and training. A draft SOP goes into the business's wiki, is published once a person approves it, then each trainee gets an Asana task and a training email, both approved before they go. Crons read and draft; a person approves every publish, assignment and email.",
+ "families": {
+  "all": {
+   "evidence": "28 of 40 discovery calls read describe how they turn know-how into SOPs: 17 by hand or without naming a tool, 6 with Loom and Confluence, 4 with an AI assistant, 1 with a job system",
+   "steps": ["capture-know-how", "record-video", "write-sop", "review-approve", "store-and-share", "assign-training", "train-new-hire", "update-when-changed", "record-keeping"],
+   "covered_by": {
+    "capture-know-how": "intake (know-how pages and walkthrough emails)",
+    "record-video": "intake (video links arrive in the walkthrough email; the owner records the video)",
+    "write-sop": "skill (outline into a proposal), then draft (SOP page in draft)",
+    "review-approve": "approval (a person reads the draft page and approves the publish)",
+    "store-and-share": "approval (publish to the SOP space)",
+    "assign-training": "train (Asana task assigned and training email, both approved)",
+    "train-new-hire": "train (one task and one email per trainee per SOP)",
+    "update-when-changed": "not yet (see gaps)",
+    "record-keeping": "not yet (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New know-how pages from the source space and walkthrough emails: one stored source each."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Write each source that has an SOP outline into a draft SOP page, and queue its publish for approval."},
+  {"name": "train", "schedule": "0 * * * *", "entry": "train", "summary": "After an SOP is published, one Asana training task and one training email per trainee, drafted and queued for approval."}
+ ],
+ "draft_ops": {
+  "confluence": ["openapi-v2-v3.getPages", "openapi-v2-v3.createPage"],
+  "microsoft-365": ["users.mailFolders.ListMessages", "users.CreateMessages"],
+  "asana": ["createTask"]
+ },
+ "live_ops": {
+  "confluence": ["openapi-v2-v3.updatePage"],
+  "microsoft-365": ["users.user.messages.message.send"],
+  "asana": ["updateTask"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of the know-how pages and the walkthrough emails, an SOP page in draft, an unassigned Asana task in the training project, an Outlook draft. Publishing an SOP, assigning a task and sending an email are live operations and wait for a person.",
+ "capabilities": ["documents.list", "documents.create", "tasks.create", "messages.draft"],
+ "adapters": {
+  "confluence": {"status": "docs-only", "covers": "know-how pages from a source space; SOP pages created as drafts in the SOP space; publish on approval"},
+  "microsoft-365": {"status": "docs-only", "covers": "walkthrough emails from a mailbox folder; training emails as Outlook drafts; sending through the approval queue"},
+  "asana": {"status": "docs-only", "covers": "one unassigned training task per trainee per SOP; assignment on approval"}
+ },
+ "gaps": [
+  "Loom (named in 2 calls, the most used recording tool): not a platform in the kit. Walkthrough videos are reached through the link in the email, and the agent watches them; no transcript is pulled.",
+  "Claude, GPT and AI agents (named in 8 mentions, the tools most used to write SOPs): the model is the agent, not a kit platform. Writing the outline is a skill step, not an adapter.",
+  "No command writes an SOP outline into the store yet. The quoting propose command is quoting-only and core is not editable here, so the outline has to be written into the proposals namespace by the CRM shell or a later core change.",
+  "Confluence publish sends the draft's own version number. Confluence accepting that for a draft page is unverified until a sandbox SOP space proves it.",
+  "Record-keeping (staff have seen each SOP): Confluence and Asana read receipts are not mapped as used here, so completion is not read back. Asana task completion is a person's check.",
+  "Update-when-changed (a designated person centralises feedback and revises SOPs): nothing watches a published SOP for edits or for new know-how, so revisions are a person's step.",
+  "Wunderbuild (job system, 1 call) and Mirror maps (2 calls): not platforms in the kit. Their SOPs are written and shared by hand in this build.",
+  "Owners recording their own know-how, interviews, and the choice of which SOPs a trainee needs are people's judgment, not automated. Every trainee currently receives every published SOP.",
+  "Notion, SOP apps and other wikis named in the calls have no mapped operations here.",
+  "Every adapter is docs-only until a sandbox Confluence space, Microsoft 365 developer tenant and Asana workspace prove it."
+ ],
+ "evidence": {
+  "calls": "40 of 54 candidate calls read; 28 describe how they turn know-how into SOPs",
+  "platforms": "all-sops-training-platforms.json is missing, so no platform's help docs were mapped for this job. The adapters are built on the three platforms the calls name that have mapped operations: Confluence (2 calls), Microsoft 365 (2 calls) and Asana (2 calls)"
+ }
+}

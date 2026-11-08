@@ -1,0 +1,12 @@
+{
+ "family": "all",
+ "business_name": "Example Business",
+ "signoff": "Operations team",
+ "asana": {"intake_project_gid": "1200000000000001", "record_project_gid": "1200000000000002"},
+ "slack": {"channel": "C0123456789"},
+ "routes": [
+  {"match": "quote", "assignee": "estimator@example.com.au", "slack_user": "U0123456789", "due_days": 2},
+  {"match": "invoice", "assignee": "accounts@example.com.au", "due_days": 3}
+ ],
+ "chase_after_hours": [24, 72]
+}

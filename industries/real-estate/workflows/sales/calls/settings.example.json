@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Real Estate",
+ "microsoft_365": {"mailbox": "sales@example.com.au", "folder": "inbox"},
+ "first_call_text": "Hi {name}, thanks for getting in touch. I would like to set up a short call about your property. What time suits you this week?",
+ "follow_up": {"after_days": [3, 7]}
+}

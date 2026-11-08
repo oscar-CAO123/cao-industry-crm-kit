@@ -1,0 +1,19 @@
+{
+ "business_name": "Example Buyers Agency",
+ "note_type_id": 1,
+ "watchlist": [
+  {
+   "id": "example-st-12",
+   "address": "12 Example St, Suburb NSW 2000",
+   "vaultre_property_id": 123456,
+   "domain_property_id": "2000000000",
+   "assumptions": {
+    "price": 800000,
+    "weekly_rent": 800,
+    "annual_costs": 6000,
+    "loan_amount": 600000,
+    "loan_rate_pct": 6
+   }
+  }
+ ]
+}

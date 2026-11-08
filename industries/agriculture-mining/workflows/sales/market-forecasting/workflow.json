@@ -1,0 +1,48 @@
+{
+ "id": "agriculture-mining:market-forecasting",
+ "name": "Forecast market demand and prices for selling and supply decisions",
+ "industry": "agriculture-mining",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Forecasts how much of each product the business will sell and what it can charge, from its own invoice history, its price list and buyer enquiries, so the owner can decide what to sell, pack and store. Crons read and draft; the monthly summary is sent only when a person approves it.",
+ "families": {
+  "all": {
+   "evidence": "2 discovery calls describe this way of forecasting (log, timber and grain exports; potatoes and garlic, packing and storage)",
+   "steps": ["demand-signal", "price-watch", "supply-estimate", "build-forecast"],
+   "covered_by": {"demand-signal": "demand-signal (Xero sales history and buyer enquiries in Outlook)", "price-watch": "price-watch (list price against last invoiced price)", "supply-estimate": "not yet (see gaps)", "build-forecast": "forecast (trailing average per item, a register row per item and a summary draft)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "demand-signal", "schedule": "0 20 * * *", "entry": "demand-signal", "summary": "Read sales invoices from Xero and buyer enquiries from the Outlook folder into the store (20:00 UTC is 6 or 7 am in eastern Australia)."},
+  {"name": "price-watch", "schedule": "30 20 * * *", "entry": "price-watch", "summary": "Compare each list price with the last price invoiced; log moves past the alert level to the register, once per item per month."},
+  {"name": "forecast", "schedule": "0 21 1 * *", "entry": "forecast", "summary": "On the 1st of each month: expected volume per item from the trailing average, a register row per item, and one summary email drafted to the owner. The send waits for approval."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoices", "accounting.getItems"],
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, register rows in the client's own workbook, and an email draft in the client's mailbox. Sending that draft is a live operation and waits for a person.",
+ "capabilities": ["invoices.list", "sheets.read", "sheets.append", "messages.draft", "notify.send"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "sales invoice history by line item, and item sales prices (read only)"},
+  "microsoft-365": {"status": "docs-only", "covers": "buyer enquiries from Outlook, the price list and register in Excel tables, the summary as an Outlook draft"}
+ },
+ "gaps": [
+  "The platform evidence for this step came back unknown on google-workspace, microsoft-365 and salesforce: the fetched pages were marketing and accessibility guides, not forecasting or pricing docs. Salesforce has no platform in the kit, so no operations are mapped for it.",
+  "Supply estimate (how many pallets or tonnes to pack, from the packing whiteboard or stock counts) has no mapped source: the whiteboard is not a platform, and no stock or packing platform was evidenced for this job. The owner enters it, or it is a skill step.",
+  "Buyer and retailer portals and the phone calls that set next month's price are not mapped. Only what lands in Xero or the Outlook folder is read.",
+  "Season, weather, crop and market judgment is the owner's. The cron forecast is a trailing average of invoiced volume and nothing more.",
+  "Xero sales are read up to 1,000 invoices per run (10 pages of 100). A business with more invoices in 12 months needs the page cap raised.",
+  "Both adapters are docs-only until a sandbox Xero demo company and a Microsoft 365 developer tenant prove them.",
+  "Scenario checks, forward commitments, buyer updates and review of forecast accuracy are not built. They are judgment or record steps for the owner's usual process."
+ ],
+ "evidence": {
+  "calls": "2 of 2 discovery calls describe how they forecast; each step is fully manual (100 percent) and the turnaround stated is next month or one day ahead",
+  "platforms": "Platform docs for google-workspace, microsoft-365 and salesforce did not cover forecasting, pricing or sell decisions. The build uses the mapped Xero and Microsoft 365 operations that hold the same data."
+ }
+}

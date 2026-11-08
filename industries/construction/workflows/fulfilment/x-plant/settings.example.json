@@ -1,0 +1,9 @@
+{
+  "family": "plant-register",
+  "owner_email": "owner@example.com.au",
+  "business_name": "Example Civil Pty Ltd",
+  "workshop_category_uuid": "",
+  "trackunit_page_size": 100,
+  "trackunit_max_pages": 10,
+  "top_jobs": 10
+}

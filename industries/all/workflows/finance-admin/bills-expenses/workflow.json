@@ -1,0 +1,58 @@
+{
+ "id": "bills-expenses",
+ "name": "Capture bills, receipts and supplier invoices",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns supplier bills and receipts into entered bills in the business's accounting software, checks each against its purchase order and chart of accounts, queues each authorisation for a person, and lists the bills that are overdue to pay. Crons read and draft; a person approves every authorisation.",
+ "families": {
+  "all": {
+   "evidence": "34 of 39 calls describe how they capture and pay bills, all by hand or unstated",
+   "steps": ["bill-arrives", "capture-receipt", "code-to-account", "enter-bill", "match-to-job", "approve-bill", "pay-supplier", "chase-missing-receipt", "handover-to-accountant", "reconcile-card-bank"],
+   "covered_by": {
+    "bill-arrives": "not covered (no intake adapter: the agent skill writes the bill into the bills store)",
+    "capture-receipt": "skill (reads the document into a bill record)",
+    "code-to-account": "enter (every line's account code is checked against the Xero chart)",
+    "enter-bill": "enter (DRAFT bill in Xero, no send)",
+    "match-to-job": "enter (the purchase order is found in Xero and its value checked; the job choice stays with the owner)",
+    "approve-bill": "approval (AUTHORISED in Xero only after a person approves)",
+    "pay-supplier": "not covered (payment runs are not mapped for Xero)",
+    "chase-missing-receipt": "not covered (no mailbox adapter)",
+    "handover-to-accountant": "review (overdue authorised bills listed for the accountant)",
+    "reconcile-card-bank": "not covered (bank reconciliation is not mapped for Xero)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "enter", "schedule": "*/15 * * * *", "entry": "enter", "summary": "Enter each new bill in the bills store as a DRAFT bill in Xero, then queue its authorisation for approval."},
+  {"name": "review", "schedule": "0 22 * * *", "entry": "review", "summary": "List the authorised bills that are past due, for the owner or accountant (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.getAccounts", "accounting.getPurchaseOrders", "accounting.getInvoices", "accounting.createInvoices"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateOrCreateInvoices"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a supplier contact, a bill in DRAFT, and reads. The authorisation of a bill (status AUTHORISED, so it can be paid) is a live operation and waits for a person.",
+ "capabilities": ["invoices.list", "invoices.create", "contacts.list", "contacts.upsert"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "supplier contact, chart check, purchase order check, DRAFT bill, authorisation, overdue list"}
+ },
+ "gaps": [
+  "Dext: not in the kit (no core/sdk/platforms/dext), and its help pages map no API operations. Capture, coding, approval and publish to Xero are described in its help pages but not built here.",
+  "MYOB Business: bill read and supplier payment operations are mapped, but no bill create is. The supplier payment line field that holds the bill UID is not confirmed on the vendor page, and the token exchange is not built. No MYOB adapter.",
+  "Bill documents are not attached in Xero: the SDK sends JSON bodies only, and the attachment endpoints need a raw octet-stream body. A runtime change in core/sdk/call.ts would be needed.",
+  "No intake: no mailbox or upload adapter. Bills reach the bills store from the agent skill (or the CRM shell), so bill arrival is a judgment step.",
+  "Staff receipts and expense claims: Xero receipts need the Xero user ID, which is not read here. Not covered.",
+  "Batch supplier payments and card or bank reconciliation: the bank and payment steps are not confirmed from Xero help pages, and reconciliation is a judgment step.",
+  "Xero's pages here are marketing guides plus the API list, with no bill help articles. Approval stages and status names need a live Xero demo company to confirm.",
+  "The purchase order check reads the first 5 pages of Xero purchase orders (500 at most). An older order past that is reported as not found.",
+  "Judgment steps stay with the agent skill: reading the document, choosing the account code for each line, choosing the job, and deciding whether a mismatch is acceptable."
+ ],
+ "evidence": {
+  "calls": "34 of 39 bill and expense calls describe how they do it; 65 percent of enter-bill steps and 100 percent of reconcile and chase steps are manual",
+  "platforms": "Xero API operations and its help pages were mapped; Dext and MYOB pages were checked and are listed in gaps"
+ }
+}

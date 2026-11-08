@@ -1,0 +1,12 @@
+{
+ "family": "all",
+ "business_name": "Example Trades",
+ "signoff": "Operations team",
+ "know_how": ["confluence", "microsoft-365"],
+ "confluence": {"source_space_id": "123456", "sop_space_id": "234567"},
+ "microsoft_365": {"mailbox": "training@example.com.au", "folder": "inbox", "search": "walkthrough"},
+ "asana": {"project_gid": "1200000000000001"},
+ "trainees": [
+  {"name": "Jordan Example", "email": "jordan@example.com.au"}
+ ]
+}

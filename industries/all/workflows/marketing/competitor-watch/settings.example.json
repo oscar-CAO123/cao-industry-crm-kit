@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Business",
+ "domain": "example.com.au",
+ "competitors": [
+  {"name": "Competitor One", "domain": "competitor-one.com.au", "facebook_page_id": "123456789012345"},
+  {"name": "Competitor Two", "domain": "competitor-two.com.au"}
+ ],
+ "semrush_project_name": "Competitor watch example.com.au"
+}

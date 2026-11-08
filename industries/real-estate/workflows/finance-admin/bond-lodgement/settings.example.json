@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Property",
+ "notify": "team@example.com.au",
+ "microsoft_365": {"mailbox": "bonds@example.com.au"},
+ "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "BondRegister"},
+ "max_pages": 5
+}

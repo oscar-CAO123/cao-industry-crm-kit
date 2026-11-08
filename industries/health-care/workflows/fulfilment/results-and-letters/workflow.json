@@ -1,0 +1,50 @@
+{
+ "id": "health-care:results-and-letters",
+ "name": "Action results, send referrals and reply letters to GPs",
+ "industry": "health-care",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes a result the clinic has sent back, drafts the reply letter to the GP as a draft treatment note in Cliniko, and queues a results-review recall for a person to approve. Crons read and draft; a person approves every recall, and sends every letter from the practice's own system.",
+ "families": {
+  "result-to-gp": {
+   "evidence": "3 discovery calls read; 2 describe the process, and the steps come from those descriptions",
+   "steps": ["result-received", "patient-contact", "letter-drafted", "letter-sent"],
+   "covered_by": {
+    "result-received": "skill (the agent records the filed result against the patient in the CRM shell)",
+    "patient-contact": "approval (a results-review recall, which Cliniko uses to book the walk-through)",
+    "letter-drafted": "draft (the GP letter saved as a draft treatment note on the patient)",
+    "letter-sent": "outside the kit (sent from the practice's secure messaging; no kit operation maps it)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Write each GP letter the agent has drafted to Cliniko as a draft treatment note."},
+  {"name": "recall", "schedule": "20 * * * *", "entry": "recall", "summary": "Queue a results-review recall for each result whose letter note is drafted. The recall runs only when a person approves it."}
+ ],
+ "draft_ops": {
+  "cliniko": ["treatment-note.createtreatmentnote"]
+ },
+ "live_ops": {
+  "cliniko": ["recall.createrecall"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the practice: a draft treatment note on the patient record. The recall is a live operation: Cliniko texts the patient from a recall, so it waits for a person's approval.",
+ "capabilities": ["notes.draft", "recalls.create"],
+ "adapters": {
+  "cliniko": {"status": "docs-only", "covers": "draft GP letter note on the patient record; results-review recall (queued for approval)"}
+ },
+ "gaps": [
+  "Sending the letter to the GP: Cliniko has no letter-sending operation in the kit, and the practice's secure messaging (HealthLink, Medical Objects, Promedicus) has no kit platform. The letter is sent by the practice from its own system.",
+  "Referrals: Cliniko referral source operations only read and update referral sources. No operation creates or sends a referral, so nothing is built for referrals.",
+  "Result intake: Cliniko has no result inbox in the kit. The agent or the CRM shell records the filed result (patient id, filed date, letter) in the results store. No runtime change was made.",
+  "Genie (Magentus) and ZedMed: their pages describe results, letters and referrals, but neither has an ops file in core/sdk/platforms, so neither has an adapter.",
+  "Jane App: only patient search is mapped (5 read operations, no letter, result or recall operations), so nothing is built for it.",
+  "Result triage (urgent or normal) and clinician sign-off on results: the evidence and the platform docs do not describe either, so both stay with the clinician.",
+  "Cliniko recall_at format and time zone, and the treatment note sections for a GP letter, need a check on a live account. Cliniko has not been run against a real account."
+ ],
+ "evidence": {
+  "calls": "3 calls read; 2 describe how results and letters are handled (variants file: one family, all by hand or with Claude)",
+  "platforms": "Genie and ZedMed platform pages read (no ops in the kit); Cliniko mapped (223 ops); Jane App mapped (5 read ops). Only Cliniko has mapped operations for this job."
+ }
+}

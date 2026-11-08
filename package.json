@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/kit.test.mjs tests/helpers.test.ts tests/security.test.ts tests/sdk.test.ts tests/vendor.test.ts",
+    "test": "node --test \"tests/*.test.ts\" \"tests/*.test.mjs\"",
     "check": "node tools/check.mjs",
     "sdk:generate": "node tools/sdk-generate.mjs",
     "sdk": "node tools/sdk.mjs"

@@ -1,0 +1,59 @@
+{
+ "id": "construction:costs",
+ "name": "Costs blow out unseen",
+ "industry": "construction",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Catches cost overruns on a job before the margin is gone: reads the budget and the committed and actual spend from Xero, records every account code running past its budget, and queues each draft timesheet for approval. Crons read and record; a person approves every timesheet.",
+ "families": {
+  "job-cost-tracking": {
+   "evidence": "10 construction calls on job costs in the worklist; the mining pass read 18 and 12 describe the process",
+   "steps": ["budget-set", "purchase-orders", "supplier-bills", "timesheets", "cost-to-date-check", "record-keeping", "client-claims", "other"],
+   "covered_by": {
+    "budget-set": "budget-watch (reads the Xero budget lines as the baseline)",
+    "purchase-orders": "spend-watch (open purchase orders count as committed cost)",
+    "supplier-bills": "spend-watch (authorised and paid bills count as actual cost)",
+    "timesheets": "timesheet-approval (each draft timesheet is queued for a person)",
+    "cost-to-date-check": "spend-watch (committed plus actual against budget, per account code)",
+    "record-keeping": "spend-watch (each account code's figures are kept in the store)",
+    "client-claims": "not covered (see gaps)",
+    "other": "not covered (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "budget-watch", "schedule": "0 22 * * *", "entry": "budget-watch", "summary": "Read each budget line for the period from Xero and keep it as the baseline."},
+  {"name": "spend-watch", "schedule": "0 */2 * * *", "entry": "spend-watch", "summary": "Compare committed and actual cost with the budget for each account code and record every line over budget."},
+  {"name": "timesheet-approval", "schedule": "15 * * * *", "entry": "timesheet-approval", "summary": "Queue each draft timesheet in Xero payroll for a person to approve."}
+ ],
+ "draft_ops": {
+  "xero": [
+   "accounting.getBudgets", "accounting.getBudget", "accounting.getPurchaseOrders", "accounting.getInvoices",
+   "payroll-au-v2.getTimesheets"
+  ]
+ },
+ "live_ops": {
+  "xero": ["payroll-au-v2.approveTimesheet"]
+ },
+ "draft_ops_note": "Draft operations here are reads only. The crons write their own figures to the workflow store, which reaches nobody outside the business. Approving a timesheet moves wages, so it is a live operation and is only ever queued.",
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "budget baseline, committed and actual cost per account code, draft timesheets and their approval"}
+ },
+ "gaps": [
+  "Buildxact: the platform runs cost-plus jobs and holds the job budget, but its ops file maps only sign-in, so no budget or cost read can run. Its help pages describe no overrun alert.",
+  "MYOB: the ops file maps a general ledger job register, purchase bills and payroll timesheets, but the supplied MYOB pages are generic and do not confirm job costing or the field names. No MYOB adapter is built until its spec is confirmed.",
+  "Fergus: the kit maps job financial summaries and quotes, but no call or help page in this evidence named Fergus for costs, so no adapter is built for it.",
+  "ServiceM8: no evidence platform file for costs. Not built.",
+  "Per-job split: Xero budgets are checked per account code across the whole business for the period. A per-job check needs job tracking set on each bill and purchase order, which this adapter does not yet set or read.",
+  "Purchase order to bill matching: a billed order is counted by its bill only. A bill that arrives without a matching order is counted as actual cost, so the committed figure can read low until orders are raised.",
+  "Client claims, progress claims and variations: not in the adapter. The mapped Xero operations do not cover a job-level variation or progress claim.",
+  "Judgment steps stay with a person: what an overrun means for a job, whether to raise a variation, and whether to hold a supplier bill.",
+  "Every adapter is docs-only until a Xero demo company proves the reads and the timesheet approval."
+ ],
+ "evidence": {
+  "calls": "10 construction calls on costs in the worklist; 18 calls read and 12 describe the process in the mining pass",
+  "platforms": "Xero help pages (generic, with the API mapped), MYOB help pages (generic), Buildxact help centre (no mapped operations)"
+ }
+}

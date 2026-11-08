@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Property",
+ "microsoft_365": {"mailbox": "arrears@example.com.au"},
+ "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "ArrearsRegister"},
+ "reminder_days": [1, 7],
+ "max_pages": 5
+}

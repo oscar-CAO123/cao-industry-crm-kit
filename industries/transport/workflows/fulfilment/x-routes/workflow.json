@@ -1,0 +1,64 @@
+{
+ "id": "transport:x-routes",
+ "name": "Route planning",
+ "industry": "transport",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes the day's stops from the business's dispatch platform, finds the stops not yet in a route, and queues a dispatch of each team's routes for approval. Crons read and draft; a person approves every dispatch that sends a driver out.",
+ "families": {
+  "stops-to-dispatched-runs": {
+   "evidence": "0 of 3 discovery calls described how they route; steps come from the platform docs of Onfleet, Locate2u and Webfleet",
+   "steps": ["job-intake", "gather-stops", "check-capacity", "build-routes", "optimise-sequence", "check-constraints", "dispatch-routes", "customer-notify", "mid-day-changes", "proof-of-delivery", "record-keeping", "follow-up"],
+   "covered_by": {
+    "job-intake": "intake (reads tasks from Onfleet)",
+    "gather-stops": "intake (stops held in the store, no address flagged)",
+    "check-capacity": "skill (team and worker limits are set in Onfleet, not read here)",
+    "build-routes": "plan (counts unrouted stops per team, queues dispatch)",
+    "optimise-sequence": "plan (Onfleet auto-dispatch orders the stops; scheduled optimisation not wired)",
+    "check-constraints": "gap",
+    "dispatch-routes": "approval (plan queues the team dispatch)",
+    "customer-notify": "not changed here (Onfleet's own notification settings)",
+    "mid-day-changes": "gap",
+    "proof-of-delivery": "not covered (driver app)",
+    "record-keeping": "not covered (Onfleet dashboard)",
+    "follow-up": "gap"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Reads tasks from the dispatch platform since the last run and keeps them as stops. Flags stops with no address."},
+  {"name": "plan", "schedule": "*/30 * * * *", "entry": "plan", "summary": "Counts stops not yet in a route for each team. Drafts a plan note and queues one team dispatch per day for approval."}
+ ],
+ "draft_ops": {
+  "onfleet": ["core.docs.get_tasks_all", "core.docs.get_routePlans"]
+ },
+ "live_ops": {
+  "onfleet": ["core.docs.post_teams_id_dispatch"]
+ },
+ "draft_ops_note": "Draft operations are reads only: tasks and route plans. Nothing a cron drafts reaches a driver or a customer. A team dispatch sends routes to drivers, so it is a live operation and waits for a person.",
+ "capabilities": ["tasks.list"],
+ "adapters": {
+  "onfleet": {"status": "docs-only", "covers": "task list, route plans, team auto-dispatch (Scale plan or higher per the Onfleet docs)"}
+ },
+ "gaps": [
+  "Call evidence: the 3 discovery calls read for this workflow did not describe how they route stops, so every step is from platform docs, not from owners.",
+  "Locate2u: the route planning and driver app are documented on marketing and training pages, but the kit has no ops file for it, so no adapter is built.",
+  "Webfleet: its pages are vehicle tracking marketing, not route planning or dispatch documentation, and the kit has no ops file for it. No adapter is built.",
+  "Onfleet auto-dispatch is a Scale plan feature per its docs. A business on a lower plan cannot run the dispatch step until it upgrades or uses another route.",
+  "Onfleet scheduled route optimisation (optimizations/scheduled) is mapped in the kit but not wired: its request body is not confirmed from the docs read here.",
+  "Creating tasks for new stops (tasks, taskOrders) is not wired. Stops are expected to arrive in Onfleet from the business's own system or the Onfleet dashboard.",
+  "Mid-day changes, failed-delivery follow-up and cancellations are not wired. The state codes for failed and completed tasks are not confirmed from the docs read here.",
+  "Mass, height, access, curfew and work diary checks are not in the Onfleet docs read here. Check them with the business before dispatch.",
+  "Customer notifications go out from Onfleet's own settings. This workflow does not change them, and the approval summary does not show them.",
+  "The Onfleet support host returned no pages, so the Onfleet steps rest on its marketing pages and the API reference, not on how-to guides.",
+  "Onfleet metadata queries (workers, teams, tasks metadata) are POST reads that the kit marks as writes, so they are not used by the crons.",
+  "Every adapter is docs-only until a sandbox account proves it. The offline test covers the workflow's rules, not a real Onfleet account."
+ ],
+ "settings_note": "settings.example.json names the team ids and where each route ends. The team ids must be set per client.",
+ "evidence": {
+  "calls": "3 discovery calls read for transport route planning; 0 described their process, so no step or variant is confirmed by owners",
+  "platforms": "3 platforms mapped step by step from their docs (Locate2u, Onfleet, Webfleet); 1 (Onfleet) has mapped operations in the kit"
+ }
+}

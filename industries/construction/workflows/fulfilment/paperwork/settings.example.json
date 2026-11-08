@@ -1,0 +1,19 @@
+{
+ "business_name": "Example Construction",
+ "google": {
+  "spreadsheet_id": "SPREADSHEET_ID",
+  "records": {
+   "range": "Requests!A1:Z500",
+   "ready_value": "ready",
+   "approved_value": "approved",
+   "columns": {"id": "ID", "kind": "Document", "email": "Client email", "status": "Status"}
+  },
+  "log_range": "Document log!A1",
+  "output_folder_id": "OUTPUT_FOLDER_ID"
+ },
+ "documents": [
+  {"kind": "extension of time claim", "template_id": "TEMPLATE_EOT_ID"},
+  {"kind": "delay notice", "template_id": "TEMPLATE_DELAY_ID"},
+  {"kind": "progress report", "template_id": "TEMPLATE_PROGRESS_ID"}
+ ]
+}

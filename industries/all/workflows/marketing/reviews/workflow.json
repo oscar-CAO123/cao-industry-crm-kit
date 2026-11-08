@@ -1,0 +1,56 @@
+{
+ "id": "reviews",
+ "name": "Ask for reviews and reply to them",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Asks customers for a review after a finished job, and drafts a reply to each review that needs one. Crons read, draft and queue only: a person approves every review request, and a person posts every reply, because the kit cannot post replies yet.",
+ "families": {
+  "all": {
+   "evidence": "12 discovery calls describe how the business asks for reviews and answers them; 4 describe a process (job completion, the review request, replies to one-star reviews, a technician checklist)",
+   "steps": ["job-complete", "review-monitor", "request-message", "request-channel", "reply-positive", "reply-negative"],
+   "covered_by": {
+     "job-complete": "ask (completed_jobs, written by the business's job tool or the CRM shell)",
+     "review-monitor": "reviews (Podium only; GoHighLevel has no review read in the kit)",
+     "request-message": "platform (GoHighLevel workflow wording; Podium invite text is set in Podium)",
+     "request-channel": "platform (review link set on the platform; Podium invites carry it)",
+     "reply-positive": "draft (reply_drafts, read and posted by a person)",
+     "reply-negative": "draft (reply_drafts, flagged for a person); posting is not covered (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "reviews", "schedule": "*/30 * * * *", "entry": "reviews", "summary": "Reads the business's reviews from Podium and drafts a reply for each one that needs an answer. Nothing is posted."},
+  {"name": "ask", "schedule": "15,45 * * * *", "entry": "ask", "summary": "Queues a review request for each completed job not yet asked. A person approves each one before it goes out."}
+ ],
+ "draft_ops": {
+  "podium": ["docs.get_reviews"]
+ },
+ "live_ops": {
+  "podium": ["docs.post_reviews_invites"],
+  "gohighlevel": ["contacts.add-contact-to-workflow", "contacts.add-tags"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of the reviews the business holds. Anything that sends a review invite, adds a contact to the review workflow (which sends the request), or tags a contact (which can start a workflow) is a live operation and waits for a person.",
+ "capabilities": ["reviews.list", "reviews.draft", "reviews.request"],
+ "adapters": {
+  "podium": {"status": "docs-only", "covers": "review read (drafts), review invite (queued for approval)"},
+  "gohighlevel": {"status": "docs-only", "covers": "review request workflow and asked tag (queued for approval); no review read"}
+ },
+ "gaps": [
+  "Replies are drafted, not posted. Podium's reply operation (docs.post_reviews_uid_responses) needs {uid} in its path, but the kit maps no parameters for it, so the call cannot be built. GoHighLevel's send-review-reply needs a conversationId for each review, and the kit has no operation that lists the business's Google reviews. A kit change is needed for either one (core/ was not changed here).",
+  "Google Business Profile: no ops file in the kit, and the 30 pages fetched were Google Ads and Accelerate articles only. No review step is mapped.",
+  "Finished-job feed: neither platform's docs show a job-complete trigger. The ask cron reads completed_jobs from the store, so something outside this workflow must write them.",
+  "Podium contact search by tag: GET /contacts has no tag filter, so the kit cannot find job-complete contacts in Podium. Podium asks therefore come only from completed_jobs.",
+  "GoHighLevel contact search: the contact search body has no fields in the spec, so tagged jobs cannot be picked out automatically. Asks come from completed_jobs.",
+  "Reminder chase (second and third reminders): Podium is partial (its reminder text is cut off in capture) and GoHighLevel documents one day only. No chase cron is built.",
+  "Escalation: neither platform documents passing a poor review to a manager. A low rating is flagged in reply_drafts only.",
+  "Review monitor and alerts for new Google reviews on GoHighLevel: not documented and not mapped.",
+  "Both adapters are docs-only until a sandbox account (a Podium developer account, a GoHighLevel test sub-account) proves them."
+ ],
+ "evidence": {
+  "calls": "12 discovery calls read; none rejected. 4 describe a review process; 1 describes a Google review request sent only when a survey scores eight out of ten",
+  "platforms": "GoHighLevel help articles and Podium's API reference and review pages, mapped step by step. The Google Business Profile fetch returned Google Ads pages only"
+ }
+}

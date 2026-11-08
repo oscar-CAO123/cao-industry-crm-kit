@@ -1,0 +1,16 @@
+{
+ "family": "tender-takeoff",
+ "business_name": "Example Civil",
+ "microsoft_365": {
+  "mailbox": "tenders@example.com.au",
+  "folder": "inbox",
+  "search": "tender",
+  "digest_to": "estimator@example.com.au",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "BidRegister"},
+  "takeoff": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Takeoff"}
+ },
+ "bluebeam": {
+  "project_id": "PROJECT_ID",
+  "max_polls": 8
+ }
+}

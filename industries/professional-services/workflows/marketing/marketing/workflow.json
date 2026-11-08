@@ -1,0 +1,54 @@
+{
+  "id": "professional-services:marketing",
+  "name": "Marketing data in five places",
+  "industry": "professional-services",
+  "department": "marketing",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Gathers the firm's marketing numbers, which sit in five places (ads, website, search, leads and the practice system), into one report. Only the ad account is mapped so far: each day it reads Meta campaign spend, leads and cost per lead, and writes a report for the owner to read. Crons read and write the workflow's own store only; nothing is changed in the ad account and nothing is sent.",
+  "families": {
+    "all": {
+      "evidence": "1 of 1 professional-services marketing call describes this job: the owner checks ad data by hand whenever he needs a look",
+      "steps": ["pull-ad-data", "pull-web-data", "pull-search-data", "match-to-matters", "define-metrics", "clean-combine", "build-dashboard", "schedule-refresh", "review-report", "record-keeping", "other"],
+      "covered_by": {
+        "pull-ad-data": "draft (Meta campaign insights for the window, read only)",
+        "pull-web-data": "not yet (see gaps)",
+        "pull-search-data": "not yet (no platform mapped for this job)",
+        "match-to-matters": "not yet (see gaps)",
+        "define-metrics": "cron (spend, leads and cost per lead, fixed in the review cron)",
+        "clean-combine": "not yet (only one source is read)",
+        "build-dashboard": "not yet (the report is a store record, not a dashboard)",
+        "schedule-refresh": "cron (pull at 21:00 UTC, review at 22:00 UTC)",
+        "review-report": "cron (review writes the report; the owner reads it)",
+        "record-keeping": "draft (the snapshot and report kept in the workflow store)",
+        "other": "person"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "pull", "schedule": "0 21 * * *", "entry": "pull", "summary": "Campaign spend, impressions, clicks and leads for the window, kept for review (21:00 UTC is 7 or 8 am in eastern Australia)."},
+    {"name": "review", "schedule": "0 22 * * *", "entry": "review", "summary": "Writes the campaign report from the last pull (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "meta-ads": ["AdAccount.get.insights"]
+  },
+  "live_ops": {},
+  "draft_ops_note": "Only reads reach the platform. The report and snapshot are written to the workflow store, which reaches nobody outside the firm. No live operation is mapped for this job: changing an ad, a budget or a pixel would need its own build and an approval step.",
+  "capabilities": ["ads.insights", "reports.run"],
+  "adapters": {
+    "meta-ads": {"status": "docs-only", "covers": "campaign-level insights for one ad account: spend, impressions, clicks, lead actions, date range"}
+  },
+  "gaps": [
+    "Only one of the five places is mapped. The evidence names Meta Ads alone, so website analytics, search visibility, lead sources and the practice system are not wired.",
+    "The Meta platform pages describe no professional services steps: matter matching, dashboards, a refresh schedule and a leadership review are not covered by the platform. The refresh here is the cron schedule, not a Meta feature.",
+    "The meta-ads platform is spec status and tested offline only (platform.json). The insights field names are confirmed against the vendor spec (AdsInsights), but no live ad account has been read.",
+    "The report lives in the workflow store only. No platform receives it yet, so the owner reads it from the CRM shell.",
+    "No live operations: this job changes nothing in an ad account, so there is no approval step. A pause or budget change would need its own build.",
+    "The judgment steps stay with the owner: which campaigns to keep, scale or stop, and what a lead is worth to the firm."
+  ],
+  "evidence": {
+    "calls": "1 call describes this job (pull-ad-data, manual, partner-run); 1 tool named (Meta Ads)",
+    "platforms": "Meta Marketing API pages: insights, leads and pixels mapped; professional services steps not described"
+  }
+}

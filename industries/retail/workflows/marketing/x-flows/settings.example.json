@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Store",
+ "klaviyo": {
+  "conversion_metric_id": "",
+  "timeframe": "last_30_days",
+  "target_conversion_rate": 0.02,
+  "min_recipients": 500
+ }
+}

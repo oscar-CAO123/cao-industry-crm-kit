@@ -1,0 +1,18 @@
+{
+ "business_name": "Example Services",
+ "sources": ["front", "google-workspace"],
+ "front": {"inbox_id": "INBOX_ID", "channel_id": "CHANNEL_ID", "teammate_id": "TEAMMATE_ID"},
+ "google": {"label_name": "Needs reply"},
+ "triage": [
+  {"category": "noise", "match": ["unsubscribe", "newsletter", "no-reply"]},
+  {"category": "complaint", "match": ["complaint", "refund", "not happy"]},
+  {"category": "quote-request", "match": ["quote", "estimate", "how much"]},
+  {"category": "work-order", "match": ["repair", "booking", "fix", "install"]},
+  {"category": "question", "match": ["opening hours", "do you", "can you"]}
+ ],
+ "auto_reply": [
+  {"category": "question", "match": ["opening hours"], "body": "Thanks for getting in touch. We are open 8am to 5pm, Monday to Friday."}
+ ],
+ "sla_hours": 4,
+ "signature": "Example Services team"
+}

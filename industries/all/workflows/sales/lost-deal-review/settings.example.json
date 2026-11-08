@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Business",
+ "locationId": "GHL_LOCATION_ID",
+ "pipeline_id": "",
+ "nurture_reason_ids": [],
+ "nurture_within_days": 90,
+ "rollup_days": 90
+}

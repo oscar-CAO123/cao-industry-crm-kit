@@ -1,0 +1,14 @@
+{
+ "family": "production-plan",
+ "warehouse_code": "MAIN",
+ "horizon_days": 30,
+ "production_plan": [
+  {"product_code": "PIE-BEEF-500", "units_per_day": 40},
+  {"product_code": "SAUCE-BBQ-1L", "units_per_day": 12}
+ ],
+ "components": [
+  {"product_code": "PASTRY-SHEET", "min": 200, "max": 600},
+  {"product_code": "BBQ-BASE", "min": 30, "max": 90}
+ ],
+ "complete_when_due": true
+}

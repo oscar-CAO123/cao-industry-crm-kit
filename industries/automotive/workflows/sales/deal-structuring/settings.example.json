@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Motors",
+ "pipedrive": {"pipeline_id": 1, "intake_stage_id": 2, "submitted_stage_id": 3},
+ "microsoft_365": {
+  "mailbox": "finance@example.com.au",
+  "folder": "inbox",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Deals"}
+ },
+ "lenders": [
+  {"id": "lender-a", "name": "Lender A", "submit_to": "deals@lender-a.example.com"},
+  {"id": "lender-b", "name": "Lender B", "submit_to": "deals@lender-b.example.com"}
+ ],
+ "max_lenders_per_deal": 3,
+ "follow_up": {"after_days": [3, 7]}
+}

@@ -1,0 +1,8 @@
+{
+  "business_name": "Example Grain Co",
+  "books": "xero",
+  "season_start": "2026-07-01",
+  "cost_types": ["DIRECTCOSTS", "EXPENSE", "OVERHEADS"],
+  "budget_id": "",
+  "volume": {"unit": "hectare", "quantity": 0}
+}

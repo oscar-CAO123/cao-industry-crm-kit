@@ -1,0 +1,56 @@
+{
+  "id": "agriculture-mining:crop-records",
+  "name": "Track crop, vineyard, grain and livestock records through the season",
+  "industry": "agriculture-mining",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Keeps the season record for crop, vineyard, grain and livestock farms: reads fields, sessions, recent records, animal counts and rainfall from AgriWebb, flags what the record is missing, and queues each rainfall reading for approval. Crons read and draft; a person approves every write to the farm record.",
+  "families": {
+    "season-records": {
+      "evidence": "1 call describes this way of recording (potato and garlic growing and packing, vineyard lot records)",
+      "steps": ["record-operations", "harvest-yield", "review-report", "record-keeping", "plan-season", "weather-soil-data", "livestock-movements"],
+      "covered_by": {
+        "record-operations": "not covered (AgriWebb's API has no crop-operation write, and the logging tool named on the call is not in the kit)",
+        "harvest-yield": "not covered (FreshTrack bin scans are not in the kit)",
+        "review-report": "draft (the review flags missing crop types, stale records and rainfall gaps into the store)",
+        "record-keeping": "draft (snapshots and reviews kept in the workflow store)",
+        "plan-season": "draft (fields and their crop types read from AgriWebb, checked by the review)",
+        "weather-soil-data": "approval (rainfall readings queued for a person to approve; soil data not covered)",
+        "livestock-movements": "not covered here (the livestock NVD build covers movements and NLIS)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "collect", "schedule": "*/30 * * * *", "entry": "collect", "summary": "Read each watched farm's fields, sessions, recent records, animal count and rainfall from AgriWebb into the store."},
+    {"name": "review", "schedule": "0 22 * * *", "entry": "review", "summary": "Flag what the season record is missing (no recent records, fields with no crop type, no rainfall) from the last read."},
+    {"name": "queue-records", "schedule": "*/30 * * * *", "entry": "queue-records", "summary": "Queue each new rainfall reading for approval. Nothing is written to AgriWebb until a person approves it."}
+  ],
+  "draft_ops": {
+    "agriwebb": ["query.farms", "query.fields", "query.sessions", "query.records", "query.animalsWithCount", "query.rainfalls"]
+  },
+  "live_ops": {
+    "agriwebb": ["mutation.addRainfalls"]
+  },
+  "draft_ops_note": "Draft operations are reads only. Nothing here writes to AgriWebb on a cron. mutation.addRainfalls is a live operation: a cron only queues it, and it runs when a person approves it.",
+  "capabilities": ["farms.list", "fields.list", "sessions.list", "records.list", "animals.count", "rainfall.list", "rainfall.queue"],
+  "adapters": {
+    "agriwebb": {"status": "docs-only", "covers": "farm, field, session, record, animal count and rainfall reads; rainfall writes queued for approval"}
+  },
+  "gaps": [
+    "Crop operations (sprays, fertiliser, cultivation, pruning, harvest) have no write in AgriWebb's API: its record writes cover animal records only (purchase, weigh, observation, group change). Crop operations are read here, not logged.",
+    "agworld (record-operations, compliance-records, review-report and record-keeping rated yes on the platform file): no kit platform folder, so nothing is read or drafted through it. Owners on Agworld keep their records there.",
+    "innovint (compliance-records and storage-stock rated yes): no kit platform folder and no mapped operations.",
+    "FreshTrack (harvest bins scanned at the packing shed): not in the kit, so harvest-yield is not covered.",
+    "CropX (soil and sensor data) and the operations centre named on the call: not in the kit.",
+    "AgriWebb's rainfall write needs the rain gauge sensorId (mapFeatures, type RAIN_GAUGE). The agent or owner must enter it on each proposal; the adapter does not look it up.",
+    "AgriWebb sign-in: bearer token from AGRIWEBB_ACCESS_TOKEN only. The token exchange is not built (platform.json), and no live account has been tested.",
+    "Judgment stays with the agent and the owner: reading field notes, deciding what a flagged field needs, and choosing which rainfall readings to enter.",
+    "Pre-harvest checklist and livestock movements are outside this build."
+  ],
+  "evidence": {
+    "calls": "1 call read (agriculture-mining-crop-records-variants.json). The worklist count of 0 is stale.",
+    "platforms": "agriwebb: 6 steps partial, mapped operations for fields, sessions, records, animal count and rainfall. agworld: 4 steps yes, no kit folder. innovint: 2 steps yes, no kit folder. FreshTrack and CropX: not in the kit."
+  }
+}

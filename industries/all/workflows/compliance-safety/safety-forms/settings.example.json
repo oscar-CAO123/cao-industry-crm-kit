@@ -1,0 +1,9 @@
+{
+ "family": "by-hand-or-unstated",
+ "business_name": "Example Civil",
+ "sitebook": {
+  "job_id": "",
+  "lookback_days": 14,
+  "email_template_id": ""
+ }
+}

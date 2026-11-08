@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Clinic",
+ "intake": ["calendly"],
+ "calendly": {
+  "user_uri": "https://api.calendly.com/users/REPLACE-WITH-USER-UUID",
+  "lookahead_days": 14,
+  "no_show_grace_minutes": 15
+ }
+}

@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Business",
+ "bank_accounts": ["XERO_BANK_ACCOUNT_ID"],
+ "processor": "stripe",
+ "lookback_days": 60,
+ "match_window_days": 3
+}

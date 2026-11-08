@@ -1,0 +1,58 @@
+{
+ "id": "agencies:report",
+ "name": "Client report pack",
+ "industry": "agencies",
+ "department": "customer-success",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Pulls each client's numbers for the last full month, drafts the client report in Gmail once the account manager has written the commentary, and queues the send for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "all": {
+   "evidence": "2 discovery calls describe how they produce client reports",
+   "steps": ["report-trigger", "pull-data", "check-data", "build-report", "add-commentary", "internal-review", "send-report", "client-questions", "action-items", "record-keeping"],
+   "covered_by": {
+    "report-trigger": "pull (runs daily and takes the last full month)",
+    "pull-data": "pull (Supermetrics query)",
+    "check-data": "not yet (see gaps)",
+    "build-report": "draft (HTML report pack)",
+    "add-commentary": "skill (writes the commentary the draft waits for)",
+    "internal-review": "approval (the person reads the Gmail draft before it is sent)",
+    "send-report": "approval",
+    "client-questions": "not yet (see gaps)",
+    "action-items": "not yet (see gaps)",
+    "record-keeping": "draft (report record in the workflow store)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pull", "schedule": "0 20 * * *", "entry": "pull", "summary": "Read last month's numbers for each client from Supermetrics. Reads only."},
+  {"name": "draft", "schedule": "30 20 * * *", "entry": "draft", "summary": "Build each client's report once its commentary is written, put it in Gmail as a draft, and queue its send for approval."}
+ ],
+ "draft_ops": {
+  "supermetrics": ["getData"],
+  "google-workspace": ["gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of client numbers, and a Gmail draft that a person still has to send. Sending the draft is a live operation and waits for a person.",
+ "capabilities": ["reports.pull", "reports.draft", "reports.send"],
+ "adapters": {
+  "supermetrics": {"status": "docs-only", "covers": "pull-data: one getData query per client for the month, from the Supermetrics spec"},
+  "google-workspace": {"status": "docs-only", "covers": "the client report as a Gmail draft, and its approved send"}
+ },
+ "gaps": [
+  "Agency Analytics and Reportz have no platform in the kit and no operations mapped. Clients who report from them need their numbers in Supermetrics, or a platform mapping added to the kit.",
+  "The Supermetrics export operation in the evidence (exportTableGroup) returns a data model, not numbers, so it is not used.",
+  "Commentary is judgment. No command yet writes it into the workflow store, so the draft cron waits until a store write exists (a runtime change, not made here).",
+  "Check-data (cross-source reconciliation) is not built. The vendor docs describe anomaly alerts only.",
+  "Client questions and action-item tracking are not built. Agency Analytics describes a client login and goal alerts, not a task tracker.",
+  "The trend view the owner asked for has no fitting solution yet. A trend read would be a skill, not a cron.",
+  "Every adapter is docs-only until a sandbox Supermetrics account and a Google Workspace test mailbox prove it."
+ ],
+ "evidence": {
+  "calls": "2 of the agencies discovery calls about client reporting, both describing a monthly report built by hand or in a dashboard",
+  "platforms": "vendor docs for Agency Analytics and Reportz (no kit mapping), and the Supermetrics spec for its query operation"
+ }
+}

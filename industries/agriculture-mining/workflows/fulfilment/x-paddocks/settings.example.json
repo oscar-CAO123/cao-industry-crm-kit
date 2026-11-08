@@ -1,0 +1,9 @@
+{
+  "business_name": "Example Station",
+  "microsoft_365": {
+    "mailbox": "records@example.com.au",
+    "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "PaddockJobs"},
+    "qc_email": "qc@example.com.au"
+  },
+  "agriwebb": {"farm_ids": ["AGRIWEBB_FARM_ID"]}
+}

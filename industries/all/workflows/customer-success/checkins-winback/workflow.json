@@ -1,0 +1,68 @@
+{
+  "id": "checkins-winback",
+  "name": "Check in, renew or win back customers",
+  "industry": "all",
+  "department": "customer-success",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Works out which customers are due a check-in, renewal or win-back, drafts the campaign for each group in the business's email tool, and queues every send for approval. Crons read and draft; a person approves every send.",
+  "families": {
+    "all": {
+      "evidence": "21 discovery calls read, 6 describe how they check in on, renew or win back customers; the most-named tools (ActiveCampaign, Freshdesk, spreadsheets) have no platform support rows in the evidence, so the build uses the platforms that do",
+      "steps": ["due-list", "segment", "draft-message", "send-outreach", "call-customer", "handle-replies", "renewal-offer", "win-back-offer", "book-in", "close-renewal", "chase-silence", "update-records", "schedule-next"],
+      "covered_by": {
+        "due-list": "cron (Mailchimp list members, by group tag and last change)",
+        "segment": "settings (each group is a tag and a saved segment the owner builds in Mailchimp)",
+        "draft-message": "draft (Mailchimp campaign and owner-approved template)",
+        "send-outreach": "approval (campaign send)",
+        "call-customer": "not covered (phone calls are a person's work)",
+        "handle-replies": "cron (flags unread conversations with a note; a person answers)",
+        "renewal-offer": "not covered (renewal terms come from the business's own system)",
+        "win-back-offer": "not covered (offers are a person's decision)",
+        "book-in": "not covered (bookings run in the business's own diary)",
+        "close-renewal": "not covered (payment and signing happen in the business's own system)",
+        "chase-silence": "not covered (no chase rule yet)",
+        "update-records": "draft (member notes log each draft and each reply)",
+        "schedule-next": "not covered (next dates come from the business's own system)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "due-list", "schedule": "0 */6 * * *", "entry": "due-list", "summary": "Read subscribed members in each group and record who is due a check-in or win-back."},
+    {"name": "draft", "schedule": "15 * * * *", "entry": "draft", "summary": "Create one Mailchimp campaign draft per group with due customers and queue its send for approval."},
+    {"name": "replies", "schedule": "*/30 * * * *", "entry": "replies", "summary": "Find unread replies to check-in campaigns and note that a person needs to answer."}
+  ],
+  "draft_ops": {
+    "mailchimp": [
+      "core.lists_list-members",
+      "core.conversations_list",
+      "core.campaigns_create",
+      "core.campaigns_upsert-content",
+      "core.lists_create-member-note"
+    ]
+  },
+  "live_ops": {
+    "mailchimp": ["core.campaigns_create-action-send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: a campaign in draft status, its content, a member note, and reads. The campaign send is a live operation and waits for a person.",
+  "capabilities": ["contacts.list", "campaigns.list", "messages.list", "messages.draft"],
+  "adapters": {
+    "mailchimp": {"status": "docs-only", "covers": "due-list, draft campaign, approved send, reply notes"}
+  },
+  "gaps": [
+    "GoHighLevel: its docs mark segment, draft-message, send-outreach, handle-replies and update-records as yes, but the vendor spec leaves the contact search body with no fields, so no adapter is built. Add it once the contact search fields are confirmed.",
+    "HubSpot: mapped operations exist, but its docs mark only three steps yes and none for replies or renewals. No adapter built.",
+    "ActiveCampaign, Freshdesk, spreadsheets, QuickWorks, FileMaker and the internal portal are named in the calls but have no platform support rows in the evidence, so no adapter is built for them.",
+    "The real due date (renewal, service or membership end) lives in the business's own system, not in Mailchimp. Mailchimp last change is only a proxy for when a customer was last active. Connect the business's job or membership system before relying on due dates.",
+    "Mailchimp groups depend on the owner tagging members and building the saved segment first. The cron reads the tag; the send goes to the saved segment.",
+    "Calls, renewal and win-back offers, bookings, close-out, chasing silence and scheduling the next date are judgment or a person's work, with no platform operation in this build.",
+    "Runtime: no change needed for this build. A send approved after the owner edits the campaign in Mailchimp goes out with the edited content."
+  ],
+  "evidence": {
+    "calls": 9,
+    "calls_read": 21,
+    "describes_process": 6,
+    "platforms": "vendor docs for GoHighLevel, HubSpot and Mailchimp mapped step by step; the Mailchimp adapter is the only one built"
+  }
+}

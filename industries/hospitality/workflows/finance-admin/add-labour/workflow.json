@@ -1,0 +1,85 @@
+{
+ "id": "hospitality:add-labour",
+ "name": "Labour alerts",
+ "industry": "hospitality",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works out each venue's labour cost as a share of its sales from the rosters and timesheets in Deputy, and records an alert the moment a venue runs over its labour target. The crons only read and record; a person changes rosters and targets in Deputy.",
+ "families": {
+  "all": {
+   "evidence": "11 discovery calls with hospitality owners; 9 describe how labour is checked today, all by hand or unstated",
+   "steps": [
+    "set-labour-target",
+    "build-roster",
+    "timesheet-check",
+    "track-sales",
+    "compare-labour-to-sales",
+    "alert-raised",
+    "review-alert",
+    "adjust-shifts"
+   ],
+   "covered_by": {
+    "set-labour-target": "settings (target per venue); set in Deputy by a person",
+    "build-roster": "not covered: rostering stays in Deputy",
+    "timesheet-check": "pull (timesheet cost per venue)",
+    "track-sales": "pull (sales read from Deputy's sales metrics)",
+    "compare-labour-to-sales": "check (labour as a share of sales)",
+    "alert-raised": "check (alert record)",
+    "review-alert": "person, in the CRM shell",
+    "adjust-shifts": "person, in Deputy"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "pull",
+   "schedule": "*/30 * * * *",
+   "entry": "pull",
+   "summary": "Reads each venue's labour cost and sales for today from Deputy."
+  },
+  {
+   "name": "check",
+   "schedule": "5 * * * *",
+   "entry": "check",
+   "summary": "Works labour out as a share of sales and keeps an alert open while a venue is over its target."
+  }
+ ],
+ "draft_ops": {
+  "deputy": [
+   "deputy-v1-resource-api.searchTimesheet",
+   "deputy-v2-api.MetricsV2Controller_getRaw"
+  ]
+ },
+ "live_ops": {
+  "deputy": []
+ },
+ "draft_ops_note": "Both draft operations are reads. The crons write alert and snapshot records to the workflow store only.",
+ "capabilities": [
+  "timesheets.list",
+  "reports.run"
+ ],
+ "adapters": {
+  "deputy": {
+   "status": "docs-only",
+   "covers": "timesheet cost and sales per venue per day, both reads"
+  }
+ },
+ "gaps": [
+  "Employment Hero is the most-named tool in these calls (four mentions across set-labour-target and alert-raised). The kit maps its labour rules, rostered shift cost and sales data, but the platform evidence has no row for it, so no adapter is built. Mine its support row, then add an adapter.",
+  "Looker Studio (two calls) is where owners set the wages flag today. It is not in the kit and has no adapter.",
+  "Xero is mapped for budgets and payroll timesheets, but its timesheets carry hours, not dollars, and its budgets are per account rather than per venue, so no adapter is built.",
+  "Humanforce is not in the kit.",
+  "Setting a labour target in Deputy (labour model rules) is not wired: the vendor spec gives no values for the metric field, so the rule is set by hand in Deputy.",
+  "Deputy's budget status check is a write-classed operation in the kit, so it is not used.",
+  "Deputy's metrics timestamps are taken as Unix seconds (from the v1 example). Confirm on a live account.",
+  "No live operation: nothing in this job reaches a customer, so the approval path is not exercised. The test covers the refusal of any non-read operation.",
+  "Rostering (build-roster) is not covered; Deputy's rostering stays a person step.",
+  "Every adapter is docs-only until a Deputy trial account proves it."
+ ],
+ "evidence": {
+  "calls": "11 calls read; 9 describe how labour is checked today; 4 multi-site hospitality groups among them",
+  "platforms": "Deputy, Xero and Humanforce mapped step by step from vendor docs; Deputy is the only adapter built"
+ }
+}

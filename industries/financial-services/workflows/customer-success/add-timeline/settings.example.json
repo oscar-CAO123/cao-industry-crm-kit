@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Financial Services",
+ "platform": "gohighlevel",
+ "gohighlevel": {"owner_user_id": "REPLACE_WITH_OWNER_USER_ID"},
+ "watch": [
+  {"contact_id": "REPLACE_WITH_CONTACT_ID", "opportunity_id": "REPLACE_WITH_OPPORTUNITY_ID"}
+ ],
+ "check_in_days": 30
+}

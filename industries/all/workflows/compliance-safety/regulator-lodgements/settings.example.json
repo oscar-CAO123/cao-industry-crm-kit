@@ -1,0 +1,16 @@
+{
+ "family": "regulator-lodgement",
+ "business_name": "Example Business",
+ "owner_email": "owner@example.com.au",
+ "microsoft_365": {
+  "mailbox": "compliance@example.com.au",
+  "folder": "inbox",
+  "search": "regulator",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "LodgementRegister"}
+ },
+ "notice_rules": [
+  {"match": "notice", "due_days": 14},
+  {"match": "permit", "due_days": 30}
+ ],
+ "reminder_days": 7
+}

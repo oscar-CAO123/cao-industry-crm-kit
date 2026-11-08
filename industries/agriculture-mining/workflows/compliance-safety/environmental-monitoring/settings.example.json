@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Mining Co",
+ "microsoft_365": {
+  "mailbox": "environment@example.com.au",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "MonitoringRegister"},
+  "qc_email": "qc@example.com.au"
+ },
+ "limits": [
+  {"parameter": "pH", "min": 6.5, "max": 8.5, "unit": "pH units"},
+  {"parameter": "Turbidity", "point": "DP1", "max": 50, "unit": "NTU"}
+ ]
+}

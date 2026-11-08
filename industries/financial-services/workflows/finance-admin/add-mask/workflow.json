@@ -1,0 +1,55 @@
+{
+ "id": "financial-services:add-mask",
+ "name": "Mask details",
+ "industry": "financial-services",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps client personal details out of documents before they are shared. It finds new documents in the raw folder, records who can see each masked copy, and queues a view share to each approved recipient for a person to approve. A person masks each copy in the business's own tool and places it in the masked folder. Crons read and queue only: no cron changes a file's contents or sends anything.",
+ "families": {
+  "all": {
+   "evidence": "1 discovery call describes this way of working: mortgage applications and settlements, about 30 applications a month, by hand or unstated",
+   "steps": ["request-received", "identify-sensitive", "decide-scope", "apply-mask", "check-mask", "share-masked", "record-keeping"],
+   "covered_by": {
+    "request-received": "intake (the Dropbox raw folder)",
+    "identify-sensitive": "skill (a person decides which details to mask)",
+    "decide-scope": "share (the approved recipients in settings; each share is approved)",
+    "apply-mask": "not covered (masking is done by a person in their own tool; see gaps)",
+    "check-mask": "skill (a person searches the masked copy for each detail)",
+    "share-masked": "share (queued for approval)",
+    "record-keeping": "check (who can see each masked copy, flagged when unexpected)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Record each new document in the raw folder. Nothing is moved or changed."},
+  {"name": "share", "schedule": "*/30 * * * *", "entry": "share", "summary": "Queue a view share of each masked copy to each approved recipient who cannot see it yet; a person approves each one."},
+  {"name": "check", "schedule": "0 22 * * *", "entry": "check", "summary": "Record who can see each masked copy and flag anyone who is neither an approved recipient nor the owner."}
+ ],
+ "draft_ops": {
+  "dropbox": ["files.list_folder", "sharing.list_file_members"]
+ },
+ "live_ops": {
+  "dropbox": ["sharing.add_file_member"]
+ },
+ "draft_ops_note": "Draft operations stay inside the business's Dropbox: listing the raw and masked folders, and reading who can see a file. Giving a person access to a file reaches someone outside the business, so it is a live operation and waits for a person.",
+ "capabilities": ["files.list", "sharing.read", "sharing.write"],
+ "adapters": {
+  "dropbox": {"status": "docs-only", "covers": "raw and masked folder listing, who can see a file, view share to an approved recipient (queued)"}
+ },
+ "gaps": [
+  "Masking itself: Dropbox's API has no redaction or masking operation, so no cron changes what a document says. A person masks each copy in the business's own tool and places it in the masked folder.",
+  "Identifying sensitive details (licence and passport numbers, tax file numbers, bank details, dates of birth): a judgment step for a person, not a cron.",
+  "Public share links (sharing.create_shared_link_with_settings) are mapped but not automated: a link opens for anyone who holds it, so it stays with the owner.",
+  "Changing an existing member's access level (sharing.update_file_member) is mapped but not automated: it stays with the owner.",
+  "Group access is not read: a group that can see a masked copy is not flagged by check.",
+  "Only the first page is read: files.list_folder/continue and sharing.list_file_members/continue are not wired here, so a folder of more than one page, or a file with more than 300 people, is only partly read.",
+  "Email attachments are not read, and MYOB and Xero have no masking operation in the pages reviewed, so no adapter is built for them.",
+  "Every Dropbox call is docs-read and offline-tested only. Confirm on a sandbox Dropbox account before a client uses it."
+ ],
+ "evidence": {
+  "calls": "1 of 1 discovery call for this workflow describes how it is done today (by hand or unstated); the call is about mortgage applications and settlements",
+  "platforms": "Dropbox sharing and file-listing operations are mapped (partial: no masking or redaction operation exists); MYOB and Xero pages reviewed carry no masking step"
+ }
+}

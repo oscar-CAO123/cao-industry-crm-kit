@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Agency",
+ "productive": {
+  "ops_project_id": "PROJECT_ID",
+  "task_list_id": "TASK_LIST_ID",
+  "brief_deal_status_id": "DEAL_STATUS_ID"
+ },
+ "budget_warning_percent": 80
+}

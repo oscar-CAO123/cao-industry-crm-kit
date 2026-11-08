@@ -1,0 +1,47 @@
+{
+ "id": "construction:variations",
+ "name": "Raise, price and approve variations with the client",
+ "industry": "construction",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns extra work found on an accepted job into a priced variation, queues it to the client for approval, chases it, and records it on the job. Crons read and draft; a person approves every send.",
+ "families": {
+  "all": {
+   "evidence": "6 of 25 discovery calls describe how they raise variations; every step in those calls is done by hand",
+   "steps": ["variation-trigger", "site-check", "scope-change", "price-variation", "client-approval", "invoice-variation", "record-keeping"],
+   "covered_by": {"variation-trigger": "intake (a job note that says variation or extra work)", "site-check": "skill (photos and notes from the site)", "scope-change": "draft (priced from the rate card or a template, or a proposal)", "price-variation": "draft", "client-approval": "approval (the client approves outside ServiceM8; a person records it)", "invoice-variation": "skill (a person adds the approved lines to the job for invoicing)", "record-keeping": "draft (a job note)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Notes on accepted jobs that say the client has extra work."},
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Price each variation from the rate card, note it on the job, queue the client email for approval."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue follow-ups on variations sent for approval that are due (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listNotes", "servicem8-api.listMaterials", "servicem8-api.listCompanyContacts", "servicem8-api.createNotes"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of jobs, notes, the rate card and contacts, and one internal note on the job that records the variation. Sending the variation or a follow-up is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "contacts.list", "messages.draft"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "variation notes on accepted jobs, rate-card pricing, the job record note, the client email for approval, and follow-up emails"}
+ },
+ "gaps": [
+  "Buildxact: only its sign-in is mapped (5 operations, none for jobs or variations). Its help centre covers variations on a job, so its variation and change-order endpoints are the first thing to map.",
+  "Procore: not in the kit's platform list, so it has no operations here. Its change event and change order endpoints are needed.",
+  "Client approval: ServiceM8 keeps no variation or change-order record and no acceptance flow, per the platform evidence. The client approves by reply or signature outside the platform, and a person records it. The kit has no command for that yet, so follow-ups stop after the set count.",
+  "Invoicing an approved variation: ServiceM8 invoices sync to Xero. A person adds the approved lines to the job. No cron does this.",
+  "Site check: a skill step (photos and notes from the site). ServiceM8 has no site-inspection support in the evidence.",
+  "Variation PDF: the Quote template prints the whole job rather than the variation alone, so the email carries the priced lines as an HTML table and no PDF is attached. A variation-only template needs checking on a live account.",
+  "The job note's related_object value 'job' is not spelled out in the ServiceM8 spec. Confirm it on a live account. Job notes are assumed to be internal; confirm the client portal does not show them.",
+  "The adapter is docs-only until a ServiceM8 trial account proves it."
+ ],
+ "evidence": {
+  "calls": "6 of 25 construction discovery calls describe how they raise variations; every step in those calls is manual",
+  "platforms": "the vendors' own help centres for Buildxact, Procore and ServiceM8; ServiceM8 has 241 operations mapped in the kit, Buildxact 5 (sign-in only), Procore none"
+ }
+}

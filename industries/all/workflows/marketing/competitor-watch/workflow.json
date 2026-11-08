@@ -1,0 +1,65 @@
+{
+ "id": "competitor-watch",
+ "name": "Watch competitors' ads, prices and posts",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Watches competitors' ads, prices and posts. This build covers their public Facebook posts and their search authority (Semrush backlink scores), and reports what changed. Competitor ads and prices have no mapped operation in the kit yet, so they stay with the owner. Crons read and draft; the one live act, creating the Semrush tracking project, waits for a person to approve it.",
+ "families": {
+  "all": {
+   "evidence": "2 competitor-watch calls were read; neither describes a process, so the steps below come from the platform evidence",
+   "steps": ["set-watchlist", "find-ads", "check-prices", "check-posts", "capture-evidence", "analyse-changes", "share-insights", "adjust-own-marketing", "set-alerts", "record-keeping"],
+   "covered_by": {
+    "set-watchlist": "cron (discover: Semrush similar domains as suggestions; the watchlist itself is set in settings)",
+    "find-ads": "not built (no ad library operation mapped for Meta, Google or Semrush's ad research)",
+    "check-prices": "not built (no platform in the evidence has a mapped price operation)",
+    "check-posts": "cron (watch: public Facebook Page posts; LinkedIn competitor posts not mapped)",
+    "capture-evidence": "not built (no dated screenshots; the store keeps the post text and link)",
+    "analyse-changes": "cron (watch: new posts since last run; authority: score and backlink change week on week)",
+    "share-insights": "cron (report writes the report row; sending it to the team is not built)",
+    "adjust-own-marketing": "skill (the owner decides; no live operation is built for it)",
+    "set-alerts": "not built (no alert operation mapped for competitors)",
+    "record-keeping": "cron (the workflow store holds snapshots and the report)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "discover", "schedule": "0 19 * * 1", "entry": "discover", "summary": "Weekly: similar domains from Semrush as suggestions only, and one approval queued to create the Semrush tracking project (Monday 19:00 UTC)."},
+  {"name": "watch", "schedule": "0 20 * * *", "entry": "watch", "summary": "Daily: new public posts on each competitor's Facebook Page since the last run. The first run only sets the baseline (20:00 UTC)."},
+  {"name": "authority", "schedule": "30 20 * * 1", "entry": "authority", "summary": "Weekly: Semrush backlink score and referring domains for the client and each competitor domain (Monday 20:30 UTC)."},
+  {"name": "report", "schedule": "0 21 * * *", "entry": "report", "summary": "Daily: writes the watch report from the stored results. Makes no platform calls (21:00 UTC)."}
+ ],
+ "draft_ops": {
+  "semrush": ["docs.get_apis_v4_backlinks_v1_competitors", "docs.get_apis_v4_backlinks_v1_comparison"],
+  "meta-ads": ["Page.get.posts"]
+ },
+ "live_ops": {
+  "semrush": ["docs.post_apis_v4_projects_v1_projects"]
+ },
+ "draft_ops_note": "Draft operations are reads: Semrush's similar domains and authority comparison, and a competitor Facebook Page's public posts. The only live operation creates one Semrush project for the client's domain, which a cron can only queue and a person approves in the CRM shell.",
+ "capabilities": ["reports.run"],
+ "adapters": {
+  "semrush": {"status": "docs-only", "covers": "similar domains (suggestions), authority comparison for the client and competitor domains, and the one-time tracking project on approval"},
+  "meta-ads": {"status": "docs-only", "covers": "public posts on each competitor's Facebook Page (read only)"}
+ },
+ "gaps": [
+  "Competitor ads: no ad library operation is mapped for Meta (no ads_archive), Google or Semrush's ad research (AdClarity). Ad watching is not built.",
+  "Competitor prices, packages and offers: no platform in the evidence has a mapped operation for them, and a competitor's pricing page is a web page, not an API. Not built.",
+  "LinkedIn: the mapped LinkedIn operations read the client's own posts, analytics and ads. None reads a competitor's posts or ads, so there is no LinkedIn adapter.",
+  "Meta Page posts: the meta-ads adapter comes from the kit's mapped operations, not from this job's platform evidence file, because it is the only mapped read of competitor posts. Reading another Page's public posts needs a token with Page Public Content Access, which is not checked against a live account.",
+  "Page.get.posts has no fields parameter in the kit, so Graph returns its default post fields. The message or permalink can be missing; confirm in a live run.",
+  "Semrush's Backlinks API v4 is in Early Access per its own docs. Endpoints, responses and pricing can change before general availability.",
+  "The Semrush project create (POST /apis/v4/projects/v1/projects) is mapped from the vendor docs. The project id is read from the response as data.id, which is not confirmed against a live account.",
+  "Semrush comparison costs 40 API units per line. The authority cron runs weekly for that reason; raising its frequency needs the owner's budget.",
+  "Competitor watching has no capability in core/capabilities.json. Only reports.run is declared. Ads, prices and alerts would each need a new capability, which is a core change and is not made here.",
+  "Set-alerts, dated evidence captures and sending the report to the team are not built. Sending the report needs a mailbox adapter for this job.",
+  "Adjusting the client's own ads or posts in response to a competitor is a judgment step for the owner. No live operation for it is built here.",
+  "Every adapter is docs-only until a sandbox or live account proves it. The workflow is tested on a fake network only."
+ ],
+ "evidence": {
+  "calls": "2 competitor-watch calls were read; 0 described a step, 0 were rejected",
+  "platforms": "linkedin and semrush platform evidence (semrush partial or yes on the watchlist, ad research, posts, analysis and alerts; linkedin partial on posts, mostly unknown elsewhere); Semrush's mapped competitor operations and the kit's Meta Page post operation"
+ }
+}

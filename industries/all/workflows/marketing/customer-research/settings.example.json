@@ -1,0 +1,16 @@
+{
+ "business_name": "Example Business",
+ "owner_email": "owner@example.com",
+ "survey": {
+  "source": "google-forms",
+  "google_form_id": "FORM_ID_FROM_EDIT_LINK",
+  "survey_url": "https://docs.google.com/forms/d/e/FORM_ID/viewform"
+ },
+ "research_log": {"spreadsheet_id": "SPREADSHEET_ID", "sheet": "Responses"},
+ "invite": {
+  "subject": "A few quick questions from Example Business",
+  "audience": [
+   {"name": "Sam Lee", "email": "sam@example.com"}
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Engineering",
+ "job_status_open": "Work Order",
+ "job_status_done": "Completed",
+ "lockout_steps": [
+  "Stop the machine at its control panel",
+  "Switch off and lock out the isolator, one lock per person",
+  "Test the machine has no power before work starts",
+  "Release stored pressure and confirm it is at zero"
+ ]
+}

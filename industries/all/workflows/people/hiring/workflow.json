@@ -1,0 +1,114 @@
+{
+ "id": "hiring",
+ "name": "Advertise, screen and onboard staff",
+ "industry": "all",
+ "department": "people",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes applications for a role into the business's own mailbox and candidate register, drafts the acknowledgement and any interview invitation or decline the owner decides on, and queues each email for approval. Crons read and draft; a person approves every email. Advertising the role and onboarding the hire are not automated here.",
+ "families": {
+  "owner-led-hire": {
+   "evidence": "31 of 39 describing calls hire by hand or do not say how; 5 use another tool; 1 uses a spreadsheet",
+   "steps": [
+    "need-identified",
+    "write-job-ad",
+    "post-ad",
+    "receive-applications",
+    "shortlist",
+    "phone-screen",
+    "interview",
+    "reference-check",
+    "offer",
+    "contract-paperwork",
+    "onboard",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "need-identified": "owner (not automated)",
+    "write-job-ad": "skill (drafted for a person to post)",
+    "post-ad": "not yet (see gaps)",
+    "receive-applications": "intake",
+    "shortlist": "owner decision, then draft",
+    "phone-screen": "owner or recruiter (not automated)",
+    "interview": "draft (invitation)",
+    "reference-check": "owner (not automated)",
+    "offer": "owner (not automated)",
+    "contract-paperwork": "owner (not automated)",
+    "onboard": "not yet (see gaps)",
+    "record-keeping": "intake (register row on arrival)"
+   }
+  },
+  "ai-assisted-hire": {
+   "evidence": "2 calls use an AI assistant for the job ad or for screening",
+   "steps": [
+    "write-job-ad",
+    "receive-applications",
+    "shortlist",
+    "interview"
+   ],
+   "covered_by": {
+    "write-job-ad": "skill",
+    "receive-applications": "intake",
+    "shortlist": "owner decision, then draft",
+    "interview": "draft (invitation)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "intake",
+   "schedule": "*/10 * * * *",
+   "entry": "intake",
+   "summary": "New applications from the mailbox: one register row and one stored applicant each."
+  },
+  {
+   "name": "draft",
+   "schedule": "*/15 * * * *",
+   "entry": "draft",
+   "summary": "Acknowledge new applicants, or send the interview invitation or decline the owner has decided on. Drafts each email and queues its send for approval."
+  }
+ ],
+ "draft_ops": {
+  "microsoft-365": [
+   "users.mailFolders.ListMessages",
+   "drives.items.workbook.tables.CreateRows",
+   "users.CreateMessages"
+  ]
+ },
+ "live_ops": {
+  "microsoft-365": [
+   "users.user.messages.message.send"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of the applications folder, a row in the candidate register, an Outlook draft. Sending a draft to a candidate is a live operation and waits for a person.",
+ "capabilities": [
+  "messages.draft",
+  "messages.send",
+  "files.read",
+  "records.create"
+ ],
+ "adapters": {
+  "microsoft-365": {
+   "status": "docs-only",
+   "covers": "applications from an Outlook folder, candidate register in an Excel table, acknowledgement, invitation and decline as Outlook drafts; sending through the approval queue"
+  }
+ },
+ "gaps": [
+  "Seek (named in 5 calls, the most named job board): not a platform in the kit. Posting the ad and pulling its applications both need its own adapter.",
+  "JobAdder (job board with SEEK posting, the only platform with hiring docs): docs only, no operations file. Nothing is mapped.",
+  "Bullhorn (2 calls): its operations are mapped, but its sign-in (a login call returning a REST session and token) is not wired, so it cannot run yet.",
+  "Meta Ads (3 calls, used for seasonal hiring): paid spend. Left out until Oscar approves a job-ad campaign on its own.",
+  "ApplyEasy (onboarding, 1 call) and onboarding systems: not in the kit. Employment Hero and BrightHR are mapped, but creating an employee is a live change, so onboarding is not automated here.",
+  "CV attachments are not read: the attachment list operation is not mapped. The crons use the email's opening text only, so shortlisting from a full CV is a person's judgment.",
+  "Shortlisting, phone screens, reference checks, offers and contracts are people's judgment (the 'shortlist' step is a decision the owner records, not a score the kit makes).",
+  "Interview times: calendar operations are not used in this build, so an invitation asks the candidate to reply with times.",
+  "Register rows are written on arrival only. Later stages are not written back to the workbook because the range update operation is not used here.",
+  "The owner's decision (interview or decline) is set on the stored applicant by the CRM shell or by a person; no control for it is built in this kit yet.",
+  "Every adapter is docs-only until a sandbox mailbox and workbook prove it."
+ ],
+ "evidence": {
+  "calls": "40 discovery calls read, 39 describe their hiring process (the worklist lists 52 candidate calls)",
+  "platforms": "all-hiring-platforms.json maps one platform (JobAdder), with no operations file. The adapter is built on Microsoft 365, the one platform with mapped mail and Excel operations this job uses"
+ }
+}

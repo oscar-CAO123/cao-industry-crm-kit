@@ -1,0 +1,60 @@
+{
+ "id": "transport:fuel-tax-credits",
+ "name": "Claim fuel tax credits from vehicle and road usage data",
+ "industry": "transport",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works out the fuel tax credit a transport business can claim for a BAS period from its fuel purchases and its off-road use. Crons read the fuel bills and the fuel tax credit account and draft a claim worksheet; a person records off-road litres and the ATO rate, and the claim is lodged by hand in the BAS.",
+ "families": {
+  "usage-from-telematics": {
+    "evidence": "0 discovery calls in the variants file (file not present); platform docs only",
+    "steps": ["usage-capture", "telematics-pull", "split-on-off-road", "fuel-purchases", "reconcile-fuel", "apply-rates", "review-claim", "lodge-claim", "record-keeping", "year-end-check"],
+    "covered_by": {
+      "usage-capture": "not yet (telematics platform not mapped for this job, see gaps)",
+      "telematics-pull": "not yet (see gaps)",
+      "split-on-off-road": "skill (person records off-road litres in the usage record)",
+      "fuel-purchases": "purchases cron (Xero bills)",
+      "reconcile-fuel": "not yet (see gaps)",
+      "apply-rates": "skill (person records the ATO rate per litre)",
+      "review-claim": "claim cron (worksheet status)",
+      "lodge-claim": "person, in the BAS (manual)",
+      "record-keeping": "claim cron (worksheet record in the store)",
+      "year-end-check": "not yet (see gaps)"
+    }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "purchases", "schedule": "0 20 * * *", "entry": "purchases", "summary": "Read fuel bills in the BAS period from Xero and keep the fuel lines."},
+  {"name": "ledger", "schedule": "0 21 * * *", "entry": "ledger", "summary": "Read the fuel tax credit account balance from MYOB."},
+  {"name": "claim", "schedule": "0 22 * * 1", "entry": "claim", "summary": "Draft the claim worksheet for the period: purchases, and the eligible amount once usage is recorded."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoices"],
+  "myob": ["docs.get_cf_uri_GeneralLedger_Account"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Every draft operation here is a read. The worksheet is written to the workflow's own store, not to a client's system. No live operation is mapped yet, so nothing can be queued for approval.",
+ "capabilities": ["bills.list", "accounts.read", "claims.draft"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "fuel bills in the period (Invoices, type ACCPAY)"},
+  "myob": {"status": "docs-only", "covers": "fuel tax credit account lookup and balance (GeneralLedger Account)"}
+ },
+ "gaps": [
+  "Usage capture and telematics pull: Trackunit is mapped in the kit and has fuel-used and distance series, but its GET time-series operations are marked kind write in core/sdk/platforms/trackunit/ops.json, so they cannot run as reads. Fix the mapping in core/ before this step is built. WEBFLEET has no ops file in the kit.",
+  "Split on and off public road: no platform in the evidence describes this step. A person records off-road litres per period in the usage record until a source exists.",
+  "Apply rates: the ATO sets the rate per litre twice a year. The rate is recorded by a person, not looked up by a cron.",
+  "Lodge claim: MYOB enters the amount by hand in the BAS fields (BASlink links them to accounts). Xero has no fuel tax credit field in the docs read. Neither platform is written to here.",
+  "Posting the received credit as a MYOB general journal: the journal line fields (Account UID, Amount, Memo) are confirmed in the vendor docs, but the sign convention for debit and credit lines is not. Build this as a live operation only after a live account confirms it.",
+  "Reconcile fuel, record keeping and year-end checks: not described in the docs read for MYOB or Xero.",
+  "Xero bills: only the first page (100 bills) is read. Paging is not built, so a busy period can total short. The purchases cron logs a warning when the page is full.",
+  "MYOB account list: the account lookup reads one request and does not page.",
+  "No evidence calls exist for this workflow. The variants file named in the brief is missing, so the family above is built from the platform docs alone.",
+  "Every adapter is docs-only until a sandbox account (Xero demo company, MYOB sandbox company file) proves it."
+ ],
+ "evidence": {
+  "calls": "0 (transport-fuel-tax-credits-variants.json not present)",
+  "platforms": "MYOB, Xero and WEBFLEET help and docs read in transport-fuel-tax-credits-platforms.json; MYOB and Xero mapped in the kit, WEBFLEET not mapped"
+ }
+}

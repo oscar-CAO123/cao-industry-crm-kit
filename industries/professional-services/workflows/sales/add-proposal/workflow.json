@@ -1,0 +1,50 @@
+{
+ "id": "professional-services:add-proposal",
+ "name": "Proposal and engagement letter",
+ "industry": "professional-services",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a scoped enquiry into a draft proposal and engagement letter in HubSpot, queues it for approval, and tracks whether the client accepts. Crons read and draft; a person approves every publish.",
+ "families": {
+  "add-proposal": {
+   "evidence": "4 discovery calls describe this way of writing proposals (legal, environmental monitoring, consulting)",
+   "steps": ["enquiry-intake", "qualify", "gather-info", "scope-and-fee", "template-draft", "send-proposal"],
+   "covered_by": {"enquiry-intake": "skill", "qualify": "skill", "gather-info": "skill", "scope-and-fee": "skill (writes the scope and fee into the proposal store)", "template-draft": "draft", "send-proposal": "approval"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Create a draft quote in HubSpot for each scoped proposal."},
+  {"name": "status", "schedule": "0 * * * *", "entry": "status", "summary": "Read each open quote's status in HubSpot: published, accepted or declined."},
+  {"name": "publish-queue", "schedule": "0 22 * * *", "entry": "publish", "summary": "Queue publishing of each drafted quote for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "hubspot": ["crm-quotes-3.post-/crm/v3/objects/quotes_create", "crm-quotes-3.get-/crm/v3/objects/quotes/{quoteId}_getById"]
+ },
+ "live_ops": {
+  "hubspot": ["crm-quotes-3.patch-/crm/v3/objects/quotes/{quoteId}_update"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a draft quote in HubSpot and reads of quote status. Publishing a quote changes the status the client sees, so it is a live operation and waits for a person.",
+ "capabilities": ["quotes.create", "quotes.read", "quotes.publish"],
+ "adapters": {
+  "hubspot": {"status": "docs-only", "covers": "draft quote create, quote status read, quote publish (status update)"}
+ },
+ "gaps": [
+  "Podio is in the kit with operations, but the only call that names it uses it to rank tenders (qualify), not to write proposals. Not built.",
+  "Canva is named for the proposal template in one call and is in the kit, but no Canva page for this job was mapped. Not built.",
+  "ChatGPT is named in two calls for drafting replies. It is not a kit platform, so the drafting is the agent skill's job, not a cron's.",
+  "HubSpot quote property names (hs_title, hs_expiration_date, hs_quote_amount, hs_status) and status values are not in the vendor spec. They come from settings and must be checked in the live account before any run.",
+  "The quote-to-contact association type is not in the vendor spec (AssociationSpec is empty). associationTypeId comes from settings and must be set from the live account.",
+  "No intake cron: the vendor pages do not cover how enquiries arrive. The agent writes each scoped proposal into the proposals store.",
+  "Sending the proposal to the client, the signing envelope and follow-ups are not in the pages read. No send or follow-up operation is mapped, so this build only publishes, which the client sees as a status change.",
+  "Fee-setting rules, engagement letter terms and the choice of scope are judgment steps for the agent skill, not platform steps.",
+  "A draft create is not idempotent. If the process stops after HubSpot accepts a create but before the store is written, a rerun can make a second draft quote. Check HubSpot before approving a rerun.",
+  "A rejected publish approval leaves the proposal at publish-queued. A person resets it to drafted before it can be queued again.",
+  "The adapter is docs-only until a HubSpot test account proves the create, read and update calls."
+ ],
+ "evidence": {
+  "calls": "4 of 6 add-proposal calls describe how they write proposals; 75 to 100 percent of each step is manual",
+  "platforms": "HubSpot quote and contract help pages, mapped to 3 quote operations in the kit"
+ }
+}

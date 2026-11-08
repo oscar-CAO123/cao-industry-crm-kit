@@ -1,0 +1,14 @@
+{
+ "business_name": "Example Hire",
+ "gorgias": {"escalate_tag": "needs-human", "overdue_tag": "complaint-overdue"},
+ "categories": [
+  {"name": "warranty", "match": ["warranty", "faulty", "defect", "stopped working", "broken"], "ack": "Thanks for letting us know about the fault. We have your details and a team member will be in touch shortly to arrange the next step."},
+  {"name": "refund", "match": ["refund", "money back", "return"], "ack": "Thanks for your message about a refund or return. We have your request, and a team member will confirm the next step with you shortly."},
+  {"name": "delivery", "match": ["late", "delivery", "not arrived", "missing", "damaged"], "ack": "Sorry the delivery has not gone to plan. We have your request, and a team member will be in touch to sort it out."}
+ ],
+ "escalate": ["injur", "lawyer", "legal", "chargeback", "unsafe", "police", "compensation"],
+ "lookback_hours": 24,
+ "chase_after_hours": 4,
+ "per_run_limit": 20,
+ "signature": "Thanks, the Example Hire team"
+}

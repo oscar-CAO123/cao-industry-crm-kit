@@ -1,0 +1,58 @@
+{
+  "id": "agencies:x-jobbudgets",
+  "name": "Job budgets",
+  "industry": "agencies",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Keeps each agency job's budget in view against what has been spent on it, and flags jobs heading over. Crons read and draft internal records only; nothing goes to a client.",
+  "families": {
+    "job-budgets": {
+      "evidence": "1 discovery call describes this way of running job budgets",
+      "steps": ["job-brief-received", "scope-definition", "budget-build", "rate-application", "budget-approval", "job-setup", "time-tracking", "cost-capture", "burn-monitoring", "overrun-flag", "change-request", "budget-reforecast", "client-reporting", "close-out-review", "record-keeping"],
+      "covered_by": {
+        "burn-monitoring": "draft (burn cron reads Xero project totals)",
+        "overrun-flag": "draft (overrun cron flags jobs at the warning share)",
+        "time-tracking": "draft (minutes logged read from the project)",
+        "cost-capture": "draft (task and expense totals read from the project)",
+        "record-keeping": "draft (snapshots kept in the workflow store)",
+        "job-brief-received": "skill",
+        "scope-definition": "skill",
+        "budget-build": "skill (the budget is set by a person; the agent does not write it)",
+        "rate-application": "skill",
+        "budget-approval": "skill",
+        "job-setup": "not yet (see gaps)",
+        "budget-reforecast": "skill",
+        "change-request": "skill (a change is priced by a person and agreed with the client)",
+        "client-reporting": "skill (a person sends any report)",
+        "close-out-review": "skill"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "burn", "schedule": "0 */6 * * *", "entry": "burn", "summary": "Snapshot each job's estimate, spend and minutes logged."},
+    {"name": "overrun", "schedule": "0 22 * * *", "entry": "overrun", "summary": "Flag jobs that have spent their warning share of the estimate (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "xero": ["projects.getProjects"]
+  },
+  "live_ops": {
+    "xero": []
+  },
+  "draft_ops_note": "Reads only. The workflow never writes to Xero: budgets, time and approvals stay with people.",
+  "capabilities": ["read the job list and totals in Xero", "keep burn and overrun snapshots in the workflow store"],
+  "adapters": ["xero"],
+  "gaps": [
+    "Harvest and Teamwork (budget-led time and budget tools in the mining evidence) have no platform in the kit, so their budget and time steps are not mapped.",
+    "Xero accounting budgets (accounting.getBudgets) are not read: a budget set in Xero's accounting module is not compared yet.",
+    "Only the first page of Xero projects is read; paging is not added.",
+    "Job setup (creating the project and assigning people) is not mapped as a live op: it needs an approval design first.",
+    "The mining variants file for this workflow (agencies-x-jobbudgets-variants.json) is missing from the mining folder, so the family and step counts rest on the spec and one discovery call.",
+    "Change requests, budget reforecasts and client reports are judgment steps for a person; no cron drafts them."
+  ],
+  "evidence": {
+    "calls": "1 discovery call for job budgets (variants file missing from the mining folder)",
+    "platforms": "Harvest and Teamwork pages mined (neither is in the kit); Xero mapped from the kit ops and the vendor spec"
+  }
+}

@@ -1,0 +1,14 @@
+{
+ "business_name": "Example Agency",
+ "release": {
+  "id": "release-2026-spring",
+  "subject": "Subject line of the release",
+  "text": "Hi {name},\n\nOne or two sentences on the news, why it matters to your readers, and the spokesperson you can offer.\n\nHappy to send the full release."
+ },
+ "media_list": [
+  {"name": "Journalist Name", "email": "journalist@example.com", "outlet": "Outlet Name"}
+ ],
+ "report_to": "owner@example.com",
+ "follow_up": {"after_days": [3, 7]},
+ "max_pitches_per_run": 10
+}

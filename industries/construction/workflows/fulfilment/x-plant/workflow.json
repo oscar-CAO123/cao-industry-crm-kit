@@ -1,0 +1,58 @@
+{
+ "id": "construction:x-plant",
+ "name": "Plant and equipment",
+ "industry": "construction",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps a register of plant and equipment and totals the parts on each workshop job: reads Trackunit and ServiceM8, records the register, and queues the owner's summary of the largest workshop part costs for approval. Crons read and record; nothing is sent, booked or hired out without a person.",
+ "families": {
+  "plant-register": {
+   "evidence": "9 construction calls read for this job in the mining pass; 4 describe the process and 2 name a tool",
+   "steps": ["request-in", "allocate", "hire-out", "usage-log", "servicing", "cost-allocation"],
+   "covered_by": {
+    "request-in": "not covered (see gaps)",
+    "allocate": "not covered (see gaps)",
+    "hire-out": "not covered (see gaps)",
+    "usage-log": "register-watch (the Trackunit register and telematics device count; operating hours are not mapped)",
+    "servicing": "not covered (see gaps)",
+    "cost-allocation": "cost-watch (parts per workshop job, summarised for the owner)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "register-watch", "schedule": "20 * * * *", "entry": "register-watch", "summary": "Read the Trackunit plant register and the ServiceM8 asset list, and keep each plant item with whether ServiceM8 has an asset of the same name."},
+  {"name": "cost-watch", "schedule": "0 21 * * *", "entry": "cost-watch", "summary": "Total the parts on each workshop job in ServiceM8, keep the figures, and queue the owner's summary of the largest for approval."}
+ ],
+ "draft_ops": {
+  "trackunit": ["assets.getAssets_v2"],
+  "servicem8": ["servicem8-api.listAssets", "servicem8-api.listJobs", "servicem8-api.listJobMaterials"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"]
+ },
+ "draft_ops_note": "Every draft operation here is a read. The crons write their own rows (the plant register, job parts totals) to the workflow store, which reaches nobody outside the business. The only live operation is the owner's summary email, which is queued and only sent when a person approves it.",
+ "capabilities": ["assets.list", "jobs.list", "messages.send"],
+ "adapters": {
+  "trackunit": {"status": "docs-only", "covers": "plant register read (name, serial, brand, model, type, telematics device count), paged"},
+  "servicem8": {"status": "docs-only", "covers": "asset list, workshop jobs by category, parts per job, and the owner's cost summary email (queued only)"}
+ },
+ "gaps": [
+  "MEX CMMS, Procore and Webfleet: the vendor help pages in the worklist describe plant registers, pre-start checks, service scheduling and hire, but none of the three has mapped operations in the kit. No adapter is built for them. Trackunit and ServiceM8 are the two platforms that carry the read path here.",
+  "Hire-in and hire-out (the subcontract-out step with a margin): no mapped kit operation covers a plant hire or its rate. Judgment step for the agent until a platform is mapped.",
+  "Plant allocation to a job or a person: ServiceM8 allocation windows are mapped, but they book staff to jobs, and no confirmed field books a machine. Not built.",
+  "Operating hours and meter readings (usage-log): the Trackunit asset record has no hours. Hours sit in another Trackunit API (telematics or time-series) that is not mapped in the kit. Usage is not recorded.",
+  "Servicing schedule and service due dates: no mapped operation sets or reads a service interval. A service reminder needs hours or dates from a platform that holds them.",
+  "Machine cost: the ServiceM8 job has no confirmed field that links it to one asset, so cost-watch totals parts per workshop job, not per machine. Linking a job to a machine needs a field confirmed in the ServiceM8 spec or a job-to-asset convention agreed with the owner.",
+  "Register matching: plant is matched to ServiceM8 by name only. Serial numbers are not held in ServiceM8 assets in a confirmed field, so two machines with the same name will match to the same asset.",
+  "Return off hire, sale or write-off of plant: not mapped in the kit for either platform.",
+  "Request intake: a plant request is not raised through any mapped platform. Judgment step for the agent.",
+  "Every adapter is docs-only until a Trackunit access token and a ServiceM8 trial account prove the reads and the summary email.",
+  "Judgment steps stay with a person: what a machine's cost means, whether to service, hire out or dispose of a machine, and what to say to a hirer."
+ ],
+ "evidence": {
+  "calls": "9 construction calls read for plant and equipment in the mining pass; 4 describe the process; steps named were request, allocation, hire-out, usage logging, servicing and cost allocation",
+  "platforms": "MEX CMMS, Procore and Webfleet help pages (no mapped operations in the kit); Trackunit and ServiceM8 mapped in the kit, with operations used here"
+ }
+}

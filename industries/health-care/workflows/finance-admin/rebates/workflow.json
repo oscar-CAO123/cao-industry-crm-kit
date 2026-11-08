@@ -1,0 +1,49 @@
+{
+ "id": "health-care:rebates",
+ "name": "Missed rebates finder",
+ "industry": "health-care",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds Medicare, DVA and health fund rebates a clinic has not been paid, from its practice system and its ledger, and lists them for a person to check. Crons read and list only; nothing is lodged, chased or changed.",
+ "families": {
+  "unsplit": {
+   "evidence": "1 discovery call describes this work; the variant file is missing, so steps are not split by family",
+   "steps": ["claims-run", "pull-billing-data", "match-remittances", "spot-unclaimed", "check-eligibility", "lodge-claim", "chase-payer", "reconcile-ledger", "report-review", "record-keeping", "other"],
+   "covered_by": {"claims-run": "gap", "pull-billing-data": "pull", "match-remittances": "pull (payments) and flag", "spot-unclaimed": "flag", "check-eligibility": "gap", "lodge-claim": "gap", "chase-payer": "gap", "reconcile-ledger": "skill", "report-review": "skill", "record-keeping": "flag (register rows in the store)", "other": "skill"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pull", "schedule": "0 */6 * * *", "entry": "pull", "summary": "Read invoices and their items from Cliniko and payments from Xero."},
+  {"name": "flag", "schedule": "0 22 * * *", "entry": "flag", "summary": "List open rebate-item invoices with no payment in Xero for a person to check (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "cliniko": ["invoice.listinvoices", "invoice-item.listinvoiceitemsforinvoice"],
+  "xero": ["accounting.getPayments"]
+ },
+ "live_ops": {
+  "cliniko": [],
+  "xero": []
+ },
+ "draft_ops_note": "Reads only. The flag list is written to this workflow's own store and reaches nobody outside the business.",
+ "capabilities": ["invoices.list", "payments.list"],
+ "adapters": {
+  "cliniko": {"status": "docs-only", "covers": "invoice list and invoice items, read only; no claim status"},
+  "xero": {"status": "docs-only", "covers": "payments read only, matched to invoice numbers"}
+ },
+ "gaps": [
+  "No mapped platform exposes Medicare, DVA or health fund claim status. Cliniko's API has no claim endpoint and Tyro Health is not mapped, so a person checks each claim in Cliniko.",
+  "Claims run, lodgement and chasing have no mapped operation. Cliniko's docs describe no batch claim run and its API has no lodge call; Xero has no payer lodgement. These stay with the clinic.",
+  "Eligibility and rebate rule checks are not mapped. The HiCaps help pages were not captured (every URL returned the same homepage), and HiCaps has no platform folder in the kit.",
+  "Xero invoice numbers are assumed to match Cliniko invoice numbers, because Cliniko pushes invoices to Xero. Unconfirmed in a live account.",
+  "The variant file health-care-rebates-variants.json is missing from mining/, so the call evidence is not split into families.",
+  "This finder has no live operation, so the queue and approval path is not exercised. Adding a lodge or chase step later needs a mapped live operation first.",
+  "Both adapters are docs-only until a Cliniko sandbox and a Xero demo company prove the field names.",
+  "Cliniko invoices are read up to 1,000 per run (10 pages of 100). Older invoices beyond that are not read."
+ ],
+ "evidence": {
+  "calls": "1 health-care discovery call on missed rebates (from the platforms file; the variants file is missing)",
+  "platforms": "Cliniko (docs read: claims, invoices, remittance, Xero sync), HiCaps (homepage only), Xero (general guides and API)"
+ }
+}

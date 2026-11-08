@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Builders",
+ "employment_hero": {
+  "organisation_id": "ORGANISATION_ID",
+  "employing_entity_id": "EMPLOYING_ENTITY_ID",
+  "work_location": {"id": "WORK_LOCATION_ID", "name": "Head office", "country": "AU"}
+ },
+ "docusign": {
+  "template_id": "CONTRACT_TEMPLATE_ID",
+  "role_name": "Employee"
+ }
+}

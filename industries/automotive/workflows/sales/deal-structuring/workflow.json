@@ -1,0 +1,62 @@
+{
+  "id": "automotive:deal-structuring",
+  "name": "Structure vehicle deals and finance with lenders inside the CRM",
+  "industry": "automotive",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Structures vehicle deals and finance with lenders inside the CRM: reads new deals, drafts one finance pack per chosen lender, queues each submission for approval, and chases lenders that have not decided. Crons read and draft; a person approves every send.",
+  "families": {
+    "all": {
+      "evidence": "1 discovery call describes this way of structuring vehicle finance (car brokerage and vehicle finance)",
+      "steps": ["enquiry-intake", "credit-application", "structure-deal", "lender-selection", "lender-submission", "lender-decision", "compliance-disclosure", "follow-up-declines", "record-keeping"],
+      "covered_by": {
+        "enquiry-intake": "intake (deals in the CRM intake stage)",
+        "credit-application": "skill (the agent checks the application is complete and marks credit_ready)",
+        "structure-deal": "skill (the agent writes the lender order and amount into a proposal)",
+        "lender-selection": "skill (the agent picks lenders from settings)",
+        "lender-submission": "draft (one Outlook pack per lender) and approval (the send, then the stage move)",
+        "lender-decision": "skill (a person or the agent records the decision on the deal, which stops chasing)",
+        "compliance-disclosure": "not built (see gaps)",
+        "follow-up-declines": "follow-up (chases a lender with no decision; re-submission after a decline is a skill step)",
+        "record-keeping": "draft (internal note on the deal and a row in the deal register)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New deals in the CRM intake stage."},
+    {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "For each deal the agent has marked credit-ready, draft one lender pack per lender, queue each send for approval, note the deal and log it in the register."},
+    {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Mark deals submitted once their send is approved, and queue a chase where a lender has not decided (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "pipedrive": ["openapi-v2.getDeals", "docs_api_v1.addNote"],
+    "microsoft-365": ["users.CreateMessages", "drives.items.workbook.tables.CreateRows"]
+  },
+  "live_ops": {
+    "pipedrive": ["openapi-v2.updateDeal"],
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: a deal read, an internal note on a deal, an Outlook draft, a register row. Sending a lender email and moving a deal to the lender-submitted stage are live operations and wait for a person.",
+  "capabilities": ["deals.list", "deals.note", "deals.move", "messages.draft", "messages.send", "files.read"],
+  "adapters": {
+    "pipedrive": {"status": "docs-only", "covers": "deal intake, internal note, stage move after a lender submission"},
+    "microsoft-365": {"status": "docs-only", "covers": "lender pack drafts, chase drafts, sends through approval, deal register rows"}
+  },
+  "gaps": [
+    "AutoManager (DeskManager, the platform the one call names): its help pages were read, but the kit has no ops file for it. Credit pulls, the lender network and deal build are unmapped. A live account is needed.",
+    "Autosoft: the 30 pages read were marketing and blog posts with no deal or lender workflow. Not mapped.",
+    "Mercury: a commercial and asset finance broker, not a dealer system. Its pages were blog articles. Not mapped to automotive deal structuring.",
+    "Lender decisions do not return to the CRM by any mapped platform. A person or the agent records the decision on the deal, and the chase stops then.",
+    "Payment, rate and term maths is a judgment step for the agent, not a cron. No lender rate or payment API is mapped.",
+    "Credit pulls and consent are not built. credit_ready is set by a person or the agent only after the application is complete and consent is on file.",
+    "Compliance checks (Red Flag, OFAC, adverse action, risk-based pricing) run inside the dealer system per its docs, so nothing is built for them here.",
+    "Customer presentation, settlement and funding, delivery and handover have no evidence and no mapped platform.",
+    "Accounting (QuickBooks transactions) is not mapped in the kit for this job.",
+    "Both adapters are docs-only until a sandbox account (Pipedrive trial, Microsoft 365 developer tenant) proves them."
+  ],
+  "evidence": {
+    "calls": "1 discovery call (car brokerage and vehicle finance): enquiry intake and follow-ups are fully manual, the credit application was an AI chatbot that was since removed",
+    "platforms": "3 platform sources read (AutoManager, Autosoft, Mercury). None has a mapped operation in the kit, so the workflow uses the kit's CRM (Pipedrive) and mailbox and workbook (Microsoft 365) for the job"
+  }
+}

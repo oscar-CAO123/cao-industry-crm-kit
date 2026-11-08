@@ -1,0 +1,47 @@
+{
+ "id": "hospitality:stock",
+ "name": "Drinks counted by hand",
+ "industry": "hospitality",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes the drinks count a bar or cellar does by hand, checks each line against the system count in the venue's POS, and posts the counts to the POS once a person approves them. Crons read and record; a person approves every change to stock.",
+ "families": {
+  "hand-count": {
+   "evidence": "2 discovery calls read; neither described a step, a variant or a tool (mining/hospitality-stock-variants.json)",
+   "steps": ["count-schedule", "physical-count", "enter-counts", "variance-check", "record-keeping"],
+   "covered_by": {"count-schedule": "snapshot cron (system levels every 6 hours); the owner sets the count day", "physical-count": "skill (the owner's count sheet becomes a count record)", "enter-counts": "post-counts (queued for approval)", "variance-check": "reconcile (difference per line)", "record-keeping": "reconcile (variances store)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "snapshot", "schedule": "0 */6 * * *", "entry": "snapshot", "summary": "Read the system stock of each tracked drink at each active venue location."},
+  {"name": "reconcile", "schedule": "0 20 * * *", "entry": "reconcile", "summary": "Compare each new hand count with the current system count and write the differences."},
+  {"name": "post-counts", "schedule": "30 * * * *", "entry": "post-counts", "summary": "Queue each reconciled count as physical counts in the POS, for approval."}
+ ],
+ "draft_ops": {
+  "square": ["api.ListLocations", "api.ListCatalog", "api.RetrieveInventoryCount"]
+ },
+ "live_ops": {
+  "square": ["api.BatchChangeInventory"]
+ },
+ "draft_ops_note": "Draft operations are reads only: the locations, the tracked drink items and their system stock. The POS changes only through the live operation, a physical-count batch, which waits for a person's approval in the CRM shell.",
+ "capabilities": ["locations.list", "stock.read", "counts.post"],
+ "adapters": {
+  "square": {"status": "docs-only", "covers": "locations, tracked item stock, physical counts posted for approval"}
+ },
+ "gaps": [
+  "Eats365 and Lightspeed: their docs describe stock features but the kit maps no API operation for either, so there is no adapter. Confirm an API operation list before building one.",
+  "Count sheet: no adapter reads a paper, Excel or form count sheet yet. Counts reach the workflow as count records in the counts store, written from the owner's sheet; a Microsoft 365 workbook adapter would replace that step.",
+  "Sales against usage (theoretical usage from POS sales and recipes): not built. The platform docs describe it only as a manual reconciliation.",
+  "Reorder and par levels: Square holds no par levels here and no reorder suggestion is built.",
+  "Deliveries and supplier invoices (receive-delivery, invoice-match): not built; AirPurchase and supplier invoices are outside the mapped platforms.",
+  "Transfers and waste: Square transfer order endpoints are mapped in the kit but this workflow does not use them; waste shows up only as a lower count.",
+  "Cost reporting: not built.",
+  "Square endpoints are offline-tested only (platform status spec in core/sdk/platforms/square/platform.json); no sandbox account has run them yet."
+ ],
+ "evidence": {
+  "calls": "2 of 2 hospitality drinks-stock discovery calls read; no step, variant or tool was described",
+  "platforms": "Eats365 and Lightspeed docs read (no API operation mapped); Square docs read, with its inventory and location endpoints mapped in the kit from Square's official spec"
+ }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "health-care:careplan",
+  "name": "Care plan from intake",
+  "industry": "health-care",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Takes a new patient from the practice system, drafts a care plan note from the clinic's own template for a clinician to finish, and queues the intake assessment form for approval. Crons read and draft; a person approves every form sent and a clinician signs off every note.",
+  "families": {
+    "clinic-intake-to-plan": {
+      "evidence": "0 discovery calls describe this way of working; built from the Cliniko help centre pages (docs read)",
+      "steps": ["intake-received", "intake-assessment", "eligibility-check", "goals-set", "plan-draft", "clinician-review", "client-consent", "plan-sent", "team-allocation", "plan-review", "record-keeping", "other"],
+      "covered_by": {
+        "intake-received": "intake cron (reads new patients and their referral source)",
+        "intake-assessment": "live op queued for approval (intake form)",
+        "eligibility-check": "skill (judges the referral's issue and expiry dates)",
+        "goals-set": "skill",
+        "plan-draft": "draft (care plan note from the clinic template, draft: true)",
+        "clinician-review": "manual in Cliniko (the clinician finalises the note)",
+        "client-consent": "not yet (see gaps)",
+        "plan-sent": "live op queued for approval (form create)",
+        "team-allocation": "not yet (see gaps)",
+        "plan-review": "not yet (see gaps)",
+        "record-keeping": "forms cron (records completed intake forms)",
+        "other": "not yet (see gaps)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New patients from the lookback window, with each one's referral source."},
+    {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Draft a care plan note from the clinic template for each new patient, and queue the intake form for approval."},
+    {"name": "forms", "schedule": "0 22 * * *", "entry": "forms", "summary": "Record which approved intake forms the patient has completed."}
+  ],
+  "draft_ops": {
+    "cliniko": [
+      "patient.listpatients",
+      "referral-source.getreferralsource",
+      "treatment-note.createtreatmentnote",
+      "patient-form.getpatientform"
+    ]
+  },
+  "live_ops": {
+    "cliniko": ["patient-form.createpatientform"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the clinic: reads, and a treatment note saved as a draft (draft: true) that only the clinic can see until a clinician finalises it. Creating a patient form is live: it reaches a patient, so a cron can only queue it.",
+  "capabilities": ["patients.list", "referrals.read", "notes.draft", "forms.queue", "forms.read"],
+  "adapters": {
+    "cliniko": {"status": "docs-only", "covers": "new patients, referral source, care plan note draft, intake form queued for approval, form completion"}
+  },
+  "gaps": [
+    "Cliniko has no care plan document, goals, funding or eligibility check, clinician sign-off, team allocation or plan review in the docs read: those steps are skill work or manual until a live account shows otherwise.",
+    "Client consent: the docs say patients accept the privacy policy when booking online, but no consent endpoint is mapped for an intake consent record, so consent is not covered.",
+    "Whether creating a patient form emails the patient is not stated in the API spec, so the form create stays in live_ops and a person sends it from Cliniko if it does not.",
+    "Splose (the second platform in the evidence) has no mapping in the kit: its help centre was read, but there is no ops.json or adapter, so it is not built.",
+    "The Cliniko list filter (created_at on q[]) and the treatment note template behaviour are tested offline only; a live Cliniko account is needed to confirm them.",
+    "Zero owner calls describe this workflow, so the steps come from the vendor help centre, not from how clinics run intake."
+  ],
+  "evidence": {
+    "calls": "0 health care calls describe care plans from intake (the variants file has no steps)",
+    "platforms": "Cliniko help centre (docs read, mapped in the kit: 223 operations); Splose help centre (docs read, not mapped in the kit)"
+  }
+}

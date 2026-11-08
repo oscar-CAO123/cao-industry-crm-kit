@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Advisory",
+ "owner_email": "owner@example.com.au",
+ "microsoft_365": {
+  "mailbox": "contracts@example.com.au",
+  "folder": "inbox",
+  "search": "contract",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Contracts"}
+ },
+ "docusign": {"from_days": 90},
+ "follow_up": {"after_days": [3, 7, 14]}
+}

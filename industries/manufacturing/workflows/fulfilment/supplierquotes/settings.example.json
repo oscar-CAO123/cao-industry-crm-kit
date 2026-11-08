@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Fabrication",
+ "microsoft_365": {
+  "mailbox": "buyer@example.com.au",
+  "quote_folder": "inbox",
+  "reply_search": "Quote",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "QuoteRegister"}
+ },
+ "chase_after_days": [3, 7]
+}

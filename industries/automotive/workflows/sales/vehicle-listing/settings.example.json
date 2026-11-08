@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Motors",
+ "microsoft_365": {
+  "mailbox": "sales@example.com.au",
+  "stock": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Stock"},
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Listings"},
+  "photos": {"drive": "DRIVE_ID"}
+ },
+ "listing_to": "listings@example.com.au",
+ "transfer_to": "transfers@example.com.au",
+ "min_photos": 6
+}

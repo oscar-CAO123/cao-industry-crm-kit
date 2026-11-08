@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Builders Pty Ltd",
+ "hubspot": {"idProperty": "xero_contact_id"},
+ "sync_bills": false
+}

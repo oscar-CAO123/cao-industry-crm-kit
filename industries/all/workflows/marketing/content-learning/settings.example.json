@@ -1,0 +1,11 @@
+{
+  "business_name": "Example Business",
+  "currency": "AUD",
+  "meta": {"ad_account_id": "act_AD_ACCOUNT_ID", "instagram_user_id": "INSTAGRAM_USER_ID"},
+  "window": "last_30d",
+  "min_spend_before_judging": 100,
+  "min_reach_before_judging": 200,
+  "max_cost_per_lead": 60,
+  "pauses_per_run": 5,
+  "history_limit": 25
+}

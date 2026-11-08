@@ -1,0 +1,5 @@
+{
+ "intake": ["zendesk"],
+ "zendesk": {"locale": "en-au", "group_id": null},
+ "follow_up": {"after_days": [3, 7]}
+}

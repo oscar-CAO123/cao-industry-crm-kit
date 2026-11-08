@@ -1,0 +1,6 @@
+{
+  "business_name": "Example Vineyard",
+  "farm_ids": ["AGRIWEBB_FARM_ID"],
+  "stale_days": 14,
+  "rain_window_days": 30
+}

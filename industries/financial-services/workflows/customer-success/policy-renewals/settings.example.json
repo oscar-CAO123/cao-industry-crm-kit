@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Insurance Broking",
+ "microsoft_365": {
+   "mailbox": "renewals@example.com.au",
+   "folder": "Renewals",
+   "underwriter": {"name": "Underwriting team", "email": "underwriting@insurer.example"},
+   "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "PolicyRegister"}
+ },
+ "renewal_lead_days": 45,
+ "follow_up": {"after_days": [7, 14]}
+}

@@ -1,0 +1,100 @@
+{
+ "id": "knowledge-base",
+ "name": "Keep a searchable knowledge base of the business",
+ "industry": "all",
+ "department": "owner",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps a searchable knowledge base of the business: it gathers the SOPs, pages and docs the business already has into one indexed store, writes new entries from them as draft pages in Confluence, and publishes each entry once a person approves it. Crons read and draft; a person approves every publish.",
+ "families": {
+  "all": {
+   "evidence": "33 of 40 calls describe the process: 17 write entries (mostly by hand or with an AI assistant), 9 publish them, 6 gather existing material, 5 capture walkthroughs",
+   "steps": [
+    "capture-knowledge",
+    "gather-existing",
+    "write-entry",
+    "review-approve",
+    "publish",
+    "share-with-team",
+    "search-lookup",
+    "update-stale",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "capture-knowledge": "gather (existing Confluence pages and Google Docs become sources); walkthrough recordings are a person's step",
+    "gather-existing": "gather (sources stored once, refreshed each hour)",
+    "write-entry": "skill (outline into a proposal), then draft (entry as a draft page in Confluence)",
+    "review-approve": "approval (a person reads the draft page and approves the publish)",
+    "publish": "approval (publish to the knowledge base space)",
+    "share-with-team": "not yet (see gaps): space access is set in Confluence by a person",
+    "search-lookup": "the sources store the agent searches; staff use Confluence search",
+    "update-stale": "gather flags pages whose last version is past the limit; revising them is a person's step",
+    "record-keeping": "the sources store holds each source's status and its entry; no platform log"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "gather",
+   "schedule": "0 * * * *",
+   "entry": "gather",
+   "summary": "Existing pages and docs: one stored source each, refreshed, with stale pages flagged."
+  },
+  {
+   "name": "draft",
+   "schedule": "*/30 * * * *",
+   "entry": "draft",
+   "summary": "Write each source that has an outline into a draft Confluence page, queue its publish for approval, and mark published entries."
+  }
+ ],
+ "draft_ops": {
+  "confluence": [
+   "openapi-v2-v3.getPages",
+   "openapi-v2-v3.createPage"
+  ],
+  "google-workspace": [
+   "drive.files.list",
+   "docs.documents.get"
+  ]
+ },
+ "live_ops": {
+  "confluence": [
+   "openapi-v2-v3.updatePage"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of existing pages and docs, and a Confluence page in draft that only its editor can see. Publishing an entry to the knowledge base space is a live operation and waits for a person.",
+ "capabilities": [
+  "documents.list",
+  "documents.read",
+  "documents.create",
+  "pages.publish"
+ ],
+ "adapters": {
+  "confluence": {
+   "status": "docs-only",
+   "covers": "existing pages read from a source space; entries created as drafts in the knowledge base space; publish on approval"
+  },
+  "google-workspace": {
+   "status": "docs-only",
+   "covers": "existing Google Docs read from one Drive folder; text read for search and for writing entries"
+  }
+ },
+ "gaps": [
+  "Microsoft 365 (SharePoint, OneNote and Word, named in 3 calls): the mapped operations are Outlook mail and Excel tables only, with no SharePoint, OneDrive or OneNote content. Not built.",
+  "Share-with-team (Google Drive sharing, Confluence space permissions): sharing reaches staff and so waits for a person. No sharing operation is queued by a cron.",
+  "Claude and GPT (the most named tools): the model is the agent, not a kit platform. Writing an outline is a skill step.",
+  "Loom and other walkthrough recorders (named in 2 calls): not platforms in the kit. Recordings are made and linked by the owner; no transcript is pulled.",
+  "Hubspot, Aircall AI, Notion and other tools named in the calls: no mapped knowledge-base operations here.",
+  "Staleness for Google Docs: Drive returns no modified date through the mapped parameters, so Docs are never flagged as stale.",
+  "Revising an existing page (update-stale): the draft cron only creates new entries. Changes to a page that is already live are a person's step.",
+  "Google Doc drafting: entries are written to Confluence only. Drafting a Doc needs a move into the folder through drive.files.update, not built.",
+  "Confluence publish takes the draft's version number plus one. That is the rule for updating a page, but it is unverified on a sandbox space.",
+  "Platform help: none of the three platforms' supplied help pages describe knowledge base steps, so every step's support is marked unknown until a live account confirms it.",
+  "Every adapter is docs-only until a Confluence sandbox space and a Google Workspace test account prove it."
+ ],
+ "evidence": {
+  "calls": "38 calls in the worklist; the mining file reads 40 and 33 describe the process",
+  "platforms": "all-knowledge-base-platforms.json lists Confluence, Google Workspace and Microsoft 365. Confluence and Google Workspace have mapped operations for this job; Microsoft 365 has none for knowledge content"
+ }
+}

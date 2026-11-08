@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Motors",
+ "microsoft_365": {
+  "mailbox": "compliance@example.com.au",
+  "stock": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Stock"},
+  "checks": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "PPSRChecks"}
+ },
+ "compliance_contact": "compliance@example.com.au"
+}

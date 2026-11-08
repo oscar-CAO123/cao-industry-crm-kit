@@ -1,0 +1,8 @@
+{
+  "business_name": "Example Business",
+  "currency": "AUD",
+  "meta": {"ad_account_id": "act_AD_ACCOUNT_ID"},
+  "max_cost_per_lead": 60,
+  "min_spend_before_judging": 100,
+  "pauses_per_run": 10
+}

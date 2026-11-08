@@ -1,0 +1,7 @@
+{
+  "business_name": "Example Accounting",
+  "projects": ["00000000-0000-4000-8000-000000000000"],
+  "lookback_days": 31,
+  "payment_terms_days": 14,
+  "invoice_account_code": null
+}

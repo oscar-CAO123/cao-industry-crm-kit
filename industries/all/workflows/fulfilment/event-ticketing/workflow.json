@@ -1,0 +1,69 @@
+{
+ "id": "event-ticketing",
+ "name": "Plan and run events: venues, suppliers, catering, tickets, registrations and check-in",
+ "industry": "all",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs ticketed events on Eventbrite. Queues publishing for events that are ready (a person approves each one), keeps the registration list current, and drafts each event's run sheet and wrap-up counts. Venue hire, suppliers and catering stay with the business and are not automated here.",
+ "families": {
+  "private-invite-functions": {
+   "evidence": "1 discovery call describes this way of running events (events and weddings catering)",
+   "steps": ["registration-capture", "record-keeping", "other", "catering-order", "run-sheet", "supplier-booking"],
+   "covered_by": {"registration-capture": "registrations cron", "record-keeping": "registrations and wrap-up crons", "other": "not covered", "catering-order": "not covered", "run-sheet": "run-day cron (from Eventbrite times and teams only)", "supplier-booking": "not covered"}
+  },
+  "unclear": {
+   "evidence": "1 discovery call describes this way of running events (event production and staging)",
+   "steps": ["other", "run-sheet"],
+   "covered_by": {"other": "not covered", "run-sheet": "run-day cron (from Eventbrite times and teams only)"}
+  }
+ },
+ "steps": ["event-brief", "venue-booking", "supplier-booking", "catering-order", "ticket-setup", "registration-capture", "promote-and-remind", "payments-refunds", "run-sheet", "check-in", "post-event-follow-up", "record-keeping"],
+ "covered_by": {
+  "event-brief": "setup cron reads the event; publishing waits for approval",
+  "venue-booking": "not covered (Eventbrite holds venue records only)",
+  "supplier-booking": "not covered",
+  "catering-order": "not covered",
+  "ticket-setup": "setup cron reads ticket types; creating them stays in Eventbrite",
+  "registration-capture": "registrations cron",
+  "promote-and-remind": "not covered (no send operation mapped)",
+  "payments-refunds": "not covered (refund operation mapped, no cron uses it)",
+  "run-sheet": "run-day cron (draft)",
+  "check-in": "run-day and wrap-up crons read team sizes and checked-in counts; the scanner app is not covered",
+  "post-event-follow-up": "wrap-up cron (draft counts); thank-you messages not covered",
+  "record-keeping": "registrations and wrap-up crons"
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "setup", "schedule": "15 * * * *", "entry": "setup", "summary": "Events still in draft that have a ticket type and a venue (or are online) are queued to publish, for approval."},
+  {"name": "registrations", "schedule": "*/30 * * * *", "entry": "registrations", "summary": "Attendees changed since the last run, kept as the register. Email addresses are not kept."},
+  {"name": "run-day", "schedule": "0 21 * * *", "entry": "run-day", "summary": "Events starting within the run-sheet window: times, check-in teams and team sizes drafted as a run sheet (21:00 UTC is 7 or 8 am in eastern Australia)."},
+  {"name": "wrap-up", "schedule": "0 22 * * *", "entry": "wrap-up", "summary": "Ended events: sold, checked-in, cancelled and refunded counts per ticket type, drafted."}
+ ],
+ "draft_ops": {
+  "eventbrite": ["get:/events/{event_id}/", "get:/events/{event_id}/ticket_classes/", "get:/events/{event_id}/attendees/", "get:/events/{event_id}/teams/"]
+ },
+ "live_ops": {
+  "eventbrite": ["post:/events/{event_id}/publish/"]
+ },
+ "draft_ops_note": "Reads only. The crons write drafts to the workflow store (register, run sheet, wrap-up), which reach nobody outside the business. Publishing an event is visible to buyers, so it is only ever queued for approval.",
+ "adapters": {
+  "eventbrite": {"status": "docs-only", "covers": "event status and times, ticket types, attendees, check-in teams, and publishing (approval only)"}
+ },
+ "gaps": [
+  "Venue hire, supplier booking and catering orders: no platform in the evidence covers them, and Eventbrite holds only venue records. Not built.",
+  "Promotion, attendee reminders, thank-you messages and surveys: no send operation is mapped for Eventbrite, and no mailbox adapter is part of this workflow.",
+  "Run sheets: Eventbrite's schedule operation is a write and is not used. The drafted run sheet holds times, check-in teams and team sizes only.",
+  "Check-in: the Eventbrite check-in app is described from help text only. The crons read team sizes and checked-in flags, not live scans.",
+  "Paging: Eventbrite returns one page of attendees per call, and the kit's operation map has no continuation parameter. Events above one page (about 50 attendees) are read incompletely. The crons log this and do not advance the register cursor. Fixing it needs a change in core, which this workflow may not make.",
+  "Refunds: the refund operation is mapped in the kit, but no cron queues one. A refund needs a person's request first, which is not wired.",
+  "Humanitix and Moshtix: no operations are mapped in the kit, so there is no adapter. Typeform, named on one call for registration forms, has mapped operations but no platform evidence here, so it is not built.",
+  "Evidence is thin: 6 calls, 2 job types, no volumes or turnaround stated. The cron times are defaults to confirm with the client.",
+  "Eventbrite field names come from the vendor spec in endpoint-map/raw. Not yet run against a live account. Needs EVENTBRITE_TOKEN.",
+  "Only setup queues anything. The other three crons read and draft, because no other mapped step needs a person to approve a platform change."
+ ],
+ "evidence": {
+  "calls": "6 discovery calls read, 2 job types (events and weddings catering; event production and staging). None stated volume or turnaround.",
+  "platforms": "Eventbrite, Humanitix and Moshtix were read. Only Eventbrite has operations mapped in the kit, so it is the only adapter."
+ }
+}

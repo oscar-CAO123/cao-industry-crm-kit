@@ -1,0 +1,10 @@
+{
+  "business_name": "Example Electrical",
+  "owner_email": "owner@example.com.au",
+  "microsoft_365": {
+    "mailbox": "compliance@example.com.au",
+    "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Expiry"}
+  },
+  "remind_within_days": 30,
+  "digest_within_days": 90
+}

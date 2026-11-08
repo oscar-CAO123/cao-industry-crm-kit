@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Builders",
+ "fieldwire": {
+  "api_version": "SET-FROM-FIELDWIRE-VERSIONING-DOCS",
+  "projects": ["PROJECT_UUID"],
+  "default_due_days": 7
+ }
+}

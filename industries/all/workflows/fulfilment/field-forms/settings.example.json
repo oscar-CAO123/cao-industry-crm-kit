@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Builders",
+ "fieldwire": {
+  "api_version": "SET-FROM-FIELDWIRE-VERSIONING-DOCS",
+  "projects": ["PROJECT_UUID"],
+  "complete_status_ids": ["FORM_STATUS_UUID_FOR_COMPLETE"],
+  "report_recipients": "owner@example.com.au",
+  "report_cc_sender": true,
+  "report_max_per_run": 20
+ },
+ "report_window_hours": 24
+}

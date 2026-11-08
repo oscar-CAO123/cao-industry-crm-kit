@@ -1,0 +1,9 @@
+{
+ "family": "newsletter-and-flows",
+ "business_name": "Example Realty",
+ "platforms": ["mailchimp", "klaviyo"],
+ "newsletter": "mailchimp",
+ "mailchimp": {"list_id": "AUDIENCE_LIST_ID", "from_name": "Example Realty", "reply_to": "hello@example.com.au"},
+ "klaviyo": {"revision": "2026-10-15"},
+ "targets": {"open_rate": null, "click_rate": null}
+}

@@ -1,0 +1,49 @@
+{
+ "id": "real-estate:add-arrears",
+ "name": "Arrears ladder",
+ "industry": "real-estate",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds overdue rent in Re-Leased, adds each new arrears invoice to the arrears register, and drafts a reminder at each step of the ladder. Every reminder waits for a person to approve the send from the arrears mailbox.",
+ "families": {
+  "all": {
+   "evidence": "1 discovery call describes this way of chasing arrears (residential rentals, reminder emails sent by hand by a VA within 1 day)",
+   "steps": ["missed-payment", "check-ledger", "reminder-message", "rent-recovered", "record-keeping"],
+   "covered_by": {"missed-payment": "scan", "check-ledger": "scan (amount and due date from the invoice)", "reminder-message": "remind (draft, approval)", "rent-recovered": "remind re-reads the invoice before any send", "record-keeping": "register row (scan)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "scan", "schedule": "0 22 * * *", "entry": "scan", "summary": "Read overdue invoices from Re-Leased, keep one arrears row per invoice and add a register row for each new one (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "remind", "schedule": "30 22 * * *", "entry": "remind", "summary": "Draft the reminder for each overdue invoice's current ladder step and queue its send for approval (30 minutes after scan)."}
+ ],
+ "draft_ops": {
+  "re-leased": ["Invoices_Get", "Invoices_Get.get"],
+  "microsoft-365": ["users.CreateMessages", "drives.items.workbook.tables.CreateRows"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of invoices, an Outlook draft in the arrears mailbox, a row in the arrears register. The only send is the reminder itself, and it is queued for a person to approve.",
+ "capabilities": ["invoices.list", "invoices.get", "messages.draft", "messages.send", "register.append"],
+ "adapters": {
+  "re-leased": {"status": "docs-only", "covers": "authorised invoices with money owing (AmountDue, DueDate, contact email, property address), re-read before each reminder"},
+  "microsoft-365": {"status": "docs-only", "covers": "arrears mailbox drafts and approved reminder sends, arrears register workbook rows"}
+ },
+ "gaps": [
+  "Console (now Reapit): arrears docs only, no mapped operations in the kit, so no adapter. Its Arrears Workflow steps are not described in the docs.",
+  "PropertyMe: arrears docs cover Arrears Automation reminders, but no operations are mapped in the kit, so no adapter. If that automation is on, turn it off for these tenancies or tenants get two reminders.",
+  "VaultRE: the kit maps tenancies, tenants and contact email, but no rent ledger or arrears operation. Its tenancy list carries no amount owing, so no adapter.",
+  "Payment plans, disputes and collectors: Re-Leased keeps an arrears status on the tenancy, but an invoice does not name its tenancy in the spec, so the reminder cannot see it. The person approving each send must check the account first.",
+  "Tenant calls, notice to remedy, owner arrears updates, escalation to a collector or tribunal, and bond recovery at exit: judgment steps, not automated.",
+  "Reminder wording and timing: the one call gives 1 to 7 days, so the default steps are 1 and 7 days. Wording is a template the business should approve.",
+  "Re-Leased notes cannot be written (only read), so each reminder is recorded in the register workbook, not on the Re-Leased account.",
+  "The Re-Leased spec's list example and its schema disagree on whether Data is one invoice or an array. The adapter accepts both; confirm on a sandbox.",
+  "Both adapters are docs-only until a Re-Leased sandbox and a Microsoft 365 developer tenant prove them."
+ ],
+ "evidence": {
+  "calls": "1 of 1 real estate arrears call describes the ladder, with reminder emails sent by a VA; no call describes payment plans or escalation",
+  "platforms": "Console and PropertyMe arrears pages checked: no operations mapped, so no adapter; Re-Leased and Microsoft 365 mapped and used"
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "id": "agriculture-mining:environmental-monitoring",
+ "name": "Schedule environmental monitoring, validate results against limits and report",
+ "industry": "agriculture-mining",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the monitoring register in the business's own workbook from the field readings and lab results the team enters, checks each result against its licence or site limit, and lists every result that needs a person's check. Scheduling the sampling rounds and lodging the report with the regulator stay with the people. Crons read and draft; a person approves the one email that goes out.",
+ "families": {},
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "register", "schedule": "*/30 * * * *", "entry": "register", "summary": "Copy each new reading or lab result in the local store into the register table, unless its row is already there."},
+  {"name": "review", "schedule": "0 21 * * *", "entry": "review", "summary": "Check every registered result against its limit, mark the ones that pass, and draft one review list for the QC mailbox, queued for approval (21:00 UTC is 7 or 8 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a row in the owner's own monitoring register workbook, and a review email created as a draft in the business mailbox. The only send is the review email, and it is queued for a person to approve.",
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "register rows in the owner's workbook, the review email draft and its queued send"}
+ },
+ "gaps": [
+  "Scheduling a monitoring plan or sampling round: no mapped platform covers it in this kit. ESdat's Field Management does, but the kit has no ESdat platform, so the schedule stays with the people.",
+  "ESdat, the closest monitoring platform: the kit has no platform folder for it, so nothing is read from or written to it. Its pages cover lab results and exceedance notices, not the sampling steps.",
+  "GoCanvas: the kit maps 94 operations for it, so field forms could feed readings in. No adapter is built, because the vendor docs confirm submission and form fields but not how a submission's answers come back. The evidence file's note that no ops file exists is out of date.",
+  "Sitemate: the kit has no platform folder for it.",
+  "Field sampling, sampling kit preparation, on-site instrument readings and instrument calibration are people's steps. The workflow records what they enter and does not run them.",
+  "Exceedance response (retest, isolate the source, escalate, stop discharge) is a person's decision. The workflow lists the exceedance and nothing more.",
+  "Lodging the monitoring report, an annual return or a notification with the regulator is never automated. The workflow lists results for a person to lodge.",
+  "Limits come from the licence or site standard entered in settings. A result with no limit on file is listed for a check and is never passed.",
+  "The three calls read do not describe how they run environmental monitoring, so no family was built from call evidence. Steps come from the catalogue's step list.",
+  "The register read takes the first 1,000 rows. A longer register needs paging before this ships.",
+  "The Microsoft 365 adapter is docs-only until a developer tenant proves it against a real workbook and mailbox. The token flow is not built, so M365_ACCESS_TOKEN is supplied by hand."
+ ],
+ "evidence": {
+  "calls": "3 discovery calls read; none describes how they run environmental monitoring",
+  "platforms": "ESdat and GoCanvas guidance pages (neither with an adapter); Microsoft 365 is the kit's mapped workbook and mail platform, used for the register and the review email"
+ }
+}

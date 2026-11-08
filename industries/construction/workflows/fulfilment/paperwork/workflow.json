@@ -1,0 +1,54 @@
+{
+ "id": "construction:paperwork",
+ "name": "Letters and reports by hand",
+ "industry": "construction",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Letters and reports by hand: each record marked ready in the requests tab (an extension of time claim, a delay notice, a progress report) is copied from its Google Doc template, filled from the record, checked for unfilled fields and open comments, drafted as an email and logged. The client gets the email only after a person approves the send. Crons read and draft; a person approves every send.",
+ "families": {
+  "all": {
+   "evidence": "11 construction discovery calls describe this work; 8 of them say gathering the facts is manual, and all 11 say the drafting is manual",
+   "steps": ["gather-facts", "draft-text", "check-facts", "send", "file-record"],
+   "covered_by": {
+    "gather-facts": "intake (the record's columns become the fields) and skill (site facts the record does not hold)",
+    "draft-text": "draft (a copy of the template, filled from the record)",
+    "check-facts": "draft (unfilled fields and open comments hold the letter) and skill (figures checked against the subcontract or job record)",
+    "send": "approval (the email draft is sent only after a person approves it)",
+    "file-record": "draft (the copy stays in the output folder, one log row per document)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New records marked ready in the requests tab."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Copy the template for each new record, fill it, check it, draft the email, log the row."},
+  {"name": "queue", "schedule": "*/30 * * * *", "entry": "queue", "summary": "Queue the send of each drafted email whose record a person has marked approved in the sheet."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["sheets.spreadsheets.values.get", "sheets.spreadsheets.values.append", "drive.files.copy", "docs.documents.batchUpdate", "docs.documents.get", "drive.comments.list", "gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the requests tab and the draft, a copy of a template in the output folder, text filled into that copy, an email draft that waits in Gmail, a row in the document log. Sending the email is a live operation and waits for a person.",
+ "capabilities": ["records.list", "documents.draft", "emails.draft", "emails.send"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "requests tab (read), Doc copy from a template, plain-text fill, placeholder and comment check, email draft, document log row, send after approval"}
+ },
+ "gaps": [
+  "Procore (named on 2 calls; its Correspondence tool and Daily Log hold the notices and site facts): no platform folder in the kit, so nothing is mapped. The requests tab is the intake instead.",
+  "Microsoft 365 (Word and Outlook named for drafting and sending): the platform evidence for this job maps no document or mail operations, so no adapter is built.",
+  "Monday.com (work-in-progress reports), Simpro, Sitemate Dashpivot and NEO are named on calls, but this job has no platform evidence for them and no adapter.",
+  "What starts a letter is not described on the calls. The requests tab is an assumed intake, the same as the documents workflow.",
+  "Judgment steps are agent-skill work: progress reports built from quoting ratios, tender responses reworded for each set of selection criteria, subcontractor claims checked against subcontract agreements, and the wording of an extension of time claim.",
+  "No cadence or deadline tracking. The five-business-day extension of time deadline and the agreed send cadence for plant pre-starts and site diaries are not scheduled.",
+  "PDF attachments and eSignature are not built. The email body is the filled text of the document. Starting a Drive approval emails the reviewers, so it would be a live step and is not built.",
+  "The sent state is not read back from Gmail. A queued send is not queued again, but the record is not marked sent automatically.",
+  "The google-workspace adapter is tested offline only, against a fake network. It has not been run against a live account."
+ ],
+ "evidence": {
+  "calls": "11 construction discovery calls on paperwork, all 11 describe the process step by step; turnaround stated as within 5 business days (extension of time claims) and 2 to 3 days (tender responses)",
+  "platforms": "Google Workspace platform evidence covers the Doc template, edits, eSignature and revision history; Procore evidence covers the Correspondence tool and Daily Log; Microsoft 365 evidence is accessibility help pages only"
+ }
+}

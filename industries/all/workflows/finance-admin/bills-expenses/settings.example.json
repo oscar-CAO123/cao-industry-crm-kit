@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Electrical",
+ "default_tax_type": "INPUT",
+ "overdue_grace_days": 0
+}

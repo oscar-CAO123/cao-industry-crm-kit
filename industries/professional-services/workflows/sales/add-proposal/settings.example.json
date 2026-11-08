@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Legal",
+ "quote_valid_days": 30,
+ "hubspot": {
+  "property": {"title": "hs_title", "expiration": "hs_expiration_date", "amount": "hs_quote_amount", "status": "hs_status"},
+  "status_values": {"published": "PUBLISHED", "accepted": "ACCEPTED", "declined": "DECLINED"},
+  "contact_association": {"associationCategory": "HUBSPOT_DEFINED", "associationTypeId": null}
+ }
+}

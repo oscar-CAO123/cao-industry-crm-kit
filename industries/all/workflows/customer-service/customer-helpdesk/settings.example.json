@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Store",
+ "sources": ["front", "gorgias"],
+ "front": {"inbox_id": "INBOX_ID", "channel_id": "CHANNEL_ID", "teammate_id": "TEAMMATE_ID"},
+ "gorgias": {"escalate_tag": "needs-human"},
+ "answers": [
+  {"name": "opening hours", "match": ["opening hours", "open on", "open until", "what time"], "front": {"article_id": "ARTICLE_ID"}},
+  {"name": "delivery", "match": ["deliver", "postage", "shipping"], "gorgias": {"macro_id": 0}}
+ ],
+ "escalate": ["refund", "complaint", "injur", "lawyer", "legal", "chargeback", "unsafe", "urgent"],
+ "lookback_hours": 24,
+ "chase_after_hours": 4,
+ "per_run_limit": 20,
+ "signature": "Thanks, the Example Store team"
+}

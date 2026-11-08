@@ -1,0 +1,8 @@
+{
+  "business_name": "Example Cafe",
+  "location_id": "REPLACE_WITH_SQUARE_LOCATION_ID",
+  "loyalty_program_id": "REPLACE_WITH_SQUARE_LOYALTY_PROGRAM_ID",
+  "activity_days": 7,
+  "per_run": 20,
+  "max_pages": 10
+}

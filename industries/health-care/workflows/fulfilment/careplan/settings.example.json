@@ -1,0 +1,6 @@
+{
+  "business_name": "Example Clinic",
+  "care_plan_template_id": "REPLACE_WITH_CLINIKO_TREATMENT_NOTE_TEMPLATE_ID",
+  "intake_form_template_id": "REPLACE_WITH_CLINIKO_PATIENT_FORM_TEMPLATE_ID",
+  "lookback_days": 14
+}

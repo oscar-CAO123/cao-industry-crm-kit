@@ -1,0 +1,21 @@
+{
+ "business_name": "Example Firm",
+ "gohighlevel": {
+  "location_id": "LOCATION_ID",
+  "pipeline_id": "PIPELINE_ID",
+  "new_stage_id": "NEW_INQUIRY_STAGE_ID",
+  "owner_user_id": "",
+  "form_id": ""
+ },
+ "lead_tags": ["web-lead"],
+ "acknowledgement": {
+  "channel": "Email",
+  "subject": "Thanks for getting in touch",
+  "text": "Hi {first}, thanks for getting in touch with {business}. We have your details and a member of our team will follow up shortly."
+ },
+ "follow_up": {
+  "after_hours": 48,
+  "max": 2,
+  "text": "Hi {first}, just checking you received our message. Happy to answer any questions."
+ }
+}

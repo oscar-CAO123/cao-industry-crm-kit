@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Store",
+ "unleashed": {
+  "warehouse_code": "MAIN",
+  "order_status": "Placed"
+ }
+}

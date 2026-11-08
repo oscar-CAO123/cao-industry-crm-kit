@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Trades Pty Ltd",
+ "microsoft_365": {
+  "mailbox": "office@example.com.au",
+  "folder": "inbox",
+  "search": "certificate",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Subcontractors"}
+ },
+ "dropbox": {"job_folders": ["/Jobs/Example Job"]},
+ "expiry_days": 30
+}

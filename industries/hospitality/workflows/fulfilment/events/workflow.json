@@ -1,0 +1,47 @@
+{
+ "id": "hospitality:events",
+ "name": "Events planned in three places",
+ "industry": "hospitality",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Brings event enquiries from the inbox onto one list, checks the venue calendar for each requested date, holds a free date with no guests invited, and drafts the reply in the enquiry's thread, so the inbox, the calendar and the event record agree. Crons read and draft; a person approves every reply before it is sent.",
+ "families": {
+   "all": {
+     "evidence": "6 of 12 event calls read describe how events are planned; every step is manual in all of them",
+     "steps": ["enquiry-intake", "qualify", "check-availability", "menu-and-quote", "record-keeping"],
+     "covered_by": {"enquiry-intake": "intake cron (enquiry emails onto one list)", "qualify": "skill (group size and date against the venue's rules, judged by hand)", "check-availability": "check cron (calendar free-busy)", "menu-and-quote": "skill (set menus and dietary versions: no mapped platform)", "record-keeping": "check cron (calendar hold with no guests invited, reply draft in the enquiry thread)"}
+   }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+   {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New enquiry emails from the enquiries label go onto one list (sender, subject and threading headers only)."},
+   {"name": "check", "schedule": "*/15 * * * *", "entry": "check", "summary": "For each enquiry with booking details: hold a free date on the venue calendar, draft the reply in the thread, and queue its send for approval. Busy dates are marked Clash."}
+ ],
+ "draft_ops": {
+   "google-workspace": ["gmail.users.messages.list", "gmail.users.messages.get", "gmail.users.drafts.create", "calendar.freebusy.query", "calendar.events.insert"]
+ },
+ "live_ops": {
+   "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the enquiry label and the venue calendar, a reply draft in the enquiry's own thread, and a calendar hold with no guests invited. Sending a reply waits for a person.",
+ "capabilities": ["enquiries.read", "calendar.check", "calendar.hold", "replies.draft", "replies.send"],
+ "adapters": {
+   "google-workspace": {"status": "docs-only", "covers": "enquiry email list and headers, calendar free-busy checks and holds with no guests, reply drafts in the thread, reply sends (approval only)"}
+ },
+ "gaps": [
+   "Typeform (named on the enquiry-intake calls) is not built: the mining run has no Typeform platform evidence for this workflow, so enquiries arrive by Gmail only.",
+   "Microsoft 365: the mined pages hold no event or booking content and no kit operation covers events, so Outlook is not built.",
+   "Roller (named on the calls and in the platform evidence for party booking) has no platform in the kit (core/sdk/platforms/roller is absent), so Roller bookings cannot be read or changed.",
+   "Menus, set-menu choices and dietary versions (menu-and-quote) have no mapped platform, so they stay a judgment step.",
+   "Entering the booking details (date, times, guest count) for each enquiry needs a screen in the CRM shell: nothing writes the bookings namespace yet. Until it exists, the agent or a person writes it into the store.",
+   "A rejected reply leaves its calendar hold in place. Moving or removing a hold needs calendar.events.patch or calendar.events.delete as live operations, which this build does not include.",
+   "Deposits, contracts, supplier bookings, staffing, run sheets, final numbers, event-day check-in and invoicing are not covered: no mapped platform describes them in the docs given.",
+   "Calendar free-busy is a read sent as a POST, but the kit labels the operation as a write, so the deploy needs KIT_ALLOW_WRITES=1 for the check cron to read the calendar.",
+   "The Google adapter is docs-only: its field names come from Google's Gmail and Calendar specs, and it has not run against a real Google Workspace account."
+ ],
+ "evidence": {
+   "calls": "12 hospitality calls read for events; 6 describe how they plan events, and every mapped step is manual",
+   "platforms": "Google Workspace calendar and Gmail operations in the kit, mapped to the calendar free-busy and event steps; Microsoft 365 and Roller pages hold no event-planning steps"
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Civil",
+ "microsoft_365": {
+   "mailbox": "tenders@example.com.au",
+   "folder": "inbox",
+   "search": "tender",
+   "register": {"drive": "REPLACE_DRIVE_ID", "item": "REPLACE_ITEM_ID", "table": "Opportunities"}
+ },
+ "digest_to": "owner@example.com.au"
+}

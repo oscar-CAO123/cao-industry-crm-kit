@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Civil Pty Ltd",
+ "prestart": {
+  "template_checklist_id": "",
+  "swms_id": "",
+  "job_title_prefix": "Pre-start: "
+ },
+ "swms_review_days": 90,
+ "swms_review_assignee": "",
+ "reminder_days": 2,
+ "reminder_template_id": ""
+}

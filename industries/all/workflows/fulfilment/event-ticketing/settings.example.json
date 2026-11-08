@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Events",
+ "event_ids": ["123456789"],
+ "publish_when_ready": false,
+ "run_sheet_days_ahead": 7,
+ "timezone": "Australia/Sydney"
+}

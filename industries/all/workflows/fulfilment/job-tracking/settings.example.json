@@ -1,0 +1,9 @@
+{
+ "family": "dispatched-field-jobs",
+ "business_name": "Example Services",
+ "intake": ["servicem8", "asana"],
+ "servicem8": {"client_channel": "email"},
+ "asana": {"workspace_gid": "WORKSPACE_GID", "project_gids": []},
+ "stall_days": 5,
+ "client_update_days": 7
+}

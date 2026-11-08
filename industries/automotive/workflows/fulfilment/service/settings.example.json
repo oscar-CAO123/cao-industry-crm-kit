@@ -1,0 +1,10 @@
+{
+ "family": "fleet-account-reminders",
+ "business_name": "Example Motors",
+ "service_interval_months": 12,
+ "remind_before_days": 30,
+ "channel": "sms",
+ "sms_template": "Hi {first}, your vehicle is due for its next service with {business}. Reply to this message to book.",
+ "email_subject": "Your vehicle is due for a service",
+ "max_per_run": 25
+}

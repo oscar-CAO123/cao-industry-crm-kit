@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Events",
+ "webflow": {
+  "site_id": "SITE_ID_24_HEX",
+  "locale_id": "LOCALE_ID",
+  "custom_domain_ids": []
+ },
+ "gohighlevel": {
+  "location_id": "SUB_ACCOUNT_LOCATION_ID"
+ },
+ "results_days": 7
+}

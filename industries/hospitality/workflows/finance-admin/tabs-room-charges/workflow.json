@@ -1,0 +1,49 @@
+{
+ "id": "hospitality:tabs-room-charges",
+ "name": "Run guest tabs and post room charges to the folio",
+ "industry": "hospitality",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs guest tabs and posts room charges to the guest folio in the property system. The crons read the folio setup and the night trial balance and keep them for the night auditor. Posting a charge to a folio waits for a person to approve it.",
+ "families": {},
+ "steps": ["tab-open", "order-capture", "room-charge-authorise", "tab-transfer", "folio-post", "end-of-shift-close", "payment-settle", "checkout-review", "dispute-resolve", "night-audit", "ledger-reconcile", "record-keeping", "other"],
+ "covered_by": {
+  "folio-post": "live (queued for approval, not yet wired: see gaps)",
+  "night-audit": "draft (reconcile reads the trial balance)",
+  "ledger-reconcile": "draft (reconcile reads the trial balance)",
+  "record-keeping": "draft (folio-config keeps the folio setup)",
+  "tab-open": "skill (the agent works from the tab feed the business uses)",
+  "order-capture": "skill (not in the kit)",
+  "room-charge-authorise": "skill (not in the kit)",
+  "tab-transfer": "live (moveTransactions, not yet wired: see gaps)",
+  "end-of-shift-close": "skill (not in the kit)",
+  "payment-settle": "skill (not in the kit)",
+  "checkout-review": "skill (not in the kit)",
+  "dispute-resolve": "skill (not in the kit)"
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "folio-config", "schedule": "*/30 * * * *", "entry": "folio-config", "summary": "Read the property's folio configurations and keep the latest copy."},
+  {"name": "reconcile", "schedule": "0 13 * * *", "entry": "reconcile", "summary": "Read the trial balance for the day (13:00 UTC is 11 pm in Sydney) and keep it for the night auditor."}
+ ],
+ "draft_ops": {
+  "cloudbeds": ["accounting-v1-0-openapi.getFolioConfigurations", "accounting-v1-0-openapi.getTrialBalanceReport"]
+ },
+ "live_ops": {
+  "cloudbeds": ["accounting-v1-0-openapi.createFolio", "accounting-v1-0-openapi.moveTransactions", "accounting-v1-0-openapi.routeTransactions"]
+ },
+ "draft_ops_note": "Reads only. A guest's bill never changes from a cron: creating a folio, moving or routing a charge are live operations and wait for a person.",
+ "adapters": {},
+ "gaps": [
+  "No tab or POS source is mapped. Lightspeed (Tableside, Foratable) and Mews are not in the kit's platform list, and the mining pages for them are restaurant POS, blog or press text. Oracle Opera was fetched with the wrong pages entirely.",
+  "The mining file for this workflow (hospitality-tabs-room-charges-variants.json) does not exist, so there is no call evidence behind the steps.",
+  "Cloudbeds is the only mapped property system here, and its ops are spec status, not proven against a real account. No adapter file is written: a live Cloudbeds account and the request body for moveTransactions and routeTransactions are needed first.",
+  "The folio-post cron is not wired. It needs the tab feed, the charge body fields confirmed from the vendor spec, and a sandbox property.",
+  "Judgment steps stay with the agent: opening tabs, authorising room charges, disputes, end-of-shift close and payment."
+ ],
+ "evidence": {
+  "calls": "0 (the variants file is missing)",
+  "platforms": "3 platforms in the mining file (Lightspeed, Mews, Oracle Opera); 1 is mapped in the kit (Cloudbeds)"
+ }
+}

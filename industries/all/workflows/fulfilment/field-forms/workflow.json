@@ -1,0 +1,57 @@
+{
+  "id": "field-forms",
+  "name": "Field forms, checklists and photos into records",
+  "industry": "all",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns the forms, checklists and photos a crew fills in on site into records the office and the client can use. Crons read forms and checklists and queue each completed form's PDF email for approval; a person sends every one.",
+  "families": {
+    "app-captured-on-site": {
+      "evidence": "11 of 29 calls describe capturing the work in a field app or job system",
+      "steps": ["trigger", "on-site-checklist", "photos", "signature", "supervisor-review", "record-keeping", "report-out", "action-follow-up"],
+      "covered_by": {"trigger": "skill (a task or job starts the form)", "on-site-checklist": "draft (checklist items read per task)", "photos": "skill (photos read with the form, not yet a cron)", "signature": "gap (no on-site capture is documented)", "supervisor-review": "skill (a person verifies)", "record-keeping": "intake (forms kept as rows)", "report-out": "report (PDF email queued)", "action-follow-up": "skill"}
+    },
+    "paper-then-transcribed": {
+      "evidence": "7 of 29 calls describe paper or a blank form re-typed later",
+      "steps": ["paper-or-blank-form", "transcribe", "record-keeping", "action-follow-up", "report-out"],
+      "covered_by": {"paper-or-blank-form": "gap (a form is created from a template by hand until the template checksum flow is built)", "transcribe": "gap (Fieldwire has no paper import)", "record-keeping": "intake", "action-follow-up": "skill", "report-out": "report"}
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Forms changed in each watched project since the last run."},
+    {"name": "checklists", "schedule": "0 * * * *", "entry": "checklists", "summary": "Checklist items on tasks starting within a day either side of now, open or done."},
+    {"name": "report", "schedule": "0 22 * * *", "entry": "report", "summary": "Queue a PDF email for each form completed in the window (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "fieldwire": [
+      "fieldwire-regional-api.get_forms_in_project",
+      "fieldwire-regional-api.get_tasks_in_project",
+      "fieldwire-regional-api.get_task_check_items_for_tasks"
+    ]
+  },
+  "live_ops": {
+    "fieldwire": ["fieldwire-regional-api.email_by_form_id"]
+  },
+  "draft_ops_note": "Draft operations are reads only. The one write, emailing a completed form to the client or office, is a live operation and waits for a person.",
+  "capabilities": ["tasks.list", "documents.list", "files.read", "messages.draft", "reports.run"],
+  "adapters": {
+    "fieldwire": {"status": "docs-only", "covers": "forms, tasks, task checklists, completed-form PDF email"}
+  },
+  "gaps": [
+    "AroFlo: its mapped operations are GET-only with unresolved path placeholders and its HMAC signer is not built, so no adapter. Its on-site inspection, photo and document steps are the next candidate once the signer and paths are confirmed.",
+    "Jotform: 36 operations were added from the official SDK, not the published spec, with inputs unmapped, so no adapter until the field names are confirmed on a live account. Its signature widget and approval workflows cover the signature and supervisor-review steps when it is the client's tool.",
+    "Fieldwire: the Fieldwire-Version header is a date the kit cannot read from the spec; it is a required setting. Paging is not followed past the first page of each list. Sign-in is a bearer token supplied directly, since the short-lived JWT exchange is not built.",
+    "Fieldwire: creating a blank form from a template needs the template checksum and status ids, which the mapped flow does not yet fill. Until then the crew starts forms by hand.",
+    "Fieldwire: no on-site signature capture is documented; the signature endpoints hold stored records only.",
+    "Fieldwire: which status means a form is complete is set per template in settings; the report cron queues nothing until it is.",
+    "Paper-to-record transcription: Fieldwire documents no paper import, so a scanned form is a manual step.",
+    "Invoicing from a verified checklist is not covered; Fieldwire documents only time-and-materials hours on forms.",
+    "Every adapter is docs-only until a sandbox Fieldwire project proves it."
+  ],
+  "evidence": {
+    "calls": "13 calls in the fulfilment worklist name these steps; 29 calls read and 24 describe the process",
+    "platforms": "Fieldwire, AroFlo and Jotform help and product pages mapped step by step (all-field-forms-platforms.json)"
+  }
+}

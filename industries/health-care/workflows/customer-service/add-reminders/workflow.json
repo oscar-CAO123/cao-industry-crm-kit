@@ -1,0 +1,48 @@
+{
+ "id": "health-care:add-reminders",
+ "name": "Appointment reminders and waitlist",
+ "industry": "health-care",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds upcoming appointments that Cliniko sent no reminder for and drafts the text to send by hand, turns cancelled appointments into waitlist offers, and queues a booking for a waitlisted patient once a person has marked them accepted. Crons read and draft; a person approves every booking.",
+ "families": {
+  "reminders": {
+   "evidence": "3 discovery calls read (2 describe the process; a pharmacy and a wellness clinic); Cliniko help pages read step by step",
+   "steps": ["booking-made", "reminder-sent", "patient-confirms", "cancellation-received", "waitlist-offer", "waitlist-fill"],
+   "covered_by": {"booking-made": "skill (staff book in Cliniko; the crons only read it)", "reminder-sent": "reminders (drafts the gaps Cliniko left)", "patient-confirms": "not automated (see gaps)", "cancellation-received": "cancellations (reads the cancelled appointment)", "waitlist-offer": "cancellations (drafts the offer text)", "waitlist-fill": "waitlist-book (queues the booking for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "reminders", "schedule": "*/30 * * * *", "entry": "reminders", "summary": "Upcoming appointments with no reminder sent by Cliniko: draft the reminder text for a person to send."},
+  {"name": "cancellations", "schedule": "*/15 * * * *", "entry": "cancellations", "summary": "Cancelled appointments still ahead: record the opening and draft the waitlist offer text."},
+  {"name": "waitlist-book", "schedule": "*/30 * * * *", "entry": "waitlist-book", "summary": "Openings a person marked accepted and still free: queue the booking for approval."}
+ ],
+ "draft_ops": {
+  "cliniko": ["individual-appointment.listindividualappointments"]
+ },
+ "live_ops": {
+  "cliniko": ["individual-appointment.createindividualappointment"]
+ },
+ "draft_ops_note": "Draft operations are reads only. The crons write drafts and openings to their own store, never to Cliniko. Booking a patient into a slot changes the appointment book, so it is a live operation and waits for a person.",
+ "capabilities": ["appointments.list", "appointments.book"],
+ "adapters": {
+  "cliniko": {"status": "docs-only", "covers": "appointment list (reminder gaps, cancellations, slot re-check) and the approved booking; reminder and SMS sends stay in Cliniko"}
+ },
+ "gaps": [
+  "Cliniko has no API operation for reminders, SMS sends or the wait list. Reminders stay on Cliniko's own templates; the crons only find the gaps and draft text.",
+  "Patient replies such as 'Reply Y to confirm' are forwarded to a practitioner's phone or email, and the docs do not say they are recorded on the appointment. Confirmation handling is not automated.",
+  "Nothing in the CRM shell yet records that a waitlisted patient accepted an opening. The waitlist-book cron has nothing to queue until a person can set an opening to accepted.",
+  "HotDoc: its reminders and online confirm are well documented, but the kit has no HotDoc ops file, so no adapter is built.",
+  "Jane App: the kit's one mapped operation (List Appointments) points at treatments, not appointments, so no adapter is built.",
+  "GoHighLevel: the calls say it sends the reminders and holds the bookings, but it is not in this workflow's platform evidence, so it is not built here.",
+  "Runtime change needed: core/sdk/call.ts sends every array parameter as one JSON string, so Cliniko's repeated date-range filter cannot be sent. The adapter sends the start filter only, checks the end in code, and refuses a book of more than 1,000 future appointments rather than reading part of it.",
+  "The Cliniko adapter is tested on a fake network only. Field names come from Cliniko's docs pages, and the cancelled-appointment read is unverified on a live account.",
+  "Evidence is thin: three calls, two of them describing the process, and no waitlist call at all. The waitlist steps come from Cliniko's help pages, not from owners."
+ ],
+ "evidence": {
+  "calls": "3 health-care discovery calls read for reminders (pharmacy, wellness clinic); 2 describe the process",
+  "platforms": "Cliniko, HotDoc and Jane App help pages mapped step by step; only Cliniko has mapped operations for these steps"
+ }
+}
