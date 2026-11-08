@@ -3,9 +3,9 @@
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("justcall");
 /** GET /v2.1/calls: List all calls [read] */
-export const docsGetV21Calls = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_calls", input);
+export const docsGetV21Calls = (input: CallInput & { params?: { "agent_id"?: number; "ai_agent_ids"?: unknown[]; "call_direction"?: string; "call_traits"?: unknown[]; "call_type"?: string; "contact_number"?: number; "disposition_codes"?: unknown[]; "fetch_ai_data"?: boolean; "fetch_queue_data"?: boolean; "from_datetime"?: string; "ivr_digit"?: number; "justcall_number"?: number; "last_call_id_fetched"?: number; "order"?: string; "page"?: number; "per_page"?: number; "sort"?: string; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_calls", input);
 /** GET /v2.1/calls/{id}: Get a call [read] */
-export const docsGetV21CallsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_calls_id", input);
+export const docsGetV21CallsId = (input: CallInput & { params?: { "fetch_ai_data"?: boolean; "fetch_queue_data"?: boolean; "id": string } } = {}) => sdk.call("docs.get_v2_1_calls_id", input);
 /** PUT /v2.1/calls/{id}: Update a call [write] */
 export const docsPutV21CallsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_calls_id", input);
 /** GET /v2.1/calls/{id}/journey: Get call journey [read] */
@@ -15,9 +15,9 @@ export const docsGetV21CallsIdVoiceAgent = (input: CallInput & { params?: { "id"
 /** GET /v2.1/calls/{id}/recording/download: Download call recording [read] */
 export const docsGetV21CallsIdRecordingDownload = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_calls_id_recording_download", input);
 /** GET /v2.1/contacts: List all contacts [read] */
-export const docsGetV21Contacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_contacts", input);
+export const docsGetV21Contacts = (input: CallInput & { params?: { "across_team"?: boolean; "agent_ids"?: unknown[]; "contact_number"?: string; "first_name"?: string; "last_contact_id_fetched"?: number; "last_name"?: string; "order"?: string; "page"?: number; "per_page"?: number; "status"?: unknown[] } } = {}) => sdk.call("docs.get_v2_1_contacts", input);
 /** GET /v2.1/contacts/{id}: Get a contact [read] */
-export const docsGetV21ContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_contacts_id", input);
+export const docsGetV21ContactsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_contacts_id", input);
 /** POST /v2.1/contacts: Create contact [write] */
 export const docsPostV21Contacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_contacts", input);
 /** PUT /v2.1/contacts: Update contact [write] */
@@ -25,25 +25,25 @@ export const docsPutV21Contacts = (input: CallInput & { params?: {  } } = {}) =>
 /** PUT /v2.1/contacts/status: Update contact status [write] */
 export const docsPutV21ContactsStatus = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_v2_1_contacts_status", input);
 /** DELETE /v2.1/contacts: Delete contact [write] */
-export const docsDeleteV21Contacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.delete_v2_1_contacts", input);
+export const docsDeleteV21Contacts = (input: CallInput & { params?: { "across_team"?: boolean; "contact_number"?: string; "id"?: number } } = {}) => sdk.call("docs.delete_v2_1_contacts", input);
 /** POST /v2.1/contacts/bulk-add/blacklist: Bulk add contacts to blacklist [write] */
 export const docsPostV21ContactsBulkAddBlacklist = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_contacts_bulk_add_blacklist", input);
 /** GET /v2.1/contacts/blacklist: List blacklist contacts [read] */
-export const docsGetV21ContactsBlacklist = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_contacts_blacklist", input);
+export const docsGetV21ContactsBlacklist = (input: CallInput & { params?: { "across_team"?: boolean; "agent_ids"?: unknown[]; "contact_number"?: string; "first_name"?: string; "last_name"?: string; "order"?: string; "page"?: number; "per_page"?: number; "status"?: unknown[] } } = {}) => sdk.call("docs.get_v2_1_contacts_blacklist", input);
 /** GET /v2.1/phone-numbers: List all phone numbers [read] */
-export const docsGetV21PhoneNumbers = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_phone_numbers", input);
+export const docsGetV21PhoneNumbers = (input: CallInput & { params?: { "availability_setting"?: string; "capabilities"?: string; "justcall_line_name"?: string; "number_owner_id"?: number; "number_type"?: string; "order"?: string; "page"?: number; "per_page"?: number; "shared_agent_id"?: number; "shared_group_id"?: number } } = {}) => sdk.call("docs.get_v2_1_phone_numbers", input);
 /** GET /v2.1/phone-numbers/{id}: Get a phone number [read] */
-export const docsGetV21PhoneNumbersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_phone_numbers_id", input);
+export const docsGetV21PhoneNumbersId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_phone_numbers_id", input);
 /** POST /v2.1/phone-numbers/detect: Detect incoming number [write] */
 export const docsPostV21PhoneNumbersDetect = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_phone_numbers_detect", input);
 /** GET /v2.1/rcs/messages: List all messages [read] */
-export const docsGetV21RcsMessages = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_rcs_messages", input);
+export const docsGetV21RcsMessages = (input: CallInput & { params?: { "contact_number"?: string; "delivery_status"?: string; "fetch_template_data"?: boolean; "from_datetime"?: string; "last_message_id_fetched"?: number; "message_direction"?: string; "order"?: string; "page"?: number; "per_page"?: number; "rcs_phone_id": number; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_rcs_messages", input);
 /** GET /v2.1/rcs/messages/{id}: Get a message [read] */
-export const docsGetV21RcsMessagesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_rcs_messages_id", input);
+export const docsGetV21RcsMessagesId = (input: CallInput & { params?: { "fetch_template_data"?: boolean; "id": number } } = {}) => sdk.call("docs.get_v2_1_rcs_messages_id", input);
 /** POST /v2.1/rcs/messages/send: Send message [write] */
 export const docsPostV21RcsMessagesSend = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_rcs_messages_send", input);
 /** GET /v2.1/rcs/messages/templates: List all templates [read] */
-export const docsGetV21RcsMessagesTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_rcs_messages_templates", input);
+export const docsGetV21RcsMessagesTemplates = (input: CallInput & { params?: { "content_type"?: string; "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_rcs_messages_templates", input);
 /** POST /v2.1/rcs/messages/templates/card: Create a card template [write] */
 export const docsPostV21RcsMessagesTemplatesCard = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_rcs_messages_templates_card", input);
 /** POST /v2.1/rcs/messages/templates/carousel: Create a carousel template [write] */
@@ -53,127 +53,127 @@ export const docsPostV21RcsMessagesTemplatesMedia = (input: CallInput & { params
 /** POST /v2.1/rcs/messages/templates/text: Create a text template [write] */
 export const docsPostV21RcsMessagesTemplatesText = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_rcs_messages_templates_text", input);
 /** GET /v2.1/rcs/phones: List RCS senders [read] */
-export const docsGetV21RcsPhones = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_rcs_phones", input);
+export const docsGetV21RcsPhones = (input: CallInput & { params?: { "status"?: string } } = {}) => sdk.call("docs.get_v2_1_rcs_phones", input);
 /** GET /v2.1/special_dates: List all special dates [read] */
-export const docsGetV21SpecialDates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_special_dates", input);
+export const docsGetV21SpecialDates = (input: CallInput & { params?: { "page"?: number; "per_page"?: number; "search"?: string } } = {}) => sdk.call("docs.get_v2_1_special_dates", input);
 /** POST /v2.1/special_dates: Create a special date [write] */
 export const docsPostV21SpecialDates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_special_dates", input);
 /** DELETE /v2.1/special_dates/{id}: Delete a special date [write] */
-export const docsDeleteV21SpecialDatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_v2_1_special_dates_id", input);
+export const docsDeleteV21SpecialDatesId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.delete_v2_1_special_dates_id", input);
 /** GET /v2.1/special_dates/{id}: Get a special date [read] */
-export const docsGetV21SpecialDatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_special_dates_id", input);
+export const docsGetV21SpecialDatesId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_special_dates_id", input);
 /** PUT /v2.1/special_dates/{id}: Update a special date [write] */
-export const docsPutV21SpecialDatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_special_dates_id", input);
+export const docsPutV21SpecialDatesId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.put_v2_1_special_dates_id", input);
 /** GET /v2.1/texts: List all texts [read] */
-export const docsGetV21Texts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_texts", input);
+export const docsGetV21Texts = (input: CallInput & { params?: { "contact_number"?: string; "from_datetime"?: string; "justcall_number"?: string; "last_sms_id_fetched"?: number; "order"?: string; "page"?: number; "per_page"?: number; "sms_content"?: string; "sms_direction"?: string; "sort"?: string; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_texts", input);
 /** GET /v2.1/texts/{id}: Get a text [read] */
-export const docsGetV21TextsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_texts_id", input);
+export const docsGetV21TextsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_texts_id", input);
 /** POST /v2.1/texts/checkreply: Check reply [write] */
 export const docsPostV21TextsCheckreply = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_texts_checkreply", input);
 /** POST /v2.1/texts/new: Send SMS/MMS [write] */
 export const docsPostV21TextsNew = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_texts_new", input);
 /** GET /v2.1/texts/tags: List all tags [read] */
-export const docsGetV21TextsTags = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_texts_tags", input);
+export const docsGetV21TextsTags = (input: CallInput & { params?: { "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_texts_tags", input);
 /** GET /v2.1/texts/tags/{id}: Get a tag [read] */
-export const docsGetV21TextsTagsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_texts_tags_id", input);
+export const docsGetV21TextsTagsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_texts_tags_id", input);
 /** POST /v2.1/texts/tags: Create a tag [write] */
 export const docsPostV21TextsTags = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_texts_tags", input);
 /** DELETE /v2.1/texts/tags/{id}: Delete a tag [write] */
-export const docsDeleteV21TextsTagsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_v2_1_texts_tags_id", input);
+export const docsDeleteV21TextsTagsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.delete_v2_1_texts_tags_id", input);
 /** GET /v2.1/texts/threads: List all threads [read] */
-export const docsGetV21TextsThreads = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_texts_threads", input);
+export const docsGetV21TextsThreads = (input: CallInput & { params?: { "contact_number"?: string; "from_datetime"?: string; "keyword"?: string; "order"?: string; "page"?: number; "per_page"?: number; "phone_id": number; "tag_id"?: number; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_texts_threads", input);
 /** GET /v2.1/texts/threads/{thread_id}: Get a thread [read] */
-export const docsGetV21TextsThreadsThreadId = (input: CallInput & { params?: { "thread_id": string } } = {}) => sdk.call("docs.get_v2_1_texts_threads_thread_id", input);
+export const docsGetV21TextsThreadsThreadId = (input: CallInput & { params?: { "limit"?: number; "offset"?: number; "thread_id": string } } = {}) => sdk.call("docs.get_v2_1_texts_threads_thread_id", input);
 /** POST /v2.1/texts/threads/tag: Add tag to thread [write] */
 export const docsPostV21TextsThreadsTag = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_texts_threads_tag", input);
 /** DELETE /v2.1/texts/threads/tag: Remove tag from thread [write] */
-export const docsDeleteV21TextsThreadsTag = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.delete_v2_1_texts_threads_tag", input);
+export const docsDeleteV21TextsThreadsTag = (input: CallInput & { params?: { "contact_number"?: string; "justcall_number"?: string; "phone_id"?: number; "tag_id": number; "thread_id"?: string } } = {}) => sdk.call("docs.delete_v2_1_texts_threads_tag", input);
 /** GET /v2.1/texts/groups: List all groups [read] */
-export const docsGetV21TextsGroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_texts_groups", input);
+export const docsGetV21TextsGroups = (input: CallInput & { params?: { "justcall_number": string; "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_texts_groups", input);
 /** GET /v2.1/texts/groups/{group_id}: Get a group [read] */
-export const docsGetV21TextsGroupsGroupId = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.get_v2_1_texts_groups_group_id", input);
+export const docsGetV21TextsGroupsGroupId = (input: CallInput & { params?: { "group_id": number } } = {}) => sdk.call("docs.get_v2_1_texts_groups_group_id", input);
 /** POST /v2.1/texts/groups: Create a group [write] */
 export const docsPostV21TextsGroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_texts_groups", input);
 /** DELETE /v2.1/texts/groups/{group_id}: Delete a group [write] */
-export const docsDeleteV21TextsGroupsGroupId = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.delete_v2_1_texts_groups_group_id", input);
+export const docsDeleteV21TextsGroupsGroupId = (input: CallInput & { params?: { "group_id": number } } = {}) => sdk.call("docs.delete_v2_1_texts_groups_group_id", input);
 /** GET /v2.1/texts/groups/{group_id}/messages: List group messages [read] */
-export const docsGetV21TextsGroupsGroupIdMessages = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.get_v2_1_texts_groups_group_id_messages", input);
+export const docsGetV21TextsGroupsGroupIdMessages = (input: CallInput & { params?: { "group_id": number; "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_texts_groups_group_id_messages", input);
 /** GET /v2.1/texts/groups/messages/{message_id}: Get a group message [read] */
-export const docsGetV21TextsGroupsMessagesMessageId = (input: CallInput & { params?: { "message_id": string } } = {}) => sdk.call("docs.get_v2_1_texts_groups_messages_message_id", input);
+export const docsGetV21TextsGroupsMessagesMessageId = (input: CallInput & { params?: { "message_id": number } } = {}) => sdk.call("docs.get_v2_1_texts_groups_messages_message_id", input);
 /** POST /v2.1/texts/groups/{group_id}/messages: Send message in a group [write] */
-export const docsPostV21TextsGroupsGroupIdMessages = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.post_v2_1_texts_groups_group_id_messages", input);
+export const docsPostV21TextsGroupsGroupIdMessages = (input: CallInput & { params?: { "group_id": number } } = {}) => sdk.call("docs.post_v2_1_texts_groups_group_id_messages", input);
 /** PUT /v2.1/texts/groups/{group_id}/members: Add members to a group [write] */
-export const docsPutV21TextsGroupsGroupIdMembers = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.put_v2_1_texts_groups_group_id_members", input);
+export const docsPutV21TextsGroupsGroupIdMembers = (input: CallInput & { params?: { "group_id": number } } = {}) => sdk.call("docs.put_v2_1_texts_groups_group_id_members", input);
 /** DELETE /v2.1/texts/groups/{group_id}/members: Remove members from a group [write] */
-export const docsDeleteV21TextsGroupsGroupIdMembers = (input: CallInput & { params?: { "group_id": string } } = {}) => sdk.call("docs.delete_v2_1_texts_groups_group_id_members", input);
+export const docsDeleteV21TextsGroupsGroupIdMembers = (input: CallInput & { params?: { "group_id": number } } = {}) => sdk.call("docs.delete_v2_1_texts_groups_group_id_members", input);
 /** GET /v2.1/calls/analytics/account: Account analytics [read] */
-export const docsGetV21CallsAnalyticsAccount = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_account", input);
+export const docsGetV21CallsAnalyticsAccount = (input: CallInput & { params?: { "from_date": string; "to_date": string } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_account", input);
 /** GET /v2.1/calls/analytics/agent: Agent analytics [read] */
-export const docsGetV21CallsAnalyticsAgent = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_agent", input);
+export const docsGetV21CallsAnalyticsAgent = (input: CallInput & { params?: { "agent_id"?: number; "from_date": string; "to_date": string } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_agent", input);
 /** GET /v2.1/calls/analytics/number: Number analytics [read] */
-export const docsGetV21CallsAnalyticsNumber = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_number", input);
+export const docsGetV21CallsAnalyticsNumber = (input: CallInput & { params?: { "from_date": string; "justcall_number"?: string; "to_date": string } } = {}) => sdk.call("docs.get_v2_1_calls_analytics_number", input);
 /** GET /v2.1/user_groups: List all user groups [read] */
-export const docsGetV21UserGroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_user_groups", input);
+export const docsGetV21UserGroups = (input: CallInput & { params?: { "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_user_groups", input);
 /** GET /v2.1/user_groups/{id}: Get a user group [read] */
-export const docsGetV21UserGroupsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_user_groups_id", input);
+export const docsGetV21UserGroupsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_user_groups_id", input);
 /** POST /v2.1/user_groups: Create a user group [write] */
 export const docsPostV21UserGroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_user_groups", input);
 /** PUT /v2.1/user_groups/{id}: Update a user group [write] */
-export const docsPutV21UserGroupsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_user_groups_id", input);
+export const docsPutV21UserGroupsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.put_v2_1_user_groups_id", input);
 /** PUT /v2.1/user_groups/{id}/members: Add members to a user group [write] */
-export const docsPutV21UserGroupsIdMembers = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_user_groups_id_members", input);
+export const docsPutV21UserGroupsIdMembers = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.put_v2_1_user_groups_id_members", input);
 /** DELETE /v2.1/user_groups/{id}/members: Remove members from a user group [write] */
-export const docsDeleteV21UserGroupsIdMembers = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_v2_1_user_groups_id_members", input);
+export const docsDeleteV21UserGroupsIdMembers = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.delete_v2_1_user_groups_id_members", input);
 /** DELETE /v2.1/user_groups/{id}: Delete a user group [write] */
-export const docsDeleteV21UserGroupsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_v2_1_user_groups_id", input);
+export const docsDeleteV21UserGroupsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.delete_v2_1_user_groups_id", input);
 /** GET /v2.1/users: List all users [read] */
-export const docsGetV21Users = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_users", input);
+export const docsGetV21Users = (input: CallInput & { params?: { "available"?: boolean; "email"?: string; "group_id"?: number; "order"?: string; "page"?: number; "per_page"?: number; "role"?: string } } = {}) => sdk.call("docs.get_v2_1_users", input);
 /** GET /v2.1/users/{id}: Get a user [read] */
-export const docsGetV21UsersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_users_id", input);
+export const docsGetV21UsersId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_users_id", input);
 /** PUT /v2.1/users/availability: Update user availability [write] */
 export const docsPutV21UsersAvailability = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_v2_1_users_availability", input);
 /** GET /v2.1/voice-agents/list: List all voice agents [read] */
-export const docsGetV21VoiceAgentsList = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_voice_agents_list", input);
+export const docsGetV21VoiceAgentsList = (input: CallInput & { params?: { "order"?: string; "page"?: number; "per_page"?: number } } = {}) => sdk.call("docs.get_v2_1_voice_agents_list", input);
 /** POST /v2.1/voice-agents/calls: Initiate a call [write] */
 export const docsPostV21VoiceAgentsCalls = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_voice_agents_calls", input);
 /** GET /v2.1/whatsapp/messages: List all messages [read] */
-export const docsGetV21WhatsappMessages = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages", input);
+export const docsGetV21WhatsappMessages = (input: CallInput & { params?: { "contact_number"?: string; "delivery_status"?: string; "fetch_template_data"?: boolean; "from_datetime"?: string; "justcall_number"?: string; "last_message_id_fetched"?: number; "message_content"?: string; "message_direction"?: string; "order"?: string; "page"?: number; "per_page"?: number; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages", input);
 /** GET /v2.1/whatsapp/messages/{id}: Get a message [read] */
-export const docsGetV21WhatsappMessagesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_id", input);
+export const docsGetV21WhatsappMessagesId = (input: CallInput & { params?: { "fetch_template_data"?: boolean; "id": number } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_id", input);
 /** POST /v2.1/whatsapp/messages/send: Send message [write] */
 export const docsPostV21WhatsappMessagesSend = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_whatsapp_messages_send", input);
 /** GET /v2.1/whatsapp/messages/templates: List all templates [read] */
-export const docsGetV21WhatsappMessagesTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_templates", input);
+export const docsGetV21WhatsappMessagesTemplates = (input: CallInput & { params?: { "category"?: string; "justcall_number": string; "language"?: string; "order"?: string; "page"?: number; "per_page"?: number; "template_name"?: string } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_templates", input);
 /** GET /v2.1/whatsapp/messages/check-reply: Check message reply [read] */
-export const docsGetV21WhatsappMessagesCheckReply = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_check_reply", input);
+export const docsGetV21WhatsappMessagesCheckReply = (input: CallInput & { params?: { "contact_number": string; "justcall_number": string } } = {}) => sdk.call("docs.get_v2_1_whatsapp_messages_check_reply", input);
 /** GET /v2.1/sales_dialer/calls: List all calls [read] */
-export const docsGetV21SalesDialerCalls = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_calls", input);
+export const docsGetV21SalesDialerCalls = (input: CallInput & { params?: { "agent_id"?: number; "call_type"?: string; "campaign_id"?: number; "contact_number"?: number; "fetch_ai_data"?: boolean; "from_datetime"?: string; "last_call_id_fetched"?: number; "order"?: string; "page"?: number; "per_page"?: number; "sales_dialer_number"?: number; "sort"?: string; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_calls", input);
 /** GET /v2.1/sales_dialer/calls/{id}: Get a call [read] */
-export const docsGetV21SalesDialerCallsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_calls_id", input);
+export const docsGetV21SalesDialerCallsId = (input: CallInput & { params?: { "fetch_ai_data"?: boolean; "id": number } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_calls_id", input);
 /** GET /v2.1/sales_dialer/campaigns: List all campaigns [read] */
-export const docsGetV21SalesDialerCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns", input);
+export const docsGetV21SalesDialerCampaigns = (input: CallInput & { params?: { "contact_number"?: number; "from_datetime"?: string; "last_campaign_id_fetched"?: number; "order"?: string; "page"?: number; "per_page"?: number; "sales_dialer_number"?: number; "status"?: string; "to_datetime"?: string; "type"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns", input);
 /** GET /v2.1/sales_dialer/campaigns/{id}: Get a campaign [read] */
-export const docsGetV21SalesDialerCampaignsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns_id", input);
+export const docsGetV21SalesDialerCampaignsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns_id", input);
 /** POST /v2.1/sales_dialer/campaigns: Create campaign [write] */
 export const docsPostV21SalesDialerCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_sales_dialer_campaigns", input);
 /** PUT /v2.1/sales_dialer/campaigns/{id}: Update campaign [write] */
-export const docsPutV21SalesDialerCampaignsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_sales_dialer_campaigns_id", input);
+export const docsPutV21SalesDialerCampaignsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.put_v2_1_sales_dialer_campaigns_id", input);
 /** GET /v2.1/sales_dialer/campaigns/contacts: List campaign contacts [read] */
-export const docsGetV21SalesDialerCampaignsContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns_contacts", input);
+export const docsGetV21SalesDialerCampaignsContacts = (input: CallInput & { params?: { "campaign_id": number; "contact_status"?: string; "order"?: string; "page"?: number; "per_page"?: number; "progress_status"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_campaigns_contacts", input);
 /** POST /v2.1/sales_dialer/campaigns/contact: Add contact to a campaign [write] */
 export const docsPostV21SalesDialerCampaignsContact = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_sales_dialer_campaigns_contact", input);
 /** DELETE /v2.1/sales_dialer/campaigns/contact: Remove contact from a campaign [write] */
-export const docsDeleteV21SalesDialerCampaignsContact = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.delete_v2_1_sales_dialer_campaigns_contact", input);
+export const docsDeleteV21SalesDialerCampaignsContact = (input: CallInput & { params?: { "campaign_id": number; "contact_id"?: number; "phone_number"?: string; "remove_all"?: boolean } } = {}) => sdk.call("docs.delete_v2_1_sales_dialer_campaigns_contact", input);
 /** GET /v2.1/sales_dialer/contacts: List all contacts [read] */
-export const docsGetV21SalesDialerContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts", input);
+export const docsGetV21SalesDialerContacts = (input: CallInput & { params?: { "email"?: string; "last_contact_id_fetched"?: number; "order"?: string; "page"?: number; "per_page"?: number; "phone_number"?: string; "status"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts", input);
 /** GET /v2.1/sales_dialer/contacts/{id}: Get a contact [read] */
-export const docsGetV21SalesDialerContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts_id", input);
+export const docsGetV21SalesDialerContactsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts_id", input);
 /** POST /v2.1/sales_dialer/contacts: Create contact [write] */
 export const docsPostV21SalesDialerContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_sales_dialer_contacts", input);
 /** PUT /v2.1/sales_dialer/contacts/{id}: Update contact [write] */
-export const docsPutV21SalesDialerContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_v2_1_sales_dialer_contacts_id", input);
+export const docsPutV21SalesDialerContactsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.put_v2_1_sales_dialer_contacts_id", input);
 /** DELETE /v2.1/sales_dialer/contacts/{id}: Delete contact [write] */
-export const docsDeleteV21SalesDialerContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.delete_v2_1_sales_dialer_contacts_id", input);
+export const docsDeleteV21SalesDialerContactsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.delete_v2_1_sales_dialer_contacts_id", input);
 /** POST /v2.1/sales_dialer/contacts/bulk_import: Bulk import contacts [write] */
 export const docsPostV21SalesDialerContactsBulkImport = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_sales_dialer_contacts_bulk_import", input);
 /** GET /v2.1/sales_dialer/contacts/bulk_import/status/{batch_id}: Get bulk import status [read] */
@@ -181,25 +181,25 @@ export const docsGetV21SalesDialerContactsBulkImportStatusBatchId = (input: Call
 /** POST /v2.1/sales_dialer/contacts/bulk-add-dnca: Bulk Add Contacts to DNCA [write] */
 export const docsPostV21SalesDialerContactsBulkAddDnca = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_sales_dialer_contacts_bulk_add_dnca", input);
 /** GET /v2.1/sales_dialer/contacts/custom-fields: List contact custom fields [read] */
-export const docsGetV21SalesDialerContactsCustomFields = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts_custom_fields", input);
+export const docsGetV21SalesDialerContactsCustomFields = (input: CallInput & { params?: { "id"?: number; "label"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_contacts_custom_fields", input);
 /** GET /v2.1/sales_dialer/analytics: Agent analytics [read] */
-export const docsGetV21SalesDialerAnalytics = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_analytics", input);
+export const docsGetV21SalesDialerAnalytics = (input: CallInput & { params?: { "agent_id"?: number; "campaign_id"?: number; "from_date"?: string; "to_date"?: string } } = {}) => sdk.call("docs.get_v2_1_sales_dialer_analytics", input);
 /** GET /v2.1/calls_ai: List calls AI data [read] */
-export const docsGetV21CallsAi = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_calls_ai", input);
+export const docsGetV21CallsAi = (input: CallInput & { params?: { "agent_id"?: number; "ai_agent_ids"?: unknown[]; "fetch_action_items"?: boolean; "fetch_ai_insights"?: boolean; "fetch_smart_chapters"?: boolean; "fetch_summary"?: boolean; "fetch_transcription"?: boolean; "from_datetime"?: string; "order"?: string; "page"?: number; "per_page"?: number; "phone_number"?: number; "platform"?: string; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_calls_ai", input);
 /** GET /v2.1/calls_ai/{id}: Get AI data [read] */
-export const docsGetV21CallsAiId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_calls_ai_id", input);
+export const docsGetV21CallsAiId = (input: CallInput & { params?: { "fetch_action_items"?: boolean; "fetch_ai_insights"?: boolean; "fetch_smart_chapters"?: boolean; "fetch_summary"?: boolean; "fetch_transcription"?: boolean; "id": number; "platform"?: string } } = {}) => sdk.call("docs.get_v2_1_calls_ai_id", input);
 /** GET /v2.1/meetings_ai: List meetings AI data [read] */
-export const docsGetV21MeetingsAi = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_meetings_ai", input);
+export const docsGetV21MeetingsAi = (input: CallInput & { params?: { "agent_id"?: number; "fetch_ai_insights"?: boolean; "fetch_smart_chapters"?: boolean; "fetch_summary"?: boolean; "fetch_transcription"?: boolean; "from_datetime"?: string; "meeting_id"?: string; "order"?: string; "page"?: number; "per_page"?: number; "platform"?: string; "to_datetime"?: string } } = {}) => sdk.call("docs.get_v2_1_meetings_ai", input);
 /** GET /v2.1/meetings_ai/{instance_sid}: Get AI data [read] */
-export const docsGetV21MeetingsAiInstanceSid = (input: CallInput & { params?: { "instance_sid": string } } = {}) => sdk.call("docs.get_v2_1_meetings_ai_instance_sid", input);
+export const docsGetV21MeetingsAiInstanceSid = (input: CallInput & { params?: { "fetch_ai_insights"?: boolean; "fetch_smart_chapters"?: boolean; "fetch_summary"?: boolean; "fetch_transcription"?: boolean; "instance_sid": string } } = {}) => sdk.call("docs.get_v2_1_meetings_ai_instance_sid", input);
 /** GET /v2.1/appointments/available-slots: List available slots [read] */
-export const docsGetV21AppointmentsAvailableSlots = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_appointments_available_slots", input);
+export const docsGetV21AppointmentsAvailableSlots = (input: CallInput & { params?: { "calendar_link": string; "date": string; "timezone": string } } = {}) => sdk.call("docs.get_v2_1_appointments_available_slots", input);
 /** POST /v2.1/appointments: Create an appointment [write] */
 export const docsPostV21Appointments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_appointments", input);
 /** GET /v2.1/appointments/{id}: Get an appointment [read] */
-export const docsGetV21AppointmentsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_v2_1_appointments_id", input);
+export const docsGetV21AppointmentsId = (input: CallInput & { params?: { "id": number } } = {}) => sdk.call("docs.get_v2_1_appointments_id", input);
 /** GET /v2.1/webhooks: List subscribed webhooks [read] */
-export const docsGetV21Webhooks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_v2_1_webhooks", input);
+export const docsGetV21Webhooks = (input: CallInput & { params?: { "type"?: string } } = {}) => sdk.call("docs.get_v2_1_webhooks", input);
 /** POST /v2.1/webhooks: Add URL to webhook [write] */
 export const docsPostV21Webhooks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_v2_1_webhooks", input);
 /** DELETE /v2.1/webhooks/url/{url_id}: Remove URL from webhook [write] */

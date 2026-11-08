@@ -449,7 +449,7 @@ export const mailMergePostDownloadMailMerge = (input: CallInput & { params?: { "
 /** GET /settings/layouts/{layoutId}/map_dependency: Get field dependencies for a layout [read] */
 export const mapDependencyGetMapDependency = (input: CallInput & { params?: { "layoutId": string; "module": string; "page"?: number; "per_page"?: number; "filters"?: string } } = {}) => sdk.call("map_dependency.getMapDependency", input);
 /** POST /settings/layouts/{layoutId}/map_dependency: Create a field dependency for a layout [write] */
-export const mapDependencyCreateMapDependency = (input: CallInput & { params?: { "module": string; "layoutId": string; "X-ZCSRF-TOKEN"?: string } } = {}) => sdk.call("map_dependency.createMapDependency", input);
+export const mapDependencyCreateMapDependency = (input: CallInput & { params?: { "module": string; "layoutId": string } } = {}) => sdk.call("map_dependency.createMapDependency", input);
 /** GET /settings/layouts/{layoutId}/map_dependency/{dependencyId}: Get a field dependency by ID [read] */
 export const mapDependencyGetMapDependencyById = (input: CallInput & { params?: { "module": string; "layoutId": string; "dependencyId": string } } = {}) => sdk.call("map_dependency.getMapDependencyById", input);
 /** PUT /settings/layouts/{layoutId}/map_dependency/{dependencyId}: Update an existing field dependency [write] */

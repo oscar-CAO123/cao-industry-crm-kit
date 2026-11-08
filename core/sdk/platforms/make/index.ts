@@ -2,8 +2,8 @@
 // Make: 257 endpoints (132 read, 125 write). Source status: docs-read. Sign-in: from vendor docs, unproven.
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("make");
-/** GET /data-stores: Resources [read] */
-export const coreDocsGetDataStores = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_data_stores", input);
+/** GET /data-stores: List data stores [read] */
+export const coreDocsGetDataStores = (input: CallInput & { params?: { "teamId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_data_stores", input);
 /** GET /oauth/v2/authorize: Authorization code flow with refresh token (confidential clients) [write] */
 export const coreDocsGetOauthV2Authorize = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_oauth_v2_authorize", input);
 /** POST /oauth/v2/token: Authorization code flow with refresh token (confidential clients) [write] */
@@ -11,89 +11,89 @@ export const coreDocsPostOauthV2Token = (input: CallInput & { params?: {  } } = 
 /** POST /affiliate/partner-register: Register partner [write] */
 export const coreDocsPostAffiliatePartnerRegister = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_affiliate_partner_register", input);
 /** GET /agents: List on-prem agents [read] */
-export const coreDocsGetAgents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_agents", input);
+export const coreDocsGetAgents = (input: CallInput & { params?: { "organizationId"?: number } } = {}) => sdk.call("core.docs.get_agents", input);
 /** GET /ai-agents/v1/agents: Get Agents [read] */
-export const coreDocsGetAiAgentsV1Agents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_agents", input);
+export const coreDocsGetAiAgentsV1Agents = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_agents", input);
 /** GET /ai-agents/v1/contexts: List Context [read] */
-export const coreDocsGetAiAgentsV1Contexts = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_contexts", input);
+export const coreDocsGetAiAgentsV1Contexts = (input: CallInput & { params?: { "agentId": string; "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_contexts", input);
 /** GET /ai-agents/v1/llm-providers: List LLM Providers [read] */
-export const coreDocsGetAiAgentsV1LlmProviders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_llm_providers", input);
+export const coreDocsGetAiAgentsV1LlmProviders = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_llm_providers", input);
 /** GET /analytics/{organizationId}: Get organization analytics [read] */
-export const coreDocsGetAnalyticsOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_analytics_organizationId", input);
+export const coreDocsGetAnalyticsOrganizationId = (input: CallInput & { params?: { "organizationId": number; "teamId"?: unknown; "folderId"?: unknown; "status"?: unknown; "timeframe[dateFrom]"?: string; "timeframe[dateTo]"?: string; "pg[offset]"?: number; "pg[limit]"?: number; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_analytics_organizationId", input);
 /** GET /audit-logs/organization/{organizationId}: List organization audit logs [read] */
-export const coreDocsGetAuditLogsOrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_audit_logs_organization_organizationId", input);
+export const coreDocsGetAuditLogsOrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": number; "team"?: unknown; "dateFrom"?: string; "dateTo"?: string; "event"?: unknown; "author"?: unknown; "pg[offset]"?: number; "pg[limit]"?: number; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_audit_logs_organization_organizationId", input);
 /** GET /cashier/prices/{priceId}: Get price detail [read] */
-export const coreDocsGetCashierPricesPriceId = (input: CallInput & { params?: { "priceId": string } } = {}) => sdk.call("core.docs.get_cashier_prices_priceId", input);
+export const coreDocsGetCashierPricesPriceId = (input: CallInput & { params?: { "priceId": number } } = {}) => sdk.call("core.docs.get_cashier_prices_priceId", input);
 /** GET /connections: List connections [read] */
-export const coreDocsGetConnections = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_connections", input);
+export const coreDocsGetConnections = (input: CallInput & { params?: { "teamId": number; "type[]"?: unknown[]; "[]"?: unknown[]; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_connections", input);
 /** GET /teams/{teamId}/connections/{connectionId}/access-list: List a connection's access list [read] */
-export const coreDocsGetTeamsTeamIdConnectionsConnectionIdAccessList = (input: CallInput & { params?: { "teamId": string; "connectionId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_connections_connectionId_access_list", input);
+export const coreDocsGetTeamsTeamIdConnectionsConnectionIdAccessList = (input: CallInput & { params?: { "teamId": number; "connectionId": number } } = {}) => sdk.call("core.docs.get_teams_teamId_connections_connectionId_access_list", input);
 /** GET /credential-requests/requests: List Credential Requests [write] */
-export const coreDocsGetCredentialRequestsRequests = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_credential_requests_requests", input);
+export const coreDocsGetCredentialRequestsRequests = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[]; "userId"?: number; "makeProviderId"?: number; "status"?: string; "name"?: string } } = {}) => sdk.call("core.docs.get_credential_requests_requests", input);
 /** GET /custom-property-structures: List custom property structures [read] */
-export const coreDocsGetCustomPropertyStructures = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_custom_property_structures", input);
+export const coreDocsGetCustomPropertyStructures = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_custom_property_structures", input);
 /** GET /custom-property-structures/{customPropertyStructureId}/custom-property-structure-items: List custom property structure items [read] */
-export const coreDocsGetCustomPropertyStructuresCustomPropertyStructureIdCustomPropertyStructureItems = (input: CallInput & { params?: { "customPropertyStructureId": string } } = {}) => sdk.call("core.docs.get_custom_property_structures_customPropertyStructureId_custom_property_structure_items", input);
+export const coreDocsGetCustomPropertyStructuresCustomPropertyStructureIdCustomPropertyStructureItems = (input: CallInput & { params?: { "customPropertyStructureId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_custom_property_structures_customPropertyStructureId_custom_property_structure_items", input);
 /** GET /data-stores/{dataStoreId}/data: List data store records [read] */
-export const coreDocsGetDataStoresDataStoreIdData = (input: CallInput & { params?: { "dataStoreId": string } } = {}) => sdk.call("core.docs.get_data_stores_dataStoreId_data", input);
+export const coreDocsGetDataStoresDataStoreIdData = (input: CallInput & { params?: { "dataStoreId": number; "pg[limit]"?: number; "pg[offset]"?: number } } = {}) => sdk.call("core.docs.get_data_stores_dataStoreId_data", input);
 /** GET /data-structures: List data structures [read] */
-export const coreDocsGetDataStructures = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_data_structures", input);
+export const coreDocsGetDataStructures = (input: CallInput & { params?: { "teamId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_data_structures", input);
 /** GET /devices: List [read] */
-export const coreDocsGetDevices = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_devices", input);
+export const coreDocsGetDevices = (input: CallInput & { params?: { "teamId": number; "assigned"?: boolean; "viewForScenarioId"?: number; "scope[]"?: unknown[]; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_devices", input);
 /** GET /devices/{deviceId}/incomings: List [read] */
-export const coreDocsGetDevicesDeviceIdIncomings = (input: CallInput & { params?: { "deviceId": string } } = {}) => sdk.call("core.docs.get_devices_deviceId_incomings", input);
+export const coreDocsGetDevicesDeviceIdIncomings = (input: CallInput & { params?: { "deviceId": string; "scope"?: string; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_devices_deviceId_incomings", input);
 /** GET /devices/{deviceId}/outgoings: List [read] */
-export const coreDocsGetDevicesDeviceIdOutgoings = (input: CallInput & { params?: { "deviceId": string } } = {}) => sdk.call("core.docs.get_devices_deviceId_outgoings", input);
+export const coreDocsGetDevicesDeviceIdOutgoings = (input: CallInput & { params?: { "deviceId": string; "scope"?: string; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_devices_deviceId_outgoings", input);
 /** GET /dlqs: List scenario incomplete executions [read] */
-export const coreDocsGetDlqs = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_dlqs", input);
+export const coreDocsGetDlqs = (input: CallInput & { params?: { "scenarioId": number; "idSearch"?: string; "createdFrom"?: number; "createdTo"?: number; "sizeFrom"?: number; "sizeTo"?: number; "status"?: string; "scheduledInFrom"?: number; "scheduledInTo"?: number; "attemptsFrom"?: number; "attemptsTo"?: number } } = {}) => sdk.call("core.docs.get_dlqs", input);
 /** GET /enums/module-types: List module types [read] */
 export const coreDocsGetEnumsModuleTypes = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_enums_module_types", input);
 /** GET /event-subscriptions/v1/organizations/{organizationId}/event-types: List event types [read] */
-export const coreDocsGetEventSubscriptionsV1OrganizationsOrganizationIdEventTypes = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_event_subscriptions_v1_organizations_organizationId_event_types", input);
+export const coreDocsGetEventSubscriptionsV1OrganizationsOrganizationIdEventTypes = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_event_subscriptions_v1_organizations_organizationId_event_types", input);
 /** GET /functions: List custom functions [read] */
-export const coreDocsGetFunctions = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_functions", input);
+export const coreDocsGetFunctions = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_functions", input);
 /** GET /ping: Ping [read] */
 export const coreDocsGetPing = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ping", input);
 /** GET /hooks: List hooks [read] */
-export const coreDocsGetHooks = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_hooks", input);
+export const coreDocsGetHooks = (input: CallInput & { params?: { "teamId": string; "typeName"?: string; "assigned"?: boolean; "viewForScenarioId"?: number } } = {}) => sdk.call("core.docs.get_hooks", input);
 /** GET /hooks/{hookId}/incomings: Get webhook queue [read] */
-export const coreDocsGetHooksHookIdIncomings = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("core.docs.get_hooks_hookId_incomings", input);
+export const coreDocsGetHooksHookIdIncomings = (input: CallInput & { params?: { "hookId": number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_hooks_hookId_incomings", input);
 /** GET /hooks/{hookId}/logs: Get webhook logs [read] */
-export const coreDocsGetHooksHookIdLogs = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("core.docs.get_hooks_hookId_logs", input);
+export const coreDocsGetHooksHookIdLogs = (input: CallInput & { params?: { "hookId": number; "to"?: number; "from"?: number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_hooks_hookId_logs", input);
 /** GET /keys: List keys [read] */
-export const coreDocsGetKeys = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_keys", input);
+export const coreDocsGetKeys = (input: CallInput & { params?: { "teamId": number; "typeName"?: string; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_keys", input);
 /** GET /teams/{teamId}/keys/{keyId}/access-list: List a key's access list [read] */
-export const coreDocsGetTeamsTeamIdKeysKeyIdAccessList = (input: CallInput & { params?: { "teamId": string; "keyId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_keys_keyId_access_list", input);
+export const coreDocsGetTeamsTeamIdKeysKeyIdAccessList = (input: CallInput & { params?: { "teamId": number; "keyId": number } } = {}) => sdk.call("core.docs.get_teams_teamId_keys_keyId_access_list", input);
 /** GET /notifications: List notifications [read] */
-export const coreDocsGetNotifications = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_notifications", input);
+export const coreDocsGetNotifications = (input: CallInput & { params?: { "unreadOnly"?: boolean; "imtZoneId"?: number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_notifications", input);
 /** GET /organizations: List user organizations [read] */
-export const coreDocsGetOrganizations = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_organizations", input);
+export const coreDocsGetOrganizations = (input: CallInput & { params?: { "zone"?: string; "externalId"?: string; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_organizations", input);
 /** GET /organizations/{organizationId}/user-organization-roles: List user roles [read] */
-export const coreDocsGetOrganizationsOrganizationIdUserOrganizationRoles = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_user_organization_roles", input);
+export const coreDocsGetOrganizationsOrganizationIdUserOrganizationRoles = (input: CallInput & { params?: { "organizationId": number; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_organizations_organizationId_user_organization_roles", input);
 /** GET /organizations/{organizationId}/managed-organizations: List of child organizations [read] */
-export const coreDocsGetOrganizationsOrganizationIdManagedOrganizations = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_managed_organizations", input);
+export const coreDocsGetOrganizationsOrganizationIdManagedOrganizations = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_organizations_organizationId_managed_organizations", input);
 /** GET /private-spaces: List private spaces [read] */
-export const coreDocsGetPrivateSpaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_private_spaces", input);
+export const coreDocsGetPrivateSpaces = (input: CallInput & { params?: { "organizationId": number; "externalId"?: string; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_private_spaces", input);
 /** POST /rpcs/{appName}/{appVersion}/{rpcName}: Call RPC [write] */
-export const coreDocsPostRpcsAppNameAppVersionRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("core.docs.post_rpcs_appName_appVersion_rpcName", input);
+export const coreDocsPostRpcsAppNameAppVersionRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string; "teamId"?: number; "imt-remote-formula"?: number; "imt-ignore-required"?: string; "imt-validate-schema"?: string } } = {}) => sdk.call("core.docs.post_rpcs_appName_appVersion_rpcName", input);
 /** GET /scenarios: List scenarios [read] */
-export const coreDocsGetScenarios = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios", input);
+export const coreDocsGetScenarios = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number; "id[]"?: unknown[]; "folderId"?: number; "includeSubfolders"?: boolean; "labelIds[]"?: unknown[]; "isActive"?: boolean; "islinked"?: boolean; "concept"?: boolean; "type"?: string; "deleted"?: boolean; "name"?: string; "search"?: string; "isinvalid"?: boolean; "islocked"?: boolean; "createdByUserName"?: string; "updatedByUserName"?: string; "dlqCount"?: number; "cols[]"?: unknown[]; "pg[offset]"?: number; "pg[limit]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string } } = {}) => sdk.call("core.docs.get_scenarios", input);
 /** GET /scenarios/{scenarioId}/logs: List scenario logs [read] */
-export const coreDocsGetScenariosScenarioIdLogs = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_logs", input);
+export const coreDocsGetScenariosScenarioIdLogs = (input: CallInput & { params?: { "scenarioId": number; "from"?: number; "to"?: number; "status"?: number; "displayStatus"?: string; "durationFrom"?: number; "durationTo"?: number; "operationsFrom"?: number; "operationsTo"?: number; "transferFrom"?: number; "transferTo"?: number; "executionName"?: string; "creditsFrom"?: number; "creditsTo"?: number; "showCheckRuns"?: boolean; "pg[offset]"?: number; "pg[limit]"?: number; "pg[showLast]"?: boolean; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_logs", input);
 /** GET /scenarios/{scenarioId}/blueprint: Get scenario blueprint [read] */
-export const coreDocsGetScenariosScenarioIdBlueprint = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_blueprint", input);
+export const coreDocsGetScenariosScenarioIdBlueprint = (input: CallInput & { params?: { "scenarioId": number; "blueprintId"?: number; "draft"?: boolean } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_blueprint", input);
 /** GET /scenarios/consumptions: List scenario consumptions [read] */
-export const coreDocsGetScenariosConsumptions = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_consumptions", input);
+export const coreDocsGetScenariosConsumptions = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number } } = {}) => sdk.call("core.docs.get_scenarios_consumptions", input);
 /** PATCH /scenarios/tools/{scenarioId}: Update tool configuration [write] */
-export const coreDocsPatchScenariosToolsScenarioId = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.patch_scenarios_tools_scenarioId", input);
+export const coreDocsPatchScenariosToolsScenarioId = (input: CallInput & { params?: { "scenarioId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.patch_scenarios_tools_scenarioId", input);
 /** GET /scenarios/{scenarioId}/custom-properties: Get custom properties data [read] */
-export const coreDocsGetScenariosScenarioIdCustomProperties = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_custom_properties", input);
+export const coreDocsGetScenariosScenarioIdCustomProperties = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_custom_properties", input);
 /** GET /scenarios-folders: List scenario folders [read] */
-export const coreDocsGetScenariosFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_folders", input);
+export const coreDocsGetScenariosFolders = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number; "parentId"?: number; "childrenDepth"?: string; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_scenarios_folders", input);
 /** GET /scenario-labels: List team labels [read] */
-export const coreDocsGetScenarioLabels = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenario_labels", input);
+export const coreDocsGetScenarioLabels = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_scenario_labels", input);
 /** GET /sdk/apps: List Apps [read] */
-export const coreDocsGetSdkApps = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_sdk_apps", input);
+export const coreDocsGetSdkApps = (input: CallInput & { params?: { "opensource"?: boolean; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_sdk_apps", input);
 /** GET /sdk/apps/invites/{SDK_appInviteToken}: Get App Invite [write] */
 export const coreDocsGetSdkAppsInvitesSDKAppInviteToken = (input: CallInput & { params?: { "SDK_appInviteToken": string } } = {}) => sdk.call("core.docs.get_sdk_apps_invites_SDK_appInviteToken", input);
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules: List App Modules [read] */
@@ -101,33 +101,33 @@ export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionModules = (input: CallInpu
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs: List App RPCs [read] */
 export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionRpcs = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_rpcs", input);
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions: List App Functions [read] */
-export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionFunctions = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_functions", input);
+export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionFunctions = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "all"?: boolean } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_functions", input);
 /** GET /sdk/apps/{SDK_appName}/connections: List App Connections [read] */
 export const coreDocsGetSdkAppsSDKAppNameConnections = (input: CallInput & { params?: { "SDK_appName": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_connections", input);
 /** GET /sdk/apps/{SDK_appName}/webhooks: List App Webhooks [read] */
 export const coreDocsGetSdkAppsSDKAppNameWebhooks = (input: CallInput & { params?: { "SDK_appName": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_webhooks", input);
 /** GET /organizations/{organizationId}/sso-certificates: Get SSO certificates [read] */
-export const coreDocsGetOrganizationsOrganizationIdSsoCertificates = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_sso_certificates", input);
+export const coreDocsGetOrganizationsOrganizationIdSsoCertificates = (input: CallInput & { params?: { "organizationId": number; "type": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_sso_certificates", input);
 /** GET /teams: List teams [read] */
-export const coreDocsGetTeams = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_teams", input);
+export const coreDocsGetTeams = (input: CallInput & { params?: { "organizationId": number; "includePrivateSpaces"?: boolean; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_teams", input);
 /** GET /teams/{teamId}/user-team-roles: List user roles in the team [read] */
-export const coreDocsGetTeamsTeamIdUserTeamRoles = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_user_team_roles", input);
+export const coreDocsGetTeamsTeamIdUserTeamRoles = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_teams_teamId_user_team_roles", input);
 /** GET /templates: List templates [read] */
-export const coreDocsGetTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_templates", input);
+export const coreDocsGetTemplates = (input: CallInput & { params?: { "teamId"?: number; "public"?: boolean; "usedApps[]"?: unknown[]; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_templates", input);
 /** GET /templates/public: List public (approved) templates [read] */
-export const coreDocsGetTemplatesPublic = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_templates_public", input);
+export const coreDocsGetTemplatesPublic = (input: CallInput & { params?: { "includeEn"?: boolean; "name"?: string; "usedApps[]"?: unknown[]; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_templates_public", input);
 /** GET /users: List users [read] */
-export const coreDocsGetUsers = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users", input);
+export const coreDocsGetUsers = (input: CallInput & { params?: { "organizationId"?: number; "teamId"?: number; "name"?: string; "email"?: string; "teamRoleId"?: number; "organizationRoleId"?: number; "filterByTeamId"?: number; "ids"?: unknown[]; "tfaStatus"?: number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[offset]"?: number; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_users", input);
 /** GET /users/me: Current user data [read] */
-export const coreDocsGetUsersMe = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users_me", input);
+export const coreDocsGetUsersMe = (input: CallInput & { params?: { "includeInvitedOrg"?: boolean; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_users_me", input);
 /** GET /users/me/api-tokens: List users API tokens [write] */
 export const coreDocsGetUsersMeApiTokens = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users_me_api_tokens", input);
 /** GET /users/{userId}/user-team-roles: List user roles [read] */
 export const coreDocsGetUsersUserIdUserTeamRoles = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_users_userId_user_team_roles", input);
 /** GET /users/user-team-notifications/{teamId}: List user team notification settings [read] */
-export const coreDocsGetUsersUserTeamNotificationsTeamId = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("core.docs.get_users_user_team_notifications_teamId", input);
+export const coreDocsGetUsersUserTeamNotificationsTeamId = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_users_user_team_notifications_teamId", input);
 /** GET /users/{userId}/user-organization-roles: List user roles in an organization [read] */
-export const coreDocsGetUsersUserIdUserOrganizationRoles = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_users_userId_user_organization_roles", input);
+export const coreDocsGetUsersUserIdUserOrganizationRoles = (input: CallInput & { params?: { "userId": string; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_users_userId_user_organization_roles", input);
 /** POST /users/custom-roles: Create a custom role [write] */
 export const coreDocsPostUsersCustomRoles = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_users_custom_roles", input);
 /** GET /users/unread-notifications: Unread notifications [read] */
@@ -135,103 +135,103 @@ export const coreDocsGetUsersUnreadNotifications = (input: CallInput & { params?
 /** GET /mailhub/users/{userId}/preferences: Get preferences [read] */
 export const coreDocsGetMailhubUsersUserIdPreferences = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_mailhub_users_userId_preferences", input);
 /** GET /imt/apps/{name}/{version}/modules-with-credentials: List App Modules with Credentials [write] */
-export const coreDocsGetImtAppsNameVersionModulesWithCredentials = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("core.docs.get_imt_apps_name_version_modules_with_credentials", input);
+export const coreDocsGetImtAppsNameVersionModulesWithCredentials = (input: CallInput & { params?: { "name": string; "version": unknown } } = {}) => sdk.call("core.docs.get_imt_apps_name_version_modules_with_credentials", input);
 /** GET /scenarios/{scenarioId}/notes: List of scenario notes [read] */
-export const coreDocsGetScenariosScenarioIdNotes = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_notes", input);
+export const coreDocsGetScenariosScenarioIdNotes = (input: CallInput & { params?: { "scenarioId": number; "teamId": number; "organizationId"?: number } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_notes", input);
 /** GET /scenarios-shared: List shared scenarios [read] */
-export const coreDocsGetScenariosShared = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_shared", input);
+export const coreDocsGetScenariosShared = (input: CallInput & { params?: { "organizationId"?: number; "teamId"?: number; "folderId"?: number; "title"?: string; "scenarioName"?: string; "scenarioIds"?: unknown[]; "pg[limit]"?: number; "pg[offset]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_scenarios_shared", input);
 /** POST /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules/{SDK_moduleName}/{SDK_moduleArchiveStatus}: Set Module Archive Status [write] */
 export const coreDocsPostSdkAppsSDKAppNameSDKAppVersionModulesSDKModuleNameSDKModuleArchiveStatus = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_moduleName": string; "SDK_moduleArchiveStatus": string } } = {}) => sdk.call("core.docs.post_sdk_apps_SDK_appName_SDK_appVersion_modules_SDK_moduleName_SDK_moduleArchiveStatus", input);
 /** GET /users/me/oauth-connections: List OAuth connections [write] */
 export const coreDocsGetUsersMeOauthConnections = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users_me_oauth_connections", input);
-/** DELETE /agents/{agentId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteAgentsAgentId = (input: CallInput & { params?: { "agentId": string } } = {}) => sdk.call("sdk.delete_agents_agentId", input);
+/** DELETE /agents/{agentId}: Delete on-prem agent [write] */
+export const sdkDeleteAgentsAgentId = (input: CallInput & { params?: { "organizationId"?: number; "agentId": string } } = {}) => sdk.call("sdk.delete_agents_agentId", input);
 /** DELETE /connected-systems/{connectedSystemId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteConnectedSystemsConnectedSystemId = (input: CallInput & { params?: { "connectedSystemId": string } } = {}) => sdk.call("sdk.delete_connected_systems_connectedSystemId", input);
-/** DELETE /connections/{connectionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.delete_connections_connectionId", input);
-/** DELETE /credential-requests/requests/{requestId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteCredentialRequestsRequestsRequestId = (input: CallInput & { params?: { "requestId": string } } = {}) => sdk.call("sdk.delete_credential_requests_requests_requestId", input);
-/** DELETE /custom-property-structures/custom-property-structure-items/{itemId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteCustomPropertyStructuresCustomPropertyStructureItemsItemId = (input: CallInput & { params?: { "itemId": string } } = {}) => sdk.call("sdk.delete_custom_property_structures_custom_property_structure_items_itemId", input);
+/** DELETE /connections/{connectionId}: Delete connection [write] */
+export const sdkDeleteConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_connections_connectionId", input);
+/** DELETE /credential-requests/requests/{requestId}: Delete Credential Request [write] */
+export const sdkDeleteCredentialRequestsRequestsRequestId = (input: CallInput & { params?: { "requestId": string; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_credential_requests_requests_requestId", input);
+/** DELETE /custom-property-structures/custom-property-structure-items/{customPropertyStructureItemId}: Delete custom property structure item [write] */
+export const sdkDeleteCustomPropertyStructuresCustomPropertyStructureItemsItemId = (input: CallInput & { params?: { "customPropertyStructureItemId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_custom_property_structures_custom_property_structure_items_itemId", input);
 /** DELETE /data-stores/{dataStoreId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteDataStoresDataStoreId = (input: CallInput & { params?: { "dataStoreId": string } } = {}) => sdk.call("sdk.delete_data_stores_dataStoreId", input);
-/** DELETE /data-structures/{dataStructureId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": string } } = {}) => sdk.call("sdk.delete_data_structures_dataStructureId", input);
+/** DELETE /data-structures/{dataStructureId}: Delete data structure [write] */
+export const sdkDeleteDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_data_structures_dataStructureId", input);
 /** DELETE /data-tables/{dataTableId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteDataTablesDataTableId = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.delete_data_tables_dataTableId", input);
 /** DELETE /data-tables/{dataTableId}/columns/{columnId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteDataTablesDataTableIdColumnsColumnId = (input: CallInput & { params?: { "dataTableId": string; "columnId": string } } = {}) => sdk.call("sdk.delete_data_tables_dataTableId_columns_columnId", input);
 /** DELETE /data-tables/{dataTableId}/records: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteDataTablesDataTableIdRecords = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.delete_data_tables_dataTableId_records", input);
-/** DELETE /functions/{functionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteFunctionsFunctionId = (input: CallInput & { params?: { "functionId": string } } = {}) => sdk.call("sdk.delete_functions_functionId", input);
-/** DELETE /hooks/{hookId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteHooksHookId = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.delete_hooks_hookId", input);
-/** DELETE /keys/{keyId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteKeysKeyId = (input: CallInput & { params?: { "keyId": string } } = {}) => sdk.call("sdk.delete_keys_keyId", input);
-/** DELETE /organizations/{organizationId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.delete_organizations_organizationId", input);
-/** DELETE /scenario-labels/{labelId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteScenarioLabelsLabelId = (input: CallInput & { params?: { "labelId": string } } = {}) => sdk.call("sdk.delete_scenario_labels_labelId", input);
-/** DELETE /scenario-labels/{labelId}/scenarios/{scenarioId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteScenarioLabelsLabelIdScenariosScenarioId = (input: CallInput & { params?: { "labelId": string; "scenarioId": string } } = {}) => sdk.call("sdk.delete_scenario_labels_labelId_scenarios_scenarioId", input);
-/** DELETE /scenarios-folders/{folderId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteScenariosFoldersFolderId = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("sdk.delete_scenarios_folders_folderId", input);
-/** DELETE /scenarios/{scenarioId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.delete_scenarios_scenarioId", input);
-/** DELETE /scenarios/{scenarioId}/notes/{noteId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": string; "noteId": string } } = {}) => sdk.call("sdk.delete_scenarios_scenarioId_notes_noteId", input);
+/** DELETE /functions/{functionId}: Delete custom function [write] */
+export const sdkDeleteFunctionsFunctionId = (input: CallInput & { params?: { "functionId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_functions_functionId", input);
+/** DELETE /hooks/{hookId}: Delete hook [write] */
+export const sdkDeleteHooksHookId = (input: CallInput & { params?: { "hookId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_hooks_hookId", input);
+/** DELETE /keys/{keyId}: Delete a key [write] */
+export const sdkDeleteKeysKeyId = (input: CallInput & { params?: { "keyId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_keys_keyId", input);
+/** DELETE /organizations/{organizationId}: Delete an organization [write] */
+export const sdkDeleteOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_organizations_organizationId", input);
+/** DELETE /scenario-labels/{labelId}: Delete team label [write] */
+export const sdkDeleteScenarioLabelsLabelId = (input: CallInput & { params?: { "labelId": number } } = {}) => sdk.call("sdk.delete_scenario_labels_labelId", input);
+/** DELETE /scenario-labels/{labelId}/scenarios/{scenarioId}: Remove label from scenario [write] */
+export const sdkDeleteScenarioLabelsLabelIdScenariosScenarioId = (input: CallInput & { params?: { "labelId": number; "scenarioId": number } } = {}) => sdk.call("sdk.delete_scenario_labels_labelId_scenarios_scenarioId", input);
+/** DELETE /scenarios-folders/{folderId}: Delete scenario folder [write] */
+export const sdkDeleteScenariosFoldersFolderId = (input: CallInput & { params?: { "folderId": number } } = {}) => sdk.call("sdk.delete_scenarios_folders_folderId", input);
+/** DELETE /scenarios/{scenarioId}: Delete scenario [write] */
+export const sdkDeleteScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.delete_scenarios_scenarioId", input);
+/** DELETE /scenarios/{scenarioId}/notes/{noteId}: Delete scenario note [write] */
+export const sdkDeleteScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": number; "noteId": number; "teamId": number; "organizationId"?: number } } = {}) => sdk.call("sdk.delete_scenarios_scenarioId_notes_noteId", input);
 /** DELETE /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkDeleteSdkAppsAppNameAppVersionEndpointsEndpointName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "endpointName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_endpoints_endpointName", input);
-/** DELETE /sdk/apps/{appName}/{appVersion}/functions/{functionName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsAppNameAppVersionFunctionsFunctionName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_functions_functionName", input);
-/** DELETE /sdk/apps/{appName}/{appVersion}/modules/{moduleName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "moduleName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_modules_moduleName", input);
-/** DELETE /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_rpcs_rpcName", input);
-/** DELETE /sdk/apps/{name}/{version}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsNameVersion = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.delete_sdk_apps_name_version", input);
-/** DELETE /sdk/apps/connections/{connectionName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "connectionName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_connections_connectionName", input);
-/** DELETE /sdk/apps/webhooks/{webhookName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "webhookName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_webhooks_webhookName", input);
-/** DELETE /teams/{teamId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteTeamsTeamId = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("sdk.delete_teams_teamId", input);
-/** DELETE /templates/{id}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteTemplatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.delete_templates_id", input);
-/** DELETE /users/custom-roles/{roleId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteUsersCustomRolesRoleId = (input: CallInput & { params?: { "roleId": string } } = {}) => sdk.call("sdk.delete_users_custom_roles_roleId", input);
-/** GET /agents/{agentId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAgentsAgentId = (input: CallInput & { params?: { "agentId": string } } = {}) => sdk.call("sdk.get_agents_agentId", input);
+/** DELETE /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}: Delete Function [write] */
+export const sdkDeleteSdkAppsAppNameAppVersionFunctionsFunctionName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_functions_functionName", input);
+/** DELETE /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules/{SDK_moduleName}: Delete Module [write] */
+export const sdkDeleteSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_moduleName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_modules_moduleName", input);
+/** DELETE /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}: Delete RPC [write] */
+export const sdkDeleteSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_appName_appVersion_rpcs_rpcName", input);
+/** DELETE /sdk/apps/{SDK_appName}/{SDK_appVersion}: Delete App [write] */
+export const sdkDeleteSdkAppsNameVersion = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number } } = {}) => sdk.call("sdk.delete_sdk_apps_name_version", input);
+/** DELETE /sdk/apps/connections/{SDK_connectionName}: Delete Connection [write] */
+export const sdkDeleteSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "SDK_connectionName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_connections_connectionName", input);
+/** DELETE /sdk/apps/webhooks/{SDK_webhookName}: Delete Webhook [write] */
+export const sdkDeleteSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "SDK_webhookName": string } } = {}) => sdk.call("sdk.delete_sdk_apps_webhooks_webhookName", input);
+/** DELETE /teams/{teamId}: Delete a team [write] */
+export const sdkDeleteTeamsTeamId = (input: CallInput & { params?: { "teamId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_teams_teamId", input);
+/** DELETE /templates/{templateId}: Delete template [write] */
+export const sdkDeleteTemplatesId = (input: CallInput & { params?: { "templateId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.delete_templates_id", input);
+/** DELETE /users/custom-roles/{roleId}: Delete a custom role [write] */
+export const sdkDeleteUsersCustomRolesRoleId = (input: CallInput & { params?: { "roleId": number } } = {}) => sdk.call("sdk.delete_users_custom_roles_roleId", input);
+/** GET /agents/{agentId}: Get on-prem agent details [read] */
+export const sdkGetAgentsAgentId = (input: CallInput & { params?: { "organizationId"?: number; "agentId": string } } = {}) => sdk.call("sdk.get_agents_agentId", input);
 /** GET /agents/{agentId}/apps/{appName}/config: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetAgentsAgentIdAppsAppNameConfig = (input: CallInput & { params?: { "agentId": string; "appName": string } } = {}) => sdk.call("sdk.get_agents_agentId_apps_appName_config", input);
-/** GET /audit-logs/v2/{organizationId}/{uuid}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAuditLogsV2OrganizationIdUuid = (input: CallInput & { params?: { "organizationId": string; "uuid": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_organizationId_uuid", input);
-/** GET /audit-logs/v2/organization/{organizationId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAuditLogsV2OrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_organization_organizationId", input);
-/** GET /audit-logs/v2/organization/{organizationId}/filters: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAuditLogsV2OrganizationOrganizationIdFilters = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_organization_organizationId_filters", input);
-/** GET /audit-logs/v2/team/{teamId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAuditLogsV2TeamTeamId = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_team_teamId", input);
-/** GET /audit-logs/v2/team/{teamId}/filters: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetAuditLogsV2TeamTeamIdFilters = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_team_teamId_filters", input);
+/** GET /audit-logs/v2/{organizationId}/{uuid}: Get audit log detail [read] */
+export const sdkGetAuditLogsV2OrganizationIdUuid = (input: CallInput & { params?: { "organizationId": number; "uuid": string } } = {}) => sdk.call("sdk.get_audit_logs_v2_organizationId_uuid", input);
+/** GET /audit-logs/v2/organization/{organizationId}: List organization audit logs [read] */
+export const sdkGetAuditLogsV2OrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": number; "team"?: unknown; "dateFrom"?: unknown; "dateTo"?: unknown; "event"?: unknown; "author"?: unknown; "pg"?: unknown } } = {}) => sdk.call("sdk.get_audit_logs_v2_organization_organizationId", input);
+/** GET /audit-logs/v2/organization/{organizationId}/filters: Get organization audit log filters [read] */
+export const sdkGetAuditLogsV2OrganizationOrganizationIdFilters = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("sdk.get_audit_logs_v2_organization_organizationId_filters", input);
+/** GET /audit-logs/v2/team/{teamId}: List team audit logs [read] */
+export const sdkGetAuditLogsV2TeamTeamId = (input: CallInput & { params?: { "teamId": number; "dateFrom"?: unknown; "dateTo"?: unknown; "event"?: unknown; "author"?: unknown; "pg"?: unknown } } = {}) => sdk.call("sdk.get_audit_logs_v2_team_teamId", input);
+/** GET /audit-logs/v2/team/{teamId}/filters: Get team audit log filters [read] */
+export const sdkGetAuditLogsV2TeamTeamIdFilters = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("sdk.get_audit_logs_v2_team_teamId_filters", input);
 /** GET /connected-systems: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetConnectedSystems = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_connected_systems", input);
 /** GET /connected-systems/{connectedSystemId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetConnectedSystemsConnectedSystemId = (input: CallInput & { params?: { "connectedSystemId": string } } = {}) => sdk.call("sdk.get_connected_systems_connectedSystemId", input);
-/** GET /connections/{connectionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.get_connections_connectionId", input);
-/** GET /connections/{connectionId}/editable-data-schema: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetConnectionsConnectionIdEditableDataSchema = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.get_connections_connectionId_editable_data_schema", input);
-/** GET /credential-requests/requests/{requestId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkGetCredentialRequestsRequestsRequestId = (input: CallInput & { params?: { "requestId": string } } = {}) => sdk.call("sdk.get_credential_requests_requests_requestId", input);
-/** GET /credential-requests/requests/{requestId}/detail: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
+/** GET /connections/{connectionId}: Get connection details [read] */
+export const sdkGetConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_connections_connectionId", input);
+/** GET /connections/{connectionId}/editable-data-schema: List updatable connection parameters [read] */
+export const sdkGetConnectionsConnectionIdEditableDataSchema = (input: CallInput & { params?: { "connectionId": number } } = {}) => sdk.call("sdk.get_connections_connectionId_editable_data_schema", input);
+/** GET /credential-requests/requests/{requestId}: Get Credential Request [write] */
+export const sdkGetCredentialRequestsRequestsRequestId = (input: CallInput & { params?: { "requestId": string; "cols"?: unknown[] } } = {}) => sdk.call("sdk.get_credential_requests_requests_requestId", input);
+/** GET /credential-requests/requests/{requestId}/detail: Get Credential Request Detail [write] */
 export const sdkGetCredentialRequestsRequestsRequestIdDetail = (input: CallInput & { params?: { "requestId": string } } = {}) => sdk.call("sdk.get_credential_requests_requests_requestId_detail", input);
-/** GET /data-stores/{dataStoreId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDataStoresDataStoreId = (input: CallInput & { params?: { "dataStoreId": string } } = {}) => sdk.call("sdk.get_data_stores_dataStoreId", input);
-/** GET /data-structures/{dataStructureId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": string } } = {}) => sdk.call("sdk.get_data_structures_dataStructureId", input);
+/** GET /data-stores/{dataStoreId}: Get data store details [read] */
+export const sdkGetDataStoresDataStoreId = (input: CallInput & { params?: { "dataStoreId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_data_stores_dataStoreId", input);
+/** GET /data-structures/{dataStructureId}: Get data structure [read] */
+export const sdkGetDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_data_structures_dataStructureId", input);
 /** GET /data-tables: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetDataTables = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_data_tables", input);
 /** GET /data-tables/{dataTableId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
@@ -242,130 +242,130 @@ export const sdkGetDataTablesDataTableIdColumns = (input: CallInput & { params?:
 export const sdkGetDataTablesDataTableIdColumnsColumnId = (input: CallInput & { params?: { "dataTableId": string; "columnId": string } } = {}) => sdk.call("sdk.get_data_tables_dataTableId_columns_columnId", input);
 /** GET /data-tables/{dataTableId}/records: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetDataTablesDataTableIdRecords = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.get_data_tables_dataTableId_records", input);
-/** GET /dlqs/{incompleteExecutionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDlqsIncompleteExecutionId = (input: CallInput & { params?: { "incompleteExecutionId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId", input);
-/** GET /dlqs/{incompleteExecutionId}/bundle: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDlqsIncompleteExecutionIdBundle = (input: CallInput & { params?: { "incompleteExecutionId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_bundle", input);
-/** GET /dlqs/{incompleteExecutionId}/logs: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDlqsIncompleteExecutionIdLogs = (input: CallInput & { params?: { "incompleteExecutionId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_logs", input);
-/** GET /dlqs/{incompleteExecutionId}/logs/{executionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetDlqsIncompleteExecutionIdLogsExecutionId = (input: CallInput & { params?: { "incompleteExecutionId": string; "executionId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_logs_executionId", input);
+/** GET /dlqs/{dlqId}: Incomplete execution detail [read] */
+export const sdkGetDlqsIncompleteExecutionId = (input: CallInput & { params?: { "dlqId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId", input);
+/** GET /dlqs/{dlqId}/bundle: Get incomplete execution bundles [read] */
+export const sdkGetDlqsIncompleteExecutionIdBundle = (input: CallInput & { params?: { "dlqId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_bundle", input);
+/** GET /dlqs/{dlqId}/logs: List incomplete executions logs [read] */
+export const sdkGetDlqsIncompleteExecutionIdLogs = (input: CallInput & { params?: { "dlqId": string; "status"?: number; "from"?: number; "to"?: number } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_logs", input);
+/** GET /dlqs/{dlqId}/logs/{executionDlqId}: Incomplete execution log detail [read] */
+export const sdkGetDlqsIncompleteExecutionIdLogsExecutionId = (input: CallInput & { params?: { "dlqId": string; "executionDlqId": string } } = {}) => sdk.call("sdk.get_dlqs_incompleteExecutionId_logs_executionId", input);
 /** GET /enums/connected-system-apps: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetEnumsConnectedSystemApps = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_enums_connected_system_apps", input);
-/** GET /enums/countries: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
+/** GET /enums/countries: List countries [read] */
 export const sdkGetEnumsCountries = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_enums_countries", input);
-/** GET /enums/imt-regions: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
+/** GET /enums/imt-regions: List Make regions [read] */
 export const sdkGetEnumsImtRegions = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_enums_imt_regions", input);
-/** GET /enums/timezones: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
+/** GET /enums/timezones: List timezones [read] */
 export const sdkGetEnumsTimezones = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_enums_timezones", input);
-/** GET /event-subscriptions/v1/organizations/{organizationId}/subscriptions: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetEventSubscriptionsV1OrganizationsOrganizationIdSubscriptions = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.get_event_subscriptions_v1_organizations_organizationId_subscriptions", input);
+/** GET /event-subscriptions/v1/organizations/{organizationId}/subscriptions: List event subscriptions [read] */
+export const sdkGetEventSubscriptionsV1OrganizationsOrganizationIdSubscriptions = (input: CallInput & { params?: { "organizationId": number; "pg[limit]"?: number; "pg[offset]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean; "status"?: string } } = {}) => sdk.call("sdk.get_event_subscriptions_v1_organizations_organizationId_subscriptions", input);
 /** GET /fields: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetFields = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_fields", input);
-/** GET /functions/{functionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetFunctionsFunctionId = (input: CallInput & { params?: { "functionId": string } } = {}) => sdk.call("sdk.get_functions_functionId", input);
-/** GET /functions/{functionId}/history: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetFunctionsFunctionIdHistory = (input: CallInput & { params?: { "functionId": string } } = {}) => sdk.call("sdk.get_functions_functionId_history", input);
+/** GET /functions/{functionId}: Custom function detail [read] */
+export const sdkGetFunctionsFunctionId = (input: CallInput & { params?: { "functionId": number; "cols"?: unknown[] } } = {}) => sdk.call("sdk.get_functions_functionId", input);
+/** GET /functions/{functionId}/history: Custom function updates history [read] */
+export const sdkGetFunctionsFunctionIdHistory = (input: CallInput & { params?: { "functionId": number; "teamId": number } } = {}) => sdk.call("sdk.get_functions_functionId_history", input);
 /** GET /functions/v2: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetFunctionsV2 = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_functions_v2", input);
-/** GET /hooks/{hookId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetHooksHookId = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.get_hooks_hookId", input);
-/** GET /hooks/{hookId}/incomings/{encodedIncomingId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetHooksHookIdIncomingsEncodedIncomingId = (input: CallInput & { params?: { "hookId": string; "encodedIncomingId": string } } = {}) => sdk.call("sdk.get_hooks_hookId_incomings_encodedIncomingId", input);
-/** GET /hooks/{hookId}/incomings/stats: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetHooksHookIdIncomingsStats = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.get_hooks_hookId_incomings_stats", input);
+/** GET /hooks/{hookId}: Get hook details [read] */
+export const sdkGetHooksHookId = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.get_hooks_hookId", input);
+/** GET /hooks/{hookId}/incomings/{incomingId}: Get webhook queue item detail [read] */
+export const sdkGetHooksHookIdIncomingsEncodedIncomingId = (input: CallInput & { params?: { "hookId": number; "incomingId": string } } = {}) => sdk.call("sdk.get_hooks_hookId_incomings_encodedIncomingId", input);
+/** GET /hooks/{hookId}/incomings/stats: Get webhook queue stats [read] */
+export const sdkGetHooksHookIdIncomingsStats = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.get_hooks_hookId_incomings_stats", input);
 /** GET /items: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetItems = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_items", input);
-/** GET /keys/{keyId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetKeysKeyId = (input: CallInput & { params?: { "keyId": string } } = {}) => sdk.call("sdk.get_keys_keyId", input);
-/** GET /keys/types: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
+/** GET /keys/{keyId}: Get key details [read] */
+export const sdkGetKeysKeyId = (input: CallInput & { params?: { "keyId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_keys_keyId", input);
+/** GET /keys/types: List key types [read] */
 export const sdkGetKeysTypes = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_keys_types", input);
-/** GET /organizations/{organizationId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.get_organizations_organizationId", input);
-/** GET /private-spaces/{privateSpaceId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetPrivateSpacesPrivateSpaceId = (input: CallInput & { params?: { "privateSpaceId": string } } = {}) => sdk.call("sdk.get_private_spaces_privateSpaceId", input);
-/** GET /scenarios/{scenarioId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId", input);
-/** GET /scenarios/{scenarioId}/blueprints: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioIdBlueprints = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_blueprints", input);
-/** GET /scenarios/{scenarioId}/executions/{executionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioIdExecutionsExecutionId = (input: CallInput & { params?: { "scenarioId": string; "executionId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_executions_executionId", input);
-/** GET /scenarios/{scenarioId}/interface: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioIdInterface = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_interface", input);
-/** GET /scenarios/{scenarioId}/logs/{executionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioIdLogsExecutionId = (input: CallInput & { params?: { "scenarioId": string; "executionId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_logs_executionId", input);
-/** GET /scenarios/{scenarioId}/notes/{noteId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": string; "noteId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_notes_noteId", input);
+/** GET /organizations/{organizationId}: Get organization details [read] */
+export const sdkGetOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": number; "wait"?: boolean } } = {}) => sdk.call("sdk.get_organizations_organizationId", input);
+/** GET /private-spaces/{privateSpaceId}: Get a private space [read] */
+export const sdkGetPrivateSpacesPrivateSpaceId = (input: CallInput & { params?: { "privateSpaceId": number; "cols"?: unknown[] } } = {}) => sdk.call("sdk.get_private_spaces_privateSpaceId", input);
+/** GET /scenarios/{scenarioId}: Get scenario details [read] */
+export const sdkGetScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_scenarios_scenarioId", input);
+/** GET /scenarios/{scenarioId}/blueprints: Get blueprint versions [read] */
+export const sdkGetScenariosScenarioIdBlueprints = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_blueprints", input);
+/** GET /scenarios/{scenarioId}/executions/{executionId}: Get scenario execution details [read] */
+export const sdkGetScenariosScenarioIdExecutionsExecutionId = (input: CallInput & { params?: { "scenarioId": number; "executionId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_executions_executionId", input);
+/** GET /scenarios/{scenarioId}/interface: Get scenario interface [read] */
+export const sdkGetScenariosScenarioIdInterface = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_interface", input);
+/** GET /scenarios/{scenarioId}/logs/{executionId}: Get execution log [read] */
+export const sdkGetScenariosScenarioIdLogsExecutionId = (input: CallInput & { params?: { "scenarioId": number; "executionId": string } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_logs_executionId", input);
+/** GET /scenarios/{scenarioId}/notes/{noteId}: Get scenario note details [read] */
+export const sdkGetScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": number; "noteId": number; "teamId": number; "organizationId"?: number } } = {}) => sdk.call("sdk.get_scenarios_scenarioId_notes_noteId", input);
 /** GET /sdk/apps/{appName}/{appVersion}/endpoints: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetSdkAppsAppNameAppVersionEndpoints = (input: CallInput & { params?: { "appName": string; "appVersion": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_endpoints", input);
 /** GET /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetSdkAppsAppNameAppVersionEndpointsEndpointName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "endpointName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_endpoints_endpointName", input);
 /** GET /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetSdkAppsAppNameAppVersionEndpointsEndpointNameSection = (input: CallInput & { params?: { "appName": string; "appVersion": string; "endpointName": string; "section": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_endpoints_endpointName_section", input);
-/** GET /sdk/apps/{appName}/{appVersion}/functions/{functionName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName", input);
-/** GET /sdk/apps/{appName}/{appVersion}/functions/{functionName}/code: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionNameCode = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName_code", input);
-/** GET /sdk/apps/{appName}/{appVersion}/functions/{functionName}/test: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionNameTest = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName_test", input);
-/** GET /sdk/apps/{appName}/{appVersion}/modules/{moduleName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "moduleName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_modules_moduleName", input);
-/** GET /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_rpcs_rpcName", input);
-/** GET /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsAppNameAppVersionRpcsRpcNameSection = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string; "section": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_rpcs_rpcName_section", input);
-/** GET /sdk/apps/{name}/{version}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsNameVersion = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.get_sdk_apps_name_version", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}: Get Function [read] */
+export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}/code: Get Function Code [read] */
+export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionNameCode = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName_code", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}/test: Get Function Test [read] */
+export const sdkGetSdkAppsAppNameAppVersionFunctionsFunctionNameTest = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_functions_functionName_test", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules/{SDK_moduleName}: Get Module [read] */
+export const sdkGetSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_moduleName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_modules_moduleName", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}: Get RPC [read] */
+export const sdkGetSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_rpcs_rpcName", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}/{SDK_rpcSection}: Get RPC Section [read] */
+export const sdkGetSdkAppsAppNameAppVersionRpcsRpcNameSection = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string; "SDK_rpcSection": string } } = {}) => sdk.call("sdk.get_sdk_apps_appName_appVersion_rpcs_rpcName_section", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}: Get App [read] */
+export const sdkGetSdkAppsNameVersion = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_sdk_apps_name_version", input);
 /** GET /sdk/apps/{name}/{version}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetSdkAppsNameVersionSection = (input: CallInput & { params?: { "name": string; "version": string; "section": string } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_section", input);
-/** GET /sdk/apps/{name}/{version}/common: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsNameVersionCommon = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_common", input);
-/** GET /sdk/apps/{name}/{version}/icon/{size}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsNameVersionIconSize = (input: CallInput & { params?: { "name": string; "version": string; "size": string } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_icon_size", input);
-/** GET /sdk/apps/{name}/{version}/readme: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsNameVersionReadme = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_readme", input);
-/** GET /sdk/apps/connections/{connectionName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "connectionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName", input);
-/** GET /sdk/apps/connections/{connectionName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsConnectionsConnectionNameSection = (input: CallInput & { params?: { "connectionName": string; "section": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName_section", input);
-/** GET /sdk/apps/connections/{connectionName}/common: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsConnectionsConnectionNameCommon = (input: CallInput & { params?: { "connectionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName_common", input);
-/** GET /sdk/apps/webhooks/{webhookName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "webhookName": string } } = {}) => sdk.call("sdk.get_sdk_apps_webhooks_webhookName", input);
-/** GET /sdk/apps/webhooks/{webhookName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetSdkAppsWebhooksWebhookNameSection = (input: CallInput & { params?: { "webhookName": string; "section": string } } = {}) => sdk.call("sdk.get_sdk_apps_webhooks_webhookName_section", input);
-/** GET /teams/{teamId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetTeamsTeamId = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("sdk.get_teams_teamId", input);
-/** GET /templates/{id}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetTemplatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.get_templates_id", input);
-/** GET /templates/{id}/blueprint: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetTemplatesIdBlueprint = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.get_templates_id_blueprint", input);
-/** GET /templates/public/{templateUrl}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetTemplatesPublicTemplateUrl = (input: CallInput & { params?: { "templateUrl": string } } = {}) => sdk.call("sdk.get_templates_public_templateUrl", input);
-/** GET /templates/public/{templateUrl}/blueprint: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetTemplatesPublicTemplateUrlBlueprint = (input: CallInput & { params?: { "templateUrl": string } } = {}) => sdk.call("sdk.get_templates_public_templateUrl_blueprint", input);
-/** GET /users/me/current-authorization: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/common: Get App Common [read] */
+export const sdkGetSdkAppsNameVersionCommon = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_common", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/icon/{SDK_appIconSize}: Get App Logo [read] */
+export const sdkGetSdkAppsNameVersionIconSize = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number; "SDK_appIconSize": number } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_icon_size", input);
+/** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/readme: Get App Docs [read] */
+export const sdkGetSdkAppsNameVersionReadme = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number; "all"?: boolean } } = {}) => sdk.call("sdk.get_sdk_apps_name_version_readme", input);
+/** GET /sdk/apps/connections/{SDK_connectionName}: Get Connection [read] */
+export const sdkGetSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "SDK_connectionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName", input);
+/** GET /sdk/apps/connections/{SDK_connectionName}/{SDK_connectionSection}: Get Connection Section [read] */
+export const sdkGetSdkAppsConnectionsConnectionNameSection = (input: CallInput & { params?: { "SDK_connectionName": string; "SDK_connectionSection": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName_section", input);
+/** GET /sdk/apps/connections/{SDK_connectionName}/common: Get Connection Common [read] */
+export const sdkGetSdkAppsConnectionsConnectionNameCommon = (input: CallInput & { params?: { "SDK_connectionName": string } } = {}) => sdk.call("sdk.get_sdk_apps_connections_connectionName_common", input);
+/** GET /sdk/apps/webhooks/{SDK_webhookName}: Get Webhook [read] */
+export const sdkGetSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "SDK_webhookName": string } } = {}) => sdk.call("sdk.get_sdk_apps_webhooks_webhookName", input);
+/** GET /sdk/apps/webhooks/{SDK_webhookName}/{SDK_webhookSection}: Get Webhook Section [read] */
+export const sdkGetSdkAppsWebhooksWebhookNameSection = (input: CallInput & { params?: { "SDK_webhookName": string; "SDK_webhookSection": string } } = {}) => sdk.call("sdk.get_sdk_apps_webhooks_webhookName_section", input);
+/** GET /teams/{teamId}: Get team details [read] */
+export const sdkGetTeamsTeamId = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[] } } = {}) => sdk.call("sdk.get_teams_teamId", input);
+/** GET /templates/{templateId}: Get template details [read] */
+export const sdkGetTemplatesId = (input: CallInput & { params?: { "templateId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_templates_id", input);
+/** GET /templates/{templateId}/blueprint: Get template blueprint [read] */
+export const sdkGetTemplatesIdBlueprint = (input: CallInput & { params?: { "templateId": number; "forUse"?: boolean; "forEdit"?: boolean; "templatePublicId"?: number } } = {}) => sdk.call("sdk.get_templates_id_blueprint", input);
+/** GET /templates/public/{templateUrl}: Get public (approved) template details [read] */
+export const sdkGetTemplatesPublicTemplateUrl = (input: CallInput & { params?: { "templateUrl": string; "templatePublicId"?: number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.get_templates_public_templateUrl", input);
+/** GET /templates/public/{templateUrl}/blueprint: Get public (approved) template blueprint [read] */
+export const sdkGetTemplatesPublicTemplateUrlBlueprint = (input: CallInput & { params?: { "templateUrl": string; "templatePublicId"?: number } } = {}) => sdk.call("sdk.get_templates_public_templateUrl_blueprint", input);
+/** GET /users/me/current-authorization: Current user authorization [read] */
 export const sdkGetUsersMeCurrentAuthorization = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_users_me_current_authorization", input);
-/** GET /users/roles: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetUsersRoles = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_users_roles", input);
-/** GET /users/roles/{roleId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetUsersRolesRoleId = (input: CallInput & { params?: { "roleId": string } } = {}) => sdk.call("sdk.get_users_roles_roleId", input);
-/** GET /users/roles/permissions: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetUsersRolesPermissions = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_users_roles_permissions", input);
-/** PATCH /agents/{agentId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchAgentsAgentId = (input: CallInput & { params?: { "agentId": string } } = {}) => sdk.call("sdk.patch_agents_agentId", input);
+/** GET /users/roles: User role definitions [read] */
+export const sdkGetUsersRoles = (input: CallInput & { params?: { "cols"?: unknown[]; "category"?: string; "organizationId"?: number; "teamId"?: number; "roleId"?: number; "excludeRole[]"?: unknown[] } } = {}) => sdk.call("sdk.get_users_roles", input);
+/** GET /users/roles/{roleId}: Get role detail [read] */
+export const sdkGetUsersRolesRoleId = (input: CallInput & { params?: { "roleId": number } } = {}) => sdk.call("sdk.get_users_roles_roleId", input);
+/** GET /users/roles/permissions: User role permission definitions [read] */
+export const sdkGetUsersRolesPermissions = (input: CallInput & { params?: { "roleCategory"?: string } } = {}) => sdk.call("sdk.get_users_roles_permissions", input);
+/** PATCH /agents/{agentId}: Update on-prem agent [write] */
+export const sdkPatchAgentsAgentId = (input: CallInput & { params?: { "organizationId"?: number; "agentId": string } } = {}) => sdk.call("sdk.patch_agents_agentId", input);
 /** PATCH /connected-systems/{connectedSystemId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchConnectedSystemsConnectedSystemId = (input: CallInput & { params?: { "connectedSystemId": string } } = {}) => sdk.call("sdk.patch_connected_systems_connectedSystemId", input);
-/** PATCH /connections/{connectionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.patch_connections_connectionId", input);
-/** PATCH /custom-property-structures/custom-property-structure-items/{itemId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchCustomPropertyStructuresCustomPropertyStructureItemsItemId = (input: CallInput & { params?: { "itemId": string } } = {}) => sdk.call("sdk.patch_custom_property_structures_custom_property_structure_items_itemId", input);
-/** PATCH /data-stores/{dataStoreId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchDataStoresDataStoreId = (input: CallInput & { params?: { "dataStoreId": string } } = {}) => sdk.call("sdk.patch_data_stores_dataStoreId", input);
-/** PATCH /data-stores/{dataStoreId}/data/{key_name}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchDataStoresDataStoreIdDataKeyName = (input: CallInput & { params?: { "dataStoreId": string; "key_name": string } } = {}) => sdk.call("sdk.patch_data_stores_dataStoreId_data_key_name", input);
-/** PATCH /data-structures/{dataStructureId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": string } } = {}) => sdk.call("sdk.patch_data_structures_dataStructureId", input);
+/** PATCH /connections/{connectionId}: Rename a connection [write] */
+export const sdkPatchConnectionsConnectionId = (input: CallInput & { params?: { "connectionId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.patch_connections_connectionId", input);
+/** PATCH /custom-property-structures/custom-property-structure-items/{customPropertyStructureItemId}: Update custom property structure item [write] */
+export const sdkPatchCustomPropertyStructuresCustomPropertyStructureItemsItemId = (input: CallInput & { params?: { "customPropertyStructureItemId": number } } = {}) => sdk.call("sdk.patch_custom_property_structures_custom_property_structure_items_itemId", input);
+/** PATCH /data-stores/{dataStoreId}: Update data store [write] */
+export const sdkPatchDataStoresDataStoreId = (input: CallInput & { params?: { "dataStoreId": number } } = {}) => sdk.call("sdk.patch_data_stores_dataStoreId", input);
+/** PATCH /data-stores/{dataStoreId}/data/{dataStoreKeyRecord}: Update data store record details [write] */
+export const sdkPatchDataStoresDataStoreIdDataKeyName = (input: CallInput & { params?: { "dataStoreId": number; "dataStoreKeyRecord": string } } = {}) => sdk.call("sdk.patch_data_stores_dataStoreId_data_key_name", input);
+/** PATCH /data-structures/{dataStructureId}: Update data structure [write] */
+export const sdkPatchDataStructuresDataStructureId = (input: CallInput & { params?: { "dataStructureId": number } } = {}) => sdk.call("sdk.patch_data_structures_dataStructureId", input);
 /** PATCH /data-tables/{dataTableId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchDataTablesDataTableId = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.patch_data_tables_dataTableId", input);
 /** PATCH /data-tables/{dataTableId}/columns/{columnId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
@@ -374,66 +374,66 @@ export const sdkPatchDataTablesDataTableIdColumnsColumnId = (input: CallInput & 
 export const sdkPatchDataTablesDataTableIdColumnsOrder = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.patch_data_tables_dataTableId_columns_order", input);
 /** PATCH /data-tables/{dataTableId}/records: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchDataTablesDataTableIdRecords = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.patch_data_tables_dataTableId_records", input);
-/** PATCH /dlqs/{incompleteExecutionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchDlqsIncompleteExecutionId = (input: CallInput & { params?: { "incompleteExecutionId": string } } = {}) => sdk.call("sdk.patch_dlqs_incompleteExecutionId", input);
-/** PATCH /functions/{functionId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchFunctionsFunctionId = (input: CallInput & { params?: { "functionId": string } } = {}) => sdk.call("sdk.patch_functions_functionId", input);
-/** PATCH /hooks/{hookId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchHooksHookId = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.patch_hooks_hookId", input);
-/** PATCH /keys/{keyId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchKeysKeyId = (input: CallInput & { params?: { "keyId": string } } = {}) => sdk.call("sdk.patch_keys_keyId", input);
-/** PATCH /organizations/{organizationId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.patch_organizations_organizationId", input);
-/** PATCH /private-spaces/{privateSpaceId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchPrivateSpacesPrivateSpaceId = (input: CallInput & { params?: { "privateSpaceId": string } } = {}) => sdk.call("sdk.patch_private_spaces_privateSpaceId", input);
-/** PATCH /scenario-labels/{labelId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchScenarioLabelsLabelId = (input: CallInput & { params?: { "labelId": string } } = {}) => sdk.call("sdk.patch_scenario_labels_labelId", input);
-/** PATCH /scenarios-folders/{folderId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchScenariosFoldersFolderId = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("sdk.patch_scenarios_folders_folderId", input);
-/** PATCH /scenarios/{scenarioId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId", input);
-/** PATCH /scenarios/{scenarioId}/interface: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchScenariosScenarioIdInterface = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId_interface", input);
-/** PATCH /scenarios/{scenarioId}/notes/{noteId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": string; "noteId": string } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId_notes_noteId", input);
+/** PATCH /dlqs/{dlqId}: Update incomplete execution [write] */
+export const sdkPatchDlqsIncompleteExecutionId = (input: CallInput & { params?: { "dlqId": string } } = {}) => sdk.call("sdk.patch_dlqs_incompleteExecutionId", input);
+/** PATCH /functions/{functionId}: Update a custom function [write] */
+export const sdkPatchFunctionsFunctionId = (input: CallInput & { params?: { "functionId": number } } = {}) => sdk.call("sdk.patch_functions_functionId", input);
+/** PATCH /hooks/{hookId}: Update hook [write] */
+export const sdkPatchHooksHookId = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.patch_hooks_hookId", input);
+/** PATCH /keys/{keyId}: Update a key [write] */
+export const sdkPatchKeysKeyId = (input: CallInput & { params?: { "keyId": number } } = {}) => sdk.call("sdk.patch_keys_keyId", input);
+/** PATCH /organizations/{organizationId}: Update organization information [write] */
+export const sdkPatchOrganizationsOrganizationId = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("sdk.patch_organizations_organizationId", input);
+/** PATCH /private-spaces/{privateSpaceId}: Update a private space [write] */
+export const sdkPatchPrivateSpacesPrivateSpaceId = (input: CallInput & { params?: { "privateSpaceId": number; "confirmed"?: boolean } } = {}) => sdk.call("sdk.patch_private_spaces_privateSpaceId", input);
+/** PATCH /scenario-labels/{labelId}: Update team label [write] */
+export const sdkPatchScenarioLabelsLabelId = (input: CallInput & { params?: { "labelId": number } } = {}) => sdk.call("sdk.patch_scenario_labels_labelId", input);
+/** PATCH /scenarios-folders/{folderId}: Update scenario folder [write] */
+export const sdkPatchScenariosFoldersFolderId = (input: CallInput & { params?: { "folderId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.patch_scenarios_folders_folderId", input);
+/** PATCH /scenarios/{scenarioId}: Update scenario [write] */
+export const sdkPatchScenariosScenarioId = (input: CallInput & { params?: { "scenarioId": number; "cols[]"?: unknown[]; "confirmed"?: boolean } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId", input);
+/** PATCH /scenarios/{scenarioId}/interface: Update scenario interface [write] */
+export const sdkPatchScenariosScenarioIdInterface = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId_interface", input);
+/** PATCH /scenarios/{scenarioId}/notes/{noteId}: Update scenario note [write] */
+export const sdkPatchScenariosScenarioIdNotesNoteId = (input: CallInput & { params?: { "scenarioId": number; "noteId": number; "teamId": number; "organizationId"?: number } } = {}) => sdk.call("sdk.patch_scenarios_scenarioId_notes_noteId", input);
 /** PATCH /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchSdkAppsAppNameAppVersionEndpointsEndpointName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "endpointName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_appName_appVersion_endpoints_endpointName", input);
-/** PATCH /sdk/apps/{appName}/{appVersion}/modules/{moduleName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "moduleName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_appName_appVersion_modules_moduleName", input);
-/** PATCH /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_appName_appVersion_rpcs_rpcName", input);
-/** PATCH /sdk/apps/{name}/{version}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchSdkAppsNameVersion = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.patch_sdk_apps_name_version", input);
-/** PATCH /sdk/apps/connections/{connectionName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "connectionName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_connections_connectionName", input);
-/** PATCH /sdk/apps/webhooks/{webhookName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "webhookName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_webhooks_webhookName", input);
-/** PATCH /templates/{id}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchTemplatesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.patch_templates_id", input);
-/** PATCH /users/custom-roles/{roleId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchUsersCustomRolesRoleId = (input: CallInput & { params?: { "roleId": string } } = {}) => sdk.call("sdk.patch_users_custom_roles_roleId", input);
+/** PATCH /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules/{SDK_moduleName}: Patch Module [write] */
+export const sdkPatchSdkAppsAppNameAppVersionModulesModuleName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_moduleName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_appName_appVersion_modules_moduleName", input);
+/** PATCH /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}: Patch RPC [write] */
+export const sdkPatchSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_appName_appVersion_rpcs_rpcName", input);
+/** PATCH /sdk/apps/{SDK_appName}/{SDK_appVersion}: Patch App [write] */
+export const sdkPatchSdkAppsNameVersion = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number } } = {}) => sdk.call("sdk.patch_sdk_apps_name_version", input);
+/** PATCH /sdk/apps/connections/{SDK_connectionName}: Update Connection [write] */
+export const sdkPatchSdkAppsConnectionsConnectionName = (input: CallInput & { params?: { "SDK_connectionName": string } } = {}) => sdk.call("sdk.patch_sdk_apps_connections_connectionName", input);
+/** PATCH /sdk/apps/webhooks/{SDK_webhookName}: Update Webhook [write] */
+export const sdkPatchSdkAppsWebhooksWebhookName = (input: CallInput & { params?: { "SDK_webhookName": string; "Content-Type"?: string } } = {}) => sdk.call("sdk.patch_sdk_apps_webhooks_webhookName", input);
+/** PATCH /templates/{templateId}: Update template [write] */
+export const sdkPatchTemplatesId = (input: CallInput & { params?: { "templateId": number; "templatePublicId"?: number; "cols[]"?: unknown[] } } = {}) => sdk.call("sdk.patch_templates_id", input);
+/** PATCH /users/custom-roles/{roleId}: Update a custom role [write] */
+export const sdkPatchUsersCustomRolesRoleId = (input: CallInput & { params?: { "roleId": number } } = {}) => sdk.call("sdk.patch_users_custom_roles_roleId", input);
 /** POST /agent/register: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostAgentRegister = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_agent_register", input);
 /** POST /connected-systems: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostConnectedSystems = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_connected_systems", input);
-/** POST /connections/{connectionId}/scoped: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostConnectionsConnectionIdScoped = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.post_connections_connectionId_scoped", input);
-/** POST /connections/{connectionId}/set-data: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostConnectionsConnectionIdSetData = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.post_connections_connectionId_set_data", input);
-/** POST /connections/{connectionId}/test: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostConnectionsConnectionIdTest = (input: CallInput & { params?: { "connectionId": string } } = {}) => sdk.call("sdk.post_connections_connectionId_test", input);
-/** POST /credential-requests/actions/create: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
+/** POST /connections/{connectionId}/scoped: Verify if connection is scoped [write] */
+export const sdkPostConnectionsConnectionIdScoped = (input: CallInput & { params?: { "connectionId": number } } = {}) => sdk.call("sdk.post_connections_connectionId_scoped", input);
+/** POST /connections/{connectionId}/set-data: Update a connection [write] */
+export const sdkPostConnectionsConnectionIdSetData = (input: CallInput & { params?: { "connectionId": number } } = {}) => sdk.call("sdk.post_connections_connectionId_set_data", input);
+/** POST /connections/{connectionId}/test: Verify connection [write] */
+export const sdkPostConnectionsConnectionIdTest = (input: CallInput & { params?: { "connectionId": number } } = {}) => sdk.call("sdk.post_connections_connectionId_test", input);
+/** POST /credential-requests/actions/create: Create Action [write] */
 export const sdkPostCredentialRequestsActionsCreate = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_credential_requests_actions_create", input);
 /** POST /credential-requests/actions/create-by-credentials: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostCredentialRequestsActionsCreateByCredentials = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_credential_requests_actions_create_by_credentials", input);
 /** POST /credential-requests/actions/extend: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostCredentialRequestsActionsExtend = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_credential_requests_actions_extend", input);
-/** POST /credential-requests/credentials/{credentialId}/decline: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostCredentialRequestsCredentialsCredentialIdDecline = (input: CallInput & { params?: { "credentialId": string } } = {}) => sdk.call("sdk.post_credential_requests_credentials_credentialId_decline", input);
-/** POST /credential-requests/credentials/{credentialId}/delete-remote: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostCredentialRequestsCredentialsCredentialIdDeleteRemote = (input: CallInput & { params?: { "credentialId": string } } = {}) => sdk.call("sdk.post_credential_requests_credentials_credentialId_delete_remote", input);
-/** POST /data-structures/{dataStructureId}/clone: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostDataStructuresDataStructureIdClone = (input: CallInput & { params?: { "dataStructureId": string } } = {}) => sdk.call("sdk.post_data_structures_dataStructureId_clone", input);
+/** POST /credential-requests/credentials/{credentialId}/decline: Decline Credential [write] */
+export const sdkPostCredentialRequestsCredentialsCredentialIdDecline = (input: CallInput & { params?: { "credentialId": string; "cols"?: unknown[] } } = {}) => sdk.call("sdk.post_credential_requests_credentials_credentialId_decline", input);
+/** POST /credential-requests/credentials/{credentialId}/delete-remote: Delete Remote Credential [write] */
+export const sdkPostCredentialRequestsCredentialsCredentialIdDeleteRemote = (input: CallInput & { params?: { "credentialId": string; "cols"?: unknown[] } } = {}) => sdk.call("sdk.post_credential_requests_credentials_credentialId_delete_remote", input);
+/** POST /data-structures/{dataStructureId}/clone: Clone data structure [write] */
+export const sdkPostDataStructuresDataStructureIdClone = (input: CallInput & { params?: { "dataStructureId": number } } = {}) => sdk.call("sdk.post_data_structures_dataStructureId_clone", input);
 /** POST /data-tables: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostDataTables = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_data_tables", input);
 /** POST /data-tables/{dataTableId}/columns: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
@@ -444,36 +444,36 @@ export const sdkPostDataTablesDataTableIdRecords = (input: CallInput & { params?
 export const sdkPostDataTablesDataTableIdRecordsBulk = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.post_data_tables_dataTableId_records_bulk", input);
 /** POST /data-tables/{dataTableId}/records/query/validate: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostDataTablesDataTableIdRecordsQueryValidate = (input: CallInput & { params?: { "dataTableId": string } } = {}) => sdk.call("sdk.post_data_tables_dataTableId_records_query_validate", input);
-/** POST /dlqs/{incompleteExecutionId}/retry: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostDlqsIncompleteExecutionIdRetry = (input: CallInput & { params?: { "incompleteExecutionId": string } } = {}) => sdk.call("sdk.post_dlqs_incompleteExecutionId_retry", input);
-/** POST /dlqs/retry: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostDlqsRetry = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_dlqs_retry", input);
-/** POST /event-subscriptions/v1/organizations/{organizationId}/subscriptions: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostEventSubscriptionsV1OrganizationsOrganizationIdSubscriptions = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("sdk.post_event_subscriptions_v1_organizations_organizationId_subscriptions", input);
-/** POST /functions/eval: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostFunctionsEval = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_functions_eval", input);
-/** POST /hooks/{hookId}/disable: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostHooksHookIdDisable = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.post_hooks_hookId_disable", input);
-/** POST /hooks/{hookId}/enable: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostHooksHookIdEnable = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.post_hooks_hookId_enable", input);
-/** POST /hooks/{hookId}/learn-start: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostHooksHookIdLearnStart = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.post_hooks_hookId_learn_start", input);
-/** POST /hooks/{hookId}/learn-stop: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostHooksHookIdLearnStop = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.post_hooks_hookId_learn_stop", input);
-/** POST /hooks/{hookId}/set-data: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostHooksHookIdSetData = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("sdk.post_hooks_hookId_set_data", input);
-/** POST /scenario-labels/{labelId}/scenarios/{scenarioId}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostScenarioLabelsLabelIdScenariosScenarioId = (input: CallInput & { params?: { "labelId": string; "scenarioId": string } } = {}) => sdk.call("sdk.post_scenario_labels_labelId_scenarios_scenarioId", input);
+/** POST /dlqs/{dlqId}/retry: Retry incomplete execution [write] */
+export const sdkPostDlqsIncompleteExecutionIdRetry = (input: CallInput & { params?: { "dlqId": string } } = {}) => sdk.call("sdk.post_dlqs_incompleteExecutionId_retry", input);
+/** POST /dlqs/retry: Retry multiple incomplete executions [write] */
+export const sdkPostDlqsRetry = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.post_dlqs_retry", input);
+/** POST /event-subscriptions/v1/organizations/{organizationId}/subscriptions: Create an event subscription [write] */
+export const sdkPostEventSubscriptionsV1OrganizationsOrganizationIdSubscriptions = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("sdk.post_event_subscriptions_v1_organizations_organizationId_subscriptions", input);
+/** POST /functions/eval: Check custom function code [write] */
+export const sdkPostFunctionsEval = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("sdk.post_functions_eval", input);
+/** POST /hooks/{hookId}/disable: Disable hook [write] */
+export const sdkPostHooksHookIdDisable = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.post_hooks_hookId_disable", input);
+/** POST /hooks/{hookId}/enable: Enable hook [write] */
+export const sdkPostHooksHookIdEnable = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.post_hooks_hookId_enable", input);
+/** POST /hooks/{hookId}/learn-start: Learn start [write] */
+export const sdkPostHooksHookIdLearnStart = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.post_hooks_hookId_learn_start", input);
+/** POST /hooks/{hookId}/learn-stop: Learn stop [write] */
+export const sdkPostHooksHookIdLearnStop = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.post_hooks_hookId_learn_stop", input);
+/** POST /hooks/{hookId}/set-data: Set hook details [write] */
+export const sdkPostHooksHookIdSetData = (input: CallInput & { params?: { "hookId": number } } = {}) => sdk.call("sdk.post_hooks_hookId_set_data", input);
+/** POST /scenario-labels/{labelId}/scenarios/{scenarioId}: Assign label to scenario [write] */
+export const sdkPostScenarioLabelsLabelIdScenariosScenarioId = (input: CallInput & { params?: { "labelId": number; "scenarioId": number } } = {}) => sdk.call("sdk.post_scenario_labels_labelId_scenarios_scenarioId", input);
 /** POST /scenarios/{scenarioId}/notes/batch: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostScenariosScenarioIdNotesBatch = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_notes_batch", input);
-/** POST /scenarios/{scenarioId}/replay: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostScenariosScenarioIdReplay = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_replay", input);
-/** POST /scenarios/{scenarioId}/run: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostScenariosScenarioIdRun = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_run", input);
-/** POST /scenarios/{scenarioId}/start: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostScenariosScenarioIdStart = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_start", input);
-/** POST /scenarios/{scenarioId}/stop: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostScenariosScenarioIdStop = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_stop", input);
+/** POST /scenarios/{scenarioId}/replay: Replay scenario executions [write] */
+export const sdkPostScenariosScenarioIdReplay = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_replay", input);
+/** POST /scenarios/{scenarioId}/run: Run a scenario [write] */
+export const sdkPostScenariosScenarioIdRun = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_run", input);
+/** POST /scenarios/{scenarioId}/start: Activate scenario [write] */
+export const sdkPostScenariosScenarioIdStart = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_start", input);
+/** POST /scenarios/{scenarioId}/stop: Deactivate scenario [write] */
+export const sdkPostScenariosScenarioIdStop = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("sdk.post_scenarios_scenarioId_stop", input);
 /** POST /sdk/apps/{appName}/{appVersion}/endpoints: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostSdkAppsAppNameAppVersionEndpoints = (input: CallInput & { params?: { "appName": string; "appVersion": string } } = {}) => sdk.call("sdk.post_sdk_apps_appName_appVersion_endpoints", input);
 /** POST /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}/private: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
@@ -484,35 +484,35 @@ export const sdkPostSdkAppsAppNameAppVersionEndpointsEndpointNamePublic = (input
 export const sdkPostSdkAppsAppNameAppVersionModulesModuleNamePrivate = (input: CallInput & { params?: { "appName": string; "appVersion": string; "moduleName": string } } = {}) => sdk.call("sdk.post_sdk_apps_appName_appVersion_modules_moduleName_private", input);
 /** POST /sdk/apps/{appName}/{appVersion}/modules/{moduleName}/public: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostSdkAppsAppNameAppVersionModulesModuleNamePublic = (input: CallInput & { params?: { "appName": string; "appVersion": string; "moduleName": string } } = {}) => sdk.call("sdk.post_sdk_apps_appName_appVersion_modules_moduleName_public", input);
-/** POST /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("sdk.post_sdk_apps_appName_appVersion_rpcs_rpcName", input);
+/** POST /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}: Test RPC [write] */
+export const sdkPostSdkAppsAppNameAppVersionRpcsRpcName = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string } } = {}) => sdk.call("sdk.post_sdk_apps_appName_appVersion_rpcs_rpcName", input);
 /** POST /sdk/apps/{name}/{version}/private: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostSdkAppsNameVersionPrivate = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.post_sdk_apps_name_version_private", input);
 /** POST /sdk/apps/{name}/{version}/public: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostSdkAppsNameVersionPublic = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.post_sdk_apps_name_version_public", input);
 /** POST /webhooks/subscribe: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostWebhooksSubscribe = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_webhooks_subscribe", input);
-/** PUT /data-stores/{dataStoreId}/data/{key_name}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutDataStoresDataStoreIdDataKeyName = (input: CallInput & { params?: { "dataStoreId": string; "key_name": string } } = {}) => sdk.call("sdk.put_data_stores_dataStoreId_data_key_name", input);
+/** PUT /data-stores/{dataStoreId}/data/{dataStoreKeyRecord}: Update entire data store record [write] */
+export const sdkPutDataStoresDataStoreIdDataKeyName = (input: CallInput & { params?: { "dataStoreId": number; "dataStoreKeyRecord": string } } = {}) => sdk.call("sdk.put_data_stores_dataStoreId_data_key_name", input);
 /** PUT /sdk/apps/{appName}/{appVersion}/endpoints/{endpointName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutSdkAppsAppNameAppVersionEndpointsEndpointNameSection = (input: CallInput & { params?: { "appName": string; "appVersion": string; "endpointName": string; "section": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_endpoints_endpointName_section", input);
-/** PUT /sdk/apps/{appName}/{appVersion}/functions/{functionName}/code: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsAppNameAppVersionFunctionsFunctionNameCode = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_functions_functionName_code", input);
-/** PUT /sdk/apps/{appName}/{appVersion}/functions/{functionName}/test: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsAppNameAppVersionFunctionsFunctionNameTest = (input: CallInput & { params?: { "appName": string; "appVersion": string; "functionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_functions_functionName_test", input);
-/** PUT /sdk/apps/{appName}/{appVersion}/rpcs/{rpcName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsAppNameAppVersionRpcsRpcNameSection = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string; "section": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_rpcs_rpcName_section", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}/code: Set Function Code [write] */
+export const sdkPutSdkAppsAppNameAppVersionFunctionsFunctionNameCode = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_functions_functionName_code", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions/{SDK_functionName}/test: Set Function Test [write] */
+export const sdkPutSdkAppsAppNameAppVersionFunctionsFunctionNameTest = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_functionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_functions_functionName_test", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs/{SDK_rpcName}/{SDK_rpcSection}: Set RPC Section [write] */
+export const sdkPutSdkAppsAppNameAppVersionRpcsRpcNameSection = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_rpcName": string; "SDK_rpcSection": string } } = {}) => sdk.call("sdk.put_sdk_apps_appName_appVersion_rpcs_rpcName_section", input);
 /** PUT /sdk/apps/{name}/{version}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutSdkAppsNameVersionSection = (input: CallInput & { params?: { "name": string; "version": string; "section": string } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_section", input);
-/** PUT /sdk/apps/{name}/{version}/common: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsNameVersionCommon = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_common", input);
-/** PUT /sdk/apps/{name}/{version}/icon: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsNameVersionIcon = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_icon", input);
-/** PUT /sdk/apps/{name}/{version}/readme: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsNameVersionReadme = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_readme", input);
-/** PUT /sdk/apps/connections/{connectionName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsConnectionsConnectionNameSection = (input: CallInput & { params?: { "connectionName": string; "section": string } } = {}) => sdk.call("sdk.put_sdk_apps_connections_connectionName_section", input);
-/** PUT /sdk/apps/connections/{connectionName}/common: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsConnectionsConnectionNameCommon = (input: CallInput & { params?: { "connectionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_connections_connectionName_common", input);
-/** PUT /sdk/apps/webhooks/{webhookName}/{section}: From integromat/make-typescript-sdk; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutSdkAppsWebhooksWebhookNameSection = (input: CallInput & { params?: { "webhookName": string; "section": string } } = {}) => sdk.call("sdk.put_sdk_apps_webhooks_webhookName_section", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/common: Set app common data [write] */
+export const sdkPutSdkAppsNameVersionCommon = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_common", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/icon: Set App Logo [write] */
+export const sdkPutSdkAppsNameVersionIcon = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": number } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_icon", input);
+/** PUT /sdk/apps/{SDK_appName}/{SDK_appVersion}/readme: Set App Docs [write] */
+export const sdkPutSdkAppsNameVersionReadme = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "all"?: boolean; "Content-Type"?: string } } = {}) => sdk.call("sdk.put_sdk_apps_name_version_readme", input);
+/** PUT /sdk/apps/connections/{SDK_connectionName}/{SDK_connectionSection}: Set Connection Section [write] */
+export const sdkPutSdkAppsConnectionsConnectionNameSection = (input: CallInput & { params?: { "SDK_connectionName": string; "SDK_connectionSection": string } } = {}) => sdk.call("sdk.put_sdk_apps_connections_connectionName_section", input);
+/** PUT /sdk/apps/connections/{SDK_connectionName}/common: Set Connection Common [write] */
+export const sdkPutSdkAppsConnectionsConnectionNameCommon = (input: CallInput & { params?: { "SDK_connectionName": string } } = {}) => sdk.call("sdk.put_sdk_apps_connections_connectionName_common", input);
+/** PUT /sdk/apps/webhooks/{SDK_webhookName}/{SDK_webhookSection}: Set Webhook Section [write] */
+export const sdkPutSdkAppsWebhooksWebhookNameSection = (input: CallInput & { params?: { "SDK_webhookName": string; "SDK_webhookSection": string; "Content-Type"?: string } } = {}) => sdk.call("sdk.put_sdk_apps_webhooks_webhookName_section", input);

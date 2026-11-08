@@ -1043,13 +1043,13 @@ export const publicProposalsAccept = (input: CallInput & { params?: { "uuid": st
 /** PATCH /api/v2/public/proposals/{uuid}/confirm_identity: Confirm identity for a public proposal [write] */
 export const publicProposalsConfirmIdentity = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-confirm_identity", input);
 /** PATCH /api/v2/public/proposals/{uuid}/decline: Decline a public proposal [write] */
-export const publicProposalsDecline = (input: CallInput & { params?: { "uuid": string; "X-Proposal-Token"?: string } } = {}) => sdk.call("public-proposals-decline", input);
+export const publicProposalsDecline = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-decline", input);
 /** GET /api/v2/public/proposals/{uuid}/file_authorize: Authorize access to a public proposal file [write] */
 export const publicProposalsFileAuthorize = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-file_authorize", input);
 /** POST /api/v2/public/proposals/{uuid}/file_presign: Pre-sign a signature image upload for a public proposal [write] */
-export const publicProposalsFilePresign = (input: CallInput & { params?: { "uuid": string; "X-Proposal-Token"?: string } } = {}) => sdk.call("public-proposals-file_presign", input);
+export const publicProposalsFilePresign = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-file_presign", input);
 /** GET /api/v2/public/proposals/{uuid}: Show a public proposal [read] */
-export const publicProposalsShow = (input: CallInput & { params?: { "uuid": string; "X-Proposal-Token"?: string } } = {}) => sdk.call("public-proposals-show", input);
+export const publicProposalsShow = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-show", input);
 /** POST /api/v2/public/proposals/{uuid}/unlock: Unlock a password-protected public proposal [write] */
 export const publicProposalsUnlock = (input: CallInput & { params?: { "uuid": string } } = {}) => sdk.call("public-proposals-unlock", input);
 /** POST /api/v2/pulses: Creates a pulse [write] */

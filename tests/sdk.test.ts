@@ -403,9 +403,10 @@ test("Cloudbeds Group Profile reaches api.cloudbeds.com; Guest Profiles stays re
 test("Unleashed signs each request: base64 HMAC-SHA256 of the exact query string with the API key (8 Nov)", async () => {
   const { createHmac } = await import("node:crypto");
   const ops = [...load("unleashed").ops.values()];
-  // Unleashed's endpoints come from its docs pages, so their inputs are unmapped: a named input on a GET goes to the query.
-  const withQuery = ops.find((o) => o.method === "GET" && o.kind === "read" && o.paramsUnmapped && !o.params.some((p) => p.required))!;
-  for (const params of [{}, { customerCode: "ACME 1" }]) {
+  // Unleashed's inputs are mapped from its reference tables (8 Nov): use a read with an optional query input.
+  const withQuery = ops.find((o) => o.method === "GET" && o.kind === "read" && !o.params.some((p) => p.required) && o.params.some((p) => p.in === "query"))!;
+  const q = withQuery.params.find((p) => p.in === "query")!.name;
+  for (const params of [{}, { [q]: "ACME 1" }]) {
     hits = [];
     await callOperation("unleashed", withQuery.id, { params });
     const h = hits[0];

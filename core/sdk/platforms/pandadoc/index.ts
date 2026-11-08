@@ -5,9 +5,9 @@ export const sdk = platform("pandadoc");
 /** POST /oauth2/access_token: Create/Refresh Access Token [write] */
 export const coreDocsPostOauth2AccessToken = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_oauth2_access_token", input);
 /** POST /public/v1/documents: Create Document [write] */
-export const coreDocsPostPublicV1Documents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_documents", input);
+export const coreDocsPostPublicV1Documents = (input: CallInput & { params?: { "editor_ver"?: string; "use_form_field_properties"?: string } } = {}) => sdk.call("core.docs.post_public_v1_documents", input);
 /** GET /public/v1/documents: List Documents [read] */
-export const coreDocsGetPublicV1Documents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_documents", input);
+export const coreDocsGetPublicV1Documents = (input: CallInput & { params?: { "template_id"?: string; "form_id"?: string; "folder_uuid"?: string; "contact_id"?: string; "count"?: number; "page"?: number; "order_by"?: string; "created_from"?: string; "created_to"?: string; "deleted"?: boolean; "id"?: string; "completed_from"?: string; "completed_to"?: string; "membership_id"?: string; "metadata"?: unknown[]; "modified_from"?: string; "modified_to"?: string; "q"?: string; "status"?: number; "status__ne"?: number; "tag"?: string } } = {}) => sdk.call("core.docs.get_public_v1_documents", input);
 /** GET /public/v1/documents/{id}/details: Document Details [read] */
 export const coreDocsGetPublicV1DocumentsIdDetails = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_details", input);
 /** GET /public/v1/documents/{id}: Document Status [read] */
@@ -29,15 +29,15 @@ export const coreDocsPatchPublicV1DocumentsIdStatus = (input: CallInput & { para
 /** POST /public/v1/documents/{id}/draft: Move Document to Draft [write] */
 export const coreDocsPostPublicV1DocumentsIdDraft = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.post_public_v1_documents_id_draft", input);
 /** GET /public/v1/documents/{id}/download: Document Download [read] */
-export const coreDocsGetPublicV1DocumentsIdDownload = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_download", input);
+export const coreDocsGetPublicV1DocumentsIdDownload = (input: CallInput & { params?: { "id": string; "watermark_color"?: string; "watermark_font_size"?: number; "watermark_opacity"?: number; "watermark_text"?: string; "separate_files"?: boolean } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_download", input);
 /** GET /public/v1/documents/{id}/download-protected: Download Completed Document [read] */
-export const coreDocsGetPublicV1DocumentsIdDownloadProtected = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_download_protected", input);
+export const coreDocsGetPublicV1DocumentsIdDownloadProtected = (input: CallInput & { params?: { "id": string; "separate_files"?: boolean } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_download_protected", input);
 /** POST /public/beta/documents/{document_id}/docx-export-tasks: [Beta] Create DOCX Export Task [write] */
 export const coreDocsPostPublicBetaDocumentsDocumentIdDocxExportTasks = (input: CallInput & { params?: { "document_id": string } } = {}) => sdk.call("core.docs.post_public_beta_documents_document_id_docx_export_tasks", input);
 /** GET /public/beta/documents/{document_id}/docx-export-tasks/{task_id}: [Beta] DOCX Export Task [read] */
 export const coreDocsGetPublicBetaDocumentsDocumentIdDocxExportTasksTaskId = (input: CallInput & { params?: { "document_id": string; "task_id": string } } = {}) => sdk.call("core.docs.get_public_beta_documents_document_id_docx_export_tasks_task_id", input);
 /** GET /public/v1/documents/folders: List Documents Folders [read] */
-export const coreDocsGetPublicV1DocumentsFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_documents_folders", input);
+export const coreDocsGetPublicV1DocumentsFolders = (input: CallInput & { params?: { "parent_uuid"?: string; "count"?: number; "page"?: number } } = {}) => sdk.call("core.docs.get_public_v1_documents_folders", input);
 /** POST /public/v1/documents/folders: Create Documents Folder [write] */
 export const coreDocsPostPublicV1DocumentsFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_documents_folders", input);
 /** PUT /public/v1/documents/folders/{id}: Rename Documents Folder [write] */
@@ -49,7 +49,7 @@ export const coreDocsPatchPublicV1DocumentsIdOwnership = (input: CallInput & { p
 /** PATCH /public/v1/documents/ownership: Transfer all documents ownership [write] */
 export const coreDocsPatchPublicV1DocumentsOwnership = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.patch_public_v1_documents_ownership", input);
 /** DELETE /public/v1/documents/{id}: Delete Document [write] */
-export const coreDocsDeletePublicV1DocumentsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.delete_public_v1_documents_id", input);
+export const coreDocsDeletePublicV1DocumentsId = (input: CallInput & { params?: { "id": string; "forever"?: boolean } } = {}) => sdk.call("core.docs.delete_public_v1_documents_id", input);
 /** DELETE /public/v1/documents: Delete documents (bulk) [write] */
 export const coreDocsDeletePublicV1Documents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.delete_public_v1_documents", input);
 /** POST /public/v1/documents/{id}/recipients: Add Document Recipient [write] */
@@ -95,7 +95,7 @@ export const coreDocsGetPublicV2DocumentsDocumentIdSettings = (input: CallInput 
 /** PATCH /public/v2/documents/{document_id}/settings: Update document settings [write] */
 export const coreDocsPatchPublicV2DocumentsDocumentIdSettings = (input: CallInput & { params?: { "document_id": string } } = {}) => sdk.call("core.docs.patch_public_v2_documents_document_id_settings", input);
 /** GET /public/v1/documents/linked-objects: List Documents by Linked Object [read] */
-export const coreDocsGetPublicV1DocumentsLinkedObjects = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_documents_linked_objects", input);
+export const coreDocsGetPublicV1DocumentsLinkedObjects = (input: CallInput & { params?: { "entity_id": string; "entity_type": string; "provider": string; "order_by"?: string; "owner_ids"?: unknown[] } } = {}) => sdk.call("core.docs.get_public_v1_documents_linked_objects", input);
 /** GET /public/v1/documents/{id}/linked-objects: List Linked Objects [read] */
 export const coreDocsGetPublicV1DocumentsIdLinkedObjects = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_documents_id_linked_objects", input);
 /** POST /public/v1/documents/{id}/linked-objects: Create Linked Object [write] */
@@ -103,11 +103,11 @@ export const coreDocsPostPublicV1DocumentsIdLinkedObjects = (input: CallInput & 
 /** DELETE /public/v1/documents/{id}/linked-objects/{linked_object_id}: Delete Linked Object [write] */
 export const coreDocsDeletePublicV1DocumentsIdLinkedObjectsLinkedObjectId = (input: CallInput & { params?: { "id": string; "linked_object_id": string } } = {}) => sdk.call("core.docs.delete_public_v1_documents_id_linked_objects_linked_object_id", input);
 /** GET /public/v2/documents/{document_id}/audit-trail: List Document Audit Trail [read] */
-export const coreDocsGetPublicV2DocumentsDocumentIdAuditTrail = (input: CallInput & { params?: { "document_id": string } } = {}) => sdk.call("core.docs.get_public_v2_documents_document_id_audit_trail", input);
+export const coreDocsGetPublicV2DocumentsDocumentIdAuditTrail = (input: CallInput & { params?: { "document_id": string; "limit"?: number; "offset"?: number } } = {}) => sdk.call("core.docs.get_public_v2_documents_document_id_audit_trail", input);
 /** GET /public/v1/templates: List Templates [read] */
-export const coreDocsGetPublicV1Templates = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_templates", input);
+export const coreDocsGetPublicV1Templates = (input: CallInput & { params?: { "q"?: string; "shared"?: boolean; "deleted"?: boolean; "count"?: number; "page"?: number; "id"?: string; "folder_uuid"?: string; "tag"?: unknown[]; "fields"?: unknown[] } } = {}) => sdk.call("core.docs.get_public_v1_templates", input);
 /** POST /public/v1/templates: Create Template [write] */
-export const coreDocsPostPublicV1Templates = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_templates", input);
+export const coreDocsPostPublicV1Templates = (input: CallInput & { params?: { "fields"?: unknown[] } } = {}) => sdk.call("core.docs.post_public_v1_templates", input);
 /** GET /public/v1/templates/{id}/details: Template Details [read] */
 export const coreDocsGetPublicV1TemplatesIdDetails = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_templates_id_details", input);
 /** DELETE /public/v1/templates/{id}: Delete Template [write] */
@@ -129,13 +129,13 @@ export const coreDocsGetPublicV1TemplatesTemplateIdShares = (input: CallInput & 
 /** PUT /public/v1/templates/{template_id}/shares: Update Template Sharing Settings [write] */
 export const coreDocsPutPublicV1TemplatesTemplateIdShares = (input: CallInput & { params?: { "template_id": string } } = {}) => sdk.call("core.docs.put_public_v1_templates_template_id_shares", input);
 /** GET /public/v1/templates/folders: List Templates Folders [read] */
-export const coreDocsGetPublicV1TemplatesFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_templates_folders", input);
+export const coreDocsGetPublicV1TemplatesFolders = (input: CallInput & { params?: { "parent_uuid"?: string; "count"?: number; "page"?: number } } = {}) => sdk.call("core.docs.get_public_v1_templates_folders", input);
 /** POST /public/v1/templates/folders: Create Templates Folder [write] */
 export const coreDocsPostPublicV1TemplatesFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_templates_folders", input);
 /** PUT /public/v1/templates/folders/{id}: Rename Templates Folder [write] */
 export const coreDocsPutPublicV1TemplatesFoldersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.put_public_v1_templates_folders_id", input);
 /** GET /public/v1/content-library-items: List Content Library Item [read] */
-export const coreDocsGetPublicV1ContentLibraryItems = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_content_library_items", input);
+export const coreDocsGetPublicV1ContentLibraryItems = (input: CallInput & { params?: { "q"?: string; "id"?: string; "deleted"?: boolean; "folder_uuid"?: string; "count"?: number; "page"?: number; "tag"?: string } } = {}) => sdk.call("core.docs.get_public_v1_content_library_items", input);
 /** POST /public/v1/content-library-items: Create Content Library Item [write] */
 export const coreDocsPostPublicV1ContentLibraryItems = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_content_library_items", input);
 /** GET /public/v1/content-library-items/{id}: Content Library Item Status [read] */
@@ -143,17 +143,17 @@ export const coreDocsGetPublicV1ContentLibraryItemsId = (input: CallInput & { pa
 /** GET /public/v1/content-library-items/{id}/details: Content Library Item Details [read] */
 export const coreDocsGetPublicV1ContentLibraryItemsIdDetails = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_content_library_items_id_details", input);
 /** GET /public/v1/forms: List Forms [read] */
-export const coreDocsGetPublicV1Forms = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_forms", input);
+export const coreDocsGetPublicV1Forms = (input: CallInput & { params?: { "count"?: number; "page"?: number; "status"?: unknown[]; "order_by"?: string; "asc"?: boolean; "name"?: string } } = {}) => sdk.call("core.docs.get_public_v1_forms", input);
 /** GET /public/v2/product-catalog/items/search: List Catalog Items Search [read] */
-export const coreDocsGetPublicV2ProductCatalogItemsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v2_product_catalog_items_search", input);
+export const coreDocsGetPublicV2ProductCatalogItemsSearch = (input: CallInput & { params?: { "page"?: number; "per_page"?: number; "query"?: string; "order_by"?: string; "types"?: unknown[]; "billing_types"?: unknown[]; "exclude_uuids"?: unknown[]; "category_id"?: string; "no_category"?: boolean } } = {}) => sdk.call("core.docs.get_public_v2_product_catalog_items_search", input);
 /** POST /public/v2/product-catalog/items: Create Catalog Item [write] */
 export const coreDocsPostPublicV2ProductCatalogItems = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v2_product_catalog_items", input);
 /** GET /public/v2/product-catalog/items/{item_uuid}: Catalog Item Details [read] */
-export const coreDocsGetPublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string } } = {}) => sdk.call("core.docs.get_public_v2_product_catalog_items_item_uuid", input);
+export const coreDocsGetPublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string; "item_uuid": string } } = {}) => sdk.call("core.docs.get_public_v2_product_catalog_items_item_uuid", input);
 /** PATCH /public/v2/product-catalog/items/{item_uuid}: Update Catalog Item [write] */
-export const coreDocsPatchPublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string } } = {}) => sdk.call("core.docs.patch_public_v2_product_catalog_items_item_uuid", input);
+export const coreDocsPatchPublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string; "item_uuid": string } } = {}) => sdk.call("core.docs.patch_public_v2_product_catalog_items_item_uuid", input);
 /** DELETE /public/v2/product-catalog/items/{item_uuid}: Delete Catalog Item [write] */
-export const coreDocsDeletePublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string } } = {}) => sdk.call("core.docs.delete_public_v2_product_catalog_items_item_uuid", input);
+export const coreDocsDeletePublicV2ProductCatalogItemsItemUuid = (input: CallInput & { params?: { "item_uuid": string; "item_uuid": string } } = {}) => sdk.call("core.docs.delete_public_v2_product_catalog_items_item_uuid", input);
 /** PUT /public/v1/documents/{document_id}/quotes/{quote_id}: Quote update [write] */
 export const coreDocsPutPublicV1DocumentsDocumentIdQuotesQuoteId = (input: CallInput & { params?: { "document_id": string; "quote_id": string } } = {}) => sdk.call("core.docs.put_public_v1_documents_document_id_quotes_quote_id", input);
 /** PATCH /public/v1/documents/{document_id}/quotes: [Beta] Update Multiple Quotes [write] */
@@ -165,11 +165,11 @@ export const coreDocsGetPublicV2NotaryNotarizationRequestsSessionRequestId = (in
 /** DELETE /public/v2/notary/notarization-requests/{session_request_id}: Delete Notarization Request [write] */
 export const coreDocsDeletePublicV2NotaryNotarizationRequestsSessionRequestId = (input: CallInput & { params?: { "session_request_id": string } } = {}) => sdk.call("core.docs.delete_public_v2_notary_notarization_requests_session_request_id", input);
 /** GET /public/v2/notary/notaries: List Notaries [read] */
-export const coreDocsGetPublicV2NotaryNotaries = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v2_notary_notaries", input);
+export const coreDocsGetPublicV2NotaryNotaries = (input: CallInput & { params?: { "status"?: unknown[]; "commission_state"?: unknown[]; "offset"?: number; "limit"?: number; "order_by"?: string } } = {}) => sdk.call("core.docs.get_public_v2_notary_notaries", input);
 /** GET /public/v2/notary/notarization-requests: List Notarization Requests [read] */
-export const coreDocsGetPublicV2NotaryNotarizationRequests = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v2_notary_notarization_requests", input);
+export const coreDocsGetPublicV2NotaryNotarizationRequests = (input: CallInput & { params?: { "status"?: unknown[]; "created_by_user_id"?: unknown[]; "document_id"?: unknown[]; "offset"?: number; "limit"?: number; "order_by"?: string } } = {}) => sdk.call("core.docs.get_public_v2_notary_notarization_requests", input);
 /** GET /public/v1/workspaces: List Workspaces [read] */
-export const coreDocsGetPublicV1Workspaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_workspaces", input);
+export const coreDocsGetPublicV1Workspaces = (input: CallInput & { params?: { "q"?: string; "count"?: number; "page"?: number } } = {}) => sdk.call("core.docs.get_public_v1_workspaces", input);
 /** POST /public/v1/workspaces: Create Workspace [write] */
 export const coreDocsPostPublicV1Workspaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_workspaces", input);
 /** PATCH /public/beta/workspaces/{workspace_id}: [Beta] Update Workspace [write] */
@@ -177,11 +177,11 @@ export const coreDocsPatchPublicBetaWorkspacesWorkspaceId = (input: CallInput & 
 /** POST /public/v1/workspaces/{workspace_id}/deactivate: Deactivate Workspace [write] */
 export const coreDocsPostPublicV1WorkspacesWorkspaceIdDeactivate = (input: CallInput & { params?: { "workspace_id": string } } = {}) => sdk.call("core.docs.post_public_v1_workspaces_workspace_id_deactivate", input);
 /** GET /public/v1/users: List Users [read] */
-export const coreDocsGetPublicV1Users = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_users", input);
+export const coreDocsGetPublicV1Users = (input: CallInput & { params?: { "count"?: number; "page"?: number; "show_removed"?: boolean } } = {}) => sdk.call("core.docs.get_public_v1_users", input);
 /** POST /public/v1/users: Create User [write] */
-export const coreDocsPostPublicV1Users = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_users", input);
+export const coreDocsPostPublicV1Users = (input: CallInput & { params?: { "notify_user"?: boolean; "notify_ws_admins"?: boolean } } = {}) => sdk.call("core.docs.post_public_v1_users", input);
 /** POST /public/v1/workspaces/{workspace_id}/members: Add Member to Workspace [write] */
-export const coreDocsPostPublicV1WorkspacesWorkspaceIdMembers = (input: CallInput & { params?: { "workspace_id": string } } = {}) => sdk.call("core.docs.post_public_v1_workspaces_workspace_id_members", input);
+export const coreDocsPostPublicV1WorkspacesWorkspaceIdMembers = (input: CallInput & { params?: { "workspace_id": string; "notify_user"?: boolean; "notify_ws_admins"?: boolean } } = {}) => sdk.call("core.docs.post_public_v1_workspaces_workspace_id_members", input);
 /** DELETE /public/v1/workspaces/{workspace_id}/members/{member_id}: Remove Member from Workspace [write] */
 export const coreDocsDeletePublicV1WorkspacesWorkspaceIdMembersMemberId = (input: CallInput & { params?: { "workspace_id": string; "member_id": string } } = {}) => sdk.call("core.docs.delete_public_v1_workspaces_workspace_id_members_member_id", input);
 /** POST /public/v1/workspaces/{workspace_id}/api-keys: Create API Key [write] */
@@ -199,7 +199,7 @@ export const coreDocsGetPublicV1MembersId = (input: CallInput & { params?: { "id
 /** POST /public/v1/members/{member_id}/token: Create Member Token [write] */
 export const coreDocsPostPublicV1MembersMemberIdToken = (input: CallInput & { params?: { "member_id": string } } = {}) => sdk.call("core.docs.post_public_v1_members_member_id_token", input);
 /** GET /public/v1/contacts: List contacts [read] */
-export const coreDocsGetPublicV1Contacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_contacts", input);
+export const coreDocsGetPublicV1Contacts = (input: CallInput & { params?: { "email"?: string } } = {}) => sdk.call("core.docs.get_public_v1_contacts", input);
 /** POST /public/v1/contacts: Create contact [write] */
 export const coreDocsPostPublicV1Contacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_public_v1_contacts", input);
 /** GET /public/v1/contacts/{id}: Contact Details [read] */
@@ -209,7 +209,7 @@ export const coreDocsDeletePublicV1ContactsId = (input: CallInput & { params?: {
 /** PATCH /public/v1/contacts/{id}: Update Contact [write] */
 export const coreDocsPatchPublicV1ContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.patch_public_v1_contacts_id", input);
 /** GET /public/v1/sms-opt-outs: Recent SMS Opt-out [read] */
-export const coreDocsGetPublicV1SmsOptOuts = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_sms_opt_outs", input);
+export const coreDocsGetPublicV1SmsOptOuts = (input: CallInput & { params?: { "timestamp_from"?: string; "timestamp_to"?: string } } = {}) => sdk.call("core.docs.get_public_v1_sms_opt_outs", input);
 /** GET /public/beta/privacy-settings/workspaces/{workspace_id}: [Beta] Workspace Privacy Settings Details [read] */
 export const coreDocsGetPublicBetaPrivacySettingsWorkspacesWorkspaceId = (input: CallInput & { params?: { "workspace_id": string } } = {}) => sdk.call("core.docs.get_public_beta_privacy_settings_workspaces_workspace_id", input);
 /** PATCH /public/beta/privacy-settings/workspaces/{workspace_id}: [Beta] Update Workspace Privacy Settings [write] */
@@ -231,15 +231,15 @@ export const coreDocsDeletePublicV1WebhookSubscriptionsId = (input: CallInput & 
 /** PATCH /public/v1/webhook-subscriptions/{id}/shared-key: Update Webhook Subscription Shared Key [write] */
 export const coreDocsPatchPublicV1WebhookSubscriptionsIdSharedKey = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.patch_public_v1_webhook_subscriptions_id_shared_key", input);
 /** GET /public/v1/webhook-events: List Webhook Events [read] */
-export const coreDocsGetPublicV1WebhookEvents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_webhook_events", input);
+export const coreDocsGetPublicV1WebhookEvents = (input: CallInput & { params?: { "count": number; "page": number; "since"?: string; "to"?: string; "type"?: unknown[]; "http_status_code"?: unknown[]; "error"?: unknown[] } } = {}) => sdk.call("core.docs.get_public_v1_webhook_events", input);
 /** GET /public/v1/webhook-events/{id}: Webhook Event Details [read] */
 export const coreDocsGetPublicV1WebhookEventsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_webhook_events_id", input);
 /** GET /public/v1/logs: List API Log [read] */
-export const coreDocsGetPublicV1Logs = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v1_logs", input);
+export const coreDocsGetPublicV1Logs = (input: CallInput & { params?: { "since"?: string; "to"?: string; "count"?: number; "page"?: number; "statuses"?: unknown[]; "methods"?: unknown[]; "search"?: string; "environment_type"?: string } } = {}) => sdk.call("core.docs.get_public_v1_logs", input);
 /** GET /public/v1/logs/{id}: API Log Details [read] */
 export const coreDocsGetPublicV1LogsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v1_logs_id", input);
 /** GET /public/v2/logs: List API Log [read] */
-export const coreDocsGetPublicV2Logs = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_public_v2_logs", input);
+export const coreDocsGetPublicV2Logs = (input: CallInput & { params?: { "since"?: string; "to"?: string; "count"?: number; "page"?: number; "statuses"?: unknown[]; "methods"?: unknown[]; "search"?: string; "environment_type"?: string } } = {}) => sdk.call("core.docs.get_public_v2_logs", input);
 /** GET /public/v2/logs/{id}: API Log Details [read] */
 export const coreDocsGetPublicV2LogsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v2_logs_id", input);
 /** GET /public/v1/documents/{document_id}/sections/uploads/{upload_id}: From PandaDoc/pandadoc-api-node-client; not in the published spec; inputs not mapped yet [read] */

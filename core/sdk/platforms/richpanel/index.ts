@@ -4,12 +4,12 @@ import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("richpanel");
 /** POST /tickets: The Conversation Object [write] */
 export const docsPostTickets = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_tickets", input);
-/** PUT /tickets/{id}: The Conversation Object [write] */
+/** PUT /tickets/{id}: Update a Conversation [write] */
 export const docsPutTicketsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_tickets_id", input);
 /** GET /tickets/{id}: The Conversation Object [read] */
 export const docsGetTicketsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_tickets_id", input);
-/** GET /tickets/number/{conversationNo}: The Conversation Object [read] */
-export const docsGetTicketsNumberConversationNo = (input: CallInput & { params?: { "conversationNo": string } } = {}) => sdk.call("docs.get_tickets_number_conversationNo", input);
+/** GET /tickets/number/{conversationNo}: Retrieve a Conversation with conversation number [read] */
+export const docsGetTicketsNumberConversationNo = (input: CallInput & { params?: { "conversationNo": number; "show_visitor_profile"?: boolean; "include_private_notes"?: boolean } } = {}) => sdk.call("docs.get_tickets_number_conversationNo", input);
 /** GET /tickets/customer: The Conversation Object [read] */
 export const docsGetTicketsCustomer = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_tickets_customer", input);
 /** PUT /tickets/{id}/add-tags: The Conversation Object [write] */
@@ -46,7 +46,7 @@ export const docsPutTicketsIdPrivateNoteNoteId = (input: CallInput & { params?: 
 export const docsDeleteTicketsIdPrivateNoteNoteId = (input: CallInput & { params?: { "id": string; "noteId": string } } = {}) => sdk.call("docs.delete_tickets_id_private_note_noteId", input);
 /** POST /customer: The Customer Object [write] */
 export const docsPostCustomer = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_customer", input);
-/** GET /customers/{type}/{id}: The Customer Object [read] */
+/** GET /customers/{type}/{id}: Retrieve a Customer with Email/Phone [read] */
 export const docsGetCustomersTypeId = (input: CallInput & { params?: { "type": string; "id": string } } = {}) => sdk.call("docs.get_customers_type_id", input);
 /** GET /customers/email/: The Customer Object [read] */
 export const docsGetCustomersEmail = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_customers_email", input);
@@ -56,36 +56,36 @@ export const docsGetCustomersPhone = (input: CallInput & { params?: {  } } = {})
 export const docsGetCustomer = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_customer", input);
 /** POST /customers: Create/UpdateCustomer [write] */
 export const docsPostCustomers = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_customers", input);
-/** POST /order/{appclient_id}: The Order Object [write] */
+/** POST /order/{appclient_id}: Create/Update orders [write] */
 export const docsPostOrderAppclientId = (input: CallInput & { params?: { "appclient_id": string } } = {}) => sdk.call("docs.post_order_appclient_id", input);
 /** GET /order/{appclient_id}/{order_id}: The Order Object [read] */
 export const docsGetOrderAppclientIdOrderId = (input: CallInput & { params?: { "appclient_id": string; "order_id": string } } = {}) => sdk.call("docs.get_order_appclient_id_order_id", input);
 /** GET /order/{conversationId}: The Order Object [read] */
 export const docsGetOrderConversationId = (input: CallInput & { params?: { "conversationId": string } } = {}) => sdk.call("docs.get_order_conversationId", input);
-/** POST /subscription/{appclient_id}: The Subscription Object [write] */
+/** POST /subscription/{appclient_id}: Create/Update Subscriptions [write] */
 export const docsPostSubscriptionAppclientId = (input: CallInput & { params?: { "appclient_id": string } } = {}) => sdk.call("docs.post_subscription_appclient_id", input);
 /** GET /users: The User object [read] */
 export const docsGetUsers = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_users", input);
 /** GET /user/{id}: The User object [read] */
 export const docsGetUserId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_user_id", input);
-/** GET /teams: The User object [read] */
+/** GET /teams: List Teams [read] */
 export const docsGetTeams = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_teams", input);
-/** POST /tasks: The Task Object [write] */
+/** POST /tasks: Create a Task [write] */
 export const docsPostTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_tasks", input);
-/** GET /tasks: The Task Object [read] */
-export const docsGetTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_tasks", input);
-/** GET /tasks/{taskId}: The Task Object [read] */
+/** GET /tasks: List Tasks [read] */
+export const docsGetTasks = (input: CallInput & { params?: { "status"?: string; "priority"?: string; "assignee"?: string; "created_by"?: string; "conversation_id"?: string; "search"?: string; "overdue"?: boolean; "due_date_from"?: string; "due_date_to"?: string; "page"?: number; "limit"?: number; "sort_by"?: string; "sort_order"?: string } } = {}) => sdk.call("docs.get_tasks", input);
+/** GET /tasks/{taskId}: Retrieve a Task [read] */
 export const docsGetTasksTaskId = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.get_tasks_taskId", input);
-/** PATCH /tasks/{taskId}: The Task Object [write] */
+/** PATCH /tasks/{taskId}: Update a Task [write] */
 export const docsPatchTasksTaskId = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.patch_tasks_taskId", input);
-/** DELETE /tasks/{taskId}: The Task Object [write] */
+/** DELETE /tasks/{taskId}: Delete a Task [write] */
 export const docsDeleteTasksTaskId = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.delete_tasks_taskId", input);
-/** GET /tasks/{taskId}/comments: The Task Object [read] */
-export const docsGetTasksTaskIdComments = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.get_tasks_taskId_comments", input);
-/** POST /tasks/{taskId}/comments: The Task Object [write] */
+/** GET /tasks/{taskId}/comments: List Task Comments [read] */
+export const docsGetTasksTaskIdComments = (input: CallInput & { params?: { "taskId": string; "page"?: number; "limit"?: number } } = {}) => sdk.call("docs.get_tasks_taskId_comments", input);
+/** POST /tasks/{taskId}/comments: Add Task Comment [write] */
 export const docsPostTasksTaskIdComments = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.post_tasks_taskId_comments", input);
-/** GET /tickets/{ticketId}/tasks: The Task Object [read] */
-export const docsGetTicketsTicketIdTasks = (input: CallInput & { params?: { "ticketId": string } } = {}) => sdk.call("docs.get_tickets_ticketId_tasks", input);
+/** GET /tickets/{ticketId}/tasks: List Ticket Tasks [read] */
+export const docsGetTicketsTicketIdTasks = (input: CallInput & { params?: { "ticketId": string; "assignee"?: string; "page"?: number; "limit"?: number; "sort_by"?: string; "sort_order"?: string } } = {}) => sdk.call("docs.get_tickets_ticketId_tasks", input);
 /** POST /tags: The Tag Object [write] */
 export const docsPostTags = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_tags", input);
 /** GET /tags: The Tag Object [read] */
@@ -95,7 +95,7 @@ export const docsGetChannels = (input: CallInput & { params?: {  } } = {}) => sd
 /** GET /channel/{id}: The Channel Object [read] */
 export const docsGetChannelId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.get_channel_id", input);
 /** GET /file/download: Download file [read] */
-export const docsGetFileDownload = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_file_download", input);
+export const docsGetFileDownload = (input: CallInput & { params?: { "conversationNo"?: string; "conversationId"?: string } } = {}) => sdk.call("docs.get_file_download", input);
 /** POST /reports/query: The Reports Object [write] */
 export const docsPostReportsQuery = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_reports_query", input);
 /** GET /reports/metrics: The Reports Object [read] */
