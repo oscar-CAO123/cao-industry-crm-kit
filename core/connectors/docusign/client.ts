@@ -31,25 +31,31 @@ export const spec: AppSpec = {
   readPosts: ["account.docusign.com/oauth/token", "account-d.docusign.com/oauth/token"],
 };
 
-let cached: { token: string; until: number; base: string } | null = null;
+// One token per scope set: eSignature needs signature impersonation; Rooms, Admin, Click, Web Forms and the other API
+// families need their own scopes as well (developers.docusign.com/platform/auth/reference/scopes, read 8 Nov 2026).
+const cache = new Map<string, { token: string; until: number; base: string }>();
+const BASE_SCOPES = ["signature", "impersonation"];
 
-async function login(): Promise<{ token: string; base: string }> {
+async function login(extraScopes: string[] = []): Promise<{ token: string; base: string }> {
+  const scope = [...new Set([...BASE_SCOPES, ...extraScopes.filter((s) => /^[a-z0-9_.]+$/i.test(s))])].sort().join(" ");
+  const cached = cache.get(scope);
   if (cached && cached.until > Date.now() + 60_000) return cached;
   const now = Math.floor(Date.now() / 1000);
-  const assertion = signJwt({ iss: secret("DOCUSIGN_INTEGRATION_KEY"), sub: secret("DOCUSIGN_USER_ID"), aud: authHost(), iat: now, exp: now + 3600, scope: "signature impersonation" }, pem(secret("DOCUSIGN_PRIVATE_KEY")));
+  const assertion = signJwt({ iss: secret("DOCUSIGN_INTEGRATION_KEY"), sub: secret("DOCUSIGN_USER_ID"), aud: authHost(), iat: now, exp: now + 3600, scope }, pem(secret("DOCUSIGN_PRIVATE_KEY")));
   const t = await call<any>(spec, { method: "POST", url: `https://${authHost()}/oauth/token`, form: { grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion }, retries: 1 });
   const token = t.data?.access_token;
   if (!token) throw new Error("DocuSign login failed. The user must grant consent to the integration key once.");
   const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo`, headers: { Authorization: `Bearer ${token}` } });
   const acct = (info.data?.accounts ?? []).find((a: any) => a.account_id === secret("DOCUSIGN_ACCOUNT_ID"));
   if (!acct?.base_uri) throw new Error("DocuSign account not found for this user");
-  cached = { token, base: `${acct.base_uri}/restapi/v2.1/accounts/${secret("DOCUSIGN_ACCOUNT_ID")}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
-  return cached;
+  const fresh = { token, base: `${acct.base_uri}/restapi/v2.1/accounts/${secret("DOCUSIGN_ACCOUNT_ID")}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
+  cache.set(scope, fresh);
+  return fresh;
 }
-export function clearTokenCache(): void { cached = null; }
+export function clearTokenCache(): void { cache.clear(); }
 
 /** The signed-in token and account base URL, for the agent SDK (core/sdk/call.ts). */
-export async function session(): Promise<{ token: string; base: string }> { return login(); }
+export async function session(scopes: string[] = []): Promise<{ token: string; base: string }> { return login(scopes); }
 
 export interface Recipient { name: string; email: string; status: string; signedDateTime: string | null; routingOrder: string | null }
 export interface Envelope { envelopeId: string; status: string; emailSubject?: string; sentDateTime?: string; completedDateTime?: string; senderEmail?: string; signerEmails: string[]; recipients: Recipient[]; customFields: Record<string, string>; raw: unknown }

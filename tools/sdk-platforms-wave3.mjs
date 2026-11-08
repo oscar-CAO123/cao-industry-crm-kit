@@ -23,8 +23,10 @@ export const W3 = {
   "bookeo": d("Bookeo", H("X-Bookeo-apiKey", "BOOKEO_API_KEY", "", { extraHeaders: { "X-Bookeo-secretKey": "BOOKEO_SECRET_KEY" } })),
   "booking-com": d("Booking.com", B("BOOKING_ACCESS_TOKEN", { note: TOKEN })),
   "brighthr": d("BrightHR", B("BRIGHTHR_ACCESS_TOKEN", { note: TOKEN })),
-  "bullhorn": d("Bullhorn", { type: "unsupported", note: "Bullhorn signs in through a login call that returns a per-session REST URL and BhRestToken; not wired yet" },
-    { keys: ["BULLHORN_CLIENT_ID", "BULLHORN_CLIENT_SECRET", "BULLHORN_USERNAME", "BULLHORN_PASSWORD"], server: "https://rest.bullhornstaffing.com/rest-services", forceServer: true }),
+  // Data centre, refresh token and session login: core/connectors/bullhorn/client.ts. No password is held by the kit.
+  "bullhorn": d("Bullhorn", { type: "custom", provider: "bullhorn" },
+    { keys: ["BULLHORN_CLIENT_ID", "BULLHORN_CLIENT_SECRET", "BULLHORN_USERNAME", "BULLHORN_REFRESH_TOKEN"], server: "https://rest.bullhornstaffing.com/rest-services", forceServer: true,
+      hostPatterns: ["rest[a-z0-9-]*\\.bullhornstaffing\\.com"] }),
   "calendesk": d("Calendesk", H("X-Api-Key", "CALENDESK_API_KEY", "", { extraHeaders: { "X-Tenant": "CALENDESK_TENANT" } })),
   "chidesk": d("ChiDesk", H("ChiDeskApiKey", "CHIDESK_API_KEY"), { serverVars: { account: { env: "CHIDESK_ACCOUNT", pattern: SUB, example: "acme" } } }),
   "cin7": d("Cin7 Omni", BA("CIN7_USERNAME", "CIN7_API_KEY"), { server: "https://api.cin7.com/api" }),
@@ -36,7 +38,11 @@ export const W3 = {
   "cloudbeds": d("Cloudbeds", H("x-api-key", "CLOUDBEDS_API_KEY"), { server: "https://api.cloudbeds.com",
     serverVars: { environment: { env: "CLOUDBEDS_ENVIRONMENT", default: "cloudbeds", pattern: "cloudbeds", example: "cloudbeds" },
       ota: { env: "CLOUDBEDS_OTA", pattern: SUB, envOnly: true, example: "acme" } },
-    opRules: [{ server: "https://api.myallocator.com/callback", unsupported: "Cloudbeds OTA callback: the booking channel implements it for Cloudbeds to call; a client never calls it" },
+    // Group Profile: Cloudbeds' own reference (developers.cloudbeds.com/reference/listallprofiles, read 8 Nov 2026 through
+    // model_guard, watcher clean) gives https://api.cloudbeds.com; the GitHub spec still says localhost:8700.
+    rewrite: { "http://localhost:8700": "https://api.cloudbeds.com" },
+    opRules: [{ server: "/guest-profiles/v1", unsupported: "Cloudbeds' own reference gives only a relative server (/guest-profiles/v1) and no host; not wired until Cloudbeds names it" },
+      { server: "https://api.myallocator.com/callback", unsupported: "Cloudbeds OTA callback: the booking channel implements it for Cloudbeds to call; a client never calls it" },
       { server: "https://api.your-ota.com", unsupported: "Cloudbeds build-to-us API: a booking channel implements these for Cloudbeds to call; a client never calls them" }] }),
   "cloudtalk": d("CloudTalk", BA("CLOUDTALK_ACCESS_KEY_ID", "CLOUDTALK_ACCESS_KEY_SECRET")),
   "confluence": d("Confluence", BA("CONFLUENCE_EMAIL", "CONFLUENCE_API_TOKEN"), {
@@ -107,7 +113,8 @@ export const W3 = {
   "twilio": d("Twilio (and SendGrid)", BA("TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"),
     { opRules: [{ server: "https://api.sendgrid.com", auth: { type: "bearer", env: "SENDGRID_API_KEY" } }], keys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "SENDGRID_API_KEY (for SendGrid)"] }),
   "typeform": d("Typeform", B("TYPEFORM_TOKEN")),
-  "unleashed": d("Unleashed", { type: "unsupported", note: "Unleashed signs each request with HMAC-SHA256; the signer is not built yet" }, { keys: ["UNLEASHED_API_ID", "UNLEASHED_API_KEY"] }),
+  // Signs each request (core/sdk/call.ts signRequest). client-type is "<account_name>/<app_name>", lowercase, no spaces.
+  "unleashed": d("Unleashed", { type: "custom", provider: "unleashed" }, { keys: ["UNLEASHED_API_ID", "UNLEASHED_API_KEY", "UNLEASHED_CLIENT_TYPE"] }),
   "vaultre": d("VaultRE", B("VAULTRE_ACCESS_TOKEN", { extraHeaders: { "X-Api-Key": "VAULTRE_API_KEY" } })),
   "webflow": d("Webflow", B("WEBFLOW_API_TOKEN")),
   "woocommerce": d("WooCommerce", BA("WOOCOMMERCE_CONSUMER_KEY", "WOOCOMMERCE_CONSUMER_SECRET"),

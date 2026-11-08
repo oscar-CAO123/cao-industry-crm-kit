@@ -50,6 +50,7 @@
  "hostFromEnv": false,
  "hostPatterns": [],
  "pinned": {},
+ "formArrays": "repeat",
  "serverVars": {},
  "auth": {
   "type": "basic",
@@ -494,7 +495,7 @@
  "gaps": [],
  "counts": {
   "operations": 1985,
-  "read": 837,
-  "write": 1148
+  "read": 936,
+  "write": 1049
  }
 }

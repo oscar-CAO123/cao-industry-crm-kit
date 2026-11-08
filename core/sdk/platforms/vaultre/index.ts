@@ -32,7 +32,7 @@ export const getResponseCodes = (input: CallInput & { params?: {  } } = {}) => s
 export const getPropertyClasses = (input: CallInput & { params?: { "page"?: number; "pagesize"?: number; "sort"?: string; "sortOrder"?: string } } = {}) => sdk.call("getPropertyClasses", input);
 /** GET /types/propertyType: Retrieve a list of property types [read] */
 export const getPropertyTypes = (input: CallInput & { params?: { "page"?: number; "pagesize"?: number; "sort"?: string; "sortOrder"?: string } } = {}) => sdk.call("getPropertyTypes", input);
-/** GET /types/customUnsubscribe: Retrieve a list of custom unsubscribe types [write] */
+/** GET /types/customUnsubscribe: Retrieve a list of custom unsubscribe types [read] */
 export const getCustomUnsubscribeTypes = (input: CallInput & { params?: { "page"?: number; "pagesize"?: number; "sort"?: string; "sortOrder"?: string } } = {}) => sdk.call("getCustomUnsubscribeTypes", input);
 /** GET /types/contactInterest: Retrieve a list of contact interest types [read] */
 export const getContactInterestTypes = (input: CallInput & { params?: { "page"?: number; "pagesize"?: number; "sort"?: string; "sortOrder"?: string } } = {}) => sdk.call("getContactInterestTypes", input);
@@ -226,7 +226,7 @@ export const getAccountPortals = (input: CallInput & { params?: { "page"?: numbe
 export const getTrustAccounts = (input: CallInput & { params?: { "page"?: number; "pagesize"?: number } } = {}) => sdk.call("getTrustAccounts", input);
 /** POST /verifyPassword: Verify the authenticated user's password [write] */
 export const verifyUserPassword = (input: CallInput & { params?: {  } } = {}) => sdk.call("verifyUserPassword", input);
-/** GET /sso: Generate a single-sign-on URL [read] */
+/** GET /sso: Generate a single-sign-on URL [write] */
 export const getSSOUrl = (input: CallInput & { params?: {  } } = {}) => sdk.call("getSSOUrl", input);
 /** GET /properties: Retrieve a list of properties [read] */
 export const getProperties = (input: CallInput & { params?: { "suburbs"?: unknown[]; "accessBy"?: unknown[]; "precincts"?: unknown[]; "customRegions"?: unknown[]; "modifiedSince"?: string; "modifiedBefore"?: string; "page"?: number; "pagesize"?: number; "sort"?: string; "sortOrder"?: string } } = {}) => sdk.call("getProperties", input);

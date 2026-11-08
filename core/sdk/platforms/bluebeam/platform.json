@@ -29,7 +29,9 @@
    "official": "vendor-domain: developers.bluebeam.com"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "Australian Studio host not confirmed: developers.bluebeam.com renders in the browser and gives no readable host to a plain fetch (8 Nov 2026); only the US host api.bluebeam.com is mapped"
+ ],
  "counts": {
   "operations": 133,
   "read": 36,

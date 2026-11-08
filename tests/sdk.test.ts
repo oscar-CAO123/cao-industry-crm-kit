@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { listPlatforms, load, search, describe, plan, callOperation, checkDocument, type Op } from "../core/sdk/call.ts";
+import { encodeForm } from "../core/lib/form.ts";
 
 type Hit = { url: string; method: string; headers: Record<string, string>; body?: string };
 let hits: Hit[] = [];
@@ -20,6 +21,8 @@ function fakeNetwork() {
       let json: unknown = { ok: true };
       if (/token$/.test(u.pathname)) json = { access_token: "tok-test", refresh_token: "r2", expires_in: 3600 };
       if (u.pathname.endsWith("/userinfo")) json = { accounts: [{ account_id: "acct-1", base_uri: "https://au.docusign.net" }] };
+      if (u.pathname === "/rest-services/loginInfo") json = { oauthUrl: "https://auth-apac.bullhornstaffing.com/oauth", restUrl: "https://rest-apac.bullhornstaffing.com/rest-services" };
+      if (u.hostname.endsWith("bullhornstaffing.com") && u.pathname === "/rest-services/login") json = { BhRestToken: "bh-session-1", restUrl: "https://rest42.bullhornstaffing.com/rest-services/corp9/" };
       return new Response(JSON.stringify(json), { status: 200, headers: { "content-type": "application/json" } });
     }) as any,
     sleep: async () => {},
@@ -38,7 +41,7 @@ const ENV: Record<string, string> = {
   GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
-  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk",
+  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit", BULLHORN_CLIENT_ID: "bh-id", BULLHORN_CLIENT_SECRET: "bh-secret", BULLHORN_USERNAME: "api.user", BULLHORN_REFRESH_TOKEN: "bh-r1", AROFLO_SECRET_KEY: "asecret", AROFLO_UENCODED: "u=1", AROFLO_PENCODED: "p&2", AROFLO_ORGENCODED: "o 3",
 };
 
 // Every key and host variable a platform declares gets a fake value, so new platforms need no hand-written entry here.
@@ -165,8 +168,9 @@ test("server variables must match their pattern, and site hosts come only from t
 });
 
 test("platforms with unbuilt sign-in refuse to call", async () => {
-  const a = firstOp("aroflo", (x) => x.kind === "read");
-  await assert.rejects(() => callOperation("aroflo", a.id), /not wired yet/);
+  // AroFlo, Unleashed and Bullhorn are built now (8 Nov); SiteMinder's per-product sign-in is not yet.
+  const a = firstOp("siteminder", (x) => x.kind === "read");
+  await assert.rejects(() => callOperation("siteminder", a.id), /not wired yet/);
   assert.equal(hits.length, 0);
 });
 
@@ -196,7 +200,9 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
         await callOperation(id, o.id, input);
         if (o.kind === "write") { problems.push(`${id} ${o.id}: write was not blocked`); continue; }
         const AUTH_HOSTS = new Set(["identity.xero.com", "zoom.us", "oauth2.googleapis.com", "account.docusign.com", "account-d.docusign.com"]);
-        const api = hits.filter((h) => !AUTH_HOSTS.has(new URL(h.url).hostname));
+        // Bullhorn's sign-in runs on its data-centre hosts: loginInfo, the OAuth token and the session login.
+        const AUTH_PATH = /^\/rest-services\/(loginInfo|login)$|^\/oauth\/token$/;
+        const api = hits.filter((h) => { const u = new URL(h.url); return !AUTH_HOSTS.has(u.hostname) && !(u.hostname.endsWith(".bullhornstaffing.com") && AUTH_PATH.test(u.pathname)); });
         if (api.length !== 1) { problems.push(`${id} ${o.id}: ${api.length} api calls`); continue; }
         const u = new URL(api[0].url);
         if (!hostOk(u.hostname)) problems.push(`${id} ${o.id}: host ${u.hostname}`);
@@ -292,7 +298,9 @@ test("review 3: endpoints that return secrets or change state are gated even whe
     ["docusign", (o) => o.id === "esignature.ConnectHMAC_GetConnectSecret"],
     ["google-workspace", (o) => o.id === "admin.directory.verificationCodes.list"],
     ["microsoft-365", (o) => /GetDeviceLocalCredentials/.test(o.id)],
-    ["hubspot", (o) => /unsubscribe-all/.test(o.path) && o.method === "GET"],
+    // A GET whose own name and summary are an action (Zenoti cancels a payment on a GET). HubSpot's GET
+    // unsubscribe-all used to be here, but HubSpot's own spec calls it a status read; its POST unsubscribes.
+    ["zenoti", (o) => /\/Cancel$/.test(o.path) && o.method === "GET"],
     ["deputy", (o) => /AuthorizationCode/.test(o.id)],
     ["deputy", (o) => /PublishShiftV2Controller_resume/.test(o.id)],
   ];
@@ -305,6 +313,49 @@ test("review 3: endpoints that return secrets or change state are gated even whe
   assert.equal(hits.length, 0);
 });
 
+test("a GET is a read unless its own name or the vendor's summary is an action: words naming the resource do not gate it (8 Nov fix)", () => {
+  const find = (pid: string, f: (o: Op) => boolean) => { const o = [...load(pid).ops.values()].find(f); assert.ok(o, `${pid}: case not found`); return o!; };
+  // Reads the old any-word rule mislabelled as writes; each vendor's spec calls them retrievals.
+  for (const [pid, f] of [
+    ["hubspot", (o: Op) => o.method === "GET" && /\/v4\/statuses\/\{subscriberIdString\}\/unsubscribe-all$/.test(o.path)],
+    ["microsoft-365", (o: Op) => o.method === "GET" && o.path === "/solutions/backupRestore/sharePointRestoreSessions"],
+    ["meta-ads", (o: Op) => o.id === "AdSet.get.ads"],
+    ["klaviyo", (o: Op) => o.id === "get_bulk_update_categories_jobs"],
+  ] as [string, (o: Op) => boolean][]) assert.equal(find(pid, f).kind, "read", pid);
+  // Every GET still labelled a write says why.
+  for (const pid of listPlatforms()) for (const o of load(pid).ops.values()) {
+    if (o.method === "GET" && o.kind === "write") assert.ok(o.override, `${pid} ${o.id}: GET labelled write with no reason`);
+  }
+});
+
+test("bodies go in the encoding the vendor's spec requires: form for Stripe and Twilio (Twilio repeats keys for lists), multipart refused clearly", async () => {
+  // The encoder matches the vendors' own SDKs.
+  assert.deepEqual(encodeForm({ a: 1, b: { c: true }, l: ["x", "y"], n: null, u: undefined }), [["a", "1"], ["b[c]", "true"], ["l[0]", "x"], ["l[1]", "y"], ["n", ""]]);
+  assert.deepEqual(encodeForm({ l: ["x", "y"] }, "repeat"), [["l", "x"], ["l", "y"]]);
+  assert.equal(load("twilio").platform.formArrays, "repeat");
+  // Every endpoint whose vendor spec accepts only form encoding is marked so (Stripe v1 has no JSON bodies).
+  for (const o of load("stripe").ops.values()) {
+    if (o.method === "GET" || !o.body) continue;
+    // v1 writes are form only; v2 writes are JSON; the v1 file uploads are multipart.
+    if (o.path.startsWith("/v1/")) assert.ok(o.bodyType === "form" || o.bodyType === "multipart", `stripe ${o.id} ${o.path}: ${o.bodyType}`);
+    if (o.path.startsWith("/v2/")) assert.equal(o.bodyType, undefined, `stripe ${o.id}`);
+  }
+  process.env.KIT_ALLOW_WRITES = "1";
+  const msg = describe("twilio", "api_v2010.CreateMessage");
+  assert.equal(msg.bodyType, "form");
+  const params = Object.fromEntries(msg.params.filter((p) => p.required && p.in === "path").map((p) => [p.name, process.env.TWILIO_ACCOUNT_SID ?? "AC00000000000000000000000000000000"]));
+  await callOperation("twilio", msg.id, { params, body: { To: "+61400000000", Body: "hi", StatusCallbackEvent: ["initiated", "ringing"] } });
+  const h = hits[hits.length - 1];
+  assert.match(String(Object.entries(h.headers).find(([k]) => k.toLowerCase() === "content-type")?.[1]), /x-www-form-urlencoded/);
+  assert.deepEqual([...new URLSearchParams(String(h.body))].filter(([k]) => k === "StatusCallbackEvent"), [["StatusCallbackEvent", "initiated"], ["StatusCallbackEvent", "ringing"]]);
+  // An upload-only endpoint is refused with a clear reason, never sent as JSON.
+  const up = [...load("zoom").ops.values()].find((o) => o.bodyType === "multipart")!;
+  const before = hits.length;
+  await assert.rejects(() => callOperation("zoom", up.id, { params: Object.fromEntries(up.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /multipart upload/);
+  assert.equal(hits.length, before);
+  delete process.env.KIT_ALLOW_WRITES;
+});
+
 test("review 3: Gmail userId and DocuSign accountId are pinned to the client's own", async () => {
   const g = [...load("google-workspace").ops.values()].find((o) => o.id === "gmail.users.messages.list")!;
   await assert.rejects(() => callOperation("google-workspace", g.id, { params: { userId: "someone-else" } }), /must be the client's own/);
@@ -315,6 +366,141 @@ test("review 3: Gmail userId and DocuSign accountId are pinned to the client's o
   hits = [];
   await callOperation("docusign", d.id);
   assert.ok(hits.some((h) => h.url.includes("/accounts/acct-1")));
+});
+
+test("DocuSign API families reach their production hosts, and the sign-in asks for each endpoint's scopes (8 Nov)", async () => {
+  const { clearTokenCache } = await import("../core/connectors/docusign/client.ts");
+  clearTokenCache();
+  const scopesAsked = () => hits.filter((h) => h.url.endsWith("/oauth/token")).map((h) => {
+    const jwt = new URLSearchParams(String(h.body)).get("assertion") ?? "";
+    return JSON.parse(Buffer.from(jwt.split(".")[1], "base64url").toString()).scope as string;
+  });
+  hits = [];
+  await callOperation("docusign", "rooms.Accounts_GetAccountInformation");
+  assert.ok(hits.some((h) => h.url.startsWith("https://rooms.docusign.com/restapi/v2/accounts/acct-1")), "Rooms goes to its production host");
+  assert.deepEqual(scopesAsked().at(-1)!.split(" ").sort(), ["dtr.company.read", "dtr.documents.read", "dtr.profile.read", "dtr.rooms.read", "impersonation", "signature"]);
+  hits = [];
+  await callOperation("docusign", "click.ServiceInformation_GetServiceInformation");
+  assert.ok(hits.some((h) => h.url === "https://au.docusign.net/clickapi/service_information"), "Click runs on the account's own server");
+  assert.ok(scopesAsked().at(-1)!.split(" ").includes("click.manage"));
+  // No DocuSign family is left refused or without a production host.
+  for (const o of load("docusign").ops.values()) {
+    assert.equal(o.authUnsupported, undefined, o.id);
+    assert.doesNotMatch(o.server, /demo|api-d\.|apps-d\./, o.id);
+  }
+});
+
+test("Cloudbeds Group Profile reaches api.cloudbeds.com; Guest Profiles stays refused until Cloudbeds names its host (8 Nov)", async () => {
+  const g = [...load("cloudbeds").ops.values()].find((o) => o.method === "GET" && o.path === "/group-profile/v1/profiles")!;
+  hits = [];
+  await callOperation("cloudbeds", g.id, { params: Object.fromEntries(g.params.filter((p) => p.required).map((p) => [p.name, "org-1"])) });
+  assert.ok(hits.some((h) => h.url.startsWith("https://api.cloudbeds.com/group-profile/v1/profiles")));
+  const guest = [...load("cloudbeds").ops.values()].find((o) => o.server === "/guest-profiles/v1")!;
+  await assert.rejects(() => callOperation("cloudbeds", guest.id), /relative server/);
+  assert.ok(load("bluebeam").platform.gaps.some((x) => /Australian Studio host/.test(x)));
+});
+
+test("Unleashed signs each request: base64 HMAC-SHA256 of the exact query string with the API key (8 Nov)", async () => {
+  const { createHmac } = await import("node:crypto");
+  const ops = [...load("unleashed").ops.values()];
+  // Unleashed's endpoints come from its docs pages, so their inputs are unmapped: a named input on a GET goes to the query.
+  const withQuery = ops.find((o) => o.method === "GET" && o.kind === "read" && o.paramsUnmapped && !o.params.some((p) => p.required))!;
+  for (const params of [{}, { customerCode: "ACME 1" }]) {
+    hits = [];
+    await callOperation("unleashed", withQuery.id, { params });
+    const h = hits[0];
+    const query = new URL(h.url).search.replace(/^\?/, "");
+    assert.equal(h.headers["api-auth-signature"], createHmac("sha256", "ukey-1").update(query).digest("base64"), "signature over the exact query sent");
+    assert.equal(h.headers["api-auth-id"], "uid-1");
+    assert.equal(h.headers["client-type"], "acme/kit");
+    assert.equal(h.headers["Content-Type"], "application/json");
+    assert.equal(h.headers.Authorization, undefined, "Unleashed takes no Authorization header");
+  }
+  assert.equal(load("unleashed").platform.auth.type, "custom");
+});
+
+test("AroFlo: each example is a zoned call, signed with hex HMAC-SHA512 over AroFlo's payload, exact strings (8 Nov)", async () => {
+  const { createHmac } = await import("node:crypto");
+  const ops = [...load("aroflo").ops.values()];
+  assert.equal(ops.filter((o) => o.path !== "/" || !(o.fixedQuery || o.fixedForm)).length, 0, "every example has its zone");
+  const check = (h: any, method: string, varString: string) => {
+    const auth = h.headers.Authorization;
+    assert.equal(auth, "uencoded=u%3D1&pencoded=p%262&orgEncoded=o%203");
+    const payload = [method, "", "text/json", auth, h.headers.afdatetimeutc, varString].join("+");
+    assert.equal(h.headers.Authentication, `HMAC ${createHmac("sha512", "asecret").update(payload).digest("hex")}`);
+    assert.equal(h.headers.Accept, "text/json");
+  };
+  const get = ops.find((o) => o.method === "GET" && o.fixedQuery?.zone === "tasks")!;
+  hits = [];
+  await callOperation("aroflo", get.id, { params: { where: ["and|status|=|not started", "and|priority|=|high"], page: 1 } });
+  assert.equal(hits[0].url, "https://api.aroflo.com/?zone=tasks&page=1&where=and%7Cstatus%7C%3D%7Cnot%20started&where=and%7Cpriority%7C%3D%7Chigh");
+  check(hits[0], "GET", new URL(hits[0].url).search.slice(1));
+  const post = ops.find((o) => o.method === "POST")!;
+  process.env.KIT_ALLOW_WRITES = "1";
+  hits = [];
+  try { await callOperation("aroflo", post.id, { params: { postxml: "<x a='1'>&</x>" } }); } finally { delete process.env.KIT_ALLOW_WRITES; }
+  assert.equal(hits[0].body, `zone=${encodeURIComponent(post.fixedForm!.zone)}&postxml=${encodeURIComponent("<x a='1'>&</x>")}`);
+  assert.equal(hits[0].headers["Content-Type"], "application/x-www-form-urlencoded");
+  check(hits[0], "POST", String(hits[0].body));
+});
+
+test("Bullhorn: data centre, refresh token in a form body, one session login, calls on the session URL, retry once on 401 (8 Nov)", async () => {
+  const b = await import("../core/connectors/bullhorn/client.ts");
+  b.clearForTests();
+  const op = [...load("bullhorn").ops.values()].find((o) => o.method === "GET" && o.kind === "read" && o.path === "/entitlements")!;
+  hits = [];
+  await callOperation("bullhorn", op.id);
+  await callOperation("bullhorn", op.id);
+  const urls = hits.map((h) => h.url);
+  assert.ok(urls[0].startsWith("https://rest.bullhornstaffing.com/rest-services/loginInfo?username=api.user"));
+  const token = hits.find((h) => h.url === "https://auth-apac.bullhornstaffing.com/oauth/token")!;
+  assert.ok(token, "token exchange on the data centre's OAuth host");
+  assert.match(String(token.body), /grant_type=refresh_token/);
+  assert.match(String(token.body), /client_secret=bh-secret/);
+  assert.ok(!urls.some((u) => u.includes("client_secret") || u.includes("refresh_token")), "secrets never in a URL");
+  assert.equal(urls.filter((u) => u.startsWith("https://rest-apac.bullhornstaffing.com/rest-services/login?")).length, 1, "one login for two calls");
+  const calls = hits.filter((h) => h.url.startsWith("https://rest42.bullhornstaffing.com/rest-services/corp9/entitlements"));
+  assert.equal(calls.length, 2);
+  for (const c of calls) assert.equal(c.headers.BhRestToken, "bh-session-1");
+  assert.ok(!urls.filter((u) => !u.includes("/rest-services/login?")).some((u) => /access_token=/.test(u)), "the access token appears only on the login call");
+  assert.ok(hits.filter((h) => h.url.includes("/rest-services/login?")).every((h) => h.method === "POST"), "login is a POST (Getting Started)");
+  // An expired session answers 401: the kit refreshes, logs in once more and retries the call once.
+  const real = hits;
+  let failed = false;
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const u = new URL(String(url));
+      real.push({ url: String(url), method: init?.method ?? "GET", headers: init?.headers ?? {}, body: init?.body });
+      if (u.pathname.endsWith("/entitlements") && !failed) { failed = true; return new Response("{}", { status: 401 }); }
+      if (u.pathname === "/oauth/token") return Response.json({ access_token: "at-2", refresh_token: "r3" });
+      if (u.pathname === "/rest-services/login") return Response.json({ BhRestToken: "bh-session-2", restUrl: "https://rest42.bullhornstaffing.com/rest-services/corp9/" });
+      return Response.json({ ok: true });
+    }) as any,
+  });
+  hits.length = 0;
+  await callOperation("bullhorn", op.id);
+  const after = hits.filter((h) => h.url.includes("/entitlements"));
+  assert.equal(after.length, 2, "one failed call and one retry");
+  assert.equal(after[1].headers.BhRestToken, "bh-session-2", "the retry uses the new session");
+  assert.equal(hits.filter((h) => h.url.includes("/rest-services/login?")).length, 1, "exactly one new login");
+});
+
+test("security review fixes (8 Nov): action GETs gated, GraphQL queries read, AroFlo body refused, more key names refused, redirect hops checked", async () => {
+  const find = (pid: string, f: (o: Op) => boolean) => [...load(pid).ops.values()].find(f)!;
+  assert.equal(find("calendesk", (o) => o.path === "/newsletter/resend/{email}").kind, "write", "Resend verification email sends mail");
+  assert.equal(find("productive", (o) => o.path === "/api/v2/signups/xero_finalize").kind, "write", "Finalize a signup");
+  assert.equal(find("monday", (o) => o.method === "QUERY" && o.path === "trigger_events").kind, "read", "a GraphQL query cannot change data");
+  assert.equal(find("apollo", (o) => o.method === "GET" && o.path === "/duplicate_contacts/merge_jobs/{id}").kind, "read", "[BETA] View ... is a read");
+  const post = find("aroflo", (o) => o.method === "POST");
+  process.env.KIT_ALLOW_WRITES = "1";
+  try { await assert.rejects(() => callOperation("aroflo", post.id, { params: { postxml: "<x/>" }, body: { zone: "x" } }), /not a body/); }
+  finally { delete process.env.KIT_ALLOW_WRITES; }
+  const { checkUrl, call: gateCall } = await import("../core/lib/http.ts");
+  const spec = { app: "t", hosts: ["api.example.com"] };
+  for (const q of ["signature=a", "sig=a", "auth=a", "authorization=a", "jwt=a", "credential=a"]) assert.throws(() => checkUrl(spec, new URL(`https://api.example.com/x?${q}`)), /key in the query/);
+  setTransport({ sleep: async () => {}, log: () => {}, fetch: (async () => new Response("", { status: 302, headers: { location: "https://api.example.com:8443/file" } })) as any });
+  await assert.rejects(() => gateCall(spec, { url: "https://api.example.com/download", followDownloadRedirects: true, binary: true }), /non-standard port/);
 });
 
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
@@ -446,14 +632,15 @@ test("wave 3: template sign-in, per-endpoint sign-in, refused hosts, regional an
   await callOperation("twilio", sg.id);
   assert.match(hits[0].headers.Authorization, /^Basic /);
   assert.equal(hits[1].headers.Authorization, "Bearer t-sendgrid_api_key");
-  // Mandrill (key in the body) and a vendor's localhost server are refused before any network call
+  // Mandrill (key in the body) and a server with no stated host are refused before any network call.
+  // (Cloudbeds Group Profile's localhost:8700 is now its real host, per Cloudbeds' own reference; Guest Profiles has no host.)
   const mandrill = firstOp("mailchimp", (x) => x.server.startsWith("https://mandrillapp.com"));
-  const local = firstOp("cloudbeds", (x) => x.server.includes("localhost"));
+  const local = firstOp("cloudbeds", (x) => x.server === "/guest-profiles/v1");
   process.env.KIT_ALLOW_WRITES = "1";
   hits = [];
   try {
     await assert.rejects(() => callOperation("mailchimp", mandrill.id, { body: {} }), /not wired yet/);
-    await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /no public production host/);
+    await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /relative server/);
   } finally { delete process.env.KIT_ALLOW_WRITES; }
   assert.equal(hits.length, 0);
   // Clio defaults to its Australian host; Mailchimp goes to the client's data centre
