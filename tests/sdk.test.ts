@@ -385,6 +385,16 @@ test("DocuSign API families reach their production hosts, and the sign-in asks f
   }
 });
 
+test("Cloudbeds Group Profile reaches api.cloudbeds.com; Guest Profiles stays refused until Cloudbeds names its host (8 Nov)", async () => {
+  const g = [...load("cloudbeds").ops.values()].find((o) => o.method === "GET" && o.path === "/group-profile/v1/profiles")!;
+  hits = [];
+  await callOperation("cloudbeds", g.id, { params: Object.fromEntries(g.params.filter((p) => p.required).map((p) => [p.name, "org-1"])) });
+  assert.ok(hits.some((h) => h.url.startsWith("https://api.cloudbeds.com/group-profile/v1/profiles")));
+  const guest = [...load("cloudbeds").ops.values()].find((o) => o.server === "/guest-profiles/v1")!;
+  await assert.rejects(() => callOperation("cloudbeds", guest.id), /relative server/);
+  assert.ok(load("bluebeam").platform.gaps.some((x) => /Australian Studio host/.test(x)));
+});
+
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
   const w = firstOp("wordpress", (x) => x.kind === "read" && !x.params.some((p) => p.required));
   await callOperation("wordpress", w.id);
@@ -514,14 +524,15 @@ test("wave 3: template sign-in, per-endpoint sign-in, refused hosts, regional an
   await callOperation("twilio", sg.id);
   assert.match(hits[0].headers.Authorization, /^Basic /);
   assert.equal(hits[1].headers.Authorization, "Bearer t-sendgrid_api_key");
-  // Mandrill (key in the body) and a vendor's localhost server are refused before any network call
+  // Mandrill (key in the body) and a server with no stated host are refused before any network call.
+  // (Cloudbeds Group Profile's localhost:8700 is now its real host, per Cloudbeds' own reference; Guest Profiles has no host.)
   const mandrill = firstOp("mailchimp", (x) => x.server.startsWith("https://mandrillapp.com"));
-  const local = firstOp("cloudbeds", (x) => x.server.includes("localhost"));
+  const local = firstOp("cloudbeds", (x) => x.server === "/guest-profiles/v1");
   process.env.KIT_ALLOW_WRITES = "1";
   hits = [];
   try {
     await assert.rejects(() => callOperation("mailchimp", mandrill.id, { body: {} }), /not wired yet/);
-    await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /no public production host/);
+    await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /relative server/);
   } finally { delete process.env.KIT_ALLOW_WRITES; }
   assert.equal(hits.length, 0);
   // Clio defaults to its Australian host; Mailchimp goes to the client's data centre

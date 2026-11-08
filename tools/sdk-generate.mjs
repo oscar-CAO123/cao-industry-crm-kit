@@ -50,7 +50,8 @@ const P = {
   "canva": { name: "Canva Connect", auth: { type: "bearer", env: "CANVA_ACCESS_TOKEN" }, keys: ["CANVA_ACCESS_TOKEN"], proof: "docs" },
   "fergus": { name: "Fergus", auth: { type: "bearer", env: "FERGUS_ACCESS_TOKEN" }, keys: ["FERGUS_ACCESS_TOKEN"], proof: "docs" },
   "aroflo": { name: "AroFlo", auth: { type: "unsupported", note: "AroFlo signs each request with HMAC; the signer is not built yet" }, keys: ["AROFLO_ORG_ENCODED", "AROFLO_USER_ENCODED", "AROFLO_PASSWORD_ENCODED", "AROFLO_SECRET"], proof: "docs", server: "https://api.aroflo.com" },
-  "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs" },
+  "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs",
+    gaps: ["Australian Studio host not confirmed: developers.bluebeam.com renders in the browser and gives no readable host to a plain fetch (8 Nov 2026); only the US host api.bluebeam.com is mapped"] },
   "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
   "dropbox": { name: "Dropbox", style: "rpc", auth: { type: "bearer", env: "DROPBOX_ACCESS_TOKEN" }, keys: ["DROPBOX_ACCESS_TOKEN"], proof: "docs" },
   "wordpress": { name: "WordPress (core REST API)", auth: { type: "basic", user: "WORDPRESS_USER", pass: "WORDPRESS_APP_PASSWORD" }, keys: ["WORDPRESS_SITE", "WORDPRESS_USER", "WORDPRESS_APP_PASSWORD"], proof: "docs",
@@ -337,7 +338,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
     pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
-    sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: m.gaps ?? [],
+    sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
   // index.ts: one named function per endpoint

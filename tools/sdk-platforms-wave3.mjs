@@ -36,7 +36,11 @@ export const W3 = {
   "cloudbeds": d("Cloudbeds", H("x-api-key", "CLOUDBEDS_API_KEY"), { server: "https://api.cloudbeds.com",
     serverVars: { environment: { env: "CLOUDBEDS_ENVIRONMENT", default: "cloudbeds", pattern: "cloudbeds", example: "cloudbeds" },
       ota: { env: "CLOUDBEDS_OTA", pattern: SUB, envOnly: true, example: "acme" } },
-    opRules: [{ server: "https://api.myallocator.com/callback", unsupported: "Cloudbeds OTA callback: the booking channel implements it for Cloudbeds to call; a client never calls it" },
+    // Group Profile: Cloudbeds' own reference (developers.cloudbeds.com/reference/listallprofiles, read 8 Nov 2026 through
+    // model_guard, watcher clean) gives https://api.cloudbeds.com; the GitHub spec still says localhost:8700.
+    rewrite: { "http://localhost:8700": "https://api.cloudbeds.com" },
+    opRules: [{ server: "/guest-profiles/v1", unsupported: "Cloudbeds' own reference gives only a relative server (/guest-profiles/v1) and no host; not wired until Cloudbeds names it" },
+      { server: "https://api.myallocator.com/callback", unsupported: "Cloudbeds OTA callback: the booking channel implements it for Cloudbeds to call; a client never calls it" },
       { server: "https://api.your-ota.com", unsupported: "Cloudbeds build-to-us API: a booking channel implements these for Cloudbeds to call; a client never calls them" }] }),
   "cloudtalk": d("CloudTalk", BA("CLOUDTALK_ACCESS_KEY_ID", "CLOUDTALK_ACCESS_KEY_SECRET")),
   "confluence": d("Confluence", BA("CONFLUENCE_EMAIL", "CONFLUENCE_API_TOKEN"), {
