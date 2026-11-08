@@ -2,369 +2,369 @@
 // AroFlo: 183 endpoints (133 read, 50 write). Source status: spec. Sign-in: from vendor docs, unproven.
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("aroflo");
-/** GET /{{urlVarString}}: Get lastupdate since [read] */
-export const getLastupdateSince = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get lastupdate since", input);
-/** GET /{{urlVarString}}: Get lastupdate Tasks [read] */
-export const getLastupdateTasks = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get lastupdate Tasks", input);
-/** GET /{{urlVarString}}: Get lastupdate Quotes [read] */
-export const getLastupdateQuotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get lastupdate Quotes", input);
-/** GET /{{urlVarString}}: BusinessUnits and Locations [read] */
-export const businessUnitsAndLocations = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("BusinessUnits and Locations", input);
-/** GET /{{urlVarString}}: BusinessUnits and Priorities [read] */
-export const businessUnitsAndPriorities = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("BusinessUnits and Priorities", input);
-/** GET /{{urlVarString}}: BusinessUnits [read] */
-export const businessUnits = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("BusinessUnits", input);
-/** GET /{{urlVarString}}: Archived BusinessUnits [read] */
-export const archivedBusinessUnits = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Archived BusinessUnits", input);
-/** GET /{{urlVarString}}: Get PermissionGroups [read] */
-export const getPermissionGroups = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get PermissionGroups", input);
-/** GET /{{urlVarString}}: Get Users and customfields [read] */
-export const getUsersAndCustomfields = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and customfields", input);
+/** GET /: Get lastupdate since [read] */
+export const getLastupdateSince = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get lastupdate since", input);
+/** GET /: Get lastupdate Tasks [read] */
+export const getLastupdateTasks = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get lastupdate Tasks", input);
+/** GET /: Get lastupdate Quotes [read] */
+export const getLastupdateQuotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get lastupdate Quotes", input);
+/** GET /: BusinessUnits and Locations [read] */
+export const businessUnitsAndLocations = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("BusinessUnits and Locations", input);
+/** GET /: BusinessUnits and Priorities [read] */
+export const businessUnitsAndPriorities = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("BusinessUnits and Priorities", input);
+/** GET /: BusinessUnits [read] */
+export const businessUnits = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("BusinessUnits", input);
+/** GET /: Archived BusinessUnits [read] */
+export const archivedBusinessUnits = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Archived BusinessUnits", input);
+/** GET /: Get PermissionGroups [read] */
+export const getPermissionGroups = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get PermissionGroups", input);
+/** GET /: Get Users and customfields [read] */
+export const getUsersAndCustomfields = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and customfields", input);
 /** POST /: Update Users customfield [write] */
-export const updateUsersCustomfield = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Users customfield", input);
+export const updateUsersCustomfield = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Users customfield", input);
 /** POST /: Create User with Custom Fields [write] */
-export const createUserWithCustomFields = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create User with Custom Fields", input);
-/** GET /{{urlVarString}}: Get Users and permissiongroups [read] */
-export const getUsersAndPermissiongroups = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and permissiongroups", input);
+export const createUserWithCustomFields = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create User with Custom Fields", input);
+/** GET /: Get Users and permissiongroups [read] */
+export const getUsersAndPermissiongroups = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and permissiongroups", input);
 /** POST /: Update Users permissiongroups [write] */
-export const updateUsersPermissiongroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Users permissiongroups", input);
-/** GET /{{urlVarString}}: Get Users and DocumentsandPhotos [read] */
-export const getUsersAndDocumentsandPhotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and DocumentsandPhotos", input);
-/** GET /{{urlVarString}}: Get Users and Notes [read] */
-export const getUsersAndNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and Notes", input);
-/** GET /{{urlVarString}}: Get Users and trackingcentredefaults [read] */
-export const getUsersAndTrackingcentredefaults = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and trackingcentredefaults", input);
-/** GET /{{urlVarString}}: Get Users and featureaccess [read] */
-export const getUsersAndFeatureaccess = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users and featureaccess", input);
+export const updateUsersPermissiongroups = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Users permissiongroups", input);
+/** GET /: Get Users and DocumentsandPhotos [read] */
+export const getUsersAndDocumentsandPhotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and DocumentsandPhotos", input);
+/** GET /: Get Users and Notes [read] */
+export const getUsersAndNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and Notes", input);
+/** GET /: Get Users and trackingcentredefaults [read] */
+export const getUsersAndTrackingcentredefaults = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and trackingcentredefaults", input);
+/** GET /: Get Users and featureaccess [read] */
+export const getUsersAndFeatureaccess = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users and featureaccess", input);
 /** POST /: Update Users "Reset Password through Forgot Password" [write] */
-export const updateUsersResetPasswordThroughForgotPassword = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Users \"Reset Password through Forgot Password\"", input);
-/** GET /{{urlVarString}}: Get Users [read] */
-export const getUsers = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users", input);
-/** GET /{{urlVarString}}: Get Users with set position [read] */
-export const getUsersWithSetPosition = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Users with set position", input);
-/** GET /{{urlVarString}}: Get a specific User [read] */
-export const getASpecificUser = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get a specific User", input);
+export const updateUsersResetPasswordThroughForgotPassword = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Users \"Reset Password through Forgot Password\"", input);
+/** GET /: Get Users [read] */
+export const getUsers = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users", input);
+/** GET /: Get Users with set position [read] */
+export const getUsersWithSetPosition = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Users with set position", input);
+/** GET /: Get a specific User [read] */
+export const getASpecificUser = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get a specific User", input);
 /** POST /: Create User [write] */
-export const createUser = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create User", input);
+export const createUser = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create User", input);
 /** POST /: Update Users mobile number [write] */
-export const updateUsersMobileNumber = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Users mobile number", input);
-/** GET /{{urlVarString}}: Get UserPosition [read] */
-export const getUserPosition = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get UserPosition", input);
-/** GET /{{urlVarString}}: Get Timesheets [read] */
-export const getTimesheets = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets", input);
-/** GET /{{urlVarString}}: Get Timesheets for timesheetid [read] */
-export const getTimesheetsForTimesheetid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets for timesheetid", input);
-/** GET /{{urlVarString}}: Get Timesheets for taskid [read] */
-export const getTimesheetsForTaskid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets for taskid", input);
-/** GET /{{urlVarString}}: Get Timesheets for workdate [read] */
-export const getTimesheetsForWorkdate = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets for workdate", input);
-/** GET /{{urlVarString}}: Get Timesheets for userid [read] */
-export const getTimesheetsForUserid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets for userid", input);
-/** GET /{{urlVarString}}: Get Timesheets for type `productive` [read] */
-export const getTimesheetsForTypeProductive = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Timesheets for type `productive`", input);
-/** GET /{{urlVarString}}: Get TransactionTerms [read] */
-export const getTransactionTerms = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get TransactionTerms", input);
-/** GET /{{urlVarString}}: Get Priorities [read] */
-export const getPriorities = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Priorities", input);
-/** GET /{{urlVarString}}: Get Client Priorties [read] */
-export const getClientPriorties = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Client Priorties", input);
+export const updateUsersMobileNumber = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Users mobile number", input);
+/** GET /: Get UserPosition [read] */
+export const getUserPosition = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get UserPosition", input);
+/** GET /: Get Timesheets [read] */
+export const getTimesheets = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets", input);
+/** GET /: Get Timesheets for timesheetid [read] */
+export const getTimesheetsForTimesheetid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets for timesheetid", input);
+/** GET /: Get Timesheets for taskid [read] */
+export const getTimesheetsForTaskid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets for taskid", input);
+/** GET /: Get Timesheets for workdate [read] */
+export const getTimesheetsForWorkdate = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets for workdate", input);
+/** GET /: Get Timesheets for userid [read] */
+export const getTimesheetsForUserid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets for userid", input);
+/** GET /: Get Timesheets for type `productive` [read] */
+export const getTimesheetsForTypeProductive = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Timesheets for type `productive`", input);
+/** GET /: Get TransactionTerms [read] */
+export const getTransactionTerms = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get TransactionTerms", input);
+/** GET /: Get Priorities [read] */
+export const getPriorities = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Priorities", input);
+/** GET /: Get Client Priorties [read] */
+export const getClientPriorties = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Client Priorties", input);
 /** POST /: Create Client Priorties [write] */
-export const createClientPriorties = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Client Priorties", input);
+export const createClientPriorties = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Client Priorties", input);
 /** POST /: Update BU Priorty [write] */
-export const updateBUPriorty = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update BU Priorty", input);
-/** GET /{{urlVarString}}: Get Clients and Locations [read] */
-export const getClientsAndLocations = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Clients and Locations", input);
+export const updateBUPriorty = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update BU Priorty", input);
+/** GET /: Get Clients and Locations [read] */
+export const getClientsAndLocations = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Clients and Locations", input);
 /** POST /: Create Location for Client [write] */
-export const createLocationForClient = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Location for Client", input);
-/** GET /{{urlVarString}}: Get Clients and Notes [read] */
-export const getClientsAndNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Clients and Notes", input);
-/** GET /{{urlVarString}}: Get Locations and LocationCustomFields for Client [read] */
-export const getLocationsAndLocationCustomFieldsForClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Locations and LocationCustomFields for Client", input);
-/** GET /{{urlVarString}}: Get active Contacts for Client [read] */
-export const getActiveContactsForClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get active Contacts for Client", input);
+export const createLocationForClient = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Location for Client", input);
+/** GET /: Get Clients and Notes [read] */
+export const getClientsAndNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Clients and Notes", input);
+/** GET /: Get Locations and LocationCustomFields for Client [read] */
+export const getLocationsAndLocationCustomFieldsForClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Locations and LocationCustomFields for Client", input);
+/** GET /: Get active Contacts for Client [read] */
+export const getActiveContactsForClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get active Contacts for Client", input);
 /** POST /: Create Contact for Client [write] */
-export const createContactForClient = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Contact for Client", input);
+export const createContactForClient = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Contact for Client", input);
 /** POST /: Update Contacts for Client [write] */
-export const updateContactsForClient = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Contacts for Client", input);
+export const updateContactsForClient = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Contacts for Client", input);
 /** POST /: Archive a Contact [write] */
-export const archiveAContact = (input: CallInput & { params?: {  } } = {}) => sdk.call("Archive a Contact", input);
-/** GET /{{urlVarString}}: Get CustomFields for a particular Client [read] */
-export const getCustomFieldsForAParticularClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get CustomFields for a particular Client", input);
+export const archiveAContact = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Archive a Contact", input);
+/** GET /: Get CustomFields for a particular Client [read] */
+export const getCustomFieldsForAParticularClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get CustomFields for a particular Client", input);
 /** POST /: Update Client Custom Field [write] */
-export const updateClientCustomField = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Client Custom Field", input);
-/** GET /{{urlVarString}}: Get Priorities for a particular Client [read] */
-export const getPrioritiesForAParticularClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Priorities for a particular Client", input);
-/** GET /{{urlVarString}}: Get DocumentsAndPhotos for a particular Client [read] */
-export const getDocumentsAndPhotosForAParticularClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get DocumentsAndPhotos for a particular Client", input);
-/** GET /{{urlVarString}}: Get "Postable"/Updated Clients [read] */
-export const getPostableUpdatedClients = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get \"Postable\"/Updated Clients", input);
-/** GET /{{urlVarString}}: Search for Client by Name [read] */
-export const searchForClientByName = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Search for Client by Name", input);
+export const updateClientCustomField = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Client Custom Field", input);
+/** GET /: Get Priorities for a particular Client [read] */
+export const getPrioritiesForAParticularClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Priorities for a particular Client", input);
+/** GET /: Get DocumentsAndPhotos for a particular Client [read] */
+export const getDocumentsAndPhotosForAParticularClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get DocumentsAndPhotos for a particular Client", input);
+/** GET /: Get "Postable"/Updated Clients [read] */
+export const getPostableUpdatedClients = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get \"Postable\"/Updated Clients", input);
+/** GET /: Search for Client by Name [read] */
+export const searchForClientByName = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Search for Client by Name", input);
 /** POST /: Create Client [write] */
-export const createClient = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Client", input);
+export const createClient = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Client", input);
 /** POST /: Update Client primary contact phone [write] */
-export const updateClientPrimaryContactPhone = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Client primary contact phone", input);
+export const updateClientPrimaryContactPhone = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Client primary contact phone", input);
 /** POST /: Mark Clients as processed. [write] */
-export const markClientsAsProcessed = (input: CallInput & { params?: {  } } = {}) => sdk.call("Mark Clients as processed.", input);
-/** GET /{{urlVarString}}: Get ClientNotes [read] */
-export const getClientNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get ClientNotes", input);
+export const markClientsAsProcessed = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Mark Clients as processed.", input);
+/** GET /: Get ClientNotes [read] */
+export const getClientNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get ClientNotes", input);
 /** POST /: Create ClientNote [write] */
-export const createClientNote = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create ClientNote", input);
+export const createClientNote = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create ClientNote", input);
 /** POST /: Update ClientNote [write] */
-export const updateClientNote = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update ClientNote", input);
-/** GET /{{urlVarString}}: Get Contacts [read] */
-export const getContacts = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Contacts", input);
-/** GET /{{urlVarString}}: Get Locations [read] */
-export const getLocations = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Locations", input);
-/** GET /{{urlVarString}}: Get Quote with documentsandphotos [read] */
-export const getQuoteWithDocumentsandphotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Quote with documentsandphotos", input);
-/** GET /{{urlVarString}}: Get Quote with lineitems [read] */
-export const getQuoteWithLineitems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Quote with lineitems", input);
-/** GET /{{urlVarString}}: Get Quote with notes [read] */
-export const getQuoteWithNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Quote with notes", input);
-/** GET /{{urlVarString}}: Get Quote with Projects [read] */
-export const getQuoteWithProjects = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Quote with Projects", input);
-/** GET /{{urlVarString}}: Get Quote with LineItems and TrackingCentres [read] */
-export const getQuoteWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Quote with LineItems and TrackingCentres", input);
-/** GET /{{urlVarString}}: Get In Progress Quotes [read] */
-export const getInProgressQuotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get In Progress Quotes", input);
-/** GET /{{urlVarString}}: Get QuoteLineItems [read] */
-export const getQuoteLineItems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get QuoteLineItems", input);
-/** GET /{{urlVarString}}: Get TaskTypes [read] */
-export const getTaskTypes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get TaskTypes", input);
-/** GET /{{urlVarString}}: Get TaskTypes for a Client [read] */
-export const getTaskTypesForAClient = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get TaskTypes for a Client", input);
-/** GET /{{urlVarString}}: Get Tasks with documentsandphotos [read] */
-export const getTasksWithDocumentsandphotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks with documentsandphotos", input);
-/** GET /{{urlVarString}}: Get Tasks with notes [read] */
-export const getTasksWithNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks with notes", input);
+export const updateClientNote = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update ClientNote", input);
+/** GET /: Get Contacts [read] */
+export const getContacts = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Contacts", input);
+/** GET /: Get Locations [read] */
+export const getLocations = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Locations", input);
+/** GET /: Get Quote with documentsandphotos [read] */
+export const getQuoteWithDocumentsandphotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Quote with documentsandphotos", input);
+/** GET /: Get Quote with lineitems [read] */
+export const getQuoteWithLineitems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Quote with lineitems", input);
+/** GET /: Get Quote with notes [read] */
+export const getQuoteWithNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Quote with notes", input);
+/** GET /: Get Quote with Projects [read] */
+export const getQuoteWithProjects = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Quote with Projects", input);
+/** GET /: Get Quote with LineItems and TrackingCentres [read] */
+export const getQuoteWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Quote with LineItems and TrackingCentres", input);
+/** GET /: Get In Progress Quotes [read] */
+export const getInProgressQuotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get In Progress Quotes", input);
+/** GET /: Get QuoteLineItems [read] */
+export const getQuoteLineItems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get QuoteLineItems", input);
+/** GET /: Get TaskTypes [read] */
+export const getTaskTypes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get TaskTypes", input);
+/** GET /: Get TaskTypes for a Client [read] */
+export const getTaskTypesForAClient = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get TaskTypes for a Client", input);
+/** GET /: Get Tasks with documentsandphotos [read] */
+export const getTasksWithDocumentsandphotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks with documentsandphotos", input);
+/** GET /: Get Tasks with notes [read] */
+export const getTasksWithNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks with notes", input);
 /** POST /: Insert Notes to Task [write] */
-export const insertNotesToTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert Notes to Task", input);
-/** GET /{{urlVarString}}: Update Note on Task [write] */
-export const updateNoteOnTask = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Update Note on Task", input);
-/** GET /{{urlVarString}}: Get Task with assignedhistory [read] */
-export const getTaskWithAssignedhistory = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with assignedhistory", input);
-/** GET /{{urlVarString}}: Get Task with Materials [read] */
-export const getTaskWithMaterials = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Materials", input);
+export const insertNotesToTask = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert Notes to Task", input);
+/** GET /: Update Note on Task [write] */
+export const updateNoteOnTask = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Update Note on Task", input);
+/** GET /: Get Task with assignedhistory [read] */
+export const getTaskWithAssignedhistory = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with assignedhistory", input);
+/** GET /: Get Task with Materials [read] */
+export const getTaskWithMaterials = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Materials", input);
 /** POST /: Insert AdHoc material to Task [write] */
-export const insertAdHocMaterialToTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert AdHoc material to Task", input);
-/** GET /{{urlVarString}}: Get Task with Labour [read] */
-export const getTaskWithLabour = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Labour", input);
-/** GET /{{urlVarString}}: Get Task with Expenses [read] */
-export const getTaskWithExpenses = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Expenses", input);
-/** GET /{{urlVarString}}: Get Task with Purchase Orders [read] */
-export const getTaskWithPurchaseOrders = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Purchase Orders", input);
-/** GET /{{urlVarString}}: Get Task with Assets [read] */
-export const getTaskWithAssets = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Assets", input);
-/** GET /{{urlVarString}}: Get Task with Custom Fields [read] */
-export const getTaskWithCustomFields = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Custom Fields", input);
+export const insertAdHocMaterialToTask = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert AdHoc material to Task", input);
+/** GET /: Get Task with Labour [read] */
+export const getTaskWithLabour = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Labour", input);
+/** GET /: Get Task with Expenses [read] */
+export const getTaskWithExpenses = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Expenses", input);
+/** GET /: Get Task with Purchase Orders [read] */
+export const getTaskWithPurchaseOrders = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Purchase Orders", input);
+/** GET /: Get Task with Assets [read] */
+export const getTaskWithAssets = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Assets", input);
+/** GET /: Get Task with Custom Fields [read] */
+export const getTaskWithCustomFields = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Custom Fields", input);
 /** POST /: Create Task with Custom Fields [write] */
-export const createTaskWithCustomFields = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Task with Custom Fields", input);
-/** GET /{{urlVarString}}: Get Task with Location [read] */
-export const getTaskWithLocation = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Location", input);
-/** GET /{{urlVarString}}: Get Task with Location Custom Fields [read] */
-export const getTaskWithLocationCustomFields = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Location Custom Fields", input);
-/** GET /{{urlVarString}}: Get Task with Project [read] */
-export const getTaskWithProject = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task with Project", input);
+export const createTaskWithCustomFields = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Task with Custom Fields", input);
+/** GET /: Get Task with Location [read] */
+export const getTaskWithLocation = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Location", input);
+/** GET /: Get Task with Location Custom Fields [read] */
+export const getTaskWithLocationCustomFields = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Location Custom Fields", input);
+/** GET /: Get Task with Project [read] */
+export const getTaskWithProject = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task with Project", input);
 /** POST /: Update Task and Project/Stage [write] */
-export const updateTaskAndProjectStage = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Task and Project/Stage", input);
-/** GET /{{urlVarString}}: Get Task and tasktotals [read] */
-export const getTaskAndTasktotals = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task and tasktotals", input);
-/** GET /{{urlVarString}}: Get Tasks and Substatus [read] */
-export const getTasksAndSubstatus = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks and Substatus", input);
+export const updateTaskAndProjectStage = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Task and Project/Stage", input);
+/** GET /: Get Task and tasktotals [read] */
+export const getTaskAndTasktotals = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task and tasktotals", input);
+/** GET /: Get Tasks and Substatus [read] */
+export const getTasksAndSubstatus = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks and Substatus", input);
 /** POST /: Update Task Substatus [write] */
-export const updateTaskSubstatus = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Task Substatus", input);
-/** GET /{{urlVarString}}: Get Tasks for the salesperson "James Nesbitt" [read] */
-export const getTasksForTheSalespersonJamesNesbitt = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks for the salesperson \"James Nesbitt\"", input);
-/** GET /{{urlVarString}}: Get Tasks for the salesperson_id [read] */
-export const getTasksForTheSalespersonId = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks for the salesperson_id", input);
-/** GET /{{urlVarString}}: Get Tasks with quote data [read] */
-export const getTasksWithQuoteData = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks with quote data", input);
-/** GET /{{urlVarString}}: Get Tasks [read] */
-export const getTasks = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks", input);
-/** GET /{{urlVarString}}: Get Tasks due for a date range [read] */
-export const getTasksDueForADateRange = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasks due for a date range", input);
+export const updateTaskSubstatus = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Task Substatus", input);
+/** GET /: Get Tasks for the salesperson "James Nesbitt" [read] */
+export const getTasksForTheSalespersonJamesNesbitt = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks for the salesperson \"James Nesbitt\"", input);
+/** GET /: Get Tasks for the salesperson_id [read] */
+export const getTasksForTheSalespersonId = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks for the salesperson_id", input);
+/** GET /: Get Tasks with quote data [read] */
+export const getTasksWithQuoteData = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks with quote data", input);
+/** GET /: Get Tasks [read] */
+export const getTasks = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks", input);
+/** GET /: Get Tasks due for a date range [read] */
+export const getTasksDueForADateRange = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasks due for a date range", input);
 /** POST /: Create Task [write] */
-export const createTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Task", input);
+export const createTask = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Task", input);
 /** POST /: Update Task [write] */
-export const updateTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Task", input);
+export const updateTask = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Task", input);
 /** POST /: Mark Task as linkprocessed [write] */
-export const markTaskAsLinkprocessed = (input: CallInput & { params?: {  } } = {}) => sdk.call("Mark Task as linkprocessed", input);
-/** GET /{{urlVarString}}: Get TaskMaterials [read] */
-export const getTaskMaterials = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get TaskMaterials", input);
+export const markTaskAsLinkprocessed = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Mark Task as linkprocessed", input);
+/** GET /: Get TaskMaterials [read] */
+export const getTaskMaterials = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get TaskMaterials", input);
 /** POST /: Insert AdHoc materials [write] */
-export const insertAdHocMaterials = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert AdHoc materials", input);
+export const insertAdHocMaterials = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert AdHoc materials", input);
 /** POST /: Mark TaskMaterials LinkProcessed [write] */
-export const markTaskMaterialsLinkProcessed = (input: CallInput & { params?: {  } } = {}) => sdk.call("Mark TaskMaterials LinkProcessed", input);
-/** GET /{{urlVarString}}: Get Tasklabours [read] */
-export const getTasklabours = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasklabours", input);
+export const markTaskMaterialsLinkProcessed = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Mark TaskMaterials LinkProcessed", input);
+/** GET /: Get Tasklabours [read] */
+export const getTasklabours = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasklabours", input);
 /** POST /: Mark Tasklabours LinkProcessed [write] */
-export const markTasklaboursLinkProcessed = (input: CallInput & { params?: {  } } = {}) => sdk.call("Mark Tasklabours LinkProcessed", input);
-/** GET /{{urlVarString}}: Get Tasklabours for workdatetimestart [read] */
-export const getTasklaboursForWorkdatetimestart = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Tasklabours for workdatetimestart", input);
-/** GET /{{urlVarString}}: Get Taskexpenses [read] */
-export const getTaskexpenses = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Taskexpenses", input);
+export const markTasklaboursLinkProcessed = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Mark Tasklabours LinkProcessed", input);
+/** GET /: Get Tasklabours for workdatetimestart [read] */
+export const getTasklaboursForWorkdatetimestart = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Tasklabours for workdatetimestart", input);
+/** GET /: Get Taskexpenses [read] */
+export const getTaskexpenses = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Taskexpenses", input);
 /** POST /: Insert Task Resource [write] */
-export const insertTaskResource = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert Task Resource", input);
-/** GET /{{urlVarString}}: Get Approved Invoices including line items [read] */
-export const getApprovedInvoicesIncludingLineItems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Approved Invoices including line items", input);
-/** GET /{{urlVarString}}: Get Approved Invoices with LineItems and TrackingCentres [read] */
-export const getApprovedInvoicesWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Approved Invoices with LineItems and TrackingCentres", input);
-/** GET /{{urlVarString}}: Get Approved Invoices include task details [read] */
-export const getApprovedInvoicesIncludeTaskDetails = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Approved Invoices include task details", input);
-/** GET /{{urlVarString}}: Get Approved Invoices include project details [read] */
-export const getApprovedInvoicesIncludeProjectDetails = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Approved Invoices include project details", input);
-/** GET /{{urlVarString}}: Get Approved Invoices updated after 2018-11-01 11:00:00 [read] */
-export const getApprovedInvoicesUpdatedAfter20181101110000 = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Approved Invoices updated after 2018-11-01 11:00:00", input);
-/** GET /{{urlVarString}}: Get all invoices for certain taskid [read] */
-export const getAllInvoicesForCertainTaskid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get all invoices for certain taskid", input);
+export const insertTaskResource = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert Task Resource", input);
+/** GET /: Get Approved Invoices including line items [read] */
+export const getApprovedInvoicesIncludingLineItems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Approved Invoices including line items", input);
+/** GET /: Get Approved Invoices with LineItems and TrackingCentres [read] */
+export const getApprovedInvoicesWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Approved Invoices with LineItems and TrackingCentres", input);
+/** GET /: Get Approved Invoices include task details [read] */
+export const getApprovedInvoicesIncludeTaskDetails = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Approved Invoices include task details", input);
+/** GET /: Get Approved Invoices include project details [read] */
+export const getApprovedInvoicesIncludeProjectDetails = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Approved Invoices include project details", input);
+/** GET /: Get Approved Invoices updated after 2018-11-01 11:00:00 [read] */
+export const getApprovedInvoicesUpdatedAfter20181101110000 = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Approved Invoices updated after 2018-11-01 11:00:00", input);
+/** GET /: Get all invoices for certain taskid [read] */
+export const getAllInvoicesForCertainTaskid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get all invoices for certain taskid", input);
 /** POST /: Update Processed Invoices [write] */
-export const updateProcessedInvoices = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Processed Invoices", input);
-/** GET /{{urlVarString}}: Get Payments [read] */
-export const getPayments = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Payments", input);
-/** GET /{{urlVarString}}: Get Suppliers and Locations [read] */
-export const getSuppliersAndLocations = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Suppliers and Locations", input);
+export const updateProcessedInvoices = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Processed Invoices", input);
+/** GET /: Get Payments [read] */
+export const getPayments = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Payments", input);
+/** GET /: Get Suppliers and Locations [read] */
+export const getSuppliersAndLocations = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Suppliers and Locations", input);
 /** POST /: Create Location for Supplier [write] */
-export const createLocationForSupplier = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Location for Supplier", input);
+export const createLocationForSupplier = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Location for Supplier", input);
 /** POST /: Update Location for Supplier [write] */
-export const updateLocationForSupplier = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Location for Supplier", input);
-/** GET /{{urlVarString}}: Get Locations and LocationCustomFields for Supplier [read] */
-export const getLocationsAndLocationCustomFieldsForSupplier = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Locations and LocationCustomFields for Supplier", input);
+export const updateLocationForSupplier = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Location for Supplier", input);
+/** GET /: Get Locations and LocationCustomFields for Supplier [read] */
+export const getLocationsAndLocationCustomFieldsForSupplier = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Locations and LocationCustomFields for Supplier", input);
 /** POST /: Update Custom Field on Location [write] */
-export const updateCustomFieldOnLocation = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Custom Field on Location", input);
-/** GET /{{urlVarString}}: Get active Contacts for Supplier [read] */
-export const getActiveContactsForSupplier = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get active Contacts for Supplier", input);
+export const updateCustomFieldOnLocation = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Custom Field on Location", input);
+/** GET /: Get active Contacts for Supplier [read] */
+export const getActiveContactsForSupplier = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get active Contacts for Supplier", input);
 /** POST /: Create Contact for Supplier [write] */
-export const createContactForSupplier = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Contact for Supplier", input);
-/** GET /{{urlVarString}}: Get CustomFields for a particular Supplier [read] */
-export const getCustomFieldsForAParticularSupplier = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get CustomFields for a particular Supplier", input);
-/** GET /{{urlVarString}}: Get Suppliers [read] */
-export const getSuppliers = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Suppliers", input);
-/** GET /{{urlVarString}}: Get "Postable"/Updated Suppliers [read] */
-export const getPostableUpdatedSuppliers = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get \"Postable\"/Updated Suppliers", input);
+export const createContactForSupplier = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Contact for Supplier", input);
+/** GET /: Get CustomFields for a particular Supplier [read] */
+export const getCustomFieldsForAParticularSupplier = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get CustomFields for a particular Supplier", input);
+/** GET /: Get Suppliers [read] */
+export const getSuppliers = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Suppliers", input);
+/** GET /: Get "Postable"/Updated Suppliers [read] */
+export const getPostableUpdatedSuppliers = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get \"Postable\"/Updated Suppliers", input);
 /** POST /: Create Supplier [write] */
-export const createSupplier = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Supplier", input);
+export const createSupplier = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Supplier", input);
 /** POST /: Update Supplier primary contact phone [write] */
-export const updateSupplierPrimaryContactPhone = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Supplier primary contact phone", input);
+export const updateSupplierPrimaryContactPhone = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Supplier primary contact phone", input);
 /** POST /: Mark Supplier as processed. [write] */
-export const markSupplierAsProcessed = (input: CallInput & { params?: {  } } = {}) => sdk.call("Mark Supplier as processed.", input);
-/** GET /{{urlVarString}}: Get Inventory with stocklevels for businessunits only [read] */
-export const getInventoryWithStocklevelsForBusinessunitsOnly = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Inventory with stocklevels for businessunits only", input);
+export const markSupplierAsProcessed = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Mark Supplier as processed.", input);
+/** GET /: Get Inventory with stocklevels for businessunits only [read] */
+export const getInventoryWithStocklevelsForBusinessunitsOnly = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Inventory with stocklevels for businessunits only", input);
 /** POST /: Update stocklevel for Inventory item [write] */
-export const updateStocklevelForInventoryItem = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update stocklevel for Inventory item", input);
-/** GET /{{urlVarString}}: Get Inventory [read] */
-export const getInventory = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Inventory", input);
+export const updateStocklevelForInventoryItem = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update stocklevel for Inventory item", input);
+/** GET /: Get Inventory [read] */
+export const getInventory = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Inventory", input);
 /** POST /: Create inventory item [write] */
-export const createInventoryItem = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create inventory item", input);
-/** GET /{{urlVarString}}: Get InventoryCategories [read] */
-export const getInventoryCategories = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get InventoryCategories", input);
-/** GET /{{urlVarString}}: Get InventoryStockLevels [read] */
-export const getInventoryStockLevels = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get InventoryStockLevels", input);
-/** GET /{{urlVarString}}: Get InventoryStockLevels for BU Stock [read] */
-export const getInventoryStockLevelsForBUStock = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get InventoryStockLevels for BU Stock", input);
-/** GET /{{urlVarString}}: Get CustomHolders [read] */
-export const getCustomHolders = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get CustomHolders", input);
-/** GET /{{urlVarString}}: Get InventoryLists [read] */
-export const getInventoryLists = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get InventoryLists", input);
-/** GET /{{urlVarString}}: Get Assemblies [read] */
-export const getAssemblies = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assemblies", input);
-/** GET /{{urlVarString}}: Get Items for an Assembly [read] */
-export const getItemsForAnAssembly = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Items for an Assembly", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders with lineitems [read] */
-export const approvedPurchaseOrdersWithLineitems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders with lineitems", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders with LineItems and TrackingCentres [read] */
-export const approvedPurchaseOrdersWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders with LineItems and TrackingCentres", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders with Task [read] */
-export const approvedPurchaseOrdersWithTask = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders with Task", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders with Project [read] */
-export const approvedPurchaseOrdersWithProject = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders with Project", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders with Documents [read] */
-export const approvedPurchaseOrdersWithDocuments = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders with Documents", input);
-/** GET /{{urlVarString}}: Approved PurchaseOrders [read] */
-export const approvedPurchaseOrders = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved PurchaseOrders", input);
+export const createInventoryItem = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create inventory item", input);
+/** GET /: Get InventoryCategories [read] */
+export const getInventoryCategories = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get InventoryCategories", input);
+/** GET /: Get InventoryStockLevels [read] */
+export const getInventoryStockLevels = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get InventoryStockLevels", input);
+/** GET /: Get InventoryStockLevels for BU Stock [read] */
+export const getInventoryStockLevelsForBUStock = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get InventoryStockLevels for BU Stock", input);
+/** GET /: Get CustomHolders [read] */
+export const getCustomHolders = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get CustomHolders", input);
+/** GET /: Get InventoryLists [read] */
+export const getInventoryLists = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get InventoryLists", input);
+/** GET /: Get Assemblies [read] */
+export const getAssemblies = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assemblies", input);
+/** GET /: Get Items for an Assembly [read] */
+export const getItemsForAnAssembly = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Items for an Assembly", input);
+/** GET /: Approved PurchaseOrders with lineitems [read] */
+export const approvedPurchaseOrdersWithLineitems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders with lineitems", input);
+/** GET /: Approved PurchaseOrders with LineItems and TrackingCentres [read] */
+export const approvedPurchaseOrdersWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders with LineItems and TrackingCentres", input);
+/** GET /: Approved PurchaseOrders with Task [read] */
+export const approvedPurchaseOrdersWithTask = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders with Task", input);
+/** GET /: Approved PurchaseOrders with Project [read] */
+export const approvedPurchaseOrdersWithProject = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders with Project", input);
+/** GET /: Approved PurchaseOrders with Documents [read] */
+export const approvedPurchaseOrdersWithDocuments = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders with Documents", input);
+/** GET /: Approved PurchaseOrders [read] */
+export const approvedPurchaseOrders = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved PurchaseOrders", input);
 /** POST /: Update Processed PurchaseOrders [write] */
-export const updateProcessedPurchaseOrders = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Processed PurchaseOrders", input);
-/** GET /{{urlVarString}}: Pending PurchaseOrders with items and Task information [read] */
-export const pendingPurchaseOrdersWithItemsAndTaskInformation = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Pending PurchaseOrders with items and Task information", input);
-/** GET /{{urlVarString}}: Approved Bills with LineItems [read] */
-export const approvedBillsWithLineItems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved Bills with LineItems", input);
-/** GET /{{urlVarString}}: Approved Bills with LineItems and TrackingCentres [read] */
-export const approvedBillsWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved Bills with LineItems and TrackingCentres", input);
-/** GET /{{urlVarString}}: Approved Bills [read] */
-export const approvedBills = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Approved Bills", input);
+export const updateProcessedPurchaseOrders = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Processed PurchaseOrders", input);
+/** GET /: Pending PurchaseOrders with items and Task information [read] */
+export const pendingPurchaseOrdersWithItemsAndTaskInformation = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Pending PurchaseOrders with items and Task information", input);
+/** GET /: Approved Bills with LineItems [read] */
+export const approvedBillsWithLineItems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved Bills with LineItems", input);
+/** GET /: Approved Bills with LineItems and TrackingCentres [read] */
+export const approvedBillsWithLineItemsAndTrackingCentres = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved Bills with LineItems and TrackingCentres", input);
+/** GET /: Approved Bills [read] */
+export const approvedBills = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Approved Bills", input);
 /** POST /: Update Processed Bills [write] */
-export const updateProcessedBills = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update Processed Bills", input);
+export const updateProcessedBills = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update Processed Bills", input);
 /** POST /: Insert Bill [write] */
-export const insertBill = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert Bill", input);
-/** GET /{{urlVarString}}: GET BillLineItems for BillID [read] */
-export const gETBillLineItemsForBillID = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("GET BillLineItems for BillID", input);
+export const insertBill = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert Bill", input);
+/** GET /: GET BillLineItems for BillID [read] */
+export const gETBillLineItemsForBillID = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("GET BillLineItems for BillID", input);
 /** POST /: Insert BillLineItem [write] */
-export const insertBillLineItem = (input: CallInput & { params?: {  } } = {}) => sdk.call("Insert BillLineItem", input);
+export const insertBillLineItem = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Insert BillLineItem", input);
 /** POST /: Update existing BillLineItem [write] */
-export const updateExistingBillLineItem = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update existing BillLineItem", input);
-/** GET /{{urlVarString}}: Get WorkOrders with documentsandphotos [read] */
-export const getWorkOrdersWithDocumentsandphotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders with documentsandphotos", input);
-/** GET /{{urlVarString}}: Get WorkOrders with notes [read] */
-export const getWorkOrdersWithNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders with notes", input);
-/** GET /{{urlVarString}}: Get WorkOrders with lineitems [read] */
-export const getWorkOrdersWithLineitems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders with lineitems", input);
-/** GET /{{urlVarString}}: Get WorkOrders with tasks [read] */
-export const getWorkOrdersWithTasks = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders with tasks", input);
-/** GET /{{urlVarString}}: Get WorkOrders with bills [read] */
-export const getWorkOrdersWithBills = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders with bills", input);
-/** GET /{{urlVarString}}: Get WorkOrders [read] */
-export const getWorkOrders = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrders", input);
-/** GET /{{urlVarString}}: Get WorkOrderLineItems [read] */
-export const getWorkOrderLineItems = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get WorkOrderLineItems", input);
-/** GET /{{urlVarString}}: Get specific WorkOrderLineItems by lineid [read] */
-export const getSpecificWorkOrderLineItemsByLineid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get specific WorkOrderLineItems by lineid", input);
-/** GET /{{urlVarString}}: Get Assets with Location [read] */
-export const getAssetsWithLocation = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assets with Location", input);
-/** GET /{{urlVarString}}: Get Assets with Customfields [read] */
-export const getAssetsWithCustomfields = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assets with Customfields", input);
-/** GET /{{urlVarString}}: Get Assets with Notes [read] */
-export const getAssetsWithNotes = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assets with Notes", input);
-/** GET /{{urlVarString}}: Get Assets with documentsandphotos [read] */
-export const getAssetsWithDocumentsandphotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assets with documentsandphotos", input);
-/** GET /{{urlVarString}}: Get Assets [read] */
-export const getAssets = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Assets", input);
+export const updateExistingBillLineItem = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update existing BillLineItem", input);
+/** GET /: Get WorkOrders with documentsandphotos [read] */
+export const getWorkOrdersWithDocumentsandphotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders with documentsandphotos", input);
+/** GET /: Get WorkOrders with notes [read] */
+export const getWorkOrdersWithNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders with notes", input);
+/** GET /: Get WorkOrders with lineitems [read] */
+export const getWorkOrdersWithLineitems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders with lineitems", input);
+/** GET /: Get WorkOrders with tasks [read] */
+export const getWorkOrdersWithTasks = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders with tasks", input);
+/** GET /: Get WorkOrders with bills [read] */
+export const getWorkOrdersWithBills = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders with bills", input);
+/** GET /: Get WorkOrders [read] */
+export const getWorkOrders = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrders", input);
+/** GET /: Get WorkOrderLineItems [read] */
+export const getWorkOrderLineItems = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get WorkOrderLineItems", input);
+/** GET /: Get specific WorkOrderLineItems by lineid [read] */
+export const getSpecificWorkOrderLineItemsByLineid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get specific WorkOrderLineItems by lineid", input);
+/** GET /: Get Assets with Location [read] */
+export const getAssetsWithLocation = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assets with Location", input);
+/** GET /: Get Assets with Customfields [read] */
+export const getAssetsWithCustomfields = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assets with Customfields", input);
+/** GET /: Get Assets with Notes [read] */
+export const getAssetsWithNotes = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assets with Notes", input);
+/** GET /: Get Assets with documentsandphotos [read] */
+export const getAssetsWithDocumentsandphotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assets with documentsandphotos", input);
+/** GET /: Get Assets [read] */
+export const getAssets = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Assets", input);
 /** POST /: Create Asset [write] */
-export const createAsset = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Asset", input);
+export const createAsset = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Asset", input);
 /** POST /: Update an Asset [write] */
-export const updateAnAsset = (input: CallInput & { params?: {  } } = {}) => sdk.call("Update an Asset", input);
-/** GET /{{urlVarString}}: Get AssetsCategories [read] */
-export const getAssetsCategories = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get AssetsCategories", input);
-/** GET /{{urlVarString}}: Get MessageBoard [read] */
-export const getMessageBoard = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get MessageBoard", input);
-/** GET /{{urlVarString}}: Get Task Substatus [read] */
-export const getTaskSubstatus = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Task Substatus", input);
-/** GET /{{urlVarString}}: Get DocumentsAndPhotos [read] */
-export const getDocumentsAndPhotos = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get DocumentsAndPhotos", input);
-/** GET /{{urlVarString}}: Get DocumentsAndPhotos from Category [read] */
-export const getDocumentsAndPhotosFromCategory = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get DocumentsAndPhotos from Category", input);
-/** GET /{{urlVarString}}: Get Schedules [read] */
-export const getSchedules = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules", input);
-/** GET /{{urlVarString}}: Get Schedules for groupid [read] */
-export const getSchedulesForGroupid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for groupid", input);
-/** GET /{{urlVarString}}: Get Schedules for scheduletotype [read] */
-export const getSchedulesForScheduletotype = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for scheduletotype", input);
-/** GET /{{urlVarString}}: Get Schedules for scheduledtoid [read] */
-export const getSchedulesForScheduledtoid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for scheduledtoid", input);
-/** GET /{{urlVarString}}: Get Schedules for startdate [read] */
-export const getSchedulesForStartdate = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for startdate", input);
-/** GET /{{urlVarString}}: Get Schedules for startdatetime [read] */
-export const getSchedulesForStartdatetime = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for startdatetime", input);
-/** GET /{{urlVarString}}: Get Schedules for taskid [read] */
-export const getSchedulesForTaskid = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Schedules for taskid", input);
+export const updateAnAsset = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Update an Asset", input);
+/** GET /: Get AssetsCategories [read] */
+export const getAssetsCategories = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get AssetsCategories", input);
+/** GET /: Get MessageBoard [read] */
+export const getMessageBoard = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get MessageBoard", input);
+/** GET /: Get Task Substatus [read] */
+export const getTaskSubstatus = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Task Substatus", input);
+/** GET /: Get DocumentsAndPhotos [read] */
+export const getDocumentsAndPhotos = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get DocumentsAndPhotos", input);
+/** GET /: Get DocumentsAndPhotos from Category [read] */
+export const getDocumentsAndPhotosFromCategory = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get DocumentsAndPhotos from Category", input);
+/** GET /: Get Schedules [read] */
+export const getSchedules = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules", input);
+/** GET /: Get Schedules for groupid [read] */
+export const getSchedulesForGroupid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for groupid", input);
+/** GET /: Get Schedules for scheduletotype [read] */
+export const getSchedulesForScheduletotype = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for scheduletotype", input);
+/** GET /: Get Schedules for scheduledtoid [read] */
+export const getSchedulesForScheduledtoid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for scheduledtoid", input);
+/** GET /: Get Schedules for startdate [read] */
+export const getSchedulesForStartdate = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for startdate", input);
+/** GET /: Get Schedules for startdatetime [read] */
+export const getSchedulesForStartdatetime = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for startdatetime", input);
+/** GET /: Get Schedules for taskid [read] */
+export const getSchedulesForTaskid = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Schedules for taskid", input);
 /** POST /: Create Schedule [write] */
-export const createSchedule = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create Schedule", input);
-/** GET /{{urlVarString}}: Get Projects [read] */
-export const getProjects = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Projects", input);
-/** GET /{{urlVarString}}: Get Stages [read] */
-export const getStages = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Stages", input);
-/** GET /{{urlVarString}}: Get Message Templates [read] */
-export const getMessageTemplates = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get Message Templates", input);
+export const createSchedule = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create Schedule", input);
+/** GET /: Get Projects [read] */
+export const getProjects = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Projects", input);
+/** GET /: Get Stages [read] */
+export const getStages = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Stages", input);
+/** GET /: Get Message Templates [read] */
+export const getMessageTemplates = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get Message Templates", input);
 /** POST /: Create MessageTemplate [write] */
-export const createMessageTemplate = (input: CallInput & { params?: {  } } = {}) => sdk.call("Create MessageTemplate", input);
-/** GET /{{urlVarString}}: Get TrackingCentres [read] */
-export const getTrackingCentres = (input: CallInput & { params?: { "{urlVarString": string } } = {}) => sdk.call("Get TrackingCentres", input);
+export const createMessageTemplate = (input: CallInput & { params?: { "postxml": string } } = {}) => sdk.call("Create MessageTemplate", input);
+/** GET /: Get TrackingCentres [read] */
+export const getTrackingCentres = (input: CallInput & { params?: { "where"?: string; "join"?: string; "order"?: string; "page"?: string; "pageSize"?: string } } = {}) => sdk.call("Get TrackingCentres", input);

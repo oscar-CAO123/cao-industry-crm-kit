@@ -49,7 +49,7 @@ const P = {
     serverVars: { tld: { env: "SMOKEBALL_REGION_TLD", default: "com.au", pattern: "com|com\\.au|co\\.uk" } }, auth: { type: "bearer", env: "SMOKEBALL_ACCESS_TOKEN", extraHeaders: { "x-api-key": "SMOKEBALL_API_KEY" } }, keys: ["SMOKEBALL_ACCESS_TOKEN", "SMOKEBALL_API_KEY", "SMOKEBALL_REGION_TLD (optional: com.au default, com, co.uk)"], proof: "docs" },
   "canva": { name: "Canva Connect", auth: { type: "bearer", env: "CANVA_ACCESS_TOKEN" }, keys: ["CANVA_ACCESS_TOKEN"], proof: "docs" },
   "fergus": { name: "Fergus", auth: { type: "bearer", env: "FERGUS_ACCESS_TOKEN" }, keys: ["FERGUS_ACCESS_TOKEN"], proof: "docs" },
-  "aroflo": { name: "AroFlo", auth: { type: "unsupported", note: "AroFlo signs each request with HMAC; the signer is not built yet" }, keys: ["AROFLO_ORG_ENCODED", "AROFLO_USER_ENCODED", "AROFLO_PASSWORD_ENCODED", "AROFLO_SECRET"], proof: "docs", server: "https://api.aroflo.com" },
+  "aroflo": { name: "AroFlo", auth: { type: "custom", provider: "aroflo" }, keys: ["AROFLO_SECRET_KEY", "AROFLO_UENCODED", "AROFLO_PENCODED", "AROFLO_ORGENCODED", "AROFLO_HOST_IP (optional)"], queryArrays: "repeat", proof: "docs", server: "https://api.aroflo.com" },
   "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs",
     gaps: ["Australian Studio host not confirmed: developers.bluebeam.com renders in the browser and gives no readable host to a plain fetch (8 Nov 2026); only the US host api.bluebeam.com is mapped"] },
   "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
@@ -289,6 +289,25 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       }
     }
   }
+  if (id === "aroflo") {
+    const zf = path.join(src, "..", "aroflo-zones.json");
+    const zones = fs.existsSync(zf) ? JSON.parse(fs.readFileSync(zf, "utf8")) : [];
+    const byName = new Map(zones.map((z) => [`${z.method} ${z.name}`, z]));
+    for (const o of ops) {
+      const z = byName.get(`${o.method} ${o.summary}`);
+      if (!z?.zone) { o.authUnsupported = "AroFlo example with no zone in the official collection"; continue; }
+      o.path = "/";
+      delete o.paramsUnmapped;
+      if (o.method === "GET") {
+        o.fixedQuery = { zone: z.zone };
+        o.params = ["where", "join", "order", "page", "pageSize"].map((n) => ({ name: n, in: "query", required: false, type: n === "where" ? "string or list (repeats where=)" : "string" }));
+      } else {
+        o.fixedForm = { zone: z.zone };
+        o.params = [{ name: "postxml", in: "formData", required: true, type: "string (XML)" }];
+        o.body = true; o.bodyType = "form";
+      }
+    }
+  }
   // Overrides are keyed by the endpoint id the assessment saw. The api prefix on an id comes and goes as a platform
   // gains or loses spec files, so a key matches the full id or the bare id (api prefix removed), and must match exactly one.
   const ov = OVERRIDES[id] ?? {};
@@ -336,7 +355,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     id, name: cfg.name, status: m.status, tested: "offline only (fake network); not yet run against a real account",
     authProof: cfg.proof, style: cfg.style ?? "rest", hosts: cfg.hostFromEnv ? [] : hosts, hostFromEnv: !!cfg.hostFromEnv,
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
-    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}),
+    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
     sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },

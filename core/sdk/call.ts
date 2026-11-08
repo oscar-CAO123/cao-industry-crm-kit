@@ -47,6 +47,9 @@ export interface Op {
   auth?: Auth;
   /** The vendor's spec accepts only this body encoding (no JSON): "form" (Stripe v1, Twilio) or "multipart" (uploads). */
   bodyType?: "form" | "multipart";
+  /** Query or form fields the endpoint always sends (AroFlo's zone), set by the generator, first in order. */
+  fixedQuery?: Record<string, string>;
+  fixedForm?: Record<string, string>;
 }
 export interface Auth {
   type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported" | "template";
@@ -66,6 +69,8 @@ export interface Platform {
   defaultScope?: string;
   /** How form-encoded lists are written: a[0]=x (default, Stripe) or a=x&a=y (Twilio). */
   formArrays?: FormArrays;
+  /** A list value for a query param repeats the key (AroFlo where=a&where=b). */
+  queryArrays?: "repeat";
 }
 export interface CallInput {
   /** Values for the endpoint's mapped params, by name. Each goes where the spec says (path, query, header, body). */
@@ -83,7 +88,7 @@ export interface CallInput {
   binary?: boolean;
   signal?: AbortSignal;
 }
-export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; kind: "read" | "write"; readPost: boolean }
+export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; body?: string; kind: "read" | "write"; readPost: boolean }
 
 const cache = new Map<string, { platform: Platform; ops: Map<string, Op> }>();
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
@@ -229,7 +234,7 @@ function authPreview(p: Platform, o?: Op): Record<string, string> {
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) h[k] = `[from ${env}, if set]`;
   if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${(a.type === "bearer" && o?.tokenEnv) || a.env || [a.user, a.pass].filter(Boolean).join(" + ")}]`;
   if (a.type === "header") h[a.header!] = `[from ${a.env}]`;
-  if (a.type === "custom" && a.provider !== "unleashed") h.Authorization = `[from the ${a.provider} sign-in]`;
+  if (a.type === "custom" && !["unleashed", "aroflo"].includes(a.provider ?? "")) h.Authorization = `[from the ${a.provider} sign-in]`;
   if (a.type === "template") h[a.header!] = `[from ${[...String(a.template).matchAll(/\{([A-Z][A-Z0-9_]+)\}/g)].map((m) => m[1]).join(" + ")}]`;
   return h;
 }
@@ -260,7 +265,7 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
 
 async function customAuth(provider: string, p: Platform, o: Op, input: CallInput, base: { url: string }): Promise<Record<string, string>> {
   // Request-signing schemes sign the final URL, so their headers are added by signRequest() once the query is set.
-  if (provider === "unleashed") return {};
+  if (provider === "unleashed" || provider === "aroflo") return {};
   if (provider === "xero") {
     const x = await import("../connectors/xero/client.ts");
     return { Authorization: `Bearer ${await x.accessToken()}`, "Xero-Tenant-Id": secret("XERO_TENANT_ID") };
@@ -340,6 +345,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   const headers: Record<string, string> = {};
   let bodyFields: Record<string, unknown> | undefined;
   let form: Record<string, string> | undefined;
+  const repeats: [string, string][] = [];
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null) continue;
     const x = known.get(k)!;
@@ -347,7 +353,10 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     if (x.in === "path") {
       const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       route = route.replace(new RegExp(`\\{${esc}\\}|:${esc}\\b`, "g"), encodePathValue(k, v, x.reserved === true, x.pattern ?? ""));
-    } else if (x.in === "query") query[k] = typeof v === "object" ? JSON.stringify(v) : String(v);
+    } else if (x.in === "query") {
+      if (Array.isArray(v) && p.queryArrays === "repeat") repeats.push(...v.map((s) => [k, String(s)] as [string, string]));
+      else query[k] = typeof v === "object" ? JSON.stringify(v) : String(v);
+    }
     else if (x.in === "header") {
       if (FORBIDDEN_HEADERS.test(k)) throw new Error(`${id} ${opId}: ${k} comes from the secret store, not a param`);
       headers[k] = String(v);
@@ -363,7 +372,9 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     json = bodyFields && input.body && typeof input.body === "object" && !Array.isArray(input.body) ? { ...(input.body as object), ...bodyFields } : (input.body ?? bodyFields);
   }
   const u = new URL(target.url);
+  for (const [k, v] of Object.entries(o.fixedQuery ?? {})) u.searchParams.set(k, v);
   for (const [k, v] of Object.entries(query)) u.searchParams.set(k, v);
+  for (const [k, v] of repeats) u.searchParams.append(k, v);
   if (method === "GET" && input.body !== undefined) throw new Error(`${id} ${opId}: a GET takes no body; pass mapped params instead`);
   if (method === "GET" && bodyFields) { // mapped params some specs document as body on a GET (Meta, Telegram): send as query
     for (const [k, v] of Object.entries(bodyFields)) u.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
@@ -375,10 +386,18 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     formOut = [...Object.entries(form ?? {}), ...encodeForm(json, p.formArrays ?? "indices")];
     json = undefined;
   }
+  // AroFlo signs the exact query or form string, built as its reference script does (encodeURIComponent per value).
+  let rawBody: string | undefined;
+  if ((o.auth ?? p.auth).provider === "aroflo") {
+    const enc = (pairs: [string, string][]) => pairs.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+    const q = enc([...u.searchParams]);
+    u.search = q ? `?${q}` : "";
+    if (method !== "GET") { rawBody = enc([...Object.entries(o.fixedForm ?? {}), ...Object.entries((formOut as Record<string, string>) ?? {})]); formOut = undefined; }
+  }
   return {
-    method, url: u.toString(), json, form: formOut, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
+    method, url: u.toString(), json, form: formOut, body: rawBody, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
     // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
-    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u) : signPreview(p, o)) },
+    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u, rawBody) : signPreview(p, o)) },
   };
 }
 
@@ -387,8 +406,26 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
 // - Unleashed (apidocs.unleashedsoftware.com/AuthenticationHelp): api-auth-signature = base64 HMAC-SHA256 of the query
 //   string only (no "?", empty when there is none) keyed with the API key, plus api-auth-id, client-type, and JSON
 //   Content-Type and Accept on every request.
-function signRequest(p: Platform, o: Op, u: URL): Record<string, string> {
+// - AroFlo (apidocs.aroflo.com collection, its pre-request script "that you must replicate"): Authentication = "HMAC " +
+//   hex HMAC-SHA512, keyed with the secret key, of [method, HostIP if used, urlPath "", accept, Authorization, ISO UTC
+//   timestamp, the query string (GET) or form string (POST)] joined with "+"; Authorization = uencoded, pencoded and
+//   orgEncoded, each URI-encoded; afdatetimeutc = the same timestamp. Hex is CryptoJS's default toString().
+function signRequest(p: Platform, o: Op, u: URL, rawBody?: string): Record<string, string> {
   const a = o.auth ?? p.auth;
+  if (a.type === "custom" && a.provider === "aroflo") {
+    const method = o.method.toUpperCase();
+    const accept = "text/json";
+    const authorization = `uencoded=${encodeURIComponent(secret("AROFLO_UENCODED"))}&pencoded=${encodeURIComponent(secret("AROFLO_PENCODED"))}&orgEncoded=${encodeURIComponent(secret("AROFLO_ORGENCODED"))}`;
+    const ts = new Date().toISOString();
+    const hostIp = optional("AROFLO_HOST_IP");
+    const varString = method === "GET" ? u.search.replace(/^\?/, "") : rawBody ?? "";
+    const payload = [method, ...(hostIp ? [hostIp] : []), "", accept, authorization, ts, varString].join("+");
+    return {
+      Authentication: `HMAC ${createHmac("sha512", secret("AROFLO_SECRET_KEY")).update(payload, "utf8").digest("hex")}`,
+      Authorization: authorization, Accept: accept, afdatetimeutc: ts, ...(hostIp ? { HostIP: hostIp } : {}),
+      ...(method !== "GET" ? { "Content-Type": "application/x-www-form-urlencoded" } : {}),
+    };
+  }
   if (a.type === "custom" && a.provider === "unleashed") {
     const query = u.search.replace(/^\?/, "");
     return {
@@ -401,6 +438,7 @@ function signRequest(p: Platform, o: Op, u: URL): Record<string, string> {
 }
 function signPreview(p: Platform, o: Op): Record<string, string> {
   const a = o.auth ?? p.auth;
+  if (a.type === "custom" && a.provider === "aroflo") return { Authentication: "[HMAC-SHA512 with AROFLO_SECRET_KEY]", Authorization: "[from AROFLO_UENCODED + AROFLO_PENCODED + AROFLO_ORGENCODED]", afdatetimeutc: "[now, ISO UTC]" };
   if (a.type === "custom" && a.provider === "unleashed") return { "api-auth-id": "[from UNLEASHED_API_ID]", "api-auth-signature": "[HMAC-SHA256 of the query string with UNLEASHED_API_KEY]", "client-type": "[from UNLEASHED_CLIENT_TYPE]" };
   return {};
 }
@@ -447,7 +485,7 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   if (o.bodyType === "multipart") throw new Error(`${p.id} ${o.id}: this endpoint takes a multipart upload, which the kit does not build yet`);
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
-  return httpCall<T>(spec, { method: r.method, url: r.url, headers: r.headers, json: r.json, form: r.form, binary: input.binary, signal: input.signal });
+  return httpCall<T>(spec, { method: r.method, url: r.url, headers: r.headers, json: r.json, form: r.form, body: r.body, binary: input.binary, signal: input.signal });
 }
 
 // A request a vendor SDK has already built (see core/sdk/vendor/). The SDK is only a front end: the

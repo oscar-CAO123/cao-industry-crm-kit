@@ -11,16 +11,18 @@
  "hostFromEnv": false,
  "hostPatterns": [],
  "pinned": {},
+ "queryArrays": "repeat",
  "serverVars": {},
  "auth": {
-  "type": "unsupported",
-  "note": "AroFlo signs each request with HMAC; the signer is not built yet"
+  "type": "custom",
+  "provider": "aroflo"
  },
  "keys": [
-  "AROFLO_ORG_ENCODED",
-  "AROFLO_USER_ENCODED",
-  "AROFLO_PASSWORD_ENCODED",
-  "AROFLO_SECRET"
+  "AROFLO_SECRET_KEY",
+  "AROFLO_UENCODED",
+  "AROFLO_PENCODED",
+  "AROFLO_ORGENCODED",
+  "AROFLO_HOST_IP (optional)"
  ],
  "sources": [
   {

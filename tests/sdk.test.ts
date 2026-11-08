@@ -39,7 +39,7 @@ const ENV: Record<string, string> = {
   GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
-  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit",
+  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit", AROFLO_SECRET_KEY: "asecret", AROFLO_UENCODED: "u=1", AROFLO_PENCODED: "p&2", AROFLO_ORGENCODED: "o 3",
 };
 
 // Every key and host variable a platform declares gets a fake value, so new platforms need no hand-written entry here.
@@ -166,8 +166,9 @@ test("server variables must match their pattern, and site hosts come only from t
 });
 
 test("platforms with unbuilt sign-in refuse to call", async () => {
-  const a = firstOp("aroflo", (x) => x.kind === "read");
-  await assert.rejects(() => callOperation("aroflo", a.id), /not wired yet/);
+  // AroFlo and Unleashed are built now (8 Nov); Bullhorn's session login is not yet.
+  const a = firstOp("bullhorn", (x) => x.kind === "read");
+  await assert.rejects(() => callOperation("bullhorn", a.id), /not wired yet/);
   assert.equal(hits.length, 0);
 });
 
@@ -412,6 +413,31 @@ test("Unleashed signs each request: base64 HMAC-SHA256 of the exact query string
     assert.equal(h.headers.Authorization, undefined, "Unleashed takes no Authorization header");
   }
   assert.equal(load("unleashed").platform.auth.type, "custom");
+});
+
+test("AroFlo: each example is a zoned call, signed with hex HMAC-SHA512 over AroFlo's payload, exact strings (8 Nov)", async () => {
+  const { createHmac } = await import("node:crypto");
+  const ops = [...load("aroflo").ops.values()];
+  assert.equal(ops.filter((o) => o.path !== "/" || !(o.fixedQuery || o.fixedForm)).length, 0, "every example has its zone");
+  const check = (h: any, method: string, varString: string) => {
+    const auth = h.headers.Authorization;
+    assert.equal(auth, "uencoded=u%3D1&pencoded=p%262&orgEncoded=o%203");
+    const payload = [method, "", "text/json", auth, h.headers.afdatetimeutc, varString].join("+");
+    assert.equal(h.headers.Authentication, `HMAC ${createHmac("sha512", "asecret").update(payload).digest("hex")}`);
+    assert.equal(h.headers.Accept, "text/json");
+  };
+  const get = ops.find((o) => o.method === "GET" && o.fixedQuery?.zone === "tasks")!;
+  hits = [];
+  await callOperation("aroflo", get.id, { params: { where: ["and|status|=|not started", "and|priority|=|high"], page: 1 } });
+  assert.equal(hits[0].url, "https://api.aroflo.com/?zone=tasks&page=1&where=and%7Cstatus%7C%3D%7Cnot%20started&where=and%7Cpriority%7C%3D%7Chigh");
+  check(hits[0], "GET", new URL(hits[0].url).search.slice(1));
+  const post = ops.find((o) => o.method === "POST")!;
+  process.env.KIT_ALLOW_WRITES = "1";
+  hits = [];
+  try { await callOperation("aroflo", post.id, { params: { postxml: "<x a='1'>&</x>" } }); } finally { delete process.env.KIT_ALLOW_WRITES; }
+  assert.equal(hits[0].body, `zone=${encodeURIComponent(post.fixedForm!.zone)}&postxml=${encodeURIComponent("<x a='1'>&</x>")}`);
+  assert.equal(hits[0].headers["Content-Type"], "application/x-www-form-urlencoded");
+  check(hits[0], "POST", String(hits[0].body));
 });
 
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
