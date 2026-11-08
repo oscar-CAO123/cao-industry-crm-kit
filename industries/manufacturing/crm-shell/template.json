@@ -1,0 +1,1342 @@
+{
+ "industry": "manufacturing",
+ "name": "Manufacturing",
+ "version": 1,
+ "source": "Pages and tabs follow the manufacturing demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "pages": [
+  {
+   "slug": "pipeline",
+   "title": "Sales",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "pipeline",
+     "title": "Pipeline",
+     "view": "board",
+     "kind": "pipeline",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "enquiries",
+     "title": "Enquiries",
+     "view": "board",
+     "kind": "enquiries",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "takeoff",
+     "title": "Takeoffs",
+     "view": "table",
+     "kind": "takeoff",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "bids",
+     "title": "Bids",
+     "view": "table",
+     "kind": "bids",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "portal",
+     "title": "Client portal",
+     "view": "table",
+     "kind": "portal",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "paylinks",
+     "title": "Payment links",
+     "view": "table",
+     "kind": "paylinks",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "marketing",
+   "title": "Marketing",
+   "department": "marketing",
+   "tabs": [
+    {
+     "slug": "content",
+     "title": "Marketing",
+     "view": "board",
+     "kind": "content",
+     "stages": [
+      "Idea",
+      "Drafting",
+      "Approved",
+      "Scheduled",
+      "Posted"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "calls",
+   "title": "Calls",
+   "department": "customer-service",
+   "tabs": [
+    {
+     "slug": "calls",
+     "title": "Calls",
+     "view": "feed",
+     "kind": "calls",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "workorders",
+   "title": "Production",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "workorders",
+     "title": "Work orders",
+     "view": "table",
+     "kind": "workorders",
+     "fields": [
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      },
+      {
+       "key": "qty",
+       "label": "Quantity",
+       "type": "number"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "shopfloor",
+     "title": "Shop floor",
+     "view": "table",
+     "kind": "shopfloor",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "kpi",
+     "title": "KPI board",
+     "view": "table",
+     "kind": "kpi",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "time",
+     "title": "Time and WIP",
+     "view": "table",
+     "kind": "time",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "cycletime",
+     "title": "Cycle times",
+     "view": "table",
+     "kind": "cycletime",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "bom",
+     "title": "Bills of materials",
+     "view": "table",
+     "kind": "bom",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "photocheck",
+   "title": "Quality and maintenance",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "photocheck",
+     "title": "Part photos",
+     "view": "table",
+     "kind": "photocheck",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "lottrace",
+     "title": "Lot trace",
+     "view": "table",
+     "kind": "lottrace",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "faultfind",
+     "title": "Fault finder",
+     "view": "table",
+     "kind": "faultfind",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "maintenance",
+     "title": "Maintenance",
+     "view": "board",
+     "kind": "maintenance",
+     "stages": [
+      "Logged",
+      "Assigned",
+      "In progress",
+      "Waiting",
+      "Closed"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "purchase",
+   "title": "Purchasing",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "purchase",
+     "title": "Purchase requests",
+     "view": "table",
+     "kind": "purchase",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "supplierquotes",
+     "title": "Supplier quotes",
+     "view": "board",
+     "kind": "supplierquotes",
+     "stages": [
+      "New request",
+      "Site visit or measure",
+      "Pricing",
+      "Sent",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "supplierdocs",
+     "title": "Supplier prices",
+     "view": "table",
+     "kind": "supplierdocs",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "invoices",
+   "title": "Invoice matching",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "invoices",
+     "title": "Invoice matching",
+     "view": "table",
+     "kind": "invoices",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pnl",
+   "title": "Numbers",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "pnl",
+     "title": "Profit and loss",
+     "view": "dashboard",
+     "kind": "pnl",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "salespack",
+     "title": "Sales numbers",
+     "view": "dashboard",
+     "kind": "salespack",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "recon",
+     "title": "Bank reconciliation",
+     "view": "table",
+     "kind": "recon",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    },
+    {
+     "slug": "ask",
+     "title": "Ask your data",
+     "view": "dashboard",
+     "kind": "ask",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "payroll",
+   "title": "Staff",
+   "department": "people",
+   "tabs": [
+    {
+     "slug": "payroll",
+     "title": "Payroll",
+     "view": "table",
+     "kind": "payroll",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "hiring",
+     "title": "Hiring",
+     "view": "board",
+     "kind": "hiring",
+     "stages": [
+      "Applied",
+      "Screened",
+      "Interview",
+      "Offer",
+      "Hired"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "workflows": [
+  {
+   "id": "all:ask-your-data",
+   "dir": "industries/all/workflows/finance-admin/ask-your-data",
+   "department": "finance-admin",
+   "name": "Ask your data",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 11
+   }
+  },
+  {
+   "id": "numbers-pack",
+   "dir": "industries/all/workflows/finance-admin/numbers-pack",
+   "department": "finance-admin",
+   "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 5
+   }
+  },
+  {
+   "id": "ad-campaigns",
+   "dir": "industries/all/workflows/marketing/ad-campaigns",
+   "department": "marketing",
+   "name": "Build and review ad campaigns",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "job-tracking",
+   "dir": "industries/all/workflows/fulfilment/job-tracking",
+   "department": "fulfilment",
+   "name": "Track jobs or projects from start to finish",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "stock-ordering",
+   "dir": "industries/all/workflows/fulfilment/stock-ordering",
+   "department": "fulfilment",
+   "name": "Track stock and order from suppliers",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "bills-expenses",
+   "dir": "industries/all/workflows/finance-admin/bills-expenses",
+   "department": "finance-admin",
+   "name": "Capture bills, receipts and supplier invoices",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "all:lead-capture",
+   "dir": "industries/all/workflows/sales/lead-capture",
+   "department": "sales",
+   "name": "Capture leads from ads, forms and chat into the CRM",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "crm-hygiene",
+   "dir": "industries/all/workflows/sales/crm-hygiene",
+   "department": "sales",
+   "name": "Clean, dedupe and enrich CRM records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "customer-helpdesk",
+   "dir": "industries/all/workflows/customer-service/customer-helpdesk",
+   "department": "customer-service",
+   "name": "Answer customer questions from the business's own knowledge",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "invoicing",
+   "dir": "industries/all/workflows/finance-admin/invoicing",
+   "department": "finance-admin",
+   "name": "Raise invoices from completed work",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "all:reconciliation",
+   "dir": "industries/all/workflows/finance-admin/reconciliation",
+   "department": "finance-admin",
+   "name": "Reconciliation",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "payroll-timesheets",
+   "dir": "industries/all/workflows/finance-admin/payroll-timesheets",
+   "department": "finance-admin",
+   "name": "Turn timesheets into payroll",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "lead-followup",
+   "dir": "industries/all/workflows/sales/lead-followup",
+   "department": "sales",
+   "name": "Follow up leads and quotes on a schedule",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "lead-reactivation",
+   "dir": "industries/all/workflows/sales/lead-reactivation",
+   "department": "sales",
+   "name": "Reactivate old leads and past customers",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "content-posting",
+   "dir": "industries/all/workflows/marketing/content-posting",
+   "department": "marketing",
+   "name": "Create and schedule social content",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "inbox-triage",
+   "dir": "industries/all/workflows/customer-service/inbox-triage",
+   "department": "customer-service",
+   "name": "Sort the shared inbox and draft replies",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "status-updates",
+   "dir": "industries/all/workflows/customer-service/status-updates",
+   "department": "customer-service",
+   "name": "Tell customers where their job, order or matter is up to",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "scheduling-dispatch",
+   "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
+   "department": "fulfilment",
+   "name": "Schedule and dispatch jobs, staff or vehicles",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "documents",
+   "dir": "industries/all/workflows/fulfilment/documents",
+   "department": "fulfilment",
+   "name": "Produce letters, reports and documents from records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "knowledge-base",
+   "dir": "industries/all/workflows/owner/knowledge-base",
+   "department": "owner",
+   "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "ad-reporting",
+   "dir": "industries/all/workflows/marketing/ad-reporting",
+   "department": "marketing",
+   "name": "Report ad spend, cost per lead and return",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "email-marketing",
+   "dir": "industries/all/workflows/marketing/email-marketing",
+   "department": "marketing",
+   "name": "Send newsletters and automated email flows",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "landing-pages",
+   "dir": "industries/all/workflows/marketing/landing-pages",
+   "department": "marketing",
+   "name": "Build and update landing pages",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "field-forms",
+   "dir": "industries/all/workflows/fulfilment/field-forms",
+   "department": "fulfilment",
+   "name": "Field forms, checklists and photos into records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "all:safety-forms",
+   "dir": "industries/all/workflows/compliance-safety/safety-forms",
+   "department": "compliance-safety",
+   "name": "Safety forms, inspections and incident reports",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "all:compliance-checks",
+   "dir": "industries/all/workflows/compliance-safety/compliance-checks",
+   "department": "compliance-safety",
+   "name": "ID, AML and regulatory checks and audits",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  }
+ ],
+ "planned_workflows": [
+  {
+   "id": "quote-build",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "department": "sales",
+   "evidence": {
+    "backing": "backed",
+    "sources": 11
+   }
+  },
+  {
+   "id": "manufacturing:photocheck",
+   "name": "Finished part photo check",
+   "department": "compliance-safety",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "manufacturing:takeoff",
+   "name": "Takeoff from drawings",
+   "department": "sales",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "manufacturing:x-maintenance",
+   "name": "Maintenance",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "manufacturing:x-shopfloor",
+   "name": "Shop floor",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "manufacturing:faultfind",
+   "name": "Breakdown fix finder",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "manufacturing:purchase",
+   "name": "Purchase request to ERP",
+   "department": "finance-admin",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "manufacturing:supplierdocs",
+   "name": "Supplier documents to SKUs",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "manufacturing:supplierquotes",
+   "name": "Supplier quote comparison",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
+   "id": "manufacturing:x-workorders",
+   "name": "Work orders",
+   "department": "fulfilment",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  }
+ ],
+ "connectors": [
+  {
+   "tool": "Xero",
+   "platform": "xero",
+   "status": "spec",
+   "calls": 9
+  },
+  {
+   "tool": "Google Workspace",
+   "platform": "google-workspace",
+   "status": "spec",
+   "calls": 5
+  },
+  {
+   "tool": "Microsoft 365",
+   "platform": "microsoft-365",
+   "status": "spec",
+   "calls": 4
+  },
+  {
+   "tool": "HubSpot",
+   "platform": "hubspot",
+   "status": "spec",
+   "calls": 3
+  }
+ ],
+ "missing_connectors": [
+  {
+   "tool": "Salesforce CRM",
+   "calls": 2
+  }
+ ]
+}

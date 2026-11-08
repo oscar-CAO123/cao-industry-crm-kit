@@ -1,0 +1,150 @@
+"use client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { addComment } from "@/actions/crm/tasks/add-comment";
+
+// Shape matches the `comments` relation select in actions/crm/account/get-task.ts.
+// Kept permissive on the nullable user fields because the relation returns
+// `name` and `avatar` as `string | null` straight out of Prisma.
+interface TeamConversationsProps {
+  data: Array<{
+    id: string;
+    comment: string;
+    createdAt: Date | string;
+    assigned_user: {
+      id?: string;
+      name: string | null;
+      avatar: string | null;
+    } | null;
+  }>;
+  taskId: string;
+}
+
+const FormSchema = z.object({
+  comment: z.string().min(3).max(160),
+});
+
+export function TeamConversations({
+  data: comments,
+  taskId,
+}: TeamConversationsProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      setIsLoading(true);
+      const result = await addComment({ taskId, comment: data.comment });
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Success");
+      }
+    } catch (error) {
+      toast.error("Something went wrong while sending comment to the DB");
+    } finally {
+      form.reset({
+        comment: "",
+      });
+      router.refresh();
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex space-x-5 w-full py-2 items-end pb-5"
+        >
+          <FormField
+            control={form.control}
+            name="comment"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input
+                    disabled={isLoading}
+                    placeholder="Your comment ..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button className="w-[80px]" disabled={isLoading} type="submit">
+            Add
+          </Button>
+        </form>
+      </Form>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Team conversation</CardTitle>
+          <CardDescription>
+            Invite your team members to collaborate.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6">
+          {comments?.map((comment: any) => (
+            <>
+              {/*               <pre>
+                <code>{JSON.stringify(comment, null, 2)}</code>
+              </pre> */}
+              <div key={comment.id} className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage
+                    src={comment.assigned_user?.avatar || "/images/nouser.png"}
+                  />
+                  <AvatarFallback>{comment.assigned_user?.name}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div>
+                    <p className="text-sm font-medium leading-none">
+                      {comment.assigned_user?.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground py-2">
+                      {comment.comment}
+                    </p>
+                  </div>
+                  <div className="text-xs opacity-50">
+                    {moment(comment.createdAt).format("YYYY-MM-DD-HH:mm")}
+                  </div>
+                </div>
+              </div>
+            </>
+          ))}
+        </CardContent>
+      </Card>
+    </>
+  );
+}

@@ -1,0 +1,153 @@
+#!/usr/bin/env -S -i /bin/bash -p
+# op-scoped: run one command with keys from the business's one 1Password vault (set at install).
+#
+#   op-scoped [--cli] vault list
+#   op-scoped items          (every item's op:// references, names only, never a value)
+#   op-scoped [--cli] run KEY_NAME [KEY_NAME2 ...] [NAME=plain-value ...] -- <command> [args]
+#   op-scoped [--cli] run NAME="op://<vault>/<item>/<field>" ... -- <command> [args]
+# A bare KEY_NAME is looked up in keys.map (the approved list); a name not on it is refused.
+#
+# --cli is the explicit fallback: the signed 1Password CLI (root-owned copy, caching off).
+# It is weaker, because op holds the token in its environment while it reads.
+# Starts with an empty environment (env -i), so nothing the caller sets can steer it.
+# Gate 1: Touch ID, showing the exact command and keys. Gate 2: the Mac password on
+# the Keychain item op-service-account (no trusted apps). The service account token
+# lives only in this shell's memory and reaches fetch.py (1Password Python SDK, pinned
+# by hash) over a pipe, never through any process's argv or environment.
+# The command gets a clean environment plus the named keys; its output is masked.
+# Installed root-owned and read-only by install.sh into /usr/local/libexec/op-scoped.
+set -euo pipefail
+umask 077
+PATH=/usr/bin:/bin
+export PATH
+
+VAULT="__VAULT__"   # replaced with the vault name by install.sh
+SERVICE="op-service-account"
+DIR="/usr/local/libexec/op-scoped"
+PYFW="/Library/Frameworks/Python.framework/Versions/3.13"
+PY="$PYFW/bin/python3.13"
+OP_BIN="$DIR/op"
+OP_TEAM="2BUA8C4S2C"
+REQUIRE_ROOT=1
+MAX_PROMPT=220
+
+die() { printf 'op-scoped: %s\n' "$1" >&2; exit "${2:-64}"; }
+[[ $VAULT != __VAULT__ && -n $VAULT ]] || die "not installed: run install.sh \"<vault name>\"" 1
+
+VIA=sdk
+if [[ ${1:-} == --cli ]]; then VIA=cli; shift; fi
+[[ $# -ge 1 ]] || die "use: op-scoped [--cli] vault list | op-scoped [--cli] run NAME=op://... -- <command>"
+names=(); refs=(); plain=()
+case "$1" in
+  vault)
+    [[ $# -eq 2 && "$2" == list ]] || die "only 'vault list' is allowed"
+    MODE=list; shown="vault list" ;;
+  items)
+    [[ $# -eq 1 && $VIA == sdk ]] || die "use: op-scoped items (names only, no --cli)"
+    MODE=items; shown="list item and field names (no values)" ;;
+  run)
+    MODE=run; shift
+    while [[ $# -gt 0 && "$1" != -- ]]; do
+      if [[ $1 =~ ^[A-Z_][A-Z0-9_]*$ ]]; then
+        n="$1"; v=""
+        while IFS= read -r line; do
+          [[ $line == "$n="* ]] && { v="${line#*=}"; break; }
+        done < "$DIR/keys.map"
+        [[ -n $v ]] || die "$n is not in the key map ($DIR/keys.map)"
+      else
+        [[ $1 =~ ^([A-Z_][A-Z0-9_]*)=(.*)$ ]] || die "expected KEY_NAME or NAME=value before --, got: $1"
+        n="${BASH_REMATCH[1]}"; v="${BASH_REMATCH[2]}"
+      fi
+      case "$n" in OP_*|PATH|HOME|USER|LOGNAME|TMPDIR|SHELL|BASH*|DYLD_*|LD_*) die "$n cannot be set" ;; esac
+      if [[ $v == op://* ]]; then
+        [[ $v == "op://$VAULT/"* ]] || die "$n points outside the $VAULT vault"
+        [[ $v != *..* ]] || die "$n: '..' is not allowed in a reference"
+        [[ $v != *[[:cntrl:]]* ]] || die "$n: control characters are not allowed in a reference"
+        names+=("$n"); refs+=("$v")
+      else
+        plain+=("$1")
+      fi
+      shift
+    done
+    [[ $# -ge 2 && "$1" == -- ]] || die "use: op-scoped run NAME=op://... -- <command>"
+    shift
+    [[ ${#names[@]} -gt 0 ]] || die "no op://$VAULT/... references given"
+    shown="run: $(printf '%q ' "$@")| keys: ${names[*]}${plain[@]+ | plain: ${plain[*]}}" ;;
+  *) die "only 'vault list', 'items' and 'run NAME=op://... -- <command>' are allowed" ;;
+esac
+
+# The Touch ID box must show the whole command, so refuse what it cannot show.
+[[ $VIA == cli ]] && shown="via CLI: $shown"
+[[ $shown != *[[:cntrl:]]* ]] || die "command contains control characters"
+[[ ${#shown} -le $MAX_PROMPT ]] || die "command too long to show on the Touch ID box (${#shown} > $MAX_PROMPT)"
+
+if [[ $REQUIRE_ROOT == 1 ]]; then
+  if [[ $VIA == cli ]]; then checks=("$OP_BIN"); else checks=("$DIR/fetch.py" "$DIR/pylib" "$DIR/pylib/onepassword" "$PYFW" "$PYFW/bin" "$PY" "$PYFW/lib/python3.13" "$PYFW/lib/python3.13/lib-dynload"); fi
+  for f in "$DIR" "$DIR/touchid" "$DIR/mask" "$DIR/keys.map" "${checks[@]}"; do
+    if [[ -L $f || $(/usr/bin/stat -f %u "$f") != 0 ]] || /bin/ls -ld "$f" | /usr/bin/grep -q '^.....w\|^........w'; then
+      die "$f must be root-owned, not a link, and not writable by others" 1
+    fi
+  done
+  if [[ $VIA == cli ]]; then
+    /usr/bin/codesign --verify --strict -R="anchor apple generic and certificate leaf[subject.OU] = \"$OP_TEAM\"" "$OP_BIN" 2>/dev/null \
+      || die "op binary failed its 1Password signature check" 1
+  fi
+fi
+
+ME="$(/usr/bin/id -un)"
+HOME_DIR="$(/usr/bin/dscl . -read "/Users/$ME" NFSHomeDirectory | /usr/bin/sed 's/^NFSHomeDirectory: //')"
+
+"$DIR/touchid" "op-scoped $shown" || die "Touch ID not approved" 1
+
+# CLI fallback: op daemons can start a moment after op exits, so also sweep them when we exit.
+stop_op_daemons() { /usr/bin/pkill -U "$(/usr/bin/id -u)" -f "op daemon" 2>/dev/null || true; }
+if [[ $VIA == cli ]]; then trap 'sleep 0.3; stop_op_daemons' EXIT; fi
+
+TOKEN="$(/usr/bin/security find-generic-password -a "$ME" -s "$SERVICE" -w 2>/dev/null)" \
+  || die "Keychain read not approved" 1
+[[ -n $TOKEN ]] || die "Keychain item is empty" 1
+
+# SDK: the token and references go to fetch.py on stdin (printf is a builtin, so no argv).
+# CLI: op gets only the token, HOME, PATH and caching off. op still starts an "op daemon"
+# that keeps the token in its environment (seen 2026-10-24), so stop it when the read ends.
+# Both print each value followed by NUL, then OK and NUL.
+fetch() {
+  if [[ $VIA == sdk ]]; then
+    printf '%s\n' "$TOKEN" "$@" | /usr/bin/env -i HOME="$HOME_DIR" "$PY" -I "$DIR/fetch.py"
+  else (
+    trap stop_op_daemons EXIT
+    for v in $(compgen -e); do unset "$v" 2>/dev/null || true; done
+    export HOME="$HOME_DIR" PATH=/usr/bin:/bin OP_CACHE=false OP_SERVICE_ACCOUNT_TOKEN="$TOKEN"
+    if [[ $* == vault-list ]]; then "$OP_BIN" --cache=false vault list; exit; fi
+    for r in "$@"; do "$OP_BIN" --cache=false read --no-newline "$r" || exit 1; printf '\0'; done
+    printf 'OK\0'
+  ) fi
+}
+
+if [[ $MODE == list ]]; then
+  fetch vault-list
+  exit
+fi
+if [[ $MODE == items ]]; then
+  fetch item-names
+  exit
+fi
+
+got=()
+while IFS= read -r -d '' v; do got+=("$v"); done < <(fetch "${refs[@]}")
+unset TOKEN
+[[ ${#got[@]} -eq $(( ${#refs[@]} + 1 )) && ${got[${#refs[@]}]} == OK ]] || die "could not read keys from $VAULT" 1
+vals=("${got[@]:0:${#refs[@]}}")
+unset got
+
+for v in $(compgen -e); do unset "$v" 2>/dev/null || true; done
+export HOME="$HOME_DIR" USER="$ME" LOGNAME="$ME" LANG=en_AU.UTF-8 \
+  PATH=/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin TMPDIR="$(/usr/bin/getconf DARWIN_USER_TEMP_DIR)"
+for p in ${plain[@]+"${plain[@]}"}; do export "$p"; done
+for i in "${!names[@]}"; do export "${names[$i]}=${vals[$i]}"; done
+
+set +e
+[[ $VIA == cli ]] && stop_op_daemons
+"$@" 2>&1 | /usr/bin/env -i "$DIR/mask" 3< <(printf '%s\0' "${vals[@]}")
+rc=${PIPESTATUS[0]}
+exit "$rc"
