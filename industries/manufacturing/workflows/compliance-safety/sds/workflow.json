@@ -1,0 +1,47 @@
+{
+ "id": "manufacturing:sds",
+ "name": "Author and maintain safety data sheets",
+ "industry": "manufacturing",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Authors and maintains the safety data sheet for each chemical the business uses. Keeps a chemical register in the business's own Airtable, drafts an SDS row for each new chemical from the data the register holds, and flags any SDS whose review date is near or past. Crons read and draft only; a person classifies the hazards, writes the sections, reviews and approves each SDS before it is used.",
+ "families": {
+  "chemical-register": {
+   "evidence": "1 of 4 calls read describes a step (supplier data sheets arrive monthly); 3 platform briefs, none with an SDS operation mapped in the kit",
+   "steps": ["chemical-intake", "obtain-supplier-sds", "check-currency", "classify-hazards", "author-sds", "technical-review", "approval-sign-off", "publish-distribute", "update-on-change", "retire-superseded", "register-and-inventory", "training-and-induction", "audit-and-inspection", "record-keeping", "other"],
+   "covered_by": {"chemical-intake": "intake (new row in the Chemicals table)", "obtain-supplier-sds": "skill (person enters the supplier SDS details; the PDF is not filed)", "check-currency": "currency (review date within the window or passed)", "classify-hazards": "skill (person classifies; the register holds the statements)", "author-sds": "draft (one row per chemical from the register)", "technical-review": "skill", "approval-sign-off": "not covered", "publish-distribute": "not covered", "update-on-change": "not covered", "retire-superseded": "not covered", "register-and-inventory": "partial (one storage field per chemical, no stock)", "training-and-induction": "not covered", "audit-and-inspection": "not covered", "record-keeping": "draft (Drafts table rows)", "other": "not covered"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New chemical rows from the Chemicals table."},
+  {"name": "draft", "schedule": "10,40 * * * *", "entry": "draft", "summary": "Write one SDS draft row per new chemical, with the fields the register is missing."},
+  {"name": "currency", "schedule": "0 22 * * *", "entry": "currency", "summary": "Write one Review due row for each SDS whose review date has passed or falls within the window (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "airtable": ["docs.get_baseId_tableIdOrName", "docs.post_baseId_tableIdOrName"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the Chemicals table, and new rows in the Drafts table. No operation sends, publishes or changes a record a staff member or customer sees.",
+ "capabilities": ["chemicals.list", "sds.draft", "reviews.flag"],
+ "adapters": {
+  "airtable": {"status": "docs-only", "covers": "chemical register read, SDS draft rows and review-due rows in a Drafts table"}
+ },
+ "gaps": [
+  "logiqc: its Documents register can hold documents with review reminders, but its docs name no SDS, and none of its operations is mapped in the kit.",
+  "whs-monitor: its Chemical Management module holds a chemical inventory and product safety information, but its operations are not mapped in the kit and its docs show no SDS upload, currency check or approval. A live account is needed.",
+  "microsoft-365: its mail and Excel operations are mapped, but its pages hold no SDS content and supplier SDS arrive by email. Reading the attachments into the register is not built.",
+  "Obtaining the supplier's SDS PDF and filing it is not covered. A person gets it and enters the details in the register.",
+  "Airtable list reads take one page (up to 100 rows) because paging is not mapped in the kit. A register of more than 100 chemicals is only partly read.",
+  "A chemical is drafted once. A later change in the register, such as a new supplier SDS version, does not write a second draft.",
+  "Hazard classification, the written sections of the SDS, technical review and sign-off are judgment steps for a person. The crons do not classify or write hazard statements.",
+  "This workflow does not check what an SDS must contain, how long it is kept, or when it must be reissued under the law.",
+  "Currency reads the review date only. It does not check the supplier's site for a newer SDS.",
+  "Publishing to staff, withdrawing superseded SDS, training records, stock and storage inventory, and audits are not covered. No live operation is mapped, so nothing is queued or sent."
+ ],
+ "evidence": {
+  "calls": "4 calls read for this workflow; 1 describes a step (supplier data sheets arrive monthly, all manual)",
+  "platforms": "3 platform briefs (logiqc, whs-monitor, microsoft-365); none maps an SDS operation in the kit. Airtable is the register because the kit maps its table operations."
+ }
+}

@@ -1,0 +1,57 @@
+{
+  "id": "automotive:vehicle-listing",
+  "name": "List vehicles for sale: photos, descriptions, ownership transfer and listing sites",
+  "industry": "automotive",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Lists vehicles for sale: reads the stock register, counts each vehicle's photos, drafts the listing copy and the ownership transfer checklist, and queues every send for approval. Crons read and draft; a person approves every send and pastes the approved copy into the listing sites.",
+  "families": {
+    "all": {
+      "evidence": "6 calls read; 1 described the process (a used car dealer checking rival prices weekly and cutting prices by hand). Platform help pages for AutoManager, Carsales and NSW Dealer Online were read.",
+      "steps": ["stock-intake", "photograph", "write-description", "price-set", "publish-listing", "ownership-transfer", "sold-and-remove", "record-keeping"],
+      "covered_by": {
+        "stock-intake": "intake (vehicles marked To list in the stock register)",
+        "photograph": "photos (counts the vehicle's photo folder; ready at the minimum)",
+        "write-description": "skill (the agent writes the listing copy into a proposal)",
+        "price-set": "intake (price comes from the stock register; a person sets it there)",
+        "publish-listing": "draft (listing copy as an Outlook draft to the listing desk) and approval (the send)",
+        "ownership-transfer": "draft (checklist to the transfer desk, no buyer details) and approval (the send); the transfer itself is a skill step",
+        "sold-and-remove": "follow-up (queues the transfer checklist once a vehicle is sold); taking the listing down is a person's step",
+        "record-keeping": "draft (a row in the listing register at each step)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Vehicles marked To list in the stock register become records; sheet status is refreshed."},
+    {"name": "photos", "schedule": "15 * * * *", "entry": "photos", "summary": "Count photos in each open vehicle's folder; a vehicle is ready at the minimum."},
+    {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "For each ready vehicle with listing copy, draft the copy, log it in the register and queue its send to the listing desk for approval."},
+    {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Mark listings live once approved; queue an ownership transfer checklist for each sold vehicle (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "drives.items.ListChildren", "users.CreateMessages"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: a read of the stock register, a read of a photo folder, a row in the listing register, an Outlook draft. Sending the listing copy or the transfer checklist is a live operation and waits for a person.",
+  "capabilities": ["vehicles.list", "photos.count", "messages.draft", "messages.send", "files.read"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "stock register read, photo folder count, listing register rows, listing copy and transfer checklist drafts, sends through approval"}
+  },
+  "gaps": [
+    "AutoManager, Carsales and NSW Dealer Online: their help pages were read, but the kit has no ops file for any of them. Stock intake, publishing to Carsales or AutoTrader, the dealer system's own price and listing records, and state ownership transfer in NSW Dealer Online are unmapped. A live account is needed for each.",
+    "Publishing to listing sites is not built: the approved copy is pasted into the site by a person. Carsales, AutoTrader and Cars.com are not mapped.",
+    "Ownership transfer forms and the state registry are not mapped. The workflow only drafts a checklist for the transfer desk. Buyer details are never put in an email.",
+    "Writing the listing copy is a judgment step for the agent, not a cron. No description is written by a deterministic template.",
+    "Photo editing and overlays, vehicle inspection, history reports (NMVTIS, CARFAX, AutoCheck), valuation and rival price comparison are not built. They need a dealer system or a data source that is not mapped in the kit.",
+    "The Excel tables have no row update operation in the kit. The register only gets new rows, and the stock register's Status cell is changed by a person, not by this workflow.",
+    "Enquiry handling from buyers is not built.",
+    "The adapter is docs-only until a Microsoft 365 developer tenant with a test workbook and a OneDrive photo folder proves it."
+  ],
+  "evidence": {
+    "calls": "6 of 6 vehicle listing calls read; 1 described the process. Calls named a used car dealer's weekly stock and price check.",
+    "platforms": "3 platform sources read (AutoManager, Carsales, NSW Dealer Online). None has a mapped operation in the kit, so the workflow uses the kit's mailbox, workbook and OneDrive (Microsoft 365) for the job."
+  }
+}

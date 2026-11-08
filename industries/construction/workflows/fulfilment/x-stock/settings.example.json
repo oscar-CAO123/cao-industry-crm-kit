@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Builders",
+ "reorder": {
+  "BOLTS-M8": {"level": 10, "order_qty": 50, "supplier_email": "accounts@example-fixings.com.au", "supplier_name": "Example Fixings"}
+ }
+}

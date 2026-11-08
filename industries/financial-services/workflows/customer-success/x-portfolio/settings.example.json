@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Advice",
+ "timezone": "Australia/Sydney",
+ "hubspot": {
+  "name_property": "name",
+  "due_property": "next_review_date",
+  "pack_properties": ["risk_profile", "objectives"],
+  "owner_id": "",
+  "organizer_user_id": ""
+ }
+}

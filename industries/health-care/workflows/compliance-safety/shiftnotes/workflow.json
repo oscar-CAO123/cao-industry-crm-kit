@@ -1,0 +1,66 @@
+{
+  "id": "health-care:shiftnotes",
+  "name": "Shift note reader",
+  "industry": "health-care",
+  "department": "compliance-safety",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Reads the shift notes that support workers and carers write after a visit, checks each one for the points it must cover, and leaves a review comment for the supervisor on any note that misses one. Crons read and draft only; nothing reaches a worker or a client.",
+  "families": {
+    "shift-note": {
+      "evidence": "2 discovery calls describe this way of writing shift notes (worklist count)",
+      "steps": ["roster-shift", "shift-start", "in-shift-observations", "incident-record", "medication-log", "write-shift-note", "submit-note", "supervisor-review", "correct-note", "handover", "client-or-family-update", "timesheet-billing", "compliance-check", "record-keeping"],
+      "covered_by": {
+        "roster-shift": "gap (roster is read by the platform, not by this workflow)",
+        "shift-start": "gap (the platform app runs the start of shift)",
+        "in-shift-observations": "gap (worker logs these in the app)",
+        "incident-record": "gap (not in the mined pages)",
+        "medication-log": "gap (not in the mined pages)",
+        "write-shift-note": "skill (worker writes the note in the app)",
+        "submit-note": "collect",
+        "supervisor-review": "check (review comment for the supervisor)",
+        "correct-note": "gap (sending a note back to one worker is not mapped)",
+        "handover": "gap (not in the mined pages)",
+        "client-or-family-update": "gap (not in the mined pages)",
+        "timesheet-billing": "gap (the platform runs timesheets and billing)",
+        "compliance-check": "check (keyword checks for the points in settings)",
+        "record-keeping": "collect"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "collect", "schedule": "*/15 * * * *", "entry": "collect", "summary": "Read yesterday's and today's timesheets and keep each new shift note that has text."},
+    {"name": "check", "schedule": "5 * * * *", "entry": "check", "summary": "Check each new note for the points in settings. Leave a review comment on the timesheet when a note misses one."}
+  ],
+  "draft_ops": {
+    "deputy": [
+      "deputy-v1-resource-api.searchTimesheet",
+      "deputy-v1-resource-api.getCommentsTimesheet",
+      "deputy-v1-resource-api.addCommentTimesheet"
+    ]
+  },
+  "live_ops": {
+    "deputy": []
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: timesheet reads and an internal review comment on a timesheet that the supervisor sees. Nothing is sent to a worker, client, GP or plan manager, and no live operation is mapped for this workflow yet.",
+  "capabilities": ["shift-notes.read", "shift-notes.check", "supervisor-comments.draft"],
+  "adapters": {
+    "deputy": {"status": "docs-only", "covers": "timesheet read, note text, supervisor review comment"}
+  },
+  "gaps": [
+    "ShiftCare, the platform most calls name (23 help pages, no API operations found), has no adapter in the kit. A ShiftCare account is needed to confirm its API and where notes are stored.",
+    "Sending a note back to the worker (correct-note) needs a memo addressed to one worker. The kit maps Deputy memo creation, but the recipient step is not confirmed against the vendor spec, so no live operation is queued.",
+    "The note text is read from the timesheet field EmployeeComment. Confirm on a live Deputy account that shift notes are stored there.",
+    "Only two crons. No cron queues an approval because no live operation is safe yet.",
+    "Incident recording, medication logs, in-shift observations, shift start, handover and client or family updates are not in the mined pages or not mapped. Workers and coordinators keep them.",
+    "The compliance check is keyword matching for the points in settings. It is not a regulator or funder check, and a person still reads every note.",
+    "The variants file for this workflow (health-care-shiftnotes-variants.json) is not in the mining folder. The build used the spec file and the platform file.",
+    "The timesheet search reads the first page of results only. Paging is not built, so a busy day can miss notes until it is added.",
+    "The Deputy adapter is docs-only until a sandbox account proves it."
+  ],
+  "evidence": {
+    "calls": "2 discovery calls named in the worklist; the variants file was not present",
+    "platforms": "ShiftCare help pages (23 mined, no API operations); Deputy vendor spec for the timesheet, comment and search fields"
+  }
+}

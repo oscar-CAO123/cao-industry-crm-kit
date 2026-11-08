@@ -1,0 +1,63 @@
+{
+ "id": "fitness-beauty:client-programs",
+ "name": "Client programs",
+ "industry": "fitness-beauty",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Builds and assigns client workout, meal and habit programs, and tracks progress against them. Crons read and draft; a person approves every send.",
+ "families": {
+  "build-and-track": {
+   "evidence": "No call counts on disk yet: the variants file named in the build brief is missing. Steps come from the mining spec and the platforms evidence.",
+   "steps": ["intake-goals", "assess-baseline", "design-program", "build-from-template", "load-to-app", "habit-setup", "deliver-to-client", "log-sessions", "check-in-review", "progress-tracking", "adjust-program", "renew-or-close", "record-keeping"],
+   "covered_by": {
+    "intake-goals": "skill (goals, injuries and schedule read from the client record)",
+    "assess-baseline": "skill (measurements and photos stay in the business's own files)",
+    "design-program": "skill (the coach writes the plan)",
+    "build-from-template": "draft (program_templates in settings, into the Programs table)",
+    "load-to-app": "draft (Programs row linked to the client)",
+    "habit-setup": "skill",
+    "deliver-to-client": "approval (check-in email draft, sent only on approval)",
+    "log-sessions": "skill (sessions logged in the Sessions table by the business)",
+    "check-in-review": "draft (check-in email to clients who have gone quiet)",
+    "progress-tracking": "draft (weekly Progress row from the Sessions table)",
+    "adjust-program": "skill",
+    "renew-or-close": "not yet (see gaps)",
+    "record-keeping": "draft (Airtable rows)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "program-draft", "schedule": "*/30 * * * *", "entry": "program-draft", "summary": "Draft a program row for each client whose intake is complete and whose goal matches a saved template."},
+  {"name": "check-in", "schedule": "0 22 * * *", "entry": "check-in", "summary": "Draft a check-in email for active clients with no logged session for the set number of days, and queue it for approval."},
+  {"name": "progress-summary", "schedule": "0 23 * * 0", "entry": "progress-summary", "summary": "Write one weekly progress row per active client from the sessions logged that week."}
+ ],
+ "draft_ops": {
+  "airtable": ["docs.get_baseId_tableIdOrName", "docs.post_baseId_tableIdOrName", "docs.patch_baseId_tableIdOrName_recordId"],
+  "google-workspace": ["gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations write to the business's own Airtable base (client, program, session and progress rows) and create Gmail drafts. Nothing reaches a client. Sending a Gmail draft is a live operation and waits for a person.",
+ "capabilities": ["contacts.list", "contacts.upsert", "messages.list", "messages.draft"],
+ "adapters": {
+  "airtable": {"status": "docs-only", "covers": "client, program, session and progress rows in the business's base"},
+  "google-workspace": {"status": "docs-only", "covers": "check-in email drafts and their approved send"}
+ },
+ "gaps": [
+  "Mindbody: the help pages describe bookings, waivers and check-ins, not program assignment or measurements. No Mindbody platform folder exists in the kit, so nothing is mapped for it.",
+  "Hapana: named in the mining spec, but no Hapana platform folder exists in the kit, so nothing is mapped for it.",
+  "The variants file named in the build brief is not on disk, so there are no call counts and no call-level step evidence.",
+  "Renewal and close-out of a program has no mapped operation. Airtable has no documented program lifecycle.",
+  "Measurements and progress photos: Airtable holds only text and attachments here, and no photo upload is mapped for this job.",
+  "Assessing a baseline, designing a program, adjusting it and habit set-up are coach judgment. The crons do not do them.",
+  "Airtable field names are per base. settings.example.json uses placeholder names that must match the client's base before any cron runs.",
+  "Both adapters are docs-only until a sandbox base and a Google test mailbox prove them."
+ ],
+ "evidence": {
+  "calls": "0 call evidence on disk (variants file missing)",
+  "platforms": "airtable, google-workspace and mindbody help pages, from fitness-beauty-client-programs-platforms.json. Airtable and Google Workspace have kit operations; Mindbody has none."
+ }
+}

@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Clinic",
+ "rebate_codes": ["EXAMPLE-REBATE-CODE"],
+ "review_after_days": 14
+}

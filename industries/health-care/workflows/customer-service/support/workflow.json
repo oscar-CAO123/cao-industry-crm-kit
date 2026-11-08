@@ -1,0 +1,50 @@
+{
+ "id": "health-care:support",
+ "name": "Patient support desk",
+ "industry": "health-care",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes patient and client enquiries from the help desk, checks the enquirer against the clinic's patient records, and queues a holding reply for a person to approve. Clinical enquiries go to a clinician and never get an automatic reply. Crons read and draft; a person approves every reply that reaches a patient.",
+ "families": {
+  "all": {
+   "evidence": "3 discovery calls describe this way of supporting patients (2 physiotherapy, 1 wellness clinic)",
+   "steps": ["enquiry-intake", "patient-lookup", "booking-change", "clinician-escalation", "reminders-and-followup", "record-keeping"],
+   "covered_by": {"enquiry-intake": "intake (help desk tickets) and draft (holding reply queued)", "patient-lookup": "draft (Cliniko record match, read only)", "booking-change": "skill (staff book and cancel in Cliniko)", "clinician-escalation": "draft (clinical words stop the automatic reply)", "reminders-and-followup": "follow-up (chases replies still waiting on the enquirer)", "record-keeping": "skill (staff note the outcome in Cliniko)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New help desk tickets, with the requester's name and email."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Match each new enquiry to a patient record, then queue a holding reply, or escalate a clinical one."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue chasers on replies still waiting on the enquirer; flag tickets the enquirer has written back to."}
+ ],
+ "draft_ops": {
+  "zendesk": ["core.ListTickets", "core.ShowTicket", "core.ShowUser"],
+  "cliniko": ["patient.listpatients"]
+ },
+ "live_ops": {
+  "zendesk": ["core.UpdateTicket"]
+ },
+ "draft_ops_note": "Reads only: new tickets, requesters, ticket status and patient matches. Holding replies and chasers wait in the workflow store until a person approves the public reply.",
+ "capabilities": ["tickets.list", "tickets.reply", "patients.find"],
+ "adapters": {
+  "zendesk": {"status": "docs-only", "covers": "enquiry intake, requester, ticket status, public reply and chasers"},
+  "cliniko": {"status": "docs-only", "covers": "patient record match (read only)"}
+ },
+ "gaps": [
+  "Cliniko: booking changes, patient creation, reminders and treatment notes are not wired. Staff do them in Cliniko. Its create and cancel operations are mapped, but no cron queues them, because the evidence does not say who may change a booking.",
+  "Cliniko: rescheduling, appointment reminders and SMS are not described in its help pages, so no step relies on them.",
+  "GoHighLevel and the AI phone line are named on the calls for enquiry intake, but they are not in this worklist's platform evidence, so no adapter was built for them.",
+  "Halaxy is in the platform evidence with no mapped operations, so it is listed only.",
+  "Facebook messages and the website form reach the desk only if the help desk is connected to them. Unverified.",
+  "Zendesk's pages are marketing and newsroom content, and none cover health-care support. The adapter follows the mapped operations alone. A live account is needed to confirm the intake flow.",
+  "Triage and complaints are judgment steps. The clinical word list is a safety net that sends enquiries to a clinician, not a triage.",
+  "Clinician escalation, hand-off between staff and Medicare or health fund steps are not covered by the pages reviewed.",
+  "Every adapter is docs-only until a sandbox account (a Zendesk trial, a Cliniko trial) proves it."
+ ],
+ "evidence": {
+  "calls": "4 calls read, 3 describe how support works (2 physiotherapy, 1 wellness clinic)",
+  "platforms": "the vendors' own help pages for Cliniko, Halaxy and Zendesk, mapped against the kit's operation lists; Cliniko has the most supported steps with mapped operations, Zendesk is second"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "family": "dispatched-field-crews",
+ "business_name": "Example Services",
+ "timezone": "Australia/Sydney",
+ "crew": ["00000000-0000-4000-8000-000000000001", "00000000-0000-4000-8000-000000000002"],
+ "office_staff_uuid": "00000000-0000-4000-8000-0000000000aa",
+ "allocation_window_uuid": "",
+ "max_jobs_per_crew_day": 3,
+ "horizon_days": 10,
+ "work_weekends": false,
+ "notify": "sms"
+}

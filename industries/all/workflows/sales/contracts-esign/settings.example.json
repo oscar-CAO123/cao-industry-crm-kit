@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Agency",
+ "email_subject_prefix": "Please sign",
+ "status_check_limit": 50
+}

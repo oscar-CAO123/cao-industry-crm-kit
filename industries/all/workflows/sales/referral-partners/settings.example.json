@@ -1,0 +1,14 @@
+{
+ "family": "referral-partners",
+ "business_name": "Example Brokers",
+ "intake": "pipedrive",
+ "partners": "activecampaign",
+ "pipedrive": {
+  "referral_label_id": "REFERRAL-LABEL-UUID-FROM-PIPEDRIVE",
+  "partner_email_field": "40-CHARACTER-PARTNER-EMAIL-FIELD-KEY"
+ },
+ "activecampaign": {
+  "acknowledged_tag": "referral-received",
+  "stage_tags": {"1": "referral-in-progress"}
+ }
+}

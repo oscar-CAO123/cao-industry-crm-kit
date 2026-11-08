@@ -1,0 +1,5 @@
+{
+ "family": "general",
+ "business_name": "Example Transport",
+ "required_fields": ["type", "brand", "model", "serialNumber", "productionYear"]
+}

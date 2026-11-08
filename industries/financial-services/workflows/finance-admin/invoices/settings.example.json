@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Accounting",
+ "bank_account_code": "",
+ "pay_days_before_due": 2,
+ "amount_tolerance": 1,
+ "chase_after_days": [7, 14, 30]
+}

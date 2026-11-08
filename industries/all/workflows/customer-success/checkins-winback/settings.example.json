@@ -1,0 +1,19 @@
+{
+ "business_name": "Example Studio",
+ "from_name": "Example Studio",
+ "reply_to": "hello@example.com.au",
+ "mailchimp": {
+  "list_id": "LIST_ID"
+ },
+ "groups": [
+  {
+   "name": "lapsed-90-days",
+   "tag": "lapsed-90-days",
+   "segment_id": 123456,
+   "after_days": 90,
+   "subject": "Checking in, and a quick question",
+   "html": "<p>Hi, it has been a while since we last worked together. Is there anything we can help with this month?</p><p>Reply to this email and it reaches a person.</p>"
+  }
+ ],
+ "max_members_per_run": 5000
+}

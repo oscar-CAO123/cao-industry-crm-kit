@@ -1,0 +1,78 @@
+{
+ "id": "rostering",
+ "name": "Build rosters from demand and availability",
+ "industry": "all",
+ "department": "people",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works out who is free for each block of demand, drafts their shifts in Deputy as private drafts, and queues each publish for approval. Crons read and draft; a person approves every publish, because publishing tells staff.",
+ "families": {
+  "shift-based-workforce": {
+   "evidence": "12 of 14 describing calls roster shift crews by hand or do not say how; the most-named tool is Deputy (3 calls)",
+   "steps": ["demand-forecast", "availability-collect", "skills-check", "roster-draft", "publish-roster", "shift-swaps", "leave-approval", "late-changes", "timesheet-check", "record-keeping"],
+   "covered_by": {
+    "demand-forecast": "settings (demand blocks typed in by the owner); not forecast from history",
+    "availability-collect": "sync (reads availability records); not yet used to pick staff",
+    "skills-check": "draft (skips inactive staff and anyone on leave or already rostered)",
+    "roster-draft": "draft (private shifts in Deputy)",
+    "publish-roster": "publish (queued for approval)",
+    "shift-swaps": "sync (reads swap requests); approval not built",
+    "leave-approval": "sync (reads leave); approval not built",
+    "late-changes": "not yet (see gaps)",
+    "timesheet-check": "sync (late clock-ins and validation flags)",
+    "record-keeping": "sync (store)"
+   }
+  },
+  "unclear": {
+   "evidence": "2 calls do not say how they roster; no step is covered beyond the family above",
+   "steps": [],
+   "covered_by": {}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "sync", "schedule": "0 */2 * * *", "entry": "sync", "summary": "Read rosters, timesheets and swap requests from Deputy into the store. Flags late clock-ins. Reads only."},
+  {"name": "draft", "schedule": "0 20 * * *", "entry": "draft", "summary": "For each demand block in the window, draft private shifts for people free for it. Records a shortfall where it cannot fill one."},
+  {"name": "publish", "schedule": "30 20 * * *", "entry": "publish", "summary": "Queue each unpublished draft starting inside the publish window for approval. Nothing is published by a cron."}
+ ],
+ "draft_ops": {
+  "deputy": [
+   "deputy-v1-resource-api.listEmployee",
+   "deputy-v1-resource-api.listEmployeeAvailability",
+   "deputy-v1-resource-api.listLeave",
+   "deputy-v1-resource-api.listRoster",
+   "deputy-v1-resource-api.listTimesheet",
+   "deputy-v1-resource-api.listRosterSwap",
+   "deputy-v1-resource-api.createRoster"
+  ]
+ },
+ "live_ops": {
+  "deputy": [
+   "deputy-v1-resource-api.updateRoster"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of staff, leave, rosters, timesheets and swap requests, and a private draft shift (Published false) that only managers see. Publishing a shift tells staff, so it is a live operation and waits for a person.",
+ "capabilities": ["rosters.list", "rosters.draft", "rosters.publish", "availability.list", "leave.list", "timesheets.list", "swaps.list", "staff.list"],
+ "adapters": {
+  "deputy": {"status": "docs-only", "covers": "staff, leave, rosters, timesheets and swap requests as reads; private draft shifts; publishing one shift at a time through the approval queue"}
+ },
+ "gaps": [
+  "ClockOn (named in 1 call): no adapter in the kit, and no rostering operations are mapped. Its pages describe a planner and a broadcast to staff, not an API.",
+  "Humanforce (named in 1 call): not in the kit. Its pages are marketing and blog pages only, with no operations mapped.",
+  "ShiftCare, ELMO, Simpro and Employment Hero (named in the calls): ShiftCare, ELMO and Simpro are not in the kit. Employment Hero is in the kit with operations, but no rostering evidence was mined for it in this job, so it is not built.",
+  "Demand forecasting: no platform in the evidence describes it. Demand is typed in by the owner in settings.json, from the budget and headcount the owner gives.",
+  "Publishing in bulk: Deputy's publish endpoint (deputy.Publisharoster) has an untyped body in the official spec, so its fields cannot be confirmed. The adapter publishes one shift at a time by setting Published true on the roster record, which the spec does type. Confirm on a sandbox account that this notifies staff as expected.",
+  "Shift swaps and leave approval: the swap and leave records are read, but approving or declining them is not built. Deputy's RosterSwap and Leave update operations are mapped, but the decision rules (who may cover, which leave is first) need the owner.",
+  "Sick calls, late cancellations and re-rostering: no Deputy page in the evidence describes a sick-call flow, so this is a person's job.",
+  "Availability: availability records are read, but their type codes are not confirmed in the spec, so staff are not excluded on availability yet. Only leave, inactive status and existing shifts exclude them.",
+  "Skills and minimum rest: Deputy's shift warnings are not read, and minimum rest checks are not described, so a skill or rest breach is not caught by the drafts. A person checks each draft.",
+  "Time units: Deputy's roster times are typed as integers. This build treats them as whole Unix seconds and sends the date as midnight UTC. Confirm both on a sandbox account before any live use.",
+  "Paging: the list reads are not filtered or paged in this build. A large account needs its own date filter before the sync is safe to run on it.",
+  "Runtime: the approval's ref reader looks for id, uuid and ...ID keys. Deputy returns Id, so no ref is kept for a published shift. The shift id is in the approval's act input instead. Changing the reader is a core change, not made here.",
+  "Every adapter is docs-only until a sandbox Deputy account proves it."
+ ],
+ "evidence": {
+  "calls": "29 rostering calls read, 14 describe their process; 12 roster by hand or do not say how",
+  "platforms": "all-rostering-platforms.json maps ClockOn, Deputy and Humanforce. Only Deputy has mapped operations in the kit, so the adapter is Deputy. ClockOn and Humanforce have no kit platform."
+ }
+}

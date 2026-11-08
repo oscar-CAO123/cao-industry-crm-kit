@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Crew Pty Ltd",
+ "deputy": {
+  "operational_unit": 1,
+  "draft_days_ahead": 14,
+  "publish_days_ahead": 7,
+  "late_grace_minutes": 5
+ },
+ "demand": [
+  {"date": "2026-11-16", "start": "2026-11-16T06:00:00+11:00", "end": "2026-11-16T14:00:00+11:00", "headcount": 8}
+ ]
+}

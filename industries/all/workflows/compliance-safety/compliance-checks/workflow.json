@@ -1,0 +1,54 @@
+{
+ "id": "all:compliance-checks",
+ "name": "ID, AML and regulatory checks and audits",
+ "industry": "all",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads the ID, AML and regulatory check state of each client matter in the business's verification platform, records what is open or still waiting, and queues a case note for a compliance person to approve. Crons read and queue only; a person decides every check result and every change to a case.",
+ "families": {
+  "aml-matter-onboarding": {
+   "evidence": "6 of the 43 worklist calls were read; 5 describe this way of working (accounting practices, law firms, a real estate agency)",
+   "steps": ["client-intake", "identity-check", "beneficial-owner-check", "aml-screening", "risk-assessment", "approval", "remediation", "ongoing-monitoring", "record-keeping", "regulatory-report"],
+   "covered_by": {
+    "client-intake": "gap (case creation is mapped but no cron starts a case; the matter system is not mapped)",
+    "identity-check": "case-watch (reads each person's check state)",
+    "beneficial-owner-check": "gap (the platform docs do not describe it)",
+    "aml-screening": "case-watch and open-items (open and waiting screening states)",
+    "risk-assessment": "gap (the platform makes no rating; the business does)",
+    "approval": "gap (staff set check status in the platform)",
+    "remediation": "gap (proof collection is a person's job)",
+    "ongoing-monitoring": "gap (the docs do not say clients are re-checked on a schedule)",
+    "record-keeping": "open-items (case notes, queued for approval)",
+    "regulatory-report": "gap (the platform does not lodge reports)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "case-watch", "schedule": "*/30 * * * *", "entry": "case-watch", "summary": "Read cases updated since the last run and record each person's and entity's check state."},
+  {"name": "open-items", "schedule": "0 * * * *", "entry": "open-items", "summary": "Queue one case note for each set of open screening or verification items, for a compliance person to approve."}
+ ],
+ "draft_ops": {
+  "first-aml": ["query.me", "query.searchCases", "query.nextPageOfCases", "query.caseDetails"]
+ },
+ "live_ops": {
+  "first-aml": ["mutation.addCaseNote"]
+ },
+ "draft_ops_note": "Read operations only. Nothing a cron drafts is written to the platform. A case note is an internal record, but it sits in a regulated file, so it is queued for a person rather than drafted.",
+ "adapters": {
+  "first-aml": {"status": "docs-only", "covers": "case search and paging, case check state for people and entities, case notes (queued)"}
+ },
+ "gaps": [
+  "Smokeball, the matter system where owners key intake by hand: the platform evidence did not cover it, so no adapter. Intake from it is not built.",
+  "Beneficial owner identification, licence checks, enhanced due diligence, second-reviewer approval, audit sampling and AUSTRAC lodgement: the First AML docs do not describe them, so they stay with the business.",
+  "Risk assessment: the platform gives check results only. The rating is a person's judgment and is not drafted by any cron.",
+  "Running verification checks and creating cases are mapped in the kit but not used by any cron, because each may contact a client or use a paid check.",
+  "Field names come from the vendor's sandbox schema. Case ID format, check status values in live data and the reading of the entity status fields are unconfirmed until a sandbox account runs them.",
+  "The adapter is docs-only: nothing has run against a First AML account. The FIRST_AML_ACCESS_TOKEN sign-in is not built yet (the platform file says so)."
+ ],
+ "evidence": {
+  "calls": "6 of 43 worklist calls read, none rejected; the rest are not in the evidence file",
+  "platforms": "First AML vendor docs, mapped step by step (client intake, identity, screening, approval, record-keeping, monitoring, remediation); Smokeball has no platform evidence"
+ }
+}

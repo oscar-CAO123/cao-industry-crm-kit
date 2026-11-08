@@ -1,0 +1,47 @@
+{
+ "id": "fitness-beauty:x-timetable",
+ "name": "Class timetable",
+ "industry": "fitness-beauty",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the class timetable in the business's booking system. Crons read the next weeks of classes and seats, flag classes that are under-filled, and queue any class cancellation or room block the owner or agent has proposed. A person approves every change that reaches a member.",
+ "families": {
+  "class-timetable": {
+   "evidence": "No discovery-call variants file exists for this workflow yet (0 calls mined). Platform evidence from the mining pass covers three platforms, none mapped in this kit.",
+   "steps": ["class-setup", "instructor-roster", "publish-timetable", "member-bookings", "fill-rate-review", "change-or-cancel", "member-notify", "attendance-check", "reporting", "record-keeping"],
+   "covered_by": {"class-setup": "gap (Bookeo products are set up in the platform; no mapped create-class operation)", "instructor-roster": "gap (no mapped instructor assignment in Bookeo)", "publish-timetable": "gap (public timetable is set in the platform)", "member-bookings": "snapshot (reads bookings and seats)", "fill-rate-review": "fill-review", "change-or-cancel": "change-queue (cancellations and room blocks, approval only)", "member-notify": "change-queue (Bookeo notifies the customer on a cancellation, through the approved operation)", "attendance-check": "gap (check-in is not mapped)", "reporting": "fill-review (stored record)", "record-keeping": "snapshot (stored snapshot per run)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "snapshot", "schedule": "0 * * * *", "entry": "snapshot", "summary": "Hourly: read the next weeks of classes, their seats and room blocks into the store. Reads only."},
+  {"name": "fill-review", "schedule": "0 22 * * *", "entry": "fillReview", "summary": "Daily: flag classes under the fill target into the store for the owner's weekly review. Writes to the store only."},
+  {"name": "change-queue", "schedule": "*/15 * * * *", "entry": "changeQueue", "summary": "Turns proposed class cancellations and room blocks into approvals. Queues only; a person approves each one."}
+ ],
+ "draft_ops": {
+  "bookeo": ["get /settings/products", "get /availability/slots", "get /bookings", "get /resourceblocks"]
+ },
+ "live_ops": {
+  "bookeo": ["delete /bookings/{bookingNumber}", "post /resourceblocks"]
+ },
+ "draft_ops_note": "Draft operations are reads only. Cancelling a booking (which notifies the customer) and blocking a room change what members see or book, so they are live operations and wait for a person.",
+ "capabilities": ["classes.list", "bookings.list", "bookings.cancel", "resources.block"],
+ "adapters": {
+  "bookeo": {"status": "docs-only", "covers": "product list, seats per class, bookings, room blocks, booking cancellation with customer notice"}
+ },
+ "gaps": [
+  "Platforms in the mining evidence (Gymdesk, GymMaster, Mindbody) are not in this kit, so none of them has an adapter. Gymdesk and GymMaster publish timetables and bookings; Mindbody sells the same through ClassPass. Each needs an OpenAPI spec and an adapter before it can run here.",
+  "No discovery-call variants file exists for this job, so the steps are taken from the platform help pages only, not from owners.",
+  "Creating or editing a class, assigning or swapping instructors, and moving a class to a new time have no mapped Bookeo operation. They stay manual in the platform.",
+  "Check-in and attendance records have no mapped Bookeo operation.",
+  "Bookeo capacity is not a single field here. Fill rate is seats left plus non-cancelled bookings for the same event, which is an approximation until a live account confirms it.",
+  "The Bookeo adapter reads the first 100 rows of each list and does not follow pagination yet.",
+  "Member notices for a moved or changed class (not a cancellation) have no mapped operation. The Bookeo cancellation notice goes out through notifyCustomer.",
+  "Every adapter stays docs-only until a Bookeo sandbox account proves it."
+ ],
+ "evidence": {
+  "calls": "0 discovery calls for this workflow (the variants file is missing)",
+  "platforms": "3 platforms in the mining file (Gymdesk, GymMaster, Mindbody); 0 of 3 mapped in the kit; Bookeo mapped as the nearest class-booking platform"
+ }
+}

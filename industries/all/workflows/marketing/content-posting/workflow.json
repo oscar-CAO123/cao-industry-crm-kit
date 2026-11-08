@@ -1,0 +1,47 @@
+{
+  "id": "content-posting",
+  "name": "Create and schedule social content",
+  "industry": "all",
+  "department": "marketing",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Creates and schedules social posts: each planned post becomes an unpublished Instagram draft and its publish is queued for approval, and recent posts are read back. Crons read and draft; a person approves every publish.",
+  "families": {
+    "all": {
+      "evidence": "31 of 40 discovery calls describe how they make and post social content, and every step is manual",
+      "steps": ["idea-capture", "content-plan", "create-visual", "write-caption", "approve", "schedule", "publish", "respond", "track-results"],
+      "covered_by": {"idea-capture": "skill (the owner or agent gives the idea)", "content-plan": "skill (planned posts are written to the posts store)", "create-visual": "skill (the picture is made by hand or in Canva, and needs an https link)", "write-caption": "skill (caption written by the agent, checked before it is planned)", "approve": "approval (a person approves each live publish in the CRM shell)", "schedule": "not yet (see gaps)", "publish": "draft (Instagram container) and approval (live publish)", "respond": "skill (replies to comments are judgment, not a cron)", "track-results": "read (recent posts on Instagram and the Facebook Page)"}
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Planned posts to Instagram drafts; each publish queued for approval."},
+    {"name": "track", "schedule": "0 21 * * *", "entry": "track", "summary": "Recent posts on each channel, kept for the owner's review (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "meta-ads": ["IGUser.get.media", "Page.get.published_posts", "IGUser.post.media"]
+  },
+  "live_ops": {
+    "meta-ads": ["IGUser.post.media_publish", "Page.post.photos", "Page.post.feed"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: an Instagram container is not public until media_publish runs, and the reads change nothing. Anything that publishes a post is a live operation and waits for a person.",
+  "adapters": {
+    "meta-ads": {"status": "docs-only", "covers": "Instagram single-image posts (container, then publish on approval), Facebook Page photo and text posts on approval, and reads of recent posts"}
+  },
+  "gaps": [
+    "LinkedIn organic posts (ugcPosts) are mapped, but LinkedIn requires the header X-Restli-Protocol-Version: 2.0.0 and the kit cannot set a header on a call yet. No LinkedIn adapter until the kit gains per-operation headers (a core change).",
+    "Canva has design and export operations mapped but no publish step. The picture is made by hand or in Canva, and its https link goes into the post.",
+    "Hootsuite, Metricool and Vista Social were read, but none has an API operation mapped in the kit, so none has an adapter.",
+    "No container status check is mapped (Meta's status_code), so an approval can run before Instagram has finished processing a picture. If it fails, approve it again after a minute.",
+    "Only single Instagram images are built. Reels, carousels and stories are not built or verified.",
+    "Scheduled publishing is not built: approval publishes when approved. Facebook's scheduled_publish_time exists on the Page feed but is not wired.",
+    "Replies to comments (respond) are a judgment step for the agent. Instagram comment reply operations are mapped but are live, so no cron runs them.",
+    "Per-post insights are not read: the metric names need confirming against Meta's docs first. track reads recent posts only.",
+    "No command or CRM screen adds a planned post yet. The agent or owner writes it to the posts namespace until a form exists (tools/workflow.ts has propose, which is quoting-only).",
+    "The Meta token needs the Instagram publishing and Page posting permissions. Checked offline only, not against a real account."
+  ],
+  "evidence": {
+    "calls": "40 content-posting calls were read: 31 describe the process, with manual share at 100 percent on most steps",
+    "platforms": "the Hootsuite, Metricool and Vista Social help pages were read: none has a mapped API operation, so the kit adapter covers Meta only"
+  }
+}

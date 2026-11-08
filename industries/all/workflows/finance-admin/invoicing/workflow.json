@@ -1,0 +1,60 @@
+{
+ "id": "invoicing",
+ "name": "Raise invoices from completed work",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns completed jobs into invoices in the business's own system, queues each one to be authorised and emailed for approval, records the payments the trade takes on site, and queues reminders for overdue invoices. Crons read and draft; a person approves every authorisation, email, payment and reminder.",
+ "families": {
+  "job-sheet-billing": {
+   "evidence": "18 calls describe this way of invoicing: field paperwork or job sheets, then invoices typed up later",
+   "steps": ["job-complete", "collect-job-data", "check-against-quote", "internal-review", "build-invoice", "send-invoice", "chase-payment", "record-keeping"],
+   "covered_by": {"job-complete": "draft (a completed ServiceM8 job is the trigger)", "build-invoice": "draft", "send-invoice": "approval", "chase-payment": "follow-up", "collect-job-data": "not covered (paperwork stays with the trade)", "check-against-quote": "not covered (judgment)", "internal-review": "approval", "record-keeping": "not covered"}
+  },
+  "stage-billing": {
+   "evidence": "8 calls describe billing against stages or a contract, checked against a quote",
+   "steps": ["collect-job-data", "check-against-quote", "internal-review", "build-invoice", "record-payment", "record-keeping"],
+   "covered_by": {"collect-job-data": "not covered", "check-against-quote": "not covered (judgment)", "internal-review": "approval", "build-invoice": "draft", "record-payment": "payments", "record-keeping": "not covered"}
+  },
+  "unclear": {
+   "evidence": "6 calls describe invoicing with no job system named",
+   "steps": ["build-invoice", "send-invoice", "record-payment"],
+   "covered_by": {"build-invoice": "draft (only where ServiceM8 holds the job)", "send-invoice": "approval", "record-payment": "payments"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Completed ServiceM8 jobs with materials become DRAFT invoices in Xero; the authorise and email is queued for approval."},
+  {"name": "payments", "schedule": "15 * * * *", "entry": "payments", "summary": "Payments the trade took in ServiceM8 are queued to record against their Xero invoices."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Sent invoices past due get the next reminder queued (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobMaterials", "servicem8-api.listCompanyContacts", "servicem8-api.listJobPayments"],
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.createInvoices", "accounting.getInvoices"]
+ },
+ "live_ops": {
+  "servicem8": ["servicem8-api.updateJobs"],
+  "xero": ["accounting.updateOrCreateInvoices", "accounting.emailInvoice", "accounting.createPayment"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of jobs, materials, contacts, payments and invoices, a Xero contact, or a Xero invoice in DRAFT. Authorising an invoice, emailing it or a reminder, recording a payment, and marking a ServiceM8 job invoiced are live operations and wait for a person.",
+ "capabilities": ["jobs.read", "invoices.draft", "invoices.authorise", "invoices.send", "payments.record", "contacts.upsert"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "completed jobs, materials, customer contact, job payments, marking a job invoiced"},
+  "xero": {"status": "docs-only", "covers": "contact, DRAFT invoice, authorise, email and reminder, payment against an invoice, status refresh"}
+ },
+ "gaps": [
+  "MYOB: the kit maps invoice reads and customer payments, but not creating or authorising an invoice (Sale/Invoice is GET only in ops.json), so there is no MYOB adapter. Invoices stay in MYOB until those operations are mapped.",
+  "Simpro, Jobpac, Ignition, Hubdoc, Base44 and Google Workspace job sheets: not in the kit's platform list. Collecting job data and checking it against the quote stay with the business.",
+  "Reminders: Xero's API has no reminder-send operation mapped, so a reminder is the invoice email again. Custom reminder wording is not available through this workflow.",
+  "Progress claims and staged billing against a contract: no operations mapped in ServiceM8 or Xero for claims. Stage-billing businesses invoice by hand until a claim operation is mapped.",
+  "Supplier and subcontractor bills, bank-detail checks and payment runs: out of scope here (the bills operations are not built).",
+  "Quoting overlap: the construction quoting workflow's handover also drafts a Xero invoice for an accepted quote. Running both on one business would draft two invoices for one job. No cross-workflow dedupe is built.",
+  "Xero GST: each line is posted with the account's default tax. Confirm the sales account's tax setting with the owner before the first invoice is authorised.",
+  "The workflow is docs-only until a sandbox ServiceM8 account and a Xero demo company prove it against real data."
+ ],
+ "evidence": {
+  "calls": "44 invoicing calls in the worklist; 40 read, 32 describe how they invoice, 8 variants by billing style",
+  "platforms": "ServiceM8, Xero and MYOB mapped step by step from their official specs and help pages; Xero and ServiceM8 have adapters"
+ }
+}

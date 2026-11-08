@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Retail",
+ "cin7": {"branch_id": 1, "rows": 50},
+ "adjustment_reason": "Batch count from purchase order receipt, approved by owner"
+}

@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Transport",
+ "period_start": "2026-07-01",
+ "period_end": "2026-09-30",
+ "fuel_account_name": "Fuel tax credit",
+ "fuel_keywords": ["fuel", "diesel", "petrol", "unleaded"]
+}

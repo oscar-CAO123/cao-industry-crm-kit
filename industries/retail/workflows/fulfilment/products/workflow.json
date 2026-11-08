@@ -1,0 +1,50 @@
+{
+ "id": "retail:products",
+ "name": "Product data pipeline",
+ "industry": "retail",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes a product from request to a live listing, stock and retirement in the retailer's own system. Crons read product records and stock, flag missing data and low stock, and queue any retirement for approval; nothing reaches a customer without a person approving it.",
+ "families": {
+  "all": {
+   "evidence": "7 discovery calls describe this way of running product data",
+   "steps": ["product-request", "specs-and-photos", "pricing", "data-entry", "variants-and-barcodes", "approval", "stock-sync", "retire-product", "record-keeping"],
+   "covered_by": {"product-request": "not yet (no mapped intake platform)", "specs-and-photos": "not yet (no mapped photo or spec operations)", "pricing": "not yet (price tier and bulk price operations unmapped)", "data-entry": "check (flags products with missing records)", "variants-and-barcodes": "check (flags missing barcodes and SKUs)", "approval": "not yet (no mapped sign-off step)", "stock-sync": "stock (low-stock flags)", "retire-product": "retire (queued for approval)", "record-keeping": "check and stock (reads from the system of record)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "check", "schedule": "*/30 * * * *", "entry": "check", "summary": "Read product records and flag products missing a barcode, description, price or SKU."},
+  {"name": "stock", "schedule": "0 */2 * * *", "entry": "stock", "summary": "Read stock on hand and flag products at or below the low-stock level."},
+  {"name": "retire", "schedule": "30 6 * * 1", "entry": "retire", "summary": "Queue an obsolete approval for each product the owner has listed for retirement."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_Products", "docs.get_StockOnHand"],
+  "woocommerce": ["docs.get_products"]
+ },
+ "live_ops": {
+  "unleashed": ["docs.post_Products_Obsolete_productGuid"]
+ },
+ "draft_ops_note": "Reads only. The crons write flags into their own store, which reaches nobody outside the business.",
+ "capabilities": ["products.list", "stock.levels", "products.retire"],
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "product records, stock on hand (read), and marking a product obsolete (queued for approval). Every call is signed in core/sdk/call.ts from UNLEASHED_API_ID, UNLEASHED_API_KEY and UNLEASHED_CLIENT_TYPE."},
+  "woocommerce": {"status": "docs-only", "covers": "product records (read only, GET /products on the host in WOOCOMMERCE_SITE). Basic auth from WOOCOMMERCE_CONSUMER_KEY and WOOCOMMERCE_CONSUMER_SECRET."}
+ },
+ "gaps": [
+  "Unleashed calls are signed in core/sdk/call.ts (HMAC-SHA256 over the query string) and tested offline only, against a fake network. Not yet run against a real Unleashed account.",
+  "Lightspeed: no ops file exists, so no operations are mapped. Its docs read covers NuORDER catalogue import, variants and UPC codes, but not barcode setup for non-catalogue products, approval or retirement.",
+  "Product request, specs and photos, pricing and margin setting, compliance check, approval and channel listing have no mapped operation, so they stay manual and are not in any cron.",
+  "Unleashed GET /Products and GET /StockOnHand are mapped with their filters and pageSize, but the reads send no pageSize and no page number is mapped, so each read returns only the first page (200 records). Paging needs an ops change.",
+  "WooCommerce's product list is mapped with page and per_page, but the read sends neither, so it returns WooCommerce's default first page of 10 products. PUT /products/{id} is mapped now, but no cron queues a WooCommerce write.",
+  "Unleashed product creation (POST /Products) is mapped but left out: a new product can reach the B2B store, and Oscar has not ruled on it.",
+  "Retirement is driven by the owner's list of product codes in settings.retire_codes, because the docs read has no discontinue rule to follow.",
+  "Unleashed product groups, brands and bulk price changes are not read: the docs read does not show the in-app price steps, and no ops for them are used here.",
+  "Named in the calls but with no mapped platform evidence, so no adapter: Fishbowl (stock, 2 calls), Shopify (descriptions typed by hand, 1 call), SIN7 (product set-up, 1 call), Airtable (wholesale pricing, 1 call), the licensor portal (design approval, 1 call) and spreadsheets (record keeping, 1 call)."
+ ],
+ "evidence": {
+  "calls": "7 discovery calls describe the process; 9 calls read; 30 SKUs a month are dropped; 7 job types",
+  "platforms": "Lightspeed, Unleashed and WooCommerce docs read (Unleashed and WooCommerce have mapped operations; Lightspeed has none)"
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "family": "defects-on-jobs",
+ "business_name": "Example Construction",
+ "defect_section": "Defects",
+ "first_reminder_after_days": 1,
+ "reminder_every_days": 3,
+ "trade_contacts": [
+  {"match": "plumb", "name": "Example Plumbing", "email": "office@example-plumbing.com.au"},
+  {"match": "paint", "name": "Example Painting", "email": "jobs@example-painting.com.au"}
+ ]
+}

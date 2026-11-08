@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Transport",
+ "lookback_days": 30,
+ "max_pages": 10,
+ "proof_grace_hours": 2,
+ "reattempt": true
+}

@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Supplies",
+ "reorder": [
+  {"code": "BOLT-M8", "name": "M8 bolt, zinc", "supplier_member_id": 0, "supplier_name": "Example Fasteners", "unit_price": 0.25, "order_qty": 500}
+ ],
+ "invoice": {"on_ship": "xero-invoice-draft", "due_days": 30}
+}

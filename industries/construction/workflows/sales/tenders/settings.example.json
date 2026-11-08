@@ -1,0 +1,12 @@
+{
+ "family": "tender-bid",
+ "business_name": "Example Civil",
+ "microsoft_365": {
+   "mailbox": "tenders@example.com.au",
+   "folder": "inbox",
+   "search": "tender",
+   "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "TenderRegister"}
+ },
+ "reminder_to": "owner@example.com.au",
+ "warn_days": 5
+}

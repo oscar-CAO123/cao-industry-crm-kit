@@ -1,0 +1,16 @@
+{
+  "business_name": "Example Finance",
+  "microsoft_365": {
+    "mailbox": "enquiries@example.com.au",
+    "folder": "inbox",
+    "search": "loan",
+    "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "LoanRegister"}
+  },
+  "documents": [
+    "Photo ID",
+    "Last two payslips",
+    "Last three months of bank statements",
+    "Most recent tax return or income statement",
+    "Details of current loans and credit cards"
+  ]
+}

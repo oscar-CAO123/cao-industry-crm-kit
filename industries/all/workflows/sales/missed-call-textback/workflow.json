@@ -1,0 +1,61 @@
+{
+ "id": "missed-call-textback",
+ "name": "Text back missed calls and log them",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads the missed calls on the business's JustCall number, queues one text back to each caller for approval, and logs each missed call as an internal note on the caller's GoHighLevel contact. The crons read, draft and queue; a person approves every text.",
+ "families": {
+  "all | justcall-with-gohighlevel": {
+   "evidence": "2 of the 5 calls in the worklist were read; neither described the steps, so the steps below come from the JustCall and GoHighLevel docs in the platform map",
+   "steps": ["missed-call-detected", "auto-text-sent", "log-in-crm", "manual-callback"]
+  }
+ },
+ "steps": {
+  "missed-call-detected": {"covered_by": "intake (reads missed incoming calls from the JustCall call log)"},
+  "auto-text-sent": {"covered_by": "textback (queues one text per missed call for approval; the text goes out through JustCall)"},
+  "log-in-crm": {"covered_by": "log (an internal note on the caller's GoHighLevel contact, found or created by phone number)"},
+  "manual-callback": {"covered_by": "not built: a person rings back from the JustCall dialer or the missed-call widget"},
+  "caller-replies": {"covered_by": "not built: replies are read in the JustCall SMS inbox by a person"},
+  "review-missed-list": {"covered_by": "not built: the JustCall Missed Call Analytics widget already shows this in the product"},
+  "lead-capture": {"covered_by": "not built: taking a name or job details from a reply is a judgment step"},
+  "route-to-person": {"covered_by": "not built: the JustCall workflow decides who rings"}
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Missed incoming calls on the JustCall number since the lookback: each one is recorded once."},
+  {"name": "textback", "schedule": "*/10 * * * *", "entry": "textback", "summary": "Queue one text back to each recorded missed caller for approval. Nothing is sent by the cron."},
+  {"name": "log", "schedule": "*/15 * * * *", "entry": "log", "summary": "Find or create each missed caller's GoHighLevel contact and add one internal note about the call."}
+ ],
+ "draft_ops": {
+  "justcall": ["docs.get_v2_1_calls"],
+  "gohighlevel": ["contacts.upsert-contact", "contacts.create-note"]
+ },
+ "live_ops": {
+  "justcall": ["docs.post_v2_1_texts_new"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of the missed-call log, and a contact and an internal note in GoHighLevel. The text to the caller is a live operation and waits for a person.",
+ "capabilities": ["calls.list", "contacts.upsert", "notes.create", "sms.send"],
+ "adapters": {
+  "justcall": {"status": "docs-only", "covers": "missed-call reads on the business number and the approval-gated text back to the caller"},
+  "gohighlevel": {"status": "docs-only", "covers": "contact lookup or creation by phone number and an internal note per missed call; no texts are sent through GoHighLevel"}
+ },
+ "gaps": [
+  "Twilio: every step is unknown. The pages read were country SMS guidelines only, so there is no adapter. Needs the Twilio Messaging or Voice product docs, or a live account.",
+  "GoHighLevel has no missed-call trigger in the docs read, so this build reads missed calls from JustCall. A GoHighLevel-only business is not covered.",
+  "GoHighLevel texts are not built. The send-a-new-message spec types subType as an object, and the values for it are not confirmed, so the text goes out through JustCall only.",
+  "JustCall's own Send SMS workflow block only fires after a voicemail greeting. This build queues the text straight from the missed-call log, so a sandbox call that rings out without voicemail needs a check before go-live.",
+  "The JustCall list read asks for the first 100 missed calls per run, with no paging. A business with more missed calls in a run than that needs paging added.",
+  "The from_datetime filter format is not confirmed in the docs, so the lookback is applied to the call time after the read, not in the query.",
+  "The JustCall list response wrapper is not confirmed. The adapter reads an array or its data array. Confirm on a sandbox account.",
+  "A missed call from a number that is not valid E.164 is recorded and closed. It gets no text and no contact note.",
+  "A caller with no name gets a contact named by phone number. The docs read give no way to take a name from a missed call.",
+  "Restrict-once stops a second text to the same number within 24 hours. The approval key also stops a repeat queue for the same call.",
+  "Both adapters are docs-only until a JustCall sandbox number and a GoHighLevel test location prove the reads, the text and the note."
+ ],
+ "evidence": {
+  "calls": "2 of 5 calls in the worklist read; 0 described the process step by step, 0 rejected",
+  "platforms": "JustCall (yes on missed-call detection, manual callback, caller replies and the missed-call list; partial on the text back), GoHighLevel (partial on most steps, mapped operations for contacts and notes), Twilio (unknown on every step, country SMS guidelines only)"
+ }
+}

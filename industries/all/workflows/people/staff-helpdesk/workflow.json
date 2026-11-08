@@ -1,0 +1,59 @@
+{
+  "id": "staff-helpdesk",
+  "name": "Answer staff questions from SOPs and policies",
+  "industry": "all",
+  "department": "people",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a staff question into a reply grounded in the business's own SOPs and policies, in the thread it came from. Crons read, search and draft; a person approves every reply before it goes out.",
+  "families": {
+    "all": {
+      "evidence": "25 discovery calls describe how staff questions get answered",
+      "steps": ["question-arrives", "find-source", "answer-staff", "escalate", "update-sop", "publish-update", "onboarding-pointer", "other"],
+      "covered_by": {
+        "question-arrives": "intake (Gmail, a Chat space, a Slack channel)",
+        "find-source": "draft (Drive and Slack file search)",
+        "answer-staff": "skill writes the answer, draft queues the reply for approval",
+        "escalate": "register (a question with no matching source is parked for a person)",
+        "update-sop": "not yet (see gaps)",
+        "publish-update": "not yet (see gaps)",
+        "onboarding-pointer": "not yet (see gaps)",
+        "other": "not yet"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New staff questions from Gmail, a Chat space and a Slack channel."},
+    {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Find SOP sources for each question; where an answer is written, draft the reply and queue its send for approval."},
+    {"name": "register", "schedule": "15 * * * *", "entry": "register", "summary": "One row per question in the question register Sheet."}
+  ],
+  "draft_ops": {
+    "google-workspace": ["gmail.users.messages.list", "gmail.users.messages.get", "gmail.users.drafts.create", "drive.files.list",
+                         "chat.spaces.messages.list", "sheets.spreadsheets.values.append"],
+    "slack": ["conversations_history", "search_files"]
+  },
+  "live_ops": {
+    "google-workspace": ["gmail.users.drafts.send", "chat.spaces.messages.create"],
+    "slack": ["chat_postMessage"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads, a Gmail draft of a reply, a row in the question register. Sending a reply is a live operation and waits for a person.",
+  "capabilities": ["messages.list", "messages.draft", "files.list", "files.read", "sheets.append"],
+  "adapters": {
+    "google-workspace": {"status": "docs-only", "covers": "Gmail and Chat questions, Drive SOP search, Gmail reply drafts, Chat replies, the question register Sheet"},
+    "slack": {"status": "docs-only", "covers": "channel questions, file search, replies in the question's thread"}
+  },
+  "gaps": [
+    "Confluence is named on 2 calls as where SOPs live, but no platform help evidence for it was mined in this run, so it has no adapter yet.",
+    "Microsoft 365: the mined help pages are Word and Windows accessibility guides, so nothing supports this workflow. Its operations are mapped in the kit but no adapter was built.",
+    "No runtime command writes an answer into the store. The agent skill needs an answer command in tools/workflow.ts (a core change) before a reply can be queued from a real question.",
+    "Slack file search needs a user token with search:read. Confirm the scope before the first live run.",
+    "The question register logs each question once, at the status it has then. A later reply is not written back to its row.",
+    "update-sop, publish-update and onboarding-pointer are not covered: they are judgment or document-owner steps, and the platform help pages do not describe them.",
+    "Every adapter is docs-only until a sandbox Google Workspace account and a Slack test workspace prove it."
+  ],
+  "evidence": {
+    "calls": "40 discovery calls read, 25 describe how staff questions are answered",
+    "platforms": "Google Workspace and Slack help pages mapped step by step; the Microsoft 365 pages are accessibility guides only"
+  }
+}

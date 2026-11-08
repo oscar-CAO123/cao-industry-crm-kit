@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Services",
+ "intake": ["fireflies", "gohighlevel"],
+ "locationId": "GHL_LOCATION_ID",
+ "reps": {"rep@example.com.au": "GHL_CONTACT_ID_OF_REP"},
+ "coach_from": "coaching@example.com.au",
+ "max_calls_per_run": 20
+}

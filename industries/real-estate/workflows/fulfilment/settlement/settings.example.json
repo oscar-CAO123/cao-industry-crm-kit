@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Realty",
+ "matter_status": ["Open"],
+ "settlement_subject": "Settlement",
+ "time_zone": "Australia/Sydney",
+ "horizon_days": 180,
+ "max_matters": 50,
+ "remind_days": 3,
+ "reminder": {"offset_type": "", "offset_type_id": 0, "user_ids": []}
+}

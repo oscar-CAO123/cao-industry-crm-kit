@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Pty Ltd",
+ "signoff": "Priya, Example Pty Ltd",
+ "microsoft_365": {
+  "mailbox": "careers@example.com.au",
+  "folder": "inbox",
+  "search": "application",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Candidates"}
+ }
+}

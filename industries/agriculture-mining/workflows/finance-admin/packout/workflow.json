@@ -1,0 +1,40 @@
+{
+ "id": "agriculture-mining:packout",
+ "name": "Grower statements",
+ "industry": "agriculture-mining",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a packhouse pack-out into a grower statement and checks it against the grower's bill in Xero, then queues the grower payment. Crons read and draft; a person approves every payment.",
+ "families": {},
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "statement", "schedule": "*/30 * * * *", "entry": "statement", "summary": "Check each new pack-out against its Xero bill, draft the statement, queue the grower payment for approval."},
+  {"name": "reconcile", "schedule": "15 * * * *", "entry": "reconcile", "summary": "Mark a grower paid once the approved payment has gone through and Xero shows the bill paid."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoice"]
+ },
+ "live_ops": {
+  "xero": ["accounting.createPayment"]
+ },
+ "draft_ops_note": "Draft operations are reads only: one Xero bill by id. Paying a grower is a live operation and is only ever queued for a person to approve.",
+ "capabilities": ["invoices.read", "payments.create"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "read the grower's bill, queue the payment against it"}
+ },
+ "gaps": [
+  "No call evidence: the variants file for this workflow is not in the mining evidence folder, so there are no families and no call counts.",
+  "Xero is the only platform with any mapping, and its guides cover none of packhouse intake, grading, rejects, pack-out totals, pool pricing, grower charges or statement approval. Those steps stay with the business.",
+  "ABC Pack, PackManager and FarmSoft are in the spec but produced no platform evidence and have no mapped operations in the kit, so no adapter was built for them.",
+  "Sending the statement to the grower is not wired. This job has no mailbox adapter, so the statement is drafted in the store and the email stays with the business.",
+  "Recording a pack-out has no command. tools/workflow.ts only proposes enquiries, so the packouts record is written into the store by the CRM shell.",
+  "One payment per statement against one bill. A grower owed across several bills is held until the bill is split by hand.",
+  "The grower's questions, disputes and the pack-out figures themselves are judgment steps that stay with the business.",
+  "The tests run on a fake network only. Nothing has been run against a Xero demo company."
+ ],
+ "evidence": {
+  "calls": "0 packout call transcripts (variants file missing)",
+  "platforms": "1 platform (Xero): 5 steps partly covered, 10 steps not covered by its docs, 15 steps in the spec"
+ }
+}

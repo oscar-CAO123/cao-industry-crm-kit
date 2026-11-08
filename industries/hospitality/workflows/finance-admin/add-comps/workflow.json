@@ -1,0 +1,64 @@
+{
+ "id": "hospitality:add-comps",
+ "name": "Comp and discount watch",
+ "industry": "hospitality",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads each venue's paid sales from Square, checks every discount on them, and flags comps and discounts outside the agreed terms, with a daily count per venue. The crons only read and record; nothing in Square is changed.",
+ "families": {
+  "all": {
+   "evidence": "2 discovery calls with hospitality owners; both find comps and discounts by accident, after the fact, and cannot see where discounts were applied",
+   "steps": ["trigger-event", "exception-check", "reporting"],
+   "covered_by": {
+    "trigger-event": "watch (each new paid sale and its discounts read from Square)",
+    "exception-check": "watch (flags a discount not on the allowed list, or a percentage over the threshold, including 100 percent comps)",
+    "reporting": "report (yesterday's sales, discounted sales, flagged sales and discount dollars per venue)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "watch",
+   "schedule": "*/30 * * * *",
+   "entry": "watch",
+   "summary": "Reads each venue's new paid sales and their discounts from Square, and flags comps and discounts that fall outside the settings."
+  },
+  {
+   "name": "report",
+   "schedule": "0 22 * * *",
+   "entry": "report",
+   "summary": "Counts yesterday's sales, discounts and flags per venue (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
+ ],
+ "draft_ops": {
+  "square": ["api.ListPayments", "api.RetrieveOrder"]
+ },
+ "live_ops": {
+  "square": []
+ },
+ "draft_ops_note": "Both draft operations are GET reads. The watch cron writes sale and flag records to the workflow store only. The report cron reads the store and makes no call.",
+ "capabilities": ["payments.list", "orders.read"],
+ "adapters": {
+  "square": {
+   "status": "docs-only",
+   "covers": "each venue's paid sales and the discounts on each sale, both reads"
+  }
+ },
+ "gaps": [
+  "Roller is named in both calls and is not in the kit: no adapter, so its till and discount steps are not covered.",
+  "Lightspeed and BePoz: their help pages name no comp or discount step, and neither has a platform folder in the kit, so no adapter is built.",
+  "Square's docs do not use the words comp or void. The watch treats a comp as a discount of 100 percent. Confirm the business's own term in a live account.",
+  "Square's SearchOrders is a POST, which the kit classes as a write, so it is not used. Sales are read as a payments list followed by one RetrieveOrder call per sale. Reading it as a read would need a kit change, which this build does not make.",
+  "A Square discount has no field for the reason it was given or the staff member who applied it. A flag shows what was applied, not why. The record keeps the payment's team member, which may not be the person who applied the discount. Confirm in a live account.",
+  "No live operation: changing or voiding a discount on a finished sale is a person step in Square. No mapped Square operation is queued here.",
+  "Approving a comp before it is given, Square's discount passcode, staff meals, stock and waste, and shift review are not built.",
+  "The first run looks back 24 hours; older sales are not checked.",
+  "Square's platform record reads spec and offline only, and the adapter is docs-only until a Square sandbox account proves it."
+ ],
+ "evidence": {
+  "calls": "2 calls read; both describe a manual check after the fact, and both name Roller as the tool",
+  "platforms": "Square, Lightspeed and BePoz help pages mapped step by step; only Square has mapped operations in the kit, so Square is the only adapter built"
+ }
+}

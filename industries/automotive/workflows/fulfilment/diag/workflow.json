@@ -1,0 +1,46 @@
+{
+ "id": "automotive:diag",
+ "name": "Diagnostic write-up",
+ "industry": "automotive",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a technician's diagnostic notes and photos into a plain write-up of the fault and the work it needs, filed on the job, then queued to the customer for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "inspection-write-up": {
+   "evidence": "2 automotive diagnostic calls were read and described no steps; the steps below come from the three workshop platform pages",
+   "steps": ["booking-intake", "tech-notes", "photos-evidence", "root-cause", "write-up", "customer-approval"],
+   "covered_by": {"booking-intake": "intake", "tech-notes": "draft (reads the technician's job notes)", "photos-evidence": "draft (counts and names the job photos)", "root-cause": "skill", "write-up": "draft (internal job note)", "customer-approval": "queue and approval"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Active jobs in Quote status that are waiting for a diagnostic write-up."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Write the diagnostic write-up from the technician's notes and photos as a job note marked DRAFT. Parks any job with no usable notes."},
+  {"name": "queue", "schedule": "20 * * * *", "entry": "queue", "summary": "Queue the write-up email to the customer for approval once the shop has removed the DRAFT marker from the note."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listNotes", "servicem8-api.getNotes", "servicem8-api.createNotes", "servicem8-api.listAttachments", "servicem8-api.listCompanyContacts"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and an internal job note. The customer email is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "notes.read", "notes.write", "photos.list", "contacts.read", "messages.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "Quote-status jobs, technician notes, photo list, primary contact, the write-up note, the customer email"}
+ },
+ "gaps": [
+  "Autoleap, Tekmetric and WorkshopMate: their pages describe a write-up step, but none has operations mapped in the kit, so no adapter is built. Their help pages do not say how a booking or inspection reaches the write-up.",
+  "Fergus and AroFlo: the kit maps job notes and attachments for both, but no adapter is built here. Check sign-in and field names against their specs before adding one.",
+  "Scan-tool and fault-code readings: no platform in the evidence reads them. The technician types them into the notes, and the write-up only carries what is written there.",
+  "Root-cause and recommended-work judgment is an agent-skill step (SKILL.md). Nothing in the crons decides what is wrong with a car.",
+  "Photos are counted and named in the note but not attached to the customer email: attaching them needs a live check of the attachment path first.",
+  "The calls evidence is thin: 2 of the 3 workflow calls were read, and neither described steps. Re-mine before trusting the step list.",
+  "No cron changes a job's status. Moving a job to Work Order on approval stays with the shop."
+ ],
+ "evidence": {
+  "calls": "2 calls read of 3 listed for this workflow, 0 rejected, 0 steps described",
+  "platforms": "autoleap, tekmetric and workshopmate mapped step by step from their own pages; none has kit operations, so ServiceM8 is the only adapter"
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Contractors",
+ "variation_words": ["variation", "extra work", "additional work", "change order"],
+ "variation_templates": [
+  {"match": "sprinkler", "lines": [{"code": "IRR-HEAD", "qty": 2}, {"code": "LAB-HR", "qty": 1}]},
+  {"match": "extra garden", "lines": [{"code": "LAB-HR", "qty": 2}]}
+ ],
+ "follow_up": {"after_days": [3, 7]},
+ "quote_valid_days": 14,
+ "gst_rate": 0.1
+}

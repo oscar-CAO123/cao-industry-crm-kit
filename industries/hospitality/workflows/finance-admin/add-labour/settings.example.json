@@ -1,0 +1,9 @@
+{
+  "business_name": "Example Hospitality Group",
+  "utc_offset_hours": 11,
+  "min_sales": 200,
+  "venues": [
+    {"name": "Example Bar", "deputy_area": 12, "labour_target_pct": 30},
+    {"name": "Example Function Room", "deputy_area": 14, "labour_target_pct": 25}
+  ]
+}

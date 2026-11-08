@@ -1,0 +1,138 @@
+// The workflow runtime: how every workflow's crons reach the client's apps.
+//
+// A workflow (industries/<industry>/workflows/<department>/<name>/workflow.json) declares two allowlists:
+//   draft_ops  operations a cron may run on its own: reads, and writes that reach nobody outside the business
+//              (a quote in draft, job lines on a quote, an email draft, a row in an internal log)
+//   live_ops   operations that reach a customer, move money or change a live record (send, mark sent, invoice):
+//              a cron can only QUEUE these; they run when a person approves them in the CRM shell
+// Every call still goes through the SDK gate (core/sdk/call.ts): writes need KIT_ALLOW_WRITES=1 on the deploy.
+// The runtime adds the rule above on top, so a cron can never send anything, whatever the deploy allows.
+
+import { callOperation, describe, type CallInput } from "../sdk/call.ts";
+import type { Reply } from "../lib/http.ts";
+import type { Store } from "./store.ts";
+import crypto from "node:crypto";
+
+export interface Act { platform: string; op: string; input?: CallInput; summary: string; /** de-duplicates queued approvals */ key?: string }
+/** One approval runs one act, or a short ordered bundle (send the email, then mark the quote sent); it stops at the first failure. */
+export interface Approval { id: string; workflow: string; summary: string; acts: Act[]; status: "pending" | "running" | "done" | "failed" | "rejected" | "needs-check"; created: string; decided?: string; started?: string; results?: { op: string; status: number | "started"; ref?: Record<string, string> }[]; error?: string; decided_by?: string }
+export interface WorkflowRecord {
+  id: string; name: string; draft_ops: Record<string, string[]>; live_ops: Record<string, string[]>;
+  crons: { name: string; schedule: string; entry: string; summary: string }[];
+}
+export interface Ctx<S = any> {
+  workflow: WorkflowRecord; settings: S; store: Store; now: Date; log: (m: string) => void;
+  /** Run an allowed draft operation now and return its reply. */
+  draft<T = any>(a: Act): Promise<Reply<T>>;
+  /** Queue a live operation (or an ordered bundle) for approval; returns the approval id. */
+  queue(a: Act | Act[], summary?: string): Promise<string>;
+}
+
+/** The approval id for a key: the CRM shell and the crons both find an approval by it. */
+/** A safe, stable id of at most 120 characters: long values keep a readable start and a hash of the whole. */
+export function safeKey(s: string, max = 120): string {
+  const clean = s.replace(/[^a-z0-9:._-]/gi, "-").replace(/^[^a-z0-9]+/i, "");
+  return clean.length <= max ? clean : `${clean.slice(0, max - 17)}-${crypto.createHash("sha256").update(s).digest("hex").slice(0, 16)}`;
+}
+export const approvalId = (workflowId: string, key: string) => safeKey(`${workflowId.replace(/[^a-z0-9]+/gi, "-")}.${key}`);
+
+function allowed(list: Record<string, string[]>, a: Act) { return (list[a.platform] ?? []).includes(a.op); }
+
+export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, now = new Date(), log: (m: string) => void = (m) => console.log(m)): Ctx<S> {
+  return {
+    workflow, settings, store, now, log,
+    async draft(a) {
+      if (!allowed(workflow.draft_ops, a)) throw new Error(`${workflow.id}: ${a.platform} ${a.op} is not a draft operation for this workflow`);
+      describe(a.platform, a.op); // throws if the operation is not mapped
+      log(`draft ${a.platform} ${a.op}: ${a.summary}`);
+      return callOperation(a.platform, a.op, a.input ?? {});
+    },
+    async queue(a, summary) {
+      const acts = Array.isArray(a) ? a : [a];
+      if (!acts.length || acts.length > 5) throw new Error(`${workflow.id}: an approval holds 1 to 5 acts`);
+      for (const x of acts) {
+        if (!allowed(workflow.live_ops, x)) throw new Error(`${workflow.id}: ${x.platform} ${x.op} is not a live operation for this workflow`);
+        describe(x.platform, x.op);
+      }
+      const key = acts[0].key ?? Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      const id = approvalId(workflow.id, key);
+      if (await store.get<Approval>("approvals", id)) return id; // already queued: a cron that runs again never queues the same thing twice
+      const text = summary ?? acts.map((x) => x.summary).join("; ");
+      await store.put("approvals", id, { id, workflow: workflow.id, summary: text, acts, status: "pending", created: now.toISOString() } satisfies Approval);
+      log(`queued for approval ${id}: ${text}`);
+      return id;
+    },
+  };
+}
+
+/** Run one approved item. Called from the CRM shell (or the CLI) after a person approves it.
+ *  - Each act is marked "started" in the store before it is called, and its created ids (id, uuid, QuoteID, an
+ *    x-record-uuid header...) are kept in results, so later steps and crons can use them.
+ *  - A failed bundle can be approved again: it resumes at the first act that did not finish, so nothing already done repeats.
+ *  - If an act was started but its outcome never came back (a crash or lost response), or an approval has been running
+ *    for over 15 minutes, it becomes needs-check: a person confirms in the platform, then runs it with confirmUnknown
+ *    ("done" skips that act, "retry" runs it again). Nothing is ever repeated automatically. */
+const STUCK_MS = 15 * 60_000;
+const ID_KEYS = /^(id|uuid|[A-Z][A-Za-z]*ID|[a-z_]*_id)$/;
+function refsOf(data: unknown, headers?: Headers): Record<string, string> {
+  const out: Record<string, string> = {};
+  const h = headers?.get?.("x-record-uuid"); if (h) out["x-record-uuid"] = h;
+  const walk = (o: any, depth: number) => {
+    if (!o || typeof o !== "object" || depth > 2 || Object.keys(out).length >= 8) return;
+    if (Array.isArray(o)) { if (o.length) walk(o[0], depth + 1); return; }
+    for (const [k, v] of Object.entries(o)) {
+      if (ID_KEYS.test(k) && (typeof v === "string" || typeof v === "number") && String(v).length <= 120) out[k] = String(v);
+      else if (v && typeof v === "object") walk(v, depth + 1);
+    }
+  };
+  walk(data, 0);
+  return out;
+}
+export async function approve(workflow: WorkflowRecord, store: Store, id: string, decidedBy: string, now = new Date(),
+                              confirmUnknown?: "done" | "retry"): Promise<Approval> {
+  const claim = async () => {
+    const ap = await store.get<Approval>("approvals", id);
+    if (!ap) throw new Error(`no approval ${id}`);
+    if (ap.workflow !== workflow.id || !ap.acts.every((a) => allowed(workflow.live_ops, a))) throw new Error(`approval ${id} is not a live operation of ${workflow.id}`);
+    const stuck = ap.status === "running" && now.getTime() - Date.parse(ap.started ?? ap.created) > STUCK_MS;
+    const results = [...(ap.results ?? [])];
+    const unknown = stuck || results.some((x) => x.status === "started");
+    if (unknown || ap.status === "needs-check") {
+      if (!confirmUnknown) {
+        const flagged = { ...ap, status: "needs-check" as const, error: "an act started but its outcome is unknown: check the platform, then approve with done or retry" };
+        await store.put("approvals", id, flagged);
+        throw new Error(`approval ${id} needs a check before it can run again`);
+      }
+      const i = results.findIndex((x) => x.status === "started");
+      if (i >= 0) { if (confirmUnknown === "done") results[i] = { op: results[i].op, status: 299 }; else results.length = i; }
+    } else if (ap.status !== "pending" && ap.status !== "failed") throw new Error(`approval ${id} is already ${ap.status}`);
+    const running = { ...ap, results: results.filter((x) => typeof x.status === "number" && x.status < 300), status: "running" as const, started: now.toISOString(), decided_by: decidedBy };
+    await store.put("approvals", id, running);
+    return running;
+  };
+  // One claim at a time: a double click or two approvers cannot both start the same approval.
+  const ap = await store.locked("approve-claims", claim);
+  const results = [...(ap.results ?? [])];
+  try {
+    for (const a of ap.acts.slice(results.length)) {
+      results.push({ op: a.op, status: "started" });
+      await store.put("approvals", id, { ...ap, results });
+      const r = await callOperation(a.platform, a.op, a.input ?? {});
+      results[results.length - 1] = { op: a.op, status: r.status, ref: refsOf(r.data, r.headers) };
+      await store.put("approvals", id, { ...ap, results });
+    }
+    Object.assign(ap, { status: "done", decided: now.toISOString(), results, error: undefined });
+  } catch (e: any) {
+    // A call that threw got an answer (an error status) or never reached the network: either way it did not succeed.
+    if (results.at(-1)?.status === "started") results.pop();
+    Object.assign(ap, { status: "failed", decided: now.toISOString(), results, error: String(e?.message ?? e).slice(0, 300) });
+  }
+  await store.put("approvals", id, ap);
+  return ap;
+}
+
+export async function reject(workflow: WorkflowRecord, store: Store, id: string, decidedBy: string, now = new Date()): Promise<void> {
+  const ap = await store.get<Approval>("approvals", id);
+  if (!ap || !["pending", "failed", "needs-check"].includes(ap.status) || ap.workflow !== workflow.id) throw new Error(`no open approval ${id} in ${workflow.id}`);
+  await store.put("approvals", id, { ...ap, status: "rejected", decided: now.toISOString(), decided_by: decidedBy });
+}

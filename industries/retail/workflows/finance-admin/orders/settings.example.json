@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Store",
+ "mailbox": "orders@example.com.au",
+ "order_search": "label:orders is:unread"
+}

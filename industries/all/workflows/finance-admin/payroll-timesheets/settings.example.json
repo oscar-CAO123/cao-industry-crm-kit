@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Labour Pty Ltd",
+ "timesheets": "deputy",
+ "pay_period": {"start": "2026-11-02", "end": "2026-11-15", "payment_date": "2026-11-20"},
+ "payroll_calendar_id": "00000000-0000-4000-8000-000000000000",
+ "employee_map": {"101": "00000000-0000-4000-8000-000000000001", "102": "00000000-0000-4000-8000-000000000002"},
+ "earnings_rate_id": "00000000-0000-4000-8000-000000000003",
+ "max_hours_per_shift": 12
+}

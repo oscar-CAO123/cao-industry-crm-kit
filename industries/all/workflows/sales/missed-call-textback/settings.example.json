@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Plumbing",
+ "justcall": {"number": "+61412345678"},
+ "gohighlevel": {"location_id": "GHL_LOCATION_ID"},
+ "textback": {
+  "message": "Hi, sorry we missed your call at {business}. Reply here and we will get back to you as soon as we can.",
+  "lookback_hours": 24
+ }
+}

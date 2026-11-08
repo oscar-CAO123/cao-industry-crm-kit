@@ -1,0 +1,58 @@
+{
+ "id": "construction:approvals",
+ "name": "Prepare, lodge and chase council approvals and permits",
+ "industry": "construction",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Prepares, lodges and chases council approvals and permits. Every hour it reads the open markups and RFI-style requests on each approval document in Bluebeam Studio and records where each stands. Every day it keeps a dated snapshot of each document for the record. The crons only read and draft; lodging with council, answering council and any status change that someone outside the business sees stay with a person.",
+ "families": {
+  "all": {
+   "evidence": "7 discovery calls name this workflow; 2 of them describe how they run it step by step",
+   "steps": ["trigger-or-brief", "collect-documents", "prepare-plans", "check-requirements", "complete-forms", "lodge-application", "respond-rfi", "track-status", "consultant-coordination", "approval-received", "conditions-tracking", "record-keeping", "client-update", "other"],
+   "covered_by": {
+    "trigger-or-brief": "person",
+    "collect-documents": "skill (gather plans and reports)",
+    "prepare-plans": "skill (drafters and certifiers do the work outside the business)",
+    "check-requirements": "skill",
+    "complete-forms": "skill",
+    "lodge-application": "person (council portal or counter)",
+    "respond-rfi": "skill (RFI markups are listed by track-status; a person answers council)",
+    "track-status": "draft (track-status cron)",
+    "consultant-coordination": "person",
+    "approval-received": "person",
+    "conditions-tracking": "skill",
+    "record-keeping": "draft (record-keeping cron)",
+    "client-update": "person",
+    "other": "skill"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "track-status", "schedule": "0 * * * *", "entry": "track-status", "summary": "Read the open markups and RFI-style requests on each approval document and record where each one stands."},
+  {"name": "record-keeping", "schedule": "0 22 * * *", "entry": "record-keeping", "summary": "Start one dated snapshot of each approval document for the record (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "bluebeam": ["SessionFiles_GetAll", "SessionMarkups_Get", "SessionMarkupsStatus_Get", "SessionFiles_Snapshot"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the Studio session, and a dated snapshot of a document kept in the session. Nothing here changes a markup status, answers council or lodges anything.",
+ "capabilities": ["documents.list", "markups.list", "statuses.list", "snapshots.create"],
+ "adapters": {
+  "bluebeam": {"status": "docs-only", "covers": "approval documents in Bluebeam Studio: open markups and RFI-style requests, valid statuses, dated snapshots"}
+ },
+ "gaps": [
+  "Council portals and counters: lodgement, forms, fees and council requests for information arrive by portal, email or post. No platform in the kit maps them, so a person does these steps.",
+  "Procore: its help pages describe RFIs for the project team, but the kit has no Procore platform, so there is no adapter. Build one from the endpoint map before wiring it.",
+  "Microsoft 365: its docs describe Office accessibility, not approvals or permits. No adapter.",
+  "Changing a markup status (SessionMarkups_UpdateStatus) is not wired. The spec gives only two body fields, Model and State, and does not say what each means. A live Bluebeam account needs to confirm this before any cron queues a status change.",
+  "Bluebeam is mapped from its public API and has not been run against a real account. The markup and status response shapes are taken from the spec, not a live call.",
+  "Chasing council or consultants has no messaging platform mapped for this job, so it stays manual.",
+  "Consultant coordination, conditions tracking and client updates have no mapped platform. They stay with the person, with the skill drafting notes only."
+ ],
+ "evidence": {
+  "calls": "7 discovery calls name this workflow; 2 describe how it runs step by step. Every step the calls describe is done by hand; the calls name Revit and outside help for the plans and the shire applications.",
+  "platforms": "Bluebeam Studio's public API (mapped operations, partial support from its help pages). Procore is documented but not mapped in the kit. Microsoft 365 documents nothing for approvals."
+ }
+}

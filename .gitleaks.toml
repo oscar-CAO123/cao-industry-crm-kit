@@ -19,3 +19,11 @@ condition = "AND"
 paths = ['''^core/sdk/platforms/[a-z0-9-]+/ops\.json$''']
 regexTarget = "match"
 regexes = ['''paramsUnmapped"?$''']
+
+[[allowlists]]
+description = "Workflow records: Pipedrive operation ids (docs_api_v1.getLead) are read as a generic key. Allowed only when the flagged value is exactly that id shape, only in workflow.json records (both must hold). Decoy-tested 8 Nov: real-looking keys in the same files are still caught."
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^industries/[a-z0-9-]+/workflows/[a-z0-9-]+/[a-z0-9-]+/workflow\.json$''']
+regexTarget = "secret"
+regexes = ['''^docs_api_v1\.[A-Za-z]+$''']

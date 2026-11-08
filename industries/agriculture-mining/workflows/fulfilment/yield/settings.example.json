@@ -1,0 +1,11 @@
+{
+  "business_name": "Example Packing Co",
+  "owner_email": "owner@example.com.au",
+  "microsoft_365": {
+    "mailbox": "shed@example.com.au",
+    "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "YieldRegister"},
+    "exceptions": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "YieldExceptions"}
+  },
+  "expected_yield_pct": 85,
+  "waste_alert_pct": 8
+}

@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Venue",
+ "timezone": "Australia/Sydney",
+ "google_workspace": {
+   "calendar_id": "bookings@example.com.au",
+   "spreadsheet_id": "SPREADSHEET_ID_FROM_THE_URL",
+   "bookings_tab": "Bookings",
+   "changes_tab": "Changes"
+ }
+}

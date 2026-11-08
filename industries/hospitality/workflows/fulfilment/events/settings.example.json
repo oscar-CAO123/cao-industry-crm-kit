@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Venue",
+ "timezone": "Australia/Sydney",
+ "google_workspace": {
+   "calendar_id": "events@example.com.au"
+ },
+ "enquiries": {
+   "query": "label:enquiries newer_than:14d",
+   "max_results": 25
+ },
+ "signoff": "Kind regards, the events team at Example Venue"
+}

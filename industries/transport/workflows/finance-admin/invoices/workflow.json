@@ -1,0 +1,48 @@
+{
+ "id": "transport:invoices",
+ "name": "Invoices from rates",
+ "industry": "transport",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns each completed transport trip into a priced invoice in the business's accounting software, from the rate card, once its proof of delivery is on file. Queues each invoice to be authorised and emailed for approval, queues reminders for overdue invoices, and keeps the trip records in step with what the accounts say. Crons read and draft; a person approves every authorisation, email and reminder.",
+ "families": {
+  "by-hand-or-unstated": {
+   "evidence": "5 of 11 transport calls describe how they invoice: rates looked up by hand, delivery proof chased, then invoices typed up or built in the CRM",
+   "steps": ["rate-lookup", "proof-of-delivery", "charge-build", "invoice-draft", "reconcile-accounts"],
+   "covered_by": {"rate-lookup": "draft (the Xero item list is the rate card)", "proof-of-delivery": "gate (a trip waits until its proof of delivery is marked on file)", "charge-build": "draft (item codes and quantities as recorded on the trip)", "invoice-draft": "draft", "reconcile-accounts": "reconcile (status and amount due read from Xero)", "invoice-send": "approval", "payment-chase": "chase"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Trips with proof of delivery on file are priced from the Xero item list and become DRAFT invoices; the authorise and email is queued for approval."},
+  {"name": "reconcile", "schedule": "15 * * * *", "entry": "reconcile", "summary": "Reads each drafted or sent invoice's status and amount due in Xero, so trip records match the accounts. Reads only."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Sent invoices past due get the next reminder queued (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createContacts", "accounting.createInvoices", "accounting.getInvoices"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateInvoice", "accounting.emailInvoice"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the rate card, contacts and invoices, a Xero contact, or a Xero invoice in DRAFT. Authorising an invoice, emailing it, and sending a reminder are live operations and wait for a person.",
+ "capabilities": ["invoices.list", "invoices.create", "contacts.upsert"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "rate card from item list, customer contact, DRAFT invoice, authorise, email (invoice and reminder), status and amount due refresh"}
+ },
+ "gaps": [
+  "CartonCloud, the most-named transport system in the calls: the kit has no CartonCloud ops file, so consignments, electronic dockets, customer rate cards, charge groups and billing runs are not mapped. Trips are entered into the trip store by hand until a CartonCloud adapter exists.",
+  "MYOB: the kit maps only read operations on Sale/Invoice and the company file is pinned by a variable. There is no create or authorise operation and the token exchange is not built, so there is no MYOB adapter.",
+  "Proof of delivery: a person marks the trip's proof of delivery as on file. The workflow does not read signed dockets, photos or signatures.",
+  "Customer-specific rates, charge groups, Use Highest Charge, fuel levy and other surcharges, storage and ad hoc charges: not built. Every trip is priced from the one Xero item list, and a trip with a rate that differs must be priced by hand.",
+  "Payments: Xero's bank feeds record payments, and this workflow only reads their result. It does not record payments. Disputes, credit notes and short payments are not covered.",
+  "Reminders: Xero's API has no reminder-send operation mapped, so a reminder is the invoice email again. Xero's own reminder settings are readable but not used here.",
+  "Reverse billing (RCTI) to drivers and subcontractors: not covered.",
+  "GST: each line posts with the account's default tax. Confirm the sales account's tax setting with the owner before the first invoice is authorised.",
+  "Xero pages read were general small business guides, so transport steps come from the calls, not from product help. The workflow is docs-only until a Xero demo company proves it against real data."
+ ],
+ "evidence": {
+  "calls": "11 transport calls read, 5 describe how they invoice (rates, proof of delivery, charge build, invoice draft, reconciliation)",
+  "platforms": "CartonCloud help pages (no ops file, not mapped), MYOB help pages (read-only operations mapped), Xero's official accounting spec (operations mapped and used)"
+ }
+}

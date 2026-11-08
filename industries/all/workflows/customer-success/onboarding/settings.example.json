@@ -1,0 +1,29 @@
+{
+ "business_name": "Example Agency",
+ "owner_email": "owner@example.com.au",
+ "checklist": [
+  "Confirm the signed agreement and fee are on file",
+  "Collect the client's details form",
+  "Confirm payment set-up",
+  "Open accounts in the client's own systems",
+  "Import the client's data",
+  "Set up integrations",
+  "Book the training session",
+  "Record the client in the CRM"
+ ],
+ "clients": [
+  {
+   "id": "example-plumbing",
+   "name": "Sam Lee",
+   "company": "Example Plumbing Pty Ltd",
+   "email": "sam@example-plumbing.com.au",
+   "invite": [
+    {"email": "team@example-plumbing.com.au", "firstName": "Alex", "lastName": "Ng", "roleId": "ROLE_ID", "primaryTeamId": "TEAM_ID"}
+   ]
+  }
+ ],
+ "welcome": {
+  "subject": "Welcome to {business}",
+  "body": "Hi {name},\n\nWelcome to {business}. We have started setting up your account. You will get an invitation to log in, and we will be in touch with the next steps.\n\nThanks,\n{business}"
+ }
+}

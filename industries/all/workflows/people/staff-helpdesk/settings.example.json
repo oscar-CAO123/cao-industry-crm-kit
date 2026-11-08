@@ -1,0 +1,13 @@
+{
+ "business_name": "Example Pty Ltd",
+ "intake": ["google-workspace", "slack"],
+ "sources": ["google-workspace", "slack"],
+ "google": {
+  "questions_query": "label:staff-questions is:unread",
+  "chat_space": "",
+  "drive_folder_id": "",
+  "log": {"spreadsheet_id": "", "range": "Questions!A:G"}
+ },
+ "slack": {"channel": ""},
+ "max_sources": 5
+}

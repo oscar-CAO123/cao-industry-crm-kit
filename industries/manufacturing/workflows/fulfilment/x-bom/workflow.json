@@ -1,0 +1,50 @@
+{
+ "id": "manufacturing:x-bom",
+ "name": "Bills of materials",
+ "industry": "manufacturing",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Bills of materials: keeps each product's list of components and quantities in the business's own system. Drafts a new bill for each product on the owner's list, checks that its components are active and in stock, and queues any change to a live bill for approval. Crons read and draft; a person approves every change to a live bill.",
+ "families": {
+  "all": {
+   "evidence": "1 of 4 calls read describes how a manufacturer builds its bills (concrete batching)",
+   "steps": ["trigger", "design-drawings", "define-components", "unit-of-measure", "supplier-part-match", "costing", "routing-operations", "version-control", "approval", "system-entry", "production-issue", "stock-check", "change-handover", "record-keeping"],
+   "covered_by": {"trigger": "skill (owner names the product)", "define-components": "draft", "unit-of-measure": "skill (each product's own unit, confirmed by a person)",
+                  "version-control": "approval (a change to a live bill is queued)", "approval": "approval", "system-entry": "draft",
+                  "stock-check": "check", "record-keeping": "check (problems kept in the store)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "check", "schedule": "0 * * * *", "entry": "check", "summary": "Hourly: read each bill the workflow created, bring its record in step with Unleashed, and note any component with less stock than one unit needs. Reads only."},
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Every 30 minutes: create the bill in Unleashed for each product on the owner's list that has none yet. Internal record only."},
+  {"name": "revise", "schedule": "15 22 * * *", "entry": "revise", "summary": "Daily (22:15 UTC is 8 or 9 am in eastern Australia): queue a change to a live bill when the owner's list differs from it. A person approves it."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_Products", "docs.get_BillOfMaterials", "docs.get_StockOnHand_productGuid_AllWarehouses", "docs.post_BillOfMaterials"]
+ },
+ "live_ops": {
+  "unleashed": ["docs.put_BillOfMaterials_billOfMaterialsGuid"]
+ },
+ "draft_ops_note": "Draft operations are reads, and one internal record: a new bill of materials in Unleashed, which is not an assembly or an order and reaches no customer or supplier. Changing a live bill waits for a person.",
+ "capabilities": ["products.list", "products.update"],
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "product lookup by code, bill read and create, stock on hand, bill revision (queued for approval)"}
+ },
+ "gaps": [
+  "Unleashed: core/sdk signs every call (api-auth-id, api-auth-signature, client-type from the UNLEASHED_* keys). Tested offline against a fake network only; no live reply has been seen.",
+  "Acumatica: no operations mapped in the kit and its help pages describe no API calls. Covered by skill steps only.",
+  "Odoo: the kit holds one operation (docs.get_web_version), so the bill of materials model has no mapped operations. Its forum pages describe the BoM form and export only. Covered by skill steps only.",
+  "Design drawings or CAD import: no platform evidence. Skill step only.",
+  "Supplier part matching, costing roll-up, routing and work centres, production orders (Assemblies), change handover and sign-off: not described as a bill step by the Unleashed pages. Left to people.",
+  "Units of measure: each bill line takes the product's own unit. The workflow does not convert units.",
+  "The capabilities list in core/capabilities.json has no bill-of-materials entry. The bill operations are named in workflow.json only.",
+  "Evidence is one discovery call. Confirm the shape with a second call before a client build.",
+  "No Unleashed sandbox account yet. Field names come from the vendor's API reference, not from a live reply; the create and update body must be checked on a sandbox."
+ ],
+ "evidence": {
+  "calls": "4 manufacturing calls read; 1 describes its way of building bills of materials (concrete batching)",
+  "platforms": "Unleashed API reference (BillOfMaterials, Products, StockOnHand, UnitOfMeasures) mapped in the kit; Acumatica and Odoo help pages, no bill operations mapped"
+ }
+}

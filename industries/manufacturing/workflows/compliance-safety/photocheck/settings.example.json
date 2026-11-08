@@ -1,0 +1,9 @@
+{
+ "business_name": "Example Engineering",
+ "microsoft_365": {
+  "mailbox": "checks@example.com.au",
+  "folder": "inbox",
+  "search": "photo",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Checks"}
+ }
+}

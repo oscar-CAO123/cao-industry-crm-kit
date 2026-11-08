@@ -1,0 +1,63 @@
+{
+ "id": "systems-monitoring",
+ "name": "Check every connection, key, website and data feed daily and alert on failures",
+ "industry": "all",
+ "department": "owner",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Checks every connection, key, data feed and platform service status once a day, and queues an alert email to the owner for each new failure. Crons read and draft; a person approves every alert send. No mapped platform checks a public website, so website checks are a gap.",
+ "families": {
+  "all": {
+   "evidence": "34 calls read; 3 describe a process (a booking system outage, a six-monthly outside health check, and a manual re-check of payroll and claim data)",
+   "steps": ["failure-noticed", "routine-check", "connection-check", "key-expiry-check", "data-feed-check", "website-check", "alert-received", "triage", "fix", "escalate", "confirm-fixed", "record-keeping"],
+   "covered_by": {
+    "failure-noticed": "check (each run records what is failing); alert (the owner is told by email)",
+    "routine-check": "check (daily)",
+    "connection-check": "check (Make connections; Microsoft 365 service health)",
+    "key-expiry-check": "check (expiry dates on Make connections only; see gaps)",
+    "data-feed-check": "check (Make scenario logs and dead-letter counts)",
+    "website-check": "not yet (see gaps)",
+    "alert-received": "alert (one draft email per new failure, sent only on approval)",
+    "triage": "skill (read the failing item and say what it likely means)",
+    "fix": "skill (a person fixes it on the platform; no cron changes anything)",
+    "escalate": "skill (the owner decides who else is told)",
+    "confirm-fixed": "check (the item clears on the next daily run)",
+    "record-keeping": "the checks store holds each item's status and when it was last seen; no platform log"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "check", "schedule": "0 21 * * *", "entry": "check", "summary": "Reads Make connections, scenarios and recent error logs, and Microsoft 365 service health, and records what is failing (21:00 UTC is 7 or 8 am in eastern Australia)."},
+  {"name": "alert", "schedule": "*/30 * * * *", "entry": "alert", "summary": "Drafts one alert email for each new failure and queues its send for approval."}
+ ],
+ "draft_ops": {
+  "make": ["core.docs.get_connections", "core.docs.get_scenarios", "core.docs.get_scenarios_scenarioId_logs"],
+  "microsoft-365": ["admin.serviceAnnouncement.ListHealthOverviews", "admin.serviceAnnouncement.healthOverviews.ListIssues", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of connections, scenarios, logs and service health, and an alert email in draft in the client's own mailbox. Sending the alert is a live operation and waits for a person.",
+ "capabilities": ["messages.draft", "messages.send"],
+ "adapters": {
+  "make": {"status": "docs-only", "covers": "connection expiry dates, scenarios flagged invalid or with dead-letter runs, and error logs from the last 24 hours; read only"},
+  "microsoft-365": {"status": "docs-only", "covers": "service health per service and its open issues, read only; the alert email drafted in the client's mailbox and sent on approval"}
+ },
+ "gaps": [
+  "Websites: no mapped platform checks a public website. An uptime tool is needed, and none is in the kit. Not built.",
+  "Google Workspace (named in the evidence): its mapped operations read and delete third-party access tokens and set up push watches, but no mined page describes a check. Not built.",
+  "Key expiry for Google Workspace and Microsoft 365 tokens: not built. Make's API token and OAuth listings are marked as writes in the kit, so they are not daily reads. Only Make connection expiry dates are read.",
+  "Fix (reconnect a connection, re-authorise, restart a scenario, clear the dead-letter queue): a person does this on the platform. No cron changes anything.",
+  "Triage and escalation are judgment steps in SKILL.md, not cron steps.",
+  "Support is unknown for most steps. The mined pages are integration listings, blog posts and one helpdesk how-to, and none describes a monitoring procedure. Confirm on a live Make account and a Microsoft 365 admin centre.",
+  "Make log reads take the first page the API returns for each scenario. A log with no timestamp is not counted.",
+  "Alerts go by Microsoft 365 email only. A business without a Microsoft 365 mailbox needs another alert route, which is not built.",
+  "Other data feeds (ServiceM8, Xero, Aircall and the rest) are not in this workflow's evidence. Add one only when a client names it.",
+  "Every adapter is docs-only until a Make trial account and a Microsoft 365 developer tenant with service health read permission prove them."
+ ],
+ "evidence": {
+  "calls": "34 calls read; 3 describe a process, so the step evidence is thin",
+  "platforms": "all-systems-monitoring-platforms.json lists Google Workspace, Make and Microsoft 365. Make and Microsoft 365 have mapped operations for this job with partial support on alerts or connection checks. Google Workspace has operations but no supported step."
+ }
+}

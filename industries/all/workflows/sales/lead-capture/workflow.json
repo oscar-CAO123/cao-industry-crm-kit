@@ -1,0 +1,49 @@
+{
+ "id": "all:lead-capture",
+ "name": "Capture leads from ads, forms and chat into the CRM",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes each new web form submission and live chat lead into the CRM, tags it, opens it in the new-lead stage, queues a short acknowledgement, and queues follow-ups for leads who have not replied or booked. Crons read and draft; a person approves every message.",
+ "families": {
+  "all": {
+   "evidence": "21 of 40 lead capture calls describe how they capture leads",
+   "steps": ["trigger-capture", "website-form", "chat-enquiry", "crm-create", "auto-reply", "qualify-questions", "book-call", "record-keeping"],
+   "covered_by": {"trigger-capture": "intake (form submissions and live chat, GoHighLevel)", "website-form": "intake", "chat-enquiry": "intake (live chat with unread messages and contact details)", "crm-create": "intake (tags and an opportunity in the new-lead stage)", "auto-reply": "acknowledge (queued for approval)", "qualify-questions": "skill (judgment, not automated)", "book-call": "follow-up checks for an appointment before chasing; booking is not written", "record-keeping": "draft (contact tags and opportunity records)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New form submissions and unread live chats become leads: tagged, with an opportunity in the new-lead stage."},
+  {"name": "acknowledge", "schedule": "*/15 * * * *", "entry": "acknowledge", "summary": "Queue a short acknowledgement for each new lead with a usable email or phone."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue follow-ups for leads that have not replied or booked (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "gohighlevel": ["forms.get-forms-submissions", "conversations.search-conversation", "contacts.add-tags", "opportunities.create-opportunity", "contacts.get-appointments-for-contact"]
+ },
+ "live_ops": {
+  "gohighlevel": ["conversations.send-a-new-message"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, a tag on a contact, an opportunity in a pipeline stage. Sending an acknowledgement or follow-up to a lead is a live operation and waits for a person.",
+ "capabilities": ["leads.capture", "contacts.tag", "opportunities.create", "messages.send", "appointments.read"],
+ "adapters": {
+  "gohighlevel": {"status": "docs-only", "covers": "form submissions, live chat leads, tags, opportunities, acknowledgements and follow-ups through conversations"}
+ },
+ "gaps": [
+  "HubSpot: its lead and deal endpoints are mapped, but the vendor spec does not name the lead property fields (name, email, phone, pipeline). No adapter until a sandbox portal confirms those property names.",
+  "Google Ads and Meta lead forms: GoHighLevel creates a contact for each lead form submission, but the mapped read covers Form Builder submissions only. The mapped ad-manager reads describe the forms, not the submissions, so ad leads are not picked up by this workflow until a contacts read by source is confirmed.",
+  "Framer and other website forms: they reach this workflow only if they post into a GoHighLevel form. Not verified.",
+  "Speed: the owners' target is a reply within five minutes. Acknowledgements wait for approval and crons run every 10 to 15 minutes, so that target is not met by this build.",
+  "AI voice or chat qualifying calls: needs a call-consent rule and a voice platform that is not mapped. Judgment step for now.",
+  "Booking: calendar slots and appointments are read only. Writing a booking needs a live account to confirm the calendar and resource setup.",
+  "Acknowledgement send: the vendor spec marks subType and status as required on conversations/messages. The adapter does not send them until a live account confirms the values, so a live send may fail at the vendor and show as a failed approval.",
+  "SMS: an SMS acknowledgement or follow-up needs consent checks before it is queued. Email is the default channel.",
+  "Owner routing: the opportunity is assigned to one owner from settings. Round-robin or territory routing is not built.",
+  "Every adapter is docs-only until a sandbox GoHighLevel location proves the reads, the tag, the opportunity and an approved send."
+ ],
+ "evidence": {
+  "calls": "40 lead capture calls read; 21 describe how their leads are captured",
+  "platforms": "GoHighLevel help centre pages for Google Lead Forms, forms, live chat, workflows and contacts, mapped step by step; HubSpot mapped for steps but not adapted (see gaps)"
+ }
+}

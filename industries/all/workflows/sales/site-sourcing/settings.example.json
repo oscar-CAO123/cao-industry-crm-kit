@@ -1,0 +1,14 @@
+{
+ "business_name": "Example Developments",
+ "search": {
+   "listing_type": "Sale",
+   "locations": [{"state": "NSW", "suburb": "Newtown", "postcode": "2042"}],
+   "property_types": [],
+   "min_land_area": 600
+ },
+ "enquiry": {
+   "sender": {"firstName": "Sam", "lastName": "Example", "email": "sam@example.com.au", "phoneNumber": "0400 000 000", "postcode": "2000"},
+   "subject": "Enquiry about {address}",
+   "message": "Hello, I am interested in {address}. Could you let me know whether the vendor has a timeline and whether the land can be discussed before it goes to auction? Thank you."
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "family": "accounting-practice",
+ "business_name": "Example Bookkeeping",
+ "period_start": "2026-10-01",
+ "coding_rules": [
+  {"match": "telstra", "account_code": "408", "tax_type": "INPUT"},
+  {"match": "officeworks", "account_code": "400", "tax_type": "INPUT"}
+ ]
+}

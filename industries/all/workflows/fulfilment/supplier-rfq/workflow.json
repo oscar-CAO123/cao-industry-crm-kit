@@ -1,0 +1,69 @@
+{
+  "id": "supplier-rfq",
+  "name": "Request supplier quotes (RFQs) and compare them",
+  "industry": "all",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Sends a request for quote to each supplier for an item list, logs every reply in a register, and raises a purchase order once a person has awarded the job. Crons read and draft; a person approves every send and every authorised purchase order.",
+  "families": {
+    "all": {
+      "evidence": "10 of 21 supplier-RFQ discovery calls describe their process; 7 send RFQs by hand or by email",
+      "steps": ["need-identified", "specify-item", "pick-suppliers", "send-rfq", "chase-quotes", "receive-quotes", "compare-quotes", "check-like-for-like", "negotiate", "approve-award", "raise-po", "delivery-follow-up", "record-keeping"],
+      "covered_by": {
+        "need-identified": "skill (the owner or estimator lists the items)",
+        "specify-item": "skill (items and specs go into the RFQ record)",
+        "pick-suppliers": "skill (suppliers go into the RFQ record)",
+        "send-rfq": "issue (one draft per supplier, each send queued for approval)",
+        "chase-quotes": "chase (chaser drafts to suppliers who have not replied, sends queued for approval)",
+        "receive-quotes": "replies (each reply logged to the register)",
+        "compare-quotes": "skill (prices compared from the register and the replies)",
+        "check-like-for-like": "skill (scope checked by the agent and the estimator)",
+        "negotiate": "not covered (a person)",
+        "approve-award": "person (sets the award on the RFQ record)",
+        "raise-po": "purchase-order (Xero draft, authorise queued for approval)",
+        "delivery-follow-up": "not covered yet (see gaps)",
+        "record-keeping": "issue, replies and purchase-order write the register"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "issue", "schedule": "*/15 * * * *", "entry": "issue", "summary": "Drafts one RFQ per supplier for each new RFQ and queues each send for approval."},
+    {"name": "replies", "schedule": "*/30 * * * *", "entry": "replies", "summary": "Logs each new supplier reply to an open RFQ in the register."},
+    {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Drafts chasers to suppliers who have not replied when a chase is due, and queues each send for approval (22:00 UTC is 8 or 9 am in eastern Australia)."},
+    {"name": "purchase-order", "schedule": "15 * * * *", "entry": "purchase-order", "summary": "Drafts the Xero purchase order for each awarded RFQ and queues its authorisation for approval."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["users.mailFolders.ListMessages", "users.CreateMessages", "drives.items.workbook.tables.CreateRows"],
+    "xero": ["accounting.createPurchaseOrders"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"],
+    "xero": ["accounting.updatePurchaseOrder"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: an email in Drafts, a row in the register, a purchase order in Xero with status DRAFT. Sending an RFQ or a chaser, and authorising a purchase order, are live operations and wait for a person.",
+  "capabilities": ["rfq.issue", "rfq.chase", "rfq.replies.log", "purchase-order.draft", "purchase-order.authorise", "messages.draft", "messages.send"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "RFQ emails as drafts, chasers, reply reading from the RFQ folder, Excel register rows; sends queued for approval"},
+    "xero": {"status": "docs-only", "covers": "purchase order drafted in DRAFT, moved to AUTHORISED only on approval"}
+  },
+  "gaps": [
+    "Buildxact: runs RFQs, quote receipt and purchase orders in product (the evidence rates send-rfq, receive-quotes and raise-po as supported), but the kit maps only its sign-in. Its RFQ and purchase order endpoints are needed before an adapter can be built.",
+    "Procore and EstimateOne: captured in the platform evidence, but neither has a kit platform folder, so no operations are mapped.",
+    "ServiceM8 supplier and material lists are mapped in the kit but not used here: the evidence names no ServiceM8 RFQ step.",
+    "Writing the RFQ record (items, suppliers, needed-by date) into the store has no CLI command yet. tools/workflow.ts is core and is not edited by this workflow.",
+    "Recording an award (the supplier, its Xero ContactID and the agreed unit prices) also has no CLI command yet. Until one exists, the CRM shell or a person writes it to the RFQ record.",
+    "Comparing prices, checking like-for-like scope and negotiating are judgment steps for the agent skill and the estimator. The crons never parse or rank a price.",
+    "Supplier award sign-off is not documented in the platform evidence. The award is a person's decision recorded on the RFQ record.",
+    "Delivery follow-up, late-delivery chasing and receipt matching have no mapped operations in this kit.",
+    "Every adapter is docs-only until a sandbox mailbox and a Xero demo company prove it."
+  ],
+  "evidence": {
+    "calls": 21,
+    "describe_process": 10,
+    "platforms_with_docs": 3,
+    "platforms_mapped_in_kit": 2,
+    "source": "mining/all-supplier-rfq-variants.json and mining/all-supplier-rfq-platforms.json"
+  }
+}

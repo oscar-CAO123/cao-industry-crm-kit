@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Builders",
+ "buying_mailbox": "buying@example.com.au",
+ "folder": "inbox",
+ "search": "quote",
+ "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "QuoteRegister"},
+ "checks": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Checks"},
+ "scope_items": [
+  {"package": "Roof framing", "items": ["trusses", "fixings", "crane"]},
+  {"package": "Electrical rough-in", "items": ["switchboard", "make good", "certificate of compliance"]}
+ ]
+}

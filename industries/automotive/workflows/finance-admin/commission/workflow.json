@@ -1,0 +1,65 @@
+{
+ "id": "automotive:commission",
+ "name": "Commission calculator",
+ "industry": "automotive",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works out each salesperson's commission from paid sales for the month, enters it on their payslip in a draft Xero pay run, and queues that pay run for a person to approve and post. Crons read and draft; a person approves every post.",
+ "families": {
+  "commission-from-paid-sales": {
+   "evidence": "1 discovery call. No variants file was supplied, so the steps come from the platform map.",
+   "steps": ["deal-closed", "gather-figures", "apply-plan", "check-deductions", "split-commission", "manager-review", "payroll-entry", "staff-statement", "queries-and-corrections", "month-end-reconcile", "record-keeping"],
+   "covered_by": {
+    "deal-closed": "figures (paid invoices in Xero are the sale record)",
+    "gather-figures": "figures",
+    "apply-plan": "figures (tiers in settings)",
+    "check-deductions": "gap",
+    "split-commission": "gap",
+    "manager-review": "approval (the post of the pay run is queued for a person)",
+    "payroll-entry": "draft-pay (commission line on a draft payslip)",
+    "staff-statement": "gap",
+    "queries-and-corrections": "gap",
+    "month-end-reconcile": "gap",
+    "record-keeping": "figures (one commission row per rep and month)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "figures", "schedule": "15 * * * *", "entry": "figures", "summary": "Work out last month's commission per rep from paid sales invoices in Xero."},
+  {"name": "draft-pay", "schedule": "45 * * * *", "entry": "draft-pay", "summary": "Enter each rep's commission on their payslip in last month's DRAFT pay run."},
+  {"name": "queue-post", "schedule": "0 22 * * *", "entry": "queue-post", "summary": "When last month's commission is complete, queue the pay run post for a person to approve."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoices", "payroll-au.getPayRuns", "payroll-au.getPayRun", "payroll-au.createPayRun", "payroll-au.getPayslip", "payroll-au.updatePayslip"]
+ },
+ "live_ops": {
+  "xero": ["payroll-au.updatePayRun"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of invoices and pay runs, a new pay run in DRAFT status, and commission lines on payslips in a DRAFT pay run. Nothing is paid until the pay run is posted, and posting is a live operation that waits for a person.",
+ "capabilities": ["sales.read", "commission.calculate", "payroll.draft", "payroll.post"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "paid invoices, DRAFT pay run, commission earnings line on a payslip, pay run post"}
+ },
+ "gaps": [
+  "MYOB: the help pages support payroll entry, but the kit's MYOB operations are docs reads and timesheet get and put only, and MYOB auth (token exchange) is not built. No MYOB adapter.",
+  "Google Workspace: no commission, payroll or sales operation is mapped in the kit. No adapter.",
+  "Commission plan tiers, targets and product bonuses are not in the evidence. The tiers in settings are an assumption to confirm with the client.",
+  "Chargebacks, refunds and credit notes after payment are not read, so they are not netted off commission.",
+  "Splitting commission between staff is not built.",
+  "Staff statements: payslips are part of the pay run, but sending them to staff is not in the API. The person sends them.",
+  "Queries and corrections after a pay run posts are a manual adjustment in Xero payroll.",
+  "Month-end reconciliation to sales totals and the general ledger is not built.",
+  "Rep attribution: Xero invoices carry no sales rep, so the workflow matches text in the invoice Reference. A tracking category or a CRM link needs confirming in a live account.",
+  "Assumes a monthly payroll calendar with one pay run per calendar month, and a commission earnings rate that takes an entered amount (ENTEREARNINGSRATE). Confirm both in a live account.",
+  "Invoices paid after the pay run posts are not in that month's commission.",
+  "Existing earnings lines on a payslip are sent back as read when the commission line is set. Confirm in a live account that Xero accepts that.",
+  "The variants file for this workflow is missing, so the call evidence could not be checked. Re-run the mining to confirm the families.",
+  "The Xero adapter is docs-only until a Xero demo company proves the calls."
+ ],
+ "evidence": {
+  "calls": "1 discovery call (variants file missing)",
+  "platforms": "Xero, MYOB and Google Workspace help pages mapped step by step (automotive-commission-platforms.json)"
+ }
+}

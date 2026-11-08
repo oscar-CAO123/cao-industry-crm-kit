@@ -1,0 +1,49 @@
+{
+ "id": "retail:x-returns",
+ "name": "Returns",
+ "industry": "retail",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes in customer return requests, answers each with the business's own returns form, and queues that reply for approval. Refunds, exchanges, return labels, check-in and restocking stay with the business's staff.",
+ "families": {
+  "all": {
+   "evidence": "1 discovery call describes this way of handling returns (online store with its own warehouse)",
+   "steps": ["return-request", "return-label", "item-received", "refund-or-exchange"],
+   "covered_by": {"return-request": "intake and draft (reply with the returns form)", "return-label": "draft (the form asks for the return details; the label itself stays manual)", "item-received": "not automated (staff check-in)", "refund-or-exchange": "not automated (staff decide; any customer message waits for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New return requests from the business's inbox and helpdesk. Reads only."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Queue the returns-form reply for each new request. Every send waits for approval."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["gmail.users.messages.list", "gmail.users.messages.get", "gmail.users.drafts.create"],
+  "gorgias": ["docs.get_tickets"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"],
+  "gorgias": ["docs.post_tickets_ticket_id_messages"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the inbox and helpdesk, and an email draft in Gmail. Sending a draft and posting a ticket reply reach the customer, so they are live operations and wait for a person.",
+ "capabilities": ["requests.list", "messages.draft", "messages.send"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "return requests from the business's Gmail, reply drafts in the same thread, approved sends"},
+  "gorgias": {"status": "docs-only", "covers": "return tickets from the helpdesk, approved replies on the ticket"}
+ },
+ "gaps": [
+  "Shopify: the kit maps its return operations by name (returnCreate, returnApproveRequest, refundCreate and others) but has no argument schema for them, so no adapter is built. Needs a development store to confirm the inputs.",
+  "WooCommerce: core WooCommerce has no return operations in the kit, and its order operations are unmapped placeholders. Returns depend on extensions (Returns for WooCommerce, Self-Service Refunds). Not built.",
+  "Return apps on Gorgias (Loop Returns, Happy Returns, AfterShip, Synctrack and others) handle approval, return labels, refunds and restocking. None of those apps is mapped in the kit, so those steps stay manual.",
+  "Warehouse check-in, inspection and restocking are physical steps with no mapped platform operation. They stay with staff.",
+  "Refund or exchange: a money movement with no confirmed operation in this kit. Staff do it in their own system.",
+  "Gorgias: the reply is posted with channel email and from_agent true. The recipient is left to Gorgias to set from the ticket, and no live account has confirmed that yet.",
+  "Google Workspace: the mailbox comes from GOOGLE_MAILBOX in the secret store. Not run against a live account yet.",
+  "Platform evidence file (retail-x-returns-platforms.json) says Gorgias has no ops file. The kit now has one with 111 operations, including tickets and messages, so Gorgias is mapped for this workflow."
+ ],
+ "evidence": {
+  "calls": "4 retail returns calls read, 1 variant described in full; every step is manual in that call, and the call runs on Google Workspace",
+  "platforms": "3 platforms checked from their vendor docs (Gorgias, Shopify, WooCommerce); 2 mapped for this workflow (Google Workspace, Gorgias)"
+ }
+}

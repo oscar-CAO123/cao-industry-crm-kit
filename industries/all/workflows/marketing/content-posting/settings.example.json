@@ -1,0 +1,7 @@
+{
+  "business_name": "Example Business",
+  "channels": ["instagram", "facebook"],
+  "meta": {"instagram_user_id": "INSTAGRAM_USER_ID", "facebook_page_id": "FACEBOOK_PAGE_ID"},
+  "post_limit_per_run": 5,
+  "history_limit": 25
+}

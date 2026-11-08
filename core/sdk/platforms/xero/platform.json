@@ -2,7 +2,7 @@
  "id": "xero",
  "name": "Xero",
  "status": "spec",
- "tested": "offline only (fake network); not yet run against a real account",
+ "tested": "core flow proven in CAO CRM production (token refresh, invoices, contacts, invoice PDF; ported from cao-crm 28aa5d91, Oscar 8 Nov); kit copy itself offline only; listContacts, listPayments, runReport and the other mapped operations not yet run against a real account",
  "authProof": "crm",
  "style": "rest",
  "hosts": [

@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Plumbing",
+ "channel": "sms",
+ "notify_statuses": ["Work Order", "Completed"],
+ "stale_after_days": 7
+}

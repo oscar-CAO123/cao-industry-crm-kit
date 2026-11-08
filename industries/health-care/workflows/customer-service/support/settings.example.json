@@ -1,0 +1,10 @@
+{
+ "family": "all",
+ "business_name": "Example Physio",
+ "support": "zendesk",
+ "records": "cliniko",
+ "turnaround": "the next business day",
+ "reply_after_days": [2, 5],
+ "clinical_words": ["referral", "post-op"],
+ "signature": "The Example Physio team"
+}

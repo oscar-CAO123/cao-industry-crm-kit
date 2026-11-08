@@ -1,0 +1,47 @@
+{
+ "id": "construction:tenders",
+ "name": "Tenders take weeks",
+ "industry": "construction",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tenders take weeks to bid. This catches tender notices in the business's mailbox, logs each one in a tender register, drafts the expression of interest for every tender marked Go, and drafts a reminder for tenders closing soon. Crons read and draft; a person approves every send. Takeoff, pricing and the written submission stay with the estimating team until their platforms are mapped.",
+ "families": {
+  "tender-bid": {
+   "evidence": "40 calls read and described tendering step by step (46 in the worklist)",
+   "steps": ["tender-notice", "go-no-go", "register-interest", "read-documents", "site-visit", "takeoff", "subcontractor-quotes", "supplier-prices", "price-build", "compliance-docs", "write-submission", "internal-approval", "submit", "award-debrief", "record-keeping"],
+   "covered_by": {"tender-notice": "intake", "go-no-go": "register (owner marks Go or No-go)", "register-interest": "interest", "read-documents": "not covered (see gaps)", "site-visit": "not covered (see gaps)", "takeoff": "not covered (see gaps)", "subcontractor-quotes": "not covered (see gaps)", "supplier-prices": "not covered (see gaps)", "price-build": "not covered (see gaps)", "compliance-docs": "not covered (see gaps)", "write-submission": "not covered (see gaps)", "internal-approval": "owner, outside the workflow", "submit": "deadlines (reminder before close); lodging by hand", "award-debrief": "not covered (see gaps)", "record-keeping": "intake (register row)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Tender notices from the mailbox, each logged once in the tender register."},
+  {"name": "interest", "schedule": "30 21 * * 0-4", "entry": "interest", "summary": "For each tender marked Go, draft the expression of interest and queue its send for approval (weekday mornings, 7 or 8 am in eastern Australia)."},
+  {"name": "deadlines", "schedule": "0 21 * * 0-4", "entry": "deadlines", "summary": "Draft one reminder listing tenders closing within the warning window that are not yet submitted (weekday mornings, 7 or 8 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reading the mailbox folder and the register, a row in the tender register, an Outlook draft. Sending a draft is a live operation and waits for a person.",
+ "capabilities": ["tenders.list", "tenders.log", "tenders.interest", "tenders.deadlines", "messages.draft", "messages.send"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "tender notices from an Outlook folder, the tender register as an Excel table, Outlook drafts for expressions of interest and reminders, sending an approved draft"}
+ },
+ "gaps": [
+  "Buildxact: the tender estimate, quote and request-for-quote endpoints are not mapped; only its sign-in is. Subcontractor and supplier quote requests stay with the owner until they are.",
+  "EstimateOne, which the calls name most for tender notices and submission, and PlanSwift, which its help centre covers for takeoff: neither is in the kit, so no adapter or operation exists for them.",
+  "Tender portals (EstimateOne, TenderLata, the principals' own portals): the portal alerts must be forwarded to the mailbox folder the intake reads. Portal lodgement is browser-only and not mapped.",
+  "Takeoff (Groundplan, Blu, Microsoft 365 spreadsheets) and reading the tender documents (Copilot, Claude, ChatGPT): judgment steps the owner or estimator does; no mapped takeoff operation.",
+  "Go or no-go, site visits, internal approval and the written submission are judgment steps. The workflow records the owner's decision in the register and does not make it.",
+  "Closing dates are not read from notices (the notice wording varies). The owner types each closing date into the register as an ISO date (YYYY-MM-DD); rows without one are listed in the reminder.",
+  "Award debrief and contract negotiation after an award have no mapped step.",
+  "Every adapter is docs-only until a sandbox Microsoft 365 developer tenant proves the Outlook and Excel operations."
+ ],
+ "evidence": {
+  "calls": "40 of the 46 worklist calls read and described tendering step by step, none rejected; the tender-notice and price-build steps carry the most calls",
+  "platforms": "the help centres for Buildxact, EstimateOne and PlanSwift were read step by step; only Buildxact is in the kit, and only its sign-in is mapped. Microsoft 365 is named on the calls for takeoff, pricing and writing, and is the one mapped platform this workflow uses."
+ }
+}

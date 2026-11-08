@@ -1,0 +1,48 @@
+{
+ "id": "opportunity-finding",
+ "name": "Find tenders, grants and advertised work that fit the business",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds tenders, grants and advertised work that fit the business. Reads the alert emails that tender and grant portals send to the business's mailbox, logs each new opportunity to a register, and drafts a digest of the ones a person judges a fit for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "opportunity-finding": {
+   "evidence": "39 of 40 discovery calls describe how they find and price work; most name tenders. 10 describe a source scan, and 82 percent of that work was manual",
+   "steps": ["source-scan", "read-brief", "triage-fit", "record-keeping", "send-digest"],
+   "covered_by": {"source-scan": "scan (reads the alerts folder each hour)", "read-brief": "scan (the alert preview); the full notice is opened by a person", "triage-fit": "skill (verdict written into the store)", "record-keeping": "log (one row per new opportunity in the register)", "send-digest": "digest (draft in the mailbox, send queued for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "scan", "schedule": "0 * * * *", "entry": "scan", "summary": "Each hour: read the alert emails in the folder and store the ones not seen before."},
+  {"name": "log", "schedule": "20 * * * *", "entry": "log", "summary": "Log each new opportunity as a row in the register workbook."},
+  {"name": "digest", "schedule": "0 21 * * *", "entry": "digest", "summary": "Each morning in eastern Australia (21:00 UTC): draft the digest of opportunities judged a fit and queue its send for approval."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Every draft operation reaches nobody outside the business: a read of the alerts folder, a row in the register workbook, and a digest draft in the business's own mailbox. The send of that digest is a live operation and waits for a person. The register row and the draft are writes, so the deploy needs KIT_ALLOW_WRITES=1.",
+ "capabilities": ["messages.list", "messages.draft", "files.write"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "alert emails read from a mail folder, register rows in an Excel table, the digest draft and its approved send"}
+ },
+ "gaps": [
+  "Tender and grant portals (AusTender, state tender sites, grant finders): no portal operation is mapped in the kit, and no call names an API for one. The scan reads the alert emails those portals send. The owner sets up each alert on the portal.",
+  "EstimateOne: the platform pages show a subcontractor source scan, but its operations are not mapped in the kit. Not built.",
+  "BuiltGrid: its pages describe builders inviting trades to quote, with no trade-side search, alerts or fit check. Not built.",
+  "Full notice text: the alert list returns the Outlook preview (about 255 characters). The kit maps no full-message read, so closing dates and scope beyond the preview need a person to open the email.",
+  "Grants: no call names a grant source, so no grant feed is built. Grant alerts that land in the same mailbox are judged by the same fit check.",
+  "Fit judgment is an agent step. The crons do not filter by trade, value or location; the verdicts come from the skill.",
+  "Eligibility checks (licences, insurance, prequalification): no platform in the pages read describes them. They stay with the owner.",
+  "Pricing, bid preparation, partner search, submission and award follow-up: these belong to the quoting workflow and are not covered here.",
+  "Live behaviour is unverified: no Microsoft 365 account has run these crons."
+ ],
+ "evidence": {
+  "calls": "40 discovery calls read; 39 describe how the work is found and priced. Source scans were 82 percent manual in the 10 calls that describe one",
+  "platforms": "EstimateOne is the one platform the pages show as supporting a source scan, but it has no mapped operations in the kit. BuiltGrid has no trade-side search. Neither has mapped operations, so the crons use Microsoft 365, which is mapped in the kit and where the alert emails arrive"
+ }
+}

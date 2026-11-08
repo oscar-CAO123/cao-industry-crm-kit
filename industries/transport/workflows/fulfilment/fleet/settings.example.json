@@ -1,0 +1,5 @@
+{
+ "business_name": "Example Transport",
+ "assets": ["TRACKUNIT_ASSET_ID_1", "TRACKUNIT_ASSET_ID_2"],
+ "system_of_measurement": "metric"
+}

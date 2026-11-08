@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Transport",
+ "due_days": 14,
+ "sales_account_code": "200",
+ "chase_after_days_past_due": [7, 21]
+}

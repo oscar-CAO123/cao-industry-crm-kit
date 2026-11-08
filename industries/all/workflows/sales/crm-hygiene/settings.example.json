@@ -1,0 +1,5 @@
+{
+  "crm": "hubspot",
+  "read_limit": 1000,
+  "fix_email_case": true
+}

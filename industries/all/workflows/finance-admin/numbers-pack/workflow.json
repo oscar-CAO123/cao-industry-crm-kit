@@ -1,0 +1,44 @@
+{
+ "id": "numbers-pack",
+ "name": "Weekly or monthly numbers and profit pack for the owner",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Weekly or monthly numbers and profit pack for the owner: reads the profit and loss and the bank position from the ledger, stores them, and drafts the pack for the owner to read and comment on. Crons read and draft only; nothing is sent.",
+ "families": {
+  "all": {
+   "evidence": "19 discovery calls describe this way of building the pack; the data pull is 88 percent manual and the pack build 73 percent manual",
+   "steps": ["data-pull", "cost-check", "job-or-product-profit", "pack-build", "commentary", "forecast-and-cashflow"],
+   "covered_by": {"data-pull": "draft (Xero profit and loss)", "cost-check": "skill (owner checks costs against budget; no mapped operation)", "job-or-product-profit": "gap (no per-job profit operation mapped for Xero)", "pack-build": "draft (pack drafted from stored snapshots)", "commentary": "skill (judgment; the owner writes it)", "forecast-and-cashflow": "gap (Xero cash flow statement is mapped but not read in this version)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "data-pull", "schedule": "0 22 * * *", "entry": "data-pull", "summary": "On the due day, read the profit and loss for the period and store it."},
+  {"name": "cash-check", "schedule": "0 22 * * *", "entry": "cash-check", "summary": "Daily, read the bank summary for the last seven days and store it."},
+  {"name": "pack-build", "schedule": "30 22 * * *", "entry": "pack-build", "summary": "On the due day, draft the numbers pack from the stored snapshots. Internal draft, never sent."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getReportProfitAndLoss", "accounting.getReportBankSummary"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Reads only, plus the pack the crons store for the owner to read. Nothing is sent, paid or changed in the ledger.",
+ "capabilities": ["reports.read", "pack.draft"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "profit and loss and bank summary reads, drafted into a pack"}
+ },
+ "gaps": [
+  "MYOB: no adapter. The journal list is paged (400 rows by default, 5000 at most) and no paging parameter is mapped, so a full period's totals cannot be read safely. MYOB access-token exchange is also not built.",
+  "Shopify, Meta Ads, Deputy, Roller, Sync Hub, Style Arcade, ELMO, Microsoft 365 (Excel), Power BI, Looker Studio and BigQuery appear in the calls but have no platform evidence for this pack, so no adapter is built for them.",
+  "Cost check against budget and job or product profit: no mapped operation for Xero. The owner does these by hand or in the ledger.",
+  "Forecast and cash flow: Xero's cash flow statement and budget summary are mapped but not read in this version.",
+  "Commentary is judgment. The pack leaves it for the owner or the agent skill to write.",
+  "Distribution: sending the pack to the owner needs a mail adapter and a live approval. None is built here, so the pack stays a draft.",
+  "Every adapter is docs-only until a Xero demo company proves the report shapes and the sign-in on a live account."
+ ],
+ "evidence": {
+  "calls": "27 calls read, 19 of them describe how the pack is built; the data pull and pack build are mostly manual",
+  "platforms": "Xero and MYOB guide pages read in the crawl; Xero reports are mapped to API operations, MYOB journal reads are not paged here, and the product steps are unconfirmed on a live account"
+ }
+}

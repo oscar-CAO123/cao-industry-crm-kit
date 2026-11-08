@@ -1,0 +1,55 @@
+{
+  "id": "health-care:x-budget",
+  "name": "Plan budget burn",
+  "industry": "health-care",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Plans and tracks budget burn for a health-care business: reads the budgets and the budget summary report from Xero every day and stores them for the owner's burn read. Nothing is changed, sent or approved by a cron.",
+  "families": {
+    "budget-tracking": {
+      "evidence": "0 discovery calls: the call evidence file for this workflow is missing",
+      "steps": ["budget-set", "actuals-pull", "compare-to-budget", "forecast", "flag-overspend", "approve-spend", "report-to-owner", "adjust-budget", "record-keeping", "hand-off", "other"],
+      "covered_by": {
+        "budget-set": "cron budget-read (reads Xero budgets)",
+        "actuals-pull": "cron burn-check (budget summary report)",
+        "compare-to-budget": "skill (agent reads the stored burn read)",
+        "forecast": "not covered",
+        "flag-overspend": "skill (agent reads the stored burn read)",
+        "approve-spend": "not covered: Xero docs describe no budget check at approval",
+        "report-to-owner": "skill (owner read, sent by a person)",
+        "adjust-budget": "not covered: Xero API budget operations are read only",
+        "record-keeping": "not covered",
+        "hand-off": "not covered",
+        "other": "not covered"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "budget-read", "schedule": "0 19 * * *", "entry": "budget-read", "summary": "Copy the Xero budgets (planned amounts per account and period) into the store."},
+    {"name": "burn-check", "schedule": "30 19 * * *", "entry": "burn-check", "summary": "Read the Xero budget summary report and store it under today's date for the burn read. 19:00 UTC is 5 or 6 am in eastern Australia."}
+  ],
+  "draft_ops": {
+    "xero": ["accounting.getBudgets", "accounting.getReportBudgetSummary"]
+  },
+  "live_ops": {},
+  "draft_ops_note": "Reads only. Each cron writes to its own store, never to the business's books.",
+  "capabilities": ["budgets.list", "reports.budget-summary"],
+  "adapters": {
+    "xero": {"status": "docs-only", "covers": "budget read and budget summary read (read only)"}
+  },
+  "gaps": [
+    "No discovery call evidence: mining/health-care-x-budget-variants.json is missing, so steps and families come from the workflow spec only.",
+    "Fathom Finance: its docs describe budgets, KPIs and reports, but the kit has no ops file for it, so no adapter is built.",
+    "Microsoft 365: the docs set covers accessibility articles only, with no budgeting, so no adapter is built.",
+    "Burn rate and variance: the budget summary rows are not parsed yet. The cron stores the raw report and the agent reads it. The row shape needs checking against a live Xero demo company.",
+    "Overspend alerts, budget editing, forecasting, approval checks at spend and a budget decision log: not in the Xero API map, or not described in the docs. A live Xero account is needed to confirm.",
+    "Owner or accountant hand-off: any email would go through a mailbox, which is not mapped for this job. No live operation is mapped, so nothing is queued.",
+    "The test covers the read-only guard. There is no live operation, so the approve-and-run path is not exercised."
+  ],
+  "evidence": {
+    "calls": "0 discovery calls. The variants file for this workflow is missing.",
+    "platforms": "Xero: budget and budget summary operations mapped in the kit. Fathom Finance and Microsoft 365: no mapped operations for budgeting."
+  }
+}

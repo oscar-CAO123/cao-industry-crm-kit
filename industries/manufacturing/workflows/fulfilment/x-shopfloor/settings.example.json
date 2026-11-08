@@ -1,0 +1,8 @@
+{
+  "business_name": "Example Manufacturing",
+  "ready_status": "Ready to complete",
+  "reorder_levels": {
+    "BOLT-M8": 100,
+    "PANEL-1200": 20
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "business_name": "Example Firm",
+  "currency": "AUD",
+  "meta": {"ad_account_id": "act_AD_ACCOUNT_ID"},
+  "window": "last_7d"
+}

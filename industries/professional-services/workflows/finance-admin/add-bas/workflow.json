@@ -1,0 +1,56 @@
+{
+ "id": "professional-services:add-bas",
+ "name": "BAS first pass",
+ "industry": "professional-services",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Prepares the BAS first pass for an accounting practice's client in Xero: reads the period's bank transactions, queues the agreed coding for approval, and lists what the accountant must check by hand before the return. Crons read and queue; an accountant approves every change and lodges the BAS.",
+ "families": {
+  "accounting-practice": {
+   "evidence": "2 discovery calls from accounting practices describe preparing a BAS; about 30 of the 50 minutes is document scanning that AI could do",
+   "steps": ["trigger-quarter-end", "document-scan", "bank-feed-pull", "categorise-lines", "gst-coding", "reconcile", "exception-review", "draft-bas", "partner-signoff", "lodge-bas"],
+   "covered_by": {
+    "trigger-quarter-end": "not covered: period_start is set in settings for each quarter",
+    "document-scan": "exceptions cron (lists transactions with no source document attached)",
+    "bank-feed-pull": "pull-period cron (reads authorised bank transactions for the period)",
+    "categorise-lines": "code-lines cron (queues coding for approval when an agreed rule matches)",
+    "gst-coding": "pull-period cron (reads tax rates and flags tax types that are not active)",
+    "reconcile": "exceptions cron (flags unreconciled lines through the same list); no write",
+    "exception-review": "exceptions cron",
+    "draft-bas": "skill (the accountant prepares the BAS from the reviewed lines)",
+    "partner-signoff": "skill (a person only)",
+    "lodge-bas": "not covered: lodgement stays with the accountant in the ATO channel"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pull-period", "schedule": "0 22 * * *", "entry": "pull-period", "summary": "Read the period's authorised bank transactions and tax rates from Xero."},
+  {"name": "code-lines", "schedule": "20 22 * * *", "entry": "code-lines", "summary": "Queue a coding change for each single-line transaction an agreed rule matches."},
+  {"name": "exceptions", "schedule": "40 22 * * *", "entry": "exceptions", "summary": "List the transactions the accountant must check by hand before the BAS."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getBankTransactions", "accounting.getTaxRates"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateBankTransaction"]
+ },
+ "draft_ops_note": "Draft operations are reads. The crons write only the internal period snapshot and the exceptions list. A coding change edits the books, so it is live and waits for an accountant.",
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "authorised bank transactions for the period, tax rates, and queued coding changes to a single-line transaction"}
+ },
+ "gaps": [
+  "MYOB: only the GST tax-code operations are mapped in the kit. Bank feed, categorise, reconcile and BAS draft steps have no mapped operation, so no MYOB adapter is built. Confirm on a live MYOB file.",
+  "Xero: the bank feed connection, the reconciliation status and the GST return report are not built. The reconciliation flag is read only.",
+  "Xero: the BAS form fields (G1, 1A, 1B) are not on the Xero pages in the evidence, so the BAS itself is prepared by the accountant, not by a cron.",
+  "Document scanning: the evidence says about 30 of the 50 minutes is scanning, but no operation reads attachment contents. The exceptions list flags missing documents only.",
+  "Partner sign-off, lodgement and client communication are judgment and human steps. The evidence does not show a platform step for them.",
+  "Coding rules are per client and must be agreed with the accountant before code-lines queues anything. With no rules, nothing is queued.",
+  "The Xero adapter is docs-only until a Xero demo organisation proves the reads and the coding update."
+ ],
+ "evidence": {
+  "calls": "2 discovery calls from accounting practices describe BAS preparation",
+  "platforms": "the vendors' own help pages for MYOB and Xero, mapped step by step"
+ }
+}

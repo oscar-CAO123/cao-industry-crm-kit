@@ -1,0 +1,62 @@
+{
+ "id": "real-estate:tenant-screening",
+ "name": "Screen tenants and sign leases",
+ "industry": "real-estate",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes a tenant applicant from enquiry through screening checks to a tenancy queued in Re-Leased, ready to sign. Crons read, check the record and queue; a person approves every tenancy before it is created.",
+ "families": {
+  "all": {
+   "evidence": "1 of 6 tenant screening calls describes the process step by step: lease preparation, lease signing and record keeping are all done by hand",
+   "steps": ["enquiry-intake", "application-form", "id-check", "income-verification", "reference-checks", "credit-check", "guarantor-check", "shortlist-decision", "applicant-notice", "lease-preparation", "lease-signing", "record-keeping"],
+   "covered_by": {
+     "enquiry-intake": "intake (applicant contacts tagged in Re-Leased)",
+     "application-form": "not covered (no Re-Leased application endpoint)",
+     "id-check": "skill (done in the agency's own check tool, result recorded by the CRM shell)",
+     "income-verification": "skill (done outside the platform)",
+     "reference-checks": "skill (done outside the platform)",
+     "credit-check": "skill (done outside the platform)",
+     "guarantor-check": "skill (done outside the platform)",
+     "shortlist-decision": "approval (a person sets the applicant approved with lease dates)",
+     "applicant-notice": "not covered (needs a mailbox adapter)",
+     "lease-preparation": "lease (tenancy queued in Re-Leased)",
+     "lease-signing": "not covered (no e-signature operation in Re-Leased)",
+     "record-keeping": "check-record (reads the record) and the Re-Leased contact and tenancy as the record"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New applicant contacts from Re-Leased."},
+  {"name": "check-record", "schedule": "10,40 * * * *", "entry": "check-record", "summary": "Reads each new applicant's record and moves it on to the checks, or parks it when it has no usable email."},
+  {"name": "lease", "schedule": "20,50 * * * *", "entry": "lease", "summary": "Queues a tenancy for each applicant a person has approved. Nothing is created until approved."}
+ ],
+ "draft_ops": {
+  "re-leased": ["Contacts_Get", "Contacts_Get.get"]
+ },
+ "live_ops": {
+  "re-leased": ["Tenancies_Post"]
+ },
+ "draft_ops_note": "Draft operations are reads only. A tenancy is a live operation because it creates a legal record that the tenant and the owner see; it waits for a person.",
+ "capabilities": ["applicants.read", "applicants.check", "tenancies.create"],
+ "adapters": {
+  "re-leased": {"status": "docs-only", "covers": "applicant contacts by tag, one contact read, and a tenancy created after approval"}
+ },
+ "gaps": [
+  "Console Cloud (Reapit PM) and PropertyMe: their help centres were read and show partial support for inspections, lease renewals and tenant references, but neither has a kit adapter or mapped operations. Build an adapter before either can run here.",
+  "Enquiries from listing sites or email: Re-Leased has no enquiry endpoint, so the intake cron only sees contacts already tagged as applicants. A mailbox intake needs the Microsoft 365 adapter, which is tied to the quoting types and is not reused here.",
+  "Application form, ID check, income, credit, guarantor and reference checks: done outside the platform. AgentBox (Reapit Foundations) maps identity checks and signed documents in the kit, but no adapter is built for it yet.",
+  "Applicant outcome notices: sending them is a live step. It needs a mailbox adapter that drafts, then queues the send for approval.",
+  "Lease signing: Re-Leased's mapped operations have no e-signature step, so signing stays manual.",
+  "Bond lodgement, key handover and advance rent: not mapped for Re-Leased.",
+  "Runtime: the approval result only keeps ids named id, uuid, *ID or *_id. Re-Leased returns GlobalIdentifier for a new tenancy, so the created tenancy id is not recorded. A change in core/workflows/runtime.ts is needed. Not made here.",
+  "Recording a screening decision: no command sets an applicant to approved with lease dates yet. The CRM shell must do it before the lease cron can queue anything.",
+  "Contacts: the intake cron reads the first page of tagged contacts only. Later pages are not followed.",
+  "Re-Leased is status spec and has not been run against a real account. The test uses a fake network only."
+ ],
+ "evidence": {
+  "calls": "6 tenant screening calls were read; 1 describes the process step by step, and it is manual at every step it covers",
+  "platforms": "Console Cloud (Reapit PM) and PropertyMe help centres were read; neither has mapped operations in the kit, so the kit's Re-Leased mapping is the only adapter built"
+ }
+}

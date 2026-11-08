@@ -1,0 +1,51 @@
+{
+ "id": "all:expiry-alerts",
+ "name": "Track licences, certificates and document expiry",
+ "industry": "all",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tracks licences, certificates and document expiry from one register: reads each expiry date, drafts a renewal reminder to each holder inside the window and queues its send for a person's approval, and drafts a weekly owner digest of lapsed and soon-due items. Crons read and draft; a person sends every reminder.",
+ "families": {
+  "all": {
+   "evidence": "13 calls read; 4 describe the process in detail (trades and construction 2, healthcare 1, real estate 1)",
+   "steps": ["expiry-captured", "reminder-sent", "chase-holder", "other"],
+   "covered_by": {
+    "expiry-captured": "scan (reads the expiry register)",
+    "reminder-sent": "remind (drafts the reminder, queues its send)",
+    "chase-holder": "remind (holder email); the holder's reply is a person's job",
+    "other": "gap (booking renewal visits and grouping them by travel stays with a person)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "scan", "schedule": "0 21 * * *", "entry": "scan", "summary": "Read the expiry register and record each item's status. Drafts and queues nothing."},
+  {"name": "remind", "schedule": "10 21 * * *", "entry": "remind", "summary": "Draft a renewal reminder for each holder inside the window or lapsed, and queue its send for approval."},
+  {"name": "digest", "schedule": "0 21 * * 0", "entry": "digest", "summary": "Draft one owner digest each week of lapsed and soon-due items. Never queued or sent by the cron."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["drives.items.workbook.tables.ListRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Reads of the register and Outlook drafts only. A draft reaches nobody until a person sends it from the mailbox. The reminder send is a live operation and is only queued.",
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "expiry register (Excel table read), holder reminder drafts with approval-queued sends, owner digest draft"}
+ },
+ "gaps": [
+  "Simpro: the calls say worker tickets and expiry dates sit in the job software, but Simpro is not mapped in the kit, so there is no adapter. Its dates must be copied into the register.",
+  "HammerTech and SiteBook: the vendor pages describe holding licences and expiry dates, but neither has operations mapped in the kit, so neither has an adapter. Their reminders and chasing are not built.",
+  "Recording a renewal: the platforms in the evidence do not describe receiving a renewed document back. A person updates the Expiry cell in the register after the renewal arrives, and the next scan picks it up.",
+  "Escalation: only the owner digest exists. No alert goes to a client, a manager or an overdue subcontractor.",
+  "Smoke alarm and equipment renewal visits, and grouping those jobs by travel route: judgment and job-system work that this workflow does not cover.",
+  "The register must be one Excel table with four columns (Holder, Email, Item, Expiry). A business with another layout must reshape its table first.",
+  "A reminder whose draft was created but whose queue call failed is drafted again on the next run. Nothing can be sent from that duplicate.",
+  "Field names come from the Microsoft Graph spec. Nothing has run against a live Microsoft 365 tenant, and the token flow is not built: M365_ACCESS_TOKEN is supplied directly."
+ ],
+ "evidence": {
+  "calls": "13 calls read, 4 describe the process; 0 rejected; one call states a volume of 500 contracts",
+  "platforms": "HammerTech and SiteBook vendor pages read; neither has operations mapped in the kit. Microsoft 365 is the one mapped platform used."
+ }
+}

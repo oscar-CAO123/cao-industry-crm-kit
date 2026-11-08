@@ -1,0 +1,11 @@
+{
+  "family": "shift-note",
+  "business_name": "Example Support Services",
+  "lookback_days": 1,
+  "min_words": 8,
+  "checks": [
+    {"label": "What support was given", "any": ["support", "assist", "help", "prompt", "supervis"]},
+    {"label": "How the client or participant was", "any": ["client", "participant", "mood", "settled", "calm", "wellbeing", "well"]},
+    {"label": "Any incident, concern or risk (or that there was none)", "any": ["incident", "concern", "risk", "no issues", "nothing to report", "no change"]}
+  ]
+}

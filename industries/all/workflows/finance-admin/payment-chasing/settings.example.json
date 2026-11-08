@@ -1,0 +1,13 @@
+{
+ "business_name": "Example Accounting",
+ "mailbox": "accounts@example.com.au",
+ "owner_email": "owner@example.com.au",
+ "ladder": [
+  {"days_overdue": 7, "tone": "friendly"},
+  {"days_overdue": 14, "tone": "firm"},
+  {"days_overdue": 30, "tone": "final"}
+ ],
+ "min_amount": 50,
+ "pause_contacts": [],
+ "pause_invoices": []
+}

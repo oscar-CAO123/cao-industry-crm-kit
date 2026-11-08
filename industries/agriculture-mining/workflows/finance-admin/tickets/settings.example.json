@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Grain Co",
+ "microsoft_365": {
+  "mailbox": "tickets@example.com.au",
+  "folder": "inbox",
+  "search": "docket",
+  "tickets": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Tickets"},
+  "qc": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "QC"},
+  "qc_contact": "qc@example.com.au"
+ },
+ "expected_grades": {
+  "Log spec 1": "Grade 1",
+  "Log spec 2": "Grade 2"
+ }
+}

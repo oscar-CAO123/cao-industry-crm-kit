@@ -1,0 +1,7 @@
+{
+ "family": "single-entry-syndication",
+ "business_name": "Example Property Management",
+ "vaultre": {
+  "_note": "Keys by environment name only: VAULTRE_ACCESS_TOKEN and VAULTRE_API_KEY. Never put key values here."
+ }
+}

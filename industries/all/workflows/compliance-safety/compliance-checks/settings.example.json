@@ -1,0 +1,9 @@
+{
+ "family": "aml-matter-onboarding",
+ "business_name": "Example Accounting",
+ "first_aml": {
+  "organization_id": "",
+  "lookback_days": 30,
+  "max_pages": 5
+ }
+}

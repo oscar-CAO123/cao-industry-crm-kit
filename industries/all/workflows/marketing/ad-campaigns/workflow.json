@@ -1,0 +1,97 @@
+{
+ "id": "ad-campaigns",
+ "name": "Build and review ad campaigns",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Builds and reviews paid ad campaigns in the business's own Meta ad account. A plan is checked, each campaign object is queued for approval and created PAUSED, and results are read back each week. Crons check, queue and read; nothing is switched on by the workflow.",
+ "families": {
+  "all": {
+   "evidence": "34 of 40 discovery calls describe how they run ads; 15 of them are lead generation",
+   "steps": [
+    "goal-setting",
+    "creative-produce",
+    "campaign-setup",
+    "tracking-setup",
+    "approval",
+    "launch",
+    "monitor",
+    "lead-handling",
+    "reporting",
+    "pause-or-stop",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "goal-setting": "plan (objective, budget and audience are set in the plan)",
+    "creative-produce": "plan (the picture link and copy are written by the owner or the agent)",
+    "campaign-setup": "build (campaign, ad set, creative and ad, each queued for approval, created PAUSED)",
+    "tracking-setup": "not covered (pixel and conversion setup stays manual)",
+    "approval": "approval (each create waits for a person)",
+    "launch": "not covered (a person switches the ads on in Ads Manager)",
+    "monitor": "review (last seven days per campaign)",
+    "lead-handling": "not covered (lead handling is outside this job)",
+    "reporting": "review",
+    "pause-or-stop": "not covered (a person pauses in Ads Manager)",
+    "record-keeping": "review (each run keeps the figures in the store)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "plan",
+   "schedule": "*/30 * * * *",
+   "entry": "plan",
+   "summary": "Checks each planned campaign against the bounds and marks it ready or skipped."
+  },
+  {
+   "name": "build",
+   "schedule": "*/15 * * * *",
+   "entry": "build",
+   "summary": "Queues the next Meta create for each ready plan once the one before it is approved and done."
+  },
+  {
+   "name": "review",
+   "schedule": "0 22 * * *",
+   "entry": "review",
+   "summary": "Reads the last seven days per campaign for the owner (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
+ ],
+ "draft_ops": {
+  "meta-ads": [
+   "AdAccount.get.insights"
+  ]
+ },
+ "live_ops": {
+  "meta-ads": [
+   "AdAccount.post.campaigns",
+   "AdAccount.post.adsets",
+   "AdAccount.post.adcreatives",
+   "AdAccount.post.ads"
+  ]
+ },
+ "draft_ops_note": "Draft operations are reads only. Every create reaches the client's paid account, and once a person switches it on it can spend, so each create is a live operation: it is queued, and a person approves it. The workflow creates every object PAUSED and never switches anything on.",
+ "adapters": {
+  "meta-ads": {
+   "status": "docs-only",
+   "covers": "campaign, ad set, creative and ad creation (PAUSED) and the last seven days of campaign results"
+  }
+ },
+ "gaps": [
+  "Google Ads is the most-named tool in these calls (13 of 40 mention it, 12 of them for campaign setup), but the mining run carried no platform support for it, so no adapter is built. The kit maps its search and campaign mutate operations; it is the next adapter once its platform support is mined.",
+  "LinkedIn: the kit maps campaign groups and creatives but no campaign operation, so a LinkedIn campaign cannot be built end to end. No adapter is built.",
+  "TikTok Ads has no ops file in the kit, so nothing is mapped for it.",
+  "Switching ads on, pausing, and stopping stay with a person in Ads Manager. No operation for activating an object is in this workflow.",
+  "Pictures are linked by https URL (Meta fetches them). Uploading a picture to the ad account first is not in this workflow.",
+  "Tracking setup (pixel install and conversion events) is manual. The mapped pixel and conversion operations are not used here.",
+  "Special ad categories (housing, employment, credit, social issues) are refused: the workflow sends none, so those campaigns need Ads Manager.",
+  "Lead handling is not in this workflow, so ad leads (personal details) are not read here.",
+  "Campaign results overlap with the ad-reporting workflow. This review keeps one table per campaign for the owner and does not replace it.",
+  "The adapter is docs-only until a sandbox ad account proves each create and the approval chain on a real Meta account."
+ ],
+ "evidence": {
+  "calls": "40 discovery calls read; 34 describe how they run ads (15 lead generation, the rest e-commerce, bookings and venue campaigns)",
+  "platforms": "Meta Ads and LinkedIn have mapped support in the mining run; TikTok Ads is in the run with no ops file. Meta holds every operation this build uses."
+ }
+}

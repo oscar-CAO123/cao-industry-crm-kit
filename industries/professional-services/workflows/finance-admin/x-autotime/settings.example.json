@@ -1,0 +1,7 @@
+{
+  "business_name": "Example Law",
+  "clio_user_id": 0,
+  "matter_status": "Open",
+  "default_activity_description_id": null,
+  "default_non_billable": false
+}

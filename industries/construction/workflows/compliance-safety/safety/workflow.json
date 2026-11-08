@@ -1,0 +1,97 @@
+{
+ "id": "construction:safety",
+ "name": "Safety paperwork on paper",
+ "industry": "construction",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns the safety paperwork a construction business does by hand (pre-starts, SWMS, sign-off, incident and close-out records) into SiteBook records, and reminds the crew when reviews and actions fall due. Crons read and draft; every reminder email waits for a person to approve it.",
+ "families": {
+  "paper-safety": {
+   "evidence": "13 discovery calls describe this way of doing safety paperwork",
+   "steps": [
+    "pre-start",
+    "swms-prepare",
+    "incident-report",
+    "sign-off",
+    "file-store",
+    "report-regulator",
+    "close-out"
+   ],
+   "covered_by": {
+    "pre-start": "draft (pre-start checklist from a template, with the SWMS attached)",
+    "swms-prepare": "draft (SWMS attached to the checklist, review action raised when due)",
+    "incident-report": "not yet (see gaps)",
+    "sign-off": "not yet (see gaps)",
+    "file-store": "not yet (Dropbox has no platform in the kit)",
+    "report-regulator": "not yet (see gaps)",
+    "close-out": "approval (reminder emails for open actions)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "pre-start",
+   "schedule": "0 20 * * 0-4",
+   "entry": "prestart",
+   "summary": "Weekday mornings, before the crew starts: a pre-start checklist for each job that does not have one yet, with the standard SWMS attached."
+  },
+  {
+   "name": "swms-review",
+   "schedule": "0 21 * * 0",
+   "entry": "swms-review",
+   "summary": "Weekly: raise a review action for each SWMS whose last review is older than the review window."
+  },
+  {
+   "name": "reminders",
+   "schedule": "0 22 * * *",
+   "entry": "reminders",
+   "summary": "Daily: queue a reminder email for each open action that falls due soon, for approval."
+  }
+ ],
+ "draft_ops": {
+  "sitebook": [
+   "docs.get_v1_jobs",
+   "docs.get_v1_swms",
+   "docs.get_v2_actions",
+   "docs.post_v1_checklists",
+   "docs.post_v1_checklists_checkListId_swms",
+   "docs.post_v1_actions"
+  ]
+ },
+ "live_ops": {
+  "sitebook": [
+   "docs.post_v1_actions_actionId_email"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a checklist created from a template, a SWMS attached to it, an internal review action. The reminder email to an action's recipient is a live operation and waits for a person.",
+ "capabilities": [
+  "jobs.list",
+  "checklists.create",
+  "swms.attach",
+  "actions.create",
+  "messages.send"
+ ],
+ "adapters": {
+  "sitebook": {
+   "status": "docs-only",
+   "covers": "pre-start checklist, SWMS attachment, SWMS review action, action reminder email"
+  }
+ },
+ "gaps": [
+  "Procore: its help pages map a site inspection, incident, action plan and forms, but the kit has no Procore platform and no ops file, so nothing is mapped. Pre-start, SWMS and toolbox talks are not in its crawled pages at all.",
+  "Sitemate: its help pages map inspections, inductions and actions, but the kit has no Sitemate platform and no ops file, so nothing is mapped.",
+  "SiteBook incident and sign-off records: the incident create endpoint and the sign-off body fields are not in the docs crawl, so incident-report and sign-off stay on paper.",
+  "SiteBook regulator and electrical portal lodgements: no endpoint in the docs crawl. The licensed person keys these in by hand.",
+  "SiteBook field names for list responses (jobs, actions, SWMS) are not confirmed in the docs crawl, which shows request bodies and single-record examples only. The adapter reads them defensively and skips any record without an id.",
+  "SiteBook CheckListId, ActionId and the conditional AssetId on checklist create: the docs say AssetId is required when no AssetGroupId is given, and ActionId is client-supplied. Confirm both on a sandbox account before live use.",
+  "Dropbox document folders, ASA Safety and AWSA Safety: no platform in the kit, so the file store and the safety-system step stay with the business.",
+  "Judgment steps stay with the agent skill in SKILL.md: writing the SWMS for a new task, close-out photo selection, and the handover pack.",
+  "Every adapter is docs-only until a SiteBook sandbox or trial account proves the calls."
+ ],
+ "evidence": {
+  "calls": "13 of 31 read safety discovery calls describe how they do it; SWMS preparation is 90 percent manual in those calls",
+  "platforms": "SiteBook's developer docs for pre-start, SWMS, action and reminder endpoints; Procore and Sitemate help pages were checked and have no mapped operations in the kit"
+ }
+}

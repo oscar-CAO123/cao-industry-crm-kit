@@ -1,0 +1,54 @@
+{
+ "id": "retail:supplier-production",
+ "name": "Run production with overseas factories, freight forwarders and licensors (tech packs, samples, shipping)",
+ "industry": "retail",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs production with overseas factories: takes each new order from the production board, drafts the factory purchase order in Xero, flags orders whose delivery date is close, and queues the deposit payment for approval. Crons read and draft; a person approves every purchase order, bill and payment. Tech packs, samples, licensor approval and freight are not covered by this build yet.",
+ "families": {
+  "all": {
+   "evidence": "4 discovery calls describe this way of running production (licensed and private-label apparel, wholesale and B2C)",
+   "steps": ["brief-and-tech-pack", "sample-request", "licence-approval", "quote-and-order", "production-monitor", "booking-freight", "shipping-to-warehouse", "record-keeping"],
+   "covered_by": {"brief-and-tech-pack": "skill (tech pack and CAD stay with the designer)", "sample-request": "skill (licensor portal by hand)", "licence-approval": "skill (licensor decides)", "quote-and-order": "draft (purchase order in Xero)", "production-monitor": "monitor (board flags at-risk orders)", "booking-freight": "not covered (see gaps)", "shipping-to-warehouse": "not covered (see gaps)", "record-keeping": "draft (board status and Xero records)", "deposit-payment": "deposit (bill and payment queued for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New orders on the production board become jobs."},
+  {"name": "draft", "schedule": "10,40 * * * *", "entry": "draft", "summary": "Draft each new order's purchase order in Xero, mark the board, queue its authorisation for approval."},
+  {"name": "monitor", "schedule": "0 */4 * * *", "entry": "monitor", "summary": "Flag orders whose delivery date is due within the warning window and mark shipped orders."},
+  {"name": "deposit", "schedule": "20 * * * *", "entry": "deposit", "summary": "For each authorised purchase order, draft the deposit bill and queue it with its payment for approval."}
+ ],
+ "draft_ops": {
+  "monday": ["query.items_page_by_column_values", "mutation.change_multiple_column_values"],
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createContacts", "accounting.createPurchaseOrders", "accounting.getPurchaseOrder", "accounting.createInvoices"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the board and of Xero, a status column on the internal production board, a supplier contact, a purchase order in DRAFT and a supplier bill in DRAFT. Anything that changes a purchase order or bill status the factory or accounts see, or that moves money, is a live operation and waits for a person.",
+ "live_ops": {
+  "xero": ["accounting.updatePurchaseOrder", "accounting.updateInvoice", "accounting.createPayment"]
+ },
+ "live_ops_note": "Authorising a purchase order, authorising a deposit bill and paying a deposit are only ever queued. A person approves them in the CRM shell.",
+ "capabilities": ["jobs.list", "jobs.update", "orders.list", "contacts.upsert", "invoices.create", "payments.list", "products.list"],
+ "adapters": {
+  "monday": {"status": "docs-only", "covers": "production board: orders in, status column out (reads the board, sets status)"},
+  "xero": {"status": "docs-only", "covers": "factory contact, purchase order (draft, then authorise), deposit bill (draft, then authorise and pay), purchase prices"}
+ },
+ "gaps": [
+  "Retailer purchase orders: they arrive in the retailer's portal or by email and are keyed into the production board by hand. No adapter reads them yet.",
+  "Tech packs, CAD and pricing: the designer builds these in the product system. The agent skill only reads them; nothing is pushed to suppliers.",
+  "Samples and licensor approval: the licensor portal and the approval step are not mapped. A person does both.",
+  "Freight: Cario has no operations file in the kit, so booking, tracking and customs entries are not built. Its help pages do not show product screens.",
+  "Dropbox: the pages mapped cover billing only. File sharing for tech packs is not built.",
+  "SIN7 (named on two calls, probably Cin7): its operations are mapped in the kit, but the platform evidence has no entry for it, so no adapter was built. Inventory records stay manual.",
+  "Airtable (pricing and margin): mapped in the kit, not built for this workflow.",
+  "Supplier email: a factory receives its purchase order from Xero by hand. The kit has no mailbox step for this workflow.",
+  "The propose command in tools/workflow.ts only accepts enquiry ids. Jobs need the proposal written to the proposals store by id, which needs a runtime change (core/ is not edited here).",
+  "Live Xero account needed to confirm: the purchase order and bill status changes, the bank account code and the purchase account code. The mapped Xero pages are general guides, not product screens.",
+  "Monday column ids and status labels differ per board: they must be set in settings.json before any cron runs."
+ ],
+ "evidence": {
+  "calls": "4 discovery calls read, 4 describe how production runs; 0 rejected",
+  "platforms": "help pages mapped for Cario, Dropbox and Xero (3 platforms). Monday is named in the calls and built from its kit operations, not from the platform evidence file."
+ }
+}

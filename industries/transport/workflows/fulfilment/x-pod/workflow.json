@@ -1,0 +1,52 @@
+{
+ "id": "transport:x-pod",
+ "name": "Proof of delivery",
+ "industry": "transport",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps a register of proof of delivery for every completed stop, flags stops finished without a photo or signature, and queues a re-attempt for failed stops for approval. Crons read and draft; a person approves every re-attempt.",
+ "families": {
+  "all": {
+   "evidence": "3 call transcripts describe proof of delivery by hand (WhatsApp photos, paper signings, monthly upload to Drive)",
+   "steps": ["capture-proof", "upload-pod", "record-keeping", "other"],
+   "covered_by": {
+    "capture-proof": "platform (Onfleet driver app takes the signature, photos and notes at completion); needs-proof cron checks them",
+    "upload-pod": "pods cron (proof reads into the register)",
+    "record-keeping": "pods cron (searchable register of completed stops)",
+    "other": "pods cron register (search by address or short id instead of old archives); the customer chase is Onfleet's own completion notice"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pods", "schedule": "*/15 * * * *", "entry": "pods", "summary": "Completed stops since the last run go into the proof register."},
+  {"name": "needs-proof", "schedule": "30 * * * *", "entry": "needs-proof", "summary": "Completed stops with no photo or signature are re-read and flagged once the grace period has passed."},
+  {"name": "reattempt", "schedule": "45 * * * *", "entry": "reattempt", "summary": "Failed stops queue a re-attempt task in Onfleet for approval."}
+ ],
+ "draft_ops": {
+  "onfleet": ["core.docs.get_tasks_all", "core.docs.get_tasks_id"]
+ },
+ "live_ops": {
+  "onfleet": ["core.docs.post_tasks"]
+ },
+ "draft_ops_note": "Draft operations are reads only: completed tasks and single tasks, with their completion details. The register is the workflow's own store, not a platform write. Creating a task notifies the customer and changes live dispatch, so it is a live operation and waits for a person.",
+ "capabilities": ["tasks.list", "tasks.create"],
+ "adapters": {
+  "onfleet": {"status": "docs-only", "covers": "completed tasks and proof fields (photo ids, signature, failure reason), single task reads, re-attempt task creation for approval"}
+ },
+ "gaps": [
+  "locate2u and starshipit: their proof-of-delivery pages were read in the mining file, but neither is in core/sdk/platforms, so there is no adapter. Their proof steps are recorded in the mining file for the next build.",
+  "Google Workspace (the monthly upload of slip photos to Drive) and WhatsApp (drivers sending photos into a group chat) are the manual steps the calls describe. No adapter exists for them in this build, so filing stays with the admin.",
+  "Proof photos and signatures are referenced by upload ids only. No download operation for them is mapped, so the register holds the ids and the image stays in Onfleet.",
+  "Onfleet failure reasons: only NONE and UNABLE_TO_LOCATE appear in the docs read. Any other non-NONE value counts as a failure.",
+  "Onfleet customer chase: Onfleet sends its own completion notice with proof. No documented operation sends a proof or chase message, so one is not built.",
+  "Onfleet sdk.* operations are unmapped (not in the published spec), so only core.docs.* operations are used.",
+  "Onfleet get_tasks_all requires from (Unix ms): pods always sends it, the saved cursor or the lookback_days window start (1 to 365, default 30). A re-attempt needs the stop's destination id (Onfleet requires destination on a new task); a stop without one is skipped and not queued.",
+  "Every adapter is docs-only until a sandbox Onfleet account proves the fields and the re-attempt task."
+ ],
+ "evidence": {
+  "calls": "3 call transcripts read in the mining file (2 mining contractors, 1 quarry sand supplier with trucking); about 100 delivery slips a month stated",
+  "platforms": "Onfleet, locate2u and starshipit docs read in the mining file; only Onfleet has mapped operations in the kit"
+ }
+}

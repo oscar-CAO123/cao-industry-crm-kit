@@ -1,0 +1,46 @@
+{
+ "id": "hospitality:bookings",
+ "name": "Bookings live in spreadsheets",
+ "industry": "hospitality",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the venue's bookings in its own spreadsheet and calendar: holds an enquiry the calendar has room for, flags clashes, logs every change to a booked value so booked revenue stays true, and queues any calendar move or removal for approval. Crons read and draft; a person approves every calendar change.",
+ "families": {
+   "all": {
+     "evidence": "7 discovery calls describe this way of booking (6 activity venues, 1 party venue)",
+     "steps": ["hold-or-book", "amend-or-cancel", "record-keeping", "other"],
+     "covered_by": {"hold-or-book": "hold cron (calendar hold, Clash when busy)", "amend-or-cancel": "changes cron (moves and removals queued for approval)", "record-keeping": "hold and changes crons (Original and Logged value columns, Changes tab)", "other": "skill (money received on the day that differs from the booked value, judged by hand)"}
+   }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+   {"name": "hold", "schedule": "*/15 * * * *", "entry": "hold", "summary": "Hold each new enquiry the venue calendar has room for; mark clashes and unreadable rows Check."},
+   {"name": "changes", "schedule": "0 22 * * *", "entry": "changes", "summary": "Log booked-value changes once to the Changes tab; queue calendar moves and removals for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+   "google-workspace": ["sheets.spreadsheets.values.get", "sheets.spreadsheets.values.update", "sheets.spreadsheets.values.append", "calendar.freebusy.query", "calendar.events.insert"]
+ },
+ "live_ops": {
+   "google-workspace": ["calendar.events.patch", "calendar.events.delete"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: rows in the venue's own bookings and changes tabs, a free-busy check, and a hold on the venue calendar with no guests invited. Moving or removing a calendar event waits for a person.",
+ "capabilities": ["bookings.read", "bookings.hold", "bookings.log", "calendar.check", "calendar.move", "calendar.remove"],
+ "adapters": {
+   "google-workspace": {"status": "docs-only", "covers": "bookings sheet rows, the change log, calendar clash checks and holds, calendar moves and removals (approval only)"}
+ },
+ "gaps": [
+   "Roller holds most of these bookings (the calls name it on hold-or-book and amend-or-cancel), but the kit has no Roller platform (core/sdk/platforms/roller is absent), so this workflow cannot read or change Roller bookings.",
+   "BigQuery is mapped in the kit and five calls use it for booked-revenue reporting, but this workflow keeps its record in the sheet and does not read BigQuery.",
+   "Excel: if the venue keeps its book in an Excel workbook, the microsoft-365 workbook table operations could serve the same two crons. Not built: the Microsoft 365 pages show no booking content.",
+   "Guest confirmations and reminders (confirm-with-guest, reminder-send) are not built: no Gmail operation is built, because Gmail field names are not in endpoint-map/raw (only the people, sheets and calendar specs are there).",
+   "Enquiry intake: the workflow starts from a row the venue marks Enquiry. No enquiry channel (web form, email, phone) is mapped.",
+   "Deposits, pre-orders, no-show chasing, seating plans, day sheets, service prep and waitlists: no mapped platform describes them in the docs given. They stay judgment steps or a later build.",
+   "Calendar free-busy is a read sent as a POST, but the kit's operation is marked write, so the deploy needs KIT_ALLOW_WRITES=1 for the hold cron to check the calendar.",
+   "The Google adapter is docs-only: its field names come from Google's Sheets and Calendar specs, and it has not run against a real Google Workspace account."
+ ],
+ "evidence": {
+   "calls": "7 of 7 hospitality discovery calls that discuss bookings describe how they do it; every step is manual",
+   "platforms": "Roller's own product and blog pages, mapped step by step; the Google Workspace and Microsoft 365 pages hold no booking content"
+ }
+}
