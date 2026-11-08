@@ -5,7 +5,7 @@ description: Call any endpoint of a connected app (Xero, Google, Microsoft 365, 
 
 # Agent SDK
 
-Every public endpoint of 32 apps is mapped in `core/sdk/platforms/<app>/`, from the vendor's own spec or docs. Find the call, preview it, then run it.
+Every public endpoint of 116 apps is mapped in `core/sdk/platforms/<app>/`, from the vendor's own spec, official SDK or docs pages. Find the call, preview it, then run it.
 
 ```
 node tools/sdk.mjs platforms                          # apps, endpoint counts, the keys each needs
