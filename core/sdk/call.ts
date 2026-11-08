@@ -17,6 +17,7 @@
 //   operation of the expected type, so a read can never carry a mutation.
 
 import fs from "node:fs";
+import { createHmac } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { call as httpCall, writesAllowed, WriteBlocked, type AppSpec, type Method, type Reply } from "../lib/http.ts";
@@ -228,7 +229,7 @@ function authPreview(p: Platform, o?: Op): Record<string, string> {
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) h[k] = `[from ${env}, if set]`;
   if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${(a.type === "bearer" && o?.tokenEnv) || a.env || [a.user, a.pass].filter(Boolean).join(" + ")}]`;
   if (a.type === "header") h[a.header!] = `[from ${a.env}]`;
-  if (a.type === "custom") h.Authorization = `[from the ${a.provider} sign-in]`;
+  if (a.type === "custom" && a.provider !== "unleashed") h.Authorization = `[from the ${a.provider} sign-in]`;
   if (a.type === "template") h[a.header!] = `[from ${[...String(a.template).matchAll(/\{([A-Z][A-Z0-9_]+)\}/g)].map((m) => m[1]).join(" + ")}]`;
   return h;
 }
@@ -258,6 +259,8 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
 }
 
 async function customAuth(provider: string, p: Platform, o: Op, input: CallInput, base: { url: string }): Promise<Record<string, string>> {
+  // Request-signing schemes sign the final URL, so their headers are added by signRequest() once the query is set.
+  if (provider === "unleashed") return {};
   if (provider === "xero") {
     const x = await import("../connectors/xero/client.ts");
     return { Authorization: `Bearer ${await x.accessToken()}`, "Xero-Tenant-Id": secret("XERO_TENANT_ID") };
@@ -375,8 +378,31 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   return {
     method, url: u.toString(), json, form: formOut, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
     // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
-    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))) },
+    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u) : signPreview(p, o)) },
   };
+}
+
+// Schemes that sign each request over its final URL (8 Nov 2026, each from the vendor's own docs, read through
+// endpoint-map/model_guard.py with a watcher model):
+// - Unleashed (apidocs.unleashedsoftware.com/AuthenticationHelp): api-auth-signature = base64 HMAC-SHA256 of the query
+//   string only (no "?", empty when there is none) keyed with the API key, plus api-auth-id, client-type, and JSON
+//   Content-Type and Accept on every request.
+function signRequest(p: Platform, o: Op, u: URL): Record<string, string> {
+  const a = o.auth ?? p.auth;
+  if (a.type === "custom" && a.provider === "unleashed") {
+    const query = u.search.replace(/^\?/, "");
+    return {
+      "api-auth-id": secret("UNLEASHED_API_ID"),
+      "api-auth-signature": createHmac("sha256", secret("UNLEASHED_API_KEY")).update(query, "utf8").digest("base64"),
+      "client-type": secret("UNLEASHED_CLIENT_TYPE"), Accept: "application/json", "Content-Type": "application/json",
+    };
+  }
+  return {};
+}
+function signPreview(p: Platform, o: Op): Record<string, string> {
+  const a = o.auth ?? p.auth;
+  if (a.type === "custom" && a.provider === "unleashed") return { "api-auth-id": "[from UNLEASHED_API_ID]", "api-auth-signature": "[HMAC-SHA256 of the query string with UNLEASHED_API_KEY]", "client-type": "[from UNLEASHED_CLIENT_TYPE]" };
+  return {};
 }
 
 async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, withKeys: boolean): Promise<Planned> {

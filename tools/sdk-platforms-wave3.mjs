@@ -111,7 +111,8 @@ export const W3 = {
   "twilio": d("Twilio (and SendGrid)", BA("TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"),
     { opRules: [{ server: "https://api.sendgrid.com", auth: { type: "bearer", env: "SENDGRID_API_KEY" } }], keys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "SENDGRID_API_KEY (for SendGrid)"] }),
   "typeform": d("Typeform", B("TYPEFORM_TOKEN")),
-  "unleashed": d("Unleashed", { type: "unsupported", note: "Unleashed signs each request with HMAC-SHA256; the signer is not built yet" }, { keys: ["UNLEASHED_API_ID", "UNLEASHED_API_KEY"] }),
+  // Signs each request (core/sdk/call.ts signRequest). client-type is "<account_name>/<app_name>", lowercase, no spaces.
+  "unleashed": d("Unleashed", { type: "custom", provider: "unleashed" }, { keys: ["UNLEASHED_API_ID", "UNLEASHED_API_KEY", "UNLEASHED_CLIENT_TYPE"] }),
   "vaultre": d("VaultRE", B("VAULTRE_ACCESS_TOKEN", { extraHeaders: { "X-Api-Key": "VAULTRE_API_KEY" } })),
   "webflow": d("Webflow", B("WEBFLOW_API_TOKEN")),
   "woocommerce": d("WooCommerce", BA("WOOCOMMERCE_CONSUMER_KEY", "WOOCOMMERCE_CONSUMER_SECRET"),

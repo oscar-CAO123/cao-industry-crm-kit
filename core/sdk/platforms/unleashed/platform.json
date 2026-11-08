@@ -13,12 +13,13 @@
  "pinned": {},
  "serverVars": {},
  "auth": {
-  "type": "unsupported",
-  "note": "Unleashed signs each request with HMAC-SHA256; the signer is not built yet"
+  "type": "custom",
+  "provider": "unleashed"
  },
  "keys": [
   "UNLEASHED_API_ID",
-  "UNLEASHED_API_KEY"
+  "UNLEASHED_API_KEY",
+  "UNLEASHED_CLIENT_TYPE"
  ],
  "sources": [
   {

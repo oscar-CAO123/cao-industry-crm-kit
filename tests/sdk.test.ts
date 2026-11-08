@@ -39,7 +39,7 @@ const ENV: Record<string, string> = {
   GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
-  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk",
+  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit",
 };
 
 // Every key and host variable a platform declares gets a fake value, so new platforms need no hand-written entry here.
@@ -393,6 +393,25 @@ test("Cloudbeds Group Profile reaches api.cloudbeds.com; Guest Profiles stays re
   const guest = [...load("cloudbeds").ops.values()].find((o) => o.server === "/guest-profiles/v1")!;
   await assert.rejects(() => callOperation("cloudbeds", guest.id), /relative server/);
   assert.ok(load("bluebeam").platform.gaps.some((x) => /Australian Studio host/.test(x)));
+});
+
+test("Unleashed signs each request: base64 HMAC-SHA256 of the exact query string with the API key (8 Nov)", async () => {
+  const { createHmac } = await import("node:crypto");
+  const ops = [...load("unleashed").ops.values()];
+  // Unleashed's endpoints come from its docs pages, so their inputs are unmapped: a named input on a GET goes to the query.
+  const withQuery = ops.find((o) => o.method === "GET" && o.kind === "read" && o.paramsUnmapped && !o.params.some((p) => p.required))!;
+  for (const params of [{}, { customerCode: "ACME 1" }]) {
+    hits = [];
+    await callOperation("unleashed", withQuery.id, { params });
+    const h = hits[0];
+    const query = new URL(h.url).search.replace(/^\?/, "");
+    assert.equal(h.headers["api-auth-signature"], createHmac("sha256", "ukey-1").update(query).digest("base64"), "signature over the exact query sent");
+    assert.equal(h.headers["api-auth-id"], "uid-1");
+    assert.equal(h.headers["client-type"], "acme/kit");
+    assert.equal(h.headers["Content-Type"], "application/json");
+    assert.equal(h.headers.Authorization, undefined, "Unleashed takes no Authorization header");
+  }
+  assert.equal(load("unleashed").platform.auth.type, "custom");
 });
 
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
