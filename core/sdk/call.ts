@@ -393,19 +393,94 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
 }
 
 /** Call an endpoint. Reads go straight through; writes need KIT_ALLOW_WRITES=1. */
+// Only a GET or a GraphQL query can be a read, whatever the label says.
+const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
+function opIsRead(p: Platform, o: Op): boolean {
+  return o.kind === "read" && (o.method === "GET" || (o.method === "QUERY" && p.style === "graphql")
+    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && READPOST_PATH.test(o.path)))));
+}
+
 export async function callOperation<T = unknown>(id: string, opId: string, input: CallInput = {}): Promise<Reply<T>> {
   const { platform: p } = load(id);
   const o = describe(id, opId);
-  // Only a GET or a GraphQL query can be a read, whatever the label says.
-  const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
-  const isRead = o.kind === "read" && (o.method === "GET" || (o.method === "QUERY" && p.style === "graphql")
-    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && READPOST_PATH.test(o.path)))));
+  const isRead = opIsRead(p, o);
   if (!isRead && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
   return httpCall<T>(spec, { method: r.method, url: r.url, headers: r.headers, json: r.json, form: r.form, binary: input.binary, signal: input.signal });
+}
+
+// A request a vendor SDK has already built (see core/sdk/vendor/). The SDK is only a front end: the
+// request must match a mapped endpoint, the read or write rule is ours, the SDK's own key headers are
+// dropped and ours are added, and it leaves through the same gate as every other call.
+export interface Prepared { method: string; url: string; headers: Record<string, string>; body?: string | Uint8Array; signal?: AbortSignal }
+
+const ROUTES = new Map<string, { o: Op; base: string; re: RegExp; literal: number }[]>();
+const PATH_PART = /^(\{[^}]+\}|:[A-Za-z_]\w*)$/;
+function routes(p: Platform, ops: Map<string, Op>) {
+  let r = ROUTES.get(p.id);
+  if (r) return r;
+  r = [];
+  for (const o of ops.values()) {
+    let base: string;
+    try { base = serverUrl(p, o, {}, true); } catch { continue; }
+    const src = o.path.replace(/^\/+/, "").split(/(\{[^}]+\}|:[A-Za-z_]\w*)/)
+      .map((s) => (PATH_PART.test(s) ? "[^/]+" : s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("");
+    r.push({ o, base, re: new RegExp(`^/${src}/?$`), literal: o.path.replace(/\{[^}]+\}|:[A-Za-z_]\w*/g, "").length });
+  }
+  ROUTES.set(p.id, r);
+  return r;
+}
+
+// Headers a vendor SDK may not choose: keys, hop-by-hop, and its own telemetry about this machine
+// (Stripe tags its user agent with the AI agent it finds in the environment).
+const SDK_DROP = /^(content-length|connection|keep-alive|transfer-encoding|user-agent|x-stripe-client-user-agent|x-stripe-client-telemetry|x-fern-[a-z-]+)$/i;
+// Headers a vendor SDK may send, besides the endpoint's own mapped header params. Anything else is
+// refused, not dropped: Stripe-Account or Stripe-Context would act on another account, and a
+// method-override header could turn a read into a write.
+const SDK_ALLOW = /^(accept|content-type|idempotency-key|stripe-version|square-version)$/i;
+
+export async function sendPrepared(id: string, req: Prepared): Promise<Reply<ArrayBuffer>> {
+  const { platform: p, ops } = load(id);
+  if (p.style === "graphql") throw new Error(`${id}: vendor SDK requests are not routed for GraphQL platforms`);
+  const method = req.method.toUpperCase();
+  const u = new URL(req.url);
+  const at = `${u.origin}${u.pathname}`;
+  const match = routes(p, ops)
+    .filter((r) => r.o.method === method && at.startsWith(r.base) && r.re.test(at.slice(r.base.length)))
+    .sort((a, b) => b.literal - a.literal)[0];
+  // The path is not echoed: it can hold client ids or emails.
+  if (!match) throw new Error(`${id}: this ${method} is not a mapped endpoint, refused`);
+  const o = match.o;
+  // An id that decodes to a slash, a backslash or a dot segment could reach another endpoint once the
+  // vendor decodes it, so it is refused (our own layer refuses dot segments the same way).
+  for (const seg of at.slice(match.base.length).split("/").filter(Boolean)) {
+    let d: string;
+    try { d = decodeURIComponent(seg); } catch { throw new Error(`${id}: a path value is not allowed`); }
+    if (/[\\/]/.test(d) || d === "." || d === "..") throw new Error(`${id}: a path value is not allowed`);
+  }
+  const read = opIsRead(p, o);
+  if (!read && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
+  if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
+  const target = { url: req.url };
+  const auth = await authHeaders(p, o, {}, target);
+  if (target.url !== req.url) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
+  const fixed = Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k)));
+  const ours = new Set([...Object.keys(auth), ...Object.keys(fixed)].map((k) => k.toLowerCase()));
+  const mapped = new Set(o.params.filter((x) => x.in === "header").map((x) => x.name.toLowerCase()));
+  const headers: Record<string, string> = {};
+  for (const [k, v] of Object.entries(req.headers)) {
+    if (FORBIDDEN_HEADERS.test(k) || SDK_DROP.test(k) || ours.has(k.toLowerCase())) continue;
+    if (!SDK_ALLOW.test(k) && !mapped.has(k.toLowerCase())) throw new Error(`${id}: header ${k} is not allowed from a vendor SDK`);
+    headers[k.toLowerCase() === "accept" ? "Accept" : k] = v;
+  }
+  Object.assign(headers, fixed, auth);
+  const spec = appSpec(p, u, read && method === "POST");
+  // xero-node sends "{}" on a GET; real fetch refuses a GET with a body, so it is dropped here.
+  const body = method === "GET" ? undefined : req.body;
+  return httpCall<ArrayBuffer>(spec, { method: method as Method, url: req.url, headers, body, binary: true, signal: req.signal });
 }
 
 /** A platform handle: what each generated index.ts uses. */

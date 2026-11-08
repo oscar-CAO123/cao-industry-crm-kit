@@ -34,6 +34,8 @@ export interface CallOptions {
   query?: Record<string, string | number | boolean | undefined | null>;
   json?: unknown;
   form?: Record<string, string>;
+  /** A body already encoded by a vendor SDK, sent as is with the caller's Content-Type. */
+  body?: string | Uint8Array;
   /** Return the body as bytes, for documents and recordings. */
   binary?: boolean;
   /**
@@ -141,9 +143,10 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
   if (!isRead(spec, method, u) && !writesAllowed()) throw new WriteBlocked(w);
 
   const headers: Record<string, string> = { Accept: o.binary ? "*/*" : "application/json", ...(o.headers ?? {}) };
-  let body: string | undefined;
+  let body: string | Uint8Array | undefined;
   if (o.json !== undefined) { body = JSON.stringify(o.json); headers["Content-Type"] = "application/json"; }
   else if (o.form) { body = new URLSearchParams(o.form).toString(); headers["Content-Type"] = "application/x-www-form-urlencoded"; }
+  else if (o.body !== undefined) body = o.body;
 
   const write = !isRead(spec, method, u);
   const max = o.retries ?? 3;
