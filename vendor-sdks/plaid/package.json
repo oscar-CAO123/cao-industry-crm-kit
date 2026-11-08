@@ -1,0 +1,9 @@
+{
+  "name": "cao-kit-sdk-plaid",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to plaid@51.0.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "plaid": "51.0.0"
+  }
+}

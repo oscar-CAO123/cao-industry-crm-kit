@@ -1,0 +1,9 @@
+{
+  "name": "cao-kit-sdk-docusign",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to docusign-esign@10.1.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "docusign-esign": "10.1.0"
+  }
+}

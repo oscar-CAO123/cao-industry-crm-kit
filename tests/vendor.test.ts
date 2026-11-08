@@ -155,26 +155,31 @@ test("no SDK opened a socket or used global fetch outside the gate", () => {
 });
 
 test("loaded under Claude Code, the Stripe SDK prints no plugin hint and the agent's variables come back", () => {
-  const code = `await import(${JSON.stringify(new URL("../core/sdk/vendor/stripe.ts", import.meta.url).href)}); process.stdout.write(String(process.env.CLAUDECODE));`;
+  const code = `const m = await import(${JSON.stringify(new URL("../core/sdk/vendor/stripe.ts", import.meta.url).href)}); m.stripe(); process.stdout.write(String(process.env.CLAUDECODE));`;
   const r = spawnSync(process.execPath, ["--input-type=module", "-e", code], { env: { ...process.env, CLAUDECODE: "1", HOME }, encoding: "utf8" });
   assert.equal(r.status, 0, "child failed to load the Stripe wrapper");
   assert.ok(!`${r.stdout}${r.stderr}`.includes("claude-code-hint"), "the Stripe SDK printed its plugin hint");
   assert.equal(r.stdout, "1");
 });
 
-test("the three SDKs are pinned to the audited versions and fingerprints, with install scripts off", () => {
+test("the kit carries no SDK code: each SDK is a pinned pointer to its audited build, install scripts off", () => {
   const pkg = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.deepEqual(pkg.dependencies, { square: "46.0.0", stripe: "23.1.0", "xero-node": "20.1.0" });
-  const lock = JSON.parse(fs.readFileSync(new URL("../package-lock.json", import.meta.url), "utf8")).packages;
-  const audited: Record<string, string> = {
-    "node_modules/stripe": "sha512-fVUfMSfTPoukfoV//MUKAx2+YxyKmYaYtnAL9VkfnHfaPNQylFdWZMD+zgUFerI8rjbaiER8Vzj2XEUQ2AhAsQ==",
-    "node_modules/xero-node": "sha512-X2mIbs/iDVBje3+Tl1K1KqfZXTD6+51f+VQtif8SlJU3Pv6fz2RweN/ZrsC8vpyAPu/KBsKefjevv2PwUsZwMw==",
-    "node_modules/square": "sha512-kxjA2w1ttzVPPojuwRnco0zIPBEfXOz7zaNsIy0YD1hmtryz92v1jGtw5VNoWb4H/hw9O0crsWnLFjZlJUUQYA==",
+  assert.equal(pkg.dependencies, undefined, "the kit itself depends on no vendor SDK");
+  const audited: Record<string, [string, string]> = {
+    stripe: ["stripe", "sha512-fVUfMSfTPoukfoV//MUKAx2+YxyKmYaYtnAL9VkfnHfaPNQylFdWZMD+zgUFerI8rjbaiER8Vzj2XEUQ2AhAsQ=="],
+    xero: ["xero-node", "sha512-X2mIbs/iDVBje3+Tl1K1KqfZXTD6+51f+VQtif8SlJU3Pv6fz2RweN/ZrsC8vpyAPu/KBsKefjevv2PwUsZwMw=="],
+    square: ["square", "sha512-kxjA2w1ttzVPPojuwRnco0zIPBEfXOz7zaNsIy0YD1hmtryz92v1jGtw5VNoWb4H/hw9O0crsWnLFjZlJUUQYA=="],
   };
-  for (const [p, start] of Object.entries(audited)) assert.equal(lock[p].integrity, start, `${p} is not the audited build`);
-  for (const [p, v] of Object.entries<any>(lock)) {
-    assert.ok(!v.hasInstallScript, `${p} has an install script`);
-    if (p) assert.match(v.resolved, /^https:\/\/registry\.npmjs\.org\//, `${p} is not from the npm registry`);
+  for (const [app, [name, sha]] of Object.entries(audited)) {
+    const dir = new URL(`../vendor-sdks/${app}/`, import.meta.url);
+    const lock = JSON.parse(fs.readFileSync(new URL("package-lock.json", dir), "utf8")).packages;
+    assert.equal(lock[`node_modules/${name}`].integrity, sha, `${app} is not the audited build`);
+    for (const [p, v] of Object.entries<any>(lock)) {
+      if (!p) continue;
+      assert.ok(!v.hasInstallScript, `${app}: ${p} has an install script`);
+      assert.match(v.resolved, /^https:\/\/registry\.npmjs\.org\//, `${app}: ${p} is not from the npm registry`);
+      assert.match(v.integrity, /^sha512-/, `${app}: ${p} has no sha512`);
+    }
+    assert.match(fs.readFileSync(new URL(".npmrc", dir), "utf8"), /^ignore-scripts=true$/m);
   }
-  assert.match(fs.readFileSync(new URL("../.npmrc", import.meta.url), "utf8"), /^ignore-scripts=true$/m);
 });

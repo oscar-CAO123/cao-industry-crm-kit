@@ -10,10 +10,5 @@
   },
   "engines": {
     "node": ">=22.18"
-  },
-  "dependencies": {
-    "square": "46.0.0",
-    "stripe": "23.1.0",
-    "xero-node": "20.1.0"
   }
 }

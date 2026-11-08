@@ -1,0 +1,9 @@
+{
+  "name": "cao-kit-sdk-googleapis-admin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to @googleapis/admin@37.0.2, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "@googleapis/admin": "37.0.2"
+  }
+}

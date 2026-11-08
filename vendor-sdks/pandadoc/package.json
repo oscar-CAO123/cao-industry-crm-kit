@@ -1,0 +1,9 @@
+{
+  "name": "cao-kit-sdk-pandadoc",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to pandadoc-node-client@6.2.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "pandadoc-node-client": "6.2.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "cao-kit-sdk-hubspot-sdk",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to @hubspot/sdk@0.1.0-alpha.11, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "@hubspot/sdk": "0.1.0-alpha.11"
+  }
+}
