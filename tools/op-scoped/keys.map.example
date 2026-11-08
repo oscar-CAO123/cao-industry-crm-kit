@@ -1,0 +1,4 @@
+# The approved key names for this business: NAME=op://<vault>/<item>/<field>. One per line.
+# Copy to keys.map, fill in, then run install.sh. A bare name not on this list is refused.
+# DATABASE_URL=op://YOUR_VAULT/crm-database/url
+# XERO_CLIENT_ID=op://YOUR_VAULT/xero/client-id

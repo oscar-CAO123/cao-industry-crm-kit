@@ -1,0 +1,25 @@
+# Local or single-server run: the shell and its own empty Postgres. Never point this at another CRM's database.
+# Every secret comes from 1Password on the way in; none is written to a file:
+#   op-scoped run SHELL_OP_TOKEN="op://<vault>/crm-runtime/token" POSTGRES_PASSWORD="op://<vault>/crm-database/password" \
+#     SHELL_VAULT="<vault>" -- docker compose -f shell/docker-compose.yml up
+# DATABASE_URL in 1Password is then postgresql://shell:<that password>@db:5432/shell.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: shell
+      POSTGRES_DB: shell
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?pass it in through op-scoped}
+    volumes: [db:/var/lib/postgresql/data]
+  migrate:
+    build: { context: .., dockerfile: shell/Dockerfile }
+    command: ["node", "shell/scripts/db-apply.mjs"]
+    environment: [SHELL_OP_TOKEN, SHELL_VAULT]
+    depends_on: [db]
+  shell:
+    build: { context: .., dockerfile: shell/Dockerfile }
+    environment: [SHELL_OP_TOKEN, SHELL_VAULT, KIT_ALLOW_WRITES, NEXT_PUBLIC_APP_NAME, AUTH_SIGNUP_DOMAINS, BETTER_AUTH_URL]
+    ports: ["3000:3000"]
+    depends_on: [migrate]
+volumes:
+  db: {}
