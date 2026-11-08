@@ -25,7 +25,9 @@
    "official": "vendor-domain: app.idashboard.com.au"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "idashboard-trust: write fields the reference lists under 'URI Parameters' but sends nested in a JSON body are not mapped; these endpoints take a free-form body: POST /attendances, PUT /attendances/{id}, POST /open_home_answers, PUT /open_home_answers/{id}, PUT /opinions, POST /opinions, POST /app_subscriptions"
+ ],
  "counts": {
   "operations": 70,
   "read": 43,

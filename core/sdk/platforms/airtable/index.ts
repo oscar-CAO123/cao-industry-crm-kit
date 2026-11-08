@@ -5,13 +5,13 @@ export const sdk = platform("airtable");
 /** GET /meta/whoami: Get user info [read] */
 export const docsGetMetaWhoami = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_meta_whoami", input);
 /** POST /{baseId}/{tableIdOrName}: Create records [write] */
-export const docsPostBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.post_baseId_tableIdOrName", input);
+export const docsPostBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "fields"?: unknown; "records"?: unknown[]; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean } } = {}) => sdk.call("docs.post_baseId_tableIdOrName", input);
 /** DELETE /{baseId}/{tableIdOrName}: Delete multiple records [write] */
 export const docsDeleteBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName", input);
 /** DELETE /{baseId}/{tableIdOrName}/{recordId}: Delete record [write] */
 export const docsDeleteBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName_recordId", input);
 /** GET /{baseId}/{tableIdOrName}/{recordId}: Get record [read] */
-export const docsGetBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.get_baseId_tableIdOrName_recordId", input);
+export const docsGetBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "cellFormat"?: string; "returnFieldsByFieldId"?: boolean; "includeDateDependencyMetadata"?: boolean } } = {}) => sdk.call("docs.get_baseId_tableIdOrName_recordId", input);
 /** GET /{baseId}/{tableIdOrName}: List records [read] */
 export const docsGetBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.get_baseId_tableIdOrName", input);
 /** POST /{baseId}/{tableIdOrName}/sync/{apiEndpointSyncId}: Sync CSV data [write] */
@@ -21,43 +21,43 @@ export const docsPatchBaseIdTableIdOrName = (input: CallInput & { params?: { "ba
 /** PUT /{baseId}/{tableIdOrName}: Update multiple records [write] */
 export const docsPutBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.put_baseId_tableIdOrName", input);
 /** PATCH /{baseId}/{tableIdOrName}/{recordId}: Update record [write] */
-export const docsPatchBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName_recordId", input);
+export const docsPatchBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean; "fields": unknown } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName_recordId", input);
 /** PUT /{baseId}/{tableIdOrName}/{recordId}: Update record [write] */
-export const docsPutBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.put_baseId_tableIdOrName_recordId", input);
+export const docsPutBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean; "fields": unknown } } = {}) => sdk.call("docs.put_baseId_tableIdOrName_recordId", input);
 /** POST /v0/{baseId}/{recordId}/{attachmentFieldIdOrName}/uploadAttachment: Upload attachment [write] */
-export const docsPostV0BaseIdRecordIdAttachmentFieldIdOrNameUploadAttachment = (input: CallInput & { params?: { "baseId": string; "recordId": string; "attachmentFieldIdOrName": string } } = {}) => sdk.call("docs.post_v0_baseId_recordId_attachmentFieldIdOrName_uploadAttachment", input);
+export const docsPostV0BaseIdRecordIdAttachmentFieldIdOrNameUploadAttachment = (input: CallInput & { params?: { "baseId": string; "recordId": string; "attachmentFieldIdOrName": string; "contentType": string; "file": string; "filename": string } } = {}) => sdk.call("docs.post_v0_baseId_recordId_attachmentFieldIdOrName_uploadAttachment", input);
 /** POST /meta/bases/{baseId}/tables/{tableId}/fields: Create field [write] */
-export const docsPostMetaBasesBaseIdTablesTableIdFields = (input: CallInput & { params?: { "baseId": string; "tableId": string } } = {}) => sdk.call("docs.post_meta_bases_baseId_tables_tableId_fields", input);
+export const docsPostMetaBasesBaseIdTablesTableIdFields = (input: CallInput & { params?: { "baseId": string; "tableId": string; "name": string; "type": number; "description"?: string; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": number; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": number; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options"?: unknown; "name": string; "type": string; "description"?: string; "options"?: unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "options": unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options"?: unknown; "name": string; "type": string; "description"?: string; "name": string; "type": string; "description"?: string; "options"?: unknown } } = {}) => sdk.call("docs.post_meta_bases_baseId_tables_tableId_fields", input);
 /** PATCH /meta/bases/{baseId}/tables/{tableId}/fields/{columnId}: Update field [write] */
-export const docsPatchMetaBasesBaseIdTablesTableIdFieldsColumnId = (input: CallInput & { params?: { "baseId": string; "tableId": string; "columnId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_tables_tableId_fields_columnId", input);
+export const docsPatchMetaBasesBaseIdTablesTableIdFieldsColumnId = (input: CallInput & { params?: { "baseId": string; "tableId": string; "columnId": string; "description"?: string; "name"?: string; "options"?: unknown } } = {}) => sdk.call("docs.patch_meta_bases_baseId_tables_tableId_fields_columnId", input);
 /** POST /{baseId}/{tableIdOrName}/{recordId}/comments: Create comment [write] */
-export const docsPostBaseIdTableIdOrNameRecordIdComments = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.post_baseId_tableIdOrName_recordId_comments", input);
+export const docsPostBaseIdTableIdOrNameRecordIdComments = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "parentCommentId"?: string; "text": string } } = {}) => sdk.call("docs.post_baseId_tableIdOrName_recordId_comments", input);
 /** DELETE /{baseId}/{tableIdOrName}/{recordId}/comments/{rowCommentId}: Delete comment [write] */
 export const docsDeleteBaseIdTableIdOrNameRecordIdCommentsRowCommentId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "rowCommentId": string } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName_recordId_comments_rowCommentId", input);
 /** GET /{baseId}/{tableIdOrName}/{recordId}/comments: List comments [read] */
-export const docsGetBaseIdTableIdOrNameRecordIdComments = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.get_baseId_tableIdOrName_recordId_comments", input);
+export const docsGetBaseIdTableIdOrNameRecordIdComments = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "pageSize"?: number; "offset"?: string } } = {}) => sdk.call("docs.get_baseId_tableIdOrName_recordId_comments", input);
 /** PATCH /{baseId}/{tableIdOrName}/{recordId}/comments/{rowCommentId}: Update comment [write] */
-export const docsPatchBaseIdTableIdOrNameRecordIdCommentsRowCommentId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "rowCommentId": string } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName_recordId_comments_rowCommentId", input);
+export const docsPatchBaseIdTableIdOrNameRecordIdCommentsRowCommentId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "rowCommentId": string; "text": string } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName_recordId_comments_rowCommentId", input);
 /** POST /meta/bases/{baseId}/tables: Create table [write] */
-export const docsPostMetaBasesBaseIdTables = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.post_meta_bases_baseId_tables", input);
+export const docsPostMetaBasesBaseIdTables = (input: CallInput & { params?: { "baseId": string; "name": string; "description"?: string; "fields": unknown[] } } = {}) => sdk.call("docs.post_meta_bases_baseId_tables", input);
 /** PATCH /meta/bases/{baseId}/tables/{tableIdOrName}: Update table [write] */
-export const docsPatchMetaBasesBaseIdTablesTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_tables_tableIdOrName", input);
+export const docsPatchMetaBasesBaseIdTablesTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "dateDependencySettings"?: string; "description"?: string; "name"?: string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_tables_tableIdOrName", input);
 /** POST /meta/bases: Create base [write] */
-export const docsPostMetaBases = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_meta_bases", input);
+export const docsPostMetaBases = (input: CallInput & { params?: { "name": string; "workspaceId": string; "tables": unknown[] } } = {}) => sdk.call("docs.post_meta_bases", input);
 /** GET /meta/bases/{baseId}: Get base collaborators [read] */
-export const docsGetMetaBasesBaseId = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId", input);
+export const docsGetMetaBasesBaseId = (input: CallInput & { params?: { "baseId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_bases_baseId", input);
 /** GET /meta/bases/{baseId}/tables: Get base schema [read] */
-export const docsGetMetaBasesBaseIdTables = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_tables", input);
+export const docsGetMetaBasesBaseIdTables = (input: CallInput & { params?: { "baseId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_bases_baseId_tables", input);
 /** GET /meta/bases: List bases [read] */
-export const docsGetMetaBases = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_meta_bases", input);
+export const docsGetMetaBases = (input: CallInput & { params?: { "offset"?: string } } = {}) => sdk.call("docs.get_meta_bases", input);
 /** POST /bases/{baseId}/webhooks: Create a webhook [write] */
-export const docsPostBasesBaseIdWebhooks = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.post_bases_baseId_webhooks", input);
+export const docsPostBasesBaseIdWebhooks = (input: CallInput & { params?: { "baseId": string; "notificationUrl"?: string; "specification": unknown } } = {}) => sdk.call("docs.post_bases_baseId_webhooks", input);
 /** DELETE /bases/{baseId}/webhooks/{webhookId}: Delete a webhook [write] */
 export const docsDeleteBasesBaseIdWebhooksWebhookId = (input: CallInput & { params?: { "baseId": string; "webhookId": string } } = {}) => sdk.call("docs.delete_bases_baseId_webhooks_webhookId", input);
 /** POST /bases/{baseId}/webhooks/{webhookId}/enableNotifications: Enable/disable webhook notifications [write] */
-export const docsPostBasesBaseIdWebhooksWebhookIdEnableNotifications = (input: CallInput & { params?: { "baseId": string; "webhookId": string } } = {}) => sdk.call("docs.post_bases_baseId_webhooks_webhookId_enableNotifications", input);
+export const docsPostBasesBaseIdWebhooksWebhookIdEnableNotifications = (input: CallInput & { params?: { "baseId": string; "webhookId": string; "enable": boolean } } = {}) => sdk.call("docs.post_bases_baseId_webhooks_webhookId_enableNotifications", input);
 /** GET /bases/{baseId}/webhooks/{webhookId}/payloads: List webhook payloads [read] */
-export const docsGetBasesBaseIdWebhooksWebhookIdPayloads = (input: CallInput & { params?: { "baseId": string; "webhookId": string } } = {}) => sdk.call("docs.get_bases_baseId_webhooks_webhookId_payloads", input);
+export const docsGetBasesBaseIdWebhooksWebhookIdPayloads = (input: CallInput & { params?: { "baseId": string; "webhookId": string; "cursor"?: number; "limit"?: number } } = {}) => sdk.call("docs.get_bases_baseId_webhooks_webhookId_payloads", input);
 /** GET /bases/{baseId}/webhooks: List webhooks [read] */
 export const docsGetBasesBaseIdWebhooks = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_bases_baseId_webhooks", input);
 /** POST /bases/{baseId}/webhooks/{webhookId}/refresh: Refresh a webhook [write] */
@@ -65,17 +65,17 @@ export const docsPostBasesBaseIdWebhooksWebhookIdRefresh = (input: CallInput & {
 /** DELETE /meta/bases/{baseId}/views/{viewId}: Delete view [write] */
 export const docsDeleteMetaBasesBaseIdViewsViewId = (input: CallInput & { params?: { "baseId": string; "viewId": string } } = {}) => sdk.call("docs.delete_meta_bases_baseId_views_viewId", input);
 /** GET /meta/bases/{baseId}/views/{viewId}: Get view metadata [read] */
-export const docsGetMetaBasesBaseIdViewsViewId = (input: CallInput & { params?: { "baseId": string; "viewId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_views_viewId", input);
+export const docsGetMetaBasesBaseIdViewsViewId = (input: CallInput & { params?: { "baseId": string; "viewId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_bases_baseId_views_viewId", input);
 /** GET /meta/bases/{baseId}/views: List views [read] */
-export const docsGetMetaBasesBaseIdViews = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_views", input);
+export const docsGetMetaBasesBaseIdViews = (input: CallInput & { params?: { "baseId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_bases_baseId_views", input);
 /** POST /meta/bases/{baseId}/collaborators: Add base collaborator [write] */
-export const docsPostMetaBasesBaseIdCollaborators = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.post_meta_bases_baseId_collaborators", input);
+export const docsPostMetaBasesBaseIdCollaborators = (input: CallInput & { params?: { "baseId": string; "collaborators": unknown[] } } = {}) => sdk.call("docs.post_meta_bases_baseId_collaborators", input);
 /** POST /meta/bases/{baseId}/interfaces/{pageBundleId}/collaborators: Add interface collaborator [write] */
-export const docsPostMetaBasesBaseIdInterfacesPageBundleIdCollaborators = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string } } = {}) => sdk.call("docs.post_meta_bases_baseId_interfaces_pageBundleId_collaborators", input);
+export const docsPostMetaBasesBaseIdInterfacesPageBundleIdCollaborators = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "collaborators": unknown[] } } = {}) => sdk.call("docs.post_meta_bases_baseId_interfaces_pageBundleId_collaborators", input);
 /** POST /meta/bases/{baseId}/interfaces/{pageBundleId}/portalCollaborators: Add interface portal collaborators [write] */
-export const docsPostMetaBasesBaseIdInterfacesPageBundleIdPortalCollaborators = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string } } = {}) => sdk.call("docs.post_meta_bases_baseId_interfaces_pageBundleId_portalCollaborators", input);
+export const docsPostMetaBasesBaseIdInterfacesPageBundleIdPortalCollaborators = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "collaborators": unknown[] } } = {}) => sdk.call("docs.post_meta_bases_baseId_interfaces_pageBundleId_portalCollaborators", input);
 /** POST /meta/workspaces/{workspaceId}/collaborators: Add workspace collaborator [write] */
-export const docsPostMetaWorkspacesWorkspaceIdCollaborators = (input: CallInput & { params?: { "workspaceId": string } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_collaborators", input);
+export const docsPostMetaWorkspacesWorkspaceIdCollaborators = (input: CallInput & { params?: { "workspaceId": string; "collaborators": unknown[] } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_collaborators", input);
 /** DELETE /meta/bases/{baseId}/collaborators/{userOrGroupId}: Delete base collaborator [write] */
 export const docsDeleteMetaBasesBaseIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "baseId": string; "userOrGroupId": string } } = {}) => sdk.call("docs.delete_meta_bases_baseId_collaborators_userOrGroupId", input);
 /** DELETE /meta/bases/{baseId}/portalCollaborators/{collaboratorId}: Delete base portal collaborator [write] */
@@ -87,19 +87,19 @@ export const docsDeleteMetaBasesBaseIdInterfacesPageBundleIdPortalCollaboratorsC
 /** DELETE /meta/workspaces/{workspaceId}/collaborators/{userOrGroupId}: Delete workspace collaborator [write] */
 export const docsDeleteMetaWorkspacesWorkspaceIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "workspaceId": string; "userOrGroupId": string } } = {}) => sdk.call("docs.delete_meta_workspaces_workspaceId_collaborators_userOrGroupId", input);
 /** GET /meta/bases/{baseId}/interfaces/{pageBundleId}: Get interface [read] */
-export const docsGetMetaBasesBaseIdInterfacesPageBundleId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_interfaces_pageBundleId", input);
+export const docsGetMetaBasesBaseIdInterfacesPageBundleId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_bases_baseId_interfaces_pageBundleId", input);
 /** GET /meta/workspaces/{workspaceId}: Get workspace collaborators [read] */
-export const docsGetMetaWorkspacesWorkspaceId = (input: CallInput & { params?: { "workspaceId": string } } = {}) => sdk.call("docs.get_meta_workspaces_workspaceId", input);
+export const docsGetMetaWorkspacesWorkspaceId = (input: CallInput & { params?: { "workspaceId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_workspaces_workspaceId", input);
 /** GET /meta/bases/{baseId}/portalCollaborators: List base portal collaborators [read] */
 export const docsGetMetaBasesBaseIdPortalCollaborators = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_portalCollaborators", input);
 /** PATCH /meta/bases/{baseId}/collaborators/{userOrGroupId}: Update collaborator base permission [write] */
-export const docsPatchMetaBasesBaseIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "baseId": string; "userOrGroupId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_collaborators_userOrGroupId", input);
+export const docsPatchMetaBasesBaseIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "baseId": string; "userOrGroupId": string; "permissionLevel": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_collaborators_userOrGroupId", input);
 /** PATCH /meta/bases/{baseId}/interfaces/{pageBundleId}/collaborators/{userOrGroupId}: Update interface collaborator [write] */
-export const docsPatchMetaBasesBaseIdInterfacesPageBundleIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "userOrGroupId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_interfaces_pageBundleId_collaborators_userOrGroupId", input);
+export const docsPatchMetaBasesBaseIdInterfacesPageBundleIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "userOrGroupId": string; "permissionLevel": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_interfaces_pageBundleId_collaborators_userOrGroupId", input);
 /** PATCH /meta/bases/{baseId}/interfaces/{pageBundleId}/portalCollaborators/{collaboratorId}: Update interface portal collaborator [write] */
-export const docsPatchMetaBasesBaseIdInterfacesPageBundleIdPortalCollaboratorsCollaboratorId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "collaboratorId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_interfaces_pageBundleId_portalCollaborators_collaboratorId", input);
+export const docsPatchMetaBasesBaseIdInterfacesPageBundleIdPortalCollaboratorsCollaboratorId = (input: CallInput & { params?: { "baseId": string; "pageBundleId": string; "collaboratorId": string; "permissionLevel": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_interfaces_pageBundleId_portalCollaborators_collaboratorId", input);
 /** PATCH /meta/workspaces/{workspaceId}/collaborators/{userOrGroupId}: Update workspace collaborator [write] */
-export const docsPatchMetaWorkspacesWorkspaceIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "workspaceId": string; "userOrGroupId": string } } = {}) => sdk.call("docs.patch_meta_workspaces_workspaceId_collaborators_userOrGroupId", input);
+export const docsPatchMetaWorkspacesWorkspaceIdCollaboratorsUserOrGroupId = (input: CallInput & { params?: { "workspaceId": string; "userOrGroupId": string; "permissionLevel": string } } = {}) => sdk.call("docs.patch_meta_workspaces_workspaceId_collaborators_userOrGroupId", input);
 /** DELETE /meta/bases/{baseId}/invites/{inviteId}: Delete base invite [write] */
 export const docsDeleteMetaBasesBaseIdInvitesInviteId = (input: CallInput & { params?: { "baseId": string; "inviteId": string } } = {}) => sdk.call("docs.delete_meta_bases_baseId_invites_inviteId", input);
 /** DELETE /meta/bases/{baseId}/interfaces/{pageBundleId}/invites/{inviteId}: Delete interface invite [write] */
@@ -111,70 +111,70 @@ export const docsDeleteMetaBasesBaseIdSharesShareId = (input: CallInput & { para
 /** GET /meta/bases/{baseId}/shares: List shares [read] */
 export const docsGetMetaBasesBaseIdShares = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_shares", input);
 /** PATCH /meta/bases/{baseId}/shares/{shareId}: Manage share [write] */
-export const docsPatchMetaBasesBaseIdSharesShareId = (input: CallInput & { params?: { "baseId": string; "shareId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_shares_shareId", input);
+export const docsPatchMetaBasesBaseIdSharesShareId = (input: CallInput & { params?: { "baseId": string; "shareId": string; "state": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_shares_shareId", input);
 /** POST /meta/workspaces: Create workspace [write] */
-export const docsPostMetaWorkspaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_meta_workspaces", input);
+export const docsPostMetaWorkspaces = (input: CallInput & { params?: { "enterpriseAccountId": string; "name": string } } = {}) => sdk.call("docs.post_meta_workspaces", input);
 /** DELETE /meta/bases/{baseId}: Delete base [write] */
 export const docsDeleteMetaBasesBaseId = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.delete_meta_bases_baseId", input);
 /** DELETE /meta/workspaces/{workspaceId}: Delete workspace [write] */
 export const docsDeleteMetaWorkspacesWorkspaceId = (input: CallInput & { params?: { "workspaceId": string } } = {}) => sdk.call("docs.delete_meta_workspaces_workspaceId", input);
 /** POST /meta/workspaces/{workspaceId}/moveBase: Move base [write] */
-export const docsPostMetaWorkspacesWorkspaceIdMoveBase = (input: CallInput & { params?: { "workspaceId": string } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_moveBase", input);
+export const docsPostMetaWorkspacesWorkspaceIdMoveBase = (input: CallInput & { params?: { "workspaceId": string; "baseId": string; "targetWorkspaceId": string; "targetIndex"?: number } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_moveBase", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/moveWorkspaces: Move workspaces [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdMoveWorkspaces = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_moveWorkspaces", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdMoveWorkspaces = (input: CallInput & { params?: { "enterpriseAccountId": string; "targetEnterpriseAccountId": string; "replacementOwnerId"?: string; "workspaceIds": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_moveWorkspaces", input);
 /** POST /meta/workspaces/{workspaceId}/updateRestrictions: Update workspace restrictions [write] */
-export const docsPostMetaWorkspacesWorkspaceIdUpdateRestrictions = (input: CallInput & { params?: { "workspaceId": string } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_updateRestrictions", input);
+export const docsPostMetaWorkspacesWorkspaceIdUpdateRestrictions = (input: CallInput & { params?: { "workspaceId": string; "inviteCreationRestriction"?: string; "shareCreationRestriction"?: string } } = {}) => sdk.call("docs.post_meta_workspaces_workspaceId_updateRestrictions", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/descendants: Create descendant enterprise [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdDescendants = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_descendants", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdDescendants = (input: CallInput & { params?: { "enterpriseAccountId": string; "name": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_descendants", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}: Get enterprise [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountId = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountId = (input: CallInput & { params?: { "enterpriseAccountId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/users/{userId}/remove: Remove user from enterprise [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersUserIdRemove = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_userId_remove", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersUserIdRemove = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string; "removeFromDescendants"?: boolean; "replacementOwnerId"?: string; "isDryRun"?: boolean } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_userId_remove", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/workspaceAiAllowlist: Update workspace AI allowlist [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdWorkspaceAiAllowlist = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_workspaceAiAllowlist", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdWorkspaceAiAllowlist = (input: CallInput & { params?: { "enterpriseAccountId": string; "includeDescendantWorkspaces"?: boolean; "workspaces": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_workspaceAiAllowlist", input);
 /** POST /{enterpriseAccountId}/{dataTableId}/deleteRecords: Delete records [write] */
-export const docsPostEnterpriseAccountIdDataTableIdDeleteRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string } } = {}) => sdk.call("docs.post_enterpriseAccountId_dataTableId_deleteRecords", input);
+export const docsPostEnterpriseAccountIdDataTableIdDeleteRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string; "primaryKeysForDelete": unknown[] } } = {}) => sdk.call("docs.post_enterpriseAccountId_dataTableId_deleteRecords", input);
 /** POST /{enterpriseAccountId}/{dataTableId}/getRecords: Read records [write] */
-export const docsPostEnterpriseAccountIdDataTableIdGetRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string } } = {}) => sdk.call("docs.post_enterpriseAccountId_dataTableId_getRecords", input);
+export const docsPostEnterpriseAccountIdDataTableIdGetRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string; "cursor"?: string; "maxRecords"?: number; "fields"?: unknown[]; "primaryKeys"?: unknown[] } } = {}) => sdk.call("docs.post_enterpriseAccountId_dataTableId_getRecords", input);
 /** PUT /{enterpriseAccountId}/{dataTableId}/upsertRecords: Update or insert records [write] */
-export const docsPutEnterpriseAccountIdDataTableIdUpsertRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string } } = {}) => sdk.call("docs.put_enterpriseAccountId_dataTableId_upsertRecords", input);
+export const docsPutEnterpriseAccountIdDataTableIdUpsertRecords = (input: CallInput & { params?: { "enterpriseAccountId": string; "dataTableId": string; "records": unknown[] } } = {}) => sdk.call("docs.put_enterpriseAccountId_dataTableId_upsertRecords", input);
 /** DELETE /meta/enterpriseAccounts/{enterpriseAccountId}/users/{userId}: Delete user by id [write] */
 export const docsDeleteMetaEnterpriseAccountsEnterpriseAccountIdUsersUserId = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string } } = {}) => sdk.call("docs.delete_meta_enterpriseAccounts_enterpriseAccountId_users_userId", input);
 /** DELETE /meta/enterpriseAccounts/{enterpriseAccountId}/users: Delete users by email [write] */
-export const docsDeleteMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.delete_meta_enterpriseAccounts_enterpriseAccountId_users", input);
+export const docsDeleteMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string; "email"?: unknown[] } } = {}) => sdk.call("docs.delete_meta_enterpriseAccounts_enterpriseAccountId_users", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/users/{userId}: Get user by id [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdUsersUserId = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_users_userId", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdUsersUserId = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_users_userId", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/users: Get users by id or email [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_users", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string; "email"?: unknown[]; "id"?: unknown[]; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_users", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/users/grantAdminAccess: Grant admin access [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersGrantAdminAccess = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_grantAdminAccess", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersGrantAdminAccess = (input: CallInput & { params?: { "enterpriseAccountId": string; "users": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_grantAdminAccess", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/users/{userId}/logout: Logout user [write] */
 export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersUserIdLogout = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_userId_logout", input);
 /** PATCH /meta/enterpriseAccounts/{enterpriseAccountId}/users/{userId}: Manage user [write] */
-export const docsPatchMetaEnterpriseAccountsEnterpriseAccountIdUsersUserId = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string } } = {}) => sdk.call("docs.patch_meta_enterpriseAccounts_enterpriseAccountId_users_userId", input);
+export const docsPatchMetaEnterpriseAccountsEnterpriseAccountIdUsersUserId = (input: CallInput & { params?: { "enterpriseAccountId": string; "userId": string; "state"?: string; "email"?: string; "firstName"?: string; "lastName"?: string } } = {}) => sdk.call("docs.patch_meta_enterpriseAccounts_enterpriseAccountId_users_userId", input);
 /** PATCH /meta/enterpriseAccounts/{enterpriseAccountId}/users: Manage user batched [write] */
-export const docsPatchMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.patch_meta_enterpriseAccounts_enterpriseAccountId_users", input);
+export const docsPatchMetaEnterpriseAccountsEnterpriseAccountIdUsers = (input: CallInput & { params?: { "enterpriseAccountId": string; "users": unknown[] } } = {}) => sdk.call("docs.patch_meta_enterpriseAccounts_enterpriseAccountId_users", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/users/claim: Manage user membership [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersClaim = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_claim", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersClaim = (input: CallInput & { params?: { "enterpriseAccountId": string; "users": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_claim", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/users/revokeAdminAccess: Revoke admin access [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersRevokeAdminAccess = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_revokeAdminAccess", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdUsersRevokeAdminAccess = (input: CallInput & { params?: { "enterpriseAccountId": string; "users": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_users_revokeAdminAccess", input);
 /** GET /meta/groups/{groupId}: Get user group [read] */
-export const docsGetMetaGroupsGroupId = (input: CallInput & { params?: { "groupId": string } } = {}) => sdk.call("docs.get_meta_groups_groupId", input);
+export const docsGetMetaGroupsGroupId = (input: CallInput & { params?: { "groupId": string; "include"?: unknown[] } } = {}) => sdk.call("docs.get_meta_groups_groupId", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/moveGroups: Move user groups [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdMoveGroups = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_moveGroups", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdMoveGroups = (input: CallInput & { params?: { "enterpriseAccountId": string; "targetEnterpriseAccountId": string; "groupIds": unknown[] } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_moveGroups", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/auditLogEvents: Audit log events [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdAuditLogEvents = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_auditLogEvents", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdAuditLogEvents = (input: CallInput & { params?: { "enterpriseAccountId": string; "startTime"?: string; "endTime"?: string; "originatingUserId"?: string; "eventType"?: unknown[]; "modelId"?: string; "pageSize"?: number; "sortOrder"?: string; "previous"?: string; "next"?: string; "category"?: unknown[] } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_auditLogEvents", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/changeEvents: Change events [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdChangeEvents = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_changeEvents", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdChangeEvents = (input: CallInput & { params?: { "enterpriseAccountId": string; "startTime"?: string; "endTime"?: string; "pageSize"?: number; "offset"?: string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_changeEvents", input);
 /** POST /meta/enterpriseAccounts/{enterpriseAccountId}/exports: Create eDiscovery export [write] */
-export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdExports = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_exports", input);
+export const docsPostMetaEnterpriseAccountsEnterpriseAccountIdExports = (input: CallInput & { params?: { "enterpriseAccountId": string; "baseId": string; "includeCsvFormat"?: boolean; "shouldSendEmailOnCompletion"?: boolean } } = {}) => sdk.call("docs.post_meta_enterpriseAccounts_enterpriseAccountId_exports", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/exports/{enterpriseTaskId}: Get eDiscovery export [read] */
 export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdExportsEnterpriseTaskId = (input: CallInput & { params?: { "enterpriseAccountId": string; "enterpriseTaskId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_exports_enterpriseTaskId", input);
 /** GET /meta/enterpriseAccounts/{enterpriseAccountId}/exports: List eDiscovery exports [read] */
-export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdExports = (input: CallInput & { params?: { "enterpriseAccountId": string } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_exports", input);
+export const docsGetMetaEnterpriseAccountsEnterpriseAccountIdExports = (input: CallInput & { params?: { "enterpriseAccountId": string; "state"?: string; "pageSize"?: number; "offset"?: number } } = {}) => sdk.call("docs.get_meta_enterpriseAccounts_enterpriseAccountId_exports", input);
 /** DELETE /meta/bases/{baseId}/blockInstallations/{blockInstallationId}: Delete block installation [write] */
 export const docsDeleteMetaBasesBaseIdBlockInstallationsBlockInstallationId = (input: CallInput & { params?: { "baseId": string; "blockInstallationId": string } } = {}) => sdk.call("docs.delete_meta_bases_baseId_blockInstallations_blockInstallationId", input);
 /** GET /meta/bases/{baseId}/blockInstallations: List block installations [read] */
 export const docsGetMetaBasesBaseIdBlockInstallations = (input: CallInput & { params?: { "baseId": string } } = {}) => sdk.call("docs.get_meta_bases_baseId_blockInstallations", input);
 /** PATCH /meta/bases/{baseId}/blockInstallations/{blockInstallationId}: Manage block installation [write] */
-export const docsPatchMetaBasesBaseIdBlockInstallationsBlockInstallationId = (input: CallInput & { params?: { "baseId": string; "blockInstallationId": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_blockInstallations_blockInstallationId", input);
+export const docsPatchMetaBasesBaseIdBlockInstallationsBlockInstallationId = (input: CallInput & { params?: { "baseId": string; "blockInstallationId": string; "state": string } } = {}) => sdk.call("docs.patch_meta_bases_baseId_blockInstallations_blockInstallationId", input);

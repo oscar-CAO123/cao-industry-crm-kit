@@ -46,8 +46,8 @@ export const deleteTasksTaskIdCommentsCommentId = (input: CallInput & { params?:
 export const deleteTeamsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("delete_teams_id", input);
 /** DELETE /training-data/{training_data_id}/documents: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const deleteTrainingDataTrainingDataIdDocuments = (input: CallInput & { params?: { "training_data_id": string } } = {}) => sdk.call("delete_training_data_training_data_id_documents", input);
-/** GET /accounts: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_accounts", input);
+/** GET /accounts: Get a list of accounts [read] */
+export const getAccounts = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_accounts", input);
 /** GET /accounts/{account_id}/activities: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getAccountsAccountIdActivities = (input: CallInput & { params?: { "account_id": string } } = {}) => sdk.call("get_accounts_account_id_activities", input);
 /** GET /accounts/{account_id}/email-activities: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
@@ -62,24 +62,24 @@ export const getAccountsId = (input: CallInput & { params?: { "id": string } } =
 export const getActivityTypes = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_activity_types", input);
 /** GET /article-feedback: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getArticleFeedback = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_article_feedback", input);
-/** GET /audit-logs: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getAuditLogs = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_audit_logs", input);
+/** GET /audit-logs: Get a list of audit logs [read] */
+export const getAuditLogs = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_audit_logs", input);
 /** GET /call-recordings/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getCallRecordingsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_call_recordings_id", input);
-/** GET /contacts: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_contacts", input);
+/** GET /contacts: Get all contacts [read] */
+export const getContacts = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_contacts", input);
 /** GET /contacts/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getContactsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_contacts_id", input);
-/** GET /custom-fields: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getCustomFields = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_custom_fields", input);
+/** GET /custom-fields: Get all custom fields [read] */
+export const getCustomFields = (input: CallInput & { params?: { "object_type": string } } = {}) => sdk.call("get_custom_fields", input);
 /** GET /custom-fields/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getCustomFieldsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_custom_fields_id", input);
-/** GET /custom-objects/{type}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getCustomObjectsType = (input: CallInput & { params?: { "type": string } } = {}) => sdk.call("get_custom_objects_type", input);
+/** GET /custom-objects/{type}: List custom objects [read] */
+export const getCustomObjectsType = (input: CallInput & { params?: { "type": string; "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_custom_objects_type", input);
 /** GET /custom-objects/{type}/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getCustomObjectsTypeId = (input: CallInput & { params?: { "type": string; "id": string } } = {}) => sdk.call("get_custom_objects_type_id", input);
-/** GET /email-suppressions: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getEmailSuppressions = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_email_suppressions", input);
+/** GET /email-suppressions: Get email suppressions [read] */
+export const getEmailSuppressions = (input: CallInput & { params?: { "email"?: string; "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_email_suppressions", input);
 /** GET /feature-requests/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getFeatureRequestsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_feature_requests_id", input);
 /** GET /issue-statuses: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
@@ -98,7 +98,7 @@ export const getIssuesIssueIdSurveyResponses = (input: CallInput & { params?: { 
 export const getIssuesIssueIdThreads = (input: CallInput & { params?: { "issue_id": string } } = {}) => sdk.call("get_issues_issue_id_threads", input);
 /** GET /issues/{issue_id}/voice-calls: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getIssuesIssueIdVoiceCalls = (input: CallInput & { params?: { "issue_id": string } } = {}) => sdk.call("get_issues_issue_id_voice_calls", input);
-/** GET /knowledge-bases: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /knowledge-bases: Get all knowledge bases [read] */
 export const getKnowledgeBases = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_knowledge_bases", input);
 /** GET /knowledge-bases/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getKnowledgeBasesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_knowledge_bases_id", input);
@@ -116,15 +116,15 @@ export const getKnowledgeBasesKnowledgeBaseIdThemesThemeId = (input: CallInput &
 export const getMacroGroups = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_macro_groups", input);
 /** GET /macros: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getMacros = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_macros", input);
-/** GET /macros/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /macros/{id}: Get a macro by its ID [read] */
 export const getMacrosId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_macros_id", input);
-/** GET /me: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /me: Get details of the authenticated organization and user [read] */
 export const getMe = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_me", input);
 /** GET /milestones/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getMilestonesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_milestones_id", input);
 /** GET /projects/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getProjectsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_projects_id", input);
-/** GET /surveys: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /surveys: Get all surveys [read] */
 export const getSurveys = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_surveys", input);
 /** GET /surveys/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getSurveysId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_surveys_id", input);
@@ -136,30 +136,30 @@ export const getTags = (input: CallInput & { params?: {  } } = {}) => sdk.call("
 export const getTagsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_tags_id", input);
 /** GET /task-statuses: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTaskStatuses = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_task_statuses", input);
-/** GET /tasks: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_tasks", input);
+/** GET /tasks: Get all tasks [read] */
+export const getTasks = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number } } = {}) => sdk.call("get_tasks", input);
 /** GET /tasks/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTasksId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_tasks_id", input);
 /** GET /tasks/{task_id}/comments: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTasksTaskIdComments = (input: CallInput & { params?: { "task_id": string } } = {}) => sdk.call("get_tasks_task_id_comments", input);
-/** GET /teams: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /teams: Get a list of teams [read] */
 export const getTeams = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_teams", input);
 /** GET /teams/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTeamsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_teams_id", input);
-/** GET /ticket-forms: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /ticket-forms: Get a list of ticket forms [read] */
 export const getTicketForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_ticket_forms", input);
 /** GET /ticket-forms/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTicketFormsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_ticket_forms_id", input);
-/** GET /training-data: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /training-data: List all training data configurations [read] */
 export const getTrainingData = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_training_data", input);
 /** GET /training-data/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getTrainingDataId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_training_data_id", input);
-/** GET /user-roles: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
+/** GET /user-roles: Get a list of all user roles [read] */
 export const getUserRoles = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_user_roles", input);
 /** GET /user-statuses: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getUserStatuses = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_user_statuses", input);
-/** GET /users: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
-export const getUsers = (input: CallInput & { params?: {  } } = {}) => sdk.call("get_users", input);
+/** GET /users: Get a list of users [read] */
+export const getUsers = (input: CallInput & { params?: { "include_deactivated"?: boolean } } = {}) => sdk.call("get_users", input);
 /** GET /users/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [read] */
 export const getUsersId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("get_users_id", input);
 /** PATCH /accounts: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
@@ -182,12 +182,12 @@ export const patchCustomObjectsType = (input: CallInput & { params?: { "type": s
 export const patchCustomObjectsTypeId = (input: CallInput & { params?: { "type": string; "id": string } } = {}) => sdk.call("patch_custom_objects_type_id", input);
 /** PATCH /feature-requests/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const patchFeatureRequestsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("patch_feature_requests_id", input);
-/** PATCH /issues: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** PATCH /issues: Update multiple issues [write] */
 export const patchIssues = (input: CallInput & { params?: {  } } = {}) => sdk.call("patch_issues", input);
 /** PATCH /issues/{id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const patchIssuesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("patch_issues_id", input);
-/** PATCH /issues/{issue_id}/messages/{message_id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
-export const patchIssuesIssueIdMessagesMessageId = (input: CallInput & { params?: { "issue_id": string; "message_id": string } } = {}) => sdk.call("patch_issues_issue_id_messages_message_id", input);
+/** PATCH /issues/{id}/messages/{message_id}: Edit a message [write] */
+export const patchIssuesIssueIdMessagesMessageId = (input: CallInput & { params?: { "id": string; "message_id": string } } = {}) => sdk.call("patch_issues_issue_id_messages_message_id", input);
 /** PATCH /knowledge-bases/{knowledge_base_id}/articles/{article_id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const patchKnowledgeBasesKnowledgeBaseIdArticlesArticleId = (input: CallInput & { params?: { "knowledge_base_id": string; "article_id": string } } = {}) => sdk.call("patch_knowledge_bases_knowledge_base_id_articles_article_id", input);
 /** PATCH /knowledge-bases/{knowledge_base_id}/collections/{collection_id}: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
@@ -216,21 +216,21 @@ export const postAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.c
 export const postAccountsMerge = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_accounts_merge", input);
 /** POST /accounts/search: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postAccountsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_accounts_search", input);
-/** POST /accounts/{account_id}/activities: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
-export const postAccountsAccountIdActivities = (input: CallInput & { params?: { "account_id": string } } = {}) => sdk.call("post_accounts_account_id_activities", input);
-/** POST /accounts/{account_id}/files: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
-export const postAccountsAccountIdFiles = (input: CallInput & { params?: { "account_id": string } } = {}) => sdk.call("post_accounts_account_id_files", input);
-/** POST /accounts/{account_id}/highlights: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** POST /accounts/{id}/activities: Create a new activity for an account [write] */
+export const postAccountsAccountIdActivities = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("post_accounts_account_id_activities", input);
+/** POST /accounts/{id}/files: Upload files to an account [write] */
+export const postAccountsAccountIdFiles = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("post_accounts_account_id_files", input);
+/** POST /accounts/{account_id}/highlights: Create an account highlight [write] */
 export const postAccountsAccountIdHighlights = (input: CallInput & { params?: { "account_id": string } } = {}) => sdk.call("post_accounts_account_id_highlights", input);
 /** POST /accounts/{account_id}/notebook-blocks/{block_id}/notes: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postAccountsAccountIdNotebookBlocksBlockIdNotes = (input: CallInput & { params?: { "account_id": string; "block_id": string } } = {}) => sdk.call("post_accounts_account_id_notebook_blocks_block_id_notes", input);
 /** POST /accounts/{account_id}/relationship: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postAccountsAccountIdRelationship = (input: CallInput & { params?: { "account_id": string } } = {}) => sdk.call("post_accounts_account_id_relationship", input);
-/** POST /attachments: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** POST /attachments: Create an attachment [write] */
 export const postAttachments = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_attachments", input);
 /** POST /audit-logs/search: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postAuditLogsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_audit_logs_search", input);
-/** POST /call-recordings: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** POST /call-recordings: Create a call recording [write] */
 export const postCallRecordings = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_call_recordings", input);
 /** POST /call-recordings/search: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postCallRecordingsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_call_recordings_search", input);
@@ -254,7 +254,7 @@ export const postCustomObjectsTypeSearch = (input: CallInput & { params?: { "typ
 export const postFeatureRequests = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_feature_requests", input);
 /** POST /feature-requests/merge: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postFeatureRequestsMerge = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_feature_requests_merge", input);
-/** POST /feature-requests/search: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** POST /feature-requests/search: Search or list feature requests [write] */
 export const postFeatureRequestsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_feature_requests_search", input);
 /** POST /feature-requests/{feature_request_id}/evidence: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postFeatureRequestsFeatureRequestIdEvidence = (input: CallInput & { params?: { "feature_request_id": string } } = {}) => sdk.call("post_feature_requests_feature_request_id_evidence", input);
@@ -318,7 +318,7 @@ export const postProjectsSearch = (input: CallInput & { params?: {  } } = {}) =>
 export const postSurveysSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_surveys_search", input);
 /** POST /tags: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postTags = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_tags", input);
-/** POST /tags/search: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
+/** POST /tags/search: Search for tags [write] */
 export const postTagsSearch = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_tags_search", input);
 /** POST /tasks: From pylon-labs/pylon-typescript; the vendor's official SDK; inputs not mapped yet [write] */
 export const postTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("post_tasks", input);

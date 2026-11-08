@@ -3,7 +3,7 @@
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("phorest");
 /** GET /api/business/{businessId}/branch/{branchId}/review: List reviews [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdReview = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_review", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdReview = (input: CallInput & { params?: { "businessId": string; "branchId": string; "clientId"?: string; "clientName"?: string; "staffName"?: string; "reviewDate"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_review", input);
 /** GET /api/business/{businessId}/branch/{branchId}/review/{reviewId}: Retrieve a review [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdReviewReviewId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "reviewId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_review_reviewId", input);
 /** POST /api/business/{businessId}/creditaccounttransaction: Create a client credit account transaction [write] */
@@ -13,47 +13,47 @@ export const docsGetApiBusinessBusinessIdClientClientId = (input: CallInput & { 
 /** PUT /api/business/{businessId}/client/{clientId}: Update a client [write] */
 export const docsPutApiBusinessBusinessIdClientClientId = (input: CallInput & { params?: { "businessId": string; "clientId": string } } = {}) => sdk.call("docs.put_api_business_businessId_client_clientId", input);
 /** GET /api/business/{businessId}/client: List clients [read] */
-export const docsGetApiBusinessBusinessIdClient = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_client", input);
+export const docsGetApiBusinessBusinessIdClient = (input: CallInput & { params?: { "businessId": string; "email"?: string; "phone"?: string; "updatedAfter"?: string; "updatedBefore"?: string; "firstName"?: string; "lastName"?: string; "externalId"?: string; "includeArchived"?: boolean; "includeDeleted"?: boolean; "includeLinkedClients"?: boolean; "hasActiveMembership"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_client", input);
 /** POST /api/business/{businessId}/client: Create a client [write] */
 export const docsPostApiBusinessBusinessIdClient = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.post_api_business_businessId_client", input);
 /** GET /api/business/{businessId}/client/{clientId}/service-history: Retrieve client's service histories [read] */
-export const docsGetApiBusinessBusinessIdClientClientIdServiceHistory = (input: CallInput & { params?: { "businessId": string; "clientId": string } } = {}) => sdk.call("docs.get_api_business_businessId_client_clientId_service_history", input);
+export const docsGetApiBusinessBusinessIdClientClientIdServiceHistory = (input: CallInput & { params?: { "businessId": string; "clientId": string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_client_clientId_service_history", input);
 /** GET /api/business/{businessId}/client/walk-in: Retrieve walk-in client [read] */
 export const docsGetApiBusinessBusinessIdClientWalkIn = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_client_walk_in", input);
 /** GET /api/business/{businessId}/client-batch: Retrieve a batch of clients [read] */
-export const docsGetApiBusinessBusinessIdClientBatch = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_client_batch", input);
+export const docsGetApiBusinessBusinessIdClientBatch = (input: CallInput & { params?: { "businessId": string; "client_id": unknown[] } } = {}) => sdk.call("docs.get_api_business_businessId_client_batch", input);
 /** GET /api/business/{businessId}/client/{clientId}/product-history: Retrieve client's product histories [read] */
-export const docsGetApiBusinessBusinessIdClientClientIdProductHistory = (input: CallInput & { params?: { "businessId": string; "clientId": string } } = {}) => sdk.call("docs.get_api_business_businessId_client_clientId_product_history", input);
+export const docsGetApiBusinessBusinessIdClientClientIdProductHistory = (input: CallInput & { params?: { "businessId": string; "clientId": string; "branchId"?: string; "date"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_client_clientId_product_history", input);
 /** GET /api/business/{businessId}/category/client: List client categories [read] */
-export const docsGetApiBusinessBusinessIdCategoryClient = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_category_client", input);
+export const docsGetApiBusinessBusinessIdCategoryClient = (input: CallInput & { params?: { "businessId": string; "name"?: string; "archivedOnly"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_category_client", input);
 /** GET /api/business/{businessId}/category/client/{categoryId}: Retrieve a client category [read] */
 export const docsGetApiBusinessBusinessIdCategoryClientCategoryId = (input: CallInput & { params?: { "businessId": string; "categoryId": string } } = {}) => sdk.call("docs.get_api_business_businessId_category_client_categoryId", input);
 /** POST /api/business/{businessId}/branch/{branchId}/client/{clientId}/checkin: Check in appointments [write] */
-export const docsPostApiBusinessBusinessIdBranchBranchIdClientClientIdCheckin = (input: CallInput & { params?: { "businessId": string; "branchId": string; "clientId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_client_clientId_checkin", input);
+export const docsPostApiBusinessBusinessIdBranchBranchIdClientClientIdCheckin = (input: CallInput & { params?: { "businessId": string; "branchId": string; "clientId": string; "date"?: string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_client_clientId_checkin", input);
 /** POST /api/business/{businessId}/branch/{branchId}/leads: Create a new lead [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdLeads = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_leads", input);
 /** GET /api/business/{businessId}/branch/{branchId}/leads: List leads [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdLeads = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_leads", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdLeads = (input: CallInput & { params?: { "businessId": string; "branchId": string; "name"?: string; "status"?: unknown[]; "contactableByEmail"?: boolean; "contactableByMobile"?: boolean; "fetchMessageHistory"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_leads", input);
 /** GET /api/business/{businessId}/branch/{branchId}/leads/stats: Get leads stats [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdLeadsStats = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_leads_stats", input);
 /** PUT /api/business/{businessId}/branch/{branchId}/leads/{leadId}: Update an existing lead [write] */
-export const docsPutApiBusinessBusinessIdBranchBranchIdLeadsLeadId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "leadId": string } } = {}) => sdk.call("docs.put_api_business_businessId_branch_branchId_leads_leadId", input);
+export const docsPutApiBusinessBusinessIdBranchBranchIdLeadsLeadId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "leadId": number } } = {}) => sdk.call("docs.put_api_business_businessId_branch_branchId_leads_leadId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/taxrate: List tax rates [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdTaxrate = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_taxrate", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdTaxrate = (input: CallInput & { params?: { "businessId": string; "branchId": string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_taxrate", input);
 /** GET /api/business/{businessId}/branch/{branchId}/taxrate/{taxId}: Retrieve a tax rate [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdTaxrateTaxId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "taxId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_taxrate_taxId", input);
 /** POST /api/business/{businessId}/branch/{branchId}/stock/adjustment: Adjust stock quantity [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdStockAdjustment = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_stock_adjustment", input);
 /** GET /api/business/{businessId}/branch/{branchId}/service-special-offer: List service special offers [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdServiceSpecialOffer = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_special_offer", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdServiceSpecialOffer = (input: CallInput & { params?: { "businessId": string; "branchId": string; "category_id"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_special_offer", input);
 /** POST /api/business/{businessId}/branch/{branchId}/deposit/payment-link: Create a deposit payment link [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdDepositPaymentLink = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_deposit_payment_link", input);
 /** GET /api/business/{businessId}/branch: List branches [read] */
-export const docsGetApiBusinessBusinessIdBranch = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch", input);
+export const docsGetApiBusinessBusinessIdBranch = (input: CallInput & { params?: { "businessId": string; "service_id"?: string; "service_internet_enabled"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch", input);
 /** GET /api/business/{businessId}/branch/{branchId}/appointment/{appointmentId}/consultation-link: Get the consultation form link for an appointment [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentIdConsultationLink = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_appointment_appointmentId_consultation_link", input);
 /** GET /api/business/{businessId}/branch/{branchId}/till/{tillId}/till-session: List till sessions [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdTillTillIdTillSession = (input: CallInput & { params?: { "businessId": string; "branchId": string; "tillId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_till_tillId_till_session", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdTillTillIdTillSession = (input: CallInput & { params?: { "businessId": string; "branchId": string; "tillId": string; "start_time"?: string; "end_time"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_till_tillId_till_session", input);
 /** GET /api/business/{businessId}/branch/{branchId}/break/{breakId}: Retrieve a break [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdBreakBreakId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "breakId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_break_breakId", input);
 /** PUT /api/business/{businessId}/branch/{branchId}/break/{breakId}: Update a break [write] */
@@ -61,23 +61,23 @@ export const docsPutApiBusinessBusinessIdBranchBranchIdBreakBreakId = (input: Ca
 /** DELETE /api/business/{businessId}/branch/{branchId}/break/{breakId}: Delete a break [write] */
 export const docsDeleteApiBusinessBusinessIdBranchBranchIdBreakBreakId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "breakId": string } } = {}) => sdk.call("docs.delete_api_business_businessId_branch_branchId_break_breakId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/break: List breaks [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdBreak = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_break", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdBreak = (input: CallInput & { params?: { "businessId": string; "branchId": string; "from_date": string; "to_date": string; "staff_id"?: string; "room_id"?: string; "machine_id"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_break", input);
 /** POST /api/business/{businessId}/branch/{branchId}/break: Create a break [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdBreak = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_break", input);
 /** GET /api/business/{businessId}/branch/{branchId}/service: List branch services [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdService = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdService = (input: CallInput & { params?: { "businessId": string; "branchId": string; "category_id"?: string; "includeArchived"?: boolean; "fetch_online_category"?: boolean; "fetch_addon_services"?: boolean; "service_type"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service", input);
 /** GET /api/business/{businessId}/branch/{branchId}/service/{serviceId}: Retrieve a branch service [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdServiceServiceId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "serviceId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_serviceId", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdServiceServiceId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "serviceId": string; "fetch_online_category"?: boolean; "fetch_addon_services"?: boolean } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_serviceId", input);
 /** POST /api/business/{businessId}/branch/{branchId}/service/{serviceId}/addon/{addonServiceId}: Link an add-on service to a branch service [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdServiceServiceIdAddonAddonServiceId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "serviceId": string; "addonServiceId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_service_serviceId_addon_addonServiceId", input);
 /** DELETE /api/business/{businessId}/branch/{branchId}/service/{serviceId}/addon/{addonServiceId}: Unlink an add-on service from a branch service [write] */
 export const docsDeleteApiBusinessBusinessIdBranchBranchIdServiceServiceIdAddonAddonServiceId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "serviceId": string; "addonServiceId": string } } = {}) => sdk.call("docs.delete_api_business_businessId_branch_branchId_service_serviceId_addon_addonServiceId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/staff/worktimetable: List staff timetables [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdStaffWorktimetable = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff_worktimetable", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdStaffWorktimetable = (input: CallInput & { params?: { "businessId": string; "branchId": string; "from_date": string; "to_date": string; "activity_type"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff_worktimetable", input);
 /** GET /api/business/{businessId}/branch/{branchId}/course: List courses [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdCourse = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_course", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdCourse = (input: CallInput & { params?: { "businessId": string; "branchId": string; "includeArchived"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_course", input);
 /** GET /api/business/{businessId}/time-off-policy: List time off policies [read] */
-export const docsGetApiBusinessBusinessIdTimeOffPolicy = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_time_off_policy", input);
+export const docsGetApiBusinessBusinessIdTimeOffPolicy = (input: CallInput & { params?: { "businessId": string; "fetch_archived"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_time_off_policy", input);
 /** GET /api/business/{businessId}/time-off-policy/{timeOffPolicyId}: Get a time off policy [read] */
 export const docsGetApiBusinessBusinessIdTimeOffPolicyTimeOffPolicyId = (input: CallInput & { params?: { "businessId": string; "timeOffPolicyId": string } } = {}) => sdk.call("docs.get_api_business_businessId_time_off_policy_timeOffPolicyId", input);
 /** POST /api/business/{businessId}/branch/{branchId}/csvexportjob: Create a CSV export job [write] */
@@ -85,27 +85,27 @@ export const docsPostApiBusinessBusinessIdBranchBranchIdCsvexportjob = (input: C
 /** GET /api/business/{businessId}/branch/{branchId}/csvexportjob/{jobId}: Retrieve a CSV export job [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdCsvexportjobJobId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "jobId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_csvexportjob_jobId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/service-category: List service categories [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdServiceCategory = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_category", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdServiceCategory = (input: CallInput & { params?: { "businessId": string; "branchId": string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_service_category", input);
 /** POST /api/business/{businessId}/branch/{branchId}/purchase: Create a purchase [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdPurchase = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_purchase", input);
 /** GET /api/business/{businessId}/branch/{branchId}/salefee: List sale fees [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdSalefee = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_salefee", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdSalefee = (input: CallInput & { params?: { "businessId": string; "branchId": string; "fetch_archived"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_salefee", input);
 /** GET /api/business/{businessId}/branch/{branchId}/salefee/{saleFeeId}: Retrieve a sale fee [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdSalefeeSaleFeeId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "saleFeeId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_salefee_saleFeeId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/salefee-batch: Retrieve a batch of sale fees [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdSalefeeBatch = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_salefee_batch", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdSalefeeBatch = (input: CallInput & { params?: { "businessId": string; "branchId": string; "salefee_id": unknown[] } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_salefee_batch", input);
 /** GET /api/business/{businessId}/voucher/{voucherId}: Retrieve a voucher [read] */
 export const docsGetApiBusinessBusinessIdVoucherVoucherId = (input: CallInput & { params?: { "businessId": string; "voucherId": string } } = {}) => sdk.call("docs.get_api_business_businessId_voucher_voucherId", input);
 /** PUT /api/business/{businessId}/voucher/{voucherId}: Update a voucher [write] */
 export const docsPutApiBusinessBusinessIdVoucherVoucherId = (input: CallInput & { params?: { "businessId": string; "voucherId": string } } = {}) => sdk.call("docs.put_api_business_businessId_voucher_voucherId", input);
 /** GET /api/business/{businessId}/voucher: List vouchers [read] */
-export const docsGetApiBusinessBusinessIdVoucher = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_voucher", input);
+export const docsGetApiBusinessBusinessIdVoucher = (input: CallInput & { params?: { "businessId": string; "clientId"?: string; "serialNumber"?: string; "includeUsed"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_voucher", input);
 /** POST /api/business/{businessId}/voucher: Create a voucher [write] */
 export const docsPostApiBusinessBusinessIdVoucher = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.post_api_business_businessId_voucher", input);
 /** GET /api/business/{businessId}/branch/{branchId}/package: List service packages [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdPackage = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_package", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdPackage = (input: CallInput & { params?: { "businessId": string; "branchId": string; "category_id"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_package", input);
 /** POST /api/business/{businessId}/branch/{branchId}/booking: Create a booking [write] */
-export const docsPostApiBusinessBusinessIdBranchBranchIdBooking = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_booking", input);
+export const docsPostApiBusinessBusinessIdBranchBranchIdBooking = (input: CallInput & { params?: { "businessId": string; "branchId": string; "force_selected_time"?: boolean } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_booking", input);
 /** POST /api/business/{businessId}/branch/{branchId}/booking/{bookingId}/cancel: Cancel a booking [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdBookingBookingIdCancel = (input: CallInput & { params?: { "businessId": string; "branchId": string; "bookingId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_booking_bookingId_cancel", input);
 /** POST /api/business/{businessId}/branch/{branchId}/booking/{bookingId}/appendnote: Create a note for the booking [write] */
@@ -113,45 +113,45 @@ export const docsPostApiBusinessBusinessIdBranchBranchIdBookingBookingIdAppendno
 /** POST /api/business/{businessId}/branch/{branchId}/booking/{bookingId}/activate: Activate a booking [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdBookingBookingIdActivate = (input: CallInput & { params?: { "businessId": string; "branchId": string; "bookingId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_booking_bookingId_activate", input);
 /** GET /api/business/{businessId}/paymenttype: List payment types [read] */
-export const docsGetApiBusinessBusinessIdPaymenttype = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_paymenttype", input);
+export const docsGetApiBusinessBusinessIdPaymenttype = (input: CallInput & { params?: { "businessId": string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_paymenttype", input);
 /** GET /api/business/{businessId}/paymenttype/{paymentTypeId}: Retrieve a payment type [read] */
 export const docsGetApiBusinessBusinessIdPaymenttypePaymentTypeId = (input: CallInput & { params?: { "businessId": string; "paymentTypeId": string } } = {}) => sdk.call("docs.get_api_business_businessId_paymenttype_paymentTypeId", input);
 /** POST /api/business/{businessId}/loyaltypoints: Update loyalty points balance [write] */
 export const docsPostApiBusinessBusinessIdLoyaltypoints = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.post_api_business_businessId_loyaltypoints", input);
 /** GET /api/business/{businessId}/branch/{branchId}/worktimetable: Retrieve a branch timetable [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdWorktimetable = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_worktimetable", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdWorktimetable = (input: CallInput & { params?: { "businessId": string; "branchId": string; "from_date": string; "to_date": string; "activity_type"?: string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_worktimetable", input);
 /** GET /api/business/{businessId}/branch/{branchId}/machine: Get a list of machines for the specified business id and branch id. List can be filtered by DateTime of update with a possibility to include archived machines [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdMachine = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_machine", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdMachine = (input: CallInput & { params?: { "businessId": string; "branchId": string; "include_archived"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_machine", input);
 /** GET /api/business/{businessId}/branch/{branchId}/machine/{machineId}: Get a machine for the specified business id, branch id and machine id [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdMachineMachineId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "machineId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_machine_machineId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/product: List products [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdProduct = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_product", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdProduct = (input: CallInput & { params?: { "businessId": string; "branchId": string; "productType"?: string; "searchQuery"?: string; "archivedOnly"?: boolean; "outOfStock"?: boolean; "lowStock"?: boolean; "includeArchived"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_product", input);
 /** GET /api/business/{businessId}/branch/{branchId}/staff: List staffs [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdStaff = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdStaff = (input: CallInput & { params?: { "businessId": string; "branchId": string; "updatedAfter"?: string; "updatedBefore"?: string; "fetch_archived"?: boolean; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff", input);
 /** GET /api/business/{businessId}/branch/{branchId}/staff/{staffId}: Retrieve a staff [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdStaffStaffId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "staffId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff_staffId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/staff-batch: Retrieve a batch of staffs [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdStaffBatch = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff_batch", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdStaffBatch = (input: CallInput & { params?: { "businessId": string; "branchId": string; "staff_id": unknown[] } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_staff_batch", input);
 /** PUT /api/business/{businessId}/branch/{branchId}/appointment/{appointmentId}: Update an appointment [write] */
-export const docsPutApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string } } = {}) => sdk.call("docs.put_api_business_businessId_branch_branchId_appointment_appointmentId", input);
+export const docsPutApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string; "force_selected_time"?: boolean } } = {}) => sdk.call("docs.put_api_business_businessId_branch_branchId_appointment_appointmentId", input);
 /** POST /api/business/{businessId}/branch/{branchId}/appointment/{appointmentId}/note: Update an appointment note [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentIdNote = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_appointmentId_note", input);
 /** POST /api/business/{businessId}/branch/{branchId}/appointment/{appointmentId}/checkin: Check in an appointment [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentIdCheckin = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_appointmentId_checkin", input);
 /** POST /api/business/{businessId}/branch/{branchId}/appointment/confirm: Confirm appointments [write] */
-export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentConfirm = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_confirm", input);
+export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentConfirm = (input: CallInput & { params?: { "businessId": string; "branchId": string; "client_id": string; "date"?: string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_confirm", input);
 /** POST /api/business/{businessId}/branch/{branchId}/appointment/cancel: Cancel appointments [write] */
-export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentCancel = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_cancel", input);
+export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentCancel = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointment_id": unknown[] } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointment_cancel", input);
 /** GET /api/business/{businessId}/branch/{branchId}/appointment: List appointments [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdAppointment = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_appointment", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdAppointment = (input: CallInput & { params?: { "businessId": string; "branchId": string; "from_date"?: string; "to_date"?: string; "staff_id"?: string; "room_id"?: string; "machine_id"?: string; "client_id"?: string; "fetch_canceled"?: boolean; "fetch_deleted"?: boolean; "fetch_archived"?: boolean; "updated_from"?: string; "updated_to"?: string; "fetch_online_category"?: boolean; "fetch_notes"?: boolean; "group_booking_id"?: string; "size"?: unknown; "page"?: unknown; "sort"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_appointment", input);
 /** GET /api/business/{businessId}/branch/{branchId}/appointment/{appointmentId}: Retrieve an appointment [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdAppointmentAppointmentId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "appointmentId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_appointment_appointmentId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/room: List rooms [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdRoom = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_room", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdRoom = (input: CallInput & { params?: { "businessId": string; "branchId": string; "include_archived"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_room", input);
 /** GET /api/business/{businessId}/branch/{branchId}/room/{roomId}: Retrieve a room [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdRoomRoomId = (input: CallInput & { params?: { "businessId": string; "branchId": string; "roomId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_room_roomId", input);
 /** GET /api/business/{businessId}/branch/{branchId}/inventorytransaction: List inventory transactions [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdInventorytransaction = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_inventorytransaction", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdInventorytransaction = (input: CallInput & { params?: { "businessId": string; "branchId": string; "type"?: string; "deleted"?: boolean; "compensatingTransaction"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_inventorytransaction", input);
 /** POST /api/business/{businessId}/branch/{branchId}/appointments/availability: List appointment availabilities [write] */
 export const docsPostApiBusinessBusinessIdBranchBranchIdAppointmentsAvailability = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.post_api_business_businessId_branch_branchId_appointments_availability", input);
 /** GET /api/business/{businessId}/clientcourse/{clientCourseId}: Retrieve a client course [read] */
@@ -159,8 +159,8 @@ export const docsGetApiBusinessBusinessIdClientcourseClientCourseId = (input: Ca
 /** PUT /api/business/{businessId}/clientcourse/{clientCourseId}: Update a client course [write] */
 export const docsPutApiBusinessBusinessIdClientcourseClientCourseId = (input: CallInput & { params?: { "businessId": string; "clientCourseId": string } } = {}) => sdk.call("docs.put_api_business_businessId_clientcourse_clientCourseId", input);
 /** GET /api/business/{businessId}/clientcourse: List client courses [read] */
-export const docsGetApiBusinessBusinessIdClientcourse = (input: CallInput & { params?: { "businessId": string } } = {}) => sdk.call("docs.get_api_business_businessId_clientcourse", input);
+export const docsGetApiBusinessBusinessIdClientcourse = (input: CallInput & { params?: { "businessId": string; "branch_id"?: string; "client_id"?: string; "includeArchived"?: boolean; "includeUsedCourseItems"?: boolean; "updated_from"?: string; "updated_to"?: string; "size"?: unknown; "page"?: unknown } } = {}) => sdk.call("docs.get_api_business_businessId_clientcourse", input);
 /** GET /api/business/{businessId}/branch/{branchId}/till/{tillId}/balance: Retrieve a till balance [read] */
-export const docsGetApiBusinessBusinessIdBranchBranchIdTillTillIdBalance = (input: CallInput & { params?: { "businessId": string; "branchId": string; "tillId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_till_tillId_balance", input);
+export const docsGetApiBusinessBusinessIdBranchBranchIdTillTillIdBalance = (input: CallInput & { params?: { "businessId": string; "branchId": string; "tillId": string; "include_integrated_payments"?: boolean } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_till_tillId_balance", input);
 /** GET /api/business/{businessId}/branch/{branchId}/till: List tills for a branch [read] */
 export const docsGetApiBusinessBusinessIdBranchBranchIdTill = (input: CallInput & { params?: { "businessId": string; "branchId": string } } = {}) => sdk.call("docs.get_api_business_businessId_branch_branchId_till", input);

@@ -95,7 +95,8 @@ const CREDENTIAL = /token|secret|password|passcode|private[ _-]?key|access[ _-]?
 const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set|resend|finalize|finalise|void|pay|charge|refund|capture|notify|dispatch|deliver|transfer|withdraw|merge|book|checkout|subscribe|sign|authorise|authorize)(?=[^a-z]|$)/i;  // resend..authorize added 8 Nov 2026 after the security review
 // A reviewed POST may be a read only if its own path says search, batch read or query.
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
-const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|upload (url|link|path)|recovery key|access key/i;  // upload links added 8 Nov 2026 (Smokeball, Trackunit)  // summaries: only clear credential words
+const SECRET_HEADER = /(^|[-_])(api[-_]?key|secret|password|customer[-_]?token|proposal[-_]?token|z?csrf[-_]?token|access[-_]?token|auth[-_]?token|session[-_]?token)$/i;
+const STRONG =/secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|upload (url|link|path)|recovery key|access key/i;  // upload links added 8 Nov 2026 (Smokeball, Trackunit)  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
 // DocuSign API families: production host (developers.docusign.com/platform/api-endpoint-base-paths) and, where the
 // family's own spec names no per-endpoint scope, the scopes DocuSign lists for it (/platform/auth/reference/scopes).
@@ -234,14 +235,20 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     // Keys never travel in a URL: query params that are keys (Slack's old token param, Meta's access_token) are dropped;
     // the sign-in layer sends the key in a header instead.
     const keyLike = (n) => ["token", "accesstoken", "apikey", "key", "secret", "clientsecret", "password"].includes(String(n).toLowerCase().replace(/[^a-z]/g, ""));
+    // A header the vendor's spec lists as an input but that carries a credential (SiteMinder's x-sm-api-key, Yotpo's
+    // X-Customer-Token, Zoho's CSRF token) is never a caller input: dropped here, and the endpoint is refused below
+    // unless the platform's sign-in supplies that header.
+    const secretHeader = (p) => String(p.in).toLowerCase() === "header" && !authHeaders.has(String(p.name).toLowerCase())
+      && SECRET_HEADER.test(String(p.name));
+    const dropped = (o.params ?? []).filter((p) => p && p.name && secretHeader(p)).map((p) => String(p.name));
     const params = (o.params ?? []).filter((p) => p && p.name && !(String(p.in).toLowerCase() === "header" && authHeaders.has(String(p.name).toLowerCase()))
-      && !(["query", "header"].includes(String(p.in).toLowerCase()) && keyLike(p.name)))
+      && !(["query", "header"].includes(String(p.in).toLowerCase()) && keyLike(p.name)) && !secretHeader(p))
       .map((p) => ({ name: clean(p.name), in: clean(p.in), required: String(p.in) === "path" ? true : !!p.required, type: clean(p.type), ...(p.reserved ? { reserved: true, pattern: String(p.pattern ?? "") } : {}) }));
     const have = new Set(params.map((p) => p.name));
     for (const mm of String(o.path).matchAll(/\{([^}]+)\}/g)) if (!have.has(mm[1])) { params.push({ name: mm[1], in: "path", required: true, type: "string" }); have.add(mm[1]); }
     return { id: clean(o.id), api: clean(o.api), method: clean(o.method).toUpperCase(), path: clean(o.path), server, summary: clean(o.summary).slice(0, 200),
              tags: (o.tags ?? []).map(clean), params, body: !!o.body, scopes: o.scopes ?? [], deprecated: !!o.deprecated, doc_url: clean(o.doc_url),
-             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(bodyType(o) ? { bodyType: bodyType(o) } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
+             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(dropped.length ? { secretHeaders: dropped } : {}), ...(bodyType(o) ? { bodyType: bodyType(o) } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
              ...(() => { const [kind, why] = readKind(id, o); return why ? { kind, override: `write: ${why}` } : { kind }; })() };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
@@ -276,6 +283,13 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       if (!o.server.startsWith(r.server)) continue;
       if (r.unsupported) o.authUnsupported = r.unsupported;
       if (r.auth) o.auth = r.auth;
+    }
+    if (o.secretHeaders) {
+      const a = o.auth ?? cfg.auth;
+      const supplied = new Set([a.header, ...Object.keys(a.extraHeaders ?? {}), ...Object.keys(a.optionalHeaders ?? {})].filter(Boolean).map((h) => h.toLowerCase()));
+      const missing = o.secretHeaders.filter((h) => !supplied.has(h.toLowerCase()));
+      if (missing.length && !o.authUnsupported) o.authUnsupported = `needs ${missing.join(", ")} from the secret store, which this platform's sign-in does not map yet`;
+      delete o.secretHeaders;
     }
     if (id === "zoom" && o.server.includes("{keyConnectorLb}"))
       o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";

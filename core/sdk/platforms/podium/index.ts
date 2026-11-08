@@ -3,7 +3,7 @@
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("podium");
 /** GET /locations: List all locations. [read] */
-export const docsGetLocations = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_locations", input);
+export const docsGetLocations = (input: CallInput & { params?: { "search"?: string; "searchFields"?: unknown[]; "limit"?: number; "createdAfter"?: string; "createdBefore"?: string; "updatedAfter"?: string; "cursor"?: string } } = {}) => sdk.call("docs.get_locations", input);
 /** GET /locations/{uid}: Get a location. [read] */
 export const docsGetLocationsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_locations_uid", input);
 /** PATCH /locations/{uid}: Update a location. [write] */
@@ -11,19 +11,19 @@ export const docsPatchLocationsUid = (input: CallInput & { params?: { "uid": str
 /** GET /organizations/{uid}: Get an organization. [read] */
 export const docsGetOrganizationsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_organizations_uid", input);
 /** GET /users: List all users. [read] */
-export const docsGetUsers = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_users", input);
+export const docsGetUsers = (input: CallInput & { params?: { "search"?: string; "createdAt"?: unknown; "searchFields"?: unknown[]; "limit"?: number; "cursor"?: string; "includeAgents"?: boolean } } = {}) => sdk.call("docs.get_users", input);
 /** GET /users/{uid}: Get a user. [read] */
 export const docsGetUsersUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_users_uid", input);
-/** POST /appointments: The appointment object [write] */
+/** POST /appointments: Create an appointment. [write] */
 export const docsPostAppointments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_appointments", input);
 /** GET /appointments: List appointments. [read] */
-export const docsGetAppointments = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_appointments", input);
+export const docsGetAppointments = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number; "locationUid"?: string; "order"?: string; "since"?: string } } = {}) => sdk.call("docs.get_appointments", input);
 /** GET /appointments/{uid}: Get an appointment. [read] */
 export const docsGetAppointmentsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_appointments_uid", input);
 /** GET /campaign_interactions: List campaign interactions [read] */
-export const docsGetCampaignInteractions = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_campaign_interactions", input);
+export const docsGetCampaignInteractions = (input: CallInput & { params?: { "campaignUid"?: string; "contactUid"?: string; "cursor"?: string; "interactionType"?: unknown[]; "limit"?: number; "locationUid"?: string } } = {}) => sdk.call("docs.get_campaign_interactions", input);
 /** GET /campaigns: List all campaigns. [read] */
-export const docsGetCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_campaigns", input);
+export const docsGetCampaigns = (input: CallInput & { params?: { "status"?: string } } = {}) => sdk.call("docs.get_campaigns", input);
 /** POST /campaigns: Create a campaign. [write] */
 export const docsPostCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_campaigns", input);
 /** DELETE /campaigns/{uid}: Delete a campaign. [write] */
@@ -52,9 +52,9 @@ export const docsPostContactTags = (input: CallInput & { params?: {  } } = {}) =
 export const docsGetContactTagsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_contact_tags_uid", input);
 /** PATCH /contact_tags/{uid}: Update a contact tag [write] */
 export const docsPatchContactTagsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.patch_contact_tags_uid", input);
-/** GET /contacts: The contact object [read] */
-export const docsGetContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_contacts", input);
-/** GET /contacts/{identifier}: The contact object [read] */
+/** GET /contacts: List all contacts [read] */
+export const docsGetContacts = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number; "updated_at"?: string } } = {}) => sdk.call("docs.get_contacts", input);
+/** GET /contacts/{identifier}: Retrieve a contact [read] */
 export const docsGetContactsIdentifier = (input: CallInput & { params?: { "identifier": string } } = {}) => sdk.call("docs.get_contacts_identifier", input);
 /** POST /contacts: Create a contact [write] */
 export const docsPostContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_contacts", input);
@@ -79,7 +79,7 @@ export const docsPostContactsTransactionalOptIn = (input: CallInput & { params?:
 /** POST /contacts/transactional/opt_out: Opt a contact out of transactional messages [write] */
 export const docsPostContactsTransactionalOptOut = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_contacts_transactional_opt_out", input);
 /** GET /conversations: List conversations. [read] */
-export const docsGetConversations = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_conversations", input);
+export const docsGetConversations = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number; "locationUid"?: string; "order"?: string; "since"?: string } } = {}) => sdk.call("docs.get_conversations", input);
 /** GET /conversations/{uid}: Get a conversation. [read] */
 export const docsGetConversationsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_conversations_uid", input);
 /** PUT /conversations/{uid}: Update a conversation. [write] */
@@ -93,11 +93,11 @@ export const docsGetConversationsUidAssignees = (input: CallInput & { params?: {
 /** PUT /conversations/{uid}/assignees: Update a conversation assignee. [write] */
 export const docsPutConversationsUidAssignees = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.put_conversations_uid_assignees", input);
 /** GET /feedback: List all feedback surveys. [read] */
-export const docsGetFeedback = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_feedback", input);
+export const docsGetFeedback = (input: CallInput & { params?: { "createdAt"?: unknown; "limit"?: number; "cursor"?: string } } = {}) => sdk.call("docs.get_feedback", input);
 /** GET /conversations/{conversation_uid}/messages: Retrieve messages from a conversation [read] */
-export const docsGetConversationsConversationUidMessages = (input: CallInput & { params?: { "conversation_uid": string } } = {}) => sdk.call("docs.get_conversations_conversation_uid_messages", input);
+export const docsGetConversationsConversationUidMessages = (input: CallInput & { params?: { "conversation_uid": string; "cursor"?: string; "order"?: string; "since"?: string } } = {}) => sdk.call("docs.get_conversations_conversation_uid_messages", input);
 /** GET /conversations/{conversation_uid}/messages/{uid}: Retreive a message from a conversation [read] */
-export const docsGetConversationsConversationUidMessagesUid = (input: CallInput & { params?: { "conversation_uid": string; "uid": string } } = {}) => sdk.call("docs.get_conversations_conversation_uid_messages_uid", input);
+export const docsGetConversationsConversationUidMessagesUid = (input: CallInput & { params?: { "uid": string; "conversation_uid": string } } = {}) => sdk.call("docs.get_conversations_conversation_uid_messages_uid", input);
 /** POST /import/messages: Import a message. [write] */
 export const docsPostImportMessages = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_import_messages", input);
 /** POST /messages: Send a message. [write] */
@@ -105,7 +105,7 @@ export const docsPostMessages = (input: CallInput & { params?: {  } } = {}) => s
 /** POST /messages/attachment: Send a message with attachment. [write] */
 export const docsPostMessagesAttachment = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_messages_attachment", input);
 /** GET /templates: List all templates [read] */
-export const docsGetTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_templates", input);
+export const docsGetTemplates = (input: CallInput & { params?: { "types"?: unknown[]; "locationUid"?: string } } = {}) => sdk.call("docs.get_templates", input);
 /** POST /templates: Create a message template. [write] */
 export const docsPostTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_templates", input);
 /** DELETE /templates/{uid}: Delete a template [write] */
@@ -113,11 +113,11 @@ export const docsDeleteTemplatesUid = (input: CallInput & { params?: { "uid": st
 /** PUT /templates/{uid}: Update a message template. [write] */
 export const docsPutTemplatesUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.put_templates_uid", input);
 /** GET /invoices: Get all invoices. [read] */
-export const docsGetInvoices = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_invoices", input);
+export const docsGetInvoices = (input: CallInput & { params?: { "locationUid"?: string; "datePaid"?: string; "dateRefunded"?: string; "dateCreated"?: string; "limit"?: number; "cursor"?: string } } = {}) => sdk.call("docs.get_invoices", input);
 /** POST /invoices: Create an invoice. [write] */
 export const docsPostInvoices = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_invoices", input);
 /** GET /invoices/{uid}: Get an invoice. [read] */
-export const docsGetInvoicesUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_invoices_uid", input);
+export const docsGetInvoicesUid = (input: CallInput & { params?: { "uid": string; "locationUid": string } } = {}) => sdk.call("docs.get_invoices_uid", input);
 /** POST /invoices/{uid}/cancel: Cancel an invoice. [write] */
 export const docsPostInvoicesUidCancel = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.post_invoices_uid_cancel", input);
 /** POST /invoices/{uid}/refund: Refund an invoice [write] */
@@ -127,7 +127,7 @@ export const docsPostInvoicesUidCharge = (input: CallInput & { params?: { "uid":
 /** POST /invoices/{uid}/setup: Create invoice setup intent. [write] */
 export const docsPostInvoicesUidSetup = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.post_invoices_uid_setup", input);
 /** GET /payment_accounts: List payment accounts. [read] */
-export const docsGetPaymentAccounts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_payment_accounts", input);
+export const docsGetPaymentAccounts = (input: CallInput & { params?: { "locationUid"?: string } } = {}) => sdk.call("docs.get_payment_accounts", input);
 /** GET /payments/{uid}: Get a payment. [read] */
 export const docsGetPaymentsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_payments_uid", input);
 /** GET /readers/{uid}: Get a card reader. [read] */
@@ -135,9 +135,9 @@ export const docsGetReadersUid = (input: CallInput & { params?: { "uid": string 
 /** POST /refunds: Create a refund. [write] */
 export const docsPostRefunds = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_refunds", input);
 /** GET /refunds/{uid}: Get a refund. [read] */
-export const docsGetRefundsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_refunds_uid", input);
+export const docsGetRefundsUid = (input: CallInput & { params?: { "uid": string; "locationUid": string } } = {}) => sdk.call("docs.get_refunds_uid", input);
 /** GET /products: List all products. [read] */
-export const docsGetProducts = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_products", input);
+export const docsGetProducts = (input: CallInput & { params?: { "locationUid"?: string; "xid"?: string; "limit"?: number; "cursor"?: string } } = {}) => sdk.call("docs.get_products", input);
 /** GET /products/{uid}: Get a product. [read] */
 export const docsGetProductsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_products_uid", input);
 /** DELETE /products/{uid}/delete_images: Deletes images from a product. [write] */
@@ -145,19 +145,19 @@ export const docsDeleteProductsUidDeleteImages = (input: CallInput & { params?: 
 /** POST /products/{uid}/upload_images: Upload images to a product. [write] */
 export const docsPostProductsUidUploadImages = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.post_products_uid_upload_images", input);
 /** GET /reviews: List all reviews. [read] */
-export const docsGetReviews = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_reviews", input);
+export const docsGetReviews = (input: CallInput & { params?: { "createdAt"?: unknown; "cursor"?: string; "limit"?: number; "updatedAt"?: unknown } } = {}) => sdk.call("docs.get_reviews", input);
 /** GET /reviews/{uid}: Get a review. [read] */
 export const docsGetReviewsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_reviews_uid", input);
 /** GET /reviews/invites: List all review invites. [read] */
-export const docsGetReviewsInvites = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_reviews_invites", input);
+export const docsGetReviewsInvites = (input: CallInput & { params?: { "createdAt"?: unknown; "senderUid"?: string; "limit"?: number; "cursor"?: string; "updatedAt"?: unknown } } = {}) => sdk.call("docs.get_reviews_invites", input);
 /** POST /reviews/invites: Create a review invite link. [write] */
 export const docsPostReviewsInvites = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_reviews_invites", input);
 /** GET /reviews/invites/{uid}: Get a review invite. [read] */
 export const docsGetReviewsInvitesUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_reviews_invites_uid", input);
 /** GET /reviews/sites/summary: Summary of all connected review sites. [read] */
-export const docsGetReviewsSitesSummary = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_reviews_sites_summary", input);
+export const docsGetReviewsSitesSummary = (input: CallInput & { params?: { "createdAt"?: unknown; "locationUids"?: unknown[]; "userUid"?: string } } = {}) => sdk.call("docs.get_reviews_sites_summary", input);
 /** GET /reviews/summary: Summary of all reviews [read] */
-export const docsGetReviewsSummary = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_reviews_summary", input);
+export const docsGetReviewsSummary = (input: CallInput & { params?: { "createdAt"?: unknown; "locationUids"?: unknown[]; "userUid"?: string } } = {}) => sdk.call("docs.get_reviews_summary", input);
 /** PATCH /reviews/{review_uid}/responses/{uid}: Update response for a given review [write] */
 export const docsPatchReviewsReviewUidResponsesUid = (input: CallInput & { params?: { "review_uid": string; "uid": string } } = {}) => sdk.call("docs.patch_reviews_review_uid_responses_uid", input);
 /** GET /reviews/{uid}/responses: List Responses of a given review [read] */
@@ -195,6 +195,6 @@ export const docsPatchScimUsersEmail = (input: CallInput & { params?: { "email":
 /** GET /calls/{uid}: Get a call. [read] */
 export const docsGetCallsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_calls_uid", input);
 /** GET /calls: List calls. [read] */
-export const docsGetCalls = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_calls", input);
+export const docsGetCalls = (input: CallInput & { params?: { "cursor"?: string; "limit"?: number; "locationUid"?: string; "order"?: string; "since"?: string } } = {}) => sdk.call("docs.get_calls", input);
 /** GET /calls/{uid}/voicemail: Get a call's voicemail. [read] */
 export const docsGetCallsUidVoicemail = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("docs.get_calls_uid_voicemail", input);

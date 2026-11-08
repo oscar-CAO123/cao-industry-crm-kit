@@ -2,8 +2,8 @@
 // Make: 257 endpoints (132 read, 125 write). Source status: docs-read. Sign-in: from vendor docs, unproven.
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("make");
-/** GET /data-stores: Resources [read] */
-export const coreDocsGetDataStores = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_data_stores", input);
+/** GET /data-stores: List data stores [read] */
+export const coreDocsGetDataStores = (input: CallInput & { params?: { "teamId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_data_stores", input);
 /** GET /oauth/v2/authorize: Authorization code flow with refresh token (confidential clients) [write] */
 export const coreDocsGetOauthV2Authorize = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_oauth_v2_authorize", input);
 /** POST /oauth/v2/token: Authorization code flow with refresh token (confidential clients) [write] */
@@ -11,89 +11,89 @@ export const coreDocsPostOauthV2Token = (input: CallInput & { params?: {  } } = 
 /** POST /affiliate/partner-register: Register partner [write] */
 export const coreDocsPostAffiliatePartnerRegister = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_affiliate_partner_register", input);
 /** GET /agents: List on-prem agents [read] */
-export const coreDocsGetAgents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_agents", input);
+export const coreDocsGetAgents = (input: CallInput & { params?: { "organizationId"?: number } } = {}) => sdk.call("core.docs.get_agents", input);
 /** GET /ai-agents/v1/agents: Get Agents [read] */
-export const coreDocsGetAiAgentsV1Agents = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_agents", input);
+export const coreDocsGetAiAgentsV1Agents = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_agents", input);
 /** GET /ai-agents/v1/contexts: List Context [read] */
-export const coreDocsGetAiAgentsV1Contexts = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_contexts", input);
+export const coreDocsGetAiAgentsV1Contexts = (input: CallInput & { params?: { "agentId": string; "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_contexts", input);
 /** GET /ai-agents/v1/llm-providers: List LLM Providers [read] */
-export const coreDocsGetAiAgentsV1LlmProviders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ai_agents_v1_llm_providers", input);
+export const coreDocsGetAiAgentsV1LlmProviders = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_ai_agents_v1_llm_providers", input);
 /** GET /analytics/{organizationId}: Get organization analytics [read] */
-export const coreDocsGetAnalyticsOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_analytics_organizationId", input);
+export const coreDocsGetAnalyticsOrganizationId = (input: CallInput & { params?: { "organizationId": number; "teamId"?: unknown; "folderId"?: unknown; "status"?: unknown; "timeframe[dateFrom]"?: string; "timeframe[dateTo]"?: string; "pg[offset]"?: number; "pg[limit]"?: number; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_analytics_organizationId", input);
 /** GET /audit-logs/organization/{organizationId}: List organization audit logs [read] */
-export const coreDocsGetAuditLogsOrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_audit_logs_organization_organizationId", input);
+export const coreDocsGetAuditLogsOrganizationOrganizationId = (input: CallInput & { params?: { "organizationId": number; "team"?: unknown; "dateFrom"?: string; "dateTo"?: string; "event"?: unknown; "author"?: unknown; "pg[offset]"?: number; "pg[limit]"?: number; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_audit_logs_organization_organizationId", input);
 /** GET /cashier/prices/{priceId}: Get price detail [read] */
-export const coreDocsGetCashierPricesPriceId = (input: CallInput & { params?: { "priceId": string } } = {}) => sdk.call("core.docs.get_cashier_prices_priceId", input);
+export const coreDocsGetCashierPricesPriceId = (input: CallInput & { params?: { "priceId": number } } = {}) => sdk.call("core.docs.get_cashier_prices_priceId", input);
 /** GET /connections: List connections [read] */
-export const coreDocsGetConnections = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_connections", input);
+export const coreDocsGetConnections = (input: CallInput & { params?: { "teamId": number; "type[]"?: unknown[]; "[]"?: unknown[]; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_connections", input);
 /** GET /teams/{teamId}/connections/{connectionId}/access-list: List a connection's access list [read] */
-export const coreDocsGetTeamsTeamIdConnectionsConnectionIdAccessList = (input: CallInput & { params?: { "teamId": string; "connectionId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_connections_connectionId_access_list", input);
+export const coreDocsGetTeamsTeamIdConnectionsConnectionIdAccessList = (input: CallInput & { params?: { "teamId": number; "connectionId": number } } = {}) => sdk.call("core.docs.get_teams_teamId_connections_connectionId_access_list", input);
 /** GET /credential-requests/requests: List Credential Requests [write] */
-export const coreDocsGetCredentialRequestsRequests = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_credential_requests_requests", input);
+export const coreDocsGetCredentialRequestsRequests = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[]; "userId"?: number; "makeProviderId"?: number; "status"?: string; "name"?: string } } = {}) => sdk.call("core.docs.get_credential_requests_requests", input);
 /** GET /custom-property-structures: List custom property structures [read] */
-export const coreDocsGetCustomPropertyStructures = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_custom_property_structures", input);
+export const coreDocsGetCustomPropertyStructures = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_custom_property_structures", input);
 /** GET /custom-property-structures/{customPropertyStructureId}/custom-property-structure-items: List custom property structure items [read] */
-export const coreDocsGetCustomPropertyStructuresCustomPropertyStructureIdCustomPropertyStructureItems = (input: CallInput & { params?: { "customPropertyStructureId": string } } = {}) => sdk.call("core.docs.get_custom_property_structures_customPropertyStructureId_custom_property_structure_items", input);
+export const coreDocsGetCustomPropertyStructuresCustomPropertyStructureIdCustomPropertyStructureItems = (input: CallInput & { params?: { "customPropertyStructureId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_custom_property_structures_customPropertyStructureId_custom_property_structure_items", input);
 /** GET /data-stores/{dataStoreId}/data: List data store records [read] */
-export const coreDocsGetDataStoresDataStoreIdData = (input: CallInput & { params?: { "dataStoreId": string } } = {}) => sdk.call("core.docs.get_data_stores_dataStoreId_data", input);
+export const coreDocsGetDataStoresDataStoreIdData = (input: CallInput & { params?: { "dataStoreId": number; "pg[limit]"?: number; "pg[offset]"?: number } } = {}) => sdk.call("core.docs.get_data_stores_dataStoreId_data", input);
 /** GET /data-structures: List data structures [read] */
-export const coreDocsGetDataStructures = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_data_structures", input);
+export const coreDocsGetDataStructures = (input: CallInput & { params?: { "teamId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_data_structures", input);
 /** GET /devices: List [read] */
-export const coreDocsGetDevices = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_devices", input);
+export const coreDocsGetDevices = (input: CallInput & { params?: { "teamId": number; "assigned"?: boolean; "viewForScenarioId"?: number; "scope[]"?: unknown[]; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_devices", input);
 /** GET /devices/{deviceId}/incomings: List [read] */
-export const coreDocsGetDevicesDeviceIdIncomings = (input: CallInput & { params?: { "deviceId": string } } = {}) => sdk.call("core.docs.get_devices_deviceId_incomings", input);
+export const coreDocsGetDevicesDeviceIdIncomings = (input: CallInput & { params?: { "deviceId": string; "scope"?: string; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_devices_deviceId_incomings", input);
 /** GET /devices/{deviceId}/outgoings: List [read] */
-export const coreDocsGetDevicesDeviceIdOutgoings = (input: CallInput & { params?: { "deviceId": string } } = {}) => sdk.call("core.docs.get_devices_deviceId_outgoings", input);
+export const coreDocsGetDevicesDeviceIdOutgoings = (input: CallInput & { params?: { "deviceId": string; "scope"?: string; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_devices_deviceId_outgoings", input);
 /** GET /dlqs: List scenario incomplete executions [read] */
-export const coreDocsGetDlqs = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_dlqs", input);
+export const coreDocsGetDlqs = (input: CallInput & { params?: { "scenarioId": number; "idSearch"?: string; "createdFrom"?: number; "createdTo"?: number; "sizeFrom"?: number; "sizeTo"?: number; "status"?: string; "scheduledInFrom"?: number; "scheduledInTo"?: number; "attemptsFrom"?: number; "attemptsTo"?: number } } = {}) => sdk.call("core.docs.get_dlqs", input);
 /** GET /enums/module-types: List module types [read] */
 export const coreDocsGetEnumsModuleTypes = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_enums_module_types", input);
 /** GET /event-subscriptions/v1/organizations/{organizationId}/event-types: List event types [read] */
-export const coreDocsGetEventSubscriptionsV1OrganizationsOrganizationIdEventTypes = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_event_subscriptions_v1_organizations_organizationId_event_types", input);
+export const coreDocsGetEventSubscriptionsV1OrganizationsOrganizationIdEventTypes = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_event_subscriptions_v1_organizations_organizationId_event_types", input);
 /** GET /functions: List custom functions [read] */
-export const coreDocsGetFunctions = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_functions", input);
+export const coreDocsGetFunctions = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_functions", input);
 /** GET /ping: Ping [read] */
 export const coreDocsGetPing = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_ping", input);
 /** GET /hooks: List hooks [read] */
-export const coreDocsGetHooks = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_hooks", input);
+export const coreDocsGetHooks = (input: CallInput & { params?: { "teamId": string; "typeName"?: string; "assigned"?: boolean; "viewForScenarioId"?: number } } = {}) => sdk.call("core.docs.get_hooks", input);
 /** GET /hooks/{hookId}/incomings: Get webhook queue [read] */
-export const coreDocsGetHooksHookIdIncomings = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("core.docs.get_hooks_hookId_incomings", input);
+export const coreDocsGetHooksHookIdIncomings = (input: CallInput & { params?: { "hookId": number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_hooks_hookId_incomings", input);
 /** GET /hooks/{hookId}/logs: Get webhook logs [read] */
-export const coreDocsGetHooksHookIdLogs = (input: CallInput & { params?: { "hookId": string } } = {}) => sdk.call("core.docs.get_hooks_hookId_logs", input);
+export const coreDocsGetHooksHookIdLogs = (input: CallInput & { params?: { "hookId": number; "to"?: number; "from"?: number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_hooks_hookId_logs", input);
 /** GET /keys: List keys [read] */
-export const coreDocsGetKeys = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_keys", input);
+export const coreDocsGetKeys = (input: CallInput & { params?: { "teamId": number; "typeName"?: string; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_keys", input);
 /** GET /teams/{teamId}/keys/{keyId}/access-list: List a key's access list [read] */
-export const coreDocsGetTeamsTeamIdKeysKeyIdAccessList = (input: CallInput & { params?: { "teamId": string; "keyId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_keys_keyId_access_list", input);
+export const coreDocsGetTeamsTeamIdKeysKeyIdAccessList = (input: CallInput & { params?: { "teamId": number; "keyId": number } } = {}) => sdk.call("core.docs.get_teams_teamId_keys_keyId_access_list", input);
 /** GET /notifications: List notifications [read] */
-export const coreDocsGetNotifications = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_notifications", input);
+export const coreDocsGetNotifications = (input: CallInput & { params?: { "unreadOnly"?: boolean; "imtZoneId"?: number; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_notifications", input);
 /** GET /organizations: List user organizations [read] */
-export const coreDocsGetOrganizations = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_organizations", input);
+export const coreDocsGetOrganizations = (input: CallInput & { params?: { "zone"?: string; "externalId"?: string; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_organizations", input);
 /** GET /organizations/{organizationId}/user-organization-roles: List user roles [read] */
-export const coreDocsGetOrganizationsOrganizationIdUserOrganizationRoles = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_user_organization_roles", input);
+export const coreDocsGetOrganizationsOrganizationIdUserOrganizationRoles = (input: CallInput & { params?: { "organizationId": number; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_organizations_organizationId_user_organization_roles", input);
 /** GET /organizations/{organizationId}/managed-organizations: List of child organizations [read] */
-export const coreDocsGetOrganizationsOrganizationIdManagedOrganizations = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_managed_organizations", input);
+export const coreDocsGetOrganizationsOrganizationIdManagedOrganizations = (input: CallInput & { params?: { "organizationId": number } } = {}) => sdk.call("core.docs.get_organizations_organizationId_managed_organizations", input);
 /** GET /private-spaces: List private spaces [read] */
-export const coreDocsGetPrivateSpaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_private_spaces", input);
+export const coreDocsGetPrivateSpaces = (input: CallInput & { params?: { "organizationId": number; "externalId"?: string; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_private_spaces", input);
 /** POST /rpcs/{appName}/{appVersion}/{rpcName}: Call RPC [write] */
-export const coreDocsPostRpcsAppNameAppVersionRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string } } = {}) => sdk.call("core.docs.post_rpcs_appName_appVersion_rpcName", input);
+export const coreDocsPostRpcsAppNameAppVersionRpcName = (input: CallInput & { params?: { "appName": string; "appVersion": string; "rpcName": string; "teamId"?: number; "imt-remote-formula"?: number; "imt-ignore-required"?: string; "imt-validate-schema"?: string } } = {}) => sdk.call("core.docs.post_rpcs_appName_appVersion_rpcName", input);
 /** GET /scenarios: List scenarios [read] */
-export const coreDocsGetScenarios = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios", input);
+export const coreDocsGetScenarios = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number; "id[]"?: unknown[]; "folderId"?: number; "includeSubfolders"?: boolean; "labelIds[]"?: unknown[]; "isActive"?: boolean; "islinked"?: boolean; "concept"?: boolean; "type"?: string; "deleted"?: boolean; "name"?: string; "search"?: string; "isinvalid"?: boolean; "islocked"?: boolean; "createdByUserName"?: string; "updatedByUserName"?: string; "dlqCount"?: number; "cols[]"?: unknown[]; "pg[offset]"?: number; "pg[limit]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string } } = {}) => sdk.call("core.docs.get_scenarios", input);
 /** GET /scenarios/{scenarioId}/logs: List scenario logs [read] */
-export const coreDocsGetScenariosScenarioIdLogs = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_logs", input);
+export const coreDocsGetScenariosScenarioIdLogs = (input: CallInput & { params?: { "scenarioId": number; "from"?: number; "to"?: number; "status"?: number; "displayStatus"?: string; "durationFrom"?: number; "durationTo"?: number; "operationsFrom"?: number; "operationsTo"?: number; "transferFrom"?: number; "transferTo"?: number; "executionName"?: string; "creditsFrom"?: number; "creditsTo"?: number; "showCheckRuns"?: boolean; "pg[offset]"?: number; "pg[limit]"?: number; "pg[showLast]"?: boolean; "pg[last]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_logs", input);
 /** GET /scenarios/{scenarioId}/blueprint: Get scenario blueprint [read] */
-export const coreDocsGetScenariosScenarioIdBlueprint = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_blueprint", input);
+export const coreDocsGetScenariosScenarioIdBlueprint = (input: CallInput & { params?: { "scenarioId": number; "blueprintId"?: number; "draft"?: boolean } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_blueprint", input);
 /** GET /scenarios/consumptions: List scenario consumptions [read] */
-export const coreDocsGetScenariosConsumptions = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_consumptions", input);
+export const coreDocsGetScenariosConsumptions = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number } } = {}) => sdk.call("core.docs.get_scenarios_consumptions", input);
 /** PATCH /scenarios/tools/{scenarioId}: Update tool configuration [write] */
-export const coreDocsPatchScenariosToolsScenarioId = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.patch_scenarios_tools_scenarioId", input);
+export const coreDocsPatchScenariosToolsScenarioId = (input: CallInput & { params?: { "scenarioId": number; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.patch_scenarios_tools_scenarioId", input);
 /** GET /scenarios/{scenarioId}/custom-properties: Get custom properties data [read] */
-export const coreDocsGetScenariosScenarioIdCustomProperties = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_custom_properties", input);
+export const coreDocsGetScenariosScenarioIdCustomProperties = (input: CallInput & { params?: { "scenarioId": number } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_custom_properties", input);
 /** GET /scenarios-folders: List scenario folders [read] */
-export const coreDocsGetScenariosFolders = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_folders", input);
+export const coreDocsGetScenariosFolders = (input: CallInput & { params?: { "teamId": number; "organizationId"?: number; "parentId"?: number; "childrenDepth"?: string; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_scenarios_folders", input);
 /** GET /scenario-labels: List team labels [read] */
-export const coreDocsGetScenarioLabels = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenario_labels", input);
+export const coreDocsGetScenarioLabels = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_scenario_labels", input);
 /** GET /sdk/apps: List Apps [read] */
-export const coreDocsGetSdkApps = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_sdk_apps", input);
+export const coreDocsGetSdkApps = (input: CallInput & { params?: { "opensource"?: boolean; "cols[]"?: unknown[] } } = {}) => sdk.call("core.docs.get_sdk_apps", input);
 /** GET /sdk/apps/invites/{SDK_appInviteToken}: Get App Invite [write] */
 export const coreDocsGetSdkAppsInvitesSDKAppInviteToken = (input: CallInput & { params?: { "SDK_appInviteToken": string } } = {}) => sdk.call("core.docs.get_sdk_apps_invites_SDK_appInviteToken", input);
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules: List App Modules [read] */
@@ -101,33 +101,33 @@ export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionModules = (input: CallInpu
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/rpcs: List App RPCs [read] */
 export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionRpcs = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_rpcs", input);
 /** GET /sdk/apps/{SDK_appName}/{SDK_appVersion}/functions: List App Functions [read] */
-export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionFunctions = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_functions", input);
+export const coreDocsGetSdkAppsSDKAppNameSDKAppVersionFunctions = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "all"?: boolean } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_SDK_appVersion_functions", input);
 /** GET /sdk/apps/{SDK_appName}/connections: List App Connections [read] */
 export const coreDocsGetSdkAppsSDKAppNameConnections = (input: CallInput & { params?: { "SDK_appName": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_connections", input);
 /** GET /sdk/apps/{SDK_appName}/webhooks: List App Webhooks [read] */
 export const coreDocsGetSdkAppsSDKAppNameWebhooks = (input: CallInput & { params?: { "SDK_appName": string } } = {}) => sdk.call("core.docs.get_sdk_apps_SDK_appName_webhooks", input);
 /** GET /organizations/{organizationId}/sso-certificates: Get SSO certificates [read] */
-export const coreDocsGetOrganizationsOrganizationIdSsoCertificates = (input: CallInput & { params?: { "organizationId": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_sso_certificates", input);
+export const coreDocsGetOrganizationsOrganizationIdSsoCertificates = (input: CallInput & { params?: { "organizationId": number; "type": string } } = {}) => sdk.call("core.docs.get_organizations_organizationId_sso_certificates", input);
 /** GET /teams: List teams [read] */
-export const coreDocsGetTeams = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_teams", input);
+export const coreDocsGetTeams = (input: CallInput & { params?: { "organizationId": number; "includePrivateSpaces"?: boolean; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_teams", input);
 /** GET /teams/{teamId}/user-team-roles: List user roles in the team [read] */
-export const coreDocsGetTeamsTeamIdUserTeamRoles = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("core.docs.get_teams_teamId_user_team_roles", input);
+export const coreDocsGetTeamsTeamIdUserTeamRoles = (input: CallInput & { params?: { "teamId": number; "cols"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_teams_teamId_user_team_roles", input);
 /** GET /templates: List templates [read] */
-export const coreDocsGetTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_templates", input);
+export const coreDocsGetTemplates = (input: CallInput & { params?: { "teamId"?: number; "public"?: boolean; "usedApps[]"?: unknown[]; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_templates", input);
 /** GET /templates/public: List public (approved) templates [read] */
-export const coreDocsGetTemplatesPublic = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_templates_public", input);
+export const coreDocsGetTemplatesPublic = (input: CallInput & { params?: { "includeEn"?: boolean; "name"?: string; "usedApps[]"?: unknown[]; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_templates_public", input);
 /** GET /users: List users [read] */
-export const coreDocsGetUsers = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users", input);
+export const coreDocsGetUsers = (input: CallInput & { params?: { "organizationId"?: number; "teamId"?: number; "name"?: string; "email"?: string; "teamRoleId"?: number; "organizationRoleId"?: number; "filterByTeamId"?: number; "ids"?: unknown[]; "tfaStatus"?: number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[offset]"?: number; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_users", input);
 /** GET /users/me: Current user data [read] */
-export const coreDocsGetUsersMe = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users_me", input);
+export const coreDocsGetUsersMe = (input: CallInput & { params?: { "includeInvitedOrg"?: boolean; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_users_me", input);
 /** GET /users/me/api-tokens: List users API tokens [write] */
 export const coreDocsGetUsersMeApiTokens = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_users_me_api_tokens", input);
 /** GET /users/{userId}/user-team-roles: List user roles [read] */
 export const coreDocsGetUsersUserIdUserTeamRoles = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_users_userId_user_team_roles", input);
 /** GET /users/user-team-notifications/{teamId}: List user team notification settings [read] */
-export const coreDocsGetUsersUserTeamNotificationsTeamId = (input: CallInput & { params?: { "teamId": string } } = {}) => sdk.call("core.docs.get_users_user_team_notifications_teamId", input);
+export const coreDocsGetUsersUserTeamNotificationsTeamId = (input: CallInput & { params?: { "teamId": number } } = {}) => sdk.call("core.docs.get_users_user_team_notifications_teamId", input);
 /** GET /users/{userId}/user-organization-roles: List user roles in an organization [read] */
-export const coreDocsGetUsersUserIdUserOrganizationRoles = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_users_userId_user_organization_roles", input);
+export const coreDocsGetUsersUserIdUserOrganizationRoles = (input: CallInput & { params?: { "userId": string; "cols"?: unknown[] } } = {}) => sdk.call("core.docs.get_users_userId_user_organization_roles", input);
 /** POST /users/custom-roles: Create a custom role [write] */
 export const coreDocsPostUsersCustomRoles = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_users_custom_roles", input);
 /** GET /users/unread-notifications: Unread notifications [read] */
@@ -135,11 +135,11 @@ export const coreDocsGetUsersUnreadNotifications = (input: CallInput & { params?
 /** GET /mailhub/users/{userId}/preferences: Get preferences [read] */
 export const coreDocsGetMailhubUsersUserIdPreferences = (input: CallInput & { params?: { "userId": string } } = {}) => sdk.call("core.docs.get_mailhub_users_userId_preferences", input);
 /** GET /imt/apps/{name}/{version}/modules-with-credentials: List App Modules with Credentials [write] */
-export const coreDocsGetImtAppsNameVersionModulesWithCredentials = (input: CallInput & { params?: { "name": string; "version": string } } = {}) => sdk.call("core.docs.get_imt_apps_name_version_modules_with_credentials", input);
+export const coreDocsGetImtAppsNameVersionModulesWithCredentials = (input: CallInput & { params?: { "name": string; "version": unknown } } = {}) => sdk.call("core.docs.get_imt_apps_name_version_modules_with_credentials", input);
 /** GET /scenarios/{scenarioId}/notes: List of scenario notes [read] */
-export const coreDocsGetScenariosScenarioIdNotes = (input: CallInput & { params?: { "scenarioId": string } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_notes", input);
+export const coreDocsGetScenariosScenarioIdNotes = (input: CallInput & { params?: { "scenarioId": number; "teamId": number; "organizationId"?: number } } = {}) => sdk.call("core.docs.get_scenarios_scenarioId_notes", input);
 /** GET /scenarios-shared: List shared scenarios [read] */
-export const coreDocsGetScenariosShared = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_scenarios_shared", input);
+export const coreDocsGetScenariosShared = (input: CallInput & { params?: { "organizationId"?: number; "teamId"?: number; "folderId"?: number; "title"?: string; "scenarioName"?: string; "scenarioIds"?: unknown[]; "pg[limit]"?: number; "pg[offset]"?: number; "pg[sortBy]"?: string; "pg[sortDir]"?: string; "pg[returnTotalCount]"?: boolean } } = {}) => sdk.call("core.docs.get_scenarios_shared", input);
 /** POST /sdk/apps/{SDK_appName}/{SDK_appVersion}/modules/{SDK_moduleName}/{SDK_moduleArchiveStatus}: Set Module Archive Status [write] */
 export const coreDocsPostSdkAppsSDKAppNameSDKAppVersionModulesSDKModuleNameSDKModuleArchiveStatus = (input: CallInput & { params?: { "SDK_appName": string; "SDK_appVersion": string; "SDK_moduleName": string; "SDK_moduleArchiveStatus": string } } = {}) => sdk.call("core.docs.post_sdk_apps_SDK_appName_SDK_appVersion_modules_SDK_moduleName_SDK_moduleArchiveStatus", input);
 /** GET /users/me/oauth-connections: List OAuth connections [write] */

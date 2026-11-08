@@ -2409,7 +2409,7 @@ export const voiceAiDeleteAction = (input: CallInput & { params?: { "actionId": 
 /** GET /workflows/: Get Workflow [read] */
 export const workflowsGetWorkflow = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("workflows.get-workflow", input);
 /** GET /ad-publishing/google/ads/{adId}/publishing-progress: Get ad publishing progress [read] */
-export const indexV3V3GoogleGetPublishingProgress = (input: CallInput & { params?: { "adId": string } } = {}) => sdk.call("index-v3.v3.google-get-publishing-progress", input);
+export const indexV3V3GoogleGetPublishingProgress = (input: CallInput & { params?: { "adId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.google-get-publishing-progress", input);
 /** POST /affiliate-manager/{locationId}/affiliates: Create Affiliate [write] */
 export const indexV3V3CreateAffiliate = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-affiliate", input);
 /** POST /affiliate-manager/{locationId}/commission: Create commission [write] */
@@ -2431,15 +2431,15 @@ export const indexV3V3DenyCommission = (input: CallInput & { params?: { "locatio
 /** GET /affiliate-manager/{locationId}/campaigns/{campaignId}: Get Campaign [read] */
 export const indexV3V3GetCampaign = (input: CallInput & { params?: { "locationId": string; "campaignId": string } } = {}) => sdk.call("index-v3.v3.get-campaign", input);
 /** GET /affiliate-manager/{locationId}/media: List affiliate media [read] */
-export const indexV3V3ListAffiliateMedia = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.list-affiliate-media", input);
+export const indexV3V3ListAffiliateMedia = (input: CallInput & { params?: { "locationId": string; "query"?: string; "parentId"?: string; "campaignId"?: string; "mediaType"?: string; "skip"?: number; "limit"?: number; "sortByType"?: string; "showGlobal"?: boolean } } = {}) => sdk.call("index-v3.v3.list-affiliate-media", input);
 /** GET /affiliate-manager/{locationId}/campaigns: List Campaigns [read] */
-export const indexV3V3ListCampaigns = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.list-campaigns", input);
+export const indexV3V3ListCampaigns = (input: CallInput & { params?: { "locationId": string; "query"?: string; "skip"?: number; "limit"?: number; "onlyActiveLiveMode"?: boolean; "trackTypes"?: unknown[] } } = {}) => sdk.call("index-v3.v3.list-campaigns", input);
 /** GET /affiliate-manager/{locationId}/country-bank-mapping: List Country Bank Mappings [read] */
 export const indexV3V3ListCountryBankMappings = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.list-country-bank-mappings", input);
 /** GET /affiliate-manager/{locationId}/affiliates/{affiliateId}/customers: List customers [read] */
-export const indexV3V3ListCustomers = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-v3.v3.list-customers", input);
+export const indexV3V3ListCustomers = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "query"?: string; "status"?: string; "campaignId"?: string; "skip"?: number; "limit"?: number; "commissionStatus"?: string } } = {}) => sdk.call("index-v3.v3.list-customers", input);
 /** GET /affiliate-manager/{locationId}/affiliate/{affiliateId}/payout-method: List Payout Methods [read] */
-export const indexV3V3ListPayoutMethods = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-v3.v3.list-payout-methods", input);
+export const indexV3V3ListPayoutMethods = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "skip"?: number; "limit"?: number } } = {}) => sdk.call("index-v3.v3.list-payout-methods", input);
 /** PATCH /affiliate-manager/{locationId}/affiliate/{affiliateId}/payout-method/{payoutMethodId}/primary: Mark Payout Method As Primary [write] */
 export const indexV3V3MarkPayoutMethodPrimary = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "payoutMethodId": string } } = {}) => sdk.call("index-v3.v3.mark-payout-method-primary", input);
 /** POST /affiliate-manager/affiliate-campaign/{locationId}/affiliate/{affiliateId}/move-campaign: Move Affiliate To Campaign [write] */
@@ -2463,17 +2463,17 @@ export const indexV3V3UpdatePayoutMethod = (input: CallInput & { params?: { "loc
 /** POST /affiliate-manager/{locationId}/affiliates/{affiliateId}/tax-form: Upload affiliate tax form [write] */
 export const indexV3V3UploadAffiliateTaxForm = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-v3.v3.upload-affiliate-tax-form", input);
 /** GET /affiliate-manager/{locationId}/affiliates/{affiliateId}/lead/validate: Validate customer lead [read] */
-export const indexV3V3ValidateCustomerLead = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-v3.v3.validate-customer-lead", input);
+export const indexV3V3ValidateCustomerLead = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "campaignId": string; "email": string } } = {}) => sdk.call("index-v3.v3.validate-customer-lead", input);
 /** GET /affiliate-manager/affiliate-campaign/{locationId}/referral-id/validate: Validate Referral Id [read] */
-export const indexV3V3ValidateReferralId = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.validate-referral-id", input);
+export const indexV3V3ValidateReferralId = (input: CallInput & { params?: { "locationId": string; "referralId": string } } = {}) => sdk.call("index-v3.v3.validate-referral-id", input);
 /** POST /agent-studio/managed-agents/{managedAgentId}/execute: Execute a published Managed Agent [write] */
-export const indexV3V3ExecuteManagedAgent = (input: CallInput & { params?: { "managedAgentId": string } } = {}) => sdk.call("index-v3.v3.execute-managed-agent", input);
+export const indexV3V3ExecuteManagedAgent = (input: CallInput & { params?: { "managedAgentId": string; "Idempotency-Key": string } } = {}) => sdk.call("index-v3.v3.execute-managed-agent", input);
 /** GET /agent-studio/managed-agents/{managedAgentId}: Get a published Managed Agent [read] */
-export const indexV3V3GetManagedAgent = (input: CallInput & { params?: { "managedAgentId": string } } = {}) => sdk.call("index-v3.v3.get-managed-agent", input);
+export const indexV3V3GetManagedAgent = (input: CallInput & { params?: { "managedAgentId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-managed-agent", input);
 /** GET /agent-studio/managed-agents: List published Managed Agents [read] */
-export const indexV3V3ListManagedAgents = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-managed-agents", input);
+export const indexV3V3ListManagedAgents = (input: CallInput & { params?: { "locationId": string; "skip"?: number; "limit"?: number; "query"?: string } } = {}) => sdk.call("index-v3.v3.list-managed-agents", input);
 /** GET /blogs/posts/post/{postId}: Get Blog Post by ID [read] */
-export const indexV3V3GetBlogPostById = (input: CallInput & { params?: { "postId": string } } = {}) => sdk.call("index-v3.v3.get-blog-post-by-id", input);
+export const indexV3V3GetBlogPostById = (input: CallInput & { params?: { "postId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-blog-post-by-id", input);
 /** POST /brand-boards/locations/{locationId}/design-kits: Create Design Kit [write] */
 export const indexV3V3CreateDesignKit = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-design-kit", input);
 /** DELETE /brand-boards/locations/{locationId}/design-kits/{designKitId}: Delete Design Kit [write] */
@@ -2481,7 +2481,7 @@ export const indexV3V3DeleteDesignKit = (input: CallInput & { params?: { "locati
 /** GET /brand-boards/locations/{locationId}/design-kits/{designKitId}: Get Design Kit [read] */
 export const indexV3V3GetDesignKit = (input: CallInput & { params?: { "locationId": string; "designKitId": string } } = {}) => sdk.call("index-v3.v3.get-design-kit", input);
 /** GET /brand-boards/locations/{locationId}/design-kits: List Design Kits [read] */
-export const indexV3V3ListDesignKits = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.list-design-kits", input);
+export const indexV3V3ListDesignKits = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "deleted"?: boolean } } = {}) => sdk.call("index-v3.v3.list-design-kits", input);
 /** POST /brand-boards/locations/{locationId}/design-kits/{designKitId}/default: Set Default Design Kit [write] */
 export const indexV3V3SetDefaultDesignKit = (input: CallInput & { params?: { "locationId": string; "designKitId": string } } = {}) => sdk.call("index-v3.v3.set-default-design-kit", input);
 /** PATCH /brand-boards/locations/{locationId}/design-kits/{designKitId}: Update Design Kit [write] */
@@ -2505,7 +2505,7 @@ export const indexV3V3CliSandboxView = (input: CallInput & { params?: { "project
 /** POST /ai-builder-api/projects/{projectId}/app-config/mobile-preview-token: Create a preview link token for a phone app. [write] */
 export const indexV3V3CreateMobileExperiencePreviewToken = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.create-mobile-experience-preview-token", input);
 /** POST /ai-builder-api/projects: Create a project. [write] */
-export const indexV3V3CreateProject = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-project", input);
+export const indexV3V3CreateProject = (input: CallInput & { params?: { "Idempotency-Key"?: string } } = {}) => sdk.call("index-v3.v3.create-project", input);
 /** GET /ai-builder-api/projects/{projectId}/runs/{runId}: Get the current state of a run (poll-friendly). [read] */
 export const indexV3V3GetAgentRun = (input: CallInput & { params?: { "projectId": string; "runId": string } } = {}) => sdk.call("index-v3.v3.get-agent-run", input);
 /** GET /ai-builder-api/projects/{projectId}/app-config: Get which revision of an app is newest, applied and published. [read] */
@@ -2515,19 +2515,19 @@ export const indexV3V3GetMobileApkBuild = (input: CallInput & { params?: { "proj
 /** GET /ai-builder-api/projects/{projectId}: Get a project by id. [read] */
 export const indexV3V3GetProject = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.get-project", input);
 /** GET /ai-builder-api/projects/{projectId}/changes/schema: JSON Schema and an example for each change kind. [read] */
-export const indexV3V3GetProjectChangeSchema = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.get-project-change-schema", input);
+export const indexV3V3GetProjectChangeSchema = (input: CallInput & { params?: { "projectId": string; "kind"?: string } } = {}) => sdk.call("index-v3.v3.get-project-change-schema", input);
 /** GET /ai-builder-api/projects/{projectId}/infra/publish-jobs/{publishJobId}: Read a publish job's progress. [read] */
 export const indexV3V3GetProjectPublishJob = (input: CallInput & { params?: { "projectId": string; "publishJobId": string } } = {}) => sdk.call("index-v3.v3.get-project-publish-job", input);
 /** GET /ai-builder-api/projects/{projectId}/publishability: Check whether an app can be published now, and which build would go live. [read] */
-export const indexV3V3GetProjectPublishability = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.get-project-publishability", input);
+export const indexV3V3GetProjectPublishability = (input: CallInput & { params?: { "projectId": string; "sourceRunId"?: string } } = {}) => sdk.call("index-v3.v3.get-project-publishability", input);
 /** GET /ai-builder-api/projects/{projectId}/runs: List an app's runs, newest first. [read] */
-export const indexV3V3ListAgentRunsForProject = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.list-agent-runs-for-project", input);
+export const indexV3V3ListAgentRunsForProject = (input: CallInput & { params?: { "projectId": string; "limit"?: number } } = {}) => sdk.call("index-v3.v3.list-agent-runs-for-project", input);
 /** GET /ai-builder-api/projects/{projectId}/app-config/revisions: List a phone app's saved revisions. [read] */
 export const indexV3V3ListMobileCustomizationRevisions = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.list-mobile-customization-revisions", input);
 /** GET /ai-builder-api/projects/{projectId}/custom-domains: List the custom domains attached to a project. [read] */
 export const indexV3V3ListProjectCustomDomains = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.list-project-custom-domains", input);
 /** GET /ai-builder-api/projects: List projects in the caller's location. [read] */
-export const indexV3V3ListProjects = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-projects", input);
+export const indexV3V3ListProjects = (input: CallInput & { params?: { "view"?: string; "status"?: string; "limit"?: number; "cursor"?: string } } = {}) => sdk.call("index-v3.v3.list-projects", input);
 /** GET /ai-builder-api/catalog/templates: List the app templates a project can be created from. [read] */
 export const indexV3V3ListTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-templates", input);
 /** POST /ai-builder-api/projects/{projectId}/changes/plan: Check a change of one kind and sign a plan for it, without writing anything. [write] */
@@ -2537,17 +2537,17 @@ export const indexV3V3PromoteProjectToProduction = (input: CallInput & { params?
 /** POST /ai-builder-api/projects/{projectId}/app-config/publish: Publish a saved revision of an app to its members. [write] */
 export const indexV3V3PublishAppCustomization = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.publish-app-customization", input);
 /** POST /ai-builder-api/projects/{projectId}/app-config/apk-builds: Build a signed Android APK of a published phone app revision. [write] */
-export const indexV3V3RequestMobileApkBuild = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.request-mobile-apk-build", input);
+export const indexV3V3RequestMobileApkBuild = (input: CallInput & { params?: { "projectId": string; "Idempotency-Key": string } } = {}) => sdk.call("index-v3.v3.request-mobile-apk-build", input);
 /** POST /ai-builder-api/projects/{projectId}/app-config/revisions/{revision}/restore: Return a phone app to an earlier revision. [write] */
-export const indexV3V3RestoreMobileCustomizationRevision = (input: CallInput & { params?: { "projectId": string; "revision": string } } = {}) => sdk.call("index-v3.v3.restore-mobile-customization-revision", input);
+export const indexV3V3RestoreMobileCustomizationRevision = (input: CallInput & { params?: { "projectId": string; "revision": number; "Idempotency-Key": string } } = {}) => sdk.call("index-v3.v3.restore-mobile-customization-revision", input);
 /** POST /ai-builder-api/projects/{projectId}/runs: Submit a prompt; the agent runs in the background. [write] */
-export const indexV3V3SubmitAgentRun = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.submit-agent-run", input);
+export const indexV3V3SubmitAgentRun = (input: CallInput & { params?: { "projectId": string; "Idempotency-Key"?: string; "X-Correlation-Id"?: string } } = {}) => sdk.call("index-v3.v3.submit-agent-run", input);
 /** PATCH /ai-builder-api/projects/{projectId}: Rename an app, archive it, or pin it to the top of the app list. [write] */
 export const indexV3V3UpdateProject = (input: CallInput & { params?: { "projectId": string } } = {}) => sdk.call("index-v3.v3.update-project", input);
 /** POST /contacts/search/count: Count Contacts [write] */
 export const indexV3V3CountContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.count-contacts", input);
 /** GET /contacts/lookup: Lookup Contact By Email Or Phone [read] */
-export const indexV3V3LookupContact = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.lookup-contact", input);
+export const indexV3V3LookupContact = (input: CallInput & { params?: { "locationId": string; "email"?: string; "phone"?: string; "nextCursor"?: string; "limit"?: number } } = {}) => sdk.call("index-v3.v3.lookup-contact", input);
 /** POST /conversation-ai/agents/{agentId}/working-hours: Create Agent Working Hours [write] */
 export const indexV3V3CreateAgentWorkingHours = (input: CallInput & { params?: { "agentId": string } } = {}) => sdk.call("index-v3.v3.create-agent-working-hours", input);
 /** DELETE /conversation-ai/agents/{agentId}/working-hours: Delete Agent Working Hours [write] */
@@ -2563,95 +2563,95 @@ export const indexV3V3CreateCountdownTimer = (input: CallInput & { params?: {  }
 /** DELETE /countdown-timer/timers/{timerId}: Delete Countdown Timer [write] */
 export const indexV3V3DeleteCountdownTimer = (input: CallInput & { params?: { "timerId": string } } = {}) => sdk.call("index-v3.v3.delete-countdown-timer", input);
 /** GET /countdown-timer/timers/{timerId}: Get Countdown Timer [read] */
-export const indexV3V3GetCountdownTimer = (input: CallInput & { params?: { "timerId": string } } = {}) => sdk.call("index-v3.v3.get-countdown-timer", input);
+export const indexV3V3GetCountdownTimer = (input: CallInput & { params?: { "timerId": string; "contactId"?: string } } = {}) => sdk.call("index-v3.v3.get-countdown-timer", input);
 /** GET /countdown-timer/templates: List Timer Templates [read] */
 export const indexV3V3ListCountdownTimerTemplates = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-countdown-timer-templates", input);
 /** GET /countdown-timer/timers: List Countdown Timers [read] */
-export const indexV3V3ListCountdownTimers = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-countdown-timers", input);
+export const indexV3V3ListCountdownTimers = (input: CallInput & { params?: { "limit"?: number; "skip"?: number; "type"?: string; "status"?: string; "name"?: string; "isExpired"?: string } } = {}) => sdk.call("index-v3.v3.list-countdown-timers", input);
 /** PATCH /countdown-timer/timers/{timerId}: Update Countdown Timer [write] */
 export const indexV3V3UpdateCountdownTimer = (input: CallInput & { params?: { "timerId": string } } = {}) => sdk.call("index-v3.v3.update-countdown-timer", input);
 /** POST /courses/products/{productId}/categories: Create Category [write] */
-export const indexV3V3CreateCategory = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.create-category", input);
+export const indexV3V3CreateCategory = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.create-category", input);
 /** POST /courses/products: Create Course [write] */
-export const indexV3V3CreateCourse = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-course", input);
+export const indexV3V3CreateCourse = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-course", input);
 /** POST /courses/enrollments: Enroll Contact [write] */
-export const indexV3V3CreateEnrollment = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-enrollment", input);
+export const indexV3V3CreateEnrollment = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-enrollment", input);
 /** POST /courses/products/{productId}/lessons: Create Lesson [write] */
-export const indexV3V3CreateLesson = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.create-lesson", input);
+export const indexV3V3CreateLesson = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.create-lesson", input);
 /** POST /courses/products/{productId}/lessons/{lessonId}/assignment: Create Lesson Assignment [write] */
-export const indexV3V3CreateLessonAssignment = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.create-lesson-assignment", input);
+export const indexV3V3CreateLessonAssignment = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.create-lesson-assignment", input);
 /** POST /courses/products/{productId}/lessons/{lessonId}/quiz: Create Lesson Quiz [write] */
-export const indexV3V3CreateLessonQuiz = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.create-lesson-quiz", input);
+export const indexV3V3CreateLessonQuiz = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.create-lesson-quiz", input);
 /** POST /courses/offers: Create Offer [write] */
-export const indexV3V3CreateOffer = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-offer", input);
+export const indexV3V3CreateOffer = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-offer", input);
 /** DELETE /courses/products/{productId}/assignments/{assignmentId}: Delete Assignment [write] */
-export const indexV3V3DeleteAssignment = (input: CallInput & { params?: { "productId": string; "assignmentId": string } } = {}) => sdk.call("index-v3.v3.delete-assignment", input);
+export const indexV3V3DeleteAssignment = (input: CallInput & { params?: { "productId": string; "assignmentId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-assignment", input);
 /** DELETE /courses/products/{productId}/categories/{categoryId}: Delete Category [write] */
-export const indexV3V3DeleteCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string } } = {}) => sdk.call("index-v3.v3.delete-category", input);
+export const indexV3V3DeleteCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-category", input);
 /** DELETE /courses/products/{productId}: Delete Course [write] */
-export const indexV3V3DeleteCourse = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.delete-course", input);
+export const indexV3V3DeleteCourse = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-course", input);
 /** DELETE /courses/enrollments: Revoke Enrollment [write] */
-export const indexV3V3DeleteEnrollment = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.delete-enrollment", input);
+export const indexV3V3DeleteEnrollment = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-enrollment", input);
 /** DELETE /courses/products/{productId}/lessons/{lessonId}: Delete Lesson [write] */
-export const indexV3V3DeleteLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.delete-lesson", input);
+export const indexV3V3DeleteLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-lesson", input);
 /** DELETE /courses/offers/{offerId}: Delete Offer [write] */
-export const indexV3V3DeleteOffer = (input: CallInput & { params?: { "offerId": string } } = {}) => sdk.call("index-v3.v3.delete-offer", input);
+export const indexV3V3DeleteOffer = (input: CallInput & { params?: { "offerId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-offer", input);
 /** DELETE /courses/products/{productId}/quizzes/{quizId}: Delete Quiz [write] */
-export const indexV3V3DeleteQuiz = (input: CallInput & { params?: { "productId": string; "quizId": string } } = {}) => sdk.call("index-v3.v3.delete-quiz", input);
+export const indexV3V3DeleteQuiz = (input: CallInput & { params?: { "productId": string; "quizId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-quiz", input);
 /** GET /courses/products/{productId}/assessments/{assessmentId}: Get Assessment [read] */
-export const indexV3V3GetAssessment = (input: CallInput & { params?: { "productId": string; "assessmentId": string } } = {}) => sdk.call("index-v3.v3.get-assessment", input);
+export const indexV3V3GetAssessment = (input: CallInput & { params?: { "productId": string; "assessmentId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-assessment", input);
 /** GET /courses/products/{productId}/categories/{categoryId}: Get Category [read] */
-export const indexV3V3GetCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string } } = {}) => sdk.call("index-v3.v3.get-category", input);
+export const indexV3V3GetCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-category", input);
 /** GET /courses/products/{productId}: Get Course [read] */
-export const indexV3V3GetCourse = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.get-course", input);
+export const indexV3V3GetCourse = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-course", input);
 /** GET /courses/products/{productId}/lessons/{lessonId}: Get Lesson [read] */
-export const indexV3V3GetLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.get-lesson", input);
+export const indexV3V3GetLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-lesson", input);
 /** GET /courses/products/{productId}/lessons/{lessonId}/assignment: Get Lesson Assignment [read] */
-export const indexV3V3GetLessonAssignment = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.get-lesson-assignment", input);
+export const indexV3V3GetLessonAssignment = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-lesson-assignment", input);
 /** GET /courses/products/{productId}/lessons/{lessonId}/quiz: Get Lesson Quiz [read] */
-export const indexV3V3GetLessonQuiz = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.get-lesson-quiz", input);
+export const indexV3V3GetLessonQuiz = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-lesson-quiz", input);
 /** GET /courses/offers/{offerId}: Get Offer [read] */
-export const indexV3V3GetOffer = (input: CallInput & { params?: { "offerId": string } } = {}) => sdk.call("index-v3.v3.get-offer", input);
+export const indexV3V3GetOffer = (input: CallInput & { params?: { "offerId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-offer", input);
 /** GET /courses/products/{productId}/quizzes/{quizId}/questions: List Quiz Questions [read] */
-export const indexV3V3GetQuizQuestions = (input: CallInput & { params?: { "productId": string; "quizId": string } } = {}) => sdk.call("index-v3.v3.get-quiz-questions", input);
+export const indexV3V3GetQuizQuestions = (input: CallInput & { params?: { "productId": string; "quizId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-quiz-questions", input);
 /** GET /courses/products/{productId}/assessments: List Assessments [read] */
-export const indexV3V3ListAssessments = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-assessments", input);
+export const indexV3V3ListAssessments = (input: CallInput & { params?: { "productId": string; "status"?: string; "pageSize"?: string; "pageNumber"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-assessments", input);
 /** GET /courses/progress: List Product Progress [read] */
-export const indexV3V3ListBulkProgress = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-bulk-progress", input);
+export const indexV3V3ListBulkProgress = (input: CallInput & { params?: { "contactId": string; "productIds": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-bulk-progress", input);
 /** GET /courses/products/{productId}/categories: List Categories [read] */
-export const indexV3V3ListCategories = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-categories", input);
+export const indexV3V3ListCategories = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-categories", input);
 /** GET /courses/products/{productId}/categories/progress: List Category Progress [read] */
-export const indexV3V3ListCategoryProgress = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-category-progress", input);
+export const indexV3V3ListCategoryProgress = (input: CallInput & { params?: { "productId": string; "contactId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-category-progress", input);
 /** GET /courses/products/{productId}/completions: List Completions [read] */
-export const indexV3V3ListCompletions = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-completions", input);
+export const indexV3V3ListCompletions = (input: CallInput & { params?: { "productId": string; "contactId"?: string; "pageSize"?: string; "pageNumber"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-completions", input);
 /** GET /courses/products: List Courses [read] */
-export const indexV3V3ListCourses = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-courses", input);
+export const indexV3V3ListCourses = (input: CallInput & { params?: { "limit"?: string; "cursor"?: string; "search"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-courses", input);
 /** GET /courses/products/{productId}/enrollments: List Product Enrollments [read] */
-export const indexV3V3ListEnrollments = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-enrollments", input);
+export const indexV3V3ListEnrollments = (input: CallInput & { params?: { "productId": string; "limit"?: string; "cursor"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-enrollments", input);
 /** GET /courses/products/{productId}/lessons: List Lessons [read] */
-export const indexV3V3ListLessons = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.list-lessons", input);
+export const indexV3V3ListLessons = (input: CallInput & { params?: { "productId": string; "categoryId"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-lessons", input);
 /** GET /courses/offers: List Offers [read] */
-export const indexV3V3ListOffers = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-offers", input);
+export const indexV3V3ListOffers = (input: CallInput & { params?: { "limit"?: string; "cursor"?: string; "search"?: string; "visibility"?: string; "locationId": string } } = {}) => sdk.call("index-v3.v3.list-offers", input);
 /** PUT /courses/products/{productId}/assessments/{assessmentId}/review: Review Assessment [write] */
-export const indexV3V3ReviewAssessment = (input: CallInput & { params?: { "productId": string; "assessmentId": string } } = {}) => sdk.call("index-v3.v3.review-assessment", input);
+export const indexV3V3ReviewAssessment = (input: CallInput & { params?: { "productId": string; "assessmentId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.review-assessment", input);
 /** PUT /courses/products/{productId}/categories/sequence: Sequence Categories [write] */
-export const indexV3V3SequenceCategories = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.sequence-categories", input);
+export const indexV3V3SequenceCategories = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.sequence-categories", input);
 /** PUT /courses/products/{productId}/categories/{categoryId}/lessons/sequence: Sequence Lessons [write] */
-export const indexV3V3SequenceLessons = (input: CallInput & { params?: { "productId": string; "categoryId": string } } = {}) => sdk.call("index-v3.v3.sequence-lessons", input);
+export const indexV3V3SequenceLessons = (input: CallInput & { params?: { "productId": string; "categoryId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.sequence-lessons", input);
 /** PUT /courses/products/{productId}/assignments/{assignmentId}: Update Assignment [write] */
-export const indexV3V3UpdateAssignment = (input: CallInput & { params?: { "productId": string; "assignmentId": string } } = {}) => sdk.call("index-v3.v3.update-assignment", input);
+export const indexV3V3UpdateAssignment = (input: CallInput & { params?: { "productId": string; "assignmentId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-assignment", input);
 /** PUT /courses/products/{productId}/categories/{categoryId}: Update Category [write] */
-export const indexV3V3UpdateCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string } } = {}) => sdk.call("index-v3.v3.update-category", input);
+export const indexV3V3UpdateCategory = (input: CallInput & { params?: { "productId": string; "categoryId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-category", input);
 /** PUT /courses/products/{productId}: Update Course [write] */
-export const indexV3V3UpdateCourse = (input: CallInput & { params?: { "productId": string } } = {}) => sdk.call("index-v3.v3.update-course", input);
+export const indexV3V3UpdateCourse = (input: CallInput & { params?: { "productId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-course", input);
 /** PUT /courses/products/{productId}/lessons/{lessonId}: Update Lesson [write] */
-export const indexV3V3UpdateLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string } } = {}) => sdk.call("index-v3.v3.update-lesson", input);
+export const indexV3V3UpdateLesson = (input: CallInput & { params?: { "productId": string; "lessonId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-lesson", input);
 /** PUT /courses/offers/{offerId}: Update Offer [write] */
-export const indexV3V3UpdateOffer = (input: CallInput & { params?: { "offerId": string } } = {}) => sdk.call("index-v3.v3.update-offer", input);
+export const indexV3V3UpdateOffer = (input: CallInput & { params?: { "offerId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-offer", input);
 /** PUT /courses/products/{productId}/quizzes/{quizId}: Update Quiz [write] */
-export const indexV3V3UpdateQuiz = (input: CallInput & { params?: { "productId": string; "quizId": string } } = {}) => sdk.call("index-v3.v3.update-quiz", input);
+export const indexV3V3UpdateQuiz = (input: CallInput & { params?: { "productId": string; "quizId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-quiz", input);
 /** PUT /courses/products/{productId}/quizzes/{quizId}/questions: Replace Quiz Questions [write] */
-export const indexV3V3UpsertQuizQuestions = (input: CallInput & { params?: { "productId": string; "quizId": string } } = {}) => sdk.call("index-v3.v3.upsert-quiz-questions", input);
+export const indexV3V3UpsertQuizQuestions = (input: CallInput & { params?: { "productId": string; "quizId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.upsert-quiz-questions", input);
 /** GET /files/d/{slug}: Get File [read] */
 export const indexV3V3GetFileBySlug = (input: CallInput & { params?: { "slug": string } } = {}) => sdk.call("index-v3.v3.get-file-by-slug", input);
 /** DELETE /knowledge-bases/files/{fileId}: Delete a file from knowledge base [write] */
@@ -2659,27 +2659,27 @@ export const indexV3V3DeleteFile = (input: CallInput & { params?: { "fileId": st
 /** GET /knowledge-bases/files/{fileId}: Get file by id [read] */
 export const indexV3V3GetFileById = (input: CallInput & { params?: { "fileId": string } } = {}) => sdk.call("index-v3.v3.get-file-by-id", input);
 /** GET /knowledge-bases/files: Get all files by knowledge base [read] */
-export const indexV3V3GetFilesByKnowledgeBasePublic = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-files-by-knowledge-base-public", input);
+export const indexV3V3GetFilesByKnowledgeBasePublic = (input: CallInput & { params?: { "knowledgeBaseId": string; "limit"?: number; "lastFileId"?: string; "offset"?: number; "search"?: string } } = {}) => sdk.call("index-v3.v3.get-files-by-knowledge-base-public", input);
 /** POST /knowledge-bases/crawler/sitemap-preview: Preview Sitemap URLs [write] */
 export const indexV3V3GetSitemapPreview = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-sitemap-preview", input);
 /** POST /knowledge-bases/files: Uploads a file to knowledge base (max file size: 10MB) [write] */
 export const indexV3V3UploadFile = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.upload-file", input);
-/** POST /notes/: Create Note [write] */
-export const indexV3V3CreateNote = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-note", input);
+/** POST /notes: Create Note [write] */
+export const indexV3V3CreateNote = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-note", input);
 /** DELETE /notes/{id}: Delete Note [write] */
-export const indexV3V3DeleteNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.delete-note", input);
+export const indexV3V3DeleteNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-note", input);
 /** GET /notes/{id}: Get Note [read] */
-export const indexV3V3GetNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.get-note", input);
+export const indexV3V3GetNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-note", input);
 /** POST /notes/{id}/restore: Restore Note [write] */
-export const indexV3V3RestoreNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.restore-note", input);
+export const indexV3V3RestoreNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.restore-note", input);
 /** POST /notes/search: Search Notes [write] */
 export const indexV3V3SearchNotes = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.search-notes", input);
 /** PUT /notes/{id}: Update Note [write] */
-export const indexV3V3UpdateNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.update-note", input);
+export const indexV3V3UpdateNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-note", input);
 /** PATCH /notes/{id}/attachments: Update Note Attachments [write] */
-export const indexV3V3UpdateNoteAttachments = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.update-note-attachments", input);
+export const indexV3V3UpdateNoteAttachments = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-note-attachments", input);
 /** PUT /notes/{id}/relations: Update Note Relations [write] */
-export const indexV3V3UpdateNoteRelations = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.update-note-relations", input);
+export const indexV3V3UpdateNoteRelations = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-note-relations", input);
 /** POST /opportunities/pipelines: Create Pipeline [write] */
 export const indexV3V3CreatePipeline = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-pipeline", input);
 /** DELETE /opportunities/pipelines/{pipelineId}: Delete Pipeline [write] */
@@ -2689,95 +2689,95 @@ export const indexV3V3GetPipeline = (input: CallInput & { params?: { "pipelineId
 /** PUT /opportunities/pipelines/{pipelineId}: Update Pipeline [write] */
 export const indexV3V3UpdatePipeline = (input: CallInput & { params?: { "pipelineId": string } } = {}) => sdk.call("index-v3.v3.update-pipeline", input);
 /** POST /projects/lists/{listId}/tasks/{taskId}: Add A Task To An Additional List [write] */
-export const indexV3V3AddProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string } } = {}) => sdk.call("index-v3.v3.add-projects-list-task", input);
+export const indexV3V3AddProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.add-projects-list-task", input);
 /** POST /projects/tasks/batch: Fetch Tasks By IDs [write] */
-export const indexV3V3BatchProjectsTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.batch-projects-tasks", input);
+export const indexV3V3BatchProjectsTasks = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.batch-projects-tasks", input);
 /** POST /projects/folders/{folderId}/lists: Create List In Folder [write] */
-export const indexV3V3CreateProjectsFolderList = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.create-projects-folder-list", input);
+export const indexV3V3CreateProjectsFolderList = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-folder-list", input);
 /** POST /projects/lists/{listId}/tasks: Create Task [write] */
-export const indexV3V3CreateProjectsListTask = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.create-projects-list-task", input);
+export const indexV3V3CreateProjectsListTask = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-list-task", input);
 /** POST /projects/recurring-tasks: Create Recurring Task [write] */
-export const indexV3V3CreateProjectsRecurringTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-projects-recurring-task", input);
+export const indexV3V3CreateProjectsRecurringTask = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-recurring-task", input);
 /** POST /projects/spaces: Create Space [write] */
-export const indexV3V3CreateProjectsSpace = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-projects-space", input);
+export const indexV3V3CreateProjectsSpace = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-space", input);
 /** POST /projects/spaces/{spaceId}/folders: Create Folder [write] */
-export const indexV3V3CreateProjectsSpaceFolder = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.create-projects-space-folder", input);
+export const indexV3V3CreateProjectsSpaceFolder = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-space-folder", input);
 /** POST /projects/spaces/{spaceId}/lists: Create List In Space [write] */
-export const indexV3V3CreateProjectsSpaceList = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.create-projects-space-list", input);
+export const indexV3V3CreateProjectsSpaceList = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-space-list", input);
 /** POST /projects/tasks/{taskId}/comments: Create Comment [write] */
-export const indexV3V3CreateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.create-projects-task-comment", input);
+export const indexV3V3CreateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.create-projects-task-comment", input);
 /** DELETE /projects/folders/{folderId}: Delete Folder [write] */
-export const indexV3V3DeleteProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-folder", input);
+export const indexV3V3DeleteProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-folder", input);
 /** DELETE /projects/folders/{folderId}/users/{userId}: Revoke Folder Member [write] */
-export const indexV3V3DeleteProjectsFolderUser = (input: CallInput & { params?: { "folderId": string; "userId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-folder-user", input);
+export const indexV3V3DeleteProjectsFolderUser = (input: CallInput & { params?: { "folderId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-folder-user", input);
 /** DELETE /projects/lists/{listId}: Delete List [write] */
-export const indexV3V3DeleteProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-list", input);
+export const indexV3V3DeleteProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-list", input);
 /** DELETE /projects/lists/{listId}/users/{userId}: Revoke List Member [write] */
-export const indexV3V3DeleteProjectsListUser = (input: CallInput & { params?: { "listId": string; "userId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-list-user", input);
+export const indexV3V3DeleteProjectsListUser = (input: CallInput & { params?: { "listId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-list-user", input);
 /** DELETE /projects/recurring-tasks/{id}: Delete Recurring Task [write] */
-export const indexV3V3DeleteProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.delete-projects-recurring-task", input);
+export const indexV3V3DeleteProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-recurring-task", input);
 /** DELETE /projects/spaces/{spaceId}: Delete Space [write] */
-export const indexV3V3DeleteProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-space", input);
+export const indexV3V3DeleteProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-space", input);
 /** DELETE /projects/spaces/{spaceId}/users/{userId}: Revoke Space Member [write] */
-export const indexV3V3DeleteProjectsSpaceUser = (input: CallInput & { params?: { "spaceId": string; "userId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-space-user", input);
+export const indexV3V3DeleteProjectsSpaceUser = (input: CallInput & { params?: { "spaceId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-space-user", input);
 /** DELETE /projects/tasks/{taskId}: Delete A Task Or Subtask [write] */
-export const indexV3V3DeleteProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-task", input);
+export const indexV3V3DeleteProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-task", input);
 /** DELETE /projects/tasks/{taskId}/comments/{commentId}: Delete A Comment [write] */
-export const indexV3V3DeleteProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string } } = {}) => sdk.call("index-v3.v3.delete-projects-task-comment", input);
+export const indexV3V3DeleteProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.delete-projects-task-comment", input);
 /** GET /projects/folders/{folderId}: Get Folder [read] */
-export const indexV3V3GetProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.get-projects-folder", input);
+export const indexV3V3GetProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-folder", input);
 /** GET /projects/folders/{folderId}/lists: Get Lists In Folder [read] */
-export const indexV3V3GetProjectsFolderLists = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.get-projects-folder-lists", input);
+export const indexV3V3GetProjectsFolderLists = (input: CallInput & { params?: { "folderId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-folder-lists", input);
 /** GET /projects/folders/{folderId}/users: Get Users With Folder Access [read] */
-export const indexV3V3GetProjectsFolderUsers = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.get-projects-folder-users", input);
+export const indexV3V3GetProjectsFolderUsers = (input: CallInput & { params?: { "folderId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-folder-users", input);
 /** GET /projects/lists/{listId}: Get List [read] */
-export const indexV3V3GetProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.get-projects-list", input);
+export const indexV3V3GetProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-list", input);
 /** GET /projects/lists/{listId}/statuses: Get List Statuses [read] */
-export const indexV3V3GetProjectsListStatuses = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.get-projects-list-statuses", input);
+export const indexV3V3GetProjectsListStatuses = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-list-statuses", input);
 /** GET /projects/lists/{listId}/users: Get Users With List Access [read] */
-export const indexV3V3GetProjectsListUsers = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.get-projects-list-users", input);
+export const indexV3V3GetProjectsListUsers = (input: CallInput & { params?: { "listId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-list-users", input);
 /** GET /projects/recurring-tasks/{id}: Get Recurring Task By Id [read] */
-export const indexV3V3GetProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.get-projects-recurring-task", input);
+export const indexV3V3GetProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-recurring-task", input);
 /** GET /projects/spaces/{spaceId}: Get Space [read] */
-export const indexV3V3GetProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.get-projects-space", input);
+export const indexV3V3GetProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-space", input);
 /** GET /projects/spaces/{spaceId}/folders: Get Folders [read] */
-export const indexV3V3GetProjectsSpaceFolders = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.get-projects-space-folders", input);
+export const indexV3V3GetProjectsSpaceFolders = (input: CallInput & { params?: { "spaceId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-space-folders", input);
 /** GET /projects/spaces/{spaceId}/lists: Get Lists In Space [read] */
-export const indexV3V3GetProjectsSpaceLists = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.get-projects-space-lists", input);
+export const indexV3V3GetProjectsSpaceLists = (input: CallInput & { params?: { "spaceId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-space-lists", input);
 /** GET /projects/spaces/{spaceId}/statuses: Get Space Statuses [read] */
-export const indexV3V3GetProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.get-projects-space-statuses", input);
+export const indexV3V3GetProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-space-statuses", input);
 /** GET /projects/spaces/{spaceId}/users: Get Users With Space Access [read] */
-export const indexV3V3GetProjectsSpaceUsers = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.get-projects-space-users", input);
+export const indexV3V3GetProjectsSpaceUsers = (input: CallInput & { params?: { "spaceId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-space-users", input);
 /** GET /projects/spaces: Get All Spaces [read] */
-export const indexV3V3GetProjectsSpaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-projects-spaces", input);
+export const indexV3V3GetProjectsSpaces = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-spaces", input);
 /** GET /projects/tasks/{taskId}: Get A Task By ID [read] */
-export const indexV3V3GetProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.get-projects-task", input);
+export const indexV3V3GetProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-task", input);
 /** GET /projects/tasks/{taskId}/lists: Get Lists For A Task [read] */
-export const indexV3V3GetProjectsTaskLists = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.get-projects-task-lists", input);
+export const indexV3V3GetProjectsTaskLists = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-projects-task-lists", input);
 /** GET /projects/lists/{listId}/tasks: Get Tasks [read] */
-export const indexV3V3ListProjectsListTasks = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.list-projects-list-tasks", input);
+export const indexV3V3ListProjectsListTasks = (input: CallInput & { params?: { "listId": string; "limit"?: number; "searchAfter"?: string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.list-projects-list-tasks", input);
 /** GET /projects/tasks/{taskId}/comments: Get Task Comments [read] */
-export const indexV3V3ListProjectsTaskComments = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.list-projects-task-comments", input);
+export const indexV3V3ListProjectsTaskComments = (input: CallInput & { params?: { "taskId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.list-projects-task-comments", input);
 /** DELETE /projects/lists/{listId}/tasks/{taskId}: Remove A Task From Additional List [write] */
-export const indexV3V3RemoveProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string } } = {}) => sdk.call("index-v3.v3.remove-projects-list-task", input);
+export const indexV3V3RemoveProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.remove-projects-list-task", input);
 /** POST /projects/tasks/search: Search Tasks [write] */
-export const indexV3V3SearchProjectsTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.search-projects-tasks", input);
+export const indexV3V3SearchProjectsTasks = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.search-projects-tasks", input);
 /** PUT /projects/tasks/{taskId}/home-list: Move Task [write] */
-export const indexV3V3SetProjectsTaskHomeList = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.set-projects-task-home-list", input);
+export const indexV3V3SetProjectsTaskHomeList = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.set-projects-task-home-list", input);
 /** PATCH /projects/folders/{folderId}: Update Folder [write] */
-export const indexV3V3UpdateProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-v3.v3.update-projects-folder", input);
+export const indexV3V3UpdateProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-folder", input);
 /** PATCH /projects/lists/{listId}: Update List [write] */
-export const indexV3V3UpdateProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-v3.v3.update-projects-list", input);
+export const indexV3V3UpdateProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-list", input);
 /** PUT /projects/recurring-tasks/{id}: Update Recurring Task [write] */
-export const indexV3V3UpdateProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-v3.v3.update-projects-recurring-task", input);
+export const indexV3V3UpdateProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-recurring-task", input);
 /** PATCH /projects/spaces/{spaceId}: Update Space [write] */
-export const indexV3V3UpdateProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.update-projects-space", input);
+export const indexV3V3UpdateProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-space", input);
 /** PATCH /projects/tasks/{taskId}: Update A Task Or Subtask [write] */
-export const indexV3V3UpdateProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-v3.v3.update-projects-task", input);
+export const indexV3V3UpdateProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-task", input);
 /** PATCH /projects/tasks/{taskId}/comments/{commentId}: Update A Comment [write] */
-export const indexV3V3UpdateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string } } = {}) => sdk.call("index-v3.v3.update-projects-task-comment", input);
+export const indexV3V3UpdateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.update-projects-task-comment", input);
 /** PUT /projects/spaces/{spaceId}/statuses: Update Statuses [write] */
-export const indexV3V3UpsertProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-v3.v3.upsert-projects-space-statuses", input);
+export const indexV3V3UpsertProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.upsert-projects-space-statuses", input);
 /** GET /saas/companies/{companyId}/locations/{locationId}/wallet-balance: Get Location Wallet Balance [read] */
 export const indexV3V3GetLocationWalletBalance = (input: CallInput & { params?: { "companyId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-location-wallet-balance", input);
 /** POST /saas/companies/{companyId}/wallet-transactions: List agency wallet transactions [write] */
@@ -2793,61 +2793,61 @@ export const indexV3V3AddWatermarkOnImage = (input: CallInput & { params?: { "lo
 /** POST /social-media-posting/{locationId}/watermarks: Create a watermark template [write] */
 export const indexV3V3CreateWatermark = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-watermark", input);
 /** DELETE /social-media-posting/{locationId}/watermarks/{templateId}: Delete a watermark template by ID [write] */
-export const indexV3V3DeleteWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-v3.v3.delete-watermark", input);
+export const indexV3V3DeleteWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-watermark", input);
 /** GET /social-media-posting/{locationId}/watermarks: List watermark templates [read] */
-export const indexV3V3GetAllWatermarks = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.get-all-watermarks", input);
+export const indexV3V3GetAllWatermarks = (input: CallInput & { params?: { "locationId": string; "limit"?: string; "skip"?: string; "name"?: string } } = {}) => sdk.call("index-v3.v3.get-all-watermarks", input);
 /** GET /social-media-posting/{locationId}/community/accounts/{accountId}/users: Get Community Members [read] */
-export const indexV3V3GetCommunityUsers = (input: CallInput & { params?: { "locationId": string; "accountId": string } } = {}) => sdk.call("index-v3.v3.get-community-users", input);
+export const indexV3V3GetCommunityUsers = (input: CallInput & { params?: { "locationId": string; "accountId": string; "searchText"?: string; "pageNo"?: number; "limit"?: number } } = {}) => sdk.call("index-v3.v3.get-community-users", input);
 /** GET /social-media-posting/{locationId}/watermarks/{templateId}: Get a watermark template by ID [read] */
-export const indexV3V3GetWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-v3.v3.get-watermark", input);
+export const indexV3V3GetWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-watermark", input);
 /** PUT /social-media-posting/{locationId}/watermarks/{templateId}: Update a watermark template by ID [write] */
-export const indexV3V3UpdateWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-v3.v3.update-watermark", input);
+export const indexV3V3UpdateWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-watermark", input);
 /** GET /social-media-posting/{locationId}/community/groups/{groupId}/users/{contactId}/validate: Validate Community Member [read] */
 export const indexV3V3ValidateCommunityUserMembership = (input: CallInput & { params?: { "locationId": string; "groupId": string; "contactId": string } } = {}) => sdk.call("index-v3.v3.validate-community-user-membership", input);
 /** POST /wallet/balance/complimentary-credits: Add complimentary credits to a sub-account wallet [write] */
-export const indexV3V3AddComplimentaryCredits = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.add-complimentary-credits", input);
+export const indexV3V3AddComplimentaryCredits = (input: CallInput & { params?: { "Idempotency-Key": string } } = {}) => sdk.call("index-v3.v3.add-complimentary-credits", input);
 /** GET /wallet/billing-summary: Get billing summary [read] */
-export const indexV3V3GetBillingSummary = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-billing-summary", input);
+export const indexV3V3GetBillingSummary = (input: CallInput & { params?: { "month"?: string } } = {}) => sdk.call("index-v3.v3.get-billing-summary", input);
 /** GET /wallet/usage-summary: Get company usage summary [read] */
-export const indexV3V3GetCompanyUsageSummary = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-company-usage-summary", input);
+export const indexV3V3GetCompanyUsageSummary = (input: CallInput & { params?: { "month"?: string } } = {}) => sdk.call("index-v3.v3.get-company-usage-summary", input);
 /** GET /wallet/usage-records/top-products: Get top usage products [read] */
 export const indexV3V3GetTopUsageProducts = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-top-usage-products", input);
 /** GET /wallet/usage-records: Get usage records [read] */
 export const indexV3V3GetUsageRecords = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-usage-records", input);
 /** GET /wallet/balance: Get wallet balance [read] */
-export const indexV3V3GetWalletBalance = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-wallet-balance", input);
+export const indexV3V3GetWalletBalance = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-wallet-balance", input);
 /** GET /wallet/transactions/{transactionId}: Get wallet transaction [read] */
-export const indexV3V3GetWalletTransaction = (input: CallInput & { params?: { "transactionId": string } } = {}) => sdk.call("index-v3.v3.get-wallet-transaction", input);
+export const indexV3V3GetWalletTransaction = (input: CallInput & { params?: { "transactionId": string; "settlementTime": string; "timezone"?: string; "locationId"?: string } } = {}) => sdk.call("index-v3.v3.get-wallet-transaction", input);
 /** GET /wallet/usage-records/by-location: List usage records per sub-account [read] */
-export const indexV3V3ListCompanyLocationUsageRecords = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-company-location-usage-records", input);
+export const indexV3V3ListCompanyLocationUsageRecords = (input: CallInput & { params?: { "skip"?: number; "limit"?: number; "query"?: string; "sortBy"?: string; "sortOrder"?: string } } = {}) => sdk.call("index-v3.v3.list-company-location-usage-records", input);
 /** POST /wallet/transactions: List wallet transactions [write] */
 export const indexV3V3ListWalletTransactions = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.list-wallet-transactions", input);
-/** POST /workflows/: Create Workflow [write] */
-export const indexV3V3CreateWorkflow = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.create-workflow", input);
+/** POST /workflows: Create Workflow [write] */
+export const indexV3V3CreateWorkflow = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.create-workflow", input);
 /** DELETE /workflows/{workflowId}: Delete Workflow [write] */
-export const indexV3V3DeleteWorkflow = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.delete-workflow", input);
+export const indexV3V3DeleteWorkflow = (input: CallInput & { params?: { "workflowId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.delete-workflow", input);
 /** GET /workflows/{workflowId}/definition: Get Workflow Definition [read] */
-export const indexV3V3GetWorkflowDefinition = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.get-workflow-definition", input);
+export const indexV3V3GetWorkflowDefinition = (input: CallInput & { params?: { "workflowId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.get-workflow-definition", input);
 /** GET /workflows/{workflowId}/logs/aggregate: Get Workflow Log Statistics [read] */
-export const indexV3V3GetWorkflowLogStatistics = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.get-workflow-log-statistics", input);
+export const indexV3V3GetWorkflowLogStatistics = (input: CallInput & { params?: { "workflowId": string; "locationId": string; "startDate"?: string; "endDate"?: string; "groupBy"?: unknown[]; "statuses"?: unknown[]; "types"?: unknown[]; "removedReasons"?: unknown[]; "timezone"?: string; "limit"?: number } } = {}) => sdk.call("index-v3.v3.get-workflow-log-statistics", input);
 /** GET /workflows/{workflowId}/logs: Get Workflow Logs [read] */
-export const indexV3V3GetWorkflowLogs = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.get-workflow-logs", input);
+export const indexV3V3GetWorkflowLogs = (input: CallInput & { params?: { "workflowId": string; "locationId": string; "limit"?: number; "action"?: string; "referenceId"?: string; "referenceCreatedAt"?: string; "types"?: unknown[]; "statuses"?: unknown[]; "startDate"?: string; "endDate"?: string; "contactId"?: string; "executionId"?: string; "recordId"?: string; "recordType"?: string } } = {}) => sdk.call("index-v3.v3.get-workflow-logs", input);
 /** GET /workflows/step-types: Get Step Types [read] */
-export const indexV3V3GetWorkflowStepTypes = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.get-workflow-step-types", input);
+export const indexV3V3GetWorkflowStepTypes = (input: CallInput & { params?: { "locationId": string; "types"?: string; "kind"?: string; "query"?: string; "limit"?: number; "skip"?: number } } = {}) => sdk.call("index-v3.v3.get-workflow-step-types", input);
 /** POST /workflows/search: Search Workflows [write] */
-export const indexV3V3SearchWorkflows = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.search-workflows", input);
+export const indexV3V3SearchWorkflows = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.search-workflows", input);
 /** PUT /workflows/{workflowId}/definition: Update Workflow Definition [write] */
-export const indexV3V3UpdateWorkflowDefinition = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.update-workflow-definition", input);
+export const indexV3V3UpdateWorkflowDefinition = (input: CallInput & { params?: { "workflowId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-workflow-definition", input);
 /** PUT /workflows/{workflowId}/status: Update Workflow Status [write] */
-export const indexV3V3UpdateWorkflowStatus = (input: CallInput & { params?: { "workflowId": string } } = {}) => sdk.call("index-v3.v3.update-workflow-status", input);
+export const indexV3V3UpdateWorkflowStatus = (input: CallInput & { params?: { "workflowId": string; "locationId": string } } = {}) => sdk.call("index-v3.v3.update-workflow-status", input);
 /** POST /workflows/definition/validate: Validate Workflow Definition [write] */
-export const indexV3V3ValidateWorkflowDefinition = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-v3.v3.validate-workflow-definition", input);
+export const indexV3V3ValidateWorkflowDefinition = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-v3.v3.validate-workflow-definition", input);
 /** GET /ad-publishing/facebook/campaigns/{campaignId}/publishing-progress: Get campaign publishing progress [read] */
-export const index2021072820210728FbGetCampaignPublishingProgress = (input: CallInput & { params?: { "campaignId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fb-get-campaign-publishing-progress", input);
+export const index2021072820210728FbGetCampaignPublishingProgress = (input: CallInput & { params?: { "campaignId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fb-get-campaign-publishing-progress", input);
 /** PUT /ad-publishing/facebook/ads: Upsert ad [write] */
 export const index2021072820210728FbUpsertAd = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fb-upsert-ad", input);
 /** GET /ad-publishing/google/ads/{adId}/publishing-progress: Get ad publishing progress [read] */
-export const index2021072820210728GoogleGetPublishingProgress = (input: CallInput & { params?: { "adId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.google-get-publishing-progress", input);
+export const index2021072820210728GoogleGetPublishingProgress = (input: CallInput & { params?: { "adId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.google-get-publishing-progress", input);
 /** POST /affiliate-manager/{locationId}/affiliates: Create Affiliate [write] */
 export const index2021072820210728CreateAffiliate = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-affiliate", input);
 /** POST /affiliate-manager/{locationId}/commission: Create commission [write] */
@@ -2869,15 +2869,15 @@ export const index2021072820210728DenyCommission = (input: CallInput & { params?
 /** GET /affiliate-manager/{locationId}/campaigns/{campaignId}: Get Campaign [read] */
 export const index2021072820210728GetCampaign = (input: CallInput & { params?: { "locationId": string; "campaignId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-campaign", input);
 /** GET /affiliate-manager/{locationId}/media: List affiliate media [read] */
-export const index2021072820210728ListAffiliateMedia = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-affiliate-media", input);
+export const index2021072820210728ListAffiliateMedia = (input: CallInput & { params?: { "locationId": string; "query"?: string; "parentId"?: string; "campaignId"?: string; "mediaType"?: string; "skip"?: number; "limit"?: number; "sortByType"?: string; "showGlobal"?: boolean } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-affiliate-media", input);
 /** GET /affiliate-manager/{locationId}/campaigns: List Campaigns [read] */
-export const index2021072820210728ListCampaigns = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-campaigns", input);
+export const index2021072820210728ListCampaigns = (input: CallInput & { params?: { "locationId": string; "query"?: string; "skip"?: number; "limit"?: number; "onlyActiveLiveMode"?: boolean; "trackTypes"?: unknown[] } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-campaigns", input);
 /** GET /affiliate-manager/{locationId}/country-bank-mapping: List Country Bank Mappings [read] */
 export const index2021072820210728ListCountryBankMappings = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-country-bank-mappings", input);
 /** GET /affiliate-manager/{locationId}/affiliates/{affiliateId}/customers: List customers [read] */
-export const index2021072820210728ListCustomers = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-customers", input);
+export const index2021072820210728ListCustomers = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "query"?: string; "status"?: string; "campaignId"?: string; "skip"?: number; "limit"?: number; "commissionStatus"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-customers", input);
 /** GET /affiliate-manager/{locationId}/affiliate/{affiliateId}/payout-method: List Payout Methods [read] */
-export const index2021072820210728ListPayoutMethods = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-payout-methods", input);
+export const index2021072820210728ListPayoutMethods = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "skip"?: number; "limit"?: number } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-payout-methods", input);
 /** PATCH /affiliate-manager/{locationId}/affiliate/{affiliateId}/payout-method/{payoutMethodId}/primary: Mark Payout Method As Primary [write] */
 export const index2021072820210728MarkPayoutMethodPrimary = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "payoutMethodId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.mark-payout-method-primary", input);
 /** POST /affiliate-manager/affiliate-campaign/{locationId}/affiliate/{affiliateId}/move-campaign: Move Affiliate To Campaign [write] */
@@ -2901,11 +2901,11 @@ export const index2021072820210728UpdatePayoutMethod = (input: CallInput & { par
 /** POST /affiliate-manager/{locationId}/affiliates/{affiliateId}/tax-form: Upload affiliate tax form [write] */
 export const index2021072820210728UploadAffiliateTaxForm = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.upload-affiliate-tax-form", input);
 /** GET /affiliate-manager/{locationId}/affiliates/{affiliateId}/lead/validate: Validate customer lead [read] */
-export const index2021072820210728ValidateCustomerLead = (input: CallInput & { params?: { "locationId": string; "affiliateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.validate-customer-lead", input);
+export const index2021072820210728ValidateCustomerLead = (input: CallInput & { params?: { "locationId": string; "affiliateId": string; "campaignId": string; "email": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.validate-customer-lead", input);
 /** GET /affiliate-manager/affiliate-campaign/{locationId}/referral-id/validate: Validate Referral Id [read] */
-export const index2021072820210728ValidateReferralId = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.validate-referral-id", input);
+export const index2021072820210728ValidateReferralId = (input: CallInput & { params?: { "locationId": string; "referralId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.validate-referral-id", input);
 /** GET /blogs/posts/post/{postId}: Get Blog Post by ID [read] */
-export const index2021072820210728GetBlogPostById = (input: CallInput & { params?: { "postId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-blog-post-by-id", input);
+export const index2021072820210728GetBlogPostById = (input: CallInput & { params?: { "postId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-blog-post-by-id", input);
 /** POST /brand-boards/public/v1/locations/{locationId}/voices: Create Brand Voice [write] */
 export const index2021072820210728CreateBrandVoiceV1 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-brand-voice-v-1", input);
 /** DELETE /brand-boards/public/v1/locations/{locationId}/voices/{brandVoiceId}: Delete Brand Voice [write] */
@@ -2913,7 +2913,7 @@ export const index2021072820210728DeleteBrandVoiceV1 = (input: CallInput & { par
 /** GET /brand-boards/public/v1/locations/{locationId}/voices/{brandVoiceId}: Get Brand Voice [read] */
 export const index2021072820210728GetBrandVoiceV1 = (input: CallInput & { params?: { "locationId": string; "brandVoiceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-brand-voice-v-1", input);
 /** GET /brand-boards/public/v1/locations/{locationId}/voices: List Brand Voices [read] */
-export const index2021072820210728ListBrandVoicesV1 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-brand-voices-v-1", input);
+export const index2021072820210728ListBrandVoicesV1 = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "deleted"?: boolean } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-brand-voices-v-1", input);
 /** POST /brand-boards/public/v1/locations/{locationId}/voices/{brandVoiceId}/default: Set Default Brand Voice [write] */
 export const index2021072820210728SetDefaultBrandVoiceV1 = (input: CallInput & { params?: { "locationId": string; "brandVoiceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.set-default-brand-voice-v-1", input);
 /** PATCH /brand-boards/public/v1/locations/{locationId}/voices/{brandVoiceId}: Update Brand Voice [write] */
@@ -2921,7 +2921,7 @@ export const index2021072820210728UpdateBrandVoiceV1 = (input: CallInput & { par
 /** POST /calendars/schedules/event-calendar/{calendarId}: Create event calendar availability schedule [write] */
 export const index2021072820210728CreateCalendarSchedule = (input: CallInput & { params?: { "calendarId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-calendar-schedule", input);
 /** POST /calendars/services/bookings: Create Service Booking [write] */
-export const index2021072820210728CreateServiceBooking = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-service-booking", input);
+export const index2021072820210728CreateServiceBooking = (input: CallInput & { params?: { "overrideAvailability"?: boolean; "skipSchedulingNotice"?: boolean } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-service-booking", input);
 /** POST /calendars/services/catalog: Create Service [write] */
 export const index2021072820210728CreateServiceCatalog = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-service-catalog", input);
 /** POST /calendars/services/locations: Create Service Location [write] */
@@ -2937,37 +2937,37 @@ export const index2021072820210728GetCalendarSchedule = (input: CallInput & { pa
 /** GET /calendars/services/bookings/{bookingId}: Get Service Booking by ID [read] */
 export const index2021072820210728GetServiceBookingById = (input: CallInput & { params?: { "bookingId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-booking-by-id", input);
 /** GET /calendars/services/bookings: Get Service Bookings [read] */
-export const index2021072820210728GetServiceBookings = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-bookings", input);
+export const index2021072820210728GetServiceBookings = (input: CallInput & { params?: { "locationId": string; "startTime": string; "endTime": string; "timezone"?: string; "serviceLocationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-bookings", input);
 /** GET /calendars/services/catalog/{serviceId}: Get Service by ID [read] */
 export const index2021072820210728GetServiceCatalogById = (input: CallInput & { params?: { "serviceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-catalog-by-id", input);
 /** GET /calendars/services/locations/{serviceLocationId}: Get Service Location by ID [read] */
 export const index2021072820210728GetServiceLocationById = (input: CallInput & { params?: { "serviceLocationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-location-by-id", input);
 /** GET /calendars/services/locations: Get Service Locations [read] */
-export const index2021072820210728GetServiceLocations = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-locations", input);
+export const index2021072820210728GetServiceLocations = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-service-locations", input);
 /** GET /calendars/services/catalog: Get Services [read] */
-export const index2021072820210728GetServicesCatalog = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-services-catalog", input);
+export const index2021072820210728GetServicesCatalog = (input: CallInput & { params?: { "locationId": string; "serviceCategoryId"?: string; "isPrivate"?: boolean } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-services-catalog", input);
 /** PUT /calendars/schedules/event-calendar/{calendarId}: Update event calendar availability schedule [write] */
 export const index2021072820210728UpdateCalendarSchedule = (input: CallInput & { params?: { "calendarId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-calendar-schedule", input);
 /** PUT /calendars/services/bookings/{bookingId}: Update Service Booking [write] */
-export const index2021072820210728UpdateServiceBooking = (input: CallInput & { params?: { "bookingId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-service-booking", input);
+export const index2021072820210728UpdateServiceBooking = (input: CallInput & { params?: { "bookingId": string; "overrideAvailability"?: boolean; "skipSchedulingNotice"?: boolean } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-service-booking", input);
 /** PUT /calendars/services/catalog/{serviceId}: Update Service [write] */
 export const index2021072820210728UpdateServiceCatalog = (input: CallInput & { params?: { "serviceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-service-catalog", input);
 /** PUT /calendars/services/locations/{serviceLocationId}: Update Service Location [write] */
 export const index2021072820210728UpdateServiceLocation = (input: CallInput & { params?: { "serviceLocationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-service-location", input);
 /** POST /chat-widget/clone: Clone a Chat Widget [write] */
 export const index2021072820210728CloneChatWidget = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.clone-chat-widget", input);
-/** POST /chat-widget/: Create a new chat widget [write] */
+/** POST /chat-widget: Create a new chat widget [write] */
 export const index2021072820210728CreateChatWidget = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-chat-widget", input);
 /** DELETE /chat-widget/{locationId}/{id}: Delete a Chat Widget [write] */
-export const index2021072820210728DeleteChatWidget = (input: CallInput & { params?: { "locationId": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-chat-widget", input);
+export const index2021072820210728DeleteChatWidget = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-chat-widget", input);
 /** GET /chat-widget/data/{locationId}/{id}: Get Chat Widget by ID [read] */
-export const index2021072820210728GetChatWidgetById = (input: CallInput & { params?: { "locationId": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-chat-widget-by-id", input);
+export const index2021072820210728GetChatWidgetById = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-chat-widget-by-id", input);
 /** GET /chat-widget/list: List Chat Widgets [read] */
-export const index2021072820210728ListChatWidgets = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-chat-widgets", input);
+export const index2021072820210728ListChatWidgets = (input: CallInput & { params?: { "locationId": string; "offset": string; "limit": string; "chatType"?: string; "excludeChatType"?: string; "voiceAiAgentId"?: string; "creationSource"?: string; "excludeCreationSource"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-chat-widgets", input);
 /** PATCH /chat-widget/data/{locationId}/{id}: Patch Chat Widget [write] */
-export const index2021072820210728PatchChatWidget = (input: CallInput & { params?: { "locationId": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.patch-chat-widget", input);
+export const index2021072820210728PatchChatWidget = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.patch-chat-widget", input);
 /** PUT /chat-widget/data/{locationId}/{id}: Update Chat Widget [write] */
-export const index2021072820210728UpdateChatWidget = (input: CallInput & { params?: { "locationId": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-chat-widget", input);
+export const index2021072820210728UpdateChatWidget = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-chat-widget", input);
 /** POST /contacts/search/count: Count Contacts [write] */
 export const index2021072820210728CountContacts = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.count-contacts", input);
 /** POST /conversation-ai/agents/{agentId}/working-hours: Create Agent Working Hours [write] */
@@ -2993,15 +2993,15 @@ export const index2021072820210728DeleteCampaignV2 = (input: CallInput & { param
 /** DELETE /emails/public/v2/locations/{locationId}/templates/{templateId}: Delete a template [write] */
 export const index2021072820210728DeleteEmailTemplateV2 = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-email-template-v-2", input);
 /** GET /emails/campaigns/bulk-actions: Get Bulk Action Campaigns [read] */
-export const index2021072820210728FetchBulkActionCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-bulk-action-campaigns", input);
+export const index2021072820210728FetchBulkActionCampaigns = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "dateFrom"?: string; "dateTo"?: string; "status"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-bulk-action-campaigns", input);
 /** GET /emails/campaigns/workflows: Get Workflow Campaigns [read] */
-export const index2021072820210728FetchWorkflowCampaigns = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-workflow-campaigns", input);
+export const index2021072820210728FetchWorkflowCampaigns = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "status"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-workflow-campaigns", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/bulk-actions/{campaignId}: Get Bulk Action Campaign by ID [read] */
 export const index2021072820210728GetBulkActionCampaignV2 = (input: CallInput & { params?: { "locationId": string; "campaignId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-bulk-action-campaign-v-2", input);
 /** GET /emails/stats/location/{locationId}/{source}/{sourceId}: Get Campaign Statistics [read] */
-export const index2021072820210728GetCampaignStats = (input: CallInput & { params?: { "locationId": string; "source": string; "sourceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-campaign-stats", input);
+export const index2021072820210728GetCampaignStats = (input: CallInput & { params?: { "locationId": string; "source": string; "sourceId": string; "subSourceId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-campaign-stats", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/stats/{source}/{sourceId}: Get Campaign Statistics [read] */
-export const index2021072820210728GetCampaignStatsUnderCampaignsV2 = (input: CallInput & { params?: { "locationId": string; "source": string; "sourceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-campaign-stats-under-campaigns-v-2", input);
+export const index2021072820210728GetCampaignStatsUnderCampaignsV2 = (input: CallInput & { params?: { "locationId": string; "source": string; "sourceId": string; "subSourceId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-campaign-stats-under-campaigns-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/emails/{campaignId}: Get Email Campaign by ID [read] */
 export const index2021072820210728GetEmailCampaignV2 = (input: CallInput & { params?: { "locationId": string; "campaignId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-email-campaign-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/templates/{templateId}: Get Email Template by ID [read] */
@@ -3011,13 +3011,13 @@ export const index2021072820210728GetWorkflowCampaignV2 = (input: CallInput & { 
 /** POST /emails/public/v2/locations/{locationId}/templates/import: Import an email template [write] */
 export const index2021072820210728ImportEmailTemplateV2 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.import-email-template-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/bulk-actions: List Bulk Action Campaigns [read] */
-export const index2021072820210728ListBulkActionCampaignsV2 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-bulk-action-campaigns-v-2", input);
+export const index2021072820210728ListBulkActionCampaignsV2 = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "dateFrom"?: string; "dateTo"?: string; "status"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-bulk-action-campaigns-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/emails: List Email Campaigns [read] */
-export const index2021072820210728ListEmailCampaignsV2 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-email-campaigns-v-2", input);
+export const index2021072820210728ListEmailCampaignsV2 = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "status"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-email-campaigns-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/templates: List templates [read] */
-export const index2021072820210728ListEmailTemplatesV2 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-email-templates-v-2", input);
+export const index2021072820210728ListEmailTemplatesV2 = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "sortBy"?: string; "sortOrder"?: string; "archived"?: boolean; "folderId"?: string; "include"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-email-templates-v-2", input);
 /** GET /emails/public/v2/locations/{locationId}/campaigns/workflows: List Workflow Campaigns [read] */
-export const index2021072820210728ListWorkflowCampaignsV2 = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-workflow-campaigns-v-2", input);
+export const index2021072820210728ListWorkflowCampaignsV2 = (input: CallInput & { params?: { "locationId": string; "limit"?: number; "offset"?: number; "search"?: string; "status"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-workflow-campaigns-v-2", input);
 /** PATCH /emails/builder/{templateId}: Update a template with settings [write] */
 export const index2021072820210728PatchTemplate = (input: CallInput & { params?: { "templateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.patch-template", input);
 /** POST /emails/public/v2/locations/{locationId}/campaigns/{campaignId}/schedule: Schedule Campaign [write] */
@@ -3033,7 +3033,7 @@ export const index2021072820210728DeleteFile = (input: CallInput & { params?: { 
 /** GET /knowledge-bases/files/{fileId}: Get file by id [read] */
 export const index2021072820210728GetFileById = (input: CallInput & { params?: { "fileId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-file-by-id", input);
 /** GET /knowledge-bases/files: Get all files by knowledge base [read] */
-export const index2021072820210728GetFilesByKnowledgeBasePublic = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-files-by-knowledge-base-public", input);
+export const index2021072820210728GetFilesByKnowledgeBasePublic = (input: CallInput & { params?: { "knowledgeBaseId": string; "limit"?: number; "lastFileId"?: string; "offset"?: number; "search"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-files-by-knowledge-base-public", input);
 /** POST /knowledge-bases/crawler/sitemap-preview: Preview Sitemap URLs [write] */
 export const index2021072820210728GetSitemapPreview = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-sitemap-preview", input);
 /** POST /knowledge-bases/files: Uploads a file to knowledge base (max file size: 10MB) [write] */
@@ -3044,22 +3044,22 @@ export const index2021072820210728GetConversationChannel = (input: CallInput & {
 export const index2021072820210728GetLocationPermissions = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-location-permissions", input);
 /** PUT /locations/{locationId}/permissions: Update Permissions [write] */
 export const index2021072820210728UpdateLocationPermissions = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-location-permissions", input);
-/** POST /notes/: Create Note [write] */
-export const index2021072820210728CreateNote = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-note", input);
+/** POST /notes: Create Note [write] */
+export const index2021072820210728CreateNote = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-note", input);
 /** DELETE /notes/{id}: Delete Note [write] */
-export const index2021072820210728DeleteNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-note", input);
+export const index2021072820210728DeleteNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-note", input);
 /** GET /notes/{id}: Get Note [read] */
-export const index2021072820210728GetNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-note", input);
+export const index2021072820210728GetNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-note", input);
 /** POST /notes/{id}/restore: Restore Note [write] */
-export const index2021072820210728RestoreNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.restore-note", input);
+export const index2021072820210728RestoreNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.restore-note", input);
 /** POST /notes/search: Search Notes [write] */
 export const index2021072820210728SearchNotes = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.search-notes", input);
 /** PUT /notes/{id}: Update Note [write] */
-export const index2021072820210728UpdateNote = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note", input);
+export const index2021072820210728UpdateNote = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note", input);
 /** PATCH /notes/{id}/attachments: Update Note Attachments [write] */
-export const index2021072820210728UpdateNoteAttachments = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note-attachments", input);
+export const index2021072820210728UpdateNoteAttachments = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note-attachments", input);
 /** PUT /notes/{id}/relations: Update Note Relations [write] */
-export const index2021072820210728UpdateNoteRelations = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note-relations", input);
+export const index2021072820210728UpdateNoteRelations = (input: CallInput & { params?: { "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-note-relations", input);
 /** POST /opportunities/pipelines: Create Pipeline [write] */
 export const index2021072820210728CreatePipeline = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-pipeline", input);
 /** DELETE /opportunities/pipelines/{pipelineId}: Delete Pipeline [write] */
@@ -3069,95 +3069,95 @@ export const index2021072820210728GetPipeline = (input: CallInput & { params?: {
 /** PUT /opportunities/pipelines/{pipelineId}: Update Pipeline [write] */
 export const index2021072820210728UpdatePipeline = (input: CallInput & { params?: { "pipelineId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-pipeline", input);
 /** POST /projects/lists/{listId}/tasks/{taskId}: Add A Task To An Additional List [write] */
-export const index2021072820210728AddProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.add-projects-list-task", input);
+export const index2021072820210728AddProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.add-projects-list-task", input);
 /** POST /projects/tasks/batch: Fetch Tasks By IDs [write] */
-export const index2021072820210728BatchProjectsTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.batch-projects-tasks", input);
+export const index2021072820210728BatchProjectsTasks = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.batch-projects-tasks", input);
 /** POST /projects/folders/{folderId}/lists: Create List In Folder [write] */
-export const index2021072820210728CreateProjectsFolderList = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-folder-list", input);
+export const index2021072820210728CreateProjectsFolderList = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-folder-list", input);
 /** POST /projects/lists/{listId}/tasks: Create Task [write] */
-export const index2021072820210728CreateProjectsListTask = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-list-task", input);
+export const index2021072820210728CreateProjectsListTask = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-list-task", input);
 /** POST /projects/recurring-tasks: Create Recurring Task [write] */
-export const index2021072820210728CreateProjectsRecurringTask = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-recurring-task", input);
+export const index2021072820210728CreateProjectsRecurringTask = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-recurring-task", input);
 /** POST /projects/spaces: Create Space [write] */
-export const index2021072820210728CreateProjectsSpace = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space", input);
+export const index2021072820210728CreateProjectsSpace = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space", input);
 /** POST /projects/spaces/{spaceId}/folders: Create Folder [write] */
-export const index2021072820210728CreateProjectsSpaceFolder = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space-folder", input);
+export const index2021072820210728CreateProjectsSpaceFolder = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space-folder", input);
 /** POST /projects/spaces/{spaceId}/lists: Create List In Space [write] */
-export const index2021072820210728CreateProjectsSpaceList = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space-list", input);
+export const index2021072820210728CreateProjectsSpaceList = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-space-list", input);
 /** POST /projects/tasks/{taskId}/comments: Create Comment [write] */
-export const index2021072820210728CreateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-task-comment", input);
+export const index2021072820210728CreateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-projects-task-comment", input);
 /** DELETE /projects/folders/{folderId}: Delete Folder [write] */
-export const index2021072820210728DeleteProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-folder", input);
+export const index2021072820210728DeleteProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-folder", input);
 /** DELETE /projects/folders/{folderId}/users/{userId}: Revoke Folder Member [write] */
-export const index2021072820210728DeleteProjectsFolderUser = (input: CallInput & { params?: { "folderId": string; "userId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-folder-user", input);
+export const index2021072820210728DeleteProjectsFolderUser = (input: CallInput & { params?: { "folderId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-folder-user", input);
 /** DELETE /projects/lists/{listId}: Delete List [write] */
-export const index2021072820210728DeleteProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-list", input);
+export const index2021072820210728DeleteProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-list", input);
 /** DELETE /projects/lists/{listId}/users/{userId}: Revoke List Member [write] */
-export const index2021072820210728DeleteProjectsListUser = (input: CallInput & { params?: { "listId": string; "userId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-list-user", input);
+export const index2021072820210728DeleteProjectsListUser = (input: CallInput & { params?: { "listId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-list-user", input);
 /** DELETE /projects/recurring-tasks/{id}: Delete Recurring Task [write] */
-export const index2021072820210728DeleteProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-recurring-task", input);
+export const index2021072820210728DeleteProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-recurring-task", input);
 /** DELETE /projects/spaces/{spaceId}: Delete Space [write] */
-export const index2021072820210728DeleteProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-space", input);
+export const index2021072820210728DeleteProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-space", input);
 /** DELETE /projects/spaces/{spaceId}/users/{userId}: Revoke Space Member [write] */
-export const index2021072820210728DeleteProjectsSpaceUser = (input: CallInput & { params?: { "spaceId": string; "userId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-space-user", input);
+export const index2021072820210728DeleteProjectsSpaceUser = (input: CallInput & { params?: { "spaceId": string; "userId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-space-user", input);
 /** DELETE /projects/tasks/{taskId}: Delete A Task Or Subtask [write] */
-export const index2021072820210728DeleteProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-task", input);
+export const index2021072820210728DeleteProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-task", input);
 /** DELETE /projects/tasks/{taskId}/comments/{commentId}: Delete A Comment [write] */
-export const index2021072820210728DeleteProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-task-comment", input);
+export const index2021072820210728DeleteProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-projects-task-comment", input);
 /** GET /projects/folders/{folderId}: Get Folder [read] */
-export const index2021072820210728GetProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder", input);
+export const index2021072820210728GetProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder", input);
 /** GET /projects/folders/{folderId}/lists: Get Lists In Folder [read] */
-export const index2021072820210728GetProjectsFolderLists = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder-lists", input);
+export const index2021072820210728GetProjectsFolderLists = (input: CallInput & { params?: { "folderId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder-lists", input);
 /** GET /projects/folders/{folderId}/users: Get Users With Folder Access [read] */
-export const index2021072820210728GetProjectsFolderUsers = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder-users", input);
+export const index2021072820210728GetProjectsFolderUsers = (input: CallInput & { params?: { "folderId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-folder-users", input);
 /** GET /projects/lists/{listId}: Get List [read] */
-export const index2021072820210728GetProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list", input);
+export const index2021072820210728GetProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list", input);
 /** GET /projects/lists/{listId}/statuses: Get List Statuses [read] */
-export const index2021072820210728GetProjectsListStatuses = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list-statuses", input);
+export const index2021072820210728GetProjectsListStatuses = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list-statuses", input);
 /** GET /projects/lists/{listId}/users: Get Users With List Access [read] */
-export const index2021072820210728GetProjectsListUsers = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list-users", input);
+export const index2021072820210728GetProjectsListUsers = (input: CallInput & { params?: { "listId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-list-users", input);
 /** GET /projects/recurring-tasks/{id}: Get Recurring Task By Id [read] */
-export const index2021072820210728GetProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-recurring-task", input);
+export const index2021072820210728GetProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-recurring-task", input);
 /** GET /projects/spaces/{spaceId}: Get Space [read] */
-export const index2021072820210728GetProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space", input);
+export const index2021072820210728GetProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space", input);
 /** GET /projects/spaces/{spaceId}/folders: Get Folders [read] */
-export const index2021072820210728GetProjectsSpaceFolders = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-folders", input);
+export const index2021072820210728GetProjectsSpaceFolders = (input: CallInput & { params?: { "spaceId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-folders", input);
 /** GET /projects/spaces/{spaceId}/lists: Get Lists In Space [read] */
-export const index2021072820210728GetProjectsSpaceLists = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-lists", input);
+export const index2021072820210728GetProjectsSpaceLists = (input: CallInput & { params?: { "spaceId": string; "limit"?: number; "cursor"?: string; "anchorId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-lists", input);
 /** GET /projects/spaces/{spaceId}/statuses: Get Space Statuses [read] */
-export const index2021072820210728GetProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-statuses", input);
+export const index2021072820210728GetProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-statuses", input);
 /** GET /projects/spaces/{spaceId}/users: Get Users With Space Access [read] */
-export const index2021072820210728GetProjectsSpaceUsers = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-users", input);
+export const index2021072820210728GetProjectsSpaceUsers = (input: CallInput & { params?: { "spaceId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-space-users", input);
 /** GET /projects/spaces: Get All Spaces [read] */
-export const index2021072820210728GetProjectsSpaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-spaces", input);
+export const index2021072820210728GetProjectsSpaces = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-spaces", input);
 /** GET /projects/tasks/{taskId}: Get A Task By ID [read] */
-export const index2021072820210728GetProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-task", input);
+export const index2021072820210728GetProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-task", input);
 /** GET /projects/tasks/{taskId}/lists: Get Lists For A Task [read] */
-export const index2021072820210728GetProjectsTaskLists = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-task-lists", input);
+export const index2021072820210728GetProjectsTaskLists = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-projects-task-lists", input);
 /** GET /projects/lists/{listId}/tasks: Get Tasks [read] */
-export const index2021072820210728ListProjectsListTasks = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-projects-list-tasks", input);
+export const index2021072820210728ListProjectsListTasks = (input: CallInput & { params?: { "listId": string; "limit"?: number; "searchAfter"?: string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-projects-list-tasks", input);
 /** GET /projects/tasks/{taskId}/comments: Get Task Comments [read] */
-export const index2021072820210728ListProjectsTaskComments = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-projects-task-comments", input);
+export const index2021072820210728ListProjectsTaskComments = (input: CallInput & { params?: { "taskId": string; "skip"?: number; "limit"?: number; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.list-projects-task-comments", input);
 /** DELETE /projects/lists/{listId}/tasks/{taskId}: Remove A Task From Additional List [write] */
-export const index2021072820210728RemoveProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.remove-projects-list-task", input);
+export const index2021072820210728RemoveProjectsListTask = (input: CallInput & { params?: { "listId": string; "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.remove-projects-list-task", input);
 /** POST /projects/tasks/search: Search Tasks [write] */
-export const index2021072820210728SearchProjectsTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.search-projects-tasks", input);
+export const index2021072820210728SearchProjectsTasks = (input: CallInput & { params?: { "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.search-projects-tasks", input);
 /** PUT /projects/tasks/{taskId}/home-list: Move Task [write] */
-export const index2021072820210728SetProjectsTaskHomeList = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.set-projects-task-home-list", input);
+export const index2021072820210728SetProjectsTaskHomeList = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.set-projects-task-home-list", input);
 /** PATCH /projects/folders/{folderId}: Update Folder [write] */
-export const index2021072820210728UpdateProjectsFolder = (input: CallInput & { params?: { "folderId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-folder", input);
+export const index2021072820210728UpdateProjectsFolder = (input: CallInput & { params?: { "folderId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-folder", input);
 /** PATCH /projects/lists/{listId}: Update List [write] */
-export const index2021072820210728UpdateProjectsList = (input: CallInput & { params?: { "listId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-list", input);
+export const index2021072820210728UpdateProjectsList = (input: CallInput & { params?: { "listId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-list", input);
 /** PUT /projects/recurring-tasks/{id}: Update Recurring Task [write] */
-export const index2021072820210728UpdateProjectsRecurringTask = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-recurring-task", input);
+export const index2021072820210728UpdateProjectsRecurringTask = (input: CallInput & { params?: { "id": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-recurring-task", input);
 /** PATCH /projects/spaces/{spaceId}: Update Space [write] */
-export const index2021072820210728UpdateProjectsSpace = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-space", input);
+export const index2021072820210728UpdateProjectsSpace = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-space", input);
 /** PATCH /projects/tasks/{taskId}: Update A Task Or Subtask [write] */
-export const index2021072820210728UpdateProjectsTask = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-task", input);
+export const index2021072820210728UpdateProjectsTask = (input: CallInput & { params?: { "taskId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-task", input);
 /** PATCH /projects/tasks/{taskId}/comments/{commentId}: Update A Comment [write] */
-export const index2021072820210728UpdateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-task-comment", input);
+export const index2021072820210728UpdateProjectsTaskComment = (input: CallInput & { params?: { "taskId": string; "commentId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-projects-task-comment", input);
 /** PUT /projects/spaces/{spaceId}/statuses: Update Statuses [write] */
-export const index2021072820210728UpsertProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.upsert-projects-space-statuses", input);
+export const index2021072820210728UpsertProjectsSpaceStatuses = (input: CallInput & { params?: { "spaceId": string; "locationId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.upsert-projects-space-statuses", input);
 /** POST /saas/allow-attach-rebilling/{locationId}: Allow Attach Rebilling [write] */
 export const index2021072820210728AllowAttachRebilling = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.allow-attach-rebilling", input);
 /** GET /saas-api/public-api/companies/{companyId}/locations/{locationId}/wallet-balance: Get Location Wallet Balance [read] */
@@ -3167,13 +3167,13 @@ export const index2021072820210728UpdateLocationWalletBalance = (input: CallInpu
 /** POST /social-media-posting/{locationId}/watermarks/add-image-watermark: Apply watermark to an image [write] */
 export const index2021072820210728AddWatermarkOnImage = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.add-watermark-on-image", input);
 /** POST /social-media-posting/oauth/{locationId}/{platform}/accounts/{accountId}: Connect Account (Step 3 of 3) [write] */
-export const index2021072820210728AttachOauthAccounts = (input: CallInput & { params?: { "locationId": string; "platform": string; "accountId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.attach-oauth-accounts", input);
+export const index2021072820210728AttachOauthAccounts = (input: CallInput & { params?: { "platform": string; "locationId": string; "accountId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.attach-oauth-accounts", input);
 /** POST /social-media-posting/category/queues/{queueId}/items/{itemId}/clone: Clone a queue item [write] */
 export const index2021072820210728CloneQueueItem = (input: CallInput & { params?: { "queueId": string; "itemId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.clone-queue-item", input);
 /** POST /social-media-posting/comments/{platform}: Create a comment or reply [write] */
-export const index2021072820210728CreateComment = (input: CallInput & { params?: { "platform": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-comment", input);
+export const index2021072820210728CreateComment = (input: CallInput & { params?: { "platform": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-comment", input);
 /** POST /social-media-posting/comments/{platform}/{id}/like: Like a comment [write] */
-export const index2021072820210728CreateLike = (input: CallInput & { params?: { "platform": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-like", input);
+export const index2021072820210728CreateLike = (input: CallInput & { params?: { "platform": string; "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-like", input);
 /** POST /social-media-posting/category/queues: Create a new category queue [write] */
 export const index2021072820210728CreateQueue = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-queue", input);
 /** POST /social-media-posting/category/queues/{queueId}/create/item: Create a new item in the queue [write] */
@@ -3181,23 +3181,23 @@ export const index2021072820210728CreateQueueItem = (input: CallInput & { params
 /** POST /social-media-posting/{locationId}/watermarks: Create a watermark template [write] */
 export const index2021072820210728CreateWatermark = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.create-watermark", input);
 /** DELETE /social-media-posting/category/queues/{postId}/active-post: Delete an active post and schedule the next one [write] */
-export const index2021072820210728DeleteCurrentActivePostAndScheduleNext = (input: CallInput & { params?: { "postId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-current-active-post-and-schedule-next", input);
+export const index2021072820210728DeleteCurrentActivePostAndScheduleNext = (input: CallInput & { params?: { "postId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-current-active-post-and-schedule-next", input);
 /** DELETE /social-media-posting/comments/{platform}/{id}/like: Unlike a comment [write] */
-export const index2021072820210728DeleteLike = (input: CallInput & { params?: { "platform": string; "id": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-like", input);
+export const index2021072820210728DeleteLike = (input: CallInput & { params?: { "platform": string; "id": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-like", input);
 /** DELETE /social-media-posting/category/queues/{queueId}/items/{itemId}: Delete an item from a queue [write] */
-export const index2021072820210728DeleteQueueItem = (input: CallInput & { params?: { "queueId": string; "itemId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-queue-item", input);
+export const index2021072820210728DeleteQueueItem = (input: CallInput & { params?: { "queueId": string; "itemId": string; "locationId": string; "sessionId"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-queue-item", input);
 /** DELETE /social-media-posting/{locationId}/watermarks/{templateId}: Delete a watermark template by ID [write] */
-export const index2021072820210728DeleteWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-watermark", input);
+export const index2021072820210728DeleteWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.delete-watermark", input);
 /** POST /social-media-posting/category/queues/{queueId}/edit/discard: Discard edit session changes [write] */
 export const index2021072820210728DiscardEditSession = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.discard-edit-session", input);
 /** GET /social-media-posting/category/queues/available-categories: Get all categories with their queue status [read] */
-export const index2021072820210728FetchAvailableCategories = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-available-categories", input);
+export const index2021072820210728FetchAvailableCategories = (input: CallInput & { params?: { "locationId": string; "skip"?: string; "limit"?: string; "q"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-available-categories", input);
 /** POST /social-media-posting/category/queues/list/calendar: Get scheduled posts calendar view [write] */
 export const index2021072820210728FetchCalendarList = (input: CallInput & { params?: {  } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-calendar-list", input);
 /** POST /social-media-posting/category/queues/{queueId}/edit/calendar: Fetch calendar view for an edit session [write] */
 export const index2021072820210728FetchEditSessionCalendar = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-edit-session-calendar", input);
 /** GET /social-media-posting/category/queues/{queueId}: Fetch a category queue by ID [read] */
-export const index2021072820210728FetchQueueById = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-queue-by-id", input);
+export const index2021072820210728FetchQueueById = (input: CallInput & { params?: { "queueId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-queue-by-id", input);
 /** POST /social-media-posting/category/queues/{queueId}/items: Fetch items from a queue [write] */
 export const index2021072820210728FetchQueueItems = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-queue-items", input);
 /** POST /social-media-posting/category/queues/list: Fetch category queues for a location [write] */
@@ -3205,15 +3205,15 @@ export const index2021072820210728FetchQueues = (input: CallInput & { params?: {
 /** POST /social-media-posting/category/queues/{queueId}/slots: Fetch slot information for queue items [write] */
 export const index2021072820210728FetchSlots = (input: CallInput & { params?: { "queueId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.fetch-slots", input);
 /** GET /social-media-posting/{locationId}/watermarks: List watermark templates [read] */
-export const index2021072820210728GetAllWatermarks = (input: CallInput & { params?: { "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-all-watermarks", input);
+export const index2021072820210728GetAllWatermarks = (input: CallInput & { params?: { "locationId": string; "limit"?: string; "skip"?: string; "name"?: string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-all-watermarks", input);
 /** POST /social-media-posting/comments/{platform}/list: List comments for a post or thread [write] */
-export const index2021072820210728GetCommentList = (input: CallInput & { params?: { "platform": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-comment-list", input);
+export const index2021072820210728GetCommentList = (input: CallInput & { params?: { "platform": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-comment-list", input);
 /** GET /social-media-posting/{locationId}/community/accounts/{accountId}/users: Get Community Members [read] */
-export const index2021072820210728GetCommunityUsers = (input: CallInput & { params?: { "locationId": string; "accountId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-community-users", input);
+export const index2021072820210728GetCommunityUsers = (input: CallInput & { params?: { "locationId": string; "accountId": string; "searchText"?: string; "pageNo"?: number; "limit"?: number } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-community-users", input);
 /** GET /social-media-posting/oauth/{locationId}/{platform}/accounts/{accountId}: Get Available Accounts (Step 2 of 3) [write] */
 export const index2021072820210728GetOauthAccounts = (input: CallInput & { params?: { "locationId": string; "platform": string; "accountId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-oauth-accounts", input);
 /** GET /social-media-posting/{locationId}/watermarks/{templateId}: Get a watermark template by ID [read] */
-export const index2021072820210728GetWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-watermark", input);
+export const index2021072820210728GetWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.get-watermark", input);
 /** PUT /social-media-posting/category/queues/{queueId}/items/{itemId}/reset: Reset an item in a queue [write] */
 export const index2021072820210728ResetQueueItem = (input: CallInput & { params?: { "queueId": string; "itemId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.reset-queue-item", input);
 /** POST /social-media-posting/category/queues/{queueId}/edit/save: Save edit session changes [write] */
@@ -3227,6 +3227,6 @@ export const index2021072820210728UpdateQueue = (input: CallInput & { params?: {
 /** PUT /social-media-posting/category/queues/{queueId}/items/{itemId}: Update an item in a queue [write] */
 export const index2021072820210728UpdateQueueItem = (input: CallInput & { params?: { "queueId": string; "itemId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-queue-item", input);
 /** PUT /social-media-posting/{locationId}/watermarks/{templateId}: Update a watermark template by ID [write] */
-export const index2021072820210728UpdateWatermark = (input: CallInput & { params?: { "locationId": string; "templateId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-watermark", input);
+export const index2021072820210728UpdateWatermark = (input: CallInput & { params?: { "templateId": string; "locationId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.update-watermark", input);
 /** GET /social-media-posting/{locationId}/community/groups/{groupId}/users/{contactId}/validate: Validate Community Member [read] */
 export const index2021072820210728ValidateCommunityUserMembership = (input: CallInput & { params?: { "locationId": string; "groupId": string; "contactId": string } } = {}) => sdk.call("index-2021-07-28.2021-07-28.validate-community-user-membership", input);

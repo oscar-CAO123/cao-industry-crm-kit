@@ -9,15 +9,15 @@ export const docsGetCfUriCompanyPreferences = (input: CallInput & { params?: { "
 /** GET /{cf_uri}/GeneralLedger/Account: Account [read] */
 export const docsGetCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_Account", input);
 /** PUT /{cf_uri}/GeneralLedger/Account: Account [write] */
-export const docsPutCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Account", input);
+export const docsPutCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "Name"?: string; "DisplayID"?: string; "Classification"?: string; "Type": string; "Number": number; "Description"?: string; "ParentAccount"?: unknown; "IsActive"?: boolean; "TaxCode"?: unknown; "Level"?: number; "OpeningBalance"?: number; "BankingDetails"?: unknown; "IsHeader"?: boolean; "ForeignCurrency"?: unknown; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Account", input);
 /** POST /{cf_uri}/GeneralLedger/Account: Account [write] */
-export const docsPostCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Account", input);
+export const docsPostCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "Name"?: string; "DisplayID"?: string; "Classification"?: string; "Type": string; "Number": number; "Description"?: string; "ParentAccount"?: unknown; "IsActive"?: boolean; "TaxCode"?: unknown; "Level"?: number; "OpeningBalance"?: number; "BankingDetails"?: unknown; "IsHeader"?: boolean; "ForeignCurrency"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Account", input);
 /** DELETE /{cf_uri}/GeneralLedger/Account: Account [write] */
 export const docsDeleteCfUriGeneralLedgerAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_GeneralLedger_Account", input);
 /** GET /{cf_uri}/GeneralLedger/AccountBudget: AccountBudget [read] */
 export const docsGetCfUriGeneralLedgerAccountBudget = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_AccountBudget", input);
 /** PUT /{cf_uri}/GeneralLedger/AccountBudget: AccountBudget [write] */
-export const docsPutCfUriGeneralLedgerAccountBudget = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_AccountBudget", input);
+export const docsPutCfUriGeneralLedgerAccountBudget = (input: CallInput & { params?: { "cf_uri": string; "FinancialYear"?: number; "Budgets"?: unknown[]; "URI"?: string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_AccountBudget", input);
 /** GET /{cf_uri}/GeneralLedger/AccountingProperties: AccountingProperties [read] */
 export const docsGetCfUriGeneralLedgerAccountingProperties = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_AccountingProperties", input);
 /** GET /{cf_uri}/GeneralLedger/AccountRegister: AccountRegister [read] */
@@ -25,9 +25,9 @@ export const docsGetCfUriGeneralLedgerAccountRegister = (input: CallInput & { pa
 /** GET /{cf_uri}/GeneralLedger/Category: Category [read] */
 export const docsGetCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_Category", input);
 /** PUT /{cf_uri}/GeneralLedger/Category: Category [write] */
-export const docsPutCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Category", input);
+export const docsPutCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "DisplayID": string; "Name"?: string; "Description"?: string; "IsActive"?: boolean; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Category", input);
 /** POST /{cf_uri}/GeneralLedger/Category: Category [write] */
-export const docsPostCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Category", input);
+export const docsPostCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "DisplayID": string; "Name"?: string; "Description"?: string; "IsActive"?: boolean; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Category", input);
 /** DELETE /{cf_uri}/GeneralLedger/Category: Category [write] */
 export const docsDeleteCfUriGeneralLedgerCategory = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_GeneralLedger_Category", input);
 /** GET /{cf_uri}/GeneralLedger/CategoryRegister: CategoryRegister [read] */
@@ -37,17 +37,17 @@ export const docsGetCfUriGeneralLedgerCurrency = (input: CallInput & { params?: 
 /** GET /{cf_uri}/GeneralLedger/GeneralJournal: GeneralJournal [read] */
 export const docsGetCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_GeneralJournal", input);
 /** PUT /{cf_uri}/GeneralLedger/GeneralJournal: GeneralJournal [write] */
-export const docsPutCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_GeneralJournal", input);
+export const docsPutCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "DisplayID"?: string; "DateOccurred": string; "IsTaxInclusive"?: boolean; "Memo"?: string; "GSTReportingMethod"?: string; "IsYearEndAdjustment"?: boolean; "Category"?: unknown; "Lines"?: unknown[]; "ForeignCurrency"?: unknown; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_GeneralJournal", input);
 /** POST /{cf_uri}/GeneralLedger/GeneralJournal: GeneralJournal [write] */
-export const docsPostCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_GeneralJournal", input);
+export const docsPostCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "DisplayID"?: string; "DateOccurred": string; "IsTaxInclusive"?: boolean; "Memo"?: string; "GSTReportingMethod"?: string; "IsYearEndAdjustment"?: boolean; "Category"?: unknown; "Lines"?: unknown[]; "ForeignCurrency"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_GeneralJournal", input);
 /** DELETE /{cf_uri}/GeneralLedger/GeneralJournal: GeneralJournal [write] */
 export const docsDeleteCfUriGeneralLedgerGeneralJournal = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_GeneralLedger_GeneralJournal", input);
 /** GET /{cf_uri}/GeneralLedger/Job: Job [read] */
 export const docsGetCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_Job", input);
 /** PUT /{cf_uri}/GeneralLedger/Job: Job [write] */
-export const docsPutCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Job", input);
+export const docsPutCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "Number": string; "IsHeader"?: boolean; "Name"?: string; "Description"?: string; "ParentJob"?: unknown; "LinkedCustomer"?: unknown; "PercentComplete"?: string; "StartDate"?: string; "FinishDate"?: string; "Contact"?: string; "Manager"?: string; "IsActive"?: boolean; "TrackReimbursables"?: boolean; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_Job", input);
 /** POST /{cf_uri}/GeneralLedger/Job: Job [write] */
-export const docsPostCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Job", input);
+export const docsPostCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "Number": string; "IsHeader"?: boolean; "Name"?: string; "Description"?: string; "ParentJob"?: unknown; "LinkedCustomer"?: unknown; "PercentComplete"?: string; "StartDate"?: string; "FinishDate"?: string; "Contact"?: string; "Manager"?: string; "IsActive"?: boolean; "TrackReimbursables"?: boolean; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_Job", input);
 /** DELETE /{cf_uri}/GeneralLedger/Job: Job [write] */
 export const docsDeleteCfUriGeneralLedgerJob = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_GeneralLedger_Job", input);
 /** GET /{cf_uri}/GeneralLedger/JobRegister: JobRegister [read] */
@@ -57,21 +57,21 @@ export const docsGetCfUriGeneralLedgerJournalTransaction = (input: CallInput & {
 /** GET /{cf_uri}/GeneralLedger/LinkedAccount: LinkedAccount [read] */
 export const docsGetCfUriGeneralLedgerLinkedAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_LinkedAccount", input);
 /** PUT /{cf_uri}/GeneralLedger/LinkedAccount: LinkedAccount [write] */
-export const docsPutCfUriGeneralLedgerLinkedAccount = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_LinkedAccount", input);
+export const docsPutCfUriGeneralLedgerLinkedAccount = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "Account"?: unknown; "Description"?: string; "URI"?: string; "RowVersion"?: string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_LinkedAccount", input);
 /** GET /{cf_uri}/GeneralLedger/TaxCode: TaxCode [read] */
 export const docsGetCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_GeneralLedger_TaxCode", input);
 /** PUT /{cf_uri}/GeneralLedger/TaxCode: TaxCode [write] */
-export const docsPutCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_TaxCode", input);
+export const docsPutCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "Code": string; "Description": string; "Type": string; "Rate"?: number; "IsRateNegative"?: boolean; "TaxCollectedAccount"?: unknown; "TaxPaidAccount"?: unknown; "WithholdingCreditAccount"?: unknown; "WithholdingPayableAccount"?: unknown; "ImportDutyPayableAccount"?: unknown; "LinkedSupplier"?: unknown; "LuxuryCarTaxThreshold"?: number; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_GeneralLedger_TaxCode", input);
 /** POST /{cf_uri}/GeneralLedger/TaxCode: TaxCode [write] */
-export const docsPostCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_TaxCode", input);
+export const docsPostCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "Code": string; "Description": string; "Type": string; "Rate"?: number; "IsRateNegative"?: boolean; "TaxCollectedAccount"?: unknown; "TaxPaidAccount"?: unknown; "WithholdingCreditAccount"?: unknown; "WithholdingPayableAccount"?: unknown; "ImportDutyPayableAccount"?: unknown; "LinkedSupplier"?: unknown; "LuxuryCarTaxThreshold"?: number; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_GeneralLedger_TaxCode", input);
 /** DELETE /{cf_uri}/GeneralLedger/TaxCode: TaxCode [write] */
 export const docsDeleteCfUriGeneralLedgerTaxCode = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_GeneralLedger_TaxCode", input);
 /** GET /{cf_uri}/Inventory/Adjustment: Adjustment [read] */
 export const docsGetCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_Inventory_Adjustment", input);
 /** PUT /{cf_uri}/Inventory/Adjustment: Adjustment [write] */
-export const docsPutCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_Inventory_Adjustment", input);
+export const docsPutCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "InventoryJournalNumber"?: string; "Date": string; "IsYearEndAdjustment"?: boolean; "Memo"?: string; "Lines"?: unknown[]; "Category"?: unknown; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_Inventory_Adjustment", input);
 /** POST /{cf_uri}/Inventory/Adjustment: Adjustment [write] */
-export const docsPostCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_Inventory_Adjustment", input);
+export const docsPostCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "InventoryJournalNumber"?: string; "Date": string; "IsYearEndAdjustment"?: boolean; "Memo"?: string; "Lines"?: unknown[]; "Category"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_Inventory_Adjustment", input);
 /** DELETE /{cf_uri}/Inventory/Adjustment: Adjustment [write] */
 export const docsDeleteCfUriInventoryAdjustment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_Inventory_Adjustment", input);
 /** GET /{cf_uri}/Payroll/SuperannuationFund: SuperannuationFund [read] */
@@ -79,7 +79,7 @@ export const docsGetCfUriPayrollSuperannuationFund = (input: CallInput & { param
 /** GET /{cf_uri}/Payroll/Timesheet: Timesheet [read] */
 export const docsGetCfUriPayrollTimesheet = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_Payroll_Timesheet", input);
 /** PUT /{cf_uri}/Payroll/Timesheet: Timesheet [write] */
-export const docsPutCfUriPayrollTimesheet = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_Payroll_Timesheet", input);
+export const docsPutCfUriPayrollTimesheet = (input: CallInput & { params?: { "cf_uri": string; "Employee"?: unknown; "StartDate": string; "EndDate": string; "Lines"?: unknown[] } } = {}) => sdk.call("docs.put_cf_uri_Payroll_Timesheet", input);
 /** GET /{cf_uri}/Purchase/Bill: Bill [read] */
 export const docsGetCfUriPurchaseBill = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_Purchase_Bill", input);
 /** GET /{cf_uri}/Purchase/Order: Order [read] */
@@ -87,15 +87,15 @@ export const docsGetCfUriPurchaseOrder = (input: CallInput & { params?: { "cf_ur
 /** GET /{cf_uri}/Purchase/SupplierPayment: SupplierPayment [read] */
 export const docsGetCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_Purchase_SupplierPayment", input);
 /** PUT /{cf_uri}/Purchase/SupplierPayment: SupplierPayment [write] */
-export const docsPutCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_Purchase_SupplierPayment", input);
+export const docsPutCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "PayFrom": string; "Account"?: unknown; "Supplier"?: unknown; "PayeeAddress"?: string; "StatementParticulars"?: string; "StatementCode"?: string; "StatementReference"?: string; "PaymentNumber"?: string; "Date"?: string; "AmountPaid"?: number; "AmountPaidForeign"?: number; "Memo"?: string; "Lines"?: unknown[]; "DeliveryStatus"?: string; "ForeignCurrency"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.put_cf_uri_Purchase_SupplierPayment", input);
 /** POST /{cf_uri}/Purchase/SupplierPayment: SupplierPayment [write] */
-export const docsPostCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_Purchase_SupplierPayment", input);
+export const docsPostCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "PayFrom": string; "Account"?: unknown; "Supplier"?: unknown; "PayeeAddress"?: string; "StatementParticulars"?: string; "StatementCode"?: string; "StatementReference"?: string; "PaymentNumber"?: string; "Date"?: string; "AmountPaid"?: number; "AmountPaidForeign"?: number; "Memo"?: string; "Lines"?: unknown[]; "DeliveryStatus"?: string; "ForeignCurrency"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_Purchase_SupplierPayment", input);
 /** DELETE /{cf_uri}/Purchase/SupplierPayment: SupplierPayment [write] */
 export const docsDeleteCfUriPurchaseSupplierPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_Purchase_SupplierPayment", input);
 /** GET /{cf_uri}/Sale/CustomerPayment: CustomerPayment [read] */
 export const docsGetCfUriSaleCustomerPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_Sale_CustomerPayment", input);
 /** POST /{cf_uri}/Sale/CustomerPayment: CustomerPayment [write] */
-export const docsPostCfUriSaleCustomerPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_Sale_CustomerPayment", input);
+export const docsPostCfUriSaleCustomerPayment = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "DepositTo": string; "Account"?: unknown; "Customer"?: unknown; "ReceiptNumber"?: string; "Date"?: string; "AmountReceived"?: number; "AmountReceivedForeign"?: number; "PaymentMethod"?: string; "Memo"?: string; "Invoices"?: unknown[] } } = {}) => sdk.call("docs.post_cf_uri_Sale_CustomerPayment", input);
 /** DELETE /{cf_uri}/Sale/CustomerPayment: CustomerPayment [write] */
 export const docsDeleteCfUriSaleCustomerPayment = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_Sale_CustomerPayment", input);
 /** GET /{cf_uri}/Sale/Invoice: Invoice [read] */
@@ -107,8 +107,8 @@ export const docsGetCfUriSaleQuote = (input: CallInput & { params?: { "cf_uri": 
 /** GET /{cf_uri}/TimeBilling/Activity: Activity [read] */
 export const docsGetCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.get_cf_uri_TimeBilling_Activity", input);
 /** PUT /{cf_uri}/TimeBilling/Activity: Activity [write] */
-export const docsPutCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.put_cf_uri_TimeBilling_Activity", input);
+export const docsPutCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string; "UID": string; "DisplayID": string; "Name"?: string; "Description"?: string; "IsActive"?: boolean; "Type"?: string; "UnitOfMeasurement"?: string; "Status"?: string; "ChargeableDetails"?: unknown; "RowVersion": string } } = {}) => sdk.call("docs.put_cf_uri_TimeBilling_Activity", input);
 /** POST /{cf_uri}/TimeBilling/Activity: Activity [write] */
-export const docsPostCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.post_cf_uri_TimeBilling_Activity", input);
+export const docsPostCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string; "UID"?: string; "DisplayID": string; "Name"?: string; "Description"?: string; "IsActive"?: boolean; "Type"?: string; "UnitOfMeasurement"?: string; "Status"?: string; "ChargeableDetails"?: unknown; "RowVersion"?: string } } = {}) => sdk.call("docs.post_cf_uri_TimeBilling_Activity", input);
 /** DELETE /{cf_uri}/TimeBilling/Activity: Activity [write] */
 export const docsDeleteCfUriTimeBillingActivity = (input: CallInput & { params?: { "cf_uri": string } } = {}) => sdk.call("docs.delete_cf_uri_TimeBilling_Activity", input);

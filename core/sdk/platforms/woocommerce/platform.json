@@ -53,10 +53,12 @@
    "official": "vendor-domain: woocommerce.github.io"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "woocommerce: mapped from the current REST API reference (wc/v3) only; the legacy references (wc/v1, wc/v2, legacy wc-api v1 to v3) are not mapped"
+ ],
  "counts": {
-  "operations": 318,
-  "read": 122,
-  "write": 196
+  "operations": 140,
+  "read": 67,
+  "write": 73
  }
 }
