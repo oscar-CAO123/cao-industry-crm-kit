@@ -21,6 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { call as httpCall, writesAllowed, WriteBlocked, type AppSpec, type Method, type Reply } from "../lib/http.ts";
 import { secret, optional } from "../lib/secrets.ts";
+import { encodeForm, type FormArrays } from "../lib/form.ts";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "platforms");
 
@@ -43,6 +44,8 @@ export interface Op {
   tokenEnv?: string;
   /** A different sign-in for this endpoint (SendGrid inside Twilio). Set by the generator, never by a caller. */
   auth?: Auth;
+  /** The vendor's spec accepts only this body encoding (no JSON): "form" (Stripe v1, Twilio) or "multipart" (uploads). */
+  bodyType?: "form" | "multipart";
 }
 export interface Auth {
   type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported" | "template";
@@ -60,6 +63,8 @@ export interface Platform {
   /** Params whose value must be the client's own (a mailbox, an account). Filled automatically when left out. */
   pinned?: Record<string, { allow: string[]; env: string; envList?: string; fill?: string }>;
   defaultScope?: string;
+  /** How form-encoded lists are written: a[0]=x (default, Stripe) or a=x&a=y (Twilio). */
+  formArrays?: FormArrays;
 }
 export interface CallInput {
   /** Values for the endpoint's mapped params, by name. Each goes where the spec says (path, query, header, body). */
@@ -77,7 +82,7 @@ export interface CallInput {
   binary?: boolean;
   signal?: AbortSignal;
 }
-export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string>; kind: "read" | "write"; readPost: boolean }
+export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; kind: "read" | "write"; readPost: boolean }
 
 const cache = new Map<string, { platform: Platform; ops: Map<string, Op> }>();
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
@@ -361,8 +366,14 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     for (const [k, v] of Object.entries(bodyFields)) u.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
     json = undefined;
   }
+  // The vendor accepts only form encoding for this body (Stripe v1, Twilio): encode it the way its own SDK does.
+  let formOut: Record<string, string> | [string, string][] | undefined = form;
+  if (o.bodyType === "form" && method !== "GET" && json !== undefined) {
+    formOut = [...Object.entries(form ?? {}), ...encodeForm(json, p.formArrays ?? "indices")];
+    json = undefined;
+  }
   return {
-    method, url: u.toString(), json, form, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
+    method, url: u.toString(), json, form: formOut, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
     // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
     headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))) },
   };
@@ -407,6 +418,7 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   if (!isRead && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
+  if (o.bodyType === "multipart") throw new Error(`${p.id} ${o.id}: this endpoint takes a multipart upload, which the kit does not build yet`);
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
   return httpCall<T>(spec, { method: r.method, url: r.url, headers: r.headers, json: r.json, form: r.form, binary: input.binary, signal: input.signal });

@@ -94,17 +94,19 @@ test("writes are blocked before the network for all three SDKs", async () => {
   assert.equal(hits.length, 0);
 });
 
-test("allowed writes: Square and Xero send the same body as our layer; Stripe sends form encoding", async () => {
+test("allowed writes: Square, Xero AND Stripe send the same body through their SDK as through our own layer", async () => {
   process.env.KIT_ALLOW_WRITES = "1";
   const [a, b] = await same(() => square().customers.create({ givenName: "A", emailAddress: "a@b.co" }), () => callOperation("square", "api.CreateCustomer", { body: { given_name: "A", email_address: "a@b.co" } }));
   assert.deepEqual(JSON.parse(a.body!), JSON.parse(String(b.body)));
   const [c, d] = await same(() => xeroApis().accounting.createContacts("t", { contacts: [{ name: "A" }] } as any), () => callOperation("xero", "accounting.createContacts", { body: { Contacts: [{ Name: "A" }] } }));
   assert.deepEqual(JSON.parse(c.body!), JSON.parse(String(d.body)));
   fakeNetwork(200, { id: "cus_1", object: "customer" });
-  await stripe().customers.create({ email: "a@b.co", metadata: { k: "v" } });
-  const s = only();
-  assert.match(String(header(s, "content-type")), /x-www-form-urlencoded/);
-  assert.equal(s.body, "email=a%40b.co&metadata[k]=v");
+  const body = { email: "a@b.co", metadata: { k: "v" }, expand: ["default_source", "tax"] };
+  const [s, ours] = await same(() => stripe().customers.create(body), () => callOperation("stripe", "openapi_spec3.PostCustomers", { body }));
+  // Stripe v1 takes form encoding only; our layer now encodes exactly as stripe-node does (brackets may be %-encoded).
+  for (const h of [s, ours]) assert.match(String(header(h, "content-type")), /x-www-form-urlencoded/);
+  assert.deepEqual([...new URLSearchParams(String(ours.body))], [...new URLSearchParams(String(s.body))]);
+  assert.deepEqual([...new URLSearchParams(String(ours.body))], [["email", "a@b.co"], ["metadata[k]", "v"], ["expand[0]", "default_source"], ["expand[1]", "tax"]]);
 });
 
 test("the SDK never holds the key, and its machine telemetry never leaves", async () => {

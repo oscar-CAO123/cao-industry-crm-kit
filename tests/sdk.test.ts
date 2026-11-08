@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { listPlatforms, load, search, describe, plan, callOperation, checkDocument, type Op } from "../core/sdk/call.ts";
+import { encodeForm } from "../core/lib/form.ts";
 
 type Hit = { url: string; method: string; headers: Record<string, string>; body?: string };
 let hits: Hit[] = [];
@@ -320,6 +321,34 @@ test("a GET is a read unless its own name or the vendor's summary is an action: 
   for (const pid of listPlatforms()) for (const o of load(pid).ops.values()) {
     if (o.method === "GET" && o.kind === "write") assert.ok(o.override, `${pid} ${o.id}: GET labelled write with no reason`);
   }
+});
+
+test("bodies go in the encoding the vendor's spec requires: form for Stripe and Twilio (Twilio repeats keys for lists), multipart refused clearly", async () => {
+  // The encoder matches the vendors' own SDKs.
+  assert.deepEqual(encodeForm({ a: 1, b: { c: true }, l: ["x", "y"], n: null, u: undefined }), [["a", "1"], ["b[c]", "true"], ["l[0]", "x"], ["l[1]", "y"], ["n", ""]]);
+  assert.deepEqual(encodeForm({ l: ["x", "y"] }, "repeat"), [["l", "x"], ["l", "y"]]);
+  assert.equal(load("twilio").platform.formArrays, "repeat");
+  // Every endpoint whose vendor spec accepts only form encoding is marked so (Stripe v1 has no JSON bodies).
+  for (const o of load("stripe").ops.values()) {
+    if (o.method === "GET" || !o.body) continue;
+    // v1 writes are form only; v2 writes are JSON; the v1 file uploads are multipart.
+    if (o.path.startsWith("/v1/")) assert.ok(o.bodyType === "form" || o.bodyType === "multipart", `stripe ${o.id} ${o.path}: ${o.bodyType}`);
+    if (o.path.startsWith("/v2/")) assert.equal(o.bodyType, undefined, `stripe ${o.id}`);
+  }
+  process.env.KIT_ALLOW_WRITES = "1";
+  const msg = describe("twilio", "api_v2010.CreateMessage");
+  assert.equal(msg.bodyType, "form");
+  const params = Object.fromEntries(msg.params.filter((p) => p.required && p.in === "path").map((p) => [p.name, process.env.TWILIO_ACCOUNT_SID ?? "AC00000000000000000000000000000000"]));
+  await callOperation("twilio", msg.id, { params, body: { To: "+61400000000", Body: "hi", StatusCallbackEvent: ["initiated", "ringing"] } });
+  const h = hits[hits.length - 1];
+  assert.match(String(Object.entries(h.headers).find(([k]) => k.toLowerCase() === "content-type")?.[1]), /x-www-form-urlencoded/);
+  assert.deepEqual([...new URLSearchParams(String(h.body))].filter(([k]) => k === "StatusCallbackEvent"), [["StatusCallbackEvent", "initiated"], ["StatusCallbackEvent", "ringing"]]);
+  // An upload-only endpoint is refused with a clear reason, never sent as JSON.
+  const up = [...load("zoom").ops.values()].find((o) => o.bodyType === "multipart")!;
+  const before = hits.length;
+  await assert.rejects(() => callOperation("zoom", up.id, { params: Object.fromEntries(up.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /multipart upload/);
+  assert.equal(hits.length, before);
+  delete process.env.KIT_ALLOW_WRITES;
 });
 
 test("review 3: Gmail userId and DocuSign accountId are pinned to the client's own", async () => {

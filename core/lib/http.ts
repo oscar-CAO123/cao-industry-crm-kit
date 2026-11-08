@@ -33,7 +33,8 @@ export interface CallOptions {
   headers?: Record<string, string>;
   query?: Record<string, string | number | boolean | undefined | null>;
   json?: unknown;
-  form?: Record<string, string>;
+  /** Form fields; ordered pairs allow a repeated key (Twilio lists). */
+  form?: Record<string, string> | [string, string][];
   /** A body already encoded by a vendor SDK, sent as is with the caller's Content-Type. */
   body?: string | Uint8Array;
   /** Return the body as bytes, for documents and recordings. */

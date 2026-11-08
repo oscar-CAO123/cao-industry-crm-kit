@@ -96,6 +96,19 @@ const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
 const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|recovery key|access key/i;  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
+// The body encoding the vendor's own spec requires, when it does not accept JSON (endpoint map body_types).
+function bodyType(o) {
+  // OAuth token and revoke endpoints take form encoding by the OAuth standard (RFC 6749 4.1.3, RFC 7009), even when
+  // the spec (or an SDK-added endpoint) records no content type.
+  if (o.body && !(o.body_types ?? []).length && /\/oauth2?\/(token|deauthorize|revoke)$/i.test(String(o.path))) return "form";
+  const t = (o.body && Array.isArray(o.body_types)) ? o.body_types : [];
+  if (!t.length || t.some((x) => x === "application/json" || x === "text/json" || x.endsWith("+json") || x === "*/*")) return null;
+  if (t.includes("application/x-www-form-urlencoded")) return "form";
+  if (t.includes("multipart/form-data")) return "multipart";
+  return null;
+}
+// How each platform's own SDK writes form-encoded lists (twilio-node: qs arrayFormat "repeat"); the default is a[0]=x.
+const FORM_ARRAYS = { twilio: "repeat" };
 const firstWord = (s) => (words(String(s ?? "")).replace(/[^A-Za-z ]+/g, " ").trim().split(/\s+/)[0] ?? "").toLowerCase();
 // The call's own name: the last path segment that is not a parameter ({id}, :id) or an OData parenthesis.
 function ownName(path) {
@@ -209,7 +222,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     for (const mm of String(o.path).matchAll(/\{([^}]+)\}/g)) if (!have.has(mm[1])) { params.push({ name: mm[1], in: "path", required: true, type: "string" }); have.add(mm[1]); }
     return { id: clean(o.id), api: clean(o.api), method: clean(o.method).toUpperCase(), path: clean(o.path), server, summary: clean(o.summary).slice(0, 200),
              tags: (o.tags ?? []).map(clean), params, body: !!o.body, scopes: o.scopes ?? [], deprecated: !!o.deprecated, doc_url: clean(o.doc_url),
-             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
+             ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(bodyType(o) ? { bodyType: bodyType(o) } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
              ...(() => { const [kind, why] = readKind(id, o); return why ? { kind, override: `write: ${why}` } : { kind }; })() };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
@@ -300,7 +313,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     id, name: cfg.name, status: m.status, tested: "offline only (fake network); not yet run against a real account",
     authProof: cfg.proof, style: cfg.style ?? "rest", hosts: cfg.hostFromEnv ? [] : hosts, hostFromEnv: !!cfg.hostFromEnv,
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
-    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope,
+    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
     sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: m.gaps ?? [],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },

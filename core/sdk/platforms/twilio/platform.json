@@ -50,6 +50,7 @@
  "hostFromEnv": false,
  "hostPatterns": [],
  "pinned": {},
+ "formArrays": "repeat",
  "serverVars": {},
  "auth": {
   "type": "basic",
