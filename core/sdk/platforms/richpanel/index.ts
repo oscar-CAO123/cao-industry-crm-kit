@@ -72,8 +72,8 @@ export const docsGetUserId = (input: CallInput & { params?: { "id": string } } =
 export const docsGetTeams = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_teams", input);
 /** POST /tasks: Create a Task [write] */
 export const docsPostTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_tasks", input);
-/** GET /tasks: The Task Object [read] */
-export const docsGetTasks = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.get_tasks", input);
+/** GET /tasks: List Tasks [read] */
+export const docsGetTasks = (input: CallInput & { params?: { "status"?: string; "priority"?: string; "assignee"?: string; "created_by"?: string; "conversation_id"?: string; "search"?: string; "overdue"?: boolean; "due_date_from"?: string; "due_date_to"?: string; "page"?: number; "limit"?: number; "sort_by"?: string; "sort_order"?: string } } = {}) => sdk.call("docs.get_tasks", input);
 /** GET /tasks/{taskId}: Retrieve a Task [read] */
 export const docsGetTasksTaskId = (input: CallInput & { params?: { "taskId": string } } = {}) => sdk.call("docs.get_tasks_taskId", input);
 /** PATCH /tasks/{taskId}: Update a Task [write] */
