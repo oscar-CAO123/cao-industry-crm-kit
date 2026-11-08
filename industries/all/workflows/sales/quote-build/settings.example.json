@@ -1,0 +1,24 @@
+{
+ "family": "priced-job-from-site-visit",
+ "business_name": "Example Services Co",
+ "intake": ["servicem8", "microsoft-365"],
+ "quotes": "servicem8",
+ "rate_card": "servicem8",
+ "messages": "microsoft-365",
+ "microsoft_365": {
+  "mailbox": "quotes@example.com.au",
+  "folder": "inbox",
+  "search": "quote",
+  "rate_card": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "RateCard"},
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Quotes"}
+ },
+ "servicem8": {"quote_template_uuid": ""},
+ "job_templates": [
+  {"match": "site visit", "lines": [{"code": "CALLOUT", "qty": 1}, {"code": "LAB-HR", "qty": 2}]},
+  {"match": "repair", "lines": [{"code": "CALLOUT", "qty": 1}]}
+ ],
+ "follow_up": {"after_days": [3, 7, 14], "channel": "email"},
+ "handover": {"on_accept": "none", "deposit_percent": 0},
+ "quote_valid_days": 30,
+ "gst_rate": 0.1
+}
