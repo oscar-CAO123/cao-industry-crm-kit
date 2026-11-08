@@ -92,7 +92,7 @@ const RESERVED = new Set("break case catch class const continue debugger default
 //   were mislabelled that way). Every GET left as a write carries its reason in `override`, so an agent sees why.
 const SLACK_READ = /^(list|info|history|replies|test)$|^(get|lookup)/;
 const CREDENTIAL = /token|secret|password|passcode|private[ _-]?key|access[ _-]?keys?|recovery[ _-]?keys?|signing[ _-]?keys?|temporary[ _-]?link|signed[ _-]?url|download[ _-]?url|data[ _-]?pack|credential|verification[ _-]?codes?|auth(?:orization)?[ _-]?code|oauth|authori[sz]e|hmac|api[ _-]?keys?|presign/i;
-const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set)(?=[^a-z]|$)/i;
+const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set|resend|finalize|finalise|void|pay|charge|refund|capture|notify|dispatch|deliver|transfer|withdraw|merge|book|checkout|subscribe|sign|authorise|authorize)(?=[^a-z]|$)/i;  // resend..authorize added 8 Nov 2026 after the security review
 // A reviewed POST may be a read only if its own path says search, batch read or query.
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
 const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|upload (url|link|path)|recovery key|access key/i;  // upload links added 8 Nov 2026 (Smokeball, Trackunit)  // summaries: only clear credential words
@@ -138,7 +138,7 @@ const READ_VERB = /^(get|gets|list|lists|retrieve|retrieves|return|returns|show|
 function readKind(platform, o) {
   const method = String(o.method).toUpperCase();
   const name = words(`${o.id} ${o.path}`);
-  const summary = String(o.summary ?? "").trim();
+  const summary = String(o.summary ?? "").trim().replace(/^(\[[^\]]*\]\s*)+/, "");  // "[BETA] View ..." reads as "View ..."
   if (CREDENTIAL.test(name)) return ["write", `sensitive: its name points to a credential (${(name.match(CREDENTIAL) ?? [""])[0]})`];
   if (STRONG.test(summary)) return ["write", `sensitive: the vendor's summary mentions ${(summary.match(STRONG) ?? [""])[0]}`];
   if (platform === "dropbox") {
@@ -159,6 +159,8 @@ function readKind(platform, o) {
   // the vendor's own summary decides: "Get set from groups" reads. OData functions ("Invoke function ...") may not
   // have side effects under the OData standard, so they read too.
   const summaryReads = READ_VERB.test(sw) || /^invoke function\b/i.test(summary);
+  // A GraphQL query cannot change data (mutations are separate), so only the credential checks above apply to it.
+  if (method === "QUERY") return ["read", ""];
   if ((isAction(own) || own === "do" || own === "run") && !summaryReads) return ["write", `its own name is an action (${own})`];
   if (isAction(sw) || isAction(sw.replace(/s$/, ""))) return ["write", `the vendor's summary starts with an action (${sw})`];
   return ["read", ""];

@@ -103,7 +103,7 @@ export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1"
 
 const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
-const KEY_NAMES = new Set(["accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
+const KEY_NAMES = new Set(["accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer", "signature", "sig", "auth", "authorization", "credential", "credentials", "jwt"]);
 const RETRY_STATUS = new Set([429, 502, 503, 504]);
 
 function buildUrl(o: CallOptions): URL {
@@ -167,7 +167,9 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
         if (!loc) break;
         const next = new URL(loc, at);
         if (next.protocol !== "https:") throw new Error(`${spec.app}: redirect to ${next.protocol} refused`);
+        if (next.port !== "" || next.username || next.password) throw new Error(`${spec.app}: redirect to a non-standard port or a URL with credentials refused`);
         const own = spec.hosts.includes(next.hostname) || !!spec.hostPattern?.test(next.hostname);
+        if (own) checkUrl(spec, next);  // an own-host hop gets the key, so it passes every check the first request did
         // Another host gets only harmless headers: every sign-in header (Authorization, X-Api-Key, any vendor key header) stays behind.
         const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => /^(accept|accept-encoding|accept-language|user-agent|range|if-none-match|if-modified-since)$/i.test(k)));
         res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal: o.signal });

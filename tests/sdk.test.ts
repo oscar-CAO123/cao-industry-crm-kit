@@ -486,6 +486,23 @@ test("Bullhorn: data centre, refresh token in a form body, one session login, ca
   assert.equal(hits.filter((h) => h.url.includes("/rest-services/login?")).length, 1, "exactly one new login");
 });
 
+test("security review fixes (8 Nov): action GETs gated, GraphQL queries read, AroFlo body refused, more key names refused, redirect hops checked", async () => {
+  const find = (pid: string, f: (o: Op) => boolean) => [...load(pid).ops.values()].find(f)!;
+  assert.equal(find("calendesk", (o) => o.path === "/newsletter/resend/{email}").kind, "write", "Resend verification email sends mail");
+  assert.equal(find("productive", (o) => o.path === "/api/v2/signups/xero_finalize").kind, "write", "Finalize a signup");
+  assert.equal(find("monday", (o) => o.method === "QUERY" && o.path === "trigger_events").kind, "read", "a GraphQL query cannot change data");
+  assert.equal(find("apollo", (o) => o.method === "GET" && o.path === "/duplicate_contacts/merge_jobs/{id}").kind, "read", "[BETA] View ... is a read");
+  const post = find("aroflo", (o) => o.method === "POST");
+  process.env.KIT_ALLOW_WRITES = "1";
+  try { await assert.rejects(() => callOperation("aroflo", post.id, { params: { postxml: "<x/>" }, body: { zone: "x" } }), /not a body/); }
+  finally { delete process.env.KIT_ALLOW_WRITES; }
+  const { checkUrl, call: gateCall } = await import("../core/lib/http.ts");
+  const spec = { app: "t", hosts: ["api.example.com"] };
+  for (const q of ["signature=a", "sig=a", "auth=a", "authorization=a", "jwt=a", "credential=a"]) assert.throws(() => checkUrl(spec, new URL(`https://api.example.com/x?${q}`)), /key in the query/);
+  setTransport({ sleep: async () => {}, log: () => {}, fetch: (async () => new Response("", { status: 302, headers: { location: "https://api.example.com:8443/file" } })) as any });
+  await assert.rejects(() => gateCall(spec, { url: "https://api.example.com/download", followDownloadRedirects: true, binary: true }), /non-standard port/);
+});
+
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
   const w = firstOp("wordpress", (x) => x.kind === "read" && !x.params.some((p) => p.required));
   await callOperation("wordpress", w.id);

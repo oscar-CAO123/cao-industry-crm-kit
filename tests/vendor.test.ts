@@ -164,6 +164,19 @@ test("loaded under Claude Code, the Stripe SDK prints no plugin hint and the age
   assert.equal(r.stdout, "1");
 });
 
+test("an installed SDK that no longer matches its audited pin is refused, never loaded (security review, 8 Nov)", async () => {
+  const { vendorRequire } = await import("../core/sdk/vendor/load.ts");
+  const f = new URL("../vendor-sdks/stripe/node_modules/.package-lock.json", import.meta.url);
+  const original = fs.readFileSync(f, "utf8");
+  try {
+    const d = JSON.parse(original);
+    d.packages["node_modules/stripe"].integrity = "sha512-tampered";
+    fs.writeFileSync(f, JSON.stringify(d));
+    assert.throws(() => vendorRequire("stripe"), /does not match the audited pin/);
+  } finally { fs.writeFileSync(f, original); }
+  assert.doesNotThrow(() => vendorRequire("stripe"));
+});
+
 test("the kit carries no SDK code: each SDK is a pinned pointer to its audited build, install scripts off", () => {
   const pkg = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   assert.equal(pkg.dependencies, undefined, "the kit itself depends on no vendor SDK");

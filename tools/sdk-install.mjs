@@ -48,7 +48,11 @@ for (const app of apps) {
     cwd: path.join(ROOT, app), stdio: ["ignore", "inherit", "inherit"], env: { ...process.env, npm_config_ignore_scripts: "true" },
   });
   const problems = r.status === 0 ? check(app) : [`npm ci failed (exit ${r.status})`];
-  if (problems.length) { failed++; console.error(`${app}: ${problems.join("; ")}`); }
+  if (problems.length) {
+    failed++;
+    fs.rmSync(path.join(ROOT, app, "node_modules"), { recursive: true, force: true });  // never leave a mismatched tree to be loaded
+    console.error(`${app}: ${problems.join("; ")} (install removed)`);
+  }
   else console.log(`${app}: installed, every package matches the audited pin`);
 }
 process.exit(failed ? 1 : 0);

@@ -398,6 +398,8 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   // AroFlo signs the exact query or form string, built as its reference script does (encodeURIComponent per value).
   let rawBody: string | undefined;
   if ((o.auth ?? p.auth).provider === "aroflo") {
+    // AroFlo signs only the query or the form string it builds itself; a caller body would go unsigned, so refuse it.
+    if (input.body !== undefined) throw new Error(`${id} ${opId}: AroFlo takes its fields as params (postxml), not a body`);
     const enc = (pairs: [string, string][]) => pairs.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
     const q = enc([...u.searchParams]);
     u.search = q ? `?${q}` : "";
