@@ -1,0 +1,49 @@
+{
+ "id": "bullhorn",
+ "name": "Bullhorn",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "rest.bullhornstaffing.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "Bullhorn signs in through a login call that returns a per-session REST URL and BhRestToken; not wired yet"
+ },
+ "keys": [
+  "BULLHORN_CLIENT_ID",
+  "BULLHORN_CLIENT_SECRET",
+  "BULLHORN_USERNAME",
+  "BULLHORN_PASSWORD"
+ ],
+ "sources": [
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/entityref.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/datahubref.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/changelog.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 90,
+  "read": 33,
+  "write": 57
+ }
+}

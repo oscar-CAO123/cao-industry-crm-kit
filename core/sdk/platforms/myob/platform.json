@@ -1,0 +1,243 @@
+{
+ "id": "myob",
+ "name": "MYOB Business (AccountRight)",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.myob.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {
+  "cf_uri": {
+   "allow": [],
+   "env": "MYOB_COMPANY_FILE_ID",
+   "fill": "$env"
+  }
+ },
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "MYOB_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token",
+  "extraHeaders": {
+   "x-myobapi-key": "MYOB_API_KEY",
+   "x-myobapi-version": "=v2"
+  }
+ },
+ "keys": [
+  "MYOB_ACCESS_TOKEN",
+  "MYOB_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/banking/statement/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/company/preferences/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/contact/customer/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/contact/employee/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/contact/personal/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/contact/supplier/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/account/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/accountbudget/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/accountingproperties/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/accountregister/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/category/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/categoryregister/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/currency/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/generaljournal/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/job/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/jobbudget/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/jobregister/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/journaltransaction/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/linkedaccount/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/generalledger/taxcode/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/inventory/adjustment/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/payroll/superannuationfund/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/payroll/timesheet/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/purchase/bill/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/purchase/order/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/purchase/supplierpayment/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/report/balancesheetsummary/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/report/profitandlosssummary/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/report/taxcodesummary/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/sale/customerpayment/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/sale/invoice/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/sale/order/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/sale/quote/",
+   "official": "vendor-domain: developer.myob.com"
+  },
+  {
+   "url": "https://developer.myob.com/api/myob-business-api/v2/timebilling/activity/",
+   "official": "vendor-domain: developer.myob.com"
+  }
+ ],
+ "gaps": [
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/banking/bankaccount/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/banking/receivemoneytxn/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/banking/spendmoneytxn/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/banking/transfermoneytxn/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/company/customlist/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/company/formtemplate/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/contact/employeepaymentdetails/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/contact/employeepaymentsummaryreport/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/contact/employeepayrolldetails/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/contact/employeestandardpay/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/generalledger/profitlossdistribution/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/inventory/itempricematrix/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/inventory/priceleveldetail/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/employmentclassification/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/deduction/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/entitlement/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/expense/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/superannuation/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/tax/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/taxtable/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/payroll/payrollcategory/wage/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/bill/item/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/bill/miscellaneous/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/bill/professional/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/bill/service/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/debitrefund/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/debitsettlement/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/order/item/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/order/miscellaneous/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/order/professional/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/order/service/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/supplierpayment/calculatediscounts/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/purchase/supplierpayment/recordwithdiscountsandfees/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/report/gst/nzgstreport/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/report/journaltransactionhistory/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/report/payroll/employeepayrolladvice/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/report/payrollcategorysummary/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/creditrefund/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/creditsettlement/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/customerpayment/calculatediscountsfees/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/customerpayment/recordwithdiscountsandfees/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/invoice/item/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/invoice/miscellaneous/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/invoice/professional/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/invoice/service/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/invoice/timebilling/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/order/item/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/order/miscellaneous/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/order/professional/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/order/service/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/order/timebilling/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/quote/item/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/quote/miscellaneous/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/quote/professional/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/quote/service/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/sale/quote/timebilling/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/security/role/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/security/user/: HTTP 404",
+  "REFUSED https://developer.myob.com/api/myob-business-api/v2/timebilling/activityslip/: HTTP 404"
+ ],
+ "counts": {
+  "operations": 55,
+  "read": 26,
+  "write": 29
+ }
+}

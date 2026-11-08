@@ -1,0 +1,629 @@
+{
+ "id": "podium",
+ "name": "Podium",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.podium.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "PODIUM_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "PODIUM_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.podium.com/reference/introduction",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/introduction.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/authentication.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/response-body.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/pagination.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/http-status-codes.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/errors-tmp.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-location-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/locationindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/locationget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/locationupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-organization-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/organizationget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-user-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/userindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/userget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-appointment-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/appointmentcreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/appointmentindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/appointmentget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-campaign-interaction-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaign_interactionindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-campaign-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaignindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaigncreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaigndelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaignget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/campaignupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messagecreate_campaign_message-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-entity-attribute-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_attributeindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_attributecreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_attributedelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_attributeget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_attributeupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-entity-tag-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_taglist.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_tagcreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_tagget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_entity_tagupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactcreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactopt_out.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-upsert-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactdelete-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-attribute-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contactupdate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_attributedelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-tag-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_attributeupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_attributecreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_tagcreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact_tagcreate-2.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contacttransactional_opt_in.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contacttransactional_opt_out.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-conversation-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversationindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversationget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversationupdate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-lead-writeback-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/lead_writebackget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-conversation-note-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversation_notecreate_conversation_note-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversation_assigneeget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversation_assigneeupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-feedback-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/feedbackindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-message-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messageindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messageget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messageimport.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messagesend-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/messagesend_with_attachment.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-template-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/templateindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/templatecreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/templatedelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/templateupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-invoice-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoiceindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoicecreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoiceget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoicecancel-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoicerefund-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoicecharge.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoicesetup.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/payment_accountindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-payment-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/paymentget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-reader-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/readerget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-refund-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/refundcreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/refundget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-payment-account-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/productindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/productget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/product_imagedelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/productupload_images.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-product-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-product-async-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-product-image-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/reviewindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/reviewget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-invite-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_inviteindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_invitecreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_inviteget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-sites-summary-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_sites_summaryindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-summary-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_summaryindex-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-response-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_responseupdate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_responseindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_responsecreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-review-attribution-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_attributiondelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review_attributioncreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/message-event-types.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/contact-event-types.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-contact-webhook-event-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/review-event-types.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/invoice.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-webhook-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/webhookindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/webhookcreate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/webhookdelete-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/webhookget-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/webhookupdate-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/conversation_lead_idget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-data-feed-event-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/data_feed_eventdata-1.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/integration_commandclaim.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/integration_commandresult.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/integration_instance_heartbeatcreate.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-integration-instance-heartbeat-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-integration-command-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-scim-user-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/scim_userdelete.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/scim_userpatch.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/callget.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/callindex.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/callvoicemail.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-call-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  },
+  {
+   "url": "https://docs.podium.com/reference/the-call-voicemail-object.md",
+   "official": "vendor-domain: docs.podium.com"
+  }
+ ],
+ "gaps": [
+  "REFUSED https://docs.podium.com/llms.txt: HTTP 404"
+ ],
+ "counts": {
+  "operations": 98,
+  "read": 44,
+  "write": 54
+ }
+}

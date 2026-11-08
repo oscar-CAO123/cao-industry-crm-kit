@@ -1,0 +1,364 @@
+{
+ "agentbox": {
+  "forceWrite": {},
+  "readPost": {},
+  "drop": {
+   "get:/contacts/OXF18000001": "a docs example with a hard-coded id, not an endpoint"
+  }
+ },
+ "aircall": {
+  "forceWrite": {
+   "fetch-number-configuration": "GET /v1/numbers/:id/messages/configuration returns a token and callbackUrl. The token is a credential-type value that the agent should not be able to read witho (aircall.json)",
+   "list-all-webhooks": "Returns every webhook with its token field. The docs say that token is used to verify requests come from Aircall, so it is a secret returned by a read. (aircall.json)",
+   "retrieve-a-webhook": "Returns the same webhook token field as the list endpoint. (aircall.json)",
+   "retrieve-an-analytics-report-export": "Returns a presigned, time-limited downloadUrl once the export finishes. A signed URL returned by a read. (aircall.json)"
+  },
+  "readPost": {}
+ },
+ "aroflo": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "asana": {
+  "forceWrite": {
+   "getAttachment": "Returns download_url (valid about two minutes), permanent_url and view_url for the file. A live file link, not a plain read. (asana.json)",
+   "getOrganizationExport": "Returns download_url for the full organisation export (gzip JSON, valid about one hour). Gives a time-limited link to all org data. (asana.json)",
+   "getJob": "Returns a download_url nested in an export job (per the spec, valid about one hour for graph exports). A time-limited export link. (asana.json)",
+   "getAuditLogEvents": "Returns saml_response on login events: the raw SAML response from the identity provider, a signed login assertion. Credential-type content. (asana.json)"
+  },
+  "readPost": {}
+ },
+ "bluebeam": {
+  "forceWrite": {
+   "ProjectFiles_Get": "Returns a DownloadUrl that gives file content. Not a state change, but it is a download link, so it belongs behind a gate. (bluebeam.json)",
+   "ProjectFiles_GetByPath": "Returns a DownloadUrl that gives file content by path. (bluebeam.json)",
+   "ProjectFileRevisions_Get": "Returns a DownloadUrl for a file revision. (bluebeam.json)",
+   "SessionFiles_Get": "Returns DownloadUrl and SnapshotDownloadUrl for a Studio Session file. (bluebeam.json)",
+   "SessionFiles_GetSnapshot": "Returns a DownloadUrl for a snapshot. (bluebeam.json)",
+   "ProjectSharedLinks_Get": "Returns ShareLink, a public link to the file, plus the password-protected flag. (bluebeam.json)",
+   "Projects_Get": "Returns an InviteUrl, an invite link that can grant project access. (bluebeam.json)",
+   "Projects_GetAll": "Returns InviteUrl on each project, an invite link that can grant access. (bluebeam.json)",
+   "Sessions_Get": "Returns an InviteUrl, an invite link that can grant Studio Session access. (bluebeam.json)",
+   "Sessions_GetAll": "Returns InviteUrl on each Studio Session, an invite link that can grant access. (bluebeam.json)"
+  },
+  "readPost": {}
+ },
+ "buildxact": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "calendly": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "canva": {
+  "forceWrite": {
+   "getDesignExportJob": "Returns an array of download URLs for the exported design, valid for only 24 hours. That is a signed-style download link, so it should be gated as returning a c (canva.json)",
+   "getImageGenerationJob": "On success the result contains a download URL for the generated image, valid for 24 hours. Same signed-link problem as the export job. (canva.json)"
+  },
+  "readPost": {}
+ },
+ "cliniko": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "deputy": {
+  "forceWrite": {
+   "deputy.Doatask": "Labelled read, but the name is an action ('Do a task') on a task-state path. Almost certainly marks the task done. Spec has no description. Treat as a write unt (deputy.json)",
+   "deputy.Getrostersavailableforswap": "Labelled read, but the path is /supervise/roster/autobuild, which sits with the auto-build action family. Vendor spec also says GET with no detail. Unverified t (deputy.json)",
+   "deputy-v1-supervise-api.supervise_employee__employeeid_manage_login_get": "'manage-login' for an employee. Spec gives no description and a generic object response. Could expose or issue login access. Needs a check before any agent call (deputy.json)",
+   "deputy-v1-my-api.my_setup__supportaccess_get": "'supportAccess' sits on the setup path. Could be a support-access grant or status. Spec gives no description. Needs a check. (deputy.json)",
+   "deputy-v1-my-api.my_memo__read_get": "'/memo/read' may mark a memo as read as a side effect. Spec gives no description. Needs a check. (deputy.json)",
+   "deputy-v1-my-api.my_widget__run_get": "'Widget / run' suggests it executes a widget's query, not a plain fetch. Spec gives no description. Needs a check. (deputy.json)",
+   "deputy-v1-my-api.my_widget__run_widgetid_get": "Same as the widget run list endpoint, per widget id. Needs a check. (deputy.json)",
+   "deputy-v1-supervise-api.supervise_employee__employeeid_action_get": "Catch-all path /supervise/employee/{employeeId}/{action}. The action is free-form, so the label cannot be checked from the path. Needs the action list. (deputy.json)",
+   "deputy-v1-my-api.my_setup__gamingfy_action_get": "Catch-all path /my/setup/gamingfy/{action}. Same problem: the action is free-form and not described. Needs the action list. (deputy.json)"
+  },
+  "readPost": {
+   "deputy-v1-resource-api.searchEmployee": "Plain read (POST /resource/Employee/QUERY, summary 'Search Employee') labelled write. Harmless read, so over-gated. (deputy.json)",
+   "deputy-v1-resource-api.searchRoster": "Plain read (POST /resource/Roster/QUERY, summary 'Search Roster') labelled write. Harmless read, so over-gated. (deputy.json)",
+   "deputy-v1-resource-api.searchTimesheet": "Plain read (POST /resource/Timesheet/QUERY, summary 'Search Timesheet') labelled write. Harmless read, so over-gated. (deputy.json)",
+   "deputy-v2-api.AvailabilityV2Controller_list": "Plain read (POST /management/v2/availability:list, summary 'List') labelled write. Harmless read, so over-gated. (deputy.json)",
+   "deputy-v1-supervise-api.supervise_metric__query_post": "Plain read (POST /supervise/metric/QUERY, summary 'POST Metric / QUERY') labelled write. Harmless read, so over-gated. (deputy.json)",
+   "deputy-v1-my-api.my_colleague__query_post": "Plain read (POST /my/colleague/QUERY, summary 'POST Colleague / QUERY') labelled write. Harmless read, so over-gated. (deputy.json)"
+  }
+ },
+ "docusign": {
+  "forceWrite": {
+   "sdk.get_v2_1_current_user_notary_jurisdictions_jurisdictionId_seal": "Read label, but it returns a notary's seal image, a signing asset that should be gated as sensitive. (docusign.json)",
+   "esignature.APIRequestLog_GetRequestLog": "Read label, but it returns an API request log file that may carry request headers, including the bearer token. Unverified against the vendor page; should be gat (docusign.json)",
+   "esignature.BillingPlan_GetCreditCardInfo": "Read label, but it returns payment card details. Not a credential in the brief's list, flagged as sensitive. (docusign.json)"
+  },
+  "readPost": {}
+ },
+ "dropbox": {
+  "forceWrite": {
+   "files.get_temporary_link": "Returns a temporary download URL for a file's content, valid four hours with no login needed. That is a credential-like return. (dropbox.json)",
+   "files.copy_reference.get": "Returns a copy reference string that lets whoever holds it save a copy of the file into their own Dropbox. Credential-like. (dropbox.json)",
+   "sharing.list_shared_links": "Returns the shared link URLs for the user's files, and each one opens the file to anyone holding it. (dropbox.json)",
+   "sharing.get_shared_links": "Deprecated version of list_shared_links with the same URL return. The spec says it retires in October 2026, which has passed, so check it still exists before an (dropbox.json)",
+   "riviera.get_transform_async": "Starts a server-side conversion job that produces a new output. Starting a job is not a read. (dropbox.json)",
+   "riviera.get_transcript_async": "Starts a transcription job on an audio or video file. (dropbox.json)",
+   "riviera.get_keyframes_async": "Starts a keyframe extraction job on a video. (dropbox.json)",
+   "riviera.get_markdown_async": "Starts a document-to-markdown conversion job. (dropbox.json)",
+   "riviera.get_metadata_async": "Starts a metadata extraction job. (dropbox.json)",
+   "riviera.get_ocr_async": "Starts an OCR job on images or PDFs. (dropbox.json)",
+   "riviera.get_text_async": "Starts a text extraction job on a document. (dropbox.json)"
+  },
+  "readPost": {
+   "files.list_folder.continue": "Pages through a folder listing with a cursor. Read. (dropbox.json)",
+   "files.list_folder.longpoll": "Waits for changes using a cursor, changes nothing. Read (runs on the notify host with no token). (dropbox.json)",
+   "files.search.continue_v2": "Fetches the next page of search results. Read. (dropbox.json)",
+   "files.get_file_lock_batch": "Returns lock metadata for paths. Read. (dropbox.json)",
+   "file_requests.list.continue": "Pages through file request list. Read. (dropbox.json)",
+   "file_properties.properties.search.continue": "Pages through property search results. Read. (dropbox.json)",
+   "team.members.list.continue": "Pages through team member list. Read. (dropbox.json)",
+   "team.members.list.continue_v2": "Pages through team member list (v2). Read. (dropbox.json)",
+   "team.groups.list.continue": "Pages through team groups list. Read. (dropbox.json)",
+   "team.groups.members.list.continue": "Pages through group members list. Read. (dropbox.json)",
+   "sharing.list_file_members.batch": "Lists members of several files. Read. (dropbox.json)",
+   "sharing.get_file_metadata.batch": "Returns shared file metadata for several files. Read. (dropbox.json)",
+   "sharing.list_file_members.continue": "Pages through file member list. Read. (dropbox.json)",
+   "sharing.list_received_files.continue": "Pages through files shared with the user. Read. (dropbox.json)",
+   "sharing.list_folders.continue": "Pages through shared folder list. Read. (dropbox.json)",
+   "paper.docs.list.continue": "Pages through Paper doc list. Read. (dropbox.json)",
+   "team_log.get_events.continue": "Pages through team audit events. Read. (dropbox.json)"
+  }
+ },
+ "fergus": {
+  "forceWrite": {
+   "get /attachments/{id}/download": "Returns HTTP 302 with a Location header holding a short-lived signed S3 URL for the file. That is a signed URL, so it should be gated as returning a credential. (fergus.json)"
+  },
+  "readPost": {
+   "post /pricebooks/search": "Searches pricebook items across pricebooks. POST is used only to carry the search body; it changes nothing. (fergus.json)"
+  }
+ },
+ "fireflies": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "gohighlevel": {
+  "forceWrite": {
+   "ad-manager.fb-get-integration": "Labelled read, but the response returns a live accessToken for each linked Facebook page. The vendor schema marks it 'Treat as a credential'. Returning a creden (gohighlevel.json)",
+   "payments.fetch-config": "Labelled read, but it returns the payment provider config, and the vendor example carries apiKey and publishableKey. Treat the response as sensitive, keep it ou (gohighlevel.json)"
+  },
+  "readPost": {
+   "contacts.search-contacts-advanced": "POST /contacts/search is a search. Vendor scope is contacts.readonly. (gohighlevel.json)",
+   "opportunities.search-opportunities-advanced": "POST search. Vendor scope is opportunities.readonly. (gohighlevel.json)",
+   "objects.search-object-records": "POST search of custom object records. Vendor scope is objects/record.readonly. (gohighlevel.json)",
+   "locations.task-search": "POST task search. Vendor scope is locations/tasks.readonly. (gohighlevel.json)",
+   "users.filter-users-by-email": "POST filter of users by email. Vendor scope is users.readonly. (gohighlevel.json)",
+   "social-media-posting.get-posts": "POST list of posts. Vendor scope is socialplanner/post.readonly. (gohighlevel.json)",
+   "social-media-posting.get-tags-by-ids": "POST lookup of tags by id. Read in name and summary. (gohighlevel.json)",
+   "social-media-posting.get-social-media-statistics": "POST statistics query. Read in name and summary. (gohighlevel.json)",
+   "ad-manager.google-get-keyword-ideas": "POST keyword idea lookup. Vendor scope is adPublishing.readonly. Lower priority, harmless. (gohighlevel.json)"
+  }
+ },
+ "google-ads": {
+  "forceWrite": {},
+  "readPost": {
+   "googleAdsFields.search": "POST searches the Google Ads field catalogue. Read only. (google-ads.json)"
+  }
+ },
+ "google-workspace": {
+  "forceWrite": {
+   "gmail.users.settings.cse.keypairs.get": "Returns a client-side encryption key pair, including metadata for its paired private key (privateKeyMetadata). Not the key itself, but credential-adjacent, so t (google-workspace.json)",
+   "gmail.users.settings.cse.keypairs.list": "Lists the same key-pair resource as keypairs.get, so it carries the same credential-adjacent metadata. Review the read label. (google-workspace.json)"
+  },
+  "readPost": {
+   "calendar.freebusy.query": "POST /freeBusy only returns busy times. Changes nothing. (google-workspace.json)",
+   "sheets.spreadsheets.developerMetadata.search": "POST searches developer metadata. Read only. (google-workspace.json)",
+   "chat.spaces.messages.search": "POST searches messages the caller can access. Read only. (google-workspace.json)",
+   "mybusinessbusinessinformation.googleLocations.search": "POST searches Google business listings. Read only. (google-workspace.json)"
+  }
+ },
+ "hubspot": {
+  "forceWrite": {
+   "crm-exports-3.get-/crm/v3/exports/export/async/tasks/{taskId}/status_getStatus": "Read label, but the response (ActionResponseWithSingleResultURI) carries a download link in \"links\" for the finished export. A link to a file is a URL to a file (hubspot-1.json)",
+   "crm-exports-2026-03.get-/crm/exports/2026-03/export/async/tasks/{taskId}/status_getStatus": "Read label, but the response (ActionResponseWithSingleResultURI) carries a download link in \"links\" for the finished export. A link to a file is a URL to a file (hubspot-1.json)",
+   "crm-exports-2026-09.get-/crm/exports/2026-09/export/async/tasks/{taskId}/status_getStatus": "Read label, but the response (ActionResponseWithSingleResultURI) carries a download link in \"links\" for the finished export. A link to a file is a URL to a file (hubspot-1.json)",
+   "files-files-3.get-/files/v3/files/{fileId}/signed-url_getSignedUrl": "Returns a signed URL (presigned link) to a private file, so it hands back a credential-like link. Spec summary: \"Get signed URL to access private file\". The 202 (hubspot-2.json)",
+   "files-files-2026-03.get-/files/2026-03/files/{fileId}/signed-url_getSignedUrl": "Returns a signed URL (presigned link) to a private file, so it hands back a credential-like link. Spec summary: \"Get signed URL to access private file\". The 202 (hubspot-2.json)",
+   "files-files-2026-09.get-/files/2026-09/files/{fileId}/signed-url": "Returns a signed URL (presigned link) to a private file, so it hands back a credential-like link. Spec summary: \"Get signed URL to access private file\". The 202 (hubspot-2.json)"
+  },
+  "readPost": {
+   "crm-companies-3.post-/crm/v3/objects/companies/search_doSearch": "POST search, no change. (hubspot-1.json)",
+   "crm-companies-3.post-/crm/v3/objects/companies/batch/read_read": "POST batch read, no change. (hubspot-1.json)",
+   "crm-contacts-3.post-/crm/v3/objects/contacts/search_doSearch": "POST search, no change. (hubspot-1.json)",
+   "crm-contacts-3.post-/crm/v3/objects/contacts/batch/read_read": "POST batch read, no change. (hubspot-1.json)",
+   "crm-deals-3.post-/crm/v3/objects/0-3/search_doSearch": "POST search, no change. (hubspot-1.json)",
+   "crm-deals-3.post-/crm/v3/objects/0-3/batch/read_read": "POST batch read, no change. (hubspot-1.json)",
+   "crm-calls-3.post-/crm/v3/objects/calls/search_doSearch": "POST search, no change. (hubspot-1.json)",
+   "communication-preferences-subscriptions-4.post-/communication-preferences/v4/statuses/batch/read": "POST batch read of statuses, no change. (hubspot-1.json)",
+   "conversations-conversations-3.post-/conversations/v3/conversations/actors/batch/read": "POST batch read of actors, no change. (hubspot-1.json)",
+   "cms-pages-3.post-/cms/v3/pages/site-pages/batch/read_readBatch": "POST batch read of website pages, no change. (hubspot-1.json)",
+   "cms-posts-3.post-/cms/v3/blogs/posts/batch/read_read": "POST batch read of blog posts, no change. (hubspot-1.json)",
+   "crm-fees-3.post-/crm/v3/objects/fees/search": "POST search, no change. (hubspot-1.json)",
+   "crm-carts-3.post-/crm/v3/objects/carts/search": "POST search, no change. (hubspot-1.json)",
+   "crm-courses-3.post-/crm/v3/objects/0-410/search": "POST search, no change. (hubspot-1.json)",
+   "crm-associations-3.post-/crm/v3/associations/{fromObjectType}/{toObjectType}/batch/read_read": "POST batch read of associations, no change. (hubspot-1.json)",
+   "test-at-debug-2026-09-beta.post-/crm/objects/2026-09-beta/{objectType}/search_/crm/objects/2026-09-beta/{objectType}/search": "POST search on a beta object type. Search only reads records, so it is a read sent as POST. (hubspot-2.json)",
+   "crm-taxes-3.post-/crm/v3/objects/taxes/search_doSearch": "POST search for taxes. Read only. (hubspot-2.json)",
+   "crm-leads-2026-09.post-/crm/objects/2026-09/leads/search_/crm/objects/2026-09-beta/{objectType}/search": "POST search for leads (2026-09). Read only. (hubspot-2.json)",
+   "crm-leads-3.post-/crm/v3/objects/leads/search_doSearch": "POST search for leads (v3). Read only. (hubspot-2.json)",
+   "crm-leads-2026-09.post-/crm/objects/2026-09/leads/batch/read_/crm/objects/2026-09-beta/{objectType}/batch/read": "POST batch read of leads by ID (2026-09). Read only. (hubspot-2.json)",
+   "crm-leads-3.post-/crm/v3/objects/leads/batch/read_read": "POST batch read of leads by ID (v3). Read only. (hubspot-2.json)",
+   "crm-taxes-3.post-/crm/v3/objects/taxes/batch/read_read": "POST batch read of taxes by ID (v3). Read only. (hubspot-2.json)",
+   "marketing-campaigns-public-api-3.post-/marketing/v3/campaigns/batch/read": "POST batch read of campaigns (v3). Read only. (hubspot-2.json)",
+   "marketing-campaigns-public-api-2026-09.post-/marketing/campaigns/2026-09/batch/read": "POST batch read of campaigns (2026-09). Read only. (hubspot-2.json)"
+  }
+ },
+ "klaviyo": {
+  "forceWrite": {
+   "get_push_tokens": "Returns the raw device push token (token field: 'The push token'). A device credential, not a plain read of profile data. (klaviyo.json)",
+   "get_push_token": "Returns the raw device push token for one record (token field). Credential-like. (klaviyo.json)",
+   "get_push_tokens_for_profile": "Lists the raw push tokens of one profile. Credential-like. (klaviyo.json)"
+  },
+  "readPost": {
+   "query_metric_aggregates": "POST that aggregates metric data; no change made. (klaviyo.json)",
+   "query_campaign_values": "POST report query for campaign values; no change made. (klaviyo.json)",
+   "query_flow_values": "POST report query for flow values; no change made. (klaviyo.json)",
+   "query_flow_series": "POST report query for flow series; no change made. (klaviyo.json)",
+   "query_form_values": "POST report query for form values; no change made. (klaviyo.json)",
+   "query_form_series": "POST report query for form series; no change made. (klaviyo.json)",
+   "query_segment_values": "POST report query for segment values; no change made. (klaviyo.json)",
+   "query_segment_series": "POST report query for segment series; no change made. (klaviyo.json)"
+  }
+ },
+ "meta-ads": {
+  "forceWrite": {
+   "Application.get.sgw_install_deferral_link": "Returns an install deferral link, which may be a signed or presigned URL. Its vendor page was not read, so the return type is unconfirmed. Hold it out of agent  (meta-ads.json)",
+   "CustomAudience.get.salts": "Returns customer-list hashing salts, a secret-like value rather than a plain read of audience data. The vendor page does not document this edge, so it is unconf (meta-ads.json)"
+  },
+  "readPost": {}
+ },
+ "microsoft-365": {
+  "forceWrite": {
+   "drives.GetItemsContent": "GET returns a 302 to a pre-authenticated download URL (vendor doc driveitem-get-content). The reply is a presigned link, so label it write or handle the link as (microsoft-365-1.json)",
+   "drives.GetRootContent": "Same driveItem content redirect to a presigned URL (vendor doc driveitem-get-content). (microsoft-365-1.json)",
+   "drives.items.GetChildrenContent": "Same driveItem content redirect to a presigned URL (vendor doc driveitem-get-content). (microsoft-365-1.json)",
+   "drives.GetSpecialContent": "Same driveItem content redirect to a presigned URL (vendor doc driveitem-get-content). (microsoft-365-1.json)",
+   "drives.GetBundlesContent": "Same driveItem content class. Redirect not checked on this exact page. (microsoft-365-1.json)",
+   "drives.items.GetVersionsContent": "Same driveItem content class. Redirect not checked on this exact page. (microsoft-365-1.json)",
+   "drives.items.analytics.itemActivityStats.activities.GetDriveItemContent": "Same driveItem content class. Not checked separately. (microsoft-365-1.json)",
+   "deviceManagement.reports.GetExportJobs": "Response field url is 'Temporary location of the exported report' (spec). Returns a temporary download link to report data. (microsoft-365-1.json)",
+   "deviceManagement.reports.ListExportJobs": "List twin of GetExportJobs. Each item carries the same temporary download url. (microsoft-365-1.json)",
+   "deviceManagement.virtualEndpoint.cloudPCs.cloudPC.retrieveCloudPcLaunchDetail": "Returns cloudPcLaunchUrl, the Cloud PC connect URL (spec). Unverified whether it carries a token. Treat as a launch credential until checked. (microsoft-365-1.json)",
+   "deviceManagement.virtualEndpoint.GetOnPremisesConnections": "Response includes adDomainPassword (spec: the password for adDomainUsername). The spec does not mark it writeOnly, so a read may return it. Unverified. (microsoft-365-1.json)",
+   "deviceManagement.virtualEndpoint.ListOnPremisesConnections": "List twin of GetOnPremisesConnections. Same adDomainPassword field. Unverified. (microsoft-365-1.json)",
+   "applications.GetSynchronization": "Response includes 'secrets' (credentials for provisioned cloud apps). The spec does not mark it writeOnly. Unverified whether values come back. (microsoft-365-1.json)",
+   "informationProtection.bitlocker.GetRecoveryKeys": "Returns the BitLocker recovery key itself when $select=key is sent (Graph reference for bitlockerRecoveryKey get). Credential, so it must not be a read. (microsoft-365-3.json)",
+   "security.identities.sensors.getDeploymentAccessKey": "GET function named for returning the sensor deployment access key, a credential. Vendor body not reached, so field-level detail is unverified. (microsoft-365-3.json)",
+   "security.identities.sensors.getDeploymentPackageUri": "GET function returning a deployment package URI, likely a download link that may be signed. Vendor body not reached, so unverified. (microsoft-365-3.json)",
+   "me.cloudPCs.cloudPC.retrieveCloudPcLaunchDetail": "Returns a cloudPcLaunchDetail that opens a live Cloud PC session, so it works as an access link. Response field names not verified against the vendor page. (microsoft-365-3.json)",
+   "users.user.authentication.fido2Methods.creationOptions": "GET function that returns WebAuthn passkey creation options including a challenge (vendor description). Credential-adjacent, not a plain read. Needs a human dec (microsoft-365-4.json)",
+   "users.user.cloudPCs.cloudPC.retrieveCloudPcLaunchDetail": "GET function that returns the launch detail for a cloud PC session, which is likely a session connection link. The vendor description does not list the fields,  (microsoft-365-4.json)",
+   "users.user.onlineMeetings.onlineMeeting.getVirtualAppointmentJoinWebUrl": "Borderline. Returns a meeting join link. It is not a signed or presigned URL, so it is not a clear credential, but it grants entry to a meeting and should be lo (microsoft-365-4.json)"
+  },
+  "readPost": {
+   "search.query": "POST, runs a Microsoft Search query. Read only. (microsoft-365-3.json)"
+  }
+ },
+ "monday": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "servicem8": {
+  "forceWrite": {
+   "addon-sdk-api.list_account_key_values": "Returns every value an add-on stored under its account keys. The docs do not say these are secret, but an add-on could store a token there, so gate it as sensit (servicem8.json)",
+   "addon-sdk-api.get_account_key_value": "Returns one stored account key value. Same concern as list_account_key_values. (servicem8.json)",
+   "addon-sdk-api.list_job_key_values": "Returns every value an add-on stored against a job. Same concern as list_account_key_values. (servicem8.json)",
+   "addon-sdk-api.get_job_key_value": "Returns one stored job key value. Same concern as list_account_key_values. (servicem8.json)"
+  },
+  "readPost": {}
+ },
+ "shopify": {
+  "forceWrite": {
+   "queries.bulkOperation": "Read label is right, but it returns url and partialDataUrl, download links that expire after seven days (bulk operations doc). That is a signed link. (shopify.json)",
+   "queries.bulkOperations": "Same as bulkOperation: returns the list of bulk operations including their download url fields that expire after seven days. (shopify.json)",
+   "queries.currentBulkOperation": "Same as bulkOperation: returns the current operation's url and partialDataUrl download links. (shopify.json)",
+   "queries.abandonedCheckouts": "Read label is right, but it returns abandonedCheckoutUrl, a recovery link carrying a key parameter (the doc example shows key=...). Treat as a credential-bearin (shopify.json)",
+   "queries.shop": "Read label is right, but the shop object can return storefrontAccessTokens (a connection of tokens). (shopify.json)",
+   "queries.order": "Borderline. Read label is right, but transactions carry authorizationCode (a payment authorization code). Other order reads were not checked individually. (shopify.json)"
+  },
+  "readPost": {}
+ },
+ "slack": {
+  "forceWrite": {
+   "core.slackLists_download_get": "Returns a download URL for a list export (docs: 'Retrieve List download URL'). It hands back a link to list contents. The docs do not say whether the link is si (slack.json)"
+  },
+  "readPost": {
+   "core.admin_workflows_search": "POST that searches workflows. (slack.json)"
+  }
+ },
+ "smokeball": {
+  "forceWrite": {
+   "DownloadFile": "Returns downloadUrl and expiry, a time-limited signed download link for a document. Treat as a credential-type return. (smokeball.json)",
+   "DownloadInvoiceFile": "Returns downloadUrl and expiry for an invoice file. Same signed-link problem. (smokeball.json)",
+   "GetPreview": "Returns downloadUrl and expiry for a file preview. Same signed-link problem. (smokeball.json)",
+   "GetPreviewById": "Returns downloadUrl and expiry for a file preview by document version. Same signed-link problem. (smokeball.json)",
+   "GetPlugin": "Returns the plugin's signing key (Plugin.key: 'Signing key of the plugin to verify integrity of requesting secure URLs'). Credential return. (smokeball.json)",
+   "GetPlugins": "The list returns Plugin objects, each carrying the same signing key. Credential return. (smokeball.json)"
+  },
+  "readPost": {}
+ },
+ "telegram": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "whatsapp": {
+  "forceWrite": {
+   "listAssetsGetFlowJsonUrl": "Labelled read, but it returns a download_url for the flow JSON asset (spec response schema, GET /{Version}/{Flow-ID}/assets). That is a fetch link to a file, wh (whatsapp.json)",
+   "retrieveMediaUrl": "Labelled read, but it returns a media url that the media docs say is valid for 5 minutes and that downloads only with the bearer token (media-api page). Short-l (whatsapp.json)"
+  },
+  "readPost": {}
+ },
+ "wordpress": {
+  "forceWrite": {},
+  "readPost": {}
+ },
+ "xero": {
+  "forceWrite": {
+   "accounting.getOnlineInvoice": "Returns a live URL (OnlineInvoiceUrl) that opens the invoice to anyone holding it. Not a signed or presigned URL and not a credential, but it is a shareable acc (xero.json)"
+  },
+  "readPost": {}
+ },
+ "zendesk": {
+  "forceWrite": {
+   "ListTargets": "GET /api/v2/targets returns target objects. The vendor spec marks only some secrets write-only; token and api_token on Basecamp, Campfire, Pivotal, Yammer, Flow (zendesk.json)",
+   "ShowTarget": "Same as ListTargets, for one target: token and api_token fields may return credentials. (zendesk.json)",
+   "RenewCurrentSession": "GET /api/v2/users/me/session/renew, summary 'Renew the current session'. Renewing extends the session, so it changes state and should be a write. (zendesk.json)",
+   "ShowCurrentUser": "GET /api/v2/users/me returns an authenticity_token (a CSRF token, per the spec description). A session-bound token, so it should not be a plain read. (zendesk.json)",
+   "ListSupportAddresses": "Returns domain_verification_code, a DNS TXT verification string. Not a login credential, but a code the brief asks flagged. (zendesk.json)",
+   "ShowSupportAddress": "Same as ListSupportAddresses, for one address: returns domain_verification_code. (zendesk.json)"
+  },
+  "readPost": {}
+ },
+ "zoom": {
+  "forceWrite": {
+   "accounts.GetDownloadableFilesforDataRequest": "lists files with short-lived download links (review pass 5)",
+   "users.userZak": "Returns a Zoom Access Key (token) that can start or join a meeting as that user. The vendor summary says so. (zoom.json)",
+   "meetings.meeting": "Returns passcode fields (password, encrypted_password, h323_password, pstn_password) and start_url, which carries host start rights. (zoom.json)",
+   "meetings.webinar": "Returns passcode fields (password, encrypted_passcode, h323_passcode) and start_url. (zoom.json)",
+   "meetings.meetingInvitation": "Returns the invitation note, which normally holds the join link and passcode. The spec does not name the fields, so this is probable, not confirmed. (zoom.json)",
+   "meetings.getMeetingLiveStreamDetails": "Returns stream_key and stream_url. (zoom.json)",
+   "meetings.getWebinarLiveStreamDetails": "Returns stream_key and stream_url. (zoom.json)",
+   "video-sdk.getLiveStreamDetails": "Returns stream_key and stream_url for a session. (zoom.json)",
+   "events.getSessionLivestreamConfiguration": "Returns stream_key, stream_url and stream_backup_url. (zoom.json)",
+   "video-sdk.Liststreamingestions": "Lists stream_key and stream_url for every stream ingestion on the account. (zoom.json)",
+   "video-sdk.Getastreamingestion": "Returns stream_key, stream_url and backup_stream_url for one ingestion. (zoom.json)",
+   "rooms.getWebzrcUrl": "Returns a temporary Zoom Rooms virtual controller URL (url, expire_in). It is a control link, so it works as a credential. (zoom.json)",
+   "crc.get_participant_identifier_code": "Returns participant_identifier_code, a code that authenticates a CRC meeting join. (zoom.json)",
+   "crc.getCiscoPolycomRoomAccountSetting": "Response includes firmware_key. Flagged on the field name; the spec describes the endpoint only as an account setting. (zoom.json)",
+   "accounts.DownloadfilesfromDataRequest": "Returns download_url. The spec says the link expires after 5 minutes and works once, so it is a short-lived signed link. (zoom.json)",
+   "clips.downloadClip": "Spec says it answers with a 302 redirect to the direct clip file location, so the caller gets a file link. (zoom.json)",
+   "ai-services.liveTranscribe": "Spec: real-time speech to text over a WebSocket, with audio streamed in. Opens a live session, so it is not a read. The HTTP SDK cannot run it. (zoom.json)",
+   "ai-services.liveVoiceAgent": "Spec: live spoken conversation with an AI assistant over a WebSocket, with function-call events. Opens a live session that can act, so it is not a read. (zoom.json)"
+  },
+  "readPost": {
+   "chat.searchChannels": "POST search of channels. Changes nothing. (zoom.json)",
+   "canvas.Search": "POST search of files. Changes nothing. (zoom.json)",
+   "canvas.Searchrows": "POST search of rows in a data table. Changes nothing. (zoom.json)"
+  }
+ }
+}

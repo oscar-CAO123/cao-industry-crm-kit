@@ -1,0 +1,36 @@
+{
+ "id": "cin7",
+ "name": "Cin7 Omni",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.cin7.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "CIN7_USERNAME",
+  "pass": "CIN7_API_KEY"
+ },
+ "keys": [
+  "CIN7_USERNAME",
+  "CIN7_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://api.cin7.com/api/swagger/v1/swagger.json",
+   "official": "vendor-domain: api.cin7.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 75,
+  "read": 45,
+  "write": 30
+ }
+}

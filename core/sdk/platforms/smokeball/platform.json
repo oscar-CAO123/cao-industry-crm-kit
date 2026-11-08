@@ -1,0 +1,45 @@
+{
+ "id": "smokeball",
+ "name": "Smokeball",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "api\\.smokeball\\.(?:com|com\\.au|co\\.uk)"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "tld": {
+   "env": "SMOKEBALL_REGION_TLD",
+   "default": "com.au",
+   "pattern": "com|com\\.au|co\\.uk"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "SMOKEBALL_ACCESS_TOKEN",
+  "extraHeaders": {
+   "x-api-key": "SMOKEBALL_API_KEY"
+  }
+ },
+ "keys": [
+  "SMOKEBALL_ACCESS_TOKEN",
+  "SMOKEBALL_API_KEY",
+  "SMOKEBALL_REGION_TLD (optional: com.au default, com, co.uk)"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.smokeball.com/openapi.json",
+   "official": "vendor-domain: docs.smokeball.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 249,
+  "read": 108,
+  "write": 141
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "id": "stripe",
+ "name": "Stripe",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.stripe.com",
+  "files.stripe.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "STRIPE_SECRET_KEY"
+ },
+ "keys": [
+  "STRIPE_SECRET_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json",
+   "official": "vendor-link: https://docs.stripe.com/sdks links github.com/stripe"
+  },
+  {
+   "url": "https://github.com/stripe/stripe-node",
+   "official": "vendor-link: https://docs.stripe.com/sdks links github.com/stripe"
+  }
+ ],
+ "gaps": [
+  "stripe: 38 endpoints added from stripe/stripe-node (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 650,
+  "read": 284,
+  "write": 366
+ }
+}

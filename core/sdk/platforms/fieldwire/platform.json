@@ -1,0 +1,53 @@
+{
+ "id": "fieldwire",
+ "name": "Fieldwire",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "client-api.super.fieldwire.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "client-api\\.(?:us|eu|ca)\\.fieldwire\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "region": {
+   "env": "FIELDWIRE_REGION",
+   "default": "us",
+   "pattern": "us|eu|ca",
+   "example": "us"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "FIELDWIRE_ACCESS_TOKEN",
+  "note": "Fieldwire swaps the API key for a short-lived JWT; that exchange is not built yet: supply the JWT"
+ },
+ "keys": [
+  "FIELDWIRE_ACCESS_TOKEN",
+  "FIELDWIRE_REGION (optional: us default)"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.fieldwire.com/llms.txt",
+   "official": "vendor-domain: developers.fieldwire.com"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/4bj10lpmwzrg6",
+   "official": "vendor-link: https://developers.fieldwire.com/reference/get_account names #4bj10lpmwzrg6"
+  },
+  {
+   "url": "https://dash.readme.com/api/v1/api-registry/40x31glmw10d1yi",
+   "official": "vendor-link: https://developers.fieldwire.com/reference/get_access_control_file_by_id names #40x31glmw10d1yi"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 633,
+  "read": 244,
+  "write": 389
+ }
+}

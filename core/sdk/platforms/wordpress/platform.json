@@ -1,0 +1,203 @@
+{
+ "id": "wordpress",
+ "name": "WordPress (core REST API)",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": true,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "site": {
+   "env": "WORDPRESS_SITE",
+   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "envOnly": true
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "WORDPRESS_USER",
+  "pass": "WORDPRESS_APP_PASSWORD"
+ },
+ "keys": [
+  "WORDPRESS_SITE",
+  "WORDPRESS_USER",
+  "WORDPRESS_APP_PASSWORD"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/application-passwords/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/block-directory-items/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/block-pattern-categories/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/block-patterns/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/block-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/block-types/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/blocks/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/categories/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/comments/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/media/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/menu-locations/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/nav_menu_item-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/nav_menu_items/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/nav_menus/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/page-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/pages/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/pattern-directory-items/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/plugins/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/post-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/post-statuses/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/post-types/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/posts/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/rendered-blocks/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/search-results/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/settings/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/sidebars/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/tags/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/taxonomies/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/themes/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/users/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/widget-types/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/widgets/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp-site-health-tests/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_global_styles/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_navigation-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_navigations/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_template-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_template_part-revisions/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_template_parts/",
+   "official": "vendor-domain: developer.wordpress.org"
+  },
+  {
+   "url": "https://developer.wordpress.org/rest-api/reference/wp_templates/",
+   "official": "vendor-domain: developer.wordpress.org"
+  }
+ ],
+ "gaps": [
+  "Some reference paths carry a typo in the docs (for example a stray parenthesis after a placeholder); the path is kept exactly as the page prints it.",
+  "Argument type and required flags are not shown per argument in the reference markup; type is 'unspecified' and required is set only when the description says Required.",
+  "Argument placement (query or body) is inferred from the method, not stated by the reference.",
+  "base_urls is a per-site placeholder; WordPress has no fixed host.",
+  "Endpoints under the core reference only; plugin and custom routes are out of scope."
+ ],
+ "counts": {
+  "operations": 157,
+  "read": 86,
+  "write": 71
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "idashboard-trust",
+ "name": "iDashboard Trust",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.idashboard.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "IDASHBOARD_ACCESS_TOKEN"
+ },
+ "keys": [
+  "IDASHBOARD_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://app.idashboard.com.au/api-docs",
+   "official": "vendor-domain: app.idashboard.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 70,
+  "read": 43,
+  "write": 27
+ }
+}

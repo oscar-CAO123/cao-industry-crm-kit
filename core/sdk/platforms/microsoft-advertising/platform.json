@@ -1,0 +1,47 @@
+{
+ "id": "microsoft-advertising",
+ "name": "Microsoft Advertising",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "campaign.api.bingads.microsoft.com",
+  "clientcenter.api.bingads.microsoft.com",
+  "reporting.api.bingads.microsoft.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "Microsoft Advertising is a SOAP API; the kit has no envelope builder yet"
+ },
+ "keys": [
+  "MSADS_ACCESS_TOKEN",
+  "MSADS_DEVELOPER_TOKEN",
+  "MSADS_CUSTOMER_ID",
+  "MSADS_ACCOUNT_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://campaign.api.bingads.microsoft.com/Api/Advertiser/CampaignManagement/v13/CampaignManagementService.svc?singleWsdl",
+   "official": "vendor-domain: campaign.api.bingads.microsoft.com"
+  },
+  {
+   "url": "https://clientcenter.api.bingads.microsoft.com/Api/CustomerManagement/v13/CustomerManagementService.svc?singleWsdl",
+   "official": "vendor-domain: clientcenter.api.bingads.microsoft.com"
+  },
+  {
+   "url": "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc?singleWsdl",
+   "official": "vendor-domain: reporting.api.bingads.microsoft.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 236,
+  "read": 0,
+  "write": 236
+ }
+}

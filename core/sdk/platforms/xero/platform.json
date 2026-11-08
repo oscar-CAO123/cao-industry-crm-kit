@@ -1,0 +1,95 @@
+{
+ "id": "xero",
+ "name": "Xero",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.xero.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "xero"
+ },
+ "keys": [
+  "XERO_CLIENT_ID",
+  "XERO_CLIENT_SECRET",
+  "XERO_TENANT_ID",
+  "XERO_REFRESH_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_accounting.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_assets.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_bankfeeds.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_bankfeeds_v2.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_files.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-finance.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-identity.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-payroll-au.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-payroll-au-v2.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-projects.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-app-store.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-accountdata.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-payroll-nz.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-payroll-uk.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero-webhooks.yaml",
+   "official": "vendor-link: https://developer.xero.com/ links github.com/XeroAPI"
+  }
+ ],
+ "gaps": [
+  "spec/raw.githubusercontent.com_XeroAPI_Xero-OpenAPI_master_xero-webhooks.yaml.json: format not recognised"
+ ],
+ "counts": {
+  "operations": 485,
+  "read": 258,
+  "write": 227
+ }
+}

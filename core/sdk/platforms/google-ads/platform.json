@@ -1,0 +1,43 @@
+{
+ "id": "google-ads",
+ "name": "Google Ads",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "googleads.googleapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "defaultScope": "https://www.googleapis.com/auth/adwords",
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "google",
+  "extraHeaders": {
+   "developer-token": "GOOGLE_ADS_DEVELOPER_TOKEN"
+  },
+  "optionalHeaders": {
+   "login-customer-id": "GOOGLE_ADS_LOGIN_CUSTOMER_ID"
+  }
+ },
+ "keys": [
+  "GOOGLE_MAILBOX",
+  "GOOGLE_ADS_DEVELOPER_TOKEN",
+  "GOOGLE_ADS_LOGIN_CUSTOMER_ID (optional)"
+ ],
+ "sources": [
+  {
+   "url": "https://googleads.googleapis.com/$discovery/rest?version=v26",
+   "official": "vendor-domain: googleads.googleapis.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 177,
+  "read": 12,
+  "write": 165
+ }
+}

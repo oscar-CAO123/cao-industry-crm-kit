@@ -1,0 +1,59 @@
+{
+ "id": "zendesk",
+ "name": "Zendesk",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.(?:zendesk)\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "subdomain": {
+   "env": "ZENDESK_SUBDOMAIN",
+   "pattern": "[a-z0-9-]+"
+  },
+  "domain": {
+   "env": "ZENDESK_DOMAIN",
+   "default": "zendesk",
+   "pattern": "zendesk"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "ZENDESK_EMAIL+=/token",
+  "pass": "ZENDESK_API_TOKEN"
+ },
+ "keys": [
+  "ZENDESK_SUBDOMAIN",
+  "ZENDESK_EMAIL",
+  "ZENDESK_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.zendesk.com/zendesk/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/help_center/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/collaboration_api/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  },
+  {
+   "url": "https://developer.zendesk.com/voice/oas.yaml",
+   "official": "vendor-domain: developer.zendesk.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 935,
+  "read": 458,
+  "write": 477
+ }
+}

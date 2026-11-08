@@ -1,0 +1,711 @@
+{
+ "id": "siteminder",
+ "name": "SiteMinder",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.siteminder.com",
+  "directbooking.siteminder.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "SiteMinder signs in differently per product (Basic, Bearer, API id headers); not wired yet"
+ },
+ "keys": [
+  "SITEMINDER_CREDENTIALS"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.siteminder.com/llms.txt",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/developer-guide.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/get-started.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/siteminder-apis.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/integration-types/pms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/integration-types/rms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/integration-types/booking-channel.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/integration-types/application.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/integration-types/property-hotel-group.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/partner-lifecycle/integration-process.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/partner-lifecycle/enhance-your-integration.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/resources/glossary.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/resources/ai-tools.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/get-started/resources/feedback-and-suggestions.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/pmsxchange-api.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/guides/quick-start.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/guides/integration-requirements.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/guides/testing-and-certification.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/guides/error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/guides/api-overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rooms-and-rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rooms-and-rates/sm-to-pms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rooms-and-rates/pms-to-sm.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/availability.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/restrictions.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/restrictions/pms-to-sm.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/restrictions/sm-to-pms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rates/pms-to-sm.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/rates/sm-to-pms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/reservations.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/reservations/push.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/reservations/pull.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/reservations/upload.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/reservations/import.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/reference/payment-transaction-record.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/booking-agent-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/document-type-code-doc.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/error-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/error-warning-types.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/fee-tax-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/http-error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/meal-plan-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/opentravel-codes-list.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/payment-card-provider-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/service-and-extra-charge.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/strong-customer-authentication-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reference-tables/test-credit-cards.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/changelog.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/credit-card-tokenization.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/pmsxchange-api/additional-resources/reservation-delivery-for-unmapped-rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/siteconnect-api.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/quick-start.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/integration-requirements.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/testing-and-certification.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/testing-and-certification/development-checklist.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/guides/api-overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/reference/rooms-and-rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/reference/availability-and-restrictions.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/reference/rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/reference/reservations.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/document-type-code-doc.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/error-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/error-warning-types.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/fee-tax-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/http-error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/meal-plan-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/opentravel-codes-list.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/payment-card-provider-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/service-and-extra-charge.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/strong-customer-authentication-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/reference-tables/test-credit-cards.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/siteconnect-api/additional-resources/changelog.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/channels-plus-api.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/guides/quick-start.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/guides/integration-requirements.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/guides/testing-and-certification.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/guides/api-overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/mcp-server/overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/properties.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/property.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/lock-reservation.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/confirm-reservation.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/modify-reservation.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/cancel-reservation.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/reservations-list.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/reservation-detail.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/export.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/export/properties.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/reference/export/property.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/generate-api-key.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/document-type-code-doc.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/error-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/error-warning-types.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/fee-tax-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/http-error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/meal-plan-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/opentravel-codes-list.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/payment-card-provider-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/service-and-extra-charge.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/strong-customer-authentication-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/reference-tables/test-credit-cards.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/changelog.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/commercial.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/commercial/partner-portal.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/commercial/deals.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/commercial/invoicing-gross-vs-net.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/channels-plus-api/additional-resources/commercial/cancellation-and-commission-charge.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/smx-api.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/guides/quick-start.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/guides/integration-requirements.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/guides/testing-and-certification.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/guides/error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/guides/api-overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/reservations.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/publishers.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/hotels.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/roomtypes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/rateplans.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/availability.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/reference/availability-and-rates/rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/property-publishers.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/document-type-code-doc.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/error-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/error-warning-types.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/fee-tax-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/http-error-handling.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/meal-plan-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/opentravel-codes-list.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/payment-card-provider-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/service-and-extra-charge.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/standard-code-lists.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/strong-customer-authentication-codes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/reference-tables/test-credit-cards.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/changelog.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/smx-api/additional-resources/activation-and-deactivation.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/direct-booking-api.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/guides/quick-start.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/guides/integration-requirements.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/guides/api-overview.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/properties.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/property.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/property/media.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-types.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-type.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-type/amenities.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-type/bedrooms.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-type/photos.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-type/views.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-rates.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/room-rate.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/rate-plan.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/quotes.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/reference/extras.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/additional-resources/faq.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/additional-resources/generate-api-key.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/additional-resources/manage-api-key.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/direct-booking-api/additional-resources/changelog.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  },
+  {
+   "url": "https://developer.siteminder.com/integration-support/integration-support.md",
+   "official": "vendor-domain: developer.siteminder.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 33,
+  "read": 25,
+  "write": 8
+ }
+}

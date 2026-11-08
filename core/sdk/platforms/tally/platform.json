@@ -1,0 +1,34 @@
+{
+ "id": "tally",
+ "name": "Tally",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.tally.so"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "TALLY_API_KEY"
+ },
+ "keys": [
+  "TALLY_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.tally.so/api-reference/openapi.json",
+   "official": "vendor-domain: developers.tally.so"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 38,
+  "read": 19,
+  "write": 19
+ }
+}

@@ -1,0 +1,702 @@
+{
+ "id": "pandadoc",
+ "name": "PandaDoc",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.pandadoc.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "PANDADOC_API_KEY",
+  "prefix": "API-Key "
+ },
+ "keys": [
+  "PANDADOC_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.pandadoc.com/llms.txt",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/about.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/postman-collection-v2.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/auth-overview.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/authentication-process.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-an-application.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/authorize-a-user.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/state-parameter.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/api-key-authentication-process.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/sandbox-key.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/production-api-key.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/access-token.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/features.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/sandbox.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/sdk.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/version.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/security.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/limits.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-from-upload.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-documents.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-status.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/documentesigndisclosure.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/appendcontentlibraryitemtodocument.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-editing-session.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/send-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/sandbox-key",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-session.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/change-document-status-manually.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/change-document-status-with-upload.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/draft.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/download-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/download-protected-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/createexportdocxtask.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/getdocxexporttask.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-documents-folders.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-documents-folder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/rename-documents-folder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-move-to-folder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/change-document-ownership.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/transfer-documents-ownership.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-document.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/bulkdeletedocuments.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/manage-document-recipients.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/add-cc-recipient.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-recipient.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-recipient.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/change-signer.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-fields.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-document-fields.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-fields.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updatedocumentfieldsassignment.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-bundle.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-sections-info.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-section.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-section-from-upload.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-section-upload-status.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-section-info.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-section.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/document-attachments.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-attachment.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-attachment.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-document-attachment-from-file-upload.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/attachment-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-attachment.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/download-attachment.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updatedocumentautoremindersettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/getdocumentautoremindersettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/statusdocumentautoreminder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/createmanualreminder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/get-document-settings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-document-settings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/link-service.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-documents-by-linked-object.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-linked-objects.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/link-to-crm.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-linked-object.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-document-audit-trail.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-templates.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-template.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-template-from-file.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/template-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-template.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/template-status.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updatetemplate.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/duplicatetemplate.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-template-editing-session.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/templatesettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updatetemplatesettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/gettemplateshares.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updatetemplatesharingsettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-templates-folders.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-templates-folder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/rename-templates-folder.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-content-library-items.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-content-library-item.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-content-library-item-from-file.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/content-library-item-status.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/content-library-item-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-forms.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/search-catalog-items.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-catalog-item.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/get-catalog-item.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-catalog-item.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-catalog-item.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-quote.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/quotesbatchupdate.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-notarization-request.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/notarization-request-detail.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/deletenotarizationrequest.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/listnotaries.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/listnotarizationrequests.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-workspaces.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-workspace.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updateworkspace.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/deactivate-workspace.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-users.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-user.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/add-member-to-workspace.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/remove-member.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-api-key.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/api-key-authentication-process",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/detailsuser.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/changememberrole.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-members.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/current-member-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/member-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/get-member-token.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-contacts.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-contact.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/contact-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-contact.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-contact.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/listrecentsmsoptouts.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/getworkspaceprivacysettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/updateworkspaceprivacysettings.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/templateapprovalworkflowget.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/templateapprovalworkflowupdate.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/webhooks-overview.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handlecontentlibraryitemcreated.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handlecontentlibraryitemcreationfailed.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handledocumentcreationfailed.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handledocumentstatechanged.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handledocumentsectionadded.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handledocumentupdated.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handledocumentdeleted.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/pdfofcompleteddocumentavailablefordownload.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handlerecipientcompleteddocument.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handlequoteupdated.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handletemplatecreated.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handletemplateupdated.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/handletemplatedeleted.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-webhooks-subscriptions.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/create-webhooks-subscription.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/webhooks-subscription-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-webhooks-subscription.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/delete-webhooks-subscription.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/update-shared-key.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-webhooks-events.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/webhook-event-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/list-api-logs.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/api-log-details.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/listlogsv2.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://developers.pandadoc.com/reference/detailslogv2.md",
+   "official": "vendor-domain: developers.pandadoc.com"
+  },
+  {
+   "url": "https://github.com/PandaDoc/pandadoc-api-node-client",
+   "official": "vendor-link: https://developers.pandadoc.com/reference/sdk links github.com/PandaDoc"
+  }
+ ],
+ "gaps": [
+  "pandadoc: 2 endpoints added from PandaDoc/pandadoc-api-node-client (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 122,
+  "read": 54,
+  "write": 68
+ }
+}

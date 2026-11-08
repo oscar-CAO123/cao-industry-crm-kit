@@ -93,9 +93,9 @@ export function setTransport(t: Partial<Transport> | null): void {
 
 export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1";
 
-const TOKEN_IN_QUERY = /(^|[?&])(access_token|token|access-token|api_key|apikey|key)=/i;
+const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
-const KEY_NAMES = new Set(["accesstoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
+const KEY_NAMES = new Set(["accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer"]);
 const RETRY_STATUS = new Set([429, 502, 503, 504]);
 
 function buildUrl(o: CallOptions): URL {
@@ -159,7 +159,8 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
         const next = new URL(loc, at);
         if (next.protocol !== "https:") throw new Error(`${spec.app}: redirect to ${next.protocol} refused`);
         const own = spec.hosts.includes(next.hostname) || !!spec.hostPattern?.test(next.hostname);
-        const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => k.toLowerCase() !== "authorization"));
+        // Another host gets only harmless headers: every sign-in header (Authorization, X-Api-Key, any vendor key header) stays behind.
+        const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => /^(accept|accept-encoding|accept-language|user-agent|range|if-none-match|if-modified-since)$/i.test(k)));
         res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal: o.signal });
         transport.log(`[${spec.app}] redirect to ${own ? next.hostname : "storage host"} ${res.status}`);
         at = next;

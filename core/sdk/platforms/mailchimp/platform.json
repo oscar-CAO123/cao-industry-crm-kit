@@ -1,0 +1,45 @@
+{
+ "id": "mailchimp",
+ "name": "Mailchimp",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:us[0-9]{1,3})\\.api\\.mailchimp\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "dc": {
+   "env": "MAILCHIMP_DC",
+   "pattern": "us[0-9]{1,3}",
+   "example": "us1"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "MAILCHIMP_API_KEY"
+ },
+ "keys": [
+  "MAILCHIMP_API_KEY",
+  "MAILCHIMP_DC"
+ ],
+ "sources": [
+  {
+   "url": "https://mailchimp.com/developer/openapi/api-reference.yaml",
+   "official": "vendor-domain: mailchimp.com"
+  },
+  {
+   "url": "https://mailchimp.com/developer/openapi/api-reference-2.yaml",
+   "official": "vendor-domain: mailchimp.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 405,
+  "read": 153,
+  "write": 252
+ }
+}

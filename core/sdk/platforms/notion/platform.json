@@ -1,0 +1,44 @@
+{
+ "id": "notion",
+ "name": "Notion",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.notion.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "NOTION_TOKEN",
+  "extraHeaders": {
+   "Notion-Version": "NOTION_VERSION"
+  }
+ },
+ "keys": [
+  "NOTION_TOKEN",
+  "NOTION_VERSION"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.notion.com/openapi.json",
+   "official": "vendor-domain: developers.notion.com"
+  },
+  {
+   "url": "https://github.com/makenotion/notion-sdk-js",
+   "official": "vendor-link: https://developers.notion.com/ links github.com/makenotion"
+  }
+ ],
+ "gaps": [
+  "notion: 14 endpoints added from makenotion/notion-sdk-js (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 80,
+  "read": 29,
+  "write": 51
+ }
+}

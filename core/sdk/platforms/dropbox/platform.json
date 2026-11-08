@@ -1,0 +1,123 @@
+{
+ "id": "dropbox",
+ "name": "Dropbox",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rpc",
+ "hosts": [
+  "api.dropboxapi.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "DROPBOX_ACCESS_TOKEN"
+ },
+ "keys": [
+  "DROPBOX_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/account.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/async.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/auth.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/check.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/common.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/contacts.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/file_properties.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/file_requests.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/files.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/openid.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/paper.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/riviera.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/secondary_emails.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/seen_state.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/sharing.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/stone_cfg.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/team.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/team_common.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/team_log.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/team_policies.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/users.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/dropbox/dropbox-api-spec/c6135b92df86a591c4962c7cba20fb434b49e426/users_common.stone",
+   "official": "github-verified: GitHub states org dropbox controls dropbox.com"
+  }
+ ],
+ "gaps": [
+  "team.devices.revoke_device_session: argument type RevokeDeviceSessionArg not expanded",
+  "team.members.send_welcome_email: argument type UserSelectorArg not expanded",
+  "team.groups.get_info: argument type GroupsSelector not expanded",
+  "team.groups.delete: argument type GroupSelector not expanded"
+ ],
+ "counts": {
+  "operations": 284,
+  "read": 120,
+  "write": 164
+ }
+}

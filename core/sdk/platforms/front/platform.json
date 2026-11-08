@@ -1,0 +1,38 @@
+{
+ "id": "front",
+ "name": "Front",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api2.frontapp.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "FRONT_API_TOKEN"
+ },
+ "keys": [
+  "FRONT_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/frontapp/front-api-specs/main/core-api/core-api.json",
+   "official": "github-verified: GitHub states org frontapp controls front.com"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/frontapp/front-api-specs/main/channel-api/channel-api.json",
+   "official": "github-verified: GitHub states org frontapp controls front.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 258,
+  "read": 123,
+  "write": 135
+ }
+}

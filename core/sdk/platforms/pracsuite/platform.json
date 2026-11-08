@@ -1,0 +1,39 @@
+{
+ "id": "pracsuite",
+ "name": "PracSuite",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.pracsuite.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "x-api-key",
+  "env": "PRACSUITE_VENDOR_KEY",
+  "extraHeaders": {
+   "a-api-key": "PRACSUITE_SUBSCRIBER_KEY"
+  }
+ },
+ "keys": [
+  "PRACSUITE_VENDOR_KEY",
+  "PRACSUITE_SUBSCRIBER_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.api.pracsuite.com/_bundle/openapi/index.yaml",
+   "official": "vendor-domain: docs.api.pracsuite.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 168,
+  "read": 131,
+  "write": 37
+ }
+}

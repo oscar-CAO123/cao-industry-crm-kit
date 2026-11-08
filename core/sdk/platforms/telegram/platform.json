@@ -1,0 +1,41 @@
+{
+ "id": "telegram",
+ "name": "Telegram Bot API",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.telegram.org"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "token": {
+   "env": "TELEGRAM_BOT_TOKEN",
+   "pattern": "[0-9]+:[A-Za-z0-9_-]+",
+   "secret": true,
+   "envOnly": true
+  }
+ },
+ "auth": {
+  "type": "path-token"
+ },
+ "keys": [
+  "TELEGRAM_BOT_TOKEN"
+ ],
+ "keyInPath": "/bot[^/]+",
+ "sources": [
+  {
+   "url": "https://core.telegram.org/bots/api",
+   "official": "vendor-domain: core.telegram.org"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 185,
+  "read": 29,
+  "write": 156
+ }
+}

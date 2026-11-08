@@ -48,6 +48,9 @@ async function login(): Promise<{ token: string; base: string }> {
 }
 export function clearTokenCache(): void { cached = null; }
 
+/** The signed-in token and account base URL, for the agent SDK (core/sdk/call.ts). */
+export async function session(): Promise<{ token: string; base: string }> { return login(); }
+
 export interface Recipient { name: string; email: string; status: string; signedDateTime: string | null; routingOrder: string | null }
 export interface Envelope { envelopeId: string; status: string; emailSubject?: string; sentDateTime?: string; completedDateTime?: string; senderEmail?: string; signerEmails: string[]; recipients: Recipient[]; customFields: Record<string, string>; raw: unknown }
 

@@ -1,0 +1,221 @@
+{
+ "id": "cliniko",
+ "name": "Cliniko",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "api\\.(?:[a-z]{2}[0-9])\\.cliniko\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "shard": {
+   "env": "CLINIKO_SHARD",
+   "default": "au1",
+   "pattern": "[a-z]{2}[0-9]"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "CLINIKO_API_KEY",
+  "passEmpty": true,
+  "extraHeaders": {
+   "User-Agent": "CLINIKO_USER_AGENT"
+  }
+ },
+ "keys": [
+  "CLINIKO_API_KEY",
+  "CLINIKO_USER_AGENT"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.api.cliniko.com/openapi/appointment-type-billable-item",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/appointment-type-product",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/appointment-type",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/attendee",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/availability-block",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/available-time",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/billable-item",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/body-chart",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/booking",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/business",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/communication",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/concession-price",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/concession-type",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/contact",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/daily-availability",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/group-appointment",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/individual-appointment",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/invoice-item",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/invoice",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/medical-alert",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/patient-attachment",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/patient-case",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/patient-form-template",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/patient-form",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/patient",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/practitioner-reference-number",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/practitioner",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/product-supplier",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/product",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/public-settings",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/recall-type",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/recall",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/referral-source-type",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/referral-source",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/relationship",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/service",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/settings",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/signature",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/stock-adjustment",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/tax",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/treatment-note-template",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/treatment-note",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/unavailable-block-type",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/unavailable-block",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  },
+  {
+   "url": "https://docs.api.cliniko.com/openapi/user",
+   "official": "vendor-domain: docs.api.cliniko.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 223,
+  "read": 116,
+  "write": 107
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "tanda",
+ "name": "Tanda",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "my.tanda.co"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "TANDA_ACCESS_TOKEN"
+ },
+ "keys": [
+  "TANDA_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://my.tanda.co/api/v2/openapi",
+   "official": "vendor-domain: my.tanda.co"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 289,
+  "read": 155,
+  "write": 134
+ }
+}

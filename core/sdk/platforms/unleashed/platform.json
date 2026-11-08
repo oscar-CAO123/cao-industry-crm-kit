@@ -1,0 +1,263 @@
+{
+ "id": "unleashed",
+ "name": "Unleashed",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.unleashedsoftware.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "unsupported",
+  "note": "Unleashed signs each request with HMAC-SHA256; the signer is not built yet"
+ },
+ "keys": [
+  "UNLEASHED_API_ID",
+  "UNLEASHED_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://apidocs.unleashedsoftware.com/sitemap.xml",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/APIChangeLog",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/AuthenticationHelp",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Faq",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Pagination",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/DateFormat",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/MailingList",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/StatusCodes",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Assemblies",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/AttributeSets",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/BillOfMaterials",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/CreditNotes",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Customers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Products",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Purchases",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SalesOrders",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Salespersons",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SalesShipments",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/StockAdjustments",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SupplierReturns",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/WarehouseStockTransfers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Accounts",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/AdjustmentReasons",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/AssemblyStatuses",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/BatchNumbers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Companies",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Currencies",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/CustomerDeliveryAddresses",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/CustomerTypes",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/DeliveryMethods",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/PaymentTerms",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/ProductBrands",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/ProductGroups",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/ProductPrices",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/RecostAdjustments",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Invoices",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SalesOrderGroups",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SalesOrderStatuses",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SalesQuotes",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SerialNumbers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SellPriceTiers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/ShippingCompanies",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/StockCounts",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/StockOnHand",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Suppliers",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/PurchaseOrderStatuses",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/SupplierReturnReasons",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Taxes",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/UnitOfMeasures",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Warehouses",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/DotNet",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Java",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/PHP",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Javascript",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Webhooks",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Sandbox",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  },
+  {
+   "url": "https://apidocs.unleashedsoftware.com/Thanks",
+   "official": "vendor-domain: apidocs.unleashedsoftware.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 146,
+  "read": 70,
+  "write": 76
+ }
+}

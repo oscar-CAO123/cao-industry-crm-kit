@@ -1,0 +1,40 @@
+{
+ "id": "pipedrive",
+ "name": "Pipedrive",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.pipedrive.com",
+  "oauth.pipedrive.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "x-api-token",
+  "env": "PIPEDRIVE_API_TOKEN"
+ },
+ "keys": [
+  "PIPEDRIVE_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.pipedrive.com/docs/api/v1/openapi.yaml",
+   "official": "vendor-domain: developers.pipedrive.com"
+  },
+  {
+   "url": "https://developers.pipedrive.com/docs/api/v1/openapi-v2.yaml",
+   "official": "vendor-domain: developers.pipedrive.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 371,
+  "read": 177,
+  "write": 194
+ }
+}

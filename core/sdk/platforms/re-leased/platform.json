@@ -1,0 +1,35 @@
+{
+ "id": "re-leased",
+ "name": "Re-Leased",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.re-leased.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "RELEASED_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "RELEASED_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://api.re-leased.com/swagger/docs/v1",
+   "official": "vendor-domain: api.re-leased.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 64,
+  "read": 40,
+  "write": 24
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "proworkflow",
+ "name": "ProWorkflow",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.proworkflow.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "apikey",
+  "env": "PROWORKFLOW_API_KEY"
+ },
+ "keys": [
+  "PROWORKFLOW_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://api.proworkflow.com/api/v4/docs/doc.json",
+   "official": "vendor-domain: api.proworkflow.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 415,
+  "read": 177,
+  "write": 238
+ }
+}

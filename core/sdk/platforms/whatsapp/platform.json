@@ -1,0 +1,34 @@
+{
+ "id": "whatsapp",
+ "name": "WhatsApp Business Platform",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "graph.facebook.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "WHATSAPP_ACCESS_TOKEN"
+ },
+ "keys": [
+  "WHATSAPP_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/facebook/openapi/main/business-messaging-api_v23.0.yaml",
+   "official": "vendor-link: https://opensource.fb.com/projects/ links github.com/facebook"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 113,
+  "read": 45,
+  "write": 68
+ }
+}

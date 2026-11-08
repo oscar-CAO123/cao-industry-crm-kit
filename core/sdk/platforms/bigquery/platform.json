@@ -1,0 +1,36 @@
+{
+ "id": "bigquery",
+ "name": "BigQuery",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "bigquery.googleapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "defaultScope": "https://www.googleapis.com/auth/bigquery",
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "google"
+ },
+ "keys": [
+  "GOOGLE_MAILBOX",
+  "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://bigquery.googleapis.com/$discovery/rest?version=v2",
+   "official": "vendor-domain: bigquery.googleapis.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 47,
+  "read": 16,
+  "write": 31
+ }
+}

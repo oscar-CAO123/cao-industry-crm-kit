@@ -1,0 +1,35 @@
+{
+ "id": "supermetrics",
+ "name": "Supermetrics",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.supermetrics.com",
+  "dts-api.supermetrics.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "SUPERMETRICS_API_KEY"
+ },
+ "keys": [
+  "SUPERMETRICS_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/supermetrics-public/supermetrics-python-sdk/main/openapi-spec.yaml",
+   "official": "github-verified: org supermetrics-public is_verified, website supermetrics.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 102,
+  "read": 44,
+  "write": 58
+ }
+}

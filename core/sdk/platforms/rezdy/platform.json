@@ -1,0 +1,44 @@
+{
+ "id": "rezdy",
+ "name": "Rezdy",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.rezdy.com",
+  "rc-stubs.rezdy.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "apiKey",
+  "env": "REZDY_API_KEY"
+ },
+ "keys": [
+  "REZDY_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.rezdy.com/rezdyapi/index-agent.html",
+   "official": "vendor-domain: developers.rezdy.com"
+  },
+  {
+   "url": "https://developers.rezdy.com/rezdyapi/index-supplier.html",
+   "official": "vendor-domain: developers.rezdy.com"
+  },
+  {
+   "url": "https://developers.rezdy.com/rezdyconnect/index.html",
+   "official": "vendor-domain: developers.rezdy.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 87,
+  "read": 41,
+  "write": 46
+ }
+}
