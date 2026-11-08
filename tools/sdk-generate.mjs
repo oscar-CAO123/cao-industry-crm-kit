@@ -96,6 +96,22 @@ const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
 const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|recovery key|access key/i;  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
+// DocuSign API families: production host (developers.docusign.com/platform/api-endpoint-base-paths) and, where the
+// family's own spec names no per-endpoint scope, the scopes DocuSign lists for it (/platform/auth/reference/scopes).
+// Both pages read 8 Nov 2026 through endpoint-map/model_guard.py; watcher models found them clean. Families whose specs
+// carry per-endpoint scopes (Admin, Workspaces, Web Forms, Maestro, Workflow Builder, Navigator, Agreement Manager,
+// Connected Fields) keep those. Click runs on the account's own server, like eSignature (rewritten at call time).
+const ROOMS_READ = ["dtr.rooms.read", "dtr.documents.read", "dtr.profile.read", "dtr.company.read"];
+const ROOMS_WRITE = ["dtr.rooms.write", "dtr.documents.write", "dtr.profile.write", "dtr.company.write"];
+const DOCUSIGN = {
+  rooms: { from: "https://demo.rooms.docusign.com/restapi", to: "https://rooms.docusign.com/restapi", scopes: (o) => (o.method === "GET" ? ROOMS_READ : ROOMS_WRITE) },
+  workspaces: { from: "https://api-d.docusign.com", to: "https://api.docusign.com" },
+  "connected-fields": { from: "https://api-d.docusign.com", to: "https://api.docusign.com" },
+  click: { from: "https://www.demo.docusign.net/clickapi", to: "https://www.docusign.net/clickapi", scopes: () => ["click.manage"] },
+  webforms: { from: "https://apps-d.docusign.com", to: "https://apps.docusign.com" },
+  admin: {}, maestro: {}, workflowbuilder: {}, navigator: {}, agreementmanager: {},
+  monitor: { scopes: () => ["signature", "impersonation"] },
+};
 // The body encoding the vendor's own spec requires, when it does not accept JSON (endpoint map body_types).
 function bodyType(o) {
   // OAuth token and revoke endpoints take form encoding by the OAuth standard (RFC 6749 4.1.3, RFC 7009), even when
@@ -263,8 +279,14 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
     if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
     if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
-    if (id === "docusign" && !["esignature", "sdk"].includes(o.api))
-      o.authUnsupported = `DocuSign ${o.api}: its sign-in scope and production host are not mapped yet (the published spec points at a demo host)`;
+    if (id === "docusign" && !["esignature", "sdk"].includes(o.api)) {
+      const f = DOCUSIGN[o.api];
+      if (!f) o.authUnsupported = `DocuSign ${o.api}: its production host and scopes are not mapped yet`;
+      else {
+        if (f.from && o.server.startsWith(f.from)) o.server = f.to + o.server.slice(f.from.length);
+        if (!(o.scopes ?? []).length && f.scopes) o.scopes = f.scopes(o);
+      }
+    }
   }
   // Overrides are keyed by the endpoint id the assessment saw. The api prefix on an id comes and goes as a platform
   // gains or loses spec files, so a key matches the full id or the bare id (api prefix removed), and must match exactly one.

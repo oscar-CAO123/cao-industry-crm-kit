@@ -281,7 +281,7 @@ async function customAuth(provider: string, p: Platform, o: Op, input: CallInput
   }
   if (provider === "docusign") {
     const d = await import("../connectors/docusign/client.ts");
-    const s = await d.session();
+    const s = await d.session(o.scopes ?? []);
     // eSignature endpoints are served from the account's own base URI, not the placeholder in the spec.
     if (new URL(base.url).hostname === "www.docusign.net") base.url = base.url.replace("https://www.docusign.net", new URL(s.base).origin);
     return { Authorization: `Bearer ${s.token}` };

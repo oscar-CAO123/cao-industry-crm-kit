@@ -363,6 +363,28 @@ test("review 3: Gmail userId and DocuSign accountId are pinned to the client's o
   assert.ok(hits.some((h) => h.url.includes("/accounts/acct-1")));
 });
 
+test("DocuSign API families reach their production hosts, and the sign-in asks for each endpoint's scopes (8 Nov)", async () => {
+  const { clearTokenCache } = await import("../core/connectors/docusign/client.ts");
+  clearTokenCache();
+  const scopesAsked = () => hits.filter((h) => h.url.endsWith("/oauth/token")).map((h) => {
+    const jwt = new URLSearchParams(String(h.body)).get("assertion") ?? "";
+    return JSON.parse(Buffer.from(jwt.split(".")[1], "base64url").toString()).scope as string;
+  });
+  hits = [];
+  await callOperation("docusign", "rooms.Accounts_GetAccountInformation");
+  assert.ok(hits.some((h) => h.url.startsWith("https://rooms.docusign.com/restapi/v2/accounts/acct-1")), "Rooms goes to its production host");
+  assert.deepEqual(scopesAsked().at(-1)!.split(" ").sort(), ["dtr.company.read", "dtr.documents.read", "dtr.profile.read", "dtr.rooms.read", "impersonation", "signature"]);
+  hits = [];
+  await callOperation("docusign", "click.ServiceInformation_GetServiceInformation");
+  assert.ok(hits.some((h) => h.url === "https://au.docusign.net/clickapi/service_information"), "Click runs on the account's own server");
+  assert.ok(scopesAsked().at(-1)!.split(" ").includes("click.manage"));
+  // No DocuSign family is left refused or without a production host.
+  for (const o of load("docusign").ops.values()) {
+    assert.equal(o.authUnsupported, undefined, o.id);
+    assert.doesNotMatch(o.server, /demo|api-d\.|apps-d\./, o.id);
+  }
+});
+
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {
   const w = firstOp("wordpress", (x) => x.kind === "read" && !x.params.some((p) => p.required));
   await callOperation("wordpress", w.id);
