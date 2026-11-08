@@ -1,0 +1,80 @@
+{
+ "id": "quote-build",
+ "name": "Build a quote or proposal from notes, photos or plans",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Builds a quote or proposal from the request and its notes, photos or plans. The agent reads the material and sets the lines; the crons price them from the rate card, draft the quote in the business's own system and queue its send for approval, chase sent quotes, and hand a won quote over. Crons read and draft; a person approves every send.",
+ "families": {
+  "priced-job-from-site-visit": {
+   "evidence": "33 of the 40 calls read for steps describe this way of quoting",
+   "steps": ["enquiry-intake", "receive-brief", "measure-scope", "site-visit", "price-build", "supplier-prices", "internal-approval", "margin-review", "send-quote", "write-proposal", "record-keeping", "follow-up", "win-handover"],
+   "covered_by": {
+    "enquiry-intake": "intake",
+    "receive-brief": "skill (reads the request, its photos and plans)",
+    "measure-scope": "skill (quantities go into a proposal)",
+    "site-visit": "skill (visit notes and photos go into a proposal)",
+    "price-build": "draft (rate card lines, or the proposal lines)",
+    "supplier-prices": "not yet (see gaps)",
+    "internal-approval": "approval (every send waits in the CRM shell)",
+    "margin-review": "skill (the margin is set on the proposal line as unitPrice)",
+    "send-quote": "approval",
+    "write-proposal": "draft (the quote in the platform)",
+    "record-keeping": "draft (the quote record and its PDF in the platform)",
+    "follow-up": "follow-up",
+    "win-handover": "handover"
+   }
+  },
+  "proposal-scope-services": {
+   "evidence": "7 of the 40 calls read for steps describe this way of quoting",
+   "steps": ["enquiry-intake", "qualify", "receive-brief", "record-keeping", "write-proposal"],
+   "covered_by": {
+    "enquiry-intake": "intake",
+    "qualify": "skill (decides whether the job is worth a proposal)",
+    "receive-brief": "skill (reads the request and its notes)",
+    "record-keeping": "draft (the quote record in the platform)",
+    "write-proposal": "draft (the proposal lines, priced by the draft cron)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New quote requests from each intake source."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Price from the rate card or the agent's proposal, draft the quote, queue its send for approval."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue follow-ups on sent quotes that are due (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "handover", "schedule": "5 * * * *", "entry": "handover", "summary": "An accepted quote becomes a draft invoice, or nothing when the platform sets up the job."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobMaterials", "servicem8-api.listMaterials", "servicem8-api.listCompanyContacts", "servicem8-api.listAttachments",
+                "servicem8-api.createJobs", "servicem8-api.createJobMaterials", "document-templates-api.produce_templated_document"],
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createContacts", "accounting.createQuotes", "accounting.getQuote", "accounting.getQuoteAsPdf", "accounting.createInvoices"],
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email", "messaging-api.send_sms"],
+  "xero": ["accounting.updateQuote"],
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a job in Quote status, its lines, a quote PDF filed to the job diary, a Xero quote, contact or invoice in DRAFT, an email draft, a register row. Anything that sends or changes a quote's status is a live operation and waits for a person.",
+ "capabilities": ["quotes.list", "quotes.create", "quotes.send", "contacts.upsert", "messages.draft", "messages.send", "invoices.create", "files.read"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "enquiry intake (jobs in Quote status), rate card, quote as a job with lines and PDF, send and follow-up by email or SMS", "reused_from": "industries/construction/workflows/sales/quoting/adapters/servicem8.ts"},
+  "xero": {"status": "docs-only", "covers": "rate card, quote, PDF, status, handover as a draft invoice; sending goes through the mailbox", "reused_from": "industries/construction/workflows/sales/quoting/adapters/xero.ts"},
+  "microsoft-365": {"status": "docs-only", "covers": "Outlook intake and drafts, Excel rate card and register; needed by the Xero adapter to send", "reused_from": "industries/construction/workflows/sales/quoting/adapters/microsoft-365.ts"}
+ },
+ "gaps": [
+  "HubSpot has the most support in the evidence (7 steps yes, 3 partial, 6 mapped operations for quotes and line items), but it has no adapter yet. Quote and line-item property names (title, expiry, amount, product) are not in the HubSpot spec in the endpoint map, so they cannot be checked. Add an adapter once they are confirmed there.",
+  "MYOB: 4 steps are supported in the evidence, but the kit maps only a read of a sale quote. No write, so no adapter.",
+  "Supplier and subcontractor price requests (supplier-prices, 12 calls, 92% manual): agent skill. The owner's usual way, recorded as a proposal.",
+  "Measure-scope and takeoff (20 calls): agent skill. Quantities go into a proposal. The kit has no takeoff adapter (Bluebeam, PlanSwift, Groundplan, Tally) for this workflow.",
+  "Revisions after a send (revise, 2 calls): not covered. Handled by hand.",
+  "The worklist's CRM entry 'proposal-web' has no kit adapter. Proposals enter through the propose command and the store.",
+  "Microsoft 365 is named in 12 quoting calls but is not in the platform evidence file. It is included because the Xero adapter sends through it.",
+  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it."
+ ],
+ "evidence": {
+  "calls": "116 discovery calls in the worklist; 40 read in depth for steps, variants and families",
+  "platforms": "the vendors' own help centres for HubSpot, MYOB, ServiceM8 and Xero, mapped step by step; operations checked against the kit's ops.json"
+ }
+}
