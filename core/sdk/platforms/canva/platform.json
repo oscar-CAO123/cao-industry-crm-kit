@@ -28,7 +28,7 @@
  "gaps": [],
  "counts": {
   "operations": 67,
-  "read": 31,
-  "write": 36
+  "read": 36,
+  "write": 31
  }
 }

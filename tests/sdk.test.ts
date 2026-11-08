@@ -292,7 +292,9 @@ test("review 3: endpoints that return secrets or change state are gated even whe
     ["docusign", (o) => o.id === "esignature.ConnectHMAC_GetConnectSecret"],
     ["google-workspace", (o) => o.id === "admin.directory.verificationCodes.list"],
     ["microsoft-365", (o) => /GetDeviceLocalCredentials/.test(o.id)],
-    ["hubspot", (o) => /unsubscribe-all/.test(o.path) && o.method === "GET"],
+    // A GET whose own name and summary are an action (Zenoti cancels a payment on a GET). HubSpot's GET
+    // unsubscribe-all used to be here, but HubSpot's own spec calls it a status read; its POST unsubscribes.
+    ["zenoti", (o) => /\/Cancel$/.test(o.path) && o.method === "GET"],
     ["deputy", (o) => /AuthorizationCode/.test(o.id)],
     ["deputy", (o) => /PublishShiftV2Controller_resume/.test(o.id)],
   ];
@@ -303,6 +305,21 @@ test("review 3: endpoints that return secrets or change state are gated even whe
     await assert.rejects(() => callOperation(pid, o!.id, { params: Object.fromEntries(o!.params.filter((p) => p.required && p.name !== "accountId" && p.name !== "userId").map((p) => [p.name, "v1"])) }), WriteBlocked);
   }
   assert.equal(hits.length, 0);
+});
+
+test("a GET is a read unless its own name or the vendor's summary is an action: words naming the resource do not gate it (8 Nov fix)", () => {
+  const find = (pid: string, f: (o: Op) => boolean) => { const o = [...load(pid).ops.values()].find(f); assert.ok(o, `${pid}: case not found`); return o!; };
+  // Reads the old any-word rule mislabelled as writes; each vendor's spec calls them retrievals.
+  for (const [pid, f] of [
+    ["hubspot", (o: Op) => o.method === "GET" && /\/v4\/statuses\/\{subscriberIdString\}\/unsubscribe-all$/.test(o.path)],
+    ["microsoft-365", (o: Op) => o.method === "GET" && o.path === "/solutions/backupRestore/sharePointRestoreSessions"],
+    ["meta-ads", (o: Op) => o.id === "AdSet.get.ads"],
+    ["klaviyo", (o: Op) => o.id === "get_bulk_update_categories_jobs"],
+  ] as [string, (o: Op) => boolean][]) assert.equal(find(pid, f).kind, "read", pid);
+  // Every GET still labelled a write says why.
+  for (const pid of listPlatforms()) for (const o of load(pid).ops.values()) {
+    if (o.method === "GET" && o.kind === "write") assert.ok(o.override, `${pid} ${o.id}: GET labelled write with no reason`);
+  }
 });
 
 test("review 3: Gmail userId and DocuSign accountId are pinned to the client's own", async () => {

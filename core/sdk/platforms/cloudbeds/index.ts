@@ -508,7 +508,7 @@ export const fiscalDocumentV10OpenapiExportFolioPdf = (input: CallInput & { para
 export const fiscalDocumentV10OpenapiGetFolioPdf = (input: CallInput & { params?: { "X-Property-ID": number; "Accept-Language"?: string } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getFolioPdf", input);
 /** GET /fiscal-document/v1/fiscalization/registration/rules: Get fiscalization rules for a country [read] */
 export const fiscalDocumentV10OpenapiGetFiscalizationRegistrationRules = (input: CallInput & { params?: { "country": string; "sectionKey"?: string; "channelCode"?: string } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getFiscalizationRegistrationRules", input);
-/** GET /fiscal-document/v1/fiscalization/reports/{reportId}: Generate and download a fiscalization report [read] */
+/** GET /fiscal-document/v1/fiscalization/reports/{reportId}: Generate and download a fiscalization report [write] */
 export const fiscalDocumentV10OpenapiGetFiscalizationReport = (input: CallInput & { params?: { "X-Property-Id": number; "reportId": string; "year": number; "period"?: number } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getFiscalizationReport", input);
 /** GET /fiscal-document/v1/fiscalization/tax/rules: Get fiscalization tax rules for a country [read] */
 export const fiscalDocumentV10OpenapiGetFiscalizationTaxRules = (input: CallInput & { params?: { "country": string; "X-Property-ID": number } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getFiscalizationTaxRules", input);
@@ -558,7 +558,7 @@ export const fiscalDocumentV10OpenapiUploadConnectionCertificate = (input: CallI
 export const fiscalDocumentV10OpenapiUploadConnectionLogo = (input: CallInput & { params?: { "X-Property-ID": number; "connectionId": number } } = {}) => sdk.call("fiscal-document-v1-0-openapi.uploadConnectionLogo", input);
 /** DELETE /fiscal-document/v1/fiscalization/connections/{connectionId}/customization/logo: Delete the branding logo for a connection [write] */
 export const fiscalDocumentV10OpenapiDeleteConnectionLogo = (input: CallInput & { params?: { "X-Property-ID": number; "connectionId": number } } = {}) => sdk.call("fiscal-document-v1-0-openapi.deleteConnectionLogo", input);
-/** GET /fiscal-document/v1/fiscalization/connections/{connectionId}/reports/{reportId}: Generate and download a report for one connection [read] */
+/** GET /fiscal-document/v1/fiscalization/connections/{connectionId}/reports/{reportId}: Generate and download a report for one connection [write] */
 export const fiscalDocumentV10OpenapiGetConnectionReport = (input: CallInput & { params?: { "X-Property-ID": number; "connectionId": number; "reportId": string; "year": number; "period"?: number } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getConnectionReport", input);
 /** GET /fiscal-document/v1/fiscalization/connections/{connectionId}/{sectionKey}: Get section configuration [read] */
 export const fiscalDocumentV10OpenapiGetConnectionSection = (input: CallInput & { params?: { "X-Property-ID": number; "connectionId": number; "sectionKey": string } } = {}) => sdk.call("fiscal-document-v1-0-openapi.getConnectionSection", input);
@@ -1232,7 +1232,7 @@ export const pmsV20OpenapiAssignableRoomsControllerGetAssignableRooms = (input: 
 export const pmsV20OpenapiCheckControllerCreateCheck = (input: CallInput & { params?: { "x-property-id": string; "Idempotency-Key": string } } = {}) => sdk.call("pms-v2-0-openapi.CheckController::createCheck", input);
 /** DELETE /folio/v1/checks/{checkId}: Void a posted check end-to-end (ledger + payments + its gratuities) by its checkId [write] */
 export const pmsV20OpenapiCheckControllerDeleteCheck = (input: CallInput & { params?: { "x-property-id": string; "checkId": string } } = {}) => sdk.call("pms-v2-0-openapi.CheckController::deleteCheck", input);
-/** GET /doorlock/v1/keys/{propertyId}: Get a list of doorlock keys for a specific app client and property. [write] */
+/** GET /doorlock/v1/keys/{propertyId}: Get a list of doorlock keys for a specific app client and property. [read] */
 export const pmsV20OpenapiDoorLockKeyControllerIndex = (input: CallInput & { params?: { "propertyId": number; "reservationId"?: string; "subReservationId"?: string; "keyIds"?: string; "reservationIds"?: string } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockKeyController::index", input);
 /** POST /doorlock/v1/keys: Create a new doorlock key. [write] */
 export const pmsV20OpenapiDoorLockKeyControllerCreate = (input: CallInput & { params?: {  } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockKeyController::create", input);
@@ -1242,7 +1242,7 @@ export const pmsV20OpenapiDoorLockKeyControllerBatchDelete = (input: CallInput &
 export const pmsV20OpenapiDoorLockKeyControllerDelete = (input: CallInput & { params?: { "id": string; "x-property-id": string } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockKeyController::delete", input);
 /** PATCH /doorlock/v1/keys/{id}: Update a doorlock key. [write] */
 export const pmsV20OpenapiDoorLockKeyControllerUpdate = (input: CallInput & { params?: { "id": string; "x-property-id": string } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockKeyController::update", input);
-/** GET /doorlock/v1/settings/{propertyId}: Get doorlock settings for property for specific application client. [write] */
+/** GET /doorlock/v1/settings/{propertyId}: Get doorlock settings for property for specific application client. [read] */
 export const pmsV20OpenapiDoorLockSettingsControllerSingle = (input: CallInput & { params?: { "propertyId": number } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockSettingsController::single", input);
 /** PUT /doorlock/v1/settings/{propertyId}: Upsert doorlock settings for property for specific application client. [write] */
 export const pmsV20OpenapiDoorLockSettingsControllerUpsert = (input: CallInput & { params?: { "propertyId": number } } = {}) => sdk.call("pms-v2-0-openapi.DoorLockSettingsController::upsert", input);

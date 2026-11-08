@@ -83,8 +83,12 @@ const RESERVED = new Set("break case catch class const continue debugger default
 // Read or write. The network gate reads only GET (and mapped GraphQL queries and RPC reads). On top of that:
 // - Slack and Telegram name actions rather than following HTTP, so their endpoints are reads only when the name says so.
 // - Dropbox is RPC over POST: its list, get and search routes are reads (sent as read-only POSTs); the rest are writes.
-// - Anything whose id, path or summary points to a credential, or whose id or path names an action, is gated as a write
-//   on every platform, even if the vendor lists it as GET (several specs do). This errs towards gating.
+// - Anything whose id, path or summary points to a credential is gated as a write on every platform, even as a GET.
+// - A GET is otherwise the vendor's own statement that the call reads (HTTP's safe method). It is a write only when the
+//   endpoint's OWN name is an action: the first word of its last path segment (Deputy's GET /tasks/{id}/do) or the first
+//   word of the vendor's summary ("Send ...", "Creates ..."). Words elsewhere in the id or path name the resource, not
+//   the call (backupRestore, AdSet, bulk-update-jobs), so they no longer make a read a write (8 Nov 2026: 1,936 GETs
+//   were mislabelled that way). Every GET left as a write carries its reason in `override`, so an agent sees why.
 const SLACK_READ = /^(list|info|history|replies|test)$|^(get|lookup)/;
 const CREDENTIAL = /token|secret|password|passcode|private[ _-]?key|access[ _-]?keys?|recovery[ _-]?keys?|signing[ _-]?keys?|temporary[ _-]?link|signed[ _-]?url|download[ _-]?url|data[ _-]?pack|credential|verification[ _-]?codes?|auth(?:orization)?[ _-]?code|oauth|authori[sz]e|hmac|api[ _-]?keys?|presign/i;
 const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set)(?=[^a-z]|$)/i;
@@ -92,24 +96,42 @@ const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish
 const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
 const STRONG = /secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|recovery key|access key/i;  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
+const firstWord = (s) => (words(String(s ?? "")).replace(/[^A-Za-z ]+/g, " ").trim().split(/\s+/)[0] ?? "").toLowerCase();
+// The call's own name: the last path segment that is not a parameter ({id}, :id) or an OData parenthesis.
+function ownName(path) {
+  const segs = String(path).split("/").map((s) => s.replace(/\(.*$/, "").replace(/^\$/, "")).filter((s) => s && !/^\{.*\}$/.test(s) && !/^:/.test(s));
+  return segs[segs.length - 1] ?? "";
+}
+const isAction = (w) => ACTION.test(w) && w.length > 0;
+const READ_VERB = /^(get|gets|list|lists|retrieve|retrieves|return|returns|show|shows|read|reads|fetch|fetches|view|views|find|finds|search|searches|count|counts|lookup|describe|describes)$/;
+// Returns [kind, reason]. The reason is set for every GET or QUERY that ends up a write.
 function readKind(platform, o) {
   const method = String(o.method).toUpperCase();
   const name = words(`${o.id} ${o.path}`);
-  if (CREDENTIAL.test(name) || STRONG.test(String(o.summary ?? ""))) return "write";
+  const summary = String(o.summary ?? "").trim();
+  if (CREDENTIAL.test(name)) return ["write", `sensitive: its name points to a credential (${(name.match(CREDENTIAL) ?? [""])[0]})`];
+  if (STRONG.test(summary)) return ["write", `sensitive: the vendor's summary mentions ${(summary.match(STRONG) ?? [""])[0]}`];
   if (platform === "dropbox") {
     const segs = String(o.path).split("/");
     const last = segs[segs.length - 1] === "continue" ? segs[segs.length - 2] : segs[segs.length - 1];  // list_folder/continue pages a read
-    return /^(list|get|search|count|check)/.test(last) && !ACTION.test(words(last)) ? "read" : "write";
+    return /^(list|get|search|count|check)/.test(last) && !ACTION.test(words(last)) ? ["read", ""] : ["write", ""];
   }
-  if (!["GET", "QUERY"].includes(method) || o.kind !== "read") return "write";
-  if (ACTION.test(name)) return "write";
-  if (/^creates?\b/i.test(String(o.summary ?? "").trim())) return "write";
+  if (!["GET", "QUERY"].includes(method)) return ["write", ""];
+  if (o.kind !== "read") return ["write", "the endpoint map labels it a write"];
   if (platform === "slack") {
     const segs = String(o.path).replace(/^\//, "").split(".");
-    return segs[0] === "search" || SLACK_READ.test(segs[segs.length - 1]) ? "read" : "write";
+    return segs[0] === "search" || SLACK_READ.test(segs[segs.length - 1]) ? ["read", ""] : ["write", "a Slack method whose name is not a read"];
   }
-  if (platform === "telegram") return /^\/?get[A-Z]/.test(String(o.path)) && !/^\/?getUpdates$/.test(String(o.path)) ? "read" : "write";
-  return "read";
+  if (platform === "telegram") return /^\/?get[A-Z]/.test(String(o.path)) && !/^\/?getUpdates$/.test(String(o.path)) ? ["read", ""] : ["write", "a Telegram method whose name is not a read"];
+  const own = firstWord(ownName(o.path));
+  const sw = firstWord(summary);
+  // A compound name can start with an action word and still name a thing (a term "set", sync_status, refreshSchedule);
+  // the vendor's own summary decides: "Get set from groups" reads. OData functions ("Invoke function ...") may not
+  // have side effects under the OData standard, so they read too.
+  const summaryReads = READ_VERB.test(sw) || /^invoke function\b/i.test(summary);
+  if ((isAction(own) || own === "do" || own === "run") && !summaryReads) return ["write", `its own name is an action (${own})`];
+  if (isAction(sw) || isAction(sw.replace(/s$/, ""))) return ["write", `the vendor's summary starts with an action (${sw})`];
+  return ["read", ""];
 }
 
 function clean(s) { return String(s ?? "").replace(/\u2014/g, ", ").replace(/\s+/g, " ").trim(); }
@@ -188,7 +210,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     return { id: clean(o.id), api: clean(o.api), method: clean(o.method).toUpperCase(), path: clean(o.path), server, summary: clean(o.summary).slice(0, 200),
              tags: (o.tags ?? []).map(clean), params, body: !!o.body, scopes: o.scopes ?? [], deprecated: !!o.deprecated, doc_url: clean(o.doc_url),
              ...(o.paramsUnmapped ? { paramsUnmapped: true } : {}), ...(Array.isArray(o.tokens) ? { tokens: o.tokens.map(clean) } : {}),
-             kind: readKind(id, o) };
+             ...(() => { const [kind, why] = readKind(id, o); return why ? { kind, override: `write: ${why}` } : { kind }; })() };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
   // Dropbox routes its own spec marks host="content"/"notify" or style upload/download (endpoint-map/raw/dropbox/spec/*.stone).
