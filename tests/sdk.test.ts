@@ -21,6 +21,8 @@ function fakeNetwork() {
       let json: unknown = { ok: true };
       if (/token$/.test(u.pathname)) json = { access_token: "tok-test", refresh_token: "r2", expires_in: 3600 };
       if (u.pathname.endsWith("/userinfo")) json = { accounts: [{ account_id: "acct-1", base_uri: "https://au.docusign.net" }] };
+      if (u.pathname === "/rest-services/loginInfo") json = { oauthUrl: "https://auth-apac.bullhornstaffing.com/oauth", restUrl: "https://rest-apac.bullhornstaffing.com/rest-services" };
+      if (u.hostname.endsWith("bullhornstaffing.com") && u.pathname === "/rest-services/login") json = { BhRestToken: "bh-session-1", restUrl: "https://rest42.bullhornstaffing.com/rest-services/corp9/" };
       return new Response(JSON.stringify(json), { status: 200, headers: { "content-type": "application/json" } });
     }) as any,
     sleep: async () => {},
@@ -39,7 +41,7 @@ const ENV: Record<string, string> = {
   GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
-  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit", AROFLO_SECRET_KEY: "asecret", AROFLO_UENCODED: "u=1", AROFLO_PENCODED: "p&2", AROFLO_ORGENCODED: "o 3",
+  BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit", BULLHORN_CLIENT_ID: "bh-id", BULLHORN_CLIENT_SECRET: "bh-secret", BULLHORN_USERNAME: "api.user", BULLHORN_REFRESH_TOKEN: "bh-r1", AROFLO_SECRET_KEY: "asecret", AROFLO_UENCODED: "u=1", AROFLO_PENCODED: "p&2", AROFLO_ORGENCODED: "o 3",
 };
 
 // Every key and host variable a platform declares gets a fake value, so new platforms need no hand-written entry here.
@@ -166,9 +168,9 @@ test("server variables must match their pattern, and site hosts come only from t
 });
 
 test("platforms with unbuilt sign-in refuse to call", async () => {
-  // AroFlo and Unleashed are built now (8 Nov); Bullhorn's session login is not yet.
-  const a = firstOp("bullhorn", (x) => x.kind === "read");
-  await assert.rejects(() => callOperation("bullhorn", a.id), /not wired yet/);
+  // AroFlo, Unleashed and Bullhorn are built now (8 Nov); SiteMinder's per-product sign-in is not yet.
+  const a = firstOp("siteminder", (x) => x.kind === "read");
+  await assert.rejects(() => callOperation("siteminder", a.id), /not wired yet/);
   assert.equal(hits.length, 0);
 });
 
@@ -198,7 +200,9 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
         await callOperation(id, o.id, input);
         if (o.kind === "write") { problems.push(`${id} ${o.id}: write was not blocked`); continue; }
         const AUTH_HOSTS = new Set(["identity.xero.com", "zoom.us", "oauth2.googleapis.com", "account.docusign.com", "account-d.docusign.com"]);
-        const api = hits.filter((h) => !AUTH_HOSTS.has(new URL(h.url).hostname));
+        // Bullhorn's sign-in runs on its data-centre hosts: loginInfo, the OAuth token and the session login.
+        const AUTH_PATH = /^\/rest-services\/(loginInfo|login)$|^\/oauth\/token$/;
+        const api = hits.filter((h) => { const u = new URL(h.url); return !AUTH_HOSTS.has(u.hostname) && !(u.hostname.endsWith(".bullhornstaffing.com") && AUTH_PATH.test(u.pathname)); });
         if (api.length !== 1) { problems.push(`${id} ${o.id}: ${api.length} api calls`); continue; }
         const u = new URL(api[0].url);
         if (!hostOk(u.hostname)) problems.push(`${id} ${o.id}: host ${u.hostname}`);
@@ -438,6 +442,48 @@ test("AroFlo: each example is a zoned call, signed with hex HMAC-SHA512 over Aro
   assert.equal(hits[0].body, `zone=${encodeURIComponent(post.fixedForm!.zone)}&postxml=${encodeURIComponent("<x a='1'>&</x>")}`);
   assert.equal(hits[0].headers["Content-Type"], "application/x-www-form-urlencoded");
   check(hits[0], "POST", String(hits[0].body));
+});
+
+test("Bullhorn: data centre, refresh token in a form body, one session login, calls on the session URL, retry once on 401 (8 Nov)", async () => {
+  const b = await import("../core/connectors/bullhorn/client.ts");
+  b.clearForTests();
+  const op = [...load("bullhorn").ops.values()].find((o) => o.method === "GET" && o.kind === "read" && o.path === "/entitlements")!;
+  hits = [];
+  await callOperation("bullhorn", op.id);
+  await callOperation("bullhorn", op.id);
+  const urls = hits.map((h) => h.url);
+  assert.ok(urls[0].startsWith("https://rest.bullhornstaffing.com/rest-services/loginInfo?username=api.user"));
+  const token = hits.find((h) => h.url === "https://auth-apac.bullhornstaffing.com/oauth/token")!;
+  assert.ok(token, "token exchange on the data centre's OAuth host");
+  assert.match(String(token.body), /grant_type=refresh_token/);
+  assert.match(String(token.body), /client_secret=bh-secret/);
+  assert.ok(!urls.some((u) => u.includes("client_secret") || u.includes("refresh_token")), "secrets never in a URL");
+  assert.equal(urls.filter((u) => u.startsWith("https://rest-apac.bullhornstaffing.com/rest-services/login?")).length, 1, "one login for two calls");
+  const calls = hits.filter((h) => h.url.startsWith("https://rest42.bullhornstaffing.com/rest-services/corp9/entitlements"));
+  assert.equal(calls.length, 2);
+  for (const c of calls) assert.equal(c.headers.BhRestToken, "bh-session-1");
+  assert.ok(!urls.filter((u) => !u.includes("/rest-services/login?")).some((u) => /access_token=/.test(u)), "the access token appears only on the login call");
+  assert.ok(hits.filter((h) => h.url.includes("/rest-services/login?")).every((h) => h.method === "POST"), "login is a POST (Getting Started)");
+  // An expired session answers 401: the kit refreshes, logs in once more and retries the call once.
+  const real = hits;
+  let failed = false;
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const u = new URL(String(url));
+      real.push({ url: String(url), method: init?.method ?? "GET", headers: init?.headers ?? {}, body: init?.body });
+      if (u.pathname.endsWith("/entitlements") && !failed) { failed = true; return new Response("{}", { status: 401 }); }
+      if (u.pathname === "/oauth/token") return Response.json({ access_token: "at-2", refresh_token: "r3" });
+      if (u.pathname === "/rest-services/login") return Response.json({ BhRestToken: "bh-session-2", restUrl: "https://rest42.bullhornstaffing.com/rest-services/corp9/" });
+      return Response.json({ ok: true });
+    }) as any,
+  });
+  hits.length = 0;
+  await callOperation("bullhorn", op.id);
+  const after = hits.filter((h) => h.url.includes("/entitlements"));
+  assert.equal(after.length, 2, "one failed call and one retry");
+  assert.equal(after[1].headers.BhRestToken, "bh-session-2", "the retry uses the new session");
+  assert.equal(hits.filter((h) => h.url.includes("/rest-services/login?")).length, 1, "exactly one new login");
 });
 
 test("review 3: the WordPress host is exactly the one in the secret store", async () => {

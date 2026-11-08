@@ -9,18 +9,20 @@
   "rest.bullhornstaffing.com"
  ],
  "hostFromEnv": false,
- "hostPatterns": [],
+ "hostPatterns": [
+  "rest[a-z0-9-]*\\.bullhornstaffing\\.com"
+ ],
  "pinned": {},
  "serverVars": {},
  "auth": {
-  "type": "unsupported",
-  "note": "Bullhorn signs in through a login call that returns a per-session REST URL and BhRestToken; not wired yet"
+  "type": "custom",
+  "provider": "bullhorn"
  },
  "keys": [
   "BULLHORN_CLIENT_ID",
   "BULLHORN_CLIENT_SECRET",
   "BULLHORN_USERNAME",
-  "BULLHORN_PASSWORD"
+  "BULLHORN_REFRESH_TOKEN"
  ],
  "sources": [
   {

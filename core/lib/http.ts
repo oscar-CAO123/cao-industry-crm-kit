@@ -25,6 +25,11 @@ export interface AppSpec {
   keyInPath?: RegExp;
   /** First wait before a retry when the app gives no Retry-After. Doubles each time, capped at 60s. */
   retryBaseMs?: number;
+  /**
+   * The one host and path where the vendor's only supported login carries a short-lived access token in the query
+   * (Bullhorn's REST /login, a 10-minute token used once). Everywhere else a key in the query string is refused.
+   */
+  keyInQueryAt?: RegExp;
 }
 
 export interface CallOptions {
@@ -126,7 +131,7 @@ export function checkUrl(spec: AppSpec, u: URL): void {
   if (u.username || u.password) throw new Error(`${spec.app}: credentials in a URL are refused`);
   if (!spec.hosts.includes(u.hostname) && !spec.hostPattern?.test(u.hostname)) throw new Error(`${spec.app}: host ${u.hostname} is not one of this app's hosts`);
   const keyish = [...u.searchParams.keys()].some((k) => KEY_NAMES.has(k.toLowerCase().replace(/[^a-z]/g, "")));
-  if (TOKEN_IN_QUERY.test(u.search) || keyish) throw new Error(`${spec.app}: a key in the query string is refused, use a header`);
+  if ((TOKEN_IN_QUERY.test(u.search) || keyish) && !spec.keyInQueryAt?.test(`${u.hostname}${u.pathname}`)) throw new Error(`${spec.app}: a key in the query string is refused, use a header`);
 }
 
 export function isRead(spec: AppSpec, method: Method, u: URL): boolean {

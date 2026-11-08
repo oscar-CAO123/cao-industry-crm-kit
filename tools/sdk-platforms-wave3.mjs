@@ -23,8 +23,10 @@ export const W3 = {
   "bookeo": d("Bookeo", H("X-Bookeo-apiKey", "BOOKEO_API_KEY", "", { extraHeaders: { "X-Bookeo-secretKey": "BOOKEO_SECRET_KEY" } })),
   "booking-com": d("Booking.com", B("BOOKING_ACCESS_TOKEN", { note: TOKEN })),
   "brighthr": d("BrightHR", B("BRIGHTHR_ACCESS_TOKEN", { note: TOKEN })),
-  "bullhorn": d("Bullhorn", { type: "unsupported", note: "Bullhorn signs in through a login call that returns a per-session REST URL and BhRestToken; not wired yet" },
-    { keys: ["BULLHORN_CLIENT_ID", "BULLHORN_CLIENT_SECRET", "BULLHORN_USERNAME", "BULLHORN_PASSWORD"], server: "https://rest.bullhornstaffing.com/rest-services", forceServer: true }),
+  // Data centre, refresh token and session login: core/connectors/bullhorn/client.ts. No password is held by the kit.
+  "bullhorn": d("Bullhorn", { type: "custom", provider: "bullhorn" },
+    { keys: ["BULLHORN_CLIENT_ID", "BULLHORN_CLIENT_SECRET", "BULLHORN_USERNAME", "BULLHORN_REFRESH_TOKEN"], server: "https://rest.bullhornstaffing.com/rest-services", forceServer: true,
+      hostPatterns: ["rest[a-z0-9-]*\\.bullhornstaffing\\.com"] }),
   "calendesk": d("Calendesk", H("X-Api-Key", "CALENDESK_API_KEY", "", { extraHeaders: { "X-Tenant": "CALENDESK_TENANT" } })),
   "chidesk": d("ChiDesk", H("ChiDeskApiKey", "CHIDESK_API_KEY"), { serverVars: { account: { env: "CHIDESK_ACCOUNT", pattern: SUB, example: "acme" } } }),
   "cin7": d("Cin7 Omni", BA("CIN7_USERNAME", "CIN7_API_KEY"), { server: "https://api.cin7.com/api" }),

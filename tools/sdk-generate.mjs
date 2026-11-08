@@ -308,6 +308,12 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       }
     }
   }
+  // A path the docs give with unbalanced placeholders ("/entity{Entity}EditHistory/{comma-separated") cannot be filled.
+  for (const o of ops) {
+    const p = String(o.path);
+    if ((p.match(/\{/g) ?? []).length !== (p.match(/\}/g) ?? []).length && !o.authUnsupported)
+      o.authUnsupported = "the vendor's docs give a malformed path for this endpoint; not callable until its inputs are mapped";
+  }
   // Overrides are keyed by the endpoint id the assessment saw. The api prefix on an id comes and goes as a platform
   // gains or loses spec files, so a key matches the full id or the bare id (api prefix removed), and must match exactly one.
   const ov = OVERRIDES[id] ?? {};

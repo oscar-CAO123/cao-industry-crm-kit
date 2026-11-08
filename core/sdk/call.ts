@@ -20,7 +20,7 @@ import fs from "node:fs";
 import { createHmac } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { call as httpCall, writesAllowed, WriteBlocked, type AppSpec, type Method, type Reply } from "../lib/http.ts";
+import { call as httpCall, writesAllowed, WriteBlocked, ApiError, type AppSpec, type Method, type Reply } from "../lib/http.ts";
 import { secret, optional } from "../lib/secrets.ts";
 import { encodeForm, type FormArrays } from "../lib/form.ts";
 
@@ -234,7 +234,8 @@ function authPreview(p: Platform, o?: Op): Record<string, string> {
   for (const [k, env] of Object.entries(a.optionalHeaders ?? {})) h[k] = `[from ${env}, if set]`;
   if (a.type === "bearer" || a.type === "basic") h.Authorization = `[from ${(a.type === "bearer" && o?.tokenEnv) || a.env || [a.user, a.pass].filter(Boolean).join(" + ")}]`;
   if (a.type === "header") h[a.header!] = `[from ${a.env}]`;
-  if (a.type === "custom" && !["unleashed", "aroflo"].includes(a.provider ?? "")) h.Authorization = `[from the ${a.provider} sign-in]`;
+  if (a.type === "custom" && a.provider === "bullhorn") h.BhRestToken = "[from the Bullhorn session login]";
+  else if (a.type === "custom" && !["unleashed", "aroflo"].includes(a.provider ?? "")) h.Authorization = `[from the ${a.provider} sign-in]`;
   if (a.type === "template") h[a.header!] = `[from ${[...String(a.template).matchAll(/\{([A-Z][A-Z0-9_]+)\}/g)].map((m) => m[1]).join(" + ")}]`;
   return h;
 }
@@ -266,6 +267,14 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
 async function customAuth(provider: string, p: Platform, o: Op, input: CallInput, base: { url: string }): Promise<Record<string, string>> {
   // Request-signing schemes sign the final URL, so their headers are added by signRequest() once the query is set.
   if (provider === "unleashed" || provider === "aroflo") return {};
+  if (provider === "bullhorn") {
+    // Calls go to the session's own restUrl (swimlane host and corpToken) with the BhRestToken header.
+    const b = await import("../connectors/bullhorn/client.ts");
+    const s = await b.login();
+    const generic = "https://rest.bullhornstaffing.com/rest-services";
+    if (base.url.startsWith(generic)) base.url = s.restUrl + base.url.slice(generic.length);
+    return { BhRestToken: s.token };
+  }
   if (provider === "xero") {
     const x = await import("../connectors/xero/client.ts");
     return { Authorization: `Bearer ${await x.accessToken()}`, "Xero-Tenant-Id": secret("XERO_TENANT_ID") };
@@ -363,7 +372,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     } else if (x.in === "formData") (form ??= {})[k] = String(v);
     else (bodyFields ??= {})[k] = v; // body, argument
   }
-  if (/\{[^}]+\}/.test(route)) throw new Error(`${id} ${opId}: path still has unfilled parts: ${route}`);
+  if (/[{}]/.test(route)) throw new Error(`${id} ${opId}: path still has unfilled parts: ${route}`);
   const target = { url: `${base}/${route.replace(/^\/+/, "")}` };
   const auth = withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
   const method = (o.method === "QUERY" || o.method === "MUTATION" ? "POST" : o.method) as Method;
@@ -485,7 +494,17 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   if (o.bodyType === "multipart") throw new Error(`${p.id} ${o.id}: this endpoint takes a multipart upload, which the kit does not build yet`);
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
-  return httpCall<T>(spec, { method: r.method, url: r.url, headers: r.headers, json: r.json, form: r.form, body: r.body, binary: input.binary, signal: input.signal });
+  const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary, signal: input.signal });
+  try {
+    return await send(r);
+  } catch (e) {
+    // Bullhorn: an expired session answers 401; refresh and log in once more, then retry this call once.
+    if ((o.auth ?? p.auth).provider === "bullhorn" && e instanceof ApiError && e.status === 401) {
+      (await import("../connectors/bullhorn/client.ts")).invalidate();
+      return send(await plan(id, opId, input, true));
+    }
+    throw e;
+  }
 }
 
 // A request a vendor SDK has already built (see core/sdk/vendor/). The SDK is only a front end: the
