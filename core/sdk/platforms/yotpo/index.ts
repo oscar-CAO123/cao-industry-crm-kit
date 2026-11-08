@@ -6,8 +6,8 @@ export const sdk = platform("yotpo");
 export const docsPostCoreV3StoresYOURSTOREIDAccessTokens = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_core_v3_stores_YOUR_STORE_ID_access_tokens", input);
 /** GET /albums/{store_id}: Custom albums [read] */
 export const docsGetAlbumsStoreId = (input: CallInput & { params?: { "store_id": string } } = {}) => sdk.call("docs.get_albums_store_id", input);
-/** POST /oauth/token: About authentication [write] */
-export const docsPostOauthToken = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_oauth_token", input);
+/** POST /oauth/token: Generate Access Token [write] */
+export const docsPostOauthToken = (input: CallInput & { params?: { "client_id": string; "grant_type": string } } = {}) => sdk.call("docs.post_oauth_token", input);
 /** POST /core/v3/stores/{store_id}/access_tokens: Generate Access Token [write] */
 export const docsPostCoreV3StoresStoreIdAccessTokens = (input: CallInput & { params?: { "store_id": string } } = {}) => sdk.call("docs.post_core_v3_stores_store_id_access_tokens", input);
 /** POST /core/v3/stores/{store_id}/orders: Create order [write] */

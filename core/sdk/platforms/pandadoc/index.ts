@@ -242,7 +242,7 @@ export const coreDocsGetPublicV1LogsId = (input: CallInput & { params?: { "id": 
 export const coreDocsGetPublicV2Logs = (input: CallInput & { params?: { "since"?: string; "to"?: string; "count"?: number; "page"?: number; "statuses"?: unknown[]; "methods"?: unknown[]; "search"?: string; "environment_type"?: string } } = {}) => sdk.call("core.docs.get_public_v2_logs", input);
 /** GET /public/v2/logs/{id}: API Log Details [read] */
 export const coreDocsGetPublicV2LogsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("core.docs.get_public_v2_logs_id", input);
-/** GET /public/v1/documents/{document_id}/sections/uploads/{upload_id}: From PandaDoc/pandadoc-api-node-client; not in the published spec; inputs not mapped yet [read] */
+/** GET /public/v1/documents/{document_id}/sections/uploads/{upload_id}: Document Section Upload Status [read] */
 export const sdkGetPublicV1DocumentsDocumentIdSectionsUploadsUploadId = (input: CallInput & { params?: { "document_id": string; "upload_id": string } } = {}) => sdk.call("sdk.get_public_v1_documents_document_id_sections_uploads_upload_id", input);
-/** POST /public/v1/documents/{document_id}/sections/uploads: From PandaDoc/pandadoc-api-node-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostPublicV1DocumentsDocumentIdSectionsUploads = (input: CallInput & { params?: { "document_id": string } } = {}) => sdk.call("sdk.post_public_v1_documents_document_id_sections_uploads", input);
+/** POST /public/v1/documents/{document_id}/sections/uploads: Create Document Section [write] */
+export const sdkPostPublicV1DocumentsDocumentIdSectionsUploads = (input: CallInput & { params?: { "document_id": string; "merge_field_scope"?: string; "parse_form_fields"?: boolean; "parse_text_tags"?: boolean; "fields"?: unknown; "name"?: string; "recipients"?: unknown[]; "tokens"?: unknown[]; "tags"?: unknown[]; "template_uuid"?: string; "pricing_tables"?: unknown[]; "content_placeholders"?: unknown[]; "url"?: string } } = {}) => sdk.call("sdk.post_public_v1_documents_document_id_sections_uploads", input);

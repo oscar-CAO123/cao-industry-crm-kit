@@ -93,7 +93,7 @@ export const docsDeleteGuestsGuestIdAccountsAccountId = (input: CallInput & { pa
 /** PUT /guests/{target_guest_id}/merge: Merge guests [write] */
 export const docsPutGuestsTargetGuestIdMerge = (input: CallInput & { params?: { "target_guest_id": string } } = {}) => sdk.call("docs.put_guests_target_guest_id_merge", input);
 /** POST /guests/{id}/tier: Registering Guest for Loyalty Points Tier [write] */
-export const docsPostGuestsIdTier = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.post_guests_id_tier", input);
+export const docsPostGuestsIdTier = (input: CallInput & { params?: { "id": string; "direct_enroll"?: boolean; "comments"?: string } } = {}) => sdk.call("docs.post_guests_id_tier", input);
 /** PUT /guests/{guest_id}/email_activate: Activate guest email [write] */
 export const docsPutGuestsGuestIdEmailActivate = (input: CallInput & { params?: { "guest_id": string } } = {}) => sdk.call("docs.put_guests_guest_id_email_activate", input);
 /** GET /guests/{guest_id}/aveda/birthday_gift: Check Aveda Birthday Gift Availability [read] */

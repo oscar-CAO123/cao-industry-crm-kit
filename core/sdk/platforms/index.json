@@ -105,7 +105,7 @@
   },
   {
    "id": "bullhorn",
-   "ops": 90,
+   "ops": 116,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -213,7 +213,7 @@
   },
   {
    "id": "domain",
-   "ops": 80,
+   "ops": 78,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -333,7 +333,7 @@
   },
   {
    "id": "idashboard-trust",
-   "ops": 70,
+   "ops": 66,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -375,7 +375,7 @@
   },
   {
    "id": "linkedin",
-   "ops": 28,
+   "ops": 35,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -459,7 +459,7 @@
   },
   {
    "id": "onfleet",
-   "ops": 73,
+   "ops": 74,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -747,7 +747,7 @@
   },
   {
    "id": "workflowmax",
-   "ops": 21,
+   "ops": 126,
    "status": "docs-read",
    "auth": "docs"
   },

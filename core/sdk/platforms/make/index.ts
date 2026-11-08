@@ -5,9 +5,9 @@ export const sdk = platform("make");
 /** GET /data-stores: List data stores [read] */
 export const coreDocsGetDataStores = (input: CallInput & { params?: { "teamId": number; "cols[]"?: unknown[]; "pg[sortBy]"?: string; "pg[offset]"?: number; "pg[sortDir]"?: string; "pg[limit]"?: number } } = {}) => sdk.call("core.docs.get_data_stores", input);
 /** GET /oauth/v2/authorize: Authorization code flow with refresh token (confidential clients) [write] */
-export const coreDocsGetOauthV2Authorize = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.get_oauth_v2_authorize", input);
+export const coreDocsGetOauthV2Authorize = (input: CallInput & { params?: { "client_id": string; "response_type": string; "redirect_uri": string; "scope": string; "state"?: string } } = {}) => sdk.call("core.docs.get_oauth_v2_authorize", input);
 /** POST /oauth/v2/token: Authorization code flow with refresh token (confidential clients) [write] */
-export const coreDocsPostOauthV2Token = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_oauth_v2_token", input);
+export const coreDocsPostOauthV2Token = (input: CallInput & { params?: { "client_id": string; "grant_type": string } } = {}) => sdk.call("core.docs.post_oauth_v2_token", input);
 /** POST /affiliate/partner-register: Register partner [write] */
 export const coreDocsPostAffiliatePartnerRegister = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_affiliate_partner_register", input);
 /** GET /agents: List on-prem agents [read] */

@@ -7,19 +7,19 @@ export const docsGetMetaWhoami = (input: CallInput & { params?: {  } } = {}) => 
 /** POST /{baseId}/{tableIdOrName}: Create records [write] */
 export const docsPostBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "fields"?: unknown; "records"?: unknown[]; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean } } = {}) => sdk.call("docs.post_baseId_tableIdOrName", input);
 /** DELETE /{baseId}/{tableIdOrName}: Delete multiple records [write] */
-export const docsDeleteBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName", input);
+export const docsDeleteBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "records"?: unknown[] } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName", input);
 /** DELETE /{baseId}/{tableIdOrName}/{recordId}: Delete record [write] */
 export const docsDeleteBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string } } = {}) => sdk.call("docs.delete_baseId_tableIdOrName_recordId", input);
 /** GET /{baseId}/{tableIdOrName}/{recordId}: Get record [read] */
 export const docsGetBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "cellFormat"?: string; "returnFieldsByFieldId"?: boolean; "includeDateDependencyMetadata"?: boolean } } = {}) => sdk.call("docs.get_baseId_tableIdOrName_recordId", input);
 /** GET /{baseId}/{tableIdOrName}: List records [read] */
-export const docsGetBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.get_baseId_tableIdOrName", input);
+export const docsGetBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "timeZone"?: string; "userLocale"?: string; "pageSize"?: number; "maxRecords"?: number; "offset"?: string; "view"?: string; "sort"?: unknown[]; "filterByFormula"?: string; "cellFormat"?: string; "fields"?: unknown[]; "returnFieldsByFieldId"?: boolean; "includeDateDependencyMetadata"?: boolean; "recordMetadata"?: unknown[] } } = {}) => sdk.call("docs.get_baseId_tableIdOrName", input);
 /** POST /{baseId}/{tableIdOrName}/sync/{apiEndpointSyncId}: Sync CSV data [write] */
 export const docsPostBaseIdTableIdOrNameSyncApiEndpointSyncId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "apiEndpointSyncId": string } } = {}) => sdk.call("docs.post_baseId_tableIdOrName_sync_apiEndpointSyncId", input);
 /** PATCH /{baseId}/{tableIdOrName}: Update multiple records [write] */
-export const docsPatchBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName", input);
+export const docsPatchBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "performUpsert"?: unknown; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean; "records": unknown[] } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName", input);
 /** PUT /{baseId}/{tableIdOrName}: Update multiple records [write] */
-export const docsPutBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string } } = {}) => sdk.call("docs.put_baseId_tableIdOrName", input);
+export const docsPutBaseIdTableIdOrName = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "performUpsert"?: unknown; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean; "records": unknown[] } } = {}) => sdk.call("docs.put_baseId_tableIdOrName", input);
 /** PATCH /{baseId}/{tableIdOrName}/{recordId}: Update record [write] */
 export const docsPatchBaseIdTableIdOrNameRecordId = (input: CallInput & { params?: { "baseId": string; "tableIdOrName": string; "recordId": string; "returnFieldsByFieldId"?: boolean; "typecast"?: boolean; "fields": unknown } } = {}) => sdk.call("docs.patch_baseId_tableIdOrName_recordId", input);
 /** PUT /{baseId}/{tableIdOrName}/{recordId}: Update record [write] */

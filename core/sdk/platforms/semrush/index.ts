@@ -136,8 +136,8 @@ export const docsPutApisV4ProjectsV0 = (input: CallInput & { params?: { "project
 export const docsDeleteApisV4ProjectsV0ProjectId = (input: CallInput & { params?: { "project_id": string } } = {}) => sdk.call("docs.delete_apis_v4_projects_v0_project_id", input);
 /** PUT /apis/v4-raw/listing-management/v1/external/locations/{id}: Listing Management | Semrush API [write] */
 export const docsPutApisV4RawListingManagementV1ExternalLocationsId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("docs.put_apis_v4_raw_listing_management_v1_external_locations_id", input);
-/** PUT /listing-management/v1/external/locations: Listing Management | Semrush API [write] */
-export const docsPutListingManagementV1ExternalLocations = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.put_listing_management_v1_external_locations", input);
+/** PUT /apis/v4-raw/listing-management/v1/external/locations: UpdateLocations [write] */
+export const docsPutListingManagementV1ExternalLocations = (input: CallInput & { params?: { "locations": unknown[] } } = {}) => sdk.call("docs.put_listing_management_v1_external_locations", input);
 /** GET /apis/v4/listing-management/v1/external/locations/{locationId}: GetLocation [read] */
 export const docsGetApisV4ListingManagementV1ExternalLocationsLocationId = (input: CallInput & { params?: { "locationId": string; "location_id": string } } = {}) => sdk.call("docs.get_apis_v4_listing_management_v1_external_locations_locationId", input);
 /** GET /apis/v4-raw/listing-management/v1/external/locations: GetLocations [read] */
@@ -146,5 +146,5 @@ export const docsGetApisV4RawListingManagementV1ExternalLocations = (input: Call
 export const docsPutApisV4ListingManagementV1ExternalLocationsLocationId = (input: CallInput & { params?: { "locationId": string; "locationName": string; "city": string; "address": string; "additionalAddressInfo"?: string; "zip"?: string; "phone": string; "region"?: string; "websiteUrl"?: string; "businessHours"?: unknown; "holidayHours"?: unknown[]; "reopenDate"?: string } } = {}) => sdk.call("docs.put_apis_v4_listing_management_v1_external_locations_locationId", input);
 /** PUT /apis/v4-raw/listing-management/v1/external/locations: UpdateLocations [write] */
 export const docsPutApisV4RawListingManagementV1ExternalLocations = (input: CallInput & { params?: { "locations": unknown[] } } = {}) => sdk.call("docs.put_apis_v4_raw_listing_management_v1_external_locations", input);
-/** POST /local/v1/locations: Tutorials | Semrush API [write] */
-export const docsPostLocalV1Locations = (input: CallInput & { params?: {  } } = {}) => sdk.call("docs.post_local_v1_locations", input);
+/** POST /apis/v4/local/v1/locations: Create Location [write] */
+export const docsPostLocalV1Locations = (input: CallInput & { params?: { "validate_only"?: boolean } } = {}) => sdk.call("docs.post_local_v1_locations", input);

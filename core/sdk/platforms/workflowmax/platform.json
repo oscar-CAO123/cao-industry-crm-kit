@@ -774,10 +774,12 @@
    "official": "vendor-domain: api-docs.workflowmax.com"
   }
  ],
- "gaps": [],
+ "gaps": [
+  "workflowmax: mapped from its current /v2 reference pages (api-docs.workflowmax.com); the earlier docs-index entries had missing prefixes and typos"
+ ],
  "counts": {
-  "operations": 21,
-  "read": 19,
-  "write": 2
+  "operations": 126,
+  "read": 56,
+  "write": 70
  }
 }

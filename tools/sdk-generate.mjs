@@ -116,6 +116,7 @@ const DOCUSIGN = {
 };
 // The body encoding the vendor's own spec requires, when it does not accept JSON (endpoint map body_types).
 function bodyType(o) {
+  if (String(o.method).toUpperCase() === "GET") return null;  // a GET sends no body, whatever a docs page lists for it
   // OAuth token and revoke endpoints take form encoding by the OAuth standard (RFC 6749 4.1.3, RFC 7009), even when
   // the spec (or an SDK-added endpoint) records no content type.
   if (o.body && !(o.body_types ?? []).length && /\/oauth2?\/(token|deauthorize|revoke)$/i.test(String(o.path))) return "form";

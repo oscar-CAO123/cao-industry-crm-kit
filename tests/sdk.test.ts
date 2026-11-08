@@ -448,10 +448,11 @@ test("AroFlo: each example is a zoned call, signed with hex HMAC-SHA512 over Aro
 test("Bullhorn: data centre, refresh token in a form body, one session login, calls on the session URL, retry once on 401 (8 Nov)", async () => {
   const b = await import("../core/connectors/bullhorn/client.ts");
   b.clearForTests();
-  const op = [...load("bullhorn").ops.values()].find((o) => o.method === "GET" && o.kind === "read" && o.path === "/entitlements")!;
+  // Bullhorn's reference documents entitlements per entity (GET /entitlements/{entity}), mapped 8 Nov from its request lines.
+  const op = [...load("bullhorn").ops.values()].find((o) => o.method === "GET" && o.kind === "read" && o.path === "/entitlements/{id}")!;
   hits = [];
-  await callOperation("bullhorn", op.id);
-  await callOperation("bullhorn", op.id);
+  await callOperation("bullhorn", op.id, { params: { id: "Candidate" } });
+  await callOperation("bullhorn", op.id, { params: { id: "Candidate" } });
   const urls = hits.map((h) => h.url);
   assert.ok(urls[0].startsWith("https://rest.bullhornstaffing.com/rest-services/loginInfo?username=api.user"));
   const token = hits.find((h) => h.url === "https://auth-apac.bullhornstaffing.com/oauth/token")!;
@@ -473,14 +474,14 @@ test("Bullhorn: data centre, refresh token in a form body, one session login, ca
     fetch: (async (url: any, init: any) => {
       const u = new URL(String(url));
       real.push({ url: String(url), method: init?.method ?? "GET", headers: init?.headers ?? {}, body: init?.body });
-      if (u.pathname.endsWith("/entitlements") && !failed) { failed = true; return new Response("{}", { status: 401 }); }
+      if (u.pathname.endsWith("/entitlements/Candidate") && !failed) { failed = true; return new Response("{}", { status: 401 }); }
       if (u.pathname === "/oauth/token") return Response.json({ access_token: "at-2", refresh_token: "r3" });
       if (u.pathname === "/rest-services/login") return Response.json({ BhRestToken: "bh-session-2", restUrl: "https://rest42.bullhornstaffing.com/rest-services/corp9/" });
       return Response.json({ ok: true });
     }) as any,
   });
   hits.length = 0;
-  await callOperation("bullhorn", op.id);
+  await callOperation("bullhorn", op.id, { params: { id: "Candidate" } });
   const after = hits.filter((h) => h.url.includes("/entitlements"));
   assert.equal(after.length, 2, "one failed call and one retry");
   assert.equal(after[1].headers.BhRestToken, "bh-session-2", "the retry uses the new session");

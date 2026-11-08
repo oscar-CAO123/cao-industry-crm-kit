@@ -2,54 +2,52 @@
 // Typeform: 29 endpoints (11 read, 18 write). Source status: docs-read. Sign-in: from vendor docs, unproven.
 import { platform, type CallInput } from "../../call.ts";
 export const sdk = platform("typeform");
-/** POST /images: core.docs.post_images [write] */
-export const coreDocsPostImages = (input: CallInput & { params?: {  } } = {}) => sdk.call("core.docs.post_images", input);
-/** GET /forms/{form_id}/responses: core.docs.get_forms_form_id_responses [read] */
-export const coreDocsGetFormsFormIdResponses = (input: CallInput & { params?: { "form_id": string } } = {}) => sdk.call("core.docs.get_forms_form_id_responses", input);
-/** DELETE /forms: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkDeleteForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.delete_forms", input);
-/** GET /choice/{choiceSize}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetChoiceChoiceSize = (input: CallInput & { params?: { "choiceSize": string } } = {}) => sdk.call("sdk.get_choice_choiceSize", input);
-/** GET /forms: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetForms = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_forms", input);
-/** GET /forms/{uid}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetFormsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("sdk.get_forms_uid", input);
-/** GET /forms/{uid}/webhooks/{tag}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetFormsUidWebhooksTag = (input: CallInput & { params?: { "uid": string; "tag": string } } = {}) => sdk.call("sdk.get_forms_uid_webhooks_tag", input);
-/** GET /images/{id}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetImagesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.get_images_id", input);
+/** POST /images: Adds an image in your Typeform account. [write] */
+export const coreDocsPostImages = (input: CallInput & { params?: { "file_name"?: string; "image"?: string; "upload_source"?: string; "url"?: string } } = {}) => sdk.call("core.docs.post_images", input);
+/** GET /forms/{form_id}/responses: Retrieve responses [read] */
+export const coreDocsGetFormsFormIdResponses = (input: CallInput & { params?: { "form_id": unknown; "page_size"?: number; "since"?: string; "until"?: string; "after"?: string; "before"?: string; "included_response_ids"?: string; "excluded_response_ids"?: string; "response_type"?: unknown[]; "completed"?: boolean; "sort"?: string; "query"?: string; "fields"?: unknown[]; "answered_fields"?: unknown[] } } = {}) => sdk.call("core.docs.get_forms_form_id_responses", input);
+/** GET /images/{image_id}/choice/{size}: Retrieve choice image by size [read] */
+export const sdkGetChoiceChoiceSize = (input: CallInput & { params?: { "image_id": string; "size": string } } = {}) => sdk.call("sdk.get_choice_choiceSize", input);
+/** GET /forms: Retrieve forms [read] */
+export const sdkGetForms = (input: CallInput & { params?: { "search"?: string; "page"?: number; "page_size"?: number; "workspace_id"?: string; "sort_by"?: string; "order_by"?: string; "is_public"?: boolean } } = {}) => sdk.call("sdk.get_forms", input);
+/** GET /forms/{form_id}: Retrieve form [read] */
+export const sdkGetFormsUid = (input: CallInput & { params?: { "form_id": unknown } } = {}) => sdk.call("sdk.get_forms_uid", input);
+/** GET /forms/{form_id}/webhooks/{tag}: Retrieve single webhook [read] */
+export const sdkGetFormsUidWebhooksTag = (input: CallInput & { params?: { "form_id": unknown; "tag": string } } = {}) => sdk.call("sdk.get_forms_uid_webhooks_tag", input);
+/** GET /images/{image_id}: Retrieve image [read] */
+export const sdkGetImagesId = (input: CallInput & { params?: { "image_id": string } } = {}) => sdk.call("sdk.get_images_id", input);
 /** GET /insights/{uid}/summary: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
 export const sdkGetInsightsUidSummary = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("sdk.get_insights_uid_summary", input);
-/** GET /themes: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetThemes = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_themes", input);
-/** GET /themes/{id}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetThemesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.get_themes_id", input);
-/** GET /workspaces: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetWorkspaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.get_workspaces", input);
-/** GET /workspaces/{id}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [read] */
-export const sdkGetWorkspacesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.get_workspaces_id", input);
-/** PATCH /forms/{uid}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchFormsUid = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("sdk.patch_forms_uid", input);
+/** GET /themes: Retrieve themes [read] */
+export const sdkGetThemes = (input: CallInput & { params?: { "page"?: number; "page_size"?: number } } = {}) => sdk.call("sdk.get_themes", input);
+/** GET /themes/{theme_id}: Retrieve theme [read] */
+export const sdkGetThemesId = (input: CallInput & { params?: { "theme_id": string } } = {}) => sdk.call("sdk.get_themes_id", input);
+/** GET /workspaces: Retrieve workspaces [read] */
+export const sdkGetWorkspaces = (input: CallInput & { params?: { "search"?: string; "page"?: number; "page_size"?: number } } = {}) => sdk.call("sdk.get_workspaces", input);
+/** GET /workspaces/{workspace_id}: Retrieve workspace [read] */
+export const sdkGetWorkspacesId = (input: CallInput & { params?: { "workspace_id": string } } = {}) => sdk.call("sdk.get_workspaces_id", input);
+/** PATCH /forms/{form_id}: Update form (patch) [write] */
+export const sdkPatchFormsUid = (input: CallInput & { params?: { "form_id": unknown; "op"?: string; "path"?: string; "value"?: unknown } } = {}) => sdk.call("sdk.patch_forms_uid", input);
 /** PATCH /members: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchMembers = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.patch_members", input);
 /** PATCH /name: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPatchName = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.patch_name", input);
-/** PATCH /workspaces/{id}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPatchWorkspacesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.patch_workspaces_id", input);
-/** POST /themes: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostThemes = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_themes", input);
+/** PATCH /workspaces/{workspace_id}: Update workspace [write] */
+export const sdkPatchWorkspacesId = (input: CallInput & { params?: { "workspace_id": string; "op"?: string; "path"?: string; "value"?: unknown } } = {}) => sdk.call("sdk.patch_workspaces_id", input);
+/** POST /themes: Create theme [write] */
+export const sdkPostThemes = (input: CallInput & { params?: { "background"?: unknown; "colors"?: unknown; "fields"?: unknown; "font"?: string; "has_transparent_button"?: boolean; "name"?: string; "origin"?: string; "rounded_corners"?: string; "screens"?: unknown; "source_theme_id"?: string } } = {}) => sdk.call("sdk.post_themes", input);
 /** POST /themes/{id}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPostThemesId = (input: CallInput & { params?: { "id": string } } = {}) => sdk.call("sdk.post_themes_id", input);
-/** POST /workspaces: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPostWorkspaces = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.post_workspaces", input);
+/** POST /workspaces: Create workspace [write] */
+export const sdkPostWorkspaces = (input: CallInput & { params?: { "name"?: string } } = {}) => sdk.call("sdk.post_workspaces", input);
 /** PUT /cui_settings: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutCuiSettings = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.put_cui_settings", input);
-/** PUT /forms/{uid}/messages: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutFormsUidMessages = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("sdk.put_forms_uid_messages", input);
+/** PUT /forms/{form_id}/messages: Update custom messages [write] */
+export const sdkPutFormsUidMessages = (input: CallInput & { params?: { "form_id": unknown; "label.buttonHint.default"?: string; "label.buttonHint.longtext"?: string; "label.warning.connection"?: string; "label.buttonNoAnswer.default"?: string; "label.warning.correction"?: string; "block.payment.cardNameTitle"?: string; "block.payment.cardNumberTitle"?: string; "block.payment.cvcDescription"?: string; "block.payment.cvcNumberTitle"?: string; "block.shortText.placeholder"?: string; "label.error.emailAddress"?: string; "label.error.expiryMonthTitle"?: string; "label.error.expiryYearTitle"?: string; "label.warning.fallbackAlert"?: string; "block.fileUpload.choose"?: string; "block.fileUpload.drag"?: string; "block.fileUpload.uploadingProgress"?: string; "label.error.sizeLimit"?: string; "label.warning.formUnavailable"?: string; "label.error.incompleteForm"?: string; "label.hint.key"?: string; "block.legal.reject"?: string; "block.legal.accept"?: string; "label.error.maxValue"?: string; "label.error.maxLength"?: string; "label.error.minValue"?: string; "label.error.range"?: string; "block.multipleChoice.hint"?: string; "label.error.mustEnter"?: string; "label.error.mustSelect"?: string; "label.no.shortcut"?: string; "label.no.default"?: string; "block.dropdown.hint"?: string; "block.multipleChoice.other"?: string; "label.progress.percent"?: string; "label.progress.proportion"?: string; "label.error.required"?: string; "label.preview"?: string; "label.button.review"?: string; "label.error.server"?: string; "label.action.share"?: string; "label.button.submit"?: string; "label.warning.success"?: string; "label.button.ok"?: string; "label.error.mustAccept"?: string; "block.longtext.hint"?: string; "block.dropdown.placeholder"?: string; "block.dropdown.placeholderTouch"?: string; "label.error.url"?: string; "label.yes.shortcut"?: string; "label.yes.default"?: string } } = {}) => sdk.call("sdk.put_forms_uid_messages", input);
 /** PUT /forms/{uid}/webhooks: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutFormsUidWebhooks = (input: CallInput & { params?: { "uid": string } } = {}) => sdk.call("sdk.put_forms_uid_webhooks", input);
-/** PUT /forms/{uid}/webhooks/{tag}: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
-export const sdkPutFormsUidWebhooksTag = (input: CallInput & { params?: { "uid": string; "tag": string } } = {}) => sdk.call("sdk.put_forms_uid_webhooks_tag", input);
+/** PUT /forms/{form_id}/webhooks/{tag}: Create or update webhook [write] */
+export const sdkPutFormsUidWebhooksTag = (input: CallInput & { params?: { "form_id": unknown; "tag": string; "enabled"?: boolean; "event_types"?: unknown; "url"?: string; "verify_ssl"?: boolean } } = {}) => sdk.call("sdk.put_forms_uid_webhooks_tag", input);
 /** PUT /settings/is_public: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutSettingsIsPublic = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.put_settings_is_public", input);
 /** PUT /settings/meta: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
@@ -60,3 +58,5 @@ export const sdkPutTheme = (input: CallInput & { params?: {  } } = {}) => sdk.ca
 export const sdkPutTitle = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.put_title", input);
 /** PUT /workspace: From typeform/js-api-client; not in the published spec; inputs not mapped yet [write] */
 export const sdkPutWorkspace = (input: CallInput & { params?: {  } } = {}) => sdk.call("sdk.put_workspace", input);
+/** DELETE /forms/{form_id}: Delete form [write] */
+export const coreDocsDeleteFormsFormId = (input: CallInput & { params?: { "form_id": unknown } } = {}) => sdk.call("core.docs.delete_forms_form_id", input);

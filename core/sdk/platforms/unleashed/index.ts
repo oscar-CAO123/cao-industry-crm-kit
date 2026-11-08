@@ -192,7 +192,7 @@ export const docsPutSupplierReturnsReturnGuidCostsCostLineGuid = (input: CallInp
 export const docsPutSupplierReturnsReturnGuidLinesLineGuid = (input: CallInput & { params?: { "Cost"?: number; "Guid"?: string; "Refund"?: boolean; "Comments"?: string; "PurchaseUnitReturnQuantity"?: number; "ReturnCost"?: number; "ReturnPrice"?: number; "ReturnReason"?: string; "ReturnToSupplier"?: boolean; "returnGuid": string; "lineGuid": string } } = {}) => sdk.call("docs.put_SupplierReturns_returnGuid_Lines_lineGuid", input);
 /** GET /WarehouseStockTransfers: List a page of Warehouse Stock Transfers [read] */
 export const docsGetWarehouseStockTransfers = (input: CallInput & { params?: { "modifiedSince"?: string; "pageSize"?: string; "transferStatus"?: string } } = {}) => sdk.call("docs.get_WarehouseStockTransfers", input);
-/** GET /WarehouseStockTransfers/{transferGuid}: Warehouse Stock Transfers · Unleashed Software [read] */
+/** GET /WarehouseStockTransfers/{transferGuid}: View a Warehouse Stock Transfer with the specified Guid [read] */
 export const docsGetWarehouseStockTransfersTransferGuid = (input: CallInput & { params?: { "transferGuid": string } } = {}) => sdk.call("docs.get_WarehouseStockTransfers_transferGuid", input);
 /** POST /WarehouseStockTransfers: Create a new Warehouse Stock Transfer [write] */
 export const docsPostWarehouseStockTransfers = (input: CallInput & { params?: { "Comments"?: string; "DestinationWarehouse": unknown; "Guid"?: string; "SourceWarehouse": unknown; "TransferDetails": unknown[]; "TransferStatus"?: string } } = {}) => sdk.call("docs.post_WarehouseStockTransfers", input);

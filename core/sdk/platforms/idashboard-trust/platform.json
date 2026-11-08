@@ -26,11 +26,12 @@
   }
  ],
  "gaps": [
-  "idashboard-trust: write fields the reference lists under 'URI Parameters' but sends nested in a JSON body are not mapped; these endpoints take a free-form body: POST /attendances, PUT /attendances/{id}, POST /open_home_answers, PUT /open_home_answers/{id}, PUT /opinions, POST /opinions, POST /app_subscriptions"
+  "idashboard-trust: write fields the reference lists under 'URI Parameters' but sends nested in a JSON body are not mapped; these endpoints take a free-form body: POST /attendances, PUT /attendances/{id}, POST /open_home_answers, PUT /open_home_answers/{id}, PUT /opinions, POST /opinions, POST /app_subscriptions",
+  "idashboard-trust: removed GET /api, POST /api, PUT /api, DELETE /api: the map's bare /api entries are the service base URL, not routes (its reference page)"
  ],
  "counts": {
-  "operations": 70,
-  "read": 43,
-  "write": 27
+  "operations": 66,
+  "read": 42,
+  "write": 24
  }
 }
