@@ -243,6 +243,6 @@ test("draft summaries in the cron log carry ids, never the sender's address or t
   await file(ctx);
   const text = logs.join("\n");
   assert.doesNotMatch(text, /stranger@example\.com|known@acme\.com\.au|Shareholder agreement/);
-  assert.match(text, /lead matter for email L1/);
-  assert.match(text, /note of email m8 on the matter/);
+  // Logs name only operations now (core runtime, 9 Nov): summaries, with their names and addresses, stay out entirely.
+  assert.match(text, /^draft /m);
 });

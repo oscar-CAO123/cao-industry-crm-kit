@@ -7,13 +7,14 @@ import { setTransport } from "../core/lib/http.ts";
 import { context, approve, type Approval, type WorkflowRecord } from "../core/workflows/runtime.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 
-const WF: WorkflowRecord = { id: "test-outcomes", name: "outcomes", draft_ops: {}, live_ops: { telegram: ["sendMessage"] }, crons: [] };
+const WF: WorkflowRecord = { id: "test-outcomes", name: "outcomes", draft_ops: { telegram: ["getMe"] }, live_ops: { telegram: ["sendMessage"] }, crons: [] };
 const NOW = new Date("2026-11-09T00:00:00Z");
 let sends = 0;
-let answer: number | "drop" = 200;
+let answer: number | "drop" | "errors" = 200;
+let liveName = "quotes_bot";
 
 beforeEach(() => {
-  sends = 0; answer = 200;
+  sends = 0; answer = 200; liveName = "quotes_bot";
   process.env.TELEGRAM_BOT_TOKEN = "123456:ABCdef_test";
   process.env.KIT_ALLOW_WRITES = "1";
   setTransport({
@@ -21,9 +22,11 @@ beforeEach(() => {
       if ((init?.method ?? "GET") === "POST" && String(url).endsWith("/sendMessage")) {
         sends++;
         if (answer === "drop") throw new TypeError("fetch failed: socket hang up");
+        if (answer === "errors") return new Response(JSON.stringify({ errors: [{ message: "chat not found" }] }), { status: 200, headers: { "content-type": "application/json" } });
         return new Response(JSON.stringify(answer < 300 ? { ok: true, result: { message_id: 7 } } : { ok: false }),
           { status: answer, headers: { "content-type": "application/json" } });
       }
+      if (String(url).endsWith("/getMe")) return new Response(JSON.stringify({ ok: true, result: { username: liveName } }), { status: 200, headers: { "content-type": "application/json" } });
       return new Response("{}", { status: 404 });
     }) as any,
     sleep: async () => {},
@@ -98,4 +101,42 @@ test("the approval record never holds a started act after a clean failure", asyn
   await approve(WF, store, id, "owner", NOW);
   const ap = await store.get<Approval>("approvals", id);
   assert.ok(!(ap?.results ?? []).some((r) => r.status === "started"));
+});
+
+test("a check reads the live record first: unchanged sends once, changed sends nothing and closes the approval", async () => {
+  const store = new MemoryStore(), ctx = context(WF, {}, store, NOW, () => {});
+  const check = { platform: "telegram", op: "getMe", expect: [{ path: "result.username", equals: "quotes_bot" }] };
+  const a = await ctx.queue({ platform: "telegram", op: "sendMessage", input: { params: { chat_id: "42", text: "hi" } }, summary: "a", key: "a", check });
+  assert.equal((await approve(WF, store, a, "owner", NOW)).status, "done");
+  assert.equal(sends, 1);
+  const b = await ctx.queue({ platform: "telegram", op: "sendMessage", input: { params: { chat_id: "42", text: "hi" } }, summary: "b", key: "b", check });
+  liveName = "renamed_bot";
+  const ap = await approve(WF, store, b, "owner", NOW);
+  assert.equal(ap.status, "rejected");
+  assert.match(ap.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(sends, 1, "no send once the record changed");
+});
+
+test("a check must be a read the workflow may draft, with plain paths", async () => {
+  const ctx = context(WF, {}, new MemoryStore(), NOW, () => {});
+  const act = { platform: "telegram", op: "sendMessage", input: { params: { chat_id: "42", text: "hi" } }, summary: "x" };
+  await assert.rejects(ctx.queue({ ...act, check: { platform: "telegram", op: "sendMessage", expect: [{ path: "ok", equals: true }] } }), /check must use a draft/);
+  await assert.rejects(ctx.queue({ ...act, check: { platform: "telegram", op: "getMe", expect: [{ path: "a[0]; drop", equals: 1 }] } }), /plain dot paths/);
+});
+
+test("a 200 answer that carries errors is a refusal: clean failure, safe to approve again", async () => {
+  const { store, id } = await queued();
+  answer = "errors";
+  assert.equal((await approve(WF, store, id, "owner", NOW)).status, "failed");
+  answer = 200;
+  assert.equal((await approve(WF, store, id, "owner", NOW)).status, "done");
+});
+
+test("logs name operations and ids, never the summary", async () => {
+  const lines: string[] = [];
+  const ctx = context(WF, {}, new MemoryStore(), NOW, (m) => lines.push(m));
+  await ctx.queue({ platform: "telegram", op: "sendMessage", input: { params: { chat_id: "42", text: "hi" } }, summary: "Remind Jane Citizen (jane@example.com)" });
+  await ctx.draft({ platform: "telegram", op: "getMe", summary: "check Jane Citizen" });
+  assert.ok(lines.length >= 2);
+  for (const l of lines) assert.doesNotMatch(l, /Jane|jane@/);
 });
