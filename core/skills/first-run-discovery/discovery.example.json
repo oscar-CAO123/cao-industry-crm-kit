@@ -1,0 +1,15 @@
+{
+ "business": "Example Plumbing",
+ "industry": "construction",
+ "owner_said": ["Quotes take two days and we lose jobs to faster replies", "Invoices go out late every month"],
+ "default_hourly_cost": 55,
+ "days_per_week": 4,
+ "workflows": [
+  {"workflow": "construction/sales/quoting", "name": "Quotes", "applies": true, "status": "can-wire", "hours_per_week": 10, "notes": "Two estimators; ServiceM8 and Xero connected"},
+  {"workflow": "all/finance-admin/invoicing", "name": "Invoicing", "applies": true, "status": "can-wire", "hours_per_week": 6},
+  {"workflow": "all/people/rostering", "name": "Rostering", "applies": false}
+ ],
+ "builds": [
+  {"name": "Supplier price list sync into the rate card", "hours_per_week": 3, "effort_days": 5, "notes": "Supplier sends a spreadsheet weekly"}
+ ]
+}
