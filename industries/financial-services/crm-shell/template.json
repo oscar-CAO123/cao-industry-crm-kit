@@ -909,6 +909,28 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 8
+   }
+  },
+  {
+   "id": "financial-services:x-loans",
+   "dir": "industries/financial-services/workflows/finance-admin/x-loans",
+   "department": "finance-admin",
+   "name": "Loans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 8
+   }
+  },
+  {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
@@ -1019,6 +1041,17 @@
    }
   },
   {
+   "id": "financial-services:add-settlement",
+   "dir": "industries/financial-services/workflows/finance-admin/add-settlement",
+   "department": "finance-admin",
+   "name": "Settlement tracker",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
@@ -1056,6 +1089,17 @@
    "dir": "industries/all/workflows/owner/meeting-actions",
    "department": "owner",
    "name": "Turn meetings and calls into notes and actions",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "financial-services:policy",
+   "dir": "industries/financial-services/workflows/customer-service/policy",
+   "department": "customer-service",
+   "name": "Policy answers take ages",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -1111,6 +1155,28 @@
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "financial-services:documents",
+   "dir": "industries/financial-services/workflows/finance-admin/documents",
+   "department": "finance-admin",
+   "name": "Forms typed by hand",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "financial-services:filenotes",
+   "dir": "industries/financial-services/workflows/compliance-safety/filenotes",
+   "department": "compliance-safety",
+   "name": "File notes take days",
    "status": "docs-only",
    "evidence": {
     "backing": "thin",
@@ -1193,67 +1259,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
-  },
-  {
-   "id": "financial-services:x-loans",
-   "name": "Loans",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
-  },
-  {
-   "id": "financial-services:add-settlement",
-   "name": "Settlement tracker",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "financial-services:policy",
-   "name": "Policy answers take ages",
-   "department": "customer-service",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "financial-services:documents",
-   "name": "Forms typed by hand",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "financial-services:filenotes",
-   "name": "File notes take days",
-   "department": "compliance-safety",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "financial-services:add-mask",
-   "name": "Mask details",
+   "dir": "industries/financial-services/workflows/finance-admin/add-mask",
    "department": "finance-admin",
+   "name": "Mask details",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1261,8 +1273,10 @@
   },
   {
    "id": "financial-services:add-timeline",
-   "name": "Client timeline",
+   "dir": "industries/financial-services/workflows/customer-success/add-timeline",
    "department": "customer-success",
+   "name": "Client timeline",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1270,8 +1284,10 @@
   },
   {
    "id": "financial-services:invoices",
-   "name": "Invoices checked by hand",
+   "dir": "industries/financial-services/workflows/finance-admin/invoices",
    "department": "finance-admin",
+   "name": "Invoices checked by hand",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1279,14 +1295,28 @@
   },
   {
    "id": "financial-services:x-portfolio",
-   "name": "Portfolio reviews",
+   "dir": "industries/financial-services/workflows/customer-success/x-portfolio",
    "department": "customer-success",
+   "name": "Portfolio reviews",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "financial-services:policy-renewals",
+   "dir": "industries/financial-services/workflows/customer-success/policy-renewals",
+   "department": "customer-success",
+   "name": "Process policy renewals and endorsements with underwriters",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Xero",

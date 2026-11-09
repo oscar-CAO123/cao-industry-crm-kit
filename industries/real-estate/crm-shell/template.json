@@ -976,6 +976,17 @@
    }
   },
   {
+   "id": "real-estate:investment",
+   "dir": "industries/real-estate/workflows/sales/investment",
+   "department": "sales",
+   "name": "Investment maths by hand",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 5
+   }
+  },
+  {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
@@ -1046,6 +1057,39 @@
    "dir": "industries/all/workflows/owner/meeting-actions",
    "department": "owner",
    "name": "Turn meetings and calls into notes and actions",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "real-estate:add-maint",
+   "dir": "industries/real-estate/workflows/fulfilment/add-maint",
+   "department": "fulfilment",
+   "name": "Maintenance dispatch",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "real-estate:pipeline",
+   "dir": "industries/real-estate/workflows/sales/pipeline",
+   "department": "sales",
+   "name": "Prospects found, nothing tracked",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "real-estate:settlement",
+   "dir": "industries/real-estate/workflows/fulfilment/settlement",
+   "department": "fulfilment",
+   "name": "Settlement dates typed by hand",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -1130,6 +1174,28 @@
    }
   },
   {
+   "id": "real-estate:condition",
+   "dir": "industries/real-estate/workflows/fulfilment/condition",
+   "department": "fulfilment",
+   "name": "Condition reports cost too much",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
@@ -1183,67 +1249,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "real-estate:investment",
-   "name": "Investment maths by hand",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
-  },
-  {
-   "id": "real-estate:add-maint",
-   "name": "Maintenance dispatch",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "real-estate:pipeline",
-   "name": "Prospects found, nothing tracked",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "real-estate:settlement",
-   "name": "Settlement dates typed by hand",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "real-estate:condition",
-   "name": "Condition reports cost too much",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
   },
   {
    "id": "real-estate:add-arrears",
-   "name": "Arrears ladder",
+   "dir": "industries/real-estate/workflows/finance-admin/add-arrears",
    "department": "finance-admin",
+   "name": "Arrears ladder",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1251,8 +1263,10 @@
   },
   {
    "id": "real-estate:owners",
-   "name": "Owner contacts, built from scratch",
+   "dir": "industries/real-estate/workflows/sales/owners",
    "department": "sales",
+   "name": "Owner contacts, built from scratch",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1260,8 +1274,10 @@
   },
   {
    "id": "real-estate:pminbox",
-   "name": "Mornings lost to manager email",
+   "dir": "industries/real-estate/workflows/customer-service/pminbox",
    "department": "customer-service",
+   "name": "Mornings lost to manager email",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1269,14 +1285,94 @@
   },
   {
    "id": "real-estate:x-rentalcompliance",
-   "name": "Rental compliance",
+   "dir": "industries/real-estate/workflows/compliance-safety/x-rentalcompliance",
    "department": "compliance-safety",
+   "name": "Rental compliance",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "real-estate:add-vendor",
+   "dir": "industries/real-estate/workflows/customer-success/add-vendor",
+   "department": "customer-success",
+   "name": "Vendor report in one tap",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:add-trust",
+   "dir": "industries/real-estate/workflows/finance-admin/add-trust",
+   "department": "finance-admin",
+   "name": "Trust reconciliation",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:bond-lodgement",
+   "dir": "industries/real-estate/workflows/finance-admin/bond-lodgement",
+   "department": "finance-admin",
+   "name": "Lodge and claim rental bonds",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:inspections",
+   "dir": "industries/real-estate/workflows/fulfilment/inspections",
+   "department": "fulfilment",
+   "name": "Inspections need a trip each",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:listing-syndication",
+   "dir": "industries/real-estate/workflows/marketing/listing-syndication",
+   "department": "marketing",
+   "name": "Create a rental listing once and syndicate it to every portal",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:calls",
+   "dir": "industries/real-estate/workflows/sales/calls",
+   "department": "sales",
+   "name": "Calls",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "real-estate:tenant-screening",
+   "dir": "industries/real-estate/workflows/sales/tenant-screening",
+   "department": "sales",
+   "name": "Screen tenants and sign leases",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Microsoft 365",

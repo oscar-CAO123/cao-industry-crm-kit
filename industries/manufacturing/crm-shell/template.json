@@ -929,6 +929,17 @@
  ],
  "workflows": [
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 11
+   }
+  },
+  {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
@@ -1061,6 +1072,39 @@
    }
   },
   {
+   "id": "manufacturing:photocheck",
+   "dir": "industries/manufacturing/workflows/compliance-safety/photocheck",
+   "department": "compliance-safety",
+   "name": "Finished part photo check",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "manufacturing:takeoff",
+   "dir": "industries/manufacturing/workflows/sales/takeoff",
+   "department": "sales",
+   "name": "Takeoff from drawings",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "manufacturing:x-maintenance",
+   "dir": "industries/manufacturing/workflows/fulfilment/x-maintenance",
+   "department": "fulfilment",
+   "name": "Maintenance",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
@@ -1149,6 +1193,17 @@
    }
   },
   {
+   "id": "manufacturing:x-shopfloor",
+   "dir": "industries/manufacturing/workflows/fulfilment/x-shopfloor",
+   "department": "fulfilment",
+   "name": "Shop floor",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
@@ -1213,58 +1268,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
-  },
-  {
-   "id": "manufacturing:photocheck",
-   "name": "Finished part photo check",
-   "department": "compliance-safety",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "manufacturing:takeoff",
-   "name": "Takeoff from drawings",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "manufacturing:x-maintenance",
-   "name": "Maintenance",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "manufacturing:x-shopfloor",
-   "name": "Shop floor",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "manufacturing:faultfind",
-   "name": "Breakdown fix finder",
+   "dir": "industries/manufacturing/workflows/fulfilment/faultfind",
    "department": "fulfilment",
+   "name": "Breakdown fix finder",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1272,8 +1282,10 @@
   },
   {
    "id": "manufacturing:purchase",
-   "name": "Purchase request to ERP",
+   "dir": "industries/manufacturing/workflows/finance-admin/purchase",
    "department": "finance-admin",
+   "name": "Purchase request to ERP",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1281,8 +1293,10 @@
   },
   {
    "id": "manufacturing:supplierdocs",
-   "name": "Supplier documents to SKUs",
+   "dir": "industries/manufacturing/workflows/fulfilment/supplierdocs",
    "department": "fulfilment",
+   "name": "Supplier documents to SKUs",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1290,8 +1304,10 @@
   },
   {
    "id": "manufacturing:supplierquotes",
-   "name": "Supplier quote comparison",
+   "dir": "industries/manufacturing/workflows/fulfilment/supplierquotes",
    "department": "fulfilment",
+   "name": "Supplier quote comparison",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1299,14 +1315,72 @@
   },
   {
    "id": "manufacturing:x-workorders",
-   "name": "Work orders",
+   "dir": "industries/manufacturing/workflows/fulfilment/x-workorders",
    "department": "fulfilment",
+   "name": "Work orders",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "manufacturing:barcode-compliance",
+   "dir": "industries/manufacturing/workflows/compliance-safety/barcode-compliance",
+   "department": "compliance-safety",
+   "name": "Check product barcodes meet GS1 standards",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "manufacturing:food-labels",
+   "dir": "industries/manufacturing/workflows/compliance-safety/food-labels",
+   "department": "compliance-safety",
+   "name": "Generate compliant food labels and nutrition panels",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "manufacturing:sds",
+   "dir": "industries/manufacturing/workflows/compliance-safety/sds",
+   "department": "compliance-safety",
+   "name": "Author and maintain safety data sheets",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "manufacturing:lottrace",
+   "dir": "industries/manufacturing/workflows/fulfilment/lottrace",
+   "department": "fulfilment",
+   "name": "Lot trace and recall",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "manufacturing:x-bom",
+   "dir": "industries/manufacturing/workflows/fulfilment/x-bom",
+   "department": "fulfilment",
+   "name": "Bills of materials",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Xero",

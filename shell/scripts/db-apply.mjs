@@ -10,6 +10,8 @@
 // - After the baseline (0001), a change may only ADD: no DROP, RENAME, TRUNCATE, DELETE, ALTER ... TYPE or
 //   ALTER ... DROP. Removing or reshaping live data is a human decision made outside this tool.
 // - The baseline only ever runs on an empty database.
+// - Migrations connect with DIRECT_URL when it is set, because a pooler (Supabase :6543, PgBouncer transaction mode)
+//   cannot run them. Without DIRECT_URL they use DATABASE_URL.
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -39,11 +41,17 @@ export function check(list) {
   return list;
 }
 
+/** The string migrations run on: DIRECT_URL when the host sets it, otherwise DATABASE_URL. */
+export function migrationUrl(env = process.env) {
+  return env.DIRECT_URL || env.DATABASE_URL || "";
+}
+
 async function apply(list) {
   const { default: pg } = await import("pg");
   const { pgPoolConfig } = await import("../lib/db-ssl.ts");
-  if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set (it comes from 1Password through with-secrets.mjs)");
-  const pool = new pg.Pool({ ...pgPoolConfig(process.env.DATABASE_URL), max: 1 });
+  const url = migrationUrl();
+  if (!url) throw new Error("DATABASE_URL (or DIRECT_URL) is not set (it comes from 1Password through with-secrets.mjs)");
+  const pool = new pg.Pool({ ...pgPoolConfig(url), max: 1 });
   const c = await pool.connect();
   try {
     await c.query('CREATE TABLE IF NOT EXISTS "shell_SchemaChanges" (name text PRIMARY KEY, hash text NOT NULL, "appliedAt" timestamptz NOT NULL DEFAULT now())');

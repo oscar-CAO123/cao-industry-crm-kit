@@ -1032,6 +1032,17 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 5
+   }
+  },
+  {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
@@ -1208,6 +1219,39 @@
    }
   },
   {
+   "id": "hospitality:add-comps",
+   "dir": "industries/hospitality/workflows/finance-admin/add-comps",
+   "department": "finance-admin",
+   "name": "Comp and discount watch",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "hospitality:add-labour",
+   "dir": "industries/hospitality/workflows/finance-admin/add-labour",
+   "department": "finance-admin",
+   "name": "Labour alerts",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "hospitality:stock",
+   "dir": "industries/hospitality/workflows/fulfilment/stock",
+   "department": "fulfilment",
+   "name": "Drinks counted by hand",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
@@ -1305,49 +1349,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
-  },
-  {
-   "id": "hospitality:add-comps",
-   "name": "Comp and discount watch",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "hospitality:add-labour",
-   "name": "Labour alerts",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "hospitality:stock",
-   "name": "Drinks counted by hand",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "hospitality:add-waste",
-   "name": "Wastage log from a bin photo",
+   "dir": "industries/hospitality/workflows/fulfilment/add-waste",
    "department": "fulfilment",
+   "name": "Wastage log from a bin photo",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1355,8 +1363,10 @@
   },
   {
    "id": "hospitality:events",
-   "name": "Events planned in three places",
+   "dir": "industries/hospitality/workflows/fulfilment/events",
    "department": "fulfilment",
+   "name": "Events planned in three places",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1364,14 +1374,39 @@
   },
   {
    "id": "hospitality:x-guests",
-   "name": "Guests and waitlist",
+   "dir": "industries/hospitality/workflows/customer-service/x-guests",
    "department": "customer-service",
+   "name": "Guests and waitlist",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "hospitality:bookings",
+   "dir": "industries/hospitality/workflows/customer-service/bookings",
+   "department": "customer-service",
+   "name": "Bookings live in spreadsheets",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "hospitality:tabs-room-charges",
+   "dir": "industries/hospitality/workflows/finance-admin/tabs-room-charges",
+   "department": "finance-admin",
+   "name": "Run guest tabs and post room charges to the folio",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Xero",

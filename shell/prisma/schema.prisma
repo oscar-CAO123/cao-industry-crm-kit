@@ -1438,3 +1438,9 @@ model shell_State {
 
   @@id([ns, key])
 }
+
+model shell_Locks {
+  name      String   @id
+  owner     String
+  expiresAt DateTime @db.Timestamptz(3)
+}

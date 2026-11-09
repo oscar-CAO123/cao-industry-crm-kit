@@ -782,6 +782,17 @@
  ],
  "workflows": [
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 7
+   }
+  },
+  {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
@@ -896,6 +907,17 @@
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "automotive:diag",
+   "dir": "industries/automotive/workflows/fulfilment/diag",
+   "department": "fulfilment",
+   "name": "Diagnostic write-up",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -1055,37 +1077,64 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
-  },
-  {
-   "id": "automotive:diag",
-   "name": "Diagnostic write-up",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
   },
   {
    "id": "automotive:commission",
-   "name": "Commission calculator",
+   "dir": "industries/automotive/workflows/finance-admin/commission",
    "department": "finance-admin",
+   "name": "Commission calculator",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "automotive:ppsr",
+   "dir": "industries/automotive/workflows/compliance-safety/ppsr",
+   "department": "compliance-safety",
+   "name": "Run PPSR checks and manage registrations",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "automotive:service",
+   "dir": "industries/automotive/workflows/fulfilment/service",
+   "department": "fulfilment",
+   "name": "Service and recall reminders",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "automotive:deal-structuring",
+   "dir": "industries/automotive/workflows/sales/deal-structuring",
+   "department": "sales",
+   "name": "Structure vehicle deals and finance with lenders inside the CRM",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "automotive:vehicle-listing",
+   "dir": "industries/automotive/workflows/sales/vehicle-listing",
+   "department": "sales",
+   "name": "List vehicles for sale: photos, descriptions, ownership transfer and listing sites",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Meta Ads",

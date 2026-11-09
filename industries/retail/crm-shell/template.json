@@ -748,6 +748,17 @@
    }
   },
   {
+   "id": "retail:products",
+   "dir": "industries/retail/workflows/fulfilment/products",
+   "department": "fulfilment",
+   "name": "Product data pipeline",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 11
+   }
+  },
+  {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
@@ -789,6 +800,17 @@
    "evidence": {
     "backing": "backed",
     "sources": 7
+   }
+  },
+  {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 5
    }
   },
   {
@@ -902,10 +924,43 @@
    }
   },
   {
+   "id": "retail:x-returns",
+   "dir": "industries/retail/workflows/customer-service/x-returns",
+   "department": "customer-service",
+   "name": "Returns",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "retail:fulfil",
+   "dir": "industries/retail/workflows/fulfilment/fulfil",
+   "department": "fulfilment",
+   "name": "Fulfilment run",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "retail:orders",
+   "dir": "industries/retail/workflows/finance-admin/orders",
+   "department": "finance-admin",
+   "name": "Orders by email",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -999,64 +1054,75 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "retail:products",
-   "name": "Product data pipeline",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
-  },
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
-  },
-  {
-   "id": "retail:x-returns",
-   "name": "Returns",
-   "department": "customer-service",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "retail:fulfil",
-   "name": "Fulfilment run",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "retail:orders",
-   "name": "Orders by email",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
   },
   {
    "id": "retail:artwork",
-   "name": "Product mockups and artwork",
+   "dir": "industries/retail/workflows/fulfilment/artwork",
    "department": "fulfilment",
+   "name": "Product mockups and artwork",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "retail:disputes",
+   "dir": "industries/retail/workflows/finance-admin/disputes",
+   "department": "finance-admin",
+   "name": "Refund and chargeback watch",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "retail:x-batches",
+   "dir": "industries/retail/workflows/finance-admin/x-batches",
+   "department": "finance-admin",
+   "name": "Batches and landed costs",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "retail:supplier-production",
+   "dir": "industries/retail/workflows/fulfilment/supplier-production",
+   "department": "fulfilment",
+   "name": "Run production with overseas factories, freight forwarders and licensors (tech packs, samples, shipping)",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "retail:x-flows",
+   "dir": "industries/retail/workflows/marketing/x-flows",
+   "department": "marketing",
+   "name": "Email flows",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "retail:wholesale",
+   "dir": "industries/retail/workflows/sales/wholesale",
+   "department": "sales",
+   "name": "Win and look after wholesale accounts and stockists",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Shopify",

@@ -1089,17 +1089,6 @@
  ],
  "workflows": [
   {
-   "id": "construction:quoting",
-   "dir": "industries/construction/workflows/sales/quoting",
-   "department": "sales",
-   "name": "Quoting",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 105
-   }
-  },
-  {
    "id": "job-tracking",
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
@@ -1108,6 +1097,39 @@
    "evidence": {
     "backing": "backed",
     "sources": 66
+   }
+  },
+  {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 55
+   }
+  },
+  {
+   "id": "construction:quoting",
+   "dir": "industries/construction/workflows/sales/quoting",
+   "department": "sales",
+   "name": "Quoting",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 50
+   }
+  },
+  {
+   "id": "construction:tenders",
+   "dir": "industries/construction/workflows/sales/tenders",
+   "department": "sales",
+   "name": "Tenders take weeks",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 46
    }
   },
   {
@@ -1152,6 +1174,17 @@
    "evidence": {
     "backing": "backed",
     "sources": 36
+   }
+  },
+  {
+   "id": "construction:takeoff",
+   "dir": "industries/construction/workflows/sales/takeoff",
+   "department": "sales",
+   "name": "The tender reader behind Tenders",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 34
    }
   },
   {
@@ -1320,6 +1353,28 @@
    }
   },
   {
+   "id": "construction:safety",
+   "dir": "industries/construction/workflows/compliance-safety/safety",
+   "department": "compliance-safety",
+   "name": "Safety paperwork on paper",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 11
+   }
+  },
+  {
+   "id": "construction:costs",
+   "dir": "industries/construction/workflows/fulfilment/costs",
+   "department": "fulfilment",
+   "name": "Costs blow out unseen",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 10
+   }
+  },
+  {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
@@ -1441,6 +1496,17 @@
    }
   },
   {
+   "id": "construction:wip",
+   "dir": "industries/construction/workflows/finance-admin/wip",
+   "department": "finance-admin",
+   "name": "WIP and retention",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 5
+   }
+  },
+  {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
@@ -1467,6 +1533,28 @@
    "dir": "industries/all/workflows/compliance-safety/safety-forms",
    "department": "compliance-safety",
    "name": "Safety forms, inspections and incident reports",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "construction:x-labour",
+   "dir": "industries/construction/workflows/finance-admin/x-labour",
+   "department": "finance-admin",
+   "name": "Labour by person",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "construction:x-rfis",
+   "dir": "industries/construction/workflows/fulfilment/x-rfis",
+   "department": "fulfilment",
+   "name": "RFIs and drawings",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -1507,6 +1595,39 @@
    }
   },
   {
+   "id": "construction:paperwork",
+   "dir": "industries/construction/workflows/fulfilment/paperwork",
+   "department": "fulfilment",
+   "name": "Letters and reports by hand",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "construction:procurement",
+   "dir": "industries/construction/workflows/fulfilment/procurement",
+   "department": "fulfilment",
+   "name": "Trade quotes miss scope",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
+   "id": "construction:x-selections",
+   "dir": "industries/construction/workflows/fulfilment/x-selections",
+   "department": "fulfilment",
+   "name": "Client selections",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
    "id": "reviews",
    "dir": "industries/all/workflows/marketing/reviews",
    "department": "marketing",
@@ -1522,6 +1643,17 @@
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "construction:x-plant",
+   "dir": "industries/construction/workflows/fulfilment/x-plant",
+   "department": "fulfilment",
+   "name": "Plant and equipment",
    "status": "docs-only",
    "evidence": {
     "backing": "thin",
@@ -1549,112 +1681,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "construction:tenders",
-   "name": "Tenders take weeks",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 46
-   }
-  },
-  {
-   "id": "construction:takeoff",
-   "name": "The tender reader behind Tenders",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 34
-   }
-  },
-  {
-   "id": "construction:safety",
-   "name": "Safety paperwork on paper",
-   "department": "compliance-safety",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
-  },
-  {
-   "id": "construction:costs",
-   "name": "Costs blow out unseen",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 10
-   }
-  },
-  {
-   "id": "construction:wip",
-   "name": "WIP and retention",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
-  },
-  {
-   "id": "construction:x-labour",
-   "name": "Labour by person",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "construction:x-rfis",
-   "name": "RFIs and drawings",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "construction:paperwork",
-   "name": "Letters and reports by hand",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "construction:procurement",
-   "name": "Trade quotes miss scope",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "construction:x-selections",
-   "name": "Client selections",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "construction:x-plant",
-   "name": "Plant and equipment",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "construction:x-stock",
-   "name": "Stock",
+   "dir": "industries/construction/workflows/fulfilment/x-stock",
    "department": "fulfilment",
+   "name": "Stock",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1662,14 +1695,61 @@
   },
   {
    "id": "construction:x-subbies",
-   "name": "Subcontractors",
+   "dir": "industries/construction/workflows/compliance-safety/x-subbies",
    "department": "compliance-safety",
+   "name": "Subcontractors",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "construction:approvals",
+   "dir": "industries/construction/workflows/compliance-safety/approvals",
+   "department": "compliance-safety",
+   "name": "Prepare, lodge and chase council approvals and permits",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "construction:defects",
+   "dir": "industries/construction/workflows/compliance-safety/defects",
+   "department": "compliance-safety",
+   "name": "Capture defects and quality inspections and close them out with trades",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "construction:env-certificates",
+   "dir": "industries/construction/workflows/compliance-safety/env-certificates",
+   "department": "compliance-safety",
+   "name": "Solar and electrical paperwork: network connection applications and environmental certificates (STCs, VEECs, LGCs)",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "construction:variations",
+   "dir": "industries/construction/workflows/sales/variations",
+   "department": "sales",
+   "name": "Raise, price and approve variations with the client",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Microsoft 365",
@@ -1700,6 +1780,12 @@
    "platform": "google-workspace",
    "status": "spec",
    "calls": 13
+  },
+  {
+   "tool": "Procore",
+   "platform": "procore",
+   "status": "docs-read",
+   "calls": 12
   },
   {
    "tool": "Monday.com",
@@ -1736,19 +1822,9 @@
    "platform": "google-ads",
    "status": "spec",
    "calls": 7
-  },
-  {
-   "tool": "WhatsApp",
-   "platform": "whatsapp",
-   "status": "spec",
-   "calls": 7
   }
  ],
  "missing_connectors": [
-  {
-   "tool": "Procore",
-   "calls": 12
-  },
   {
    "tool": "Simpro",
    "calls": 12

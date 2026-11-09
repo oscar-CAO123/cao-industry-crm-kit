@@ -1038,6 +1038,17 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 9
+   }
+  },
+  {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
@@ -1148,6 +1159,17 @@
    }
   },
   {
+   "id": "professional-services:add-proposal",
+   "dir": "industries/professional-services/workflows/sales/add-proposal",
+   "department": "sales",
+   "name": "Proposal and engagement letter",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
@@ -1203,6 +1225,17 @@
    }
   },
   {
+   "id": "professional-services:add-narratives",
+   "dir": "industries/professional-services/workflows/finance-admin/add-narratives",
+   "department": "finance-admin",
+   "name": "Billing narratives",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
@@ -1251,6 +1284,28 @@
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "professional-services:add-bas",
+   "dir": "industries/professional-services/workflows/finance-admin/add-bas",
+   "department": "finance-admin",
+   "name": "BAS first pass",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "professional-services:x-autotime",
+   "dir": "industries/professional-services/workflows/finance-admin/x-autotime",
+   "department": "finance-admin",
+   "name": "Automatic time capture",
    "status": "docs-only",
    "evidence": {
     "backing": "thin",
@@ -1366,58 +1421,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
-  },
-  {
-   "id": "professional-services:add-proposal",
-   "name": "Proposal and engagement letter",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "professional-services:add-narratives",
-   "name": "Billing narratives",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "professional-services:add-bas",
-   "name": "BAS first pass",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "professional-services:x-autotime",
-   "name": "Automatic time capture",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "professional-services:contracts",
-   "name": "Contracts read by hand",
+   "dir": "industries/professional-services/workflows/compliance-safety/contracts",
    "department": "compliance-safety",
+   "name": "Contracts read by hand",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1425,8 +1435,10 @@
   },
   {
    "id": "professional-services:marketing",
-   "name": "Marketing data in five places",
+   "dir": "industries/professional-services/workflows/marketing/marketing",
    "department": "marketing",
+   "name": "Marketing data in five places",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -1434,14 +1446,72 @@
   },
   {
    "id": "professional-services:x-matter",
-   "name": "Email to matter",
+   "dir": "industries/professional-services/workflows/finance-admin/x-matter",
    "department": "finance-admin",
+   "name": "Email to matter",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "professional-services:add-conflict",
+   "dir": "industries/professional-services/workflows/compliance-safety/add-conflict",
+   "department": "compliance-safety",
+   "name": "Conflict check",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "professional-services:add-missingdocs",
+   "dir": "industries/professional-services/workflows/finance-admin/add-missingdocs",
+   "department": "finance-admin",
+   "name": "Missing documents finder",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "professional-services:x-duedates",
+   "dir": "industries/professional-services/workflows/finance-admin/x-duedates",
+   "department": "finance-admin",
+   "name": "Due dates",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "professional-services:x-trust",
+   "dir": "industries/professional-services/workflows/finance-admin/x-trust",
+   "department": "finance-admin",
+   "name": "Trust accounting",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "professional-services:litigation-drafting",
+   "dir": "industries/professional-services/workflows/fulfilment/litigation-drafting",
+   "department": "fulfilment",
+   "name": "Draft pleadings and defences and research case law for litigation",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Microsoft 365",

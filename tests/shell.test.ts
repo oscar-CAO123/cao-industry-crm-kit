@@ -80,24 +80,33 @@ test("the image starts every process through the launcher", () => {
 // ---- Rule 2: nothing live without the approval click --------------------------------------------------------------
 class FakePool {
   rows = new Map<string, unknown>();
-  locks = new Map<string, Promise<void>>();
+  leases = new Map<string, { owner: string; expiresAt: number }>();
   async query(sql: string, p: unknown[] = []) {
     const k = (ns: unknown, key: unknown) => `${ns}\u0000${key}`;
     if (sql.startsWith('SELECT value FROM "shell_State"')) { const v = this.rows.get(k(p[0], p[1])); return { rows: v === undefined ? [] : [{ value: structuredClone(v) }] }; }
     if (sql.startsWith('INSERT INTO "shell_State"')) { this.rows.set(k(p[0], p[1]), JSON.parse(String(p[2]))); return { rows: [] }; }
     if (sql.startsWith('SELECT key, value FROM "shell_State"')) return { rows: [...this.rows].filter(([x]) => x.startsWith(`${p[0]}\u0000`)).map(([x, value]) => ({ key: x.split("\u0000")[1], value })) };
+    // the approval lease (shell/workflows/pg-store.ts): one statement each, clock from the fake
+    const name = String(p[0]), owner = String(p[1]), now = Date.now();
+    if (sql.startsWith('INSERT INTO "shell_Locks"')) {
+      const cur = this.leases.get(name);
+      if (cur && cur.expiresAt > now) return { rows: [] };
+      this.leases.set(name, { owner, expiresAt: now + Number(p[2]) * 1000 });
+      return { rows: [{ owner }] };
+    }
+    if (sql.startsWith('UPDATE "shell_Locks"')) {
+      const cur = this.leases.get(name);
+      if (!cur || cur.owner !== owner) return { rows: [] };
+      cur.expiresAt = now + Number(p[2]) * 1000;
+      return { rows: [{ owner }] };
+    }
+    if (sql.startsWith('DELETE FROM "shell_Locks"')) {
+      const cur = this.leases.get(name);
+      if (!cur || cur.owner !== owner) return { rows: [] };
+      this.leases.delete(name);
+      return { rows: [{ owner }] };
+    }
     throw new Error(`unexpected SQL: ${sql}`);
-  }
-  async connect() {
-    let release = () => {};
-    return {
-      query: async (sql: string, p: unknown[]) => {
-        if (sql.startsWith("SELECT pg_advisory_lock")) { const prev = this.locks.get(String(p[0])) ?? Promise.resolve(); let r!: () => void; const next = new Promise<void>((x) => (r = x)); this.locks.set(String(p[0]), prev.then(() => next)); await prev; release = r; return { rows: [] }; }
-        if (sql.startsWith("SELECT pg_advisory_unlock")) { release(); return { rows: [] }; }
-        return this.query(sql, p);
-      },
-      release: () => {},
-    };
   }
 }
 
@@ -208,6 +217,8 @@ test("every deploy target renders for every industry, with key names and op:// p
   for (const i of inds) {
     const js = jobs([i]), keys = keyNames([i]);
     assert.ok(js.length > 0, i);
+    // Cloud job names (Google Cloud Run, Azure Container Apps) must be lowercase, even for a camelCase cron entry.
+    for (const j of js) assert.match(j.slug, /^[a-z0-9-]+$/, `${i} ${j.slug}`);
     for (const t of TARGETS) {
       const files = render(t, js, keys);
       const refs = JSON.parse(files["secrets.refs.json.example"]);

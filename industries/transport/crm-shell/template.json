@@ -826,6 +826,17 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
@@ -958,6 +969,28 @@
    }
   },
   {
+   "id": "transport:fleet",
+   "dir": "industries/transport/workflows/fulfilment/fleet",
+   "department": "fulfilment",
+   "name": "Fleet service planner",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "transport:x-pod",
+   "dir": "industries/transport/workflows/fulfilment/x-pod",
+   "department": "fulfilment",
+   "name": "Proof of delivery",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
@@ -1055,46 +1088,53 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "transport:fleet",
-   "name": "Fleet service planner",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "transport:x-pod",
-   "name": "Proof of delivery",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "transport:invoices",
-   "name": "Invoices from rates",
+   "dir": "industries/transport/workflows/finance-admin/invoices",
    "department": "finance-admin",
+   "name": "Invoices from rates",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "transport:mass-compliance",
+   "dir": "industries/transport/workflows/compliance-safety/mass-compliance",
+   "department": "compliance-safety",
+   "name": "Heavy vehicle mass compliance and reporting",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "transport:fuel-tax-credits",
+   "dir": "industries/transport/workflows/finance-admin/fuel-tax-credits",
+   "department": "finance-admin",
+   "name": "Claim fuel tax credits from vehicle and road usage data",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "transport:x-routes",
+   "dir": "industries/transport/workflows/fulfilment/x-routes",
+   "department": "fulfilment",
+   "name": "Route planning",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Google Workspace",

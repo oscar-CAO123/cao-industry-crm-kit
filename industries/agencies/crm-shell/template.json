@@ -726,6 +726,17 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
@@ -741,6 +752,17 @@
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
+   "id": "agencies:report",
+   "dir": "industries/agencies/workflows/customer-success/report",
+   "department": "customer-success",
+   "name": "Client report pack",
    "status": "docs-only",
    "evidence": {
     "backing": "backed",
@@ -770,10 +792,43 @@
    }
   },
   {
+   "id": "agencies:creative",
+   "dir": "industries/agencies/workflows/marketing/creative",
+   "department": "marketing",
+   "name": "Creative test reader",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 3
+   }
+  },
+  {
    "id": "payment-chasing",
    "dir": "industries/all/workflows/finance-admin/payment-chasing",
    "department": "finance-admin",
    "name": "Chase unpaid invoices",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "agencies:adaudit",
+   "dir": "industries/agencies/workflows/marketing/adaudit",
+   "department": "marketing",
+   "name": "Daily ad audit",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "agencies:ops",
+   "dir": "industries/agencies/workflows/finance-admin/ops",
+   "department": "finance-admin",
+   "name": "Agency ops board",
    "status": "docs-only",
    "evidence": {
     "backing": "thin",
@@ -867,64 +922,20 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "agencies:report",
-   "name": "Client report pack",
-   "department": "customer-success",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "agencies:creative",
-   "name": "Creative test reader",
-   "department": "marketing",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
-  },
-  {
-   "id": "agencies:adaudit",
-   "name": "Daily ad audit",
-   "department": "marketing",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "agencies:ops",
-   "name": "Agency ops board",
-   "department": "finance-admin",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "agencies:x-jobbudgets",
-   "name": "Job budgets",
+   "dir": "industries/agencies/workflows/finance-admin/x-jobbudgets",
    "department": "finance-admin",
+   "name": "Job budgets",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Microsoft 365",

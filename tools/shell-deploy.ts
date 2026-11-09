@@ -18,7 +18,7 @@ export type Target = (typeof TARGETS)[number];
 const CRON5 = /^(\S+) (\S+) (\S+) (\S+) (\S+)$/;
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const WEB = "node shell/scripts/with-secrets.mjs -- node shell/server.js";
-const BASE_KEYS = ["DATABASE_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
+const BASE_KEYS = ["DATABASE_URL", "DIRECT_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
 
 export interface Job { workflow: string; dir: string; entry: string; schedule: string; slug: string }
 
@@ -32,8 +32,8 @@ export function jobs(industries: string[]): Job[] {
       if (!/^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/.test(w.dir)) throw new Error(`bad workflow dir ${w.dir}`);
       const rec = JSON.parse(fs.readFileSync(path.join(ROOT, w.dir, "workflow.json"), "utf8"));
       for (const c of rec.crons ?? []) {
-        if (!CRON5.test(c.schedule) || !/^[a-z0-9-]{1,40}$/.test(c.entry)) throw new Error(`bad cron in ${w.dir}`);
-        const slug = `${String(rec.id).replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-${c.entry}`.slice(0, 60);
+        if (!CRON5.test(c.schedule) || !/^[A-Za-z0-9-]{1,40}$/.test(c.entry)) throw new Error(`bad cron in ${w.dir}`); // letters, digits, dashes: safe in a command line
+        const slug = `${String(rec.id).replace(/[^a-z0-9]+/gi, "-")}-${c.entry}`.toLowerCase().slice(0, 60); // cloud job names are lowercase
         out.set(slug, { workflow: String(rec.id), dir: w.dir, entry: c.entry, schedule: c.schedule, slug });
       }
     }
