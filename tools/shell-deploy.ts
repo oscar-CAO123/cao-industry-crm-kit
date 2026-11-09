@@ -32,8 +32,8 @@ export function jobs(industries: string[]): Job[] {
       if (!/^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/.test(w.dir)) throw new Error(`bad workflow dir ${w.dir}`);
       const rec = JSON.parse(fs.readFileSync(path.join(ROOT, w.dir, "workflow.json"), "utf8"));
       for (const c of rec.crons ?? []) {
-        if (!CRON5.test(c.schedule) || !/^[a-z0-9-]{1,40}$/.test(c.entry)) throw new Error(`bad cron in ${w.dir}`);
-        const slug = `${String(rec.id).replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-${c.entry}`.slice(0, 60);
+        if (!CRON5.test(c.schedule) || !/^[A-Za-z0-9-]{1,40}$/.test(c.entry)) throw new Error(`bad cron in ${w.dir}`); // letters, digits, dashes: safe in a command line
+        const slug = `${String(rec.id).replace(/[^a-z0-9]+/gi, "-")}-${c.entry}`.toLowerCase().slice(0, 60); // cloud job names are lowercase
         out.set(slug, { workflow: String(rec.id), dir: w.dir, entry: c.entry, schedule: c.schedule, slug });
       }
     }

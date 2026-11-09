@@ -208,6 +208,8 @@ test("every deploy target renders for every industry, with key names and op:// p
   for (const i of inds) {
     const js = jobs([i]), keys = keyNames([i]);
     assert.ok(js.length > 0, i);
+    // Cloud job names (Google Cloud Run, Azure Container Apps) must be lowercase, even for a camelCase cron entry.
+    for (const j of js) assert.match(j.slug, /^[a-z0-9-]+$/, `${i} ${j.slug}`);
     for (const t of TARGETS) {
       const files = render(t, js, keys);
       const refs = JSON.parse(files["secrets.refs.json.example"]);

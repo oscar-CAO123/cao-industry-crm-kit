@@ -830,6 +830,17 @@
    }
   },
   {
+   "id": "agriculture-mining:yield",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/yield",
+   "department": "fulfilment",
+   "name": "Yield and waste",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
@@ -883,22 +894,13 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "agriculture-mining:yield",
-   "name": "Yield and waste",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "agriculture-mining:shipdocs",
-   "name": "Export document check",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/shipdocs",
    "department": "finance-admin",
+   "name": "Export document check",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
@@ -906,14 +908,116 @@
   },
   {
    "id": "agriculture-mining:tickets",
-   "name": "Delivery tickets to data",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/tickets",
    "department": "finance-admin",
+   "name": "Delivery tickets to data",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "agriculture-mining:carbon-credits",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/carbon-credits",
+   "department": "compliance-safety",
+   "name": "Earn carbon credits from field records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:environmental-monitoring",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/environmental-monitoring",
+   "department": "compliance-safety",
+   "name": "Schedule environmental monitoring, validate results against limits and report",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:livestock-nvds",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/livestock-nvds",
+   "department": "compliance-safety",
+   "name": "Create livestock National Vendor Declarations (NVDs) and movement records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:spray",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/spray",
+   "department": "compliance-safety",
+   "name": "Spray and harvest records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:packout",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/packout",
+   "department": "finance-admin",
+   "name": "Grower statements",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:crop-records",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/crop-records",
+   "department": "fulfilment",
+   "name": "Track crop, vineyard, grain and livestock records through the season",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:x-costprod",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/x-costprod",
+   "department": "fulfilment",
+   "name": "Cost of production",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:x-paddocks",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/x-paddocks",
+   "department": "fulfilment",
+   "name": "Paddock records",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "agriculture-mining:market-forecasting",
+   "dir": "industries/agriculture-mining/workflows/sales/market-forecasting",
+   "department": "sales",
+   "name": "Forecast market demand and prices for selling and supply decisions",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "Microsoft 365",

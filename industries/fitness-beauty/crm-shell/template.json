@@ -780,6 +780,17 @@
    }
   },
   {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 1
+   }
+  },
+  {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
@@ -844,19 +855,53 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
+  },
   {
-   "id": "quote-build",
-   "name": "Build a quote or proposal from notes, photos or plans",
-   "department": "sales",
+   "id": "fitness-beauty:x-billing",
+   "dir": "industries/fitness-beauty/workflows/finance-admin/x-billing",
+   "department": "finance-admin",
+   "name": "Failed payments",
+   "status": "docs-only",
    "evidence": {
-    "backing": "thin",
-    "sources": 1
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "fitness-beauty:x-packs",
+   "dir": "industries/fitness-beauty/workflows/finance-admin/x-packs",
+   "department": "finance-admin",
+   "name": "Packs and gift cards",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "fitness-beauty:client-programs",
+   "dir": "industries/fitness-beauty/workflows/fulfilment/client-programs",
+   "department": "fulfilment",
+   "name": "Client programs",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "fitness-beauty:x-timetable",
+   "dir": "industries/fitness-beauty/workflows/fulfilment/x-timetable",
+   "department": "fulfilment",
+   "name": "Class timetable",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
    }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "GoHighLevel",

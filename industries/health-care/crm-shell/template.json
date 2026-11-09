@@ -906,6 +906,17 @@
    }
   },
   {
+   "id": "health-care:add-dictation",
+   "dir": "industries/health-care/workflows/fulfilment/add-dictation",
+   "department": "fulfilment",
+   "name": "Session notes from dictation",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "backed",
+    "sources": 4
+   }
+  },
+  {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
@@ -1009,6 +1020,28 @@
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "health-care:shiftnotes",
+   "dir": "industries/health-care/workflows/compliance-safety/shiftnotes",
+   "department": "compliance-safety",
+   "name": "Shift note reader",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "thin",
+    "sources": 2
+   }
+  },
+  {
+   "id": "health-care:support",
+   "dir": "industries/health-care/workflows/customer-service/support",
+   "department": "customer-service",
+   "name": "Patient support desk",
    "status": "docs-only",
    "evidence": {
     "backing": "thin",
@@ -1124,46 +1157,75 @@
     "backing": "thin",
     "sources": 1
    }
-  }
- ],
- "planned_workflows": [
-  {
-   "id": "health-care:add-dictation",
-   "name": "Session notes from dictation",
-   "department": "fulfilment",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
-  },
-  {
-   "id": "health-care:shiftnotes",
-   "name": "Shift note reader",
-   "department": "compliance-safety",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
-  },
-  {
-   "id": "health-care:support",
-   "name": "Patient support desk",
-   "department": "customer-service",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
   },
   {
    "id": "health-care:rebates",
-   "name": "Missed rebates finder",
+   "dir": "industries/health-care/workflows/finance-admin/rebates",
    "department": "finance-admin",
+   "name": "Missed rebates finder",
+   "status": "docs-only",
    "evidence": {
     "backing": "thin",
     "sources": 1
    }
+  },
+  {
+   "id": "health-care:add-reminders",
+   "dir": "industries/health-care/workflows/customer-service/add-reminders",
+   "department": "customer-service",
+   "name": "Appointment reminders and waitlist",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "health-care:x-agreements",
+   "dir": "industries/health-care/workflows/customer-success/x-agreements",
+   "department": "customer-success",
+   "name": "Service agreements",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "health-care:x-budget",
+   "dir": "industries/health-care/workflows/finance-admin/x-budget",
+   "department": "finance-admin",
+   "name": "Plan budget burn",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "health-care:careplan",
+   "dir": "industries/health-care/workflows/fulfilment/careplan",
+   "department": "fulfilment",
+   "name": "Care plan from intake",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
+  },
+  {
+   "id": "health-care:results-and-letters",
+   "dir": "industries/health-care/workflows/fulfilment/results-and-letters",
+   "department": "fulfilment",
+   "name": "Action results, send referrals and reply letters to GPs",
+   "status": "docs-only",
+   "evidence": {
+    "backing": "built for this industry",
+    "sources": 0
+   }
   }
  ],
+ "planned_workflows": [],
  "connectors": [
   {
    "tool": "GoHighLevel",
