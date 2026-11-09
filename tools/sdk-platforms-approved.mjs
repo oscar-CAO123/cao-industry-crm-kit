@@ -24,5 +24,7 @@ export const APPROVED = {
   // Auth v2 (Bearer) is current; the legacy /api/1.x Data API routes take "JWT <token>" (set per route in sdk-generate.mjs).
   "time-doctor": d("Time Doctor", { type: "bearer", env: "TIMEDOCTOR_ACCESS_TOKEN", note: TOKEN }),
   "procore": d("Procore", { type: "bearer", env: "PROCORE_ACCESS_TOKEN", note: TOKEN, extraHeaders: { "Procore-Company-Id": "PROCORE_COMPANY_ID" } },
-    { gaps: ["Sandbox host not read from Procore's pages: only the production host api.procore.com is mapped"] }),
+    // company_id (path, query or body on 209 routes) is pinned to the client's own, like QuickBooks' realmID (pen test, 9 Nov).
+    { pinned: { company_id: { allow: [], env: "PROCORE_COMPANY_ID", fill: "$env" } },
+      gaps: ["Sandbox host not read from Procore's pages: only the production host api.procore.com is mapped"] }),
 };
