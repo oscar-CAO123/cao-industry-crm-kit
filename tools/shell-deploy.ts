@@ -18,7 +18,7 @@ export type Target = (typeof TARGETS)[number];
 const CRON5 = /^(\S+) (\S+) (\S+) (\S+) (\S+)$/;
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const WEB = "node shell/scripts/with-secrets.mjs -- node shell/server.js";
-const BASE_KEYS = ["DATABASE_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
+const BASE_KEYS = ["DATABASE_URL", "DIRECT_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
 
 export interface Job { workflow: string; dir: string; entry: string; schedule: string; slug: string }
 
