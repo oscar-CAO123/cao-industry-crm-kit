@@ -11,6 +11,8 @@
  "hostFromEnv": false,
  "hostPatterns": [],
  "pinned": {},
+ "queryArrays": "comma",
+ "queryObjects": "deepObject",
  "serverVars": {},
  "auth": {
   "type": "header",

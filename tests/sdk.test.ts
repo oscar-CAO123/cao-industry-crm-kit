@@ -4,7 +4,7 @@ import fs from "node:fs";
 import assert from "node:assert/strict";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
-import { listPlatforms, load, search, describe, plan, callOperation, checkDocument, type Op } from "../core/sdk/call.ts";
+import { listPlatforms, load, search, describe, plan, callOperation, checkDocument, READPOST_PATH, type Op } from "../core/sdk/call.ts";
 import { encodeForm } from "../core/lib/form.ts";
 
 type Hit = { url: string; method: string; headers: Record<string, string>; body?: string };
@@ -536,7 +536,7 @@ test("review 4: unmapped inputs can never carry key-shaped names; signed links a
   assert.equal(gl?.kind, "write");
   for (const o of [...load("hubspot").ops.values()].filter((x) => /signed-url/.test(x.path))) assert.equal(o.kind, "write", o.id);
   for (const id of listPlatforms()) for (const o of load(id).ops.values()) {
-    if (o.readPost) assert.match(o.path, /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i, `${id} ${o.id}`);
+    if (o.readPost) assert.match(o.path, READPOST_PATH, `${id} ${o.id}`);
   }
 });
 
