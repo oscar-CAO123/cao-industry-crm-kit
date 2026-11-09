@@ -105,3 +105,14 @@ test("an empty vehicle list is refused", async () => {
   const ctx = context(WF, { ...SETTINGS, assets: [] }, new MemoryStore(), NOW, () => {});
   await assert.rejects(status(ctx), /lists no vehicles/);
 });
+
+test("plan: a pending booking is withdrawn once its planned service is no longer due, and cannot be approved", async () => {
+  const store = new MemoryStore();
+  await plan(context(WF, SETTINGS, store, NOW, () => {}));
+  statuses["veh-001"] = [{ plannedServiceId: "ps-100", servicePlanId: "sp-1", status: "PLANNED" }]; // booked or completed since
+  assert.deepEqual(await plan(context(WF, SETTINGS, store, NOW, () => {})), { approvals: 1 });
+  const stale = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].input!.body.plannedServiceId === "ps-100")!;
+  assert.equal(stale.status, "rejected");
+  await assert.rejects(approve(WF, store, stale.id, "owner", NOW), /already rejected/);
+  assert.equal(bookings().length, 0, "a withdrawn booking never reaches the workshop");
+});

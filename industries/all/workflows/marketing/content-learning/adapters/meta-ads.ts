@@ -75,8 +75,8 @@ export const meta = {
   },
 
   /** The live act that pauses one ad. Only ever passed to ctx.queue; a person approves it in the CRM shell. */
-  pauseAct(adId: string, why: string): Act {
-    return { platform: P, op: "Ad.post.self", key: keyOf(`pause:${adId}`), summary: `pause ad ${adId}: ${why}`,
+  pauseAct(adId: string, why: string, since: string): Act {
+    return { platform: P, op: "Ad.post.self", key: keyOf(`pause:${adId}:${since}`), summary: `pause ad ${adId}: ${why}`,
       input: { params: { "Ad-id": adId, status: "PAUSED" } } };
   },
 };

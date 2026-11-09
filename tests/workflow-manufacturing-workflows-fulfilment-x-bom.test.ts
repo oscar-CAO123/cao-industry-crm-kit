@@ -139,6 +139,22 @@ test("an approved change is sent only on approval, to the bill's own URL, signed
   assert.equal(hits.length, 1, "a second approval sends nothing");
 });
 
+test("a change approved earlier is queued again when the live bill has since moved off those lines", async () => {
+  const store = new MemoryStore(), ctx = context(WF, settingsWith(6), store, NOW, () => {});
+  await seedRecord(store);
+  await revise(ctx);
+  const [first] = await approvals(store);
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "done");
+  // The bill is put back to four shelves in Unleashed and the record is brought in step with it, as the hourly check does.
+  await seedRecord(store);
+  await revise(ctx);
+  const aps = await approvals(store);
+  assert.equal(aps.length, 2, "the change to six shelves is queued again, not silently dropped");
+  assert.equal(aps.filter((a) => a.status === "pending").length, 1);
+  await revise(ctx);
+  assert.equal((await approvals(store)).length, 2, "a re-run does not queue the pending change a third time");
+});
+
 test("a component that is not on the live bill is parked, never queued", async () => {
   const store = new MemoryStore(), ctx = context(WF, settingsWith(4, [{ code: "BRACKET", qty: 2 }]), store, NOW, () => {});
   await seedRecord(store);

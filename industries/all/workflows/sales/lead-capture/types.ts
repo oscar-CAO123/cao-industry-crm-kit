@@ -42,3 +42,8 @@ export const esc = (s: unknown): string => String(s ?? "").replace(/[&<>"']/g, (
 export const fill = (template: string, vars: Record<string, string>): string => template.replace(/\{(\w+)\}/g, (_, k: string) => vars[k] ?? "");
 
 export const firstName = (name: string): string => clean(name, 60).split(" ")[0] || "there";
+
+/** An address for an approval summary: first letter and domain only. The full address stays in the store. */
+export const maskEmail = (e: string): string => e.replace(/^(.).*(@.*)$/, "$1***$2");
+/** A phone number for an approval summary: last two digits only. */
+export const maskPhone = (p: string): string => `***${p.slice(-2)}`;

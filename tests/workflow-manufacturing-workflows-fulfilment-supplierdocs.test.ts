@@ -15,10 +15,10 @@ const BILL_C = "99999999-8888-4777-8666-555555555555";   // already AUTHORISED: 
 const BILL_D = "12345678-1234-4234-8234-123456789012";   // matched code, billed at a changed price
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
-let itemCost = 10, failAuthorise = 0;
+let itemCost = 10, failAuthorise = 0, editA = false;
 
 function fake() {
-  hits = []; itemCost = 10; failAuthorise = 0;
+  hits = []; itemCost = 10; failAuthorise = 0; editA = false;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -29,8 +29,9 @@ function fake() {
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
       if (p.endsWith("/Invoices") && m === "GET") return json({ Invoices: [
-        { InvoiceID: BILL_A, InvoiceNumber: "INV-100", Type: "ACCPAY", Status: "DRAFT", Total: 220, Date: "2026-11-01T00:00:00",
-          Contact: { Name: "Paper Supply Co" }, LineItems: [{ Description: "A4 paper box", ItemCode: "PAPER-A4", Quantity: 2, UnitAmount: 10 }] },
+        { InvoiceID: BILL_A, InvoiceNumber: "INV-100", Type: "ACCPAY", Status: "DRAFT", Total: editA ? 230 : 220, Date: "2026-11-01T00:00:00",
+          Contact: { Name: "Paper Supply Co" }, LineItems: [{ Description: "A4 paper box", ItemCode: "PAPER-A4", Quantity: 2, UnitAmount: 10 },
+            ...(editA ? [{ Description: "Freight", ItemCode: "", Quantity: 1, UnitAmount: 10 }] : [])] },
         { InvoiceID: BILL_B, InvoiceNumber: "INV-101", Type: "ACCPAY", Status: "DRAFT", Total: 55, Date: "2026-11-02T00:00:00",
           Contact: { Name: "Ink Works" }, LineItems: [{ Description: "Cyan toner", ItemCode: "TONER-X9", Quantity: 1, UnitAmount: 55 }] },
         { InvoiceID: BILL_C, InvoiceNumber: "INV-099", Type: "ACCPAY", Status: "AUTHORISED", Total: 10, Date: "2026-10-30T00:00:00",
@@ -130,6 +131,21 @@ test("a failed authorisation stays queued for a person to retry", async () => {
   assert.deepEqual(await publish(ctx), { queued: 0, authorised: 0, rejected: 0 });
   assert.equal((await store.get<any>("documents", BILL_A)).status, "queued");
   assert.equal((await approve(WF, store, ap.id, "owner", NOW, "retry")).status, "done");
+});
+
+test("a bill edited in Xero after matching is not queued, and match does not clear the hold", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx); await match(ctx);
+  editA = true;   // a line is added to the draft bill in Xero after it was matched
+  assert.deepEqual(await publish(ctx), { queued: 0, authorised: 0, rejected: 0 });
+  assert.equal(Object.keys(await store.list("approvals")).length, 0, "nothing is queued for authorisation");
+  const a = await store.get<any>("documents", BILL_A);
+  assert.equal(a.status, "needs-review");
+  assert.match(a.changed, /Xero now has 2 lines and \$230\.00, matched as 1 lines and \$220\.00/);
+  await match(ctx);
+  assert.equal((await store.get<any>("documents", BILL_A)).status, "needs-review", "a re-run of match leaves it for a person");
+  assert.deepEqual(await publish(ctx), { queued: 0, authorised: 0, rejected: 0 });
+  assert.equal(writes().length, 0, "nothing is authorised in Xero");
 });
 
 test("a rejected authorisation is recorded and the bill is not queued again", async () => {

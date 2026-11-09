@@ -28,7 +28,7 @@ export async function contact(ctx: Ctx<Settings>, company?: string): Promise<{ n
 }
 
 /** Queue one chase email for approval. Nothing is sent here. */
-export function queueChase(ctx: Ctx<Settings>, t: Tracked, to: string, text: string): Promise<string> {
-  return ctx.queue({ platform: P, op: "messaging-api.send_email", key: `chase:${t.uuid}`, summary: `Chase ${t.missing.join(", ")} from ${to} for ${t.title}`,
+export function queueChase(ctx: Ctx<Settings>, t: Tracked, n: number, to: string, text: string): Promise<string> {
+  return ctx.queue({ platform: P, op: "messaging-api.send_email", key: `chase:${t.uuid}:${n}`, summary: `Chase ${t.missing.join(", ")} from ${to} for ${t.title}`,
     input: { body: { to, subject: `Paperwork for ${t.title}`, htmlBody: `<p>${esc(text)}</p>`, regardingJobUUID: t.uuid } } });
 }

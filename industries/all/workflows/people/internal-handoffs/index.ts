@@ -40,7 +40,9 @@ export async function draft(ctx: Ctx<Settings>) {
   for (const h of todo) {
     const park = async (reason: string) => {
       needs_routing++;
-      await ctx.store.put("handovers", h.id, { ...h, status: "needs-routing", reason } satisfies Handover);
+      // Reads the saved row, so a record task saved earlier in this run is kept when the handover is parked.
+      const cur = (await ctx.store.get<Handover>("handovers", h.id)) ?? h;
+      await ctx.store.put("handovers", h.id, { ...cur, status: "needs-routing", reason } satisfies Handover);
     };
     try {
       const got = await ctx.store.get<unknown>("proposals", h.id);
@@ -60,7 +62,11 @@ export async function draft(ctx: Ctx<Settings>) {
       const due = dueDate(ctx.now, who.due_days);
       // The record task is made once; a retry after a crash reuses it. Its direct message is opened once too.
       const rec: { task: string; channel?: string } = h.record ?? { task: "" };
-      if (!rec.task) rec.task = await asana.createRecord(ctx, `Handover: ${h.title}`, handoverText(h.title, due, who.summary, who.next_step));
+      if (!rec.task) {
+        rec.task = await asana.createRecord(ctx, `Handover: ${h.title}`, handoverText(h.title, due, who.summary, who.next_step));
+        // Saved before the direct message: if that step fails, the next run reuses this task instead of making another.
+        await ctx.store.put("handovers", h.id, { ...h, record: rec } satisfies Handover);
+      }
       if (who.slack_user && !rec.channel) rec.channel = await slack.dm(ctx, who.slack_user);
       await ctx.store.put("handovers", h.id, { ...h, record: rec, reason: undefined } satisfies Handover);
 
@@ -90,6 +96,11 @@ export async function followUp(ctx: Ctx<Settings>) {
   for (let h of Object.values(await ctx.store.list<Handover>("handovers"))) {
     if (h.status === "queued" && h.approval) {
       const ap = await ctx.store.get<Approval>("approvals", h.approval);
+      // A refused handover leaves the open list and is never retried by a cron.
+      if (ap?.status === "failed" || ap?.status === "rejected") {
+        await ctx.store.put("handovers", h.id, { ...h, status: ap.status, reason: ap.error ?? `approval ${ap.status}` } satisfies Handover);
+        continue;
+      }
       if (ap?.status !== "done") continue;
       h = { ...h, status: "passed-on", passed_on: ap.decided ?? ctx.now.toISOString() };
       await ctx.store.put("handovers", h.id, h);

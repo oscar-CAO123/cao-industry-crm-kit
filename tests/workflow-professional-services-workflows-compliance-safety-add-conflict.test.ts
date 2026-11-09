@@ -39,6 +39,7 @@ function fake() {
         const q = u.searchParams.get("Search") ?? "";
         if (q === "Jo Smith") return json({ value: [person("C1"), person("C9")] });   // C1 is the lead's own client, C9 is a real match
         if (q === "Pat Smith") return json({ value: [person("C3")] });                 // the lead's own related party
+        if (q === "Kim Lee") return json({ value: [person("C4")] });                   // only the lead's own client
         return json({ value: [] });
       }
       if (p.startsWith("/matters/") && m === "PATCH") return json({});
@@ -63,7 +64,7 @@ test("runtime: a cron cannot draft a live operation, and a read is the only draf
 test("crons read and record only: no write reaches the practice system", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   assert.deepEqual(await intake(ctx), { added: 2 });
-  assert.deepEqual(await check(ctx), { clear: 1, hit: 1, no_parties: 0 });
+  assert.deepEqual(await check(ctx), { clear: 1, hit: 1, review: 0, no_parties: 0 });
   assert.equal(writes().length, 0, "nothing written by intake or check");
   const hit = await store.get<any>("leads", LEAD_HIT);
   assert.equal(hit.status, "hit");
@@ -79,6 +80,16 @@ test("a clear lead is queued to open as a matter, never opened by a cron", async
   assert.equal(queued?.status, "pending");
   assert.equal(queued?.acts[0].op, "PatchMatter");
   assert.equal(await store.get("approvals", approvalId(WF.id, `open:${LEAD_HIT}`)), undefined, "a lead with a match is never queued");
+});
+
+test("a name search that fills its page is held for review, never queued as clear", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...S, search_limit: 1 }, store, NOW, () => {});
+  await intake(ctx);
+  assert.deepEqual(await check(ctx), { clear: 0, hit: 1, review: 1, no_parties: 0 });
+  assert.equal((await store.get<any>("leads", LEAD_CLEAR)).status, "review", "a full page is not clear");
+  assert.deepEqual(await openMatter(ctx), { queued: 0 });
+  assert.equal(await store.get("approvals", approvalId(WF.id, `open:${LEAD_CLEAR}`)), undefined, "nothing is queued to open it");
+  assert.equal(writes().length, 0);
 });
 
 test("re-runs never queue twice, and an approved open is a single PATCH", async () => {

@@ -34,6 +34,9 @@ export function toE164(raw: unknown): string | undefined {
   return PHONE.test(s) ? s : undefined;
 }
 
+/** A caller for approval summaries and the run log: the last four digits only. The full number stays in the send input and the note. */
+export const masked = (phone: string): string => `caller ending ${String(phone).slice(-4)}`;
+
 export function checkSettings(s: Settings): void {
   const bad = (what: string) => { throw new Error(`missed-call-textback settings: ${what}`); };
   if (typeof s.business_name !== "string" || !s.business_name.trim() || s.business_name.length > 60) bad("business_name must be 1 to 60 characters");

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { draft, status, publish, CRONS } from "../industries/professional-services/workflows/sales/add-proposal/index.ts";
 import fs from "node:fs";
 
@@ -97,6 +97,22 @@ test("approval publishes the quote, and the status cron reads acceptance back", 
   assert.deepEqual(await status(ctx), { changed: 1 });
   assert.equal((await store.get<any>("proposals", "enq-1")).status, "accepted");
   await assert.rejects(approve(WF, store, ap.id, "owner"), /already done/);
+});
+
+test("a rejected publish, once reset to drafted, queues a new approval a person can approve", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await seed(store); await draft(ctx); await publish(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await reject(WF, store, first.id, "owner", NOW);
+  await store.put("proposals", "enq-1", { ...(await store.get<any>("proposals", "enq-1")), status: "drafted" });   // the documented reset
+  assert.deepEqual(await publish(ctx), { queued: 1 });
+  const waiting = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(waiting.length, 1, "a new approval is waiting for a person");
+  assert.notEqual(waiting[0].id, first.id);
+  assert.equal((await store.get<any>("proposals", "enq-1")).status, "publish-queued");
+  assert.equal((await approve(WF, store, waiting[0].id, "owner", NOW)).status, "done");
+  assert.equal(writes().filter((h) => h.method === "PATCH").length, 1, "the approved publish runs once");
+  assert.deepEqual(await publish(ctx), { queued: 0 }, "a published quote is not queued again");
 });
 
 test("the crons match the workflow record's entries", () => {

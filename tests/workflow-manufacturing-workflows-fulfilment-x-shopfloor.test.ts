@@ -30,11 +30,12 @@ beforeEach(() => {
 });
 
 // A context whose platform reads return fixed rows. Queueing stays the real runtime, so approval rules still apply.
-function withReads(store: MemoryStore, rows: { assemblies?: unknown[]; stock?: unknown[] }) {
+function withReads(store: MemoryStore, rows: { assemblies?: unknown[]; stock?: unknown[]; pages?: number }) {
   const base = context(WF, S, store, NOW, () => {});
   const draft: Ctx<Settings>["draft"] = (async (a: { op: string }) => ({
     status: 200, headers: new Headers(),
-    data: { Items: a.op === "docs.get_StockOnHand" ? rows.stock ?? [] : rows.assemblies ?? [] },
+    data: { Items: a.op === "docs.get_StockOnHand" ? rows.stock ?? [] : rows.assemblies ?? [],
+      Pagination: { NumberOfPages: rows.pages ?? 1 } },
   })) as any;
   return { ...base, draft } as Ctx<Settings>;
 }
@@ -89,6 +90,20 @@ test("complete-builds queues a ready build once, however often it runs", async (
   assert.equal(aps[0].acts[0].op, "docs.post_Assemblies_assemblyGuid_Complete");
   assert.deepEqual(aps[0].acts[0].input, { params: { assemblyGuid: G1 } });
   assert.equal(netHits, 0, "queueing reaches no network");
+});
+
+test("builds on pages after the first are recorded as not read, never silently missed", async () => {
+  const store = new MemoryStore();
+  const rows = [{ Guid: G1, AssemblyStatus: "Ready to complete", Product: { ProductCode: "PANEL-1200" }, Quantity: 40 }];
+  await completeBuilds(withReads(store, { assemblies: rows, pages: 3 }));
+  const gap = await store.get<{ partial: boolean; pages: number }>("shopfloor", "coverage");
+  assert.equal(gap?.partial, true, "the gap is recorded");
+  assert.equal(gap?.pages, 3);
+  await schedule(withReads(store, { assemblies: rows, pages: 3 }));
+  assert.equal((await store.get<{ partial: boolean }>("shopfloor", "board"))?.partial, true, "the board says it is partial");
+  await completeBuilds(withReads(store, { assemblies: rows, pages: 1 }));
+  assert.equal((await store.get<{ partial: boolean }>("shopfloor", "coverage"))?.partial, false, "a full read clears the flag");
+  assert.equal(netHits, 0, "recording the gap sends nothing");
 });
 
 test("a build with a malformed guid never reaches a path", async () => {

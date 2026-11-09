@@ -16,7 +16,7 @@ export async function intake(ctx: Ctx<Settings>) {
     ctx.log("intake: baseline set; leads from before this run are not imported");
     return { added: 0, baseline: true };
   }
-  const found = [...(await gh.readSubmissions(ctx, Date.parse(base.at))), ...(await gh.readChats(ctx))];
+  const found = [...(await gh.readSubmissions(ctx, Date.parse(base.at))), ...(await gh.readChats(ctx, Date.parse(base.at)))];
   let added = 0;
   for (const raw of found) {
     const key = safeKey(`${gh.P}:${raw.source}:${raw.ref}`);

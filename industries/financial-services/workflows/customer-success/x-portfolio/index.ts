@@ -1,6 +1,6 @@
 // The portfolio reviews workflow's three crons. Each reads, drafts or queues. None sends anything: an invite reaches
 // the client, so the invite cron only queues it for an adviser's approval.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import type { Approval, Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { ClientRow, Pack, Settings, Slot } from "./types.ts";
 import { dueAt, isoDay, pick } from "./types.ts";
 import * as hubspot from "./adapters/hubspot.ts";
@@ -47,24 +47,34 @@ export async function prepare(ctx: Ctx<Settings>) {
   return { prepared };
 }
 
-/** Every 15 minutes: queue the invite for each prepared client whose agreed slot is in the store. Queues only. */
+/** Every 15 minutes: queue the invite for each prepared client whose agreed slot is in the store. A client whose invite
+ *  was rejected goes back to prepared and is queued again as a new approval. Queues only. */
 export async function invite(ctx: Ctx<Settings>) {
-  const todo = Object.values(await ctx.store.list<ClientRow>("reviews")).filter((r) => r.status === "prepared");
-  let queued = 0, waiting = 0, bad = 0;
-  for (const r of todo) {
+  const rows = Object.values(await ctx.store.list<ClientRow>("reviews"));
+  let queued = 0, waiting = 0, bad = 0, requeued = 0;
+  for (let r of rows) {
+    if (r.status === "invite-queued" && r.invite_approval) {
+      const ap = await ctx.store.get<Approval>("approvals", r.invite_approval);
+      if (ap?.status !== "rejected") continue; // still waiting for an adviser, or already approved
+      r = { ...r, status: "prepared", invite_round: (r.invite_round ?? 0) + 1 };
+      await ctx.store.put("reviews", r.id, r satisfies ClientRow);
+      requeued++;
+    }
+    if (r.status !== "prepared") continue;
     const slot = await ctx.store.get<Slot>("slots", r.id);
     if (!slot) { waiting++; continue; }
+    let approval: string;
     try {
-      await hubspot.queueInvite(ctx, { id: r.id, name: r.name }, slot);
+      approval = await hubspot.queueInvite(ctx, { id: r.id, name: r.name }, slot, r.invite_round ?? 0);
     } catch (e: any) {
       bad++;
       ctx.log(`invite: ${r.id} not queued: ${String(e?.message ?? e).slice(0, 120)}`);
       continue;
     }
-    await ctx.store.put("reviews", r.id, { ...r, status: "invite-queued" } satisfies ClientRow);
+    await ctx.store.put("reviews", r.id, { ...r, status: "invite-queued", invite_approval: approval } satisfies ClientRow);
     queued++;
   }
-  ctx.log(`invite: ${queued} queued, ${waiting} waiting for a slot, ${bad} refused`);
+  ctx.log(`invite: ${queued} queued, ${requeued} requeued after rejection, ${waiting} waiting for a slot, ${bad} refused`);
   return { queued, waiting_for_slot: waiting, refused: bad };
 }
 

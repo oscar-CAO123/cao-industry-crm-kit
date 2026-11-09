@@ -105,5 +105,8 @@ export function dayLabel(date: string, tz: string): string {
     .format(new Date(`${date}T12:00:00Z`));
 }
 
-export const clientText = (business: string, first: string | undefined, label: string) =>
-  `Hi ${first ?? "there"}, your visit with ${business} is booked for ${label}.`;
+/** The first name is platform text: control characters become spaces and it is cut to 40 characters before it is placed in the text. */
+export const clientText = (business: string, first: string | undefined, label: string) => {
+  const name = String(first ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, 40);
+  return `Hi ${name || "there"}, your visit with ${business} is booked for ${label}.`;
+};

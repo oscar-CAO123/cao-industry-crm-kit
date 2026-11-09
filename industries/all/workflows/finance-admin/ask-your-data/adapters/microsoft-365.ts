@@ -5,9 +5,13 @@ import { type Figure, type Question, type Settings, EMAIL, ID, keyOf } from "../
 
 const P = "microsoft-365";
 
+/** A mail folder's well-known name (inbox, sentitems) or its Graph id. Checked before it goes into a request path. */
+const FOLDER = /^[A-Za-z0-9=_!-]{1,400}$/;
+
 const cfg = (ctx: Ctx<Settings>) => {
   const m = ctx.settings.microsoft_365;
   if (!m?.mailbox || !EMAIL.test(m.mailbox)) throw new Error("microsoft_365.mailbox is not set");
+  if (m.folder !== undefined && !FOLDER.test(String(m.folder))) throw new Error("microsoft_365.folder is not a folder name or id");
   if (!EMAIL.test(ctx.settings.owner_email ?? "")) throw new Error("owner_email is not set");
   return m;
 };

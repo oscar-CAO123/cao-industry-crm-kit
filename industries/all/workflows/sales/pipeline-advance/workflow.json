@@ -94,7 +94,8 @@
     "Pipedrive's last change is the deal's update or stage-change time. An unrelated field edit counts as a change, so a stalled deal can look fresh.",
     "GoHighLevel's last action date is the platform's own field. Whether it moves on every call or email needs a check on a real account.",
     "The stage order is typed in settings. Pipedrive's stage list (order_nr) is mapped but not read, so a reorder in the CRM is not picked up.",
-    "Both adapters are offline-tested only, with a fake network. Neither is proven against a real account."
+    "Both adapters are offline-tested only, with a fake network. Neither is proven against a real account.",
+    "NEEDS CORE: a queued stage move runs at approval without checking that the deal is still at the stage its summary shows, so a deal moved by hand after queuing can be pushed backward or past its target. Fix needed in core/workflows/runtime.ts approve(): a precondition hook that re-reads the deal and refuses the move unless its stage still matches, wired into the CRM shell's approve path. Not built here, because this folder cannot change core."
   ],
   "evidence": {
     "calls": "40 pipeline calls read; 21 describe how they move deals, 21 are in the all family; manual share is 57 to 100 percent on every step",

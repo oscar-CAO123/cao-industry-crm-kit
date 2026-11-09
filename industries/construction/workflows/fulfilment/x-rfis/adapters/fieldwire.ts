@@ -13,6 +13,7 @@ function version(s: Settings): Record<string, string> {
   return { "Fieldwire-Version": v };
 }
 const uuid = (v: unknown) => { const s = String(v ?? ""); if (!UUID.test(s)) throw new Error("fieldwire: bad id"); return s; };
+const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
 /** RFIs in a project changed since a time (first page; paging is not followed yet, see gaps). */
 export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, since: string): Promise<RfiRow[]> {
@@ -46,7 +47,8 @@ export function queueRfiOpen(ctx: Ctx<Settings>, rfi: { project: string; id: str
   if (!Number.isInteger(assignee) || assignee <= 0) throw new Error("fieldwire: assignee must be a user id");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(due)) throw new Error("fieldwire: due must be a date (YYYY-MM-DD)");
   const pid = uuid(rfi.project), rid = uuid(rfi.id);
-  const summary = `open RFI "${clean(rfi.name, 120)}" to user ${assignee}, due ${due} (Fieldwire emails them)`;
+  // The approver sees the exact text Fieldwire will email: cleaned, capped, and escaped.
+  const summary = `open RFI "${clean(rfi.name, 120)}" to user ${assignee}, due ${due} (Fieldwire emails them). Message: "${esc(clean(message, 300))}"`;
   return ctx.queue({ platform: P, op: OP("transition_rfi_in_project"), key: `rfi-open:${rid}`, summary,
     input: { params: { ...version(ctx.settings), project_id: pid, id: rid },
              body: { to_state: "open", assignee_user_id: assignee, due_date: due, message: clean(message, 2000) } } }, summary);

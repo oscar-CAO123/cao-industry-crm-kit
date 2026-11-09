@@ -67,8 +67,11 @@ async function advance(ctx: Ctx<Settings>, key: string, p: CampaignPlan): Promis
       if (ap.status === "rejected") return stop("rejected", `${step} was rejected`);
       return stop("blocked", `${step}: ${ap.status}${ap.error ? `, ${ap.error}` : ""}`);
     }
+    // The plan may have been edited since plan() passed it: check it again before anything is queued.
+    const why = planProblem(p, ctx.settings);
+    if (why) return stop("blocked", `plan no longer passes: ${why}`);
     const act = createAct(ctx.settings, p, step, ids, keyOf(`${key}:${step}`));
-    approvals[step] = await ctx.queue(act, `Meta ${step} for ${p.name} (created PAUSED)`);
+    approvals[step] = await ctx.queue(act, act.summary);
     return stop("building");
   }
   return stop("built");

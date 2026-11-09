@@ -54,20 +54,25 @@ export async function draft(ctx: Ctx<Settings>) {
   let touched = 0, held = 0;
   for (const lead of leads) {
     if (touched >= TOUCH_LIMIT) break;
-    const n = lead.touches;
-    if (a.queueSend && !lead.contact_id) {
-      await ctx.store.put("leads", lead.key, { ...lead, reason: "no contact on the opportunity: a person sends this one" });
-      held++;
-      continue;
+    // Each lead is its own unit: one failed CRM write is logged and the rest of the run goes on. The lead is tried again next run.
+    try {
+      const n = lead.touches;
+      if (a.queueSend && !lead.contact_id) {
+        await ctx.store.put("leads", lead.key, { ...lead, reason: "no contact on the opportunity: a person sends this one" });
+        held++;
+        continue;
+      }
+      const tpl = n === 0 && lead.role === "quote" && s.templates.quote_first ? s.templates.quote_first
+        : n === 0 ? s.templates.first_touch : s.templates.follow_up[n - 1];
+      if (!tpl) continue;
+      const text = clip(render(tpl, { business_name: clip(s.business_name, 80), title: clip(lead.title, 80) }), 600);
+      await a.draftTouch(ctx, lead, text, n);
+      const approval = a.queueSend ? await a.queueSend(ctx, lead, text, `touch:${lead.key}:${n}`) : undefined;
+      await ctx.store.put("leads", lead.key, { ...lead, touches: n + 1, last_touch: nowIso, last_approval: approval, reason: undefined });
+      touched++;
+    } catch (e: any) {
+      ctx.log(`draft: ${lead.key} not touched: ${String(e?.message ?? e).slice(0, 160)}`);
     }
-    const tpl = n === 0 && lead.role === "quote" && s.templates.quote_first ? s.templates.quote_first
-      : n === 0 ? s.templates.first_touch : s.templates.follow_up[n - 1];
-    if (!tpl) continue;
-    const text = clip(render(tpl, { business_name: clip(s.business_name, 80), title: clip(lead.title, 80) }), 600);
-    await a.draftTouch(ctx, lead, text, n);
-    const approval = a.queueSend ? await a.queueSend(ctx, lead, text, `touch:${lead.key}:${n}`) : undefined;
-    await ctx.store.put("leads", lead.key, { ...lead, touches: n + 1, last_touch: nowIso, last_approval: approval, reason: undefined });
-    touched++;
   }
   ctx.log(`draft: ${touched} touches drafted, ${held} held`);
   return { touched, held };

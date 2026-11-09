@@ -9,6 +9,7 @@ import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/retail/workflows/fulfilment/artwork/workflow.json", "utf8")) as WorkflowRecord;
 const SITE = "shop.example.com.au";
+const ASSET_HOST = "assets.example.com.au";
 const EXISTING = `https://${SITE}/wp-content/uploads/tote-plain.jpg`;
 const TOTE_FRONT = "https://assets.example.com.au/mockups/tote-navy-front.jpg";
 const TOTE_BACK = "https://assets.example.com.au/mockups/tote-navy-back.jpg";
@@ -69,7 +70,7 @@ test("catalogue reads the products, records them, and sends nothing", async () =
 });
 
 test("listing queues each mockup set once, and sends nothing before approval", async () => {
-  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10 }, store, NOW, () => {});
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
   await store.put("mockups", "set-tote", { product_id: 101, images: [{ src: TOTE_FRONT, alt: "Navy tote, front" }] });
   await store.put("mockups", "set-mug", { product_id: 102, images: [{ src: MUG_FRONT, alt: "Enamel mug, front" }, { src: TOTE_BACK, alt: "" }] });
   await catalogue(ctx);
@@ -80,7 +81,7 @@ test("listing queues each mockup set once, and sends nothing before approval", a
 });
 
 test("approval sends the batch update: existing image kept by id, new images appended in order", async () => {
-  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10 }, store, NOW, () => {});
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
   await store.put("mockups", "set-tote", { product_id: 101, images: [{ src: TOTE_FRONT, alt: "Navy tote, front" }] });
   await catalogue(ctx);
   await listing(ctx);
@@ -95,7 +96,7 @@ test("approval sends the batch update: existing image kept by id, new images app
 });
 
 test("after approval the set shows as live, and listing does not queue it again", async () => {
-  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10 }, store, NOW, () => {});
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
   await store.put("mockups", "set-mug", { product_id: 102, images: [{ src: MUG_FRONT, alt: "Enamel mug, front" }] });
   await catalogue(ctx);
   await listing(ctx);
@@ -107,8 +108,24 @@ test("after approval the set shows as live, and listing does not queue it again"
   assert.equal(writes().filter((h) => h.path.endsWith("/batch")).length, 1, "the store was written once");
 });
 
+test("a mockup image on a host the business does not control is rejected before anything is queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
+  await catalogue(ctx);
+  await store.put("mockups", "steered", { product_id: 102, images: [{ src: "https://attacker.example.net/mug.jpg", alt: "" }] });
+  assert.deepEqual(await listing(ctx), { ready_for_approval: 0, rejected: 1, skipped: 0 });
+  assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 0);
+});
+
+test("listing refuses to run until asset_hosts is set", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10 }, store, NOW, () => {});
+  await catalogue(ctx);
+  await store.put("mockups", "set-mug", { product_id: 102, images: [{ src: MUG_FRONT, alt: "" }] });
+  await assert.rejects(listing(ctx), /asset_hosts/);
+  assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 0);
+});
+
 test("unsafe mockup sets are rejected before anything is queued", async () => {
-  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 2 }, store, NOW, () => {});
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 2, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
   await catalogue(ctx);
   await store.put("mockups", "plain-http", { product_id: 102, images: [{ src: "http://assets.example.com.au/mug.jpg", alt: "" }] });
   await store.put("mockups", "too-long-alt", { product_id: 102, images: [{ src: MUG_FRONT, alt: "x".repeat(126) }] });
@@ -118,7 +135,7 @@ test("unsafe mockup sets are rejected before anything is queued", async () => {
 });
 
 test("a set for a product the catalogue has not read waits, and a blocked deploy cannot write", async () => {
-  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10 }, store, NOW, () => {});
+  const store = new MemoryStore(), ctx = context(WF, { store: "woocommerce", max_images: 10, asset_hosts: [ASSET_HOST] }, store, NOW, () => {});
   await store.put("mockups", "unknown", { product_id: 999, images: [{ src: MUG_FRONT, alt: "" }] });
   assert.deepEqual(await listing(ctx), { ready_for_approval: 0, rejected: 0, skipped: 1 });
   await store.put("mockups", "set-mug", { product_id: 102, images: [{ src: MUG_FRONT, alt: "" }] });

@@ -10,11 +10,16 @@ const projectIds = (s: Settings) => (s.projects ?? []).map((p) => guid(p));
 
 /** Every 30 minutes: read each client's chargeable, uninvoiced time entries. An entry that left ACTIVE is marked gone. */
 export async function capture(ctx: Ctx<Settings>) {
-  const since = new Date(ctx.now.getTime() - (ctx.settings.lookback_days ?? LOOKBACK_DAYS) * DAY).toISOString();
+  const windowStart = ctx.now.getTime() - (ctx.settings.lookback_days ?? LOOKBACK_DAYS) * DAY;
   const stamp = ctx.now.toISOString();
   let read = 0, added = 0, gone = 0;
   const existing = await ctx.store.list<Entry>("entries");
   for (const pid of projectIds(ctx.settings)) {
+    // Read back as far as the oldest entry still waiting, not only the lookback: a waiting entry is marked gone only when
+    // Xero stops listing it as ACTIVE, never because it aged out of the window.
+    const waiting = Object.values(existing).filter((e) => e.project_id === pid && e.status === "new")
+      .map((e) => Date.parse(`${e.date}T00:00:00Z`)).filter(Number.isFinite);
+    const since = new Date(Math.min(windowStart, ...waiting) - DAY).toISOString();
     const rows = await timeEntries(ctx, pid, since);
     const seen = new Set(rows.map((r) => r.id));
     read += rows.length;

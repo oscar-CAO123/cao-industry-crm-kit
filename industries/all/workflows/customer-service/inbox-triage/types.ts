@@ -13,6 +13,8 @@ export interface Settings {
   triage: { category: Category; match: string[] }[];       // first rule with a word in the subject or preview wins; otherwise "other"
   auto_reply: { category: Category; match?: string[]; body: string }[];  // approved template replies the draft cron may queue
   sla_hours?: number;                                      // reminder after this many hours (the four-hour target by default)
+  lookback_hours?: number;                                 // only mail this recent is triaged (default 24); older mail is left alone
+  per_run_limit?: number;                                  // most reply approvals one draft run queues (default 20)
   signature?: string;
 }
 
@@ -23,6 +25,7 @@ export interface Enquiry {
   category?: Category;
   status: "triaged" | "skipped";
   replied?: string;      // approval id of the queued reply
+  reply_error?: string;  // why no reply could be queued; a person answers, and the thread is still assigned or labelled
   assigned?: string;     // when the thread was assigned or labelled
 }
 

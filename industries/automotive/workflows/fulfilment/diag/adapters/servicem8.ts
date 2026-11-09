@@ -43,11 +43,13 @@ export async function photosOn(ctx: Ctx<Settings>, job: string): Promise<string[
     .map((a) => String(a.attachment_name ?? "photo").slice(0, 120));
 }
 
-/** File the write-up on the job as an internal note. Returns the note uuid the platform gave back. */
-export async function fileNote(ctx: Ctx<Settings>, job: string, text: string): Promise<string> {
+/** File the write-up on the job as an internal note. Returns the note uuid the platform gave back, or undefined when the
+ *  reply carried none: the note is filed either way, so a missing id is for a person to check, never a thrown error. */
+export async function fileNote(ctx: Ctx<Settings>, job: string, text: string): Promise<string | undefined> {
   const r = await ctx.draft({ platform: P, op: "servicem8-api.createNotes", summary: `write-up note on job ${job}`,
     input: { body: { related_object: "job", related_object_uuid: uuid(job), note: text.slice(0, 4000) } } });
-  return uuid(r.headers.get("x-record-uuid"));
+  const id = r.headers.get("x-record-uuid") ?? "";
+  return UUID.test(id) ? id : undefined;
 }
 
 /** The current text of a note the workflow filed. */
@@ -56,8 +58,8 @@ export async function readNote(ctx: Ctx<Settings>, noteUuid: string): Promise<st
   return String(r.data?.note ?? "").trim().slice(0, 8000);
 }
 
-/** Queue the write-up email. The approver sees the recipient and the subject; the send happens only on approval. */
-export async function queueEmail(ctx: Ctx<Settings>, job: string, to: string, subject: string, htmlBody: string, key: string) {
+/** Queue the write-up email. The approver sees the whole email as text (`shown`: recipient, subject and body); the send happens only on approval. */
+export async function queueEmail(ctx: Ctx<Settings>, job: string, to: string, subject: string, htmlBody: string, key: string, shown: string) {
   return ctx.queue({ platform: P, op: "messaging-api.send_email", key: `send:${key}`, summary: `Email write-up to ${to} for job ${job}`,
-    input: { body: { to, subject, htmlBody, regardingJobUUID: uuid(job) } } });
+    input: { body: { to, subject, htmlBody, regardingJobUUID: uuid(job) } } }, shown);
 }

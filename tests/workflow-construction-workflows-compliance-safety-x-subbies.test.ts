@@ -135,3 +135,10 @@ test("inputs from outside are checked before any call: a bad job folder or a bad
   await assert.rejects(intake(context(WF, badBox, new MemoryStore(), NOW, () => {})), /mailbox/);
   assert.equal(hits.length, 0);
 });
+
+test("a job folder with a . or .. segment is refused before any Dropbox call", async () => {
+  for (const folder of ["/Jobs/../Payroll", "/Jobs/./12 Smith Street", "/.."]) {
+    await assert.rejects(records(context(WF, { ...SET, dropbox: { job_folders: [folder] } }, new MemoryStore(), NOW, () => {})), /bad job folder/, folder);
+  }
+  assert.equal(hits.filter((h) => h.path === "/2/files/list_folder").length, 0);
+});

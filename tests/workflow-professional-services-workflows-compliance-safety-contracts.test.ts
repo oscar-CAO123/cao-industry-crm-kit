@@ -19,9 +19,11 @@ const PRIVATE_KEY = crypto.generateKeyPairSync("rsa", { modulusLength: 2048,
 type Hit = { method: string; host: string; path: string; body: any };
 let hits: Hit[] = [];
 let envelopes: any[] = [];
+let received = "2026-11-08T00:00:00Z";
+let rowsFail = false;
 
 function fake() {
-  hits = [];
+  hits = []; received = "2026-11-08T00:00:00Z"; rowsFail = false;
   envelopes = [{ envelopeId: ENV, status: "sent", emailSubject: "Retainer agreement", sentDateTime: "2026-11-01T00:00:00Z",
     recipients: { signers: [
       { name: "Sam Lee", email: "Sam@Example.com", status: "sent", routingOrder: "1", recipientId: "1" },
@@ -41,11 +43,11 @@ function fake() {
       // Microsoft Graph
       if (u.hostname === "graph.microsoft.com") {
         if (/\/mailFolders\/[^/]+\/messages$/.test(p) && m === "GET") return json({ value: [{ id: "AAMkReq1", subject: "Contract for the retainer",
-          from: { emailAddress: { name: "Ari", address: "ari@example.com" } }, receivedDateTime: "2026-11-08T00:00:00Z", hasAttachments: true }] });
+          from: { emailAddress: { name: "Ari", address: "ari@example.com" } }, receivedDateTime: received, hasAttachments: true }] });
         if (p.endsWith("/attachments") && m === "GET") return json({ value: [{ id: "att1", name: "Retainer.pdf", size: 20480, contentType: "application/pdf" }] });
         if (/\/messages$/.test(p) && m === "POST") return json({ id: `AAMkDraft${hits.filter((h) => /\/messages$/.test(h.path) && h.method === "POST").length}` });
         if (/\/messages\/[^/]+\/send$/.test(p) && m === "POST") return new Response(null, { status: 202 });
-        if (p.endsWith("/rows") && m === "POST") return json({ index: 0 });
+        if (p.endsWith("/rows") && m === "POST") return rowsFail ? new Response("{}", { status: 400 }) : json({ index: 0 });
       }
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
@@ -101,6 +103,29 @@ test("contract email: logged once, a review note drafted and queued, nothing sen
   assert.equal(ap.status, "done");
   assert.equal(sends().length, 1, "sent once, only after approval");
   await assert.rejects(approve(WF, store, pending[0].id, "owner"), /already done/);
+});
+
+test("a failed register row never drafts the review note a second time", async () => {
+  const store = new MemoryStore();
+  const ctx = () => context(WF, S, store, NOW, () => {});
+  await intake(ctx());
+  rowsFail = true;
+  await assert.rejects(review(ctx()), /failed with status 400/);
+  assert.equal(drafts().length, 1, "the note is drafted once before the row fails");
+  rowsFail = false;
+  assert.deepEqual(await review(ctx()), { drafted: 1 });
+  assert.equal(drafts().length, 1, "the retry reuses the saved draft: no second note");
+  assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 1, "one approval queued");
+  const [contract] = Object.values(await store.list<Contract>("contracts"));
+  assert.equal(contract.status, "in-review");
+});
+
+test("the register row escapes a received date that could read as a formula", async () => {
+  received = "=HYPERLINK(\"http://x\")";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  await review(ctx);
+  assert.equal(rows()[0].body.values[0][0], "'=HYPERLINK");
 });
 
 test("DocuSign: an unsigned signer gets a reminder on the schedule, re-runs never double-queue, nothing sent by a cron", async () => {

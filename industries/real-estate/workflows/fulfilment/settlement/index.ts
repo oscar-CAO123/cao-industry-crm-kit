@@ -2,8 +2,8 @@
 // date changes for a person. The agreed date itself is judgment (read the contract or the solicitor's confirmation):
 // the agent or a person writes it into the "agreed" store, see SKILL.md.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
-import { type Settings, type Agreed, type Matter, uuid, isDay, dayOf } from "./types.ts";
-import { openMatters, settlementEvents, createSettlement, dateChangeAct, remindersOn, createReminder } from "./adapters/smokeball.ts";
+import { type Settings, type Agreed, type Matter, uuid, isDay, dayOf, clean } from "./types.ts";
+import { openMatters, settlementEvents, settlementEventById, createSettlement, dateChangeAct, remindersOn, createReminder } from "./adapters/smokeball.ts";
 
 /** Every 30 minutes: read the open matters and their settlement events into the register. Reads only. */
 export async function register(ctx: Ctx<Settings>) {
@@ -28,8 +28,16 @@ export async function check(ctx: Ctx<Settings>) {
     if (!m) { skipped++; ctx.log(`check: ${matterId} is not in the register yet`); continue; }
     if (m.events.length > 1) { skipped++; ctx.log(`check: ${matterId} has ${m.events.length} settlement events: a person picks one`); continue; }
     if (m.events.length === 0) {
-      // A settlement event this workflow already created is waiting for the register to see it: never create a second.
-      if (a.event_id) { skipped++; ctx.log(`check: ${matterId} event ${a.event_id} is not in the register yet`); continue; }
+      // An event this workflow already made or pinned is outside the register window (past the horizon, or deleted):
+      // read it by id, so a date change is still queued, and never create a second one.
+      if (a.event_id) {
+        const ev = await settlementEventById(ctx, matterId, a.event_id);
+        if (!ev) { skipped++; ctx.log(`check: ${matterId} event ${a.event_id} is gone or not a settlement on this matter: a person checks it`); continue; }
+        if (ev.date === day) continue;
+        await ctx.queue(dateChangeAct(ctx, ev.event_id, matterId, day), `Move settlement on matter ${matterId} from ${ev.date} to ${day} (source: ${clean(a.source, 120)})`);
+        queued++;
+        continue;
+      }
       const id = await createSettlement(ctx, matterId, day);
       await ctx.store.put("agreed", matterId, { ...a, event_id: id } satisfies Agreed);
       created++;
@@ -39,7 +47,7 @@ export async function check(ctx: Ctx<Settings>) {
     if (a.event_id && a.event_id !== e.event_id) { skipped++; ctx.log(`check: ${matterId} settlement event is not the one this workflow made: a person checks it`); continue; }
     if (!a.event_id) await ctx.store.put("agreed", matterId, { ...a, event_id: e.event_id } satisfies Agreed);
     if (e.date === day) continue;
-    await ctx.queue(dateChangeAct(ctx, e.event_id, matterId, day), `Move settlement on matter ${matterId} from ${e.date} to ${day} (source: ${a.source})`);
+    await ctx.queue(dateChangeAct(ctx, e.event_id, matterId, day), `Move settlement on matter ${matterId} from ${e.date} to ${day} (source: ${clean(a.source, 120)})`);
     queued++;
   }
   ctx.log(`check: ${created} created, ${queued} date changes queued, ${skipped} skipped`);

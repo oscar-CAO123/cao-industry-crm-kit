@@ -38,6 +38,7 @@
   "Aircall texts: the send-message operation maps its number id as both a query and a path part, so it is left out until the operation map is corrected. An Aircall-only business gets no automatic text back.",
   "Aircall call transfer for emergency escalation is left out: it acts on a live call, and an approval arrives after the caller has hung up.",
   "JustCall's list response wrapper is not confirmed in the docs (only the per-call fields are). The adapter reads an array or its data array. Confirm on a sandbox account.",
+  "JustCall's call list pages 100 at a time and the adapter reads up to 10 pages per run (1,000 calls), stopping at the first short page. The from_datetime format and the sort order are not confirmed, so the lookback is applied after the read. A run that hits the 10-page cap logs that older calls may be unread.",
   "Urgency is a keyword check on the call notes and voicemail transcript. Aircall's log is read without notes because its notes field is not confirmed in the docs, so urgent calls are only flagged for JustCall.",
   "Callbacks, booking a job or appointment into a diary, and taking job details on the call are not mapped for either platform, so they are not built here.",
   "Opening hours cover the weekly pattern only; a public holiday closure is not built.",

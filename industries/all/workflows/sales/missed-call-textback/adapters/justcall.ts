@@ -3,7 +3,7 @@
 // call_date, call_time (UTC), contact_number; texts/new takes justcall_number, contact_number, body, restrict_once.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../../core/workflows/runtime.ts";
-import { type MissedCall, type Settings, toE164 } from "../types.ts";
+import { type MissedCall, type Settings, masked, toE164 } from "../types.ts";
 
 const P = "justcall";
 const ID = /^\d{1,12}$/;
@@ -28,6 +28,6 @@ export async function missedCalls(ctx: Ctx<Settings>, since: Date): Promise<Miss
 
 /** A text from the business's JustCall number. Queued only: a person approves it. restrict_once stops a repeat within 24 hours. */
 export function textAct(s: Settings, to: string, body: string, key: string): Act {
-  return { platform: P, op: "docs.post_v2_1_texts_new", key, summary: `text ${to}`,
+  return { platform: P, op: "docs.post_v2_1_texts_new", key, summary: `text ${masked(to)}`,
     input: { body: { justcall_number: s.justcall.number, contact_number: to, body: body.slice(0, 300), restrict_once: "Yes" } } };
 }

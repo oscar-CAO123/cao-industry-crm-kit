@@ -71,7 +71,9 @@
   "Revisions after a send (revise, 2 calls): not covered. Handled by hand.",
   "The worklist's CRM entry 'proposal-web' has no kit adapter. Proposals enter through the propose command and the store.",
   "Microsoft 365 is named in 12 quoting calls but is not in the platform evidence file. It is included because the Xero adapter sends through it.",
-  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it."
+  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it.",
+  "Needs a change in the construction ServiceM8 adapter (industries/construction/workflows/sales/quoting/adapters/servicem8.ts, draftQuote), not made here: on a retry after a partial failure, line creation is skipped whenever any line already exists on the job, so the job can keep fewer lines than the emailed quote total. The fix is to create only the missing lines and refuse the send unless the job's lines add up to the quote total.",
+  "Needs a change in the same ServiceM8 adapter, not made here: the job id from the stored enquiry goes into OData filters on the job-lines and attachments reads without the UUID check the rest of that file applies. Low risk today, because the stored id is only written from UUID-checked values."
  ],
  "evidence": {
   "calls": "116 discovery calls in the worklist; 40 read in depth for steps, variants and families",

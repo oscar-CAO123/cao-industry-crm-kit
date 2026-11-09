@@ -133,6 +133,18 @@ test("a payment the trade took is queued against the Xero invoice, never recorde
     { invoice: { InvoiceID: INV }, code: "090", amount: 200 });
 });
 
+test("a payment parked for a missing bank code is queued once the setting is fixed, and only then", async () => {
+  const store = new MemoryStore();
+  const ctx = await sentInvoice(store);
+  const noBank = context(WF, { ...S, bank_account_code: undefined }, store, NOW, () => {});
+  assert.deepEqual(await payments(noBank), { queued: 0, parked: 1 });
+  assert.equal((await store.get<{ status: string }>("payments", PAY))!.status, "parked");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).filter((a) => a.acts[0].op === "accounting.createPayment").length, 0);
+  assert.deepEqual(await payments(ctx), { queued: 1, parked: 0 }, "the parked payment is queued after the fix");
+  assert.deepEqual(await payments(ctx), { queued: 0, parked: 0 }, "and never queued a second time");
+  assert.equal(count((h) => h.method === "POST" && h.path.endsWith("/Payments")), 0, "nothing recorded by the cron");
+});
+
 test("chase: a sent invoice past due gets its reminder queued, not sent, and step 2 waits for its own day count", async () => {
   const store = new MemoryStore();
   const ctx = await sentInvoice(store);

@@ -17,6 +17,8 @@ const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "
 const nameOf = (c: VendorContact) => [text(c.forename, 60), text(c.surname, 60)].filter(Boolean).join(" ") || c.id;
 const emailOf = (c: VendorContact) => { const e = text(c.email, 190); return EMAIL.test(e) ? e : undefined; };
 const firstOf = (name: string) => name.split(" ")[0] || "there";
+/** The approval key of a lead's first-call send. Attempt 0 keeps the plain key; each send after a rejection gets its own. */
+const sendKey = (id: string, attempt = 0) => (attempt ? `send:${id}:${attempt}` : `send:${id}`);
 
 /** The email body as escaped HTML. The name goes in by a function, so a "$" in a name is not read as a replacement pattern. */
 function bodyHtml(template: string, first: string, business?: string): string {
@@ -50,10 +52,14 @@ export async function callDraft(ctx: Ctx<Settings>) {
   let queued = 0, no_email = 0;
   for (const l of todo) {
     if (!l.email) { await ctx.store.put("call-leads", l.id, { ...l, status: "no-email" }); no_email++; continue; }
+    // A first-call send that was rejected is queued again under a new key: the rejected approval would otherwise be returned as is.
+    let attempt = l.attempt ?? 0;
+    const prior = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, sendKey(l.id, attempt)));
+    if (prior?.status === "rejected") attempt++;
     const html = bodyHtml(ctx.settings.first_call_text ?? "", firstOf(l.name), ctx.settings.business_name);
-    const d = await emailDraft(ctx, l.email, FIRST_CALL_SUBJECT, html, `send:${l.id}`);
+    const d = await emailDraft(ctx, l.email, FIRST_CALL_SUBJECT, html, sendKey(l.id, attempt));
     await ctx.queue(d.act, `First-call email to ${l.name} (${l.email})`);
-    await ctx.store.put("call-leads", l.id, { ...l, status: "queued", message: d.messageId, queued_at: ctx.now.toISOString() });
+    await ctx.store.put("call-leads", l.id, { ...l, status: "queued", message: d.messageId, queued_at: ctx.now.toISOString(), attempt });
     queued++;
   }
   ctx.log(`call-draft: ${queued} queued for approval, ${no_email} without an email`);
@@ -66,7 +72,7 @@ export async function followUp(ctx: Ctx<Settings>) {
   let sent = 0;
   for (const l of Object.values(await ctx.store.list<CallLead>("call-leads"))) {
     if (l.status !== "queued") continue;
-    const ap = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `send:${l.id}`));
+    const ap = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, sendKey(l.id, l.attempt ?? 0)));
     if (ap?.status === "done") {
       await ctx.store.put("call-leads", l.id, { ...l, status: "sent", sent_at: ap.decided ?? ap.started ?? ctx.now.toISOString() });
       sent++;

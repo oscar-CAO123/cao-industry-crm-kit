@@ -41,13 +41,13 @@ export const employmentHero = {
     check(!bad, bad ?? "");
     const w = ctx.settings.employment_hero.work_location;
     return ctx.queue({
-      platform: P, op: "Quick Add Employee Config", key: `hire:${h.id}`, summary: `add ${h.first_name} ${h.last_name} to Employment Hero`,
+      platform: P, op: "Quick Add Employee Config", key: `hire:${h.id}`, summary: `add hire ${h.id} to Employment Hero`,
       input: { params: { organisation_id: org(ctx) }, body: {
         employing_entity_id: entity(ctx), first_name: h.first_name, last_name: h.last_name, email: h.email,
         ...(h.date_of_birth ? { date_of_birth: h.date_of_birth } : {}),
         ...(w ? { work_location: { id: w.id, name: w.name, country: w.country } } : {}),
       } },
-    }, `add ${h.first_name} ${h.last_name} (${h.email}) as an employee in Employment Hero`);
+    }, `add hire ${h.id} as an employee in Employment Hero`);
   },
 
   /** Queue a new salary version for a pay rise. Live: it changes pay. */

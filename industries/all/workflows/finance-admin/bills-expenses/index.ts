@@ -2,12 +2,19 @@
 // ever queued for a person to approve. Judgment (reading a document, choosing the account code for each line) belongs
 // to the agent skill in SKILL.md, which writes the bill into the bills store as status "new".
 import type { Ctx, Act } from "../../../../../core/workflows/runtime.ts";
-import { WriteBlocked } from "../../../../../core/lib/http.ts";
-import { type Bill, type Settings, DAY, money, total, validate } from "./types.ts";
+import { ApiError, WriteBlocked } from "../../../../../core/lib/http.ts";
+import { type Bill, type Settings, DAY, GUID, money, total, validate } from "./types.ts";
 import * as xero from "./adapters/xero.ts";
 
 async function park(ctx: Ctx<Settings>, key: string, b: Bill, status: "needs-coding" | "needs-review", reason: string) {
   await ctx.store.put("bills", key, { ...b, status, reason });
+}
+
+/** No answer, a timeout, a dropped connection, or a 5xx, 408 or 429 from Xero: the bill may be fine to try again. */
+function transient(e: any): boolean {
+  if (e instanceof ApiError) return e.status >= 500 || e.status === 408 || e.status === 429;
+  if (e?.name === "TimeoutError" || e?.name === "AbortError") return true;
+  return e instanceof TypeError && "cause" in e; // Node's fetch failure carries a cause; a bug in this code does not
 }
 
 /** Queue the authorisation of an entered bill once. A cron that runs again finds the approval and queues nothing new. */
@@ -19,9 +26,12 @@ async function queueAuthorise(ctx: Ctx<Settings>, key: string, b: Bill) {
 /** Every 15 minutes: enter each new bill as a DRAFT in Xero, after its checks, then queue its authorisation for approval. */
 export async function enter(ctx: Ctx<Settings>) {
   let codes: Set<string> | undefined; // read from Xero only once a bill needs checking
-  const counts = { entered: 0, queued: 0, parked: 0, duplicate: 0 };
+  const counts = { entered: 0, queued: 0, parked: 0, duplicate: 0, retry: 0 };
   for (const [key, b] of Object.entries(await ctx.store.list<Bill>("bills"))) {
-    if (b.status === "entered" && b.ref?.invoice_id) { await queueAuthorise(ctx, key, b); counts.queued++; continue; }
+    if (b.status === "entered" && b.ref?.invoice_id) {
+      if (!GUID.test(b.ref.invoice_id)) { await park(ctx, key, b, "needs-review", "the stored Xero invoice id is not a valid id"); counts.parked++; continue; }
+      await queueAuthorise(ctx, key, b); counts.queued++; continue;
+    }
     if (b.status !== "new") continue;
     const bad = validate(b);
     if (bad) { await park(ctx, key, b, "needs-review", bad); counts.parked++; continue; }
@@ -51,12 +61,14 @@ export async function enter(ctx: Ctx<Settings>) {
       counts.entered++;
     } catch (e: any) {
       if (e instanceof WriteBlocked) throw e; // the deploy does not allow writes: stop, do not park the bill
-      // A retry is safe: the supplier, bill and authorisation keys are idempotent, and the duplicate check runs first.
+      // A transient failure leaves the bill as new, so the next run retries it. The supplier, bill and authorisation keys
+      // are idempotent, and the duplicate check runs first, so a retry never makes a second bill.
+      if (transient(e)) { counts.retry++; continue; }
       await park(ctx, key, b, "needs-review", `Xero did not take this bill: ${String(e?.message ?? e).slice(0, 160)}`);
       counts.parked++;
     }
   }
-  ctx.log(`enter: ${counts.entered} entered, ${counts.queued} authorisations queued, ${counts.parked} parked, ${counts.duplicate} duplicates`);
+  ctx.log(`enter: ${counts.entered} entered, ${counts.queued} authorisations queued, ${counts.parked} parked, ${counts.duplicate} duplicates, ${counts.retry} to retry`);
   return counts;
 }
 

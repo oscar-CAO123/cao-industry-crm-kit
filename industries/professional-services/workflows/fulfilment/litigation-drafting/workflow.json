@@ -28,7 +28,7 @@
   {"name": "draft", "schedule": "20 */2 * * *", "entry": "draft", "summary": "File each pending draft as a memo; queue its client message for approval."}
  ],
  "draft_ops": {
-  "smokeball": ["GetMatters", "GetFiles", "CreateMemo", "CreateTask"]
+  "smokeball": ["GetMatters", "GetMatterById", "GetFiles", "CreateMemo", "CreateTask"]
  },
  "live_ops": {
   "smokeball": ["SendPortalMessageAsync"]

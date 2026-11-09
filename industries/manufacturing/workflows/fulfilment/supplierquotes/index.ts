@@ -46,7 +46,8 @@ export async function compare(ctx: Ctx<Settings>) {
   return { drafted };
 }
 
-/** Daily: for each open comparison that is due, one chaser draft per supplier who has not quoted, each send queued for approval. */
+/** Daily: for each open comparison that is due, one chaser draft per supplier who has not quoted, each send queued for approval.
+ *  A supplier whose quote is in the quote folder (without the reference in the subject, so intake missed it) is not chased. */
 export async function chase(ctx: Ctx<Settings>) {
   const days = ctx.settings.chase_after_days ?? [3, 7];
   let queued = 0;
@@ -58,8 +59,11 @@ export async function chase(ctx: Ctx<Settings>) {
     c.chase_drafts ??= {};
     for (const s of validSuppliers(c).filter((x) => !replied.has(x.email.toLowerCase()))) {
       const email = s.email.toLowerCase(), k = `${round}:${email}`;
+      const quoted = await microsoft365.quotedBy(ctx, c, email);
+      if (quoted) { ctx.log(`chase: ${c.id} ${email} has a quote in the quote folder (${quoted}), not chased`); continue; }
       if (!c.chase_drafts[k]) { c.chase_drafts[k] = await microsoft365.draftChase(ctx, c, s, round); await save(ctx, c); }
-      await ctx.queue(microsoft365.sendAct(ctx, c.chase_drafts[k], email, `chase${round}:${c.id}:${email}`, `chaser ${round} for quote comparison ${c.id} to ${email}`));
+      await ctx.queue(microsoft365.sendAct(ctx, c.chase_drafts[k], email, `chase${round}:${c.id}:${email}`,
+        `chaser ${round} for quote comparison ${c.id} to ${email}: no quote from them in the store or the quote folder`));
       queued++;
     }
     c.chases = round;

@@ -20,6 +20,7 @@ export interface StockLine {
   management_group_id?: string;
   group_name?: string;
   read: string;               // ISO time of the read
+  gone?: string;              // ISO time a complete AgriWebb read no longer listed this animal: kept, never matched
 }
 
 export interface Group { managementGroupId: string; name?: string; species?: string; type?: string }
@@ -30,7 +31,7 @@ export interface NvdRequest {
   destination?: string;
   tags: string[];             // tag numbers collected from the owner
   status: "new" | "drafted" | "needs-check";
-  lines?: { tag: string; animal_id?: string; group?: string; matched: boolean }[];
+  lines?: { tag: string; animal_id?: string; group?: string; matched: boolean; ambiguous?: boolean }[];   // ambiguous: the tag is on more than one animal
   note?: string;
 }
 

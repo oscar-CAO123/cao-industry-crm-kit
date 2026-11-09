@@ -118,6 +118,18 @@ test("check: a free date gets a hold with no guests, a reply draft in the thread
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "re-runs never queue twice");
 });
 
+test("logs: no console line carries a guest's email address, and the approval keeps it", async () => {
+  const store = new MemoryStore(), lines: string[] = [];
+  const log = (m: string) => lines.push(m);
+  await intake(context(WF, S, store, NOW, log));
+  await store.put("bookings", M1, BOOKING);
+  await check(context(WF, S, store, NOW, log));
+  assert.ok(lines.length >= 3, "the run logs its draft, its queue and its summary");
+  assert.ok(lines.every((l) => !l.includes("ari@example.com")), lines.join("\n"));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.acts[0].summary, /ari@example\.com/, "the address stays on the approval record");
+});
+
 test("approval: the reply is sent only when a person approves it, and only once", async () => {
   const store = new MemoryStore();
   await intake(context(WF, S, store, NOW, () => {}));

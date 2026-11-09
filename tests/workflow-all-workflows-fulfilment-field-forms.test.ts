@@ -101,3 +101,21 @@ test("report queues nothing until a complete status is set, and rejects a bad re
   await assert.rejects(report(context(WF, { ...S, fieldwire: { ...S.fieldwire, report_recipients: "not-an-address" } }, store, NOW, () => {})), /comma-separated email/);
   assert.equal(Object.keys(await store.list("approvals")).length, 0);
 });
+
+test("a capped run carries the forms it left out to the next run, even after they leave the 24-hour window", async () => {
+  const LATER = "cccccccc-dddd-4eee-8fff-000000000001";
+  formsOut = [
+    { id: FORM, name: "Pre-start checklist", form_template_id: TPL, form_template_form_status_id: DONE, project_id: PROJ, kind: "default", created_at: "2026-11-07T09:00:00Z", updated_at: UPDATED },
+    { id: LATER, name: "Hot works permit", form_template_id: TPL, form_template_form_status_id: DONE, project_id: PROJ, kind: "default", created_at: "2026-11-07T10:00:00Z", updated_at: "2026-11-07T13:00:00Z" },
+  ];
+  const capped = { ...S, fieldwire: { ...S.fieldwire, report_max_per_run: 1 } };
+  const store = new MemoryStore();
+  await intake(context(WF, capped, store, NOW, () => {}));
+  assert.deepEqual(await report(context(WF, capped, store, NOW, () => {})), { queued: 1 });
+  const NEXT = new Date("2026-11-09T22:00:00Z");  // both forms are now older than the 24-hour window
+  await intake(context(WF, capped, store, NEXT, () => {}));
+  assert.deepEqual(await report(context(WF, capped, store, NEXT, () => {})), { queued: 1 }, "the form the cap left behind is queued on the next run");
+  const ids = Object.values(await store.list<Approval>("approvals")).map((a) => a.acts[0].input?.params?.id).sort();
+  assert.deepEqual(ids, [FORM, LATER].sort(), "each form is queued exactly once");
+  assert.equal((await store.get<any>("forms", LATER))!.carry, undefined, "the carry marker is cleared once queued");
+});

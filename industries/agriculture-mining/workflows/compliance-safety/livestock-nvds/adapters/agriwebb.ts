@@ -21,16 +21,18 @@ export async function listGroups(ctx: Ctx<Settings>): Promise<Group[]> {
   return Array.isArray(rows) ? rows : [];
 }
 
-export async function listAnimals(ctx: Ctx<Settings>): Promise<any[]> {
+/** All animals on the farm. `complete` is false when the page cap was hit or a page came back malformed: the list is partial. */
+export async function listAnimals(ctx: Ctx<Settings>): Promise<{ animals: any[]; complete: boolean }> {
   const farmId = farmOf(ctx.settings);
   const pages = Math.min(Math.max(ctx.settings.max_pages ?? 20, 1), 50);
   const out: any[] = [];
   for (let page = 0; page < pages; page++) {
     const r = await ctx.draft<{ data?: { animals?: any[] } }>({ platform: P, op: "query.animals", summary: `read animals page ${page + 1}`,
       input: { params: { farmId, limit: PAGE, skip: page * PAGE }, select: ANIMAL_SELECT } });
-    const rows = Array.isArray(r.data?.data?.animals) ? r.data.data!.animals! : [];
+    const rows = r.data?.data?.animals;
+    if (!Array.isArray(rows)) return { animals: out, complete: false };
     out.push(...rows);
-    if (rows.length < PAGE) break;
+    if (rows.length < PAGE) return { animals: out, complete: true };
   }
-  return out;
+  return { animals: out, complete: false };
 }

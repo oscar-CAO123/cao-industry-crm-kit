@@ -72,9 +72,9 @@ const SETTINGS: any = {
     log_range: "Document log!A1", output_folder_id: "folderOut",
   },
   documents: [
-    { kind: "progress report", template_id: "tplProgress" },
-    { kind: "letter", template_id: "tplLetter" },
-    { kind: "invoice", template_id: "tplInvoice" },
+    { kind: "progress report", template_id: "tplProgress", fields: ["Client name", "Total", "Notes"] },
+    { kind: "letter", template_id: "tplLetter", fields: ["Client name", "Total", "Notes"] },
+    { kind: "invoice", template_id: "tplInvoice", fields: ["Client name", "Total", "Signatory"] },
   ],
   share_role: "reader",
 };
@@ -95,6 +95,22 @@ test("intake: only ready rows with a valid id become requests, once; an unknown 
   assert.equal((await req(store, "R-3"))?.status, "needs-person");
   assert.equal(await req(store, "R-4"), undefined, "not-ready rows are ignored");
   assert.deepEqual(await intake(ctx), { added: 0, skipped: 1 }, "re-runs add nothing new");
+});
+
+test("intake keeps only the columns the template fills: no contact details or status on the request", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx);
+  assert.deepEqual(Object.keys((await req(store, "R-1"))!.fields).sort(), ["Client name", "Notes", "Total"]);
+  for (const q of Object.values(await store.list<Request>("requests"))) {
+    assert.ok(!["Client email", "Status", "ID", "Document"].some((h) => h in q.fields), `${q.id} keeps a column its template does not fill`);
+  }
+});
+
+test("bad settings: a template with no fields list is refused before any call", async () => {
+  const store = new MemoryStore();
+  const bad = { ...SETTINGS, documents: [{ kind: "letter", template_id: "tplLetter" }] };
+  await assert.rejects(intake(context(WF, bad, store, NOW, () => {})), /fields list/);
+  assert.equal(hits.length, 0);
 });
 
 test("draft: copies each template into the output folder, fills it, logs each row, and shares nothing", async () => {

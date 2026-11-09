@@ -22,6 +22,13 @@ const STOCK: any[][] = [
   [VIN2, "", "S102", "2026-11-03"],                       // no rego yet: kept
 ];
 
+/** The rows one ListRows page returns: $top rows from $skip, as the Graph API does. */
+const page = (rows: any[][], u: URL) => {
+  const top = Number(u.searchParams.get("$top") ?? rows.length), skip = Number(u.searchParams.get("$skip") ?? 0);
+  return rows.slice(skip, skip + top).map((values) => ({ values: [values] }));
+};
+const vinAt = (i: number) => "WVWZZZ1JZXW" + String(i).padStart(6, "0");
+
 function fake(stock: any[][] = STOCK) {
   hits = []; checkRows = [];
   setTransport({
@@ -31,8 +38,8 @@ function fake(stock: any[][] = STOCK) {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
-      if (p.includes("/tables/STOCK/rows") && m === "GET") return json({ value: stock.map((values) => ({ values: [values] })) });
-      if (p.includes("/tables/CHK/rows") && m === "GET") return json({ value: checkRows.map((values) => ({ values: [values] })) });
+      if (p.includes("/tables/STOCK/rows") && m === "GET") return json({ value: page(stock, u) });
+      if (p.includes("/tables/CHK/rows") && m === "GET") return json({ value: page(checkRows, u) });
       if (p.includes("/tables/CHK/rows") && m === "POST") { checkRows.push(...body.values); return json({ index: checkRows.length - 1 }); }
       if (/\/users\/[^/]+\/messages$/.test(p) && m === "POST") return json({ id: MSG });
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
@@ -105,4 +112,23 @@ test("digest: a discharge due is reported with the searches to run", async () =>
   const html = drafts()[0].body.body.content as string;
   assert.match(html, /Discharge due \(1\)/);
   assert.match(html, new RegExp(VIN2));
+});
+
+test("register: a register and stock list past 1,000 rows are read to the end, so no vehicle is missed or added twice", async () => {
+  const stock = Array.from({ length: 1500 }, (_, i) => [vinAt(i), "", `S${i}`, "2026-11-01"]);
+  fake(stock);
+  checkRows = stock.slice(0, 1200).map((r) => ["2026-11-09", r[0], "", r[2], "To search", "", "", "from stock list"]);
+  const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
+  assert.deepEqual(await register(ctx), { added: 300 }, "only the 300 vehicles past row 1,200 are new");
+  assert.equal(checkRows.length, 1500);
+  assert.equal(new Set(checkRows.map((r) => r[1])).size, 1500, "every vehicle is on the register exactly once");
+  assert.equal(checkRows[1499][1], vinAt(1499));
+});
+
+test("register: a table past the page cap stops the run with an error and writes nothing", async () => {
+  fake(Array.from({ length: 50000 }, () => ["", "", "", ""]));
+  const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
+  await assert.rejects(register(ctx), /has more than 50000 rows/);
+  assert.equal(checkRows.length, 0);
+  assert.equal(hits.filter((h) => h.method === "POST").length, 0, "no partial write");
 });

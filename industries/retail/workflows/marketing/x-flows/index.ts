@@ -49,7 +49,7 @@ export async function goLive(ctx: Ctx<Settings>) {
   for (const r of Object.values(ready)) {
     const row = card?.flows.find((f) => f.id === r.flow_id);
     if (!row || !["draft", "manual"].includes(row.status)) continue; // already live, archived, or not in the account
-    await ctx.queue(klaviyo.goLiveAct(row.id, row.name), `Put flow "${row.name}" live, marked ready by ${r.marked_by}`);
+    await ctx.queue(klaviyo.goLiveAct(row.id, row.name, r.marked), `Put flow "${row.name}" live, marked ready by ${r.marked_by}`);
     queued++;
   }
   ctx.log(`go-live: ${queued} queued`);

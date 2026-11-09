@@ -5,15 +5,15 @@ import { type Settings, type Flag, type Product, flagKey } from "./types.ts";
 import { unleashed } from "./adapters/unleashed.ts";
 import { woocommerce } from "./adapters/woocommerce.ts";
 
-/** Raise this run's flags of one kind, keep first_seen, and resolve open flags of that kind that did not come up again. */
-async function raise(ctx: Ctx<Settings>, kind: Flag["kind"], found: Flag[]): Promise<number> {
+/** Raise this run's flags of one kind, keep first_seen, and (when the read was complete) resolve open flags of that kind that did not come up again. */
+async function raise(ctx: Ctx<Settings>, kind: Flag["kind"], found: Flag[], resolve = true): Promise<number> {
   const now = ctx.now.toISOString();
   const seen = new Set(found.map((f) => f.key));
   for (const f of found) {
     const prev = await ctx.store.get<Flag>("flags", f.key);
     await ctx.store.put("flags", f.key, { ...f, first_seen: prev?.first_seen ?? now, last_seen: now, status: "open" } satisfies Flag);
   }
-  for (const [k, f] of Object.entries(await ctx.store.list<Flag>("flags"))) {
+  if (resolve) for (const [k, f] of Object.entries(await ctx.store.list<Flag>("flags"))) {
     if (f.kind === kind && f.status === "open" && !seen.has(k)) await ctx.store.put("flags", k, { ...f, status: "resolved", last_seen: now });
   }
   return found.length;
@@ -26,8 +26,14 @@ const flag = (kind: Flag["kind"], p: Product, reason: string, message: string): 
 
 /** Every 30 minutes: product records missing a barcode, description, price or (WooCommerce) SKU. */
 export async function check(ctx: Ctx<Settings>) {
-  const products: Product[] = await unleashed.products(ctx);
-  if (ctx.settings.woocommerce) products.push(...(await woocommerce.products(ctx)));
+  const u = await unleashed.products(ctx);
+  const products: Product[] = [...u.items];
+  let partial = u.partial;
+  if (ctx.settings.woocommerce) {
+    const w = await woocommerce.products(ctx);
+    products.push(...w.items);
+    partial = partial || w.partial;
+  }
   const found: Flag[] = [];
   for (const p of products) {
     if (p.platform === "unleashed" && !p.barcode) found.push(flag("check", p, "missing-barcode", `${p.code} has no barcode`));
@@ -35,16 +41,20 @@ export async function check(ctx: Ctx<Settings>) {
     if (p.price === undefined) found.push(flag("check", p, "missing-price", `${p.code} has no price`));
     if (p.platform === "woocommerce" && !p.sku) found.push(flag("check", p, "missing-sku", `WooCommerce product ${p.guid ?? "?"} has no SKU`));
   }
-  const n = await raise(ctx, "check", found);
-  ctx.log(`check: ${n} open record gaps across ${products.length} products`);
-  return { open: n, products: products.length };
+  // A product record is whole on the page it sits on, so its flags are right; only resolving is unsafe on a partial read.
+  const n = await raise(ctx, "check", found, !partial);
+  ctx.log(`check: ${n} open record gaps across ${products.length} products${partial ? " (first page only: open flags were not resolved)" : ""}`);
+  return { open: n, products: products.length, partial };
 }
 
 /** Every two hours: products whose total on hand, across warehouses, is at or below the low-stock level. */
 export async function stock(ctx: Ctx<Settings>) {
   const low = ctx.settings.low_stock_qty ?? 5;
+  const s = await unleashed.stock(ctx);
+  // A product's rows can sit on later pages, so its total can be short: on a partial read no low-stock flag is raised or resolved.
+  if (s.partial) { ctx.log("stock: first page only, so no low-stock flags were raised or resolved"); return { low: 0, partial: true }; }
   const totals = new Map<string, number>();
-  for (const l of await unleashed.stock(ctx)) totals.set(l.code, (totals.get(l.code) ?? 0) + l.qty);
+  for (const l of s.levels) totals.set(l.code, (totals.get(l.code) ?? 0) + l.qty);
   const found: Flag[] = [];
   for (const [code, qty] of totals) {
     if (qty > low) continue;
@@ -61,7 +71,7 @@ export async function retire(ctx: Ctx<Settings>) {
   const codes = new Set((ctx.settings.retire_codes ?? []).map(String));
   if (!codes.size) return { queued: 0 };
   let queued = 0;
-  for (const p of await unleashed.products(ctx)) {
+  for (const p of (await unleashed.products(ctx)).items) {
     if (!codes.has(p.code) || !p.guid || p.obsolete) continue;
     await unleashed.queueObsolete(ctx, p);
     queued++;

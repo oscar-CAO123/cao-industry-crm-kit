@@ -3,32 +3,41 @@
 // the handover pack) belongs to the agent skill in SKILL.md.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Settings } from "./types.ts";
-import { DAY } from "./types.ts";
+import { DAY, guidOrNull } from "./types.ts";
 import { jobs, createPrestart, attachSwms, swmsList, raiseReview, openActions, queueReminder } from "./adapters/sitebook.ts";
 
-type PreStart = { checkListId: string; swmsAttached: boolean; created: string };
+type PreStart = { checkListId?: string; pending?: boolean; swmsAttached: boolean; created: string };
 
 /** Weekday mornings: a pre-start checklist for each job that has none, with the standard SWMS attached. */
 export async function prestart(ctx: Ctx<Settings>) {
   const s = ctx.settings.prestart;
   if (!s?.template_checklist_id) { ctx.log("prestart: no template set"); return { created: 0, attached: 0 }; }
-  let created = 0, attached = 0;
+  if (!s.asset_id && !s.asset_group_id) { ctx.log("prestart: no asset_id or asset_group_id set (SiteBook needs one on checklist create)"); return { created: 0, attached: 0 }; }
+  // Refuse a bad setting here, before any job is marked pending for a call that could never be made.
+  if (!guidOrNull(s.template_checklist_id) || (s.asset_id && !guidOrNull(s.asset_id)) || (s.asset_group_id && !guidOrNull(s.asset_group_id))) {
+    ctx.log("prestart: a template, asset or asset group id in settings is not a SiteBook id"); return { created: 0, attached: 0 };
+  }
+  let created = 0, attached = 0, held = 0;
   for (const j of await jobs(ctx)) {
     let rec = await ctx.store.get<PreStart>("prestart", j.id);
+    if (rec?.pending) { held++; continue; }  // a create that failed after it was sent: a person checks SiteBook before this job is retried
     if (!rec) {
-      const checkListId = await createPrestart(ctx, s.template_checklist_id, j.id, `${s.job_title_prefix ?? "Pre-start: "}${j.title}`);
+      // Marked before the call: if the create fails after SiteBook stored it, the next run does not make a second checklist.
+      await ctx.store.put("prestart", j.id, { pending: true, swmsAttached: false, created: ctx.now.toISOString() } satisfies PreStart);
+      const checkListId = await createPrestart(ctx, s.template_checklist_id, j.id, `${s.job_title_prefix ?? "Pre-start: "}${j.title}`,
+        { asset_id: s.asset_id, asset_group_id: s.asset_group_id });
       rec = { checkListId, swmsAttached: false, created: ctx.now.toISOString() };
-      await ctx.store.put("prestart", j.id, rec); // remembered at once: a re-run never makes a second checklist for the job
+      await ctx.store.put("prestart", j.id, rec);
       created++;
     }
-    if (!rec.swmsAttached && s.swms_id) {
+    if (!rec.swmsAttached && s.swms_id && rec.checkListId) {
       await attachSwms(ctx, rec.checkListId, s.swms_id);
       rec.swmsAttached = true;
       await ctx.store.put("prestart", j.id, rec);
       attached++;
     }
   }
-  ctx.log(`prestart: ${created} created, ${attached} SWMS attached`);
+  ctx.log(`prestart: ${created} created, ${attached} SWMS attached${held ? `, ${held} held for a person to check` : ""}`);
   return { created, attached };
 }
 

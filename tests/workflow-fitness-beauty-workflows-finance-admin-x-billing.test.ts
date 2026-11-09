@@ -114,3 +114,24 @@ test("reconcile closes a paid failure, notes it, and the chase then has nothing 
   assert.deepEqual(await chase(context(WF, SET, store, day1, () => {})), { queued: 0, skipped: 0 });
   assert.equal(Object.keys(await store.list("approvals")).length, 0);
 });
+
+test("overdue follows Stripe paging: a failed invoice on the second page is still found", async () => {
+  const page2 = "in_Page2Invoice01", seen: (string | null)[] = [];
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any) => {
+      const u = new URL(String(url));
+      if (u.pathname !== "/v1/invoices") return new Response("not faked: " + u.pathname, { status: 404 });
+      const after = u.searchParams.get("starting_after");
+      seen.push(after);
+      const inv = (id: string) => ({ id, object: "invoice", number: id.slice(-4), status: "open", attempted: true, attempt_count: 1,
+        amount_remaining: 1000, currency: "aud", customer_name: "Pat Doe", customer_email: "pat@example.com" });
+      const body = after === null ? { has_more: true, data: [inv(SINV)] } : { has_more: false, data: [inv(page2)] };
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    }) as any,
+  });
+  const store = new MemoryStore();
+  assert.deepEqual(await detect(context(WF, { ...SET, sources: ["stripe"] }, store, NOW, () => {})), { added: 2 });
+  assert.deepEqual(seen, [null, SINV], "the second page is requested from the last invoice id of the first");
+  assert.ok(await store.get("failures", `stripe:${page2}`), "the invoice on page two is recorded");
+});

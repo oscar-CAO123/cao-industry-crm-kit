@@ -169,3 +169,41 @@ test("deploy: every target renders every cron, with no key values", () => {
     assert.ok(!all.includes("test-token-not-real"), `${t} carries no key values`);
   }
 });
+
+test("the approval summary shows the whole caption, not the first 80 characters", async () => {
+  const store = new MemoryStore();
+  const caption = "Fresh bread at 7am. ".repeat(12) + "Last line: book your table today.";
+  await store.put("posts", "long-1", { id: "long-1", caption, image_url: PICTURE, channels: ["instagram"], status: "planned" });
+  await draft(context(WF, BOTH, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.ok(ap.summary.includes("Last line: book your table today."), "the end of the caption is in the summary");
+});
+
+test("a reused post id with new text is a new approval, never the old one", async () => {
+  const store = new MemoryStore(), ctx = () => context(WF, BOTH, store, NOW, () => {});
+  await store.put("posts", "morning-1", { id: "morning-1", caption: "Fresh bread at 7am.", image_url: PICTURE, channels: ["instagram"], status: "planned" });
+  await draft(ctx());
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, first.id, "owner", NOW);
+  await store.put("posts", "morning-1", { id: "morning-1", caption: "We are closed on Monday.", image_url: PICTURE, channels: ["instagram"], status: "planned" });
+  assert.deepEqual(await draft(ctx()), { drafted: 1, queued: 1, skipped: 0 });
+  const approvals = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(approvals.length, 2, "the new text has its own approval");
+  const fresh = approvals.find((a) => a.id !== first.id)!;
+  assert.equal(fresh.status, "pending");
+  assert.match(fresh.summary, /We are closed on Monday\./);
+});
+
+test("a reused post id with the same text that was already approved is skipped with a reason, and nothing is created", async () => {
+  const store = new MemoryStore(), ctx = () => context(WF, BOTH, store, NOW, () => {});
+  await store.put("posts", "morning-1", { id: "morning-1", caption: "Fresh bread at 7am.", image_url: PICTURE, channels: ["instagram"], status: "planned" });
+  await draft(ctx());
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, first.id, "owner", NOW);
+  const containersBefore = hits.filter((h) => h.method === "POST" && h.path.endsWith(`/${IG}/media`)).length;
+  await store.put("posts", "morning-1", { id: "morning-1", caption: "Fresh bread at 7am.", image_url: PICTURE, channels: ["instagram"], status: "planned" });
+  assert.deepEqual(await draft(ctx()), { drafted: 0, queued: 0, skipped: 1 });
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith(`/${IG}/media`)).length, containersBefore, "no new container");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "no second approval");
+  assert.match((await store.get<any>("posts", "morning-1")).reason, /already approved or rejected/);
+});

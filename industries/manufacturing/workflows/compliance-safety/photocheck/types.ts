@@ -16,7 +16,7 @@ export interface Settings {
 
 export interface Contact { name?: string; email?: string }
 export interface Check {
-  id: string; source: Platform; title: string; text?: string; contact: Contact; received: string;
+  id: string; source: Platform; title: string; contact: Contact; received: string;
   status: "new" | "logged" | "result-ready" | "queued";
   result?: { decision: Decision; note: string };
   ref?: Record<string, string>;

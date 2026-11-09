@@ -2,7 +2,7 @@
 // Field names come from the vendor's API reference (BillOfMaterials, Products, StockOnHand). The product filter
 // matches the start of a code, so the exact match is checked here. Every call goes through the SDK gate, which signs
 // each request (api-auth-id, api-auth-signature, client-type) from the UNLEASHED_* secrets.
-import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import { approvalId, type Approval, type Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type BomPart, type BomRecord, type Settings, guid, keyOf, productCode } from "../types.ts";
 
 const P = "unleashed";
@@ -53,11 +53,20 @@ export async function createBill(ctx: Ctx<Settings>, parentGuid: string, lines: 
   return guid(r.data?.Guid, "bill");
 }
 
-/** A change to a live bill. Queued for a person to approve; no cron sends it. Keyed by the change, so a re-run queues it once. */
-export function queueRevision(ctx: Ctx<Settings>, rec: BomRecord, lines: BomPart[], hash: string) {
+/** A change to a live bill. Queued for a person to approve; no cron sends it. Keyed by the change, so a re-run queues it once.
+ *  A change already approved (done) is not the same change again: if the live bill has since moved off those lines, the
+ *  same lines are queued under the next key. A pending, running, failed or declined change is reused, never queued twice. */
+export async function queueRevision(ctx: Ctx<Settings>, rec: BomRecord, lines: BomPart[], hash: string) {
   const bill = guid(rec.guid, "bill");
+  const base = `bom-rev.${rec.parent}.${hash}`;
+  let key = keyOf(base);
+  for (let n = 1; ; n++) {
+    const prev = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, key));
+    if (prev?.status !== "done") break;
+    key = keyOf(`${base}.${n}`);
+  }
   return ctx.queue({
-    platform: P, op: "docs.put_BillOfMaterials_billOfMaterialsGuid", key: keyOf(`bom-rev.${rec.parent}.${hash}`),
+    platform: P, op: "docs.put_BillOfMaterials_billOfMaterialsGuid", key,
     input: { params: { billOfMaterialsGuid: bill }, body: billBody(rec.parent_guid, lines, bill) },
     summary: `Update the bill of materials for ${rec.parent} in Unleashed to ${lines.length} components`,
   }, `Update the bill of materials for ${rec.parent} in Unleashed (${lines.length} components)`);

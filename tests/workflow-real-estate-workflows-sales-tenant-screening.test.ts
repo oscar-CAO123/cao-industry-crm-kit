@@ -4,20 +4,22 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, checkRecord, lease } from "../industries/real-estate/workflows/sales/tenant-screening/index.ts";
 import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/real-estate/workflows/sales/tenant-screening/workflow.json", "utf8")) as WorkflowRecord;
 const CO = "11111111-2222-4333-8444-555555555555", PROP = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee";
 const APP1 = "12345678-1234-4234-8234-123456789012", APP2 = "87654321-4321-4321-8321-210987654321";
-const TEN = "abcdefab-cdef-4abc-8def-abcdefabcdef";
+const TEN = "abcdefab-cdef-4abc-8def-abcdefabcdef", APP3 = "dddddddd-eeee-4fff-8000-111111111111";
+const NEXT = `https://api.re-leased.com/api/contacts?companyId=${CO}&fromId=${APP1}`;
 type Hit = { method: string; path: string; search: string; body: any; headers: Record<string, string> };
 let hits: Hit[] = [];
 let app2Email = "not-an-email";
+let pages: "one" | "two" | "endless" = "one";
 
 function fake() {
-  hits = []; app2Email = "not-an-email";
+  hits = []; app2Email = "not-an-email"; pages = "one";
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -25,10 +27,18 @@ function fake() {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, search: u.search, body, headers: init?.headers ?? {} });
       const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { "content-type": "application/json" } });
-      if (p === "/api/contacts" && m === "GET") return json({ Data: [
-        { Id: APP1, Name: "Ari Jones", Email: "ari@example.com", UpdatedDateTime: "2026-11-08T00:00:00Z" },
-        { Id: APP2, FirstName: "Bo", LastName: "Lin", Email: "not-an-email", UpdatedDateTime: "2026-11-08T01:00:00Z" },
-      ], MetaData: { NextPageUrl: null } });
+      if (p === "/api/contacts" && m === "GET") {
+        const from = u.searchParams.get("fromId");
+        if (pages === "endless") return json({ Data: [], MetaData: { NextPageUrl: NEXT } });
+        if (pages === "two") {
+          if (!from) return json({ Data: [{ Id: APP1, Name: "Ari Jones", Email: "ari@example.com", UpdatedDateTime: "2026-11-08T00:00:00Z" }], MetaData: { NextPageUrl: NEXT } });
+          return json({ Data: [{ Id: APP3, FirstName: "Cy", LastName: "Ng", Email: "cy@example.com", UpdatedDateTime: "2026-11-08T02:00:00Z" }], MetaData: { NextPageUrl: null } });
+        }
+        return json({ Data: [
+          { Id: APP1, Name: "Ari Jones", Email: "ari@example.com", UpdatedDateTime: "2026-11-08T00:00:00Z" },
+          { Id: APP2, FirstName: "Bo", LastName: "Lin", Email: "not-an-email", UpdatedDateTime: "2026-11-08T01:00:00Z" },
+        ], MetaData: { NextPageUrl: null } });
+      }
       if (p === `/api/contacts/${APP1}` && m === "GET") return json({ Data: { Id: APP1, Name: "Ari Jones", Email: "ari@example.com" } });
       if (p === `/api/contacts/${APP2}` && m === "GET") return json({ Data: { Id: APP2, Name: "Bo Lin", Email: app2Email } });
       if (p === "/api/tenancies" && m === "POST") return json({ GlobalIdentifier: TEN, Title: body?.Title }, 201);
@@ -99,12 +109,54 @@ test("approval creates the tenancy with the mapped body and the idempotency key"
   await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
 });
 
-test("bad lease dates and a bad company id are refused before anything is queued", async () => {
+test("bad lease dates are refused before anything is queued, and a bad company id stops intake", async () => {
   const store = new MemoryStore();
   await store.put("applicants", APP1, { id: APP1, name: "Ari Jones", status: "approved", received: "", lease: { start: "2027-12-31", end: "2027-01-01" } });
-  await assert.rejects(lease(context(WF, S, store, NOW, () => {})), /not a valid range/);
+  assert.deepEqual(await lease(context(WF, S, store, NOW, () => {})), { checked: 0 });
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0);
   await assert.rejects(intake(context(WF, { ...S, re_leased: { ...S.re_leased, company_id: "not-a-guid" } }, store, NOW, () => {})), /company_id is not set to a GUID/);
+});
+
+test("one applicant with bad lease dates does not stop the others from being queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("applicants", APP1, { id: APP1, name: "Ari Jones", status: "approved", received: "", lease: { start: "2027-12-31", end: "2027-01-01" } });
+  await store.put("applicants", APP2, { id: APP2, name: "Bo Lin", status: "approved", received: "", lease: { start: "2027-02-01", end: "2028-01-31" } });
+  assert.deepEqual(await lease(ctx), { checked: 1 });
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /Lease: Bo Lin/);
+});
+
+test("a rejected tenancy is not re-queued by every run; it waits for a person to approve the applicant again", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("applicants", APP1, { id: APP1, name: "Ari Jones", email: "ari@example.com", status: "approved", received: "", lease: { start: "2027-01-01", end: "2027-12-31" } });
+  await lease(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await reject(WF, store, first.id, "owner", NOW);
+  await lease(ctx);
+  assert.equal((await store.get<any>("applicants", APP1)).status, "awaiting-checks", "parked after the rejection");
+  assert.equal(Object.keys(await store.list("approvals")).length, 1, "no new approval on the run after the rejection");
+  await store.put("applicants", APP1, { ...(await store.get<any>("applicants", APP1)), status: "approved" });
+  await lease(ctx);
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1, "a new tenancy queued once the applicant is approved again");
+  assert.equal(await approve(WF, store, pending[0].id, "owner", NOW).then((a) => a.status), "done");
+  assert.equal(writes()[0].headers["Idempotency-Key"], `lease-${APP1}-1`);
+});
+
+test("intake follows every page before it moves the cursor, so a second page is not skipped", async () => {
+  pages = "two";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { added: 2 });
+  assert.ok(await store.get<any>("applicants", APP3), "the applicant on page two is kept");
+  assert.ok(await store.get<any>("state", "intake"), "cursor moved after a complete read");
+});
+
+test("intake holds its cursor when pages run past the cap, so the window is read again next run", async () => {
+  pages = "endless";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { added: 0 });
+  assert.equal(await store.get("state", "intake"), undefined, "cursor not moved");
+  assert.equal(hits.filter((h) => h.path === "/api/contacts").length, 20, "capped at 20 pages");
 });
 
 test("the approval summary and the tenancy title strip control characters from outside text", async () => {

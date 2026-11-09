@@ -126,6 +126,16 @@ test("draft copies, fills, drafts the email and logs; a bad email, missing templ
   assert.match((await get(store, "R-7"))!.reason!, /no template/);
 });
 
+test("a customer value that contains another placeholder is filled as written, and the draft is parked for a person", async () => {
+  rows[1][4] = "{{Notes}}";   // R-1's client name is the text of another field, which is filled after it in the old code
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx);
+  await draft(ctx);
+  assert.equal(docs.doc1, "Progress report for {{Notes}}. Total $1,200.00. Notes: On track.", "the value is not rewritten by a later replacement");
+  assert.equal(drafts.length, 0, "the leftover placeholder parks the record: no email draft");
+  assert.match((await get(store, "R-1"))!.reason!, /unfilled fields: \{\{Notes\}\}/);
+});
+
 test("re-runs never copy or draft twice", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await intake(ctx); await draft(ctx);

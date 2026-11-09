@@ -37,14 +37,21 @@ export async function remind(ctx: Ctx<Settings>) {
   const business = ctx.settings.business_name ?? "us";
   const due = Object.values(await ctx.store.list<Due>("due"))
     .filter((d) => { const ahead = daysUntil(d.due, t); return ahead <= c.before && ahead >= -PAST_DAYS; })
-    .sort((a, b) => a.due.localeCompare(b.due))
-    .slice(0, c.max);
-  let queued = 0, skipped = 0;
+    .sort((a, b) => a.due.localeCompare(b.due));
+  // The run's limit counts only reminders it would queue now: a job already queued, approved or rejected, or with no usable
+  // contact, keeps no place in the limit, so the jobs behind it are still reached.
+  const fresh: { d: Due; route: "sms" | "email"; phone?: string; email?: string }[] = [];
+  let skipped = 0, waiting = 0;
   for (const d of due) {
+    if (await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, reminderKey(d)))) { waiting++; continue; }
     const phone = d.contact.phone && PHONE.test(d.contact.phone) ? d.contact.phone : undefined;
     const email = d.contact.email && EMAIL.test(d.contact.email) ? d.contact.email : undefined;
     const route = c.channel === "sms" ? (phone ? "sms" : email ? "email" : undefined) : (email ? "email" : phone ? "sms" : undefined);
     if (!route) { skipped++; continue; }
+    fresh.push({ d, route, phone, email });
+  }
+  let queued = 0;
+  for (const { d, route, phone, email } of fresh.slice(0, c.max)) {
     const first = text(d.contact.name?.split(" ")[0] || "there", 40);
     const what = text(`${d.description || "your vehicle"} at ${d.address || "the job address"}`, 200);
     const summary = `Remind ${first} that the service on ${what} falls due ${d.due}. Approve to send.`;
@@ -58,7 +65,7 @@ export async function remind(ctx: Ctx<Settings>) {
     }
     queued++;
   }
-  ctx.log(`remind: ${queued} queued or already queued, ${skipped} without a usable contact`);
+  ctx.log(`remind: ${queued} queued, ${waiting} already queued, approved or rejected, ${skipped} without a usable contact`);
   return { queued, skipped };
 }
 

@@ -7,6 +7,8 @@ import * as onfleet from "./adapters/onfleet.ts";
 const DAY = 864e5, HOUR = 36e5;
 const POD = "pods", CURSOR = "cursor";
 const CHECK_CAP = 100; // tasks re-read per needs-proof run
+const REATTEMPT_WINDOW = 7 * DAY; // only a stop that failed within the last week is offered a re-attempt
+const REATTEMPT_CAP = 20; // re-attempts queued per run, newest failure first
 
 /** Every 15 minutes: completed stops since the last run go into the proof register. Read and store only. */
 export async function pods(ctx: Ctx<Settings>) {
@@ -58,11 +60,12 @@ export async function needsProof(ctx: Ctx<Settings>) {
   return { checked: waiting.length, flagged, cleared, unreadable };
 }
 
-/** Hourly: a failed stop queues a re-attempt task for approval. The approval runs the create; nothing here does. */
+/** Hourly: a recent failed stop queues a re-attempt task for approval. The approval runs the create; nothing here does. */
 export async function reattempt(ctx: Ctx<Settings>) {
   if (ctx.settings.reattempt === false) return { queued: 0, off: true };
-  const all = Object.values(await ctx.store.list<Pod>(POD)).filter((p) => p.failed);
-  let queued = 0, recorded = 0, skipped = 0;
+  const all = Object.values(await ctx.store.list<Pod>(POD)).filter((p) => p.failed)
+    .sort((a, b) => Date.parse(b.completed) - Date.parse(a.completed));
+  let queued = 0, recorded = 0, skipped = 0, stale = 0, capped = 0;
   for (const p of all) {
     if (p.status === "reattempt-created" || p.status === "reattempt-rejected") continue;
     if (p.approval) {
@@ -78,12 +81,14 @@ export async function reattempt(ctx: Ctx<Settings>) {
       }
       continue; // pending, running or failed: a person acts on it in the CRM shell
     }
+    if (!(ctx.now.getTime() - Date.parse(p.completed) <= REATTEMPT_WINDOW)) { stale++; continue; }
     if (!p.destination_id) { skipped++; ctx.log(`reattempt: ${p.short_id ?? p.task_id} has no destination id to re-attempt`); continue; }
+    if (queued >= REATTEMPT_CAP) { capped++; continue; }
     const id = await ctx.queue(onfleet.reattemptAct(p));
     await ctx.store.put(POD, p.key, { ...p, status: "reattempt-queued", approval: id } satisfies Pod);
     queued++;
   }
-  ctx.log(`reattempt: ${queued} queued for approval, ${recorded} outcomes recorded, ${skipped} skipped`);
+  ctx.log(`reattempt: ${queued} queued for approval, ${recorded} outcomes recorded, ${skipped} skipped, ${stale} failed over a week ago, ${capped} over the per-run cap`);
   return { queued, recorded, skipped };
 }
 

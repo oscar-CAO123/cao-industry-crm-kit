@@ -103,7 +103,8 @@ export async function respond(ctx: Ctx<Settings>) {
           if (await queueOnce(ctx, stripe.submitAct(d.id, note))) queued++;
         } else {
           if (!d.staged.length) { held.push(d.id); continue; }   // nothing staged yet: never submit an empty file
-          if (await queueOnce(ctx, submitAct(d.id))) queued++;
+          const note = await ctx.store.get<EvidenceNote>("evidence", d.id);
+          if (await queueOnce(ctx, submitAct(d.id, { types: d.staged, text: note?.text }))) queued++;
         }
       }
     } catch (e: any) {

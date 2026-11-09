@@ -17,9 +17,10 @@ const NOW = new Date("2026-11-08T00:00:00Z");
 type Hit = { method: string; path: string; query: string };
 let hits: Hit[] = [];
 let noteStatus = 200;
+let pageCases: any[] | undefined, morePages = false;
 
 function fake() {
-  hits = []; noteStatus = 200;
+  hits = []; noteStatus = 200; pageCases = undefined; morePages = false;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -29,8 +30,8 @@ function fake() {
       hits.push({ method: m, path: p, query });
       const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { "content-type": "application/json" } });
       if (!p.endsWith("/graphql")) return new Response("not faked: " + p, { status: 404 });
-      if (query.includes("searchCases(")) return json({ data: { searchCases: { hasNextPage: false, nextCursor: null,
-        cases: [{ caseId: CASE, caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T10:00:00Z" }] } } });
+      if (query.includes("searchCases(")) return json({ data: { searchCases: { hasNextPage: morePages, nextCursor: morePages ? "CURSOR-2" : null,
+        cases: pageCases ?? [{ caseId: CASE, caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T10:00:00Z" }] } } });
       if (query.includes("caseDetails(")) return json({ data: { caseDetails: { caseId: CASE, caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T10:00:00Z",
         individuals: [{ individualId: "IND-1", individualVerificationChecksStatus: { legalName: "PASS", dateOfBirth: "PASS", address: "PASS", governmentId: "PASS",
           pep: "NO_MATCH", sanctions: "POSSIBLE_MATCH", adverseMedia: "NO_MATCH", overall: "CONSIDER", dateVerified: null } }],
@@ -69,7 +70,7 @@ test("case-watch reads only, records each person's check state, and moves the cu
 test("open-items queues one note for approval, and a re-run queues nothing new", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await caseWatch(ctx);
-  assert.deepEqual(await openItems(ctx), { queued: 1 });
+  assert.deepEqual(await openItems(ctx), { queued: 1, failed: 0 });
   assert.equal(mutations().length, 0, "the note is queued, never written");
   await caseWatch(ctx); await openItems(ctx);
   const pending = Object.values(await store.list<any>("approvals")).filter((a) => a.status === "pending");
@@ -103,4 +104,41 @@ test("a case ID that is not a plain identifier is refused before any call", asyn
   const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
   await assert.rejects(readCase(ctx, '../x") { evil }'), /bad case id/);
   assert.equal(hits.length, 0);
+});
+
+test("case-watch reads oldest first, so a capped read leaves the cursor at the newest case it read and skips none", async () => {
+  pageCases = [
+    { caseId: "CASE-1000", caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T09:00:00Z" },
+    { caseId: CASE, caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T10:00:00Z" },
+  ];
+  morePages = true;
+  const store = new MemoryStore(), ctx = context(WF, { ...SETTINGS, first_aml: { lookback_days: 30, max_pages: 1 } }, store, NOW, () => {});
+  assert.deepEqual(await caseWatch(ctx), { read: 2 });
+  const search = hits.find((h) => h.query.includes("searchCases("))!;
+  assert.match(search.query, /sortDirection: ASCENDING/, "the search runs oldest first");
+  assert.deepEqual(await store.get("cursor", "first-aml"), { updated_after: "2026-11-07T10:00:00Z" });
+});
+
+test("a case whose open items are too long for one note is cut to the 1000-character limit and says what was left out", async () => {
+  const people = Array.from({ length: 60 }, (_, i) => ({ kind: "individual", id: `IND-${String(i).padStart(4, "0")}-LONG-IDENTIFIER`, state: "open",
+    open: ["sanctions", "pep", "adverseMedia"], waiting: [] }));
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("cases", "CASE-2001", { caseId: "CASE-2001", caseStatus: "IN_PROGRESS", lastUpdatedOn: "2026-11-07T10:00:00Z", people, open_count: 60, checked: NOW.toISOString() });
+  assert.deepEqual(await openItems(ctx), { queued: 1, failed: 0 });
+  const [ap] = Object.values(await store.list<any>("approvals"));
+  const note: string = ap.acts[0].input.params.input.note;
+  assert.ok(note.length <= 1000, `note is ${note.length} characters`);
+  assert.match(note, /and \d+ more, see the case in First AML/);
+  assert.match(note, /A person clears or escalates each item\.$/);
+});
+
+test("one case that cannot be queued is counted and does not stop the other cases", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  const open = [{ kind: "individual", id: "IND-1", state: "open", open: ["sanctions"], waiting: [] }];
+  await store.put("cases", "CASE-3001", { caseId: "bad id with spaces", caseStatus: "IN_PROGRESS", lastUpdatedOn: "", people: open, open_count: 1, checked: NOW.toISOString() });
+  await store.put("cases", "CASE-3002", { caseId: "CASE-3002", caseStatus: "IN_PROGRESS", lastUpdatedOn: "", people: open, open_count: 1, checked: NOW.toISOString() });
+  assert.deepEqual(await openItems(ctx), { queued: 1, failed: 1 });
+  const pending = Object.values(await store.list<any>("approvals"));
+  assert.equal(pending.length, 1);
+  assert.match(pending[0].acts[0].input.document, /CASE-3002/);
 });

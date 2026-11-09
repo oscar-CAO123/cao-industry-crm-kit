@@ -41,7 +41,7 @@ export async function readWaitlist(ctx: Ctx<Settings>): Promise<Entry[]> {
   return grid.slice(1)
     .map((v, i): Entry => ({
       row: i + 2, guest: str(v[0], 120), party: whole(v[1]), added: str(v[2], 40), quoted: num(v[3]), position: num(v[4]),
-      status: status(v[5]), outcome: str(v[6], 40), note: str(v[7], 300),
+      status: status(v[5]), outcome: str(v[6], 40), note: str(v[7], 50000),
     }))
     .filter((e) => e.guest !== "" || e.added !== "" || e.status !== "");
 }

@@ -22,7 +22,7 @@ export async function intake(ctx: Ctx<Settings>) {
 /** Every 15 minutes: match each bill line to a Xero item (its item code is the SKU). Anything unmatched, or priced
  *  outside the tolerance against the item's purchase price, is needs-review for a person. */
 export async function match(ctx: Ctx<Settings>) {
-  const docs = Object.values(await ctx.store.list<Doc>("documents")).filter(NEEDS_CHECK);
+  const docs = Object.values(await ctx.store.list<Doc>("documents")).filter((d) => NEEDS_CHECK(d) && !d.changed);
   if (!docs.length) return { matched: 0, needs_review: 0 };
   const byCode = new Map((await xero.items(ctx)).map((i) => [i.code.toLowerCase(), i]));
   const tol = Math.max(0, ctx.settings.price_tolerance_percent ?? 2);
@@ -46,10 +46,13 @@ export async function match(ctx: Ctx<Settings>) {
   return { matched, needs_review: review };
 }
 
-/** Hourly: queue each clean bill for authorisation, and record what the approver did with the ones already queued. */
+/** Hourly: queue each clean bill for authorisation, and record what the approver did with the ones already queued.
+ *  The authorise call authorises what Xero holds when it runs, so each clean bill is read again first: a bill whose total
+ *  or line count moved since matching is not queued, and waits for a person. */
 export async function publish(ctx: Ctx<Settings>) {
   const docs = Object.values(await ctx.store.list<Doc>("documents"));
-  let queued = 0, authorised = 0, rejected = 0;
+  let queued = 0, authorised = 0, rejected = 0, held = 0;
+  let inXero: Map<string, Doc> | undefined;
   for (const d of docs) {
     if (d.status === "queued") {
       const ap = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `authorise:${d.id}`));
@@ -58,13 +61,26 @@ export async function publish(ctx: Ctx<Settings>) {
       continue;
     }
     if (d.status !== "matched") continue;
+    inXero ??= new Map((await xero.bills(ctx)).map((b) => [b.id, b]));
+    const now = inXero.get(d.id);
+    const drift = !now ? "it is no longer a draft in Xero"
+      : now.lines.length !== d.lines.length || Math.abs(now.total - d.total) > 0.005
+        ? `Xero now has ${now.lines.length} lines and ${money(now.total)}, matched as ${d.lines.length} lines and ${money(d.total)}` : "";
+    if (drift) {
+      d.status = "needs-review";
+      d.changed = `Changed in Xero after matching: ${drift}. Check the bill before it is queued.`;
+      d.reasons = [d.changed];
+      await ctx.store.put("documents", d.id, d);
+      held++;
+      continue;
+    }
     d.approval = await ctx.queue(xero.authoriseAct(d),
       `Authorise bill ${d.number || d.id} from ${d.supplier || "the supplier"} in Xero: ${d.lines.length} lines, ${money(d.total)}`);
     d.status = "queued";
     await ctx.store.put("documents", d.id, d);
     queued++;
   }
-  ctx.log(`publish: ${queued} queued, ${authorised} authorised, ${rejected} rejected`);
+  ctx.log(`publish: ${queued} queued, ${authorised} authorised, ${rejected} rejected, ${held} held for a change in Xero`);
   return { queued, authorised, rejected };
 }
 

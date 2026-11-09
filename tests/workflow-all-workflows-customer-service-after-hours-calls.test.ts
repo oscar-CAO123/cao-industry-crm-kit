@@ -92,6 +92,36 @@ test("intake reads only after-hours incoming calls, once, and never texts anyone
   assert.equal(texts().length, 0);
 });
 
+test("JustCall: pages until a short page, so an after-hours call beyond the first 100 is seen, and the run is capped", async () => {
+  const pages: number[] = [];
+  const outgoing = (i: number) => ({ id: 20000 + i, contact_number: "+61412345680", call_date: "2026-11-07", call_time: "10:00:00", call_info: { direction: "Outgoing", notes: "" } });
+  const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+  const useFake = (full: boolean) => setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
+      if (p === "/v2.1/calls" && m === "GET") {
+        const n = Number(u.searchParams.get("page"));
+        pages.push(n);
+        if (full) return json({ data: Array.from({ length: 100 }, (_, i) => outgoing(n * 100 + i)) });
+        if (n === 1) return json({ data: Array.from({ length: 100 }, (_, i) => outgoing(i)) });
+        if (n === 2) return json({ data: [{ id: 9001, contact_number: "+61412345680", call_date: "2026-11-07", call_time: "22:00:00", call_info: { direction: "Incoming", notes: "" } }] });
+      }
+      return new Response("not faked: " + m + " " + p, { status: 404 });
+    }) as any,
+  });
+  const S1 = { ...S, call_platforms: ["justcall" as const] };
+
+  useFake(false);
+  assert.deepEqual(await intake(context(WF, S1, new MemoryStore(), NOW, () => {})), { added: 1 });
+  assert.deepEqual(pages, [1, 2], "page 2 is a short page, so the read stops there");
+
+  pages.length = 0;
+  useFake(true);
+  await intake(context(WF, S1, new MemoryStore(), NOW, () => {}));
+  assert.equal(pages.length, 10, "a full page every time stops at the cap of 10 pages");
+});
+
 test("triage flags the urgent call, drafts one caller record, and queues texts for approval only", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await intake(ctx);

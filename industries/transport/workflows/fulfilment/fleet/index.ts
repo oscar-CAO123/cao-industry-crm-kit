@@ -1,6 +1,6 @@
 // The fleet service planner's two crons. Each reads and drafts into the store and queues bookings for approval.
 // A cron never books: MakeBooking reaches the workshop, so it is a live operation and waits for a person.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { reject, type Approval, type Ctx } from "../../../../../core/workflows/runtime.ts";
 import { checkId, plannedServices, openIssues, bookingAct } from "./adapters/trackunit.ts";
 import type { FleetRecord, PlanRecord, Settings } from "./types.ts";
 
@@ -28,12 +28,20 @@ export async function status(ctx: Ctx<Settings>) {
   return { vehicles: ids.length, due, open_issues: issues };
 }
 
-/** Hourly: re-read each vehicle's due services (never from the snapshot alone), draft the plan, and queue one booking per due service. */
+/** Hourly: re-read each vehicle's due services (never from the snapshot alone), withdraw any pending booking whose service
+ *  is no longer due (already booked or completed), draft the plan, and queue one booking per due service. */
 export async function plan(ctx: Ctx<Settings>) {
   const ids = vehicles(ctx.settings);
-  let approvals = 0;
+  let approvals = 0, withdrawn = 0;
   for (const asset of ids) {
     const due = (await plannedServices(ctx, asset)).filter((p) => DUE.has(p.status));
+    const dueIds = new Set(due.map((d) => d.plannedServiceId));
+    const last = await ctx.store.get<PlanRecord>("plans", asset);
+    for (const id of last?.approvals ?? []) {
+      const ap = await ctx.store.get<Approval>("approvals", id);
+      const service = ap?.acts[0]?.input?.body?.plannedServiceId;
+      if (ap?.status === "pending" && !dueIds.has(service)) { await reject(ctx.workflow, ctx.store, id, "plan cron", ctx.now); withdrawn++; }
+    }
     const queued: string[] = [];
     for (const d of due) {
       queued.push(await ctx.queue(bookingAct(asset, d.plannedServiceId), `Book ${d.status.toLowerCase()} service for vehicle ${asset} (plan ${d.servicePlanId})`));
@@ -42,7 +50,7 @@ export async function plan(ctx: Ctx<Settings>) {
     await ctx.store.put("plans", asset, rec);
     approvals += queued.length;
   }
-  ctx.log(`plan: ${approvals} bookings waiting for approval`);
+  ctx.log(`plan: ${approvals} bookings waiting for approval, ${withdrawn} withdrawn`);
   return { approvals };
 }
 

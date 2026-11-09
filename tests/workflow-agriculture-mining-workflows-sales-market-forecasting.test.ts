@@ -85,6 +85,8 @@ test("demand signal reads only: sale lines from authorised and paid invoices (dr
   assert.ok(lines.every((l) => l.qty !== 999), "the draft invoice is not a sale");
   assert.equal(sends().length, 0);
   assert.equal(hits.filter((h) => h.method !== "GET" && !h.path.endsWith("/token")).length, 0, "no write from a read cron");
+  const [enq] = Object.values(await store.list<any>("enquiries"));
+  assert.deepEqual(Object.keys(enq).sort(), ["id", "received", "title"], "only the subject and time are kept: no sender address, no body preview");
 });
 
 test("price watch: a move past the alert level is logged to the register once a month, and not again on a re-run", async () => {

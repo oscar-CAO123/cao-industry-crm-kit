@@ -4,10 +4,10 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { dueList, remind, replies } from "../industries/automotive/workflows/fulfilment/service/index.ts";
 import { uuid } from "../industries/automotive/workflows/fulfilment/service/adapters/servicem8.ts";
-import { addMonths } from "../industries/automotive/workflows/fulfilment/service/types.ts";
+import { addMonths, fill, type Due } from "../industries/automotive/workflows/fulfilment/service/types.ts";
 import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/automotive/workflows/fulfilment/service/workflow.json", "utf8")) as WorkflowRecord;
@@ -147,4 +147,24 @@ test("bad settings stop the run, and a malformed job id is never used in a filte
   assert.equal(uuid("11111111-2222-4333-8444-555555555555' or 'x"), undefined);
   assert.equal(uuid(JOB_SOON), JOB_SOON);
   assert.equal(addMonths("2026-01-31", 1), "2026-02-28", "short months clamp to their last day");
+});
+
+test("remind: a job already queued, or with no usable contact, does not use up the run's limit", async () => {
+  const NO_CONTACT = "55555555-2222-4333-8444-555555555555";
+  const store = new MemoryStore(), ctx = context(WF, { ...S, max_per_run: 1 }, store, NOW, () => {});
+  await dueList(ctx);
+  // The oldest service of all, with no phone or email: it must not hold the one place in the run.
+  await store.put("due", NO_CONTACT, { key: NO_CONTACT, platform: "servicem8", job_uuid: NO_CONTACT, address: "9 Test St", description: "Old service",
+    completed: "2025-09-20", due: "2026-09-20", contact: {}, seen: NOW.toISOString() } satisfies Due);
+  assert.deepEqual(await remind(ctx), { queued: 1, skipped: 1 });
+  assert.ok(await store.get("approvals", approvalId(WF.id, `remind:${JOB_OVERDUE}:2026-10-01`)), "the oldest reachable job is queued");
+  // The approver rejects that reminder. It stays on record, and the next run goes on to the next job.
+  await reject(WF, store, approvalId(WF.id, `remind:${JOB_OVERDUE}:2026-10-01`), "owner", NOW);
+  assert.deepEqual(await remind(ctx), { queued: 1, skipped: 1 });
+  assert.ok(await store.get("approvals", approvalId(WF.id, `remind:${JOB_SOON}:2026-12-01`)), "the next job is queued");
+  assert.equal(sends().length, 0, "nothing sent");
+});
+
+test("fill: a name or business containing $& or $' is inserted as typed, not read as a replacement pattern", () => {
+  assert.equal(fill("Hi {first}, from {business}.", "O$&Brien", "Ace $' Motors"), "Hi O$&Brien, from Ace $' Motors.");
 });

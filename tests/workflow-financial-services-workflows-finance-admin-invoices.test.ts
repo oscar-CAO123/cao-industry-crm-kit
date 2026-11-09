@@ -96,6 +96,16 @@ test("check: flags the bill with no account code or source document, notes both,
   assert.deepEqual(await check(ctx), { checked: 0, flagged: 0 }, "an unchanged invoice is not checked again");
 });
 
+test("check: a flagged bill that is then coded and given its source document is checked again and passes", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await check(ctx);
+  assert.equal((await store.get<any>("checks", BILL_B)).verdict, "needs-review");
+  invoices[BILL_B].LineItems[0].AccountCode = "400";
+  attachments[BILL_B] = 1;
+  assert.deepEqual(await check(ctx), { checked: 1, flagged: 0 }, "only the fixed bill is checked again");
+  assert.equal((await store.get<any>("checks", BILL_B)).verdict, "passed");
+});
+
 test("payments: a passed bill due within two days is queued once; approval pays it; nothing is paid by a cron", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await check(ctx);

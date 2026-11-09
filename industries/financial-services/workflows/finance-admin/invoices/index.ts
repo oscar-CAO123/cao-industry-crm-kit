@@ -28,13 +28,17 @@ export async function check(ctx: Ctx<Settings>) {
   const known: Record<string, Check> = await ctx.store.list<Check>("checks");
   let checked = 0, flagged = 0;
   for (const [kind, inv] of [...bills.map((i) => ["bill", i] as const), ...sales.map((i) => ["sales", i] as const)]) {
-    const fingerprint = `${inv.Total ?? ""}|${inv.DueDate ?? ""}|${inv.Status}`;
+    // The attachment count and the account codes are part of the fingerprint, so fixing a bill (coding it, attaching the
+    // source document) makes it checked again instead of staying needs-review.
+    const documents = kind === "bill" ? await attachmentCount(ctx, inv.InvoiceID) : 0;
+    const codes = (inv.LineItems ?? []).map((l) => l.AccountCode ?? "");
+    const fingerprint = JSON.stringify([inv.Total ?? "", inv.DueDate ?? "", inv.Status, codes, documents]);
     if (known[inv.InvoiceID]?.fingerprint === fingerprint) continue; // checked, and nothing has changed since
     const supplier = inv.Contact?.Name ?? "";
     const dupeOf = kind === "bill" && supplier && inv.InvoiceNumber
       ? Object.values(known).find((c) => c.kind === "bill" && c.invoice !== inv.InvoiceID && c.supplier === supplier && c.number === inv.InvoiceNumber)?.invoice
       : undefined;
-    const hasDocument = kind === "bill" ? (await attachmentCount(ctx, inv.InvoiceID)) > 0 : true;
+    const hasDocument = kind === "bill" ? documents > 0 : true;
     const reasons = assess(inv, kind, ctx.settings, hasDocument, dupeOf);
     const verdict = reasons.length ? "needs-review" : "passed";
     const rec: Check = { invoice: inv.InvoiceID, kind, supplier, number: inv.InvoiceNumber, verdict, reasons, fingerprint, checked: ctx.now.toISOString() };

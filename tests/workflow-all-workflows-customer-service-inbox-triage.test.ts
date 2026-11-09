@@ -116,6 +116,35 @@ test("re-runs never double-queue or double-draft", async () => {
   assert.equal(hits.filter((h) => h.path === "/gmail/v1/users/me/drafts" && h.method === "POST").length, 1, "one Gmail draft");
 });
 
+test("mail older than the lookback window is never triaged, so no old backlog gets a reply", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, new Date("2025-11-10T06:00:00Z"), () => {});
+  assert.deepEqual(await intake(ctx), { added: 0 }, "everything in the fake inbox is two days old");
+  assert.deepEqual(await draft(ctx), { queued: 0, needs_reply: 0 });
+  assert.equal(Object.keys(await store.list("enquiries")).length, 0);
+});
+
+test("draft queues at most per_run_limit replies a run, and mail with no template never takes a slot", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...SETTINGS, per_run_limit: 1 }, store, NOW, () => {});
+  await intake(ctx);
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_reply: 1 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1);
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_reply: 1 }, "the next run takes the one still waiting");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 2);
+});
+
+test("a thread that cannot take a reply is parked for a person; the rest of the run is queued and it is still assigned", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx);
+  const sam = (await store.get<any>("enquiries", "gmail:thr1"))!;
+  await store.put("enquiries", "gmail:thr1", { ...sam, sender: { name: "Sam Lee" } });   // no valid address to reply to
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_reply: 1 }, "the Front reply still queues");
+  assert.match((await store.get<any>("enquiries", "gmail:thr1"))!.reply_error, /no valid address/);
+  assert.deepEqual(await draft(ctx), { queued: 0, needs_reply: 1 }, "a parked thread is not retried every run");
+  assert.equal(hits.filter((h) => h.path === "/gmail/v1/users/me/drafts" && h.method === "POST").length, 0);
+  assert.equal(sends().length, 0);
+  assert.deepEqual(await assign(ctx), { assigned: 3 }, "the parked thread still gets its label");
+});
+
 test("approval runs the send: a Front reply and a Gmail draft send, once each", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await intake(ctx); await draft(ctx);

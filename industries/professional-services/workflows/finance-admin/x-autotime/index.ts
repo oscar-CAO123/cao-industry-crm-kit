@@ -11,7 +11,9 @@ export async function capture(ctx: Ctx<Settings>) {
   const date = todayUtc(ctx.now);
   const entries = await dayEntries(ctx, date);
   const timer = await runningTimer(ctx);
-  await ctx.store.put("captured", safeKey(`${ctx.settings.clio_user_id}:${date}`), { at: ctx.now.toISOString(), entries, timer });
+  // Only ids, dates and flags are kept: the note text stays in Clio and never lands in the store.
+  const kept = entries.map((e) => ({ id: e.id, date: e.date, matter_id: e.matter_id, non_billable: e.non_billable, has_note: !!e.note }));
+  await ctx.store.put("captured", safeKey(`${ctx.settings.clio_user_id}:${date}`), { at: ctx.now.toISOString(), entries: kept, timer });
   let flagged = 0;
   for (const e of entries) {
     const kinds: Flag["kind"][] = [];

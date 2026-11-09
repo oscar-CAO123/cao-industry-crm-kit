@@ -46,12 +46,14 @@ export async function client(ctx: Ctx<Settings>, id: string): Promise<PartnerCli
 }
 
 /** Queue the calendar invite for one client and one agreed slot. Nothing is sent until an adviser approves it. */
-export function queueInvite(ctx: Ctx<Settings>, c: { id: string; name: string }, slot: Slot): Promise<string> {
+export function queueInvite(ctx: Ctx<Settings>, c: { id: string; name: string }, slot: Slot, round = 0): Promise<string> {
   const start = iso(slot.start), end = iso(slot.end);
   if (Date.parse(end) <= Date.parse(start)) throw new Error("hubspot: the review must end after it starts");
   const hs = ctx.settings.hubspot;
   const summary = `invite ${c.name} to a portfolio review at ${start}`;
-  return ctx.queue({ platform: P, op: OP_INVITE, key: `review:${hsId(c.id)}:${start}`, summary,
+  // A rejected invite is queued again under a new key (round + 1), so the old rejected approval does not block it.
+  const key = `review:${hsId(c.id)}:${start}${round ? `:r${round}` : ""}`;
+  return ctx.queue({ platform: P, op: OP_INVITE, key, summary,
     input: { params: { organizerUserId: hsId(hs.organizer_user_id) }, body: {
       timezone: ctx.settings.timezone,
       associations: [],

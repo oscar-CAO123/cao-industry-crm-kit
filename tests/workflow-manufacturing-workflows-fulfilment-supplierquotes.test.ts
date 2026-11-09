@@ -135,6 +135,19 @@ test("chase: due chasers are drafted and queued once; a re-run queues nothing ne
   assert.equal(sends().length, 0);
 });
 
+test("chase: a supplier who quoted without the reference in the subject is not chased, and the summary shows who has no quote", async () => {
+  const store = new MemoryStore();
+  await store.put("comparisons", CMP.id, CMP);
+  // Sam quotes in the body only: intake does not log it (no reference in the subject), but the quote folder has it.
+  replyList = [reply("m9", SAM, "Re: brackets", `Our price for ${CMP.id} is 15.00 each`)];
+  assert.deepEqual(await CRONS.intake(context(WF, SETTINGS, store, NOW, () => {})), { logged: 0 });
+  assert.deepEqual(await CRONS.chase(context(WF, SETTINGS, store, NOW, () => {})), { queued: 1 }, "only Ari is chased");
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.ok(ap.acts[0].key?.endsWith(ARI), ap.acts[0].key);
+  assert.match(ap.summary, /to ari@supplier\.example: no quote from them in the store or the quote folder/);
+  assert.equal(sends().length, 0);
+});
+
 test("approval runs the chaser send exactly once", async () => {
   const store = new MemoryStore();
   await store.put("comparisons", CMP.id, CMP);

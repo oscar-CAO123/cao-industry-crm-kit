@@ -29,6 +29,9 @@ has approved. They read and queue. Nothing is created in Re-Leased until a perso
 `needs-contact-details` means Re-Leased has no usable email or no record. Fix the contact in Re-Leased; the next `check-record` run
 picks it up again.
 
+## When a tenancy is rejected
+A rejected tenancy sends the applicant back to `awaiting-checks`. Approve the applicant again (status `approved`) to queue a new tenancy.
+
 ## Not covered yet
 Enquiries from listing sites or email, the application form, the ID, income, credit, guarantor and reference checks in the platform,
 applicant outcome emails, lease signing, bond lodgement, key handover. See `workflow.json` gaps for each.

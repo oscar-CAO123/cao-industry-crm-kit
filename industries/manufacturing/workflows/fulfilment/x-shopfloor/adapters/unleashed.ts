@@ -9,10 +9,14 @@ export const OP = {
   complete: "docs.post_Assemblies_assemblyGuid_Complete",
 } as const;
 
-/** Open builds: a read, first page only (no filters sent; paging is not built). */
-export async function listAssemblies(ctx: Ctx<Settings>): Promise<Build[]> {
-  const r = await ctx.draft<{ Items?: Build[] }>({ platform: PLATFORM, op: OP.builds, summary: "list builds" });
-  return Array.isArray(r.data?.Items) ? r.data.Items : [];
+/** Open builds: a read of the first page (no filters sent; the mapped operation has no page number, so paging is not built).
+ *  Returns how many pages the platform holds, so a caller can record when builds on later pages were not read. */
+export async function listAssemblies(ctx: Ctx<Settings>): Promise<{ builds: Build[]; pages: number }> {
+  const r = await ctx.draft<{ Items?: Build[]; Pagination?: { NumberOfPages?: number } }>({ platform: PLATFORM, op: OP.builds, summary: "list builds" });
+  return {
+    builds: Array.isArray(r.data?.Items) ? r.data.Items : [],
+    pages: Number(r.data?.Pagination?.NumberOfPages) || 1,
+  };
 }
 
 /** Stock on hand by product and warehouse: a read. */

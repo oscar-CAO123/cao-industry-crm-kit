@@ -7,11 +7,20 @@ import { safeKey } from "../../../../../core/workflows/runtime.ts";
 import { type Entry, type Settings, DONE, STATUSES, WHEN } from "./types.ts";
 import * as g from "./adapters/google-workspace.ts";
 
+/** The reasons the cron writes into a row's Note when it marks the row Check. */
+const REASON = {
+  name: "guest name is missing",
+  party: "party size must be a whole number from 1 to 100",
+  added: "added needs a date, a time and an offset, such as 2026-12-05T18:00:00+11:00",
+  status: "status must be Waiting, Ready, Seated, No show, Left or Check",
+};
+const CRON_NOTES: string[] = Object.values(REASON);
+
 /** The problem with a waitlist row, or null when it can be queued. */
 function problem(e: Entry): string | null {
-  if (!e.guest) return "guest name is missing";
-  if (e.party === null || e.party > 100) return "party size must be a whole number from 1 to 100";
-  if (!WHEN.test(e.added)) return "added needs a date, a time and an offset, such as 2026-12-05T18:00:00+11:00";
+  if (!e.guest) return REASON.name;
+  if (e.party === null || e.party > 100) return REASON.party;
+  if (!WHEN.test(e.added)) return REASON.added;
   return null;
 }
 
@@ -27,7 +36,7 @@ export async function queue(ctx: Ctx<Settings>) {
   const writes: Entry[] = [];
   for (const e of await g.readWaitlist(ctx)) {
     if (!STATUSES.includes(e.status)) {
-      writes.push({ ...e, status: "Check", position: null, quoted: null, note: "status must be Waiting, Ready, Seated, No show, Left or Check" });
+      writes.push({ ...e, status: "Check", position: null, quoted: null, note: REASON.status });
       counts.check++;
       continue;
     }
@@ -43,7 +52,9 @@ export async function queue(ctx: Ctx<Settings>) {
   waiting.sort((a, b) => Date.parse(a.added) - Date.parse(b.added) || a.row - b.row);
   waiting.forEach((e, i) => {
     const position = i + 1, quoted = i * per;
-    if (e.position !== position || e.quoted !== quoted || e.note !== "") { writes.push({ ...e, position, quoted, note: "" }); counts.positioned++; }
+    // Only the cron's own Check reasons are cleared: a note the host typed on the row stays as it is.
+    const note = CRON_NOTES.includes(e.note) ? "" : e.note;
+    if (e.position !== position || e.quoted !== quoted || note !== e.note) { writes.push({ ...e, position, quoted, note }); counts.positioned++; }
   });
   for (const w of writes) await g.writeEntry(ctx, w);
   ctx.log(`queue: ${counts.positioned} positioned, ${counts.check} to check`);

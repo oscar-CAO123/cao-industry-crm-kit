@@ -37,7 +37,8 @@
   "Locate client data, verify identity (KYC), prepare for signature, send for signature and submit to a lender or provider are judgment or platform steps the evidence does not map. They stay with the adviser.",
   "Uploaded files on forms (fileUploadAnswers) are not read. Only text answers are.",
   "Google Forms reads are paged up to 1,000 responses per form per run. A form with more responses needs a cursor added in the adapter.",
-  "Every adapter is docs-only until a Workspace test account proves the Forms, Gmail draft and send calls end to end."
+  "Every adapter is docs-only until a Workspace test account proves the Forms, Gmail draft and send calls end to end.",
+  "A queued chase is approved on the missing fields seen when it was queued. If the client answers before the approval, the chase still goes out. Needs a runtime step that re-checks the submission before a live operation runs (core/workflows/runtime.ts)."
  ],
  "evidence": {
   "calls": "4 financial services calls read for this workflow (3 describe the process); Smokeball is named once",

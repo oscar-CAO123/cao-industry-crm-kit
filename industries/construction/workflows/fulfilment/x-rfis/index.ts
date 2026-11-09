@@ -31,29 +31,35 @@ export async function intake(ctx: Ctx<Settings>) {
 export async function draft(ctx: Ctx<Settings>) {
   const s = ctx.settings.fieldwire;
   const todo = Object.values(await ctx.store.list<QuestionRow>("questions"))
-    .filter((q) => q.status === "new" || q.status === "drafted" || q.status === "needs-assignee");
+    .filter((q) => q.status === "new" || q.status === "drafted" || q.status === "needs-assignee" || q.status === "needs-person");
   let created = 0, queued = 0, parked = 0;
   for (const q of todo) {
-    if (!q.rfi_id) {
-      q.rfi_id = await fw.createRfiDraft(ctx, q.project, q.name);
-      await ctx.store.put("questions", q.id, q);     // remember the RFI at once: a rerun never creates a second one
-      created++;
+    // One question's failure parks that question with its reason; the others still run in this pass.
+    try {
+      if (!q.rfi_id) {
+        q.rfi_id = await fw.createRfiDraft(ctx, q.project, q.name);
+        await ctx.store.put("questions", q.id, q);     // remember the RFI at once: a rerun never creates a second one
+        created++;
+      }
+      if (!q.question_set) {
+        await fw.setQuestion(ctx, q.project, q.rfi_id, q.question);
+        q.question_set = true;
+      }
+      const assignee = q.assignee_user_id ?? s?.designer_user_id;
+      if (!assignee) {
+        q.status = "needs-assignee"; q.reason = "no designer named and no default designer_user_id in settings";
+        await ctx.store.put("questions", q.id, q); parked++;
+        continue;
+      }
+      const due = q.due_date ?? ymd(new Date(ctx.now.getTime() + (s?.default_due_days ?? 7) * DAY));
+      await fw.queueRfiOpen(ctx, { project: q.project, id: q.rfi_id, name: q.name }, assignee, due, q.message ?? "Please answer this RFI in Fieldwire.");
+      q.status = "queued"; q.reason = undefined;
+      await ctx.store.put("questions", q.id, q);
+      queued++;
+    } catch (e: any) {
+      q.status = "needs-person"; q.reason = String(e?.message ?? e).slice(0, 240);
+      await ctx.store.put("questions", q.id, q); parked++;   // the RFI id is saved already, so a retry never makes a second RFI
     }
-    if (!q.question_set) {
-      await fw.setQuestion(ctx, q.project, q.rfi_id, q.question);
-      q.question_set = true;
-    }
-    const assignee = q.assignee_user_id ?? s?.designer_user_id;
-    if (!assignee) {
-      q.status = "needs-assignee"; q.reason = "no designer named and no default designer_user_id in settings";
-      await ctx.store.put("questions", q.id, q); parked++;
-      continue;
-    }
-    const due = q.due_date ?? ymd(new Date(ctx.now.getTime() + (s?.default_due_days ?? 7) * DAY));
-    await fw.queueRfiOpen(ctx, { project: q.project, id: q.rfi_id, name: q.name }, assignee, due, q.message ?? "Please answer this RFI in Fieldwire.");
-    q.status = "queued"; q.reason = undefined;
-    await ctx.store.put("questions", q.id, q);
-    queued++;
   }
   ctx.log(`draft: ${created} RFI drafts, ${queued} queued to open, ${parked} need an assignee`);
   return { created, queued, needs_assignee: parked };

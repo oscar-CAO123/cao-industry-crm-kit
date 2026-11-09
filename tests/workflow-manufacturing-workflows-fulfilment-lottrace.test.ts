@@ -10,7 +10,7 @@ import fs from "node:fs";
 
 const DIR = "industries/manufacturing/workflows/fulfilment/lottrace";
 const WF = JSON.parse(fs.readFileSync(`${DIR}/workflow.json`, "utf8")) as WorkflowRecord;
-const S: any = { business_name: "Test Fabrication", quarantine_warehouse: "QUAR", warehouse_codes: ["MAIN"] };
+const S: any = { business_name: "Test Fabrication", quarantine_warehouse: "QUAR", warehouse_codes: ["MAIN"], lot_selection_confirmed: true };
 const NOW = new Date("2026-11-09T00:00:00Z");
 const BATCH = "11111111-2222-4333-8444-555555555555", PROD = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee";
 // Test values only. The real keys come from the client's secret store.
@@ -125,6 +125,15 @@ test("quarantine queues one transfer for approval, never runs it, and never queu
   assert.equal(apps[0].acts[0].input!.body.DestinationWarehouse.WarehouseCode, "QUAR");
   assert.equal(apps[0].summary, "Move 10 of PLATE-5MM (batch HT-0412) from MAIN to QUAR in Unleashed");
   assert.equal(hits.length, 0, "nothing sent by a cron");
+});
+
+test("no hold is queued until lot selection is confirmed in settings", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...S, lot_selection_confirmed: false }, store, NOW, () => {});
+  await store.put("holds", BATCH, hold());
+  assert.deepEqual(await quarantine(ctx), { queued: 0, skipped: 1 });
+  assert.equal(Object.keys(await store.list("approvals")).length, 0, "a transfer that may not move the named batch is never queued");
+  assert.equal((await store.get<any>("holds", BATCH)).queued, undefined, "the hold waits for confirmation");
+  assert.equal(hits.length, 0);
 });
 
 test("a hold that fails validation is skipped and never queued", async () => {

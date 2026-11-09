@@ -18,27 +18,34 @@ export function dueOf(v: string): string {
   return "";
 }
 
-/** Every 30 minutes: read regulator notices that arrived in the compliance mailbox and store the new ones. Read only. */
+/** Every 30 minutes: read regulator notices that arrived in the compliance mailbox and store the new ones. Read only.
+ *  The notice rules are matched against the title and body preview here; the preview itself is not stored. */
 export async function intake(ctx: Ctx<Settings>) {
   let added = 0;
   for (const n of await notices(ctx)) {
     if (await ctx.store.get("notices", n.id)) continue;
-    await ctx.store.put("notices", n.id, { ...n, status: "new" } satisfies Notice);
+    const { text, ...kept } = n;
+    const rule = (ctx.settings.notice_rules ?? []).find((r) => r.match && `${n.title} ${text}`.toLowerCase().includes(r.match.toLowerCase()));
+    await ctx.store.put("notices", n.id, { ...kept, status: "new", due_days: rule?.due_days } satisfies Notice);
     added++;
   }
   ctx.log(`intake: ${added} new notices`);
   return { added };
 }
 
-/** Hourly: log each new notice in the lodgement register, draft an internal note to the owner, and queue that note's send. */
+/** Hourly: log each new notice in the lodgement register, draft an internal note to the owner, and queue that note's send.
+ *  The register row is written once: a notice whose note or queue step fails is retried without a second row. */
 export async function register(ctx: Ctx<Settings>) {
   const todo = Object.values(await ctx.store.list<Notice>("notices")).filter((n) => n.status === "new");
   let logged = 0;
   for (const n of todo) {
-    const text = `${n.title} ${n.text ?? ""}`.toLowerCase();
-    const rule = (ctx.settings.notice_rules ?? []).find((r) => r.match && text.includes(r.match.toLowerCase()));
-    const rec: Notice = { ...n, due: rule ? day(new Date(ctx.now.getTime() + rule.due_days * DAY)) : "", registered: ctx.now.toISOString() };
-    await addRegisterRow(ctx, rec);
+    const written = await ctx.store.get<{ due: string }>("register-rows", n.id);
+    const due = written ? written.due : n.due_days === undefined ? "" : day(new Date(ctx.now.getTime() + n.due_days * DAY));
+    const rec: Notice = { ...n, due, registered: ctx.now.toISOString() };
+    if (!written) {
+      await addRegisterRow(ctx, rec);
+      await ctx.store.put("register-rows", n.id, { due, at: ctx.now.toISOString() });
+    }
     const d = await ownerDraft(ctx, `Regulator notice: ${n.title}`, noticeHtml(rec, ctx.settings.business_name ?? "the business"));
     const summary = `Send to ${ctx.settings.owner_email}: regulator notice "${n.title}"${rec.due ? `, due ${rec.due}` : ", no due date set"}`;
     await ctx.queue({ ...d.act, key: `notice:${n.id}`, summary }, summary);

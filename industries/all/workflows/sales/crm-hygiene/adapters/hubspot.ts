@@ -3,7 +3,8 @@
 // GET /crm/v3/objects/contacts/{contactId} (properties), POST /crm/v3/objects/contacts/batch/update (inputs[].id,
 // inputs[].properties), POST /crm/v3/objects/contacts/merge (primaryObjectId, objectIdToMerge).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Adapter, type Contact, type Finding, type Settings, ID, tidy } from "../types.ts";
+import { ApiError } from "../../../../../../core/lib/http.ts";
+import { type Adapter, type Contact, type Finding, type Settings, ID, norm, tidy, valid } from "../types.ts";
 
 const H = "hubspot" as const;
 const PAGE = 100;
@@ -11,6 +12,19 @@ const SEARCH = "crm-contacts-3.post-/crm/v3/objects/contacts/search_doSearch";
 const GET = "crm-contacts-3.get-/crm/v3/objects/contacts/{contactId}_getById";
 const BATCH_UPDATE = "crm-contacts-3.post-/crm/v3/objects/contacts/batch/update_update";
 const MERGE = "crm-contacts-3.post-/crm/v3/objects/contacts/merge_merge";
+
+/** The valid address a contact holds, normalised. undefined when the contact is gone (a merged or deleted record). */
+async function currentEmails(ctx: Ctx<Settings>, id: string): Promise<string[] | undefined> {
+  try {
+    const r = await ctx.draft<any>({ platform: H, op: GET, summary: `re-read contact ${id} before merging`,
+      input: { params: { contactId: id, properties: ["email"] } } });
+    const e = typeof r.data?.properties?.email === "string" ? norm(r.data.properties.email) : "";
+    return valid(e) ? [e] : [];
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return undefined;
+    throw err;
+  }
+}
 
 export const hubspot: Adapter = {
   id: H,
@@ -27,8 +41,11 @@ export const hubspot: Adapter = {
     return { items, next: next ? String(next) : undefined };
   },
 
-  async queueMerge(ctx: Ctx<Settings>, f: Finding, key: string) {
+  async queueMerge(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string | undefined> {
     if (!ID.test(f.id) || !f.with || !ID.test(f.with)) throw new Error("crm-hygiene: merge needs two plain record ids");
+    // Re-read both records: the scan may be days old. The merge is queued only while they still share an address.
+    const a = await currentEmails(ctx, f.id), b = await currentEmails(ctx, f.with);
+    if (!a || !b || !a.some((e) => b.includes(e))) return undefined;
     return ctx.queue({ platform: H, op: MERGE, key, summary: f.summary,
       input: { body: { primaryObjectId: f.with, objectIdToMerge: f.id } } }, f.summary);
   },

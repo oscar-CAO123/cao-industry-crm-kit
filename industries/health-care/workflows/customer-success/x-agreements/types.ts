@@ -8,7 +8,10 @@ export interface Settings {
 }
 
 export interface Agreement {
-  key: string; patient_id: string; template_id: string; form_id: string; created: string;
+  key: string; patient_id: string; template_id: string;
+  approval: string;                              // the approval that creates the form; no form exists until a person approves it
+  form_id?: string;                              // set once the approved creation has run
+  created: string;                               // when the form was created (the approval's decision), else when it was queued
   expiry_queued?: string; filed?: string;
 }
 

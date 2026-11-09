@@ -5,17 +5,23 @@ import type { Commission, Settings } from "./types.ts";
 import { checkSettings, closedPeriod, rateFor, money2 } from "./types.ts";
 import { paidSales, payRunFor, enterOnPayslip } from "./adapters/xero.ts";
 
+/** Once the pay post for a period is queued for approval, that period's figures and payslips are fixed: the approver sees
+ *  exactly the total that was queued. Only queue-post sets this. */
+const postQueued = async (ctx: Ctx<Settings>, period: string) => Boolean(await ctx.store.get("commission-posts", period));
+
 /** Hourly: last month's commission for each rep, from paid sales invoices dated in that month. */
 export async function figures(ctx: Ctx<Settings>) {
   checkSettings(ctx.settings);
   const p = closedPeriod(ctx.now);
+  if (await postQueued(ctx, p.period)) { ctx.log(`figures ${p.period}: the pay post is queued for approval, figures are fixed`); return { locked: true }; }
   const sales = await paidSales(ctx, p);
   const reps = ctx.settings.reps;
   const totals = new Map(reps.map((r) => [r.employee_id.toLowerCase(), { ex: 0, ids: [] as string[] }]));
   let unmatched = 0;
   for (const s of sales) {
-    const rep = reps.find((r) => s.reference.toLowerCase().includes(r.match.toLowerCase()));
-    if (!rep) { unmatched++; continue; }
+    const matches = reps.filter((r) => s.reference.toLowerCase().includes(r.match.toLowerCase()));
+    if (matches.length !== 1) { unmatched++; continue; }   // no rep, or two reps: a person sorts it out, never a guess
+    const rep = matches[0];
     const t = totals.get(rep.employee_id.toLowerCase())!;
     t.ex = money2(t.ex + s.ex_gst);
     t.ids.push(s.id);
@@ -33,7 +39,7 @@ export async function figures(ctx: Ctx<Settings>) {
     await ctx.store.put("commission", key, { key, period: p.period, employee_id: id, rep: rep.name, sales_ex_gst: t.ex, rate, amount, invoices: t.ids, status } satisfies Commission);
     if (amount > 0) rows++;
   }
-  ctx.log(`figures ${p.period}: ${sales.length} paid sales, ${unmatched} with no rep match, ${rows} commission rows`);
+  ctx.log(`figures ${p.period}: ${sales.length} paid sales, ${unmatched} with no single rep match, ${rows} commission rows`);
   return { sales: sales.length, unmatched, rows };
 }
 
@@ -41,6 +47,7 @@ export async function figures(ctx: Ctx<Settings>) {
 export async function draftPay(ctx: Ctx<Settings>) {
   checkSettings(ctx.settings);
   const p = closedPeriod(ctx.now);
+  if (await postQueued(ctx, p.period)) { ctx.log(`draft-pay ${p.period}: the pay post is queued for approval, nothing entered`); return { entered: 0, locked: true }; }
   const todo = Object.values(await ctx.store.list<Commission>("commission")).filter((r) => r.period === p.period && r.status === "calculated");
   if (!todo.length) return { entered: 0 };
   const run = await payRunFor(ctx, p, true);
@@ -73,6 +80,7 @@ export async function queuePost(ctx: Ctx<Settings>) {
   const approval = await ctx.queue({ platform: "xero", op: "payroll-au.updatePayRun", key: `post:${runId}`, summary: `post pay run ${p.period}`,
     input: { params: { PayRunID: runId }, body: [{ PayRunStatus: "POSTED" }] } },
     `Post the ${p.period} pay run in Xero with ${entered.length} commission lines totalling $${total.toFixed(2)}`);
+  await ctx.store.put("commission-posts", p.period, { approval, pay_run: runId, lines: entered.length, total, queued: ctx.now.toISOString() });
   return { queued: 1, approval };
 }
 

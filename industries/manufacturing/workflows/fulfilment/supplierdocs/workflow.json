@@ -37,6 +37,7 @@
   "Acumatica and PrintIQ, which the calls name for publishing and for supplier invoices against purchase orders: neither is in core/sdk/platforms.",
   "Microsoft 365 spreadsheet route (an Excel table as the register and the SKU list): the kit has the platform, but this build adds only the Xero adapter.",
   "Attaching the supplier PDF to the Xero bill: the attachment endpoint takes raw file bytes, and the SDK sends JSON bodies only. Needs a runtime change in core/, so it is not built.",
+  "A bill changed in Xero after matching is held (needs-review, with the change noted) and is not matched again. No command clears that hold yet: a person must clear the stored change before the bill can be queued. Needs a runtime command in core/.",
   "Matching a bill to a purchase order before it is accepted: not built.",
   "Units of measure, pack sizes and conversions: none of the evidence covers them, so a bill line is taken as billed.",
   "Reading the supplier PDF for lines the bill does not carry (scanned invoices): a skill step, described in SKILL.md.",

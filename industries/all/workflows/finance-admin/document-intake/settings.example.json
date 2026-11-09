@@ -10,6 +10,6 @@
   {"match": "claim", "label": "Claim", "folder": "/Contracts/Claims"}
  ],
  "checklist": [
-  {"code": "liability", "label": "Public liability certificate", "match": "liability", "within_days": 365}
+  {"code": "liability", "label": "Public liability certificate", "match": "liability", "within_days": 365, "folder": "/Compliance/Certificates"}
  ]
 }

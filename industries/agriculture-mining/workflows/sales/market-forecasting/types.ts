@@ -20,7 +20,8 @@ export interface Settings {
 }
 
 export interface SaleLine { id: string; date: string; code: string; name: string; qty: number; unit: number; buyer: string }
-export interface Enquiry { id: string; title: string; from: string; received: string; preview: string }
+/** A buyer enquiry: the subject and the time only. The sender address and the body are never stored. */
+export interface Enquiry { id: string; title: string; received: string }
 export interface Item { code: string; name: string; price: number }
 /** One comparison of a list price against the last invoiced price for the same item. */
 export interface PriceCheck { code: string; name: string; last: number; list: number; pct: number; checked: string }

@@ -170,3 +170,19 @@ test("a text progress check goes out as an SMS to an Australian mobile when the 
   assert.equal(ap!.acts[0].op, "messaging-api.send_sms");
   assert.equal(ap!.acts[0].input.body.to, "+61412345678");
 });
+
+test("an owner update subject is one line even when the tenant's job title has line breaks", async () => {
+  jobDesc = "Hot water\r\nBcc: someone@example.com\nleaking";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  jobStatus = "Work Order";
+  await dispatch(ctx);
+  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  await followUp(ctx);
+  jobStatus = "Completed";
+  assert.deepEqual(await followUp(ctx), { queued: 1 });
+  const ownerAp = await store.get<Approval>("approvals", approvalId(WF.id, `owner-update:${JOB}`));
+  const subject: string = ownerAp!.acts[0].input.body.subject;
+  assert.ok(!/[\r\n]/.test(subject), "no line break in the subject");
+  assert.equal(subject, "Maintenance complete: Hot water Bcc: someone@example.com leaking");
+});

@@ -43,9 +43,9 @@ export const google = {
     const done = items.filter((t) => t?.status === "completed").length;
     return { done, open: items.length - done };
   },
-  /** A plain-text email kept as a Gmail draft. Nothing leaves the mailbox. */
-  async draft(ctx: Ctx<Settings>, to: string, subject: string, text: string): Promise<string> {
-    const r = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: `draft email to ${to}: ${clean(subject, 80)}`,
+  /** A plain-text email kept as a Gmail draft. Nothing leaves the mailbox. The run log names the client, never the address. */
+  async draft(ctx: Ctx<Settings>, to: string, subject: string, text: string, client: string): Promise<string> {
+    const r = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: `draft email for client ${clean(client, 61)}: ${clean(subject, 80)}`,
       input: { params: { userId: ME }, body: { message: { raw: mime(to, subject, text) } } } });
     return need(r.data?.id, GID, "draft");
   },

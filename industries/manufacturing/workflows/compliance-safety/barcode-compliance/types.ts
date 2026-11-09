@@ -32,6 +32,7 @@ export interface Fix {
   product: string;      // the product guid on the platform
   barcode: string;      // the corrected GTIN, digits only
   approval?: string;    // set once the update is queued, so a re-run never reads or queues it again
+  error?: string;       // why the last attempt failed (for example the product could not be read); cleared on success
 }
 
 export const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

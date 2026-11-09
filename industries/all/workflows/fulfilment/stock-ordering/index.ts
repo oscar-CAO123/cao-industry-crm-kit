@@ -2,6 +2,7 @@
 // after a person approves its authorisation in the CRM shell.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { type Settings, type Stock, type Reorder, checkRules, day, keyOf, money, str } from "./types.ts";
+import { type Approval, approvalId } from "../../../../../core/workflows/runtime.ts";
 import { readItems, createDraftPo, authoriseAct, readPo } from "./adapters/xero.ts";
 
 const DAY = 864e5;
@@ -32,8 +33,19 @@ export async function reorderDraft(ctx: Ctx<Settings>) {
     return ctx.queue(authoriseAct(o.po_id, summary), summary);
   };
   // Re-queue any order still waiting; queue() returns the existing approval, so this never doubles up.
+  // A rejected authorisation closes its order, so the item can be drafted again (the Xero draft stays unauthorised).
   const all = Object.values(await ctx.store.list<Reorder>("reorders"));
-  for (const o of all) if (o.stage === "awaiting-approval") await authorise(o);
+  for (const o of all) {
+    if (o.stage !== "awaiting-approval") continue;
+    const ap = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `authorise:${o.po_id}`));
+    if (ap?.status === "rejected") {
+      o.stage = "closed"; o.checked = ctx.now.toISOString();
+      await ctx.store.put("reorders", o.key, o);
+      ctx.log(`reorder-draft: ${o.code} authorisation rejected, order closed`);
+      continue;
+    }
+    await authorise(o);
+  }
   const open = all.filter((o) => o.stage !== "closed");
   let drafted = 0;
   for (const r of rules) {

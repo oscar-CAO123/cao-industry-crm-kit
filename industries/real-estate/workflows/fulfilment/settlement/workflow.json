@@ -20,7 +20,7 @@
   {"name": "reminders", "schedule": "0 22 * * *", "entry": "reminders", "summary": "Draft one reminder per upcoming settlement event (22:00 UTC is 8 or 9 am in eastern Australia). Does nothing until the reminder settings are set."}
  ],
  "draft_ops": {
-  "smokeball": ["GetMatters", "GetEvents", "CreateEvent", "CreateReminder"]
+  "smokeball": ["GetMatters", "GetEvents", "GetEventById", "CreateEvent", "CreateReminder"]
  },
  "live_ops": {
   "smokeball": ["UpdateEvent"]

@@ -1,5 +1,6 @@
 {
  "business_name": "Example Fabrication",
  "quarantine_warehouse": "QUAR",
- "warehouse_codes": ["MAIN"]
+ "warehouse_codes": ["MAIN"],
+ "lot_selection_confirmed": false
 }

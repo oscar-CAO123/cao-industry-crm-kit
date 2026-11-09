@@ -9,10 +9,11 @@ import { prestart, swmsReview, reminders, CRONS } from "../industries/constructi
 
 const WF = JSON.parse(fs.readFileSync("industries/construction/workflows/compliance-safety/safety/workflow.json", "utf8")) as WorkflowRecord;
 const TPL = "11111111-1111-4111-8111-111111111111", SWMS = "22222222-2222-4222-8222-222222222222", JOB = "33333333-3333-4333-8333-333333333333";
+const ASSET = "77777777-7777-4777-8777-777777777777";
 const CHK = "44444444-4444-4444-8444-444444444444", ACT = "55555555-5555-4555-8555-555555555555", MAILTPL = "66666666-6666-4666-8666-666666666666";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const NOW = new Date("2026-11-09T00:00:00Z");
-const S: any = { business_name: "Test Civil", prestart: { template_checklist_id: TPL, swms_id: SWMS, job_title_prefix: "Pre-start: " },
+const S: any = { business_name: "Test Civil", prestart: { template_checklist_id: TPL, swms_id: SWMS, job_title_prefix: "Pre-start: ", asset_id: ASSET },
   swms_review_days: 90, reminder_days: 2, reminder_template_id: MAILTPL };
 
 type Hit = { method: string; path: string; body: any };
@@ -66,7 +67,7 @@ test("pre-start: one checklist per job with the SWMS attached, and nothing repea
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   assert.deepEqual(await prestart(ctx), { created: 1, attached: 1 });
   const create = hits.find((h) => h.path === "/v1/checklists" && h.method === "POST")!.body;
-  assert.deepEqual(create, { CheckListId: TPL, JobId: JOB, Title: "Pre-start: Level 3 fit-out" });
+  assert.deepEqual(create, { CheckListId: TPL, JobId: JOB, Title: "Pre-start: Level 3 fit-out", AssetId: ASSET });
   assert.deepEqual(hits.find((h) => h.path.endsWith("/swms"))!.body, { SwmsId: SWMS });
   hits = [];
   assert.deepEqual(await prestart(ctx), { created: 0, attached: 0 });
@@ -98,4 +99,40 @@ test("reminders: queued for approval, never sent by the cron, and approval sends
   assert.deepEqual(emails()[0].body, { EmailTemplateId: MAILTPL });
   assert.equal(emails()[0].path, `/v1/actions/${ACT}/email`);
   await assert.rejects(approve(WF, store, aps[0].id, "owner", NOW), /already done/);
+});
+
+test("pre-start: no checklist is made until an asset is set, and the set asset goes on the create", async () => {
+  const store = new MemoryStore();
+  const noAsset: any = { ...S, prestart: { ...S.prestart, asset_id: undefined } };
+  assert.deepEqual(await prestart(context(WF, noAsset, store, NOW, () => {})), { created: 0, attached: 0 });
+  assert.equal(hits.filter((h) => h.method === "POST").length, 0, "nothing sent without an asset");
+  assert.deepEqual(await prestart(context(WF, S, store, NOW, () => {})), { created: 1, attached: 1 });
+  assert.equal(hits.find((h) => h.path === "/v1/checklists" && h.method === "POST")!.body.AssetId, ASSET);
+});
+
+test("pre-start: a create that returns no checklist id is held, and the next run makes no second checklist", async () => {
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
+      hits.push({ method: m, path: p, body: init?.body ? JSON.parse(init.body) : undefined });
+      const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+      if (p === "/v1/jobs") return json({ jobs: [{ JobId: JOB, Title: "Level 3 fit-out" }] });
+      if (p === "/v1/checklists" && m === "POST") return json({ checkLists: [] });
+      return new Response("not faked: " + p, { status: 404 });
+    }) as any,
+  });
+  const store = new MemoryStore();
+  await assert.rejects(prestart(context(WF, S, store, NOW, () => {})), /bad id/);
+  hits = [];
+  assert.deepEqual(await prestart(context(WF, S, store, NOW, () => {})), { created: 0, attached: 0 });
+  assert.equal(hits.filter((h) => h.method === "POST").length, 0, "the held job is not created again");
+});
+
+test("pre-start: a template id that is not a SiteBook id is refused before any job is marked", async () => {
+  const store = new MemoryStore();
+  const bad: any = { ...S, prestart: { ...S.prestart, template_checklist_id: "not-a-guid" } };
+  assert.deepEqual(await prestart(context(WF, bad, store, NOW, () => {})), { created: 0, attached: 0 });
+  assert.equal(hits.length, 0);
+  assert.equal(Object.keys(await store.list("prestart")).length, 0);
 });

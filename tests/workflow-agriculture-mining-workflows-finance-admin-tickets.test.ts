@@ -63,6 +63,18 @@ test("runtime: the SDK gate still blocks writes when the deploy does not allow t
   assert.equal(rowsTo("Tickets").length, 0);
 });
 
+test("intake refuses a mail folder that is a path segment, before any request is made", async () => {
+  const store = new MemoryStore();
+  for (const folder of ["..", "a.b", "inbox/../drafts"]) {
+    const bad = { ...S, microsoft_365: { ...S.microsoft_365, folder } };
+    await assert.rejects(intake(context(WF, bad, store, NOW, () => {})), /mail folder/);
+  }
+  assert.equal(hits.length, 0, "no folder value reaches Graph");
+  const ids = { ...S, microsoft_365: { ...S.microsoft_365, folder: "AAMkADFolderId=" } };
+  assert.deepEqual(await intake(context(WF, ids, store, NOW, () => {})), { added: 2 });
+  assert.ok(decodeURIComponent(hits.find((h) => h.method === "GET")!.path).endsWith("/mailFolders/AAMkADFolderId=/messages"));
+});
+
 test("intake turns each docket email into one new ticket, never twice", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   assert.deepEqual(await intake(ctx), { added: 2 });

@@ -108,6 +108,18 @@ test("a lost hand-off without a lost reason is held for a person and not queued"
   assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 0);
 });
 
+test("a hand-off with a malformed id is held for a person and does not stop the later hand-offs", async () => {
+  const store = new MemoryStore();
+  await store.put("handoffs", "a-bad", handoff({ id: "a-bad", to_user_id: "../../etc" }));
+  await store.put("handoffs", "b-good", handoff({ id: "b-good" }));
+  const r = await handOff(context(WF, SETTINGS, store, NOW, () => {}));
+  assert.deepEqual(r, { drafted: 1, queued: 0 }, "the good hand-off still runs");
+  assert.equal((await store.get<any>("handoffs", "a-bad")).status, "needs-check");
+  assert.equal((await store.get<any>("handoffs", "b-good")).status, "drafted");
+  assert.ok(hits.some((h) => h.method === "POST" && h.path === `/contacts/${C}/notes`), "the good hand-off wrote its note");
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path === `/contacts/${C}/notes`).length, 1, "the malformed one wrote nothing");
+});
+
 test("check-in creates one follow-up task for a quiet client, and not again in the same period", async () => {
   const store = new MemoryStore();
   await store.put("timeline", C, { contact_id: C, events: [], last_activity: "2026-09-01T00:00:00.000Z", updated: NOW.toISOString() });

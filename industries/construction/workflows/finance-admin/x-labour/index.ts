@@ -1,11 +1,33 @@
 // The labour-by-person workflow's two crons. Each reads ServiceM8 clock events, drafts Xero timesheet lines, or queues one
 // approval for a person. No cron approves a timesheet or pays anyone.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
-import { type Holds, type Settings, type ShiftRec, GUID, clean, keyFor, period } from "./types.ts";
+import { type Ctx, type Approval, reject } from "../../../../../core/workflows/runtime.ts";
+import { type Holds, type Settings, type ShiftRec, type XeroTimesheet, GUID, clean, keyFor, period } from "./types.ts";
 import { shiftsFrom, staffEvents } from "./adapters/servicem8.ts";
 import { addLine, approveAct, createTimesheet, timesheetsIn } from "./adapters/xero.ts";
 
 const DEFAULT_MAX_HOURS = 12;
+
+/** A timesheet approval still waiting for a person is withdrawn once its employee is held, so partial hours cannot be approved. */
+async function withdrawHeld(ctx: Ctx<Settings>, p: { start: string; end: string }, held: string[]): Promise<number> {
+  const pending = Object.values(await ctx.store.list<Approval>("approvals"))
+    .filter((a) => a.workflow === ctx.workflow.id && a.status === "pending");
+  if (!pending.length || !held.length) return 0;
+  const heldSet = new Set(held);
+  const employeeOf = new Map((await timesheetsIn(ctx, p)).map((t) => [t.timesheetID, t.employeeID]));
+  let withdrawn = 0;
+  for (const ap of pending) {
+    const sheet = String((ap.acts[0]?.input?.params as { TimesheetID?: string } | undefined)?.TimesheetID ?? "");
+    if (heldSet.has(employeeOf.get(sheet) ?? "")) { await reject(ctx.workflow, ctx.store, ap.id, "mirror", ctx.now); withdrawn++; }
+  }
+  return withdrawn;
+}
+
+/** The Draft timesheet a person already has for the period in Xero, if a crashed run created one the store never recorded. */
+async function draftFor(ctx: Ctx<Settings>, employee: string, p: { start: string; end: string }): Promise<string | undefined> {
+  const found = (await timesheetsIn(ctx, p, "Draft")).filter((t: XeroTimesheet) => t.employeeID === employee);
+  if (found.length > 1) throw new Error("more than one draft timesheet for this person in the period");
+  return found[0]?.timesheetID;
+}
 
 /** Every 30 minutes: ServiceM8 clock events for the pay period become draft lines on each person's Xero timesheet.
  *  A complete shift is written once. A shift over the daily limit is held. A person whose clock events do not pair, or who is
@@ -19,7 +41,9 @@ export async function mirror(ctx: Ctx<Settings>) {
   const { events, bad } = await staffEvents(ctx, p);
   if (bad) {
     // A clock row that does not check out means nothing can be trusted for this period: everyone mapped is held until a person checks.
-    await ctx.store.put("holds", holdKey, { employees: Object.values(s.employee_map ?? {}).filter((g) => GUID.test(g)), at } satisfies Holds);
+    const everyone = Object.values(s.employee_map ?? {}).filter((g) => GUID.test(g));
+    await ctx.store.put("holds", holdKey, { employees: everyone, at } satisfies Holds);
+    await withdrawHeld(ctx, p, everyone);
     ctx.log(`mirror: ${bad} clock row(s) did not check out, so every mapped person is held`);
     return { blocked: bad };
   }
@@ -44,7 +68,8 @@ export async function mirror(ctx: Ctx<Settings>) {
     try {
       const line = { date: sh.date, earningsRateID: s.earnings_rate_id, numberOfUnits: sh.hours };
       const tsKey = keyFor("xts", employee, p.start);
-      const existing = await ctx.store.get<string>("xts", tsKey);
+      let existing = await ctx.store.get<string>("xts", tsKey);
+      if (!existing) existing = await draftFor(ctx, employee, p);
       let tsId: string;
       if (existing) {
         await addLine(ctx, existing, line, sh.key);
@@ -67,6 +92,8 @@ export async function mirror(ctx: Ctx<Settings>) {
   for (const r of Object.values(await ctx.store.list<ShiftRec>("shifts"))) if (r.period === p.start && r.state !== "mirrored") held.add(r.staff);
   const employees = [...held].map((st) => s.employee_map?.[st]).filter((g): g is string => !!g && GUID.test(g));
   await ctx.store.put("holds", holdKey, { employees, at } satisfies Holds);
+  const withdrawn = await withdrawHeld(ctx, p, employees);
+  ctx.log(`mirror: ${withdrawn} queued approval(s) withdrawn`);
   ctx.log(`mirror: ${mirrored} mirrored, ${flagged} held over the daily limit, ${unmapped} without a Xero employee, ${failed} need a check, ${employees.length} held`);
   return { mirrored, flagged, unmapped, failed, held: employees.length };
 }

@@ -32,4 +32,6 @@ export function isDay(v: unknown): string | undefined {
   return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== s ? undefined : s;
 }
 export const dayOf = (d: Date) => d.toISOString().slice(0, 10);
+/** Strip control characters from text that came from outside, and cap its length. */
+export const clean = (s: unknown, max = 255) => String(s ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 export const addDays = (d: Date, n: number) => new Date(d.getTime() + n * 864e5);

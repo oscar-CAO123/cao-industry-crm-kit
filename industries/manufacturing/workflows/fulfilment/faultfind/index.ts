@@ -63,7 +63,8 @@ export async function escalate(ctx: Ctx<Settings>) {
     if (j.status !== breakdownStatus(ctx.settings)) { await ctx.store.put("faults", f.id, { ...f, status: "closed" } satisfies Fault); closed++; continue; }
     if (ctx.now.getTime() - Date.parse(f.seen) < hours * HOUR) continue;
     if (!to || !EMAIL.test(to)) { ctx.log(`escalate: ${f.id} is overdue but settings.escalation_email is not a valid address`); continue; }
-    const act = escalationAct(f.job_uuid, `escalate:${f.id}`, to, `Breakdown still open: ${f.title}`.slice(0, 150),
+    const subjectTitle = f.title.replace(/[\u0000-\u001f\u007f]/g, " ");   // the title is customer text: no line breaks in a subject
+    const act = escalationAct(f.job_uuid, `escalate:${f.id}`, to, `Breakdown still open: ${subjectTitle}`.slice(0, 150),
       `The breakdown "${f.title}" at ${f.address || "the site"} has been open for ${hours} hours or more. Please check it.`,
       `Escalate ${f.title} to ${to}: open ${hours}+ hours`);
     await ctx.queue(act);

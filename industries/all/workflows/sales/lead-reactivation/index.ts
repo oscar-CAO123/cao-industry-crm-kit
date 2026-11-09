@@ -10,6 +10,8 @@ const ENROL = "contacts.add-contact-to-campaign";
 const perRun = (s: Settings) => Math.min(Math.max(s.per_run ?? 50, 1), 500);
 const batchSize = (s: Settings) => Math.min(Math.max(s.batch ?? 5, 1), 5);
 const label = (c: Candidate) => clip(c.email ?? c.id, 80);
+/** For approval summaries and the run log: the email with its name masked, or the id when there is no email. */
+const masked = (c: Candidate) => clip(c.email ? c.email.replace(/^(.{1,2})[^@]*(?=@)/, "$1***") : c.id, 80);
 
 /** Every 6 hours (GoHighLevel only): read the lapsed contacts into the reactivation list. Reads only. */
 export async function listBuild(ctx: Ctx<Settings>) {
@@ -38,8 +40,16 @@ async function recordApproved(ctx: Ctx<Settings>): Promise<void> {
       const key = candKey(id);
       const c = await ctx.store.get<Candidate>("candidates", key);
       if (!c || c.status !== "queued") continue;
-      await tagContact(ctx, id, ctx.settings.sent_tag);
-      await ctx.store.put("candidates", key, { ...c, status: "sent", sent_at: ctx.now.toISOString() } satisfies Candidate);
+      try {
+        await tagContact(ctx, id, ctx.settings.sent_tag);
+      } catch (e) {
+        // One contact that cannot be tagged (for example, deleted) must not stop the rest. It stays queued, so the next run tries again.
+        const msg = clip((e as Error).message, 160);
+        await ctx.store.put("candidates", key, { ...c, tag_error: msg } satisfies Candidate);
+        ctx.log(`record: one contact could not be tagged (${msg})`);
+        continue;
+      }
+      await ctx.store.put("candidates", key, { ...c, status: "sent", sent_at: ctx.now.toISOString(), tag_error: undefined } satisfies Candidate);
     }
   }
 }
@@ -62,7 +72,7 @@ export async function queueSend(ctx: Ctx<Settings>) {
     const chunk = todo.slice(i, i + size);
     const key = `enrol:${campaign}:${chunk.map((c) => c.id).join(",")}`;
     const acts: Act[] = chunk.map((c, j) => enrolAct(campaign, c.id, j === 0 ? key : undefined));
-    const approval = await ctx.queue(acts, `Enrol ${chunk.length} in campaign ${campaign}: ${chunk.map(label).join(", ")}`);
+    const approval = await ctx.queue(acts, `Enrol ${chunk.length} in campaign ${campaign}: ${chunk.map(masked).join(", ")}`);
     for (const c of chunk) await ctx.store.put("candidates", c.key, { ...c, status: "queued", approval } satisfies Candidate);
     queued += chunk.length;
   }

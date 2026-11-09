@@ -49,10 +49,11 @@ export const klaviyo = {
       id: id(flowId), revision: REV, "page[size]": 50 } } });
     return (r.data?.data ?? []).map((x: any) => String(x?.id ?? "")).filter((x: string) => ID.test(x));
   },
-  /** The live switch for a flow. Only ever queued for approval. */
-  goLiveAct(flowId: string, name: string) {
+  /** The live switch for a flow. Only ever queued for approval. The key carries the ready mark, so a fresh mark after a
+   *  rejected switch queues a new approval, while a re-run for the same mark finds the same one. */
+  goLiveAct(flowId: string, name: string, marked: string) {
     const fid = id(flowId);
-    return { platform: P, op: "update_flow", key: `live:${fid}`, summary: `put flow "${name}" live`, input: {
+    return { platform: P, op: "update_flow", key: `live:${fid}:${marked}`, summary: `put flow "${name}" live`, input: {
       params: { id: fid, revision: REV }, body: { data: { type: "flow", id: fid, attributes: { status: "live" } } } } };
   },
 };

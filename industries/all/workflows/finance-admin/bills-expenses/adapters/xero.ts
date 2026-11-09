@@ -74,9 +74,10 @@ export async function enterBill(ctx: Ctx<Settings>, key: string, b: Bill, contac
 
 /** The live act that authorises an entered bill. It is only ever queued; a person approves it. */
 export function authoriseAct(key: string, b: Bill, invoiceId: string): Act {
+  const id = guid(invoiceId); // a stored id is checked like every other Xero id before it goes into the live body
   return { platform: P, op: "accounting.updateOrCreateInvoices", key: `authorise:${key}`,
     summary: `authorise bill ${b.invoice_number} from ${b.supplier} for ${money(total(b.lines))} ex GST in Xero`,
-    input: { params: idem(`authorise:${key}`), body: { Invoices: [{ InvoiceID: invoiceId, Status: "AUTHORISED" }] } } };
+    input: { params: idem(`authorise:${key}`), body: { Invoices: [{ InvoiceID: id, Status: "AUTHORISED" }] } } };
 }
 
 /** Authorised supplier bills, every page, for the overdue list. Read only. */

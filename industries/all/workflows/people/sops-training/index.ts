@@ -40,7 +40,9 @@ export async function draft(ctx: Ctx<Settings>) {
     }
     const title = sopTitle(prop.title), html = sopHtml(prop);
     const page = await confluence.draftPage(ctx, title, html);
-    const approval = await ctx.queue({ ...confluence.publishAct({ ...page, title, html }), key: `publish:${s.id}` });
+    // The approval shows the source it came from, so the person approving sees the outside text beside the draft.
+    const approval = await ctx.queue({ ...confluence.publishAct({ ...page, title, html }), key: `publish:${s.id}` },
+      `publish SOP "${title}" to the SOP space, from "${s.title.slice(0, 120)}". Source text: ${s.text.slice(0, 300)}`);
     const sop: Sop = { title, purpose: prop.purpose, steps: prop.steps, page: page.page, version: page.version, approval };
     await ctx.store.put("sources", s.id, { ...s, status: "drafted", reason: undefined, sop } satisfies Source);
     drafted++;

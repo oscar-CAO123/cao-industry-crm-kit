@@ -1,7 +1,7 @@
 // Stripe: the failed charge on an invoice. An invoice counts as failed when Stripe has attempted it and money is still owed.
 // Retry and invoice email move money or reach the member, so they are live operations: a cron only queues them.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Adapter, type Settings, STRIPE_INVOICE, emailOf, textOf, dueDay, keyOf, money } from "../types.ts";
+import { type Adapter, type Failure, type Settings, STRIPE_INVOICE, emailOf, textOf, dueDay, keyOf, money } from "../types.ts";
 
 const P = "stripe";
 const sid = (v: unknown) => { const s = String(v ?? ""); if (!STRIPE_INVOICE.test(s)) throw new Error("stripe: bad invoice id"); return s; };
@@ -9,17 +9,28 @@ const sid = (v: unknown) => { const s = String(v ?? ""); if (!STRIPE_INVOICE.tes
 export const stripe: Adapter = {
   id: P,
   async overdue(ctx: Ctx<Settings>) {
-    const r = await ctx.draft<any>({ platform: P, op: "openapi_spec3.GetInvoices", summary: "open invoices", input: { params: { status: "open", limit: 100 } } });
-    return (r.data?.data ?? []).flatMap((i: any) => {
-      const remaining = Number(i.amount_remaining);
-      if (!STRIPE_INVOICE.test(String(i.id ?? "")) || i.attempted !== true || !Number.isInteger(remaining) || remaining <= 0) return [];
-      return [{
-        key: keyOf(P, i.id), platform: P, invoice: i.id, number: textOf(i.number, 40),
-        contact: { name: textOf(i.customer_name), email: emailOf(i.customer_email) },
-        amount_due: remaining / 100, currency: String(i.currency ?? "aud").toUpperCase(),
-        due: dueDay(i.due_date ?? undefined), attempts: Number(i.attempt_count) || 0,
-      }];
-    });
+    // Every page of open invoices, following starting_after while has_more is true. A cap that is hit throws, so a
+    // partial list never passes as the whole list.
+    const found: Omit<Failure, "first_seen" | "chases" | "status">[] = [];
+    let after: string | undefined;
+    for (let page = 0; page < 50; page++) {
+      const params: Record<string, unknown> = { status: "open", limit: 100, ...(after ? { starting_after: after } : {}) };
+      const r = await ctx.draft<any>({ platform: P, op: "openapi_spec3.GetInvoices", summary: "open invoices", input: { params } });
+      const items: any[] = r.data?.data ?? [];
+      found.push(...items.flatMap((i: any) => {
+        const remaining = Number(i.amount_remaining);
+        if (!STRIPE_INVOICE.test(String(i.id ?? "")) || i.attempted !== true || !Number.isInteger(remaining) || remaining <= 0) return [];
+        return [{
+          key: keyOf(P, i.id), platform: P, invoice: i.id, number: textOf(i.number, 40),
+          contact: { name: textOf(i.customer_name), email: emailOf(i.customer_email) },
+          amount_due: remaining / 100, currency: String(i.currency ?? "aud").toUpperCase(),
+          due: dueDay(i.due_date ?? undefined), attempts: Number(i.attempt_count) || 0,
+        }];
+      }));
+      if (r.data?.has_more !== true) return found;
+      after = sid(items.at(-1)?.id);
+    }
+    throw new Error("stripe: more than 5,000 open invoices; the overdue list is incomplete, so the run stops here");
   },
   async isPaid(ctx: Ctx<Settings>, f) {
     const r = await ctx.draft<any>({ platform: P, op: "openapi_spec3.GetInvoicesInvoice", summary: `invoice ${f.number ?? f.invoice}`, input: { params: { invoice: sid(f.invoice) } } });

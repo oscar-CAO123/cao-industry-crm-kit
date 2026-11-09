@@ -15,12 +15,21 @@ const table = (t: Table) => {
   return { "drive-id": t.drive, "driveItem-id": t.item, "workbookTable-id": t.table };
 };
 
+/** A well-known Graph mail folder name, or a folder id. Dots are refused: a value such as ".." would be read as a path segment. */
+const WELL_KNOWN_FOLDERS = ["inbox", "drafts", "sentitems", "deleteditems", "archive", "junkemail"];
+const folderOf = (f: string) => {
+  const ok = WELL_KNOWN_FOLDERS.includes(f.toLowerCase()) || (GRAPH_ID.test(f) && !f.includes("."));
+  if (!ok) throw new Error("microsoft_365.folder is not a mail folder name or id");
+  return f;
+};
+
 /** Docket emails in the ticket mailbox: id, subject and received time. The body is not read here. */
 export async function dockets(ctx: Ctx<Settings>): Promise<{ id: string; subject: string; received: string }[]> {
   const m = cfg(ctx);
   const word = (m.search ?? "docket").replace(/["\\]/g, "").slice(0, 60) || "docket";
+  const folder = folderOf(m.folder ?? "inbox");
   const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: "read docket emails", input: { params: {
-    "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $search: `"${word}"`, $top: 25, $select: "id,subject,receivedDateTime" } } });
+    "user-id": m.mailbox, "mailFolder-id": folder, $search: `"${word}"`, $top: 25, $select: "id,subject,receivedDateTime" } } });
   return (r.data?.value ?? []).filter((x: any) => GRAPH_ID.test(String(x.id ?? ""))).map((x: any) => ({
     id: String(x.id), subject: text(x.subject, 120), received: String(x.receivedDateTime ?? ctx.now.toISOString()) }));
 }

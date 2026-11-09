@@ -27,10 +27,19 @@ export async function matterBalances(ctx: Ctx<Settings>, accountId: string): Pro
   return rows(r.data).map((b) => ({ matter_id: b.matter?.id ?? null, balance: Number(b.balance), available: Number(b.availableBalance) }));
 }
 
+/** Every page of trust transactions, up to a cap. The spec pages with Offset and Limit; a short page is the last one. */
+const TX_PAGE = 200, TX_MAX_PAGES = 25;
 export async function transactions(ctx: Ctx<Settings>, accountId: string): Promise<Transaction[]> {
-  const r = await ctx.draft<any>({ platform: P, op: "GetTransactions", summary: "trust transactions on a trust account",
-    input: { params: { bankAccountId: platformId(accountId, "trust account"), Limit: 200 } } });
-  return rows(r.data).map((t) => ({ id: String(t.id), type: t.type ?? null, amount: Number(t.amount), matter_id: t.matter?.id ?? null, entered: t.enteredDate ?? null }));
+  const out: Transaction[] = [];
+  for (let page = 0; page < TX_MAX_PAGES; page++) {
+    const r = await ctx.draft<any>({ platform: P, op: "GetTransactions", summary: "trust transactions on a trust account",
+      input: { params: { bankAccountId: platformId(accountId, "trust account"), Offset: page * TX_PAGE, Limit: TX_PAGE } } });
+    const batch = rows(r.data);
+    out.push(...batch.map((t) => ({ id: String(t.id), type: t.type ?? null, amount: Number(t.amount), matter_id: t.matter?.id ?? null, entered: t.enteredDate ?? null })));
+    if (batch.length < TX_PAGE) return out;
+  }
+  ctx.log(`x-trust: ${accountId} has more than ${TX_MAX_PAGES * TX_PAGE} transactions; only the first ${TX_MAX_PAGES * TX_PAGE} were read`);
+  return out;
 }
 
 /** The live act for a disbursement: queued by the cron, run only after a person approves it. */

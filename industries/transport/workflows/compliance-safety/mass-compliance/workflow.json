@@ -35,7 +35,7 @@
   "Weighing, GVM, GCM and axle group calculation, and load adjustment: no platform in the kit does these. They stay with the driver or the scale operator.",
   "Regulator reporting: no mapped operation lodges accreditation evidence or mass records.",
   "Trackunit asset records carry no mass fields (no GVM, tare or axle configuration), so the check only tests that the register holds the basic fields a vehicle chart needs. It does not check mass.",
-  "assets.updateAssetNote_v2 replaces the whole note, and the kit has no safe read of existing notes (assets.queryAssetNotes_v2 is marked as a write). The approver checks the current note before approving.",
+  "assets.updateAssetNote_v2 replaces the whole note, and the kit has no safe read of existing notes (assets.queryAssetNotes_v2 is marked as a write), so the approval cannot show the current note. The approval summary states the overwrite and shows the new text; the approver must read the note in Trackunit before approving.",
   "No 'assets' capability exists in core/capabilities.json, so the workflow declares no capabilities list. A runtime change would be needed to add one.",
   "The Trackunit adapter is docs-only: it needs TRACKUNIT_ACCESS_TOKEN and no sandbox has run it. The page number is taken as zero-based, to confirm on the sandbox."
  ],

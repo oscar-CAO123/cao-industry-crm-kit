@@ -3,14 +3,14 @@
 // Field names come from the vendor's official spec (endpoint-map/raw/gohighlevel/spec): contacts/upsert takes locationId
 // and phone; contacts/{contactId}/notes takes body.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Settings, clean, id } from "../types.ts";
+import { type Settings, clean, id, masked } from "../types.ts";
 
 const P = "gohighlevel";
 
 export const gohighlevel = {
   /** The contact for a caller's number: found or created in the configured location. Returns the contact id. */
   async contactFor(ctx: Ctx<Settings>, phone: string): Promise<string> {
-    const r = await ctx.draft<any>({ platform: P, op: "contacts.upsert-contact", summary: `contact for ${phone}`,
+    const r = await ctx.draft<any>({ platform: P, op: "contacts.upsert-contact", summary: `contact for ${masked(phone)}`,
       input: { body: { locationId: id(ctx.settings.gohighlevel?.location_id, "location id"), phone } } });
     return id(r.data?.contact?.id, "contact id");
   },

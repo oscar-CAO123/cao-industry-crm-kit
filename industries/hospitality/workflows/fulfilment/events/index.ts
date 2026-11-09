@@ -61,7 +61,8 @@ export async function check(ctx: Ctx<Settings>) {
     let draftId: string;
     try { draftId = await g.draftReply(ctx, e, b); }
     catch { await ctx.store.put("enquiries", e.id, { ...e, status: "check", note: "the hold is in the calendar but the reply draft failed: draft the reply by hand" }); counts.check++; continue; }
-    const approval = await ctx.queue(g.sendAct(e, draftId), `Send the reply to ${e.from} offering ${g.whenLabel(ctx.settings, b)}`);
+    // The summary is logged by the runtime, so it names the enquiry, not the guest's address (the act keeps the address).
+    const approval = await ctx.queue(g.sendAct(e, draftId), `Send the reply for enquiry ${e.id} offering ${g.whenLabel(ctx.settings, b)}`);
     await ctx.store.put("enquiries", e.id, { ...e, status: "replied", draft_id: draftId, approval_id: approval });
     counts.held++;
   }

@@ -104,6 +104,15 @@ test("a proposed adjustment is queued, never run by the cron, and runs once when
   await assert.rejects(approve(WF, store, id, "owner"), /already done/);
 });
 
+test("no adjustment is queued while no Cin7 branch is set, so it can never land on another branch's stock", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...SETTINGS, cin7: { rows: 50 } }, store, NOW, () => {});
+  await store.put("proposals", "count-1", { key: "count-1", barcode: BARCODE, qty_adjusted: -2, status: "proposed" });
+  assert.deepEqual(await adjust(ctx), { queued: 0, rejected: 0, applied: 0 });
+  assert.equal(hits.length, 0, "no call to Cin7");
+  assert.equal(Object.keys(await store.list("approvals")).length, 0);
+  assert.equal((await store.get<any>("proposals", "count-1")).status, "proposed", "held for a later run, not rejected");
+});
+
 test("a bad barcode or quantity is rejected before any call goes out", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await store.put("proposals", "bad-bc", { key: "bad-bc", barcode: "../../x", qty_adjusted: 1, status: "proposed" });

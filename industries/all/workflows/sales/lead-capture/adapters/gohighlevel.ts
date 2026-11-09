@@ -5,7 +5,7 @@
 // subject, html, message). Reads and internal records are draft operations; a message to a lead is only ever built
 // here as an Act and queued by the cron for a person to approve.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { ID, EMAIL, PHONE, clean, esc, fill, firstName, type RawLead, type Lead, type Settings } from "../types.ts";
+import { ID, EMAIL, PHONE, clean, esc, fill, firstName, maskEmail, maskPhone, type RawLead, type Lead, type Settings } from "../types.ts";
 
 export const P = "gohighlevel" as const;
 
@@ -33,8 +33,9 @@ export async function readSubmissions(ctx: Ctx<Settings>, since: number): Promis
   return out;
 }
 
-/** Live chats with a visitor message still unanswered. A chat with no contact details yet is kept, and checked again next run. */
-export async function readChats(ctx: Ctx<Settings>): Promise<RawLead[]> {
+/** Live chats with a visitor message still unanswered, whose last message is after `since` (ms), the intake baseline.
+ *  A chat with no readable last-message time is skipped, so an old chat never becomes a new lead. A chat with no contact details yet is checked again next run. */
+export async function readChats(ctx: Ctx<Settings>, since: number): Promise<RawLead[]> {
   const g = cfg(ctx);
   const r = await ctx.draft<any>({ platform: P, op: "conversations.search-conversation", summary: "read live chats",
     input: { params: { locationId: g.location_id, limit: 50 } } });
@@ -42,8 +43,10 @@ export async function readChats(ctx: Ctx<Settings>): Promise<RawLead[]> {
   for (const c of r.data?.conversations ?? []) {
     const ref = idOf(c?.id), contactId = idOf(c?.contactId);
     if (!ref || !contactId || !(Number(c?.unreadCount) > 0)) continue;
+    const at = Date.parse(String(c?.lastMessageDate ?? ""));
+    if (!(at > since)) continue;
     out.push({ source: "live-chat", ref, contactId, name: clean(c?.fullName ?? c?.contactName, 120),
-      email: emailOf(c), phone: phoneOf(c), received: ctx.now.toISOString() });
+      email: emailOf(c), phone: phoneOf(c), received: new Date(at).toISOString() });
   }
   return out;
 }
@@ -84,10 +87,10 @@ export function messageAct(s: Settings, lead: Lead, channel: "Email" | "SMS", te
   const message = fill(template, { first: firstName(lead.name), business: clean(s.business_name ?? "us", 120) });
   if (channel === "Email") {
     if (!lead.email) return undefined;
-    return { platform: P, op: "conversations.send-a-new-message", key, summary: `${kind} email to ${lead.email}`,
+    return { platform: P, op: "conversations.send-a-new-message", key, summary: `${kind} email to ${maskEmail(lead.email)}`,
       input: { body: { type: "Email", contactId: lead.contactId, subject: clean(subject, 150), html: `<p>${esc(message)}</p>` } } };
   }
   if (!lead.phone) return undefined;
-  return { platform: P, op: "conversations.send-a-new-message", key, summary: `${kind} text to ${lead.phone}`,
+  return { platform: P, op: "conversations.send-a-new-message", key, summary: `${kind} text to ${maskPhone(lead.phone)}`,
     input: { body: { type: "SMS", contactId: lead.contactId, message: message.slice(0, 480) } } };
 }

@@ -5,11 +5,23 @@ import type { Act } from "../../../../../../core/workflows/runtime.ts";
 import { type Booking, type Product, type RoomBlock, type Settings, type Slot, ID, WHEN, clean } from "../types.ts";
 
 const P = "bookeo";
-type Page<T> = { data?: T[] };
+type Page<T> = { data?: T[]; info?: { pageNavigationToken?: string } };
+const MAX_PAGES = 50;                                    // 5,000 rows per list; past that the read stops loudly
+const TOKEN = /^[A-Za-z0-9._~+=/-]{1,1000}$/;
 
+/** Every row of one Bookeo list, following info.pageNavigationToken to the end. A list past the cap throws, so no
+ *  cancellation or fill count is ever worked out from a partial list. */
 const rows = async <T>(ctx: Ctx<Settings>, op: string, params: Record<string, unknown>): Promise<T[]> => {
-  const r = await ctx.draft<Page<T>>({ platform: P, op, input: { params: { itemsPerPage: 100, ...params } }, summary: `read ${op}` });
-  return (r.data?.data ?? []) as T[];
+  const out: T[] = [];
+  let token: string | undefined;
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const r = await ctx.draft<Page<T>>({ platform: P, op, input: { params: { itemsPerPage: 100, ...params, ...(token ? { pageNavigationToken: token } : {}) } }, summary: `read ${op}` });
+    out.push(...((r.data?.data ?? []) as T[]));
+    token = r.data?.info?.pageNavigationToken || undefined;
+    if (!token) return out;
+    if (!TOKEN.test(token)) throw new Error("bookeo: bad page token");
+  }
+  throw new Error(`bookeo: ${op} has more than ${MAX_PAGES * 100} rows; the read is incomplete, so the run stops here`);
 };
 const when = (v: unknown): string => { const s = String(v ?? ""); if (!WHEN.test(s)) throw new Error(`bookeo: bad time ${s.slice(0, 40)}`); return s; };
 const id = (v: unknown): string => { const s = String(v ?? ""); if (!ID.test(s)) throw new Error("bookeo: bad id"); return s; };

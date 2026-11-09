@@ -205,3 +205,18 @@ test("a retirement is sent, signed, only after approval and only with writes all
 test("the cron table exports every cron named in workflow.json", () => {
   for (const c of WF.crons as unknown as { entry: string }[]) assert.equal(typeof CRONS[c.entry], "function", `missing cron ${c.entry}`);
 });
+
+test("a full first page is a partial read: open flags are not resolved and no low-stock flag is raised", async () => {
+  const store = new MemoryStore();
+  // A flag from an earlier run, for a product that sits on a later page than the first.
+  await store.put("flags", "old-flag", { key: "old-flag", kind: "check", platform: "unleashed", code: "SKU-PAGE-2", reason: "missing-barcode",
+    message: "SKU-PAGE-2 has no barcode", first_seen: NOW.toISOString(), last_seen: NOW.toISOString(), status: "open" } satisfies Flag);
+  const rows = Array.from({ length: 200 }, (_, i) => ({ ProductCode: `P-${i}`, Guid: G1, ProductDescription: "d", Barcode: "1", DefaultSellPrice: 1 }));
+  const levels = Array.from({ length: 200 }, (_, i) => ({ ProductCode: `P-${i}`, ProductGuid: G1, WarehouseCode: "MAIN", QtyOnHand: 1 }));
+  const ctx = context(WF, S, store, NOW, () => {});
+  ctx.draft = (async (a: any) => ({ status: 200, data: { Pagination: {}, Items: a.op === "docs.get_Products" ? rows : levels }, headers: new Headers() })) as any;
+  await check(ctx);
+  assert.equal((await store.get<Flag>("flags", "old-flag"))!.status, "open", "a flag on a later page is not resolved by a partial read");
+  await stock(ctx);
+  assert.equal(Object.values(await store.list<Flag>("flags")).filter((f) => f.kind === "stock").length, 0, "stock totals on a partial read raise nothing");
+});

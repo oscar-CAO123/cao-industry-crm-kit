@@ -47,7 +47,8 @@ export async function invoice(ctx: Ctx<Settings>) {
     if (ap?.status === "done") { await ctx.store.put("orders", o.id, { ...o, status: "invoiced" }); sent++; continue; }
     if (ap?.status === "rejected") { await ctx.store.put("orders", o.id, { ...o, status: "held", reason: "invoice send rejected: check the Xero draft" }); rejected++; continue; }
     if (!a?.xero_contact_id || !a.email) continue;
-    await ctx.queue(sendActs(ctx, o, a, a.xero_contact_id), `Authorise and email invoice ${o.id} to ${a.email}: ${o.lines.length} lines, ${money(total(o.lines))} ex GST`);
+    // The queue text is logged by the runtime, so it names the account and never carries its email address (the act keeps it).
+    await ctx.queue(sendActs(ctx, o, a, a.xero_contact_id), `Authorise and email invoice ${o.id} to ${a.name}: ${o.lines.length} lines, ${money(total(o.lines))} ex GST`);
     if (!ap) queued++;
   }
 
@@ -71,7 +72,7 @@ export async function chase(ctx: Ctx<Settings>) {
     if (reached <= done) continue;
     const a = accounts[o.account];
     if (!a?.email || !EMAIL.test(a.email)) continue;
-    await ctx.queue(chaseAct(o, reached), `Chase invoice ${o.id} to ${a.email}: ${money(Number(inv.AmountDue) || 0)} due, ${late} days late`);
+    await ctx.queue(chaseAct(o, reached), `Chase invoice ${o.id} to ${a.name}: ${money(Number(inv.AmountDue) || 0)} due, ${late} days late`);
     await ctx.store.put("orders", o.id, { ...o, chases: [...(o.chases ?? []), reached] });
     queued++;
   }

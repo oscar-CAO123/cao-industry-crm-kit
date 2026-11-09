@@ -2,6 +2,7 @@
  "business_name": "Example Bookkeeping",
  "messages": "microsoft-365",
  "microsoft_365": {"mailbox": "accounts@example.com.au"},
+ "client_email": "client@example.com.au",
  "lookback_days": 90,
  "chase_after_days": [7, 14]
 }

@@ -235,3 +235,18 @@ test("register appends one escaped row per question to the register Sheet, once"
   assert.deepEqual(await register(ctx), { logged: 0 });
   assert.equal(hits.filter((h) => h.url.pathname.endsWith(":append")).length, 4);
 });
+
+test("a Chat reply is escaped, so a mention in the answer cannot ping the whole space", async () => {
+  const store = new MemoryStore();
+  const ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx);
+  await store.put("answers", idOf(await store.list("questions"), (q: any) => q.thread.chat_space === "spaces/AAAA"),
+    { text: "Ask <users/all> & check the HR folder." });
+  await draft(ctx);
+  const ap = Object.values(await store.list<Approval>("approvals")).find((a) => a.summary.startsWith("Reply to Priya Shah"));
+  assert.ok(ap);
+  await approve(WF, store, ap.id, "oscar", NOW);
+  const post = hits.find((h) => h.method === "POST" && h.url.pathname === "/v1/spaces/AAAA/messages");
+  assert.ok(post);
+  assert.equal(post.body.text, "Ask &lt;users/all&gt; &amp; check the HR folder.");
+});

@@ -146,6 +146,20 @@ test("queue-fixes queues one barcode update per recorded fix, once, and refuses 
   assert.equal((await store.get<Fix>("barcode-fixes", "fix-good"))!.approval, approvals[0].id);
 });
 
+test("queue-fixes: one unreadable product does not stop the fixes after it, and its error stays on that fix", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  fake.products[G(2)] = product(2, "BADCHK", "4006381333932");
+  await store.put("barcode-fixes", "fix-a-deleted", { product: G(9), barcode: "4006381333931" } satisfies Fix);
+  await store.put("barcode-fixes", "fix-b-good", { product: G(2), barcode: "4006381333931" } satisfies Fix);
+  await queueFixes(ctx);
+  const bad = await store.get<Fix>("barcode-fixes", "fix-a-deleted");
+  assert.ok(bad!.error, "the error is recorded on the unreadable fix");
+  assert.equal(bad!.approval, undefined, "it is not queued");
+  const good = await store.get<Fix>("barcode-fixes", "fix-b-good");
+  assert.ok(good!.approval, "the fix after it is still queued");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1);
+});
+
 test("an approved barcode update reaches Unleashed only after approval, once", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   fake.products[G(2)] = product(2, "BADCHK", "4006381333932");

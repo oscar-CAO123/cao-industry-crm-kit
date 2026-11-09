@@ -1,6 +1,5 @@
-// Webflow: the site's pages and forms (reads), and a page change queued as one approval: the content update, then the
-// publish of that page. Field names come from the Webflow v2 spec in the endpoint map (pages list, forms list,
-// form submissions, pages/{page_id}/dom, sites/{site_id}/publish).
+// Webflow: the site's pages and forms (reads), and a page content change queued as one approval. Field names come from
+// the Webflow v2 spec in the endpoint map (pages list, forms list, form submissions, pages/{page_id}/dom).
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Change, type FormRow, type PageRow, type Settings, WEBFLOW_ID, arr, checked, iso } from "../types.ts";
 
@@ -34,14 +33,11 @@ export const webflow = {
     return arr(r.data?.formSubmissions).filter((x) => Date.parse(String(x?.dateSubmitted)) >= from).length;
   },
 
-  /** The live acts for one change: the content update, then (when asked) the publish of that page. Both are live operations. */
+  /** The live act for one change: the content update. A Webflow publish puts every staged change on the site, not only this
+   *  page (the publish endpoint takes no page id), so it is never queued here: a person publishes the page in Webflow. */
   acts(ctx: Ctx<Settings>, c: Change, key: string): Act[] {
     const w = cfg(ctx.settings);
-    const acts: Act[] = [{ platform: P, op: "2.pages_update-static-content", key, summary: `update content of page ${c.page_id}`,
+    return [{ platform: P, op: "2.pages_update-static-content", key, summary: `update content of page ${c.page_id}`,
       input: { params: { page_id: c.page_id, localeId: w.locale_id }, body: { nodes: c.nodes } } }];
-    if (c.publish) acts.push({ platform: P, op: "2.sites_publish", summary: `publish page ${c.page_id}`,
-      input: { body: { pageId: c.page_id, customDomains: w.custom_domain_ids ?? [], publishToWebflowSubdomain: !(w.custom_domain_ids?.length) },
-        params: { site_id: site(ctx.settings) } } });
-    return acts;
   },
 };

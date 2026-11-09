@@ -5,7 +5,8 @@ import { safeKey } from "../../../../../core/workflows/runtime.ts";
 export type Platform = "dropbox";
 
 export interface Rule { match: string; label: string; folder: string }
-export interface ChecklistItem { code: string; label: string; match: string; within_days: number }
+/** folder: the business folder a rule files this document into. Only a document filed there counts as holding it. */
+export interface ChecklistItem { code: string; label: string; match: string; within_days: number; folder: string }
 export interface Settings {
   business_name?: string;
   intake_folder: string;       // where documents land (Dropbox path)

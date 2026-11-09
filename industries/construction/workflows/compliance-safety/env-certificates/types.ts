@@ -17,6 +17,7 @@ export interface Tracked {
   missing: string[];                      // evidence labels still not on file, from the last check
   checked?: string;
   chased_at?: string;
+  chases?: number;                        // chase emails queued so far; part of each chase's approval key
 }
 
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

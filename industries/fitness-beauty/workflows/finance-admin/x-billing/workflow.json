@@ -9,34 +9,89 @@
  "families": {
   "membership-direct-debit": {
    "evidence": "0 discovery calls describe this way of handling failed payments; steps come from the platform docs only",
-   "steps": ["payment-run", "failure-detect", "auto-retry", "member-notify", "access-hold"],
-   "covered_by": {"payment-run": "draft (invoice read)", "failure-detect": "draft (detect cron)", "auto-retry": "approval (Stripe retry)", "member-notify": "approval (invoice or reminder email)", "access-hold": "not yet (see gaps)"}
+   "steps": [
+    "payment-run",
+    "failure-detect",
+    "auto-retry",
+    "member-notify",
+    "access-hold"
+   ],
+   "covered_by": {
+    "payment-run": "draft (invoice read)",
+    "failure-detect": "draft (detect cron)",
+    "auto-retry": "approval (Stripe retry)",
+    "member-notify": "approval (invoice or reminder email)",
+    "access-hold": "not yet (see gaps)"
+   }
   },
   "appointment-card-on-file": {
    "evidence": "0 discovery calls describe this way of handling failed payments; steps come from the platform docs only",
-   "steps": ["card-update", "member-contact"],
-   "covered_by": {"card-update": "not yet (see gaps)", "member-contact": "skill (staff call or message)"}
+   "steps": [
+    "card-update",
+    "member-contact"
+   ],
+   "covered_by": {
+    "card-update": "not yet (see gaps)",
+    "member-contact": "skill (staff call or message)"
+   }
   }
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "detect", "schedule": "0 * * * *", "entry": "detect", "summary": "Find failed Stripe charges and overdue Xero invoices; note each new one in Xero."},
-  {"name": "reconcile", "schedule": "30 21 * * *", "entry": "reconcile", "summary": "Close failures that have been paid since; note that in Xero. Runs before the chase (21:30 UTC is 7 or 8 am in eastern Australia)."},
-  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Queue the next chase step on each open failure that is due (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  {
+   "name": "detect",
+   "schedule": "0 * * * *",
+   "entry": "detect",
+   "summary": "Find failed Stripe charges and overdue Xero invoices; note each new one in Xero."
+  },
+  {
+   "name": "reconcile",
+   "schedule": "30 21 * * *",
+   "entry": "reconcile",
+   "summary": "Close failures that have been paid since; note that in Xero. Runs before the chase (21:30 UTC is 7 or 8 am in eastern Australia)."
+  },
+  {
+   "name": "chase",
+   "schedule": "0 22 * * *",
+   "entry": "chase",
+   "summary": "Queue the next chase step on each open failure that is due (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
  ],
  "draft_ops": {
-  "stripe": ["openapi_spec3.GetInvoices", "openapi_spec3.GetInvoicesInvoice"],
-  "xero": ["accounting.getInvoices", "accounting.createInvoiceHistory"]
+  "stripe": [
+   "openapi_spec3.GetInvoices",
+   "openapi_spec3.GetInvoicesInvoice"
+  ],
+  "xero": [
+   "accounting.getInvoices",
+   "accounting.createInvoiceHistory"
+  ]
  },
  "live_ops": {
-  "stripe": ["openapi_spec3.PostInvoicesInvoicePay", "openapi_spec3.PostInvoicesInvoiceSend"],
-  "xero": ["accounting.emailInvoice"]
+  "stripe": [
+   "openapi_spec3.PostInvoicesInvoicePay",
+   "openapi_spec3.PostInvoicesInvoiceSend"
+  ],
+  "xero": [
+   "accounting.emailInvoice"
+  ]
  },
  "draft_ops_note": "Draft operations are reads, plus one internal history note per failure in Xero. A note reaches nobody outside the business.",
- "capabilities": ["invoices.list", "invoices.retry", "invoices.remind", "notes.write"],
+ "capabilities": [
+  "invoices.list",
+  "invoices.retry",
+  "invoices.remind",
+  "notes.write"
+ ],
  "adapters": {
-  "stripe": {"status": "docs-only", "covers": "failed charge detection, retry of the invoice, invoice email for manual payment, paid check"},
-  "xero": {"status": "docs-only", "covers": "overdue invoice detection, internal history note, reminder email, paid check"}
+  "stripe": {
+   "status": "docs-only",
+   "covers": "failed charge detection, retry of the invoice, invoice email for manual payment, paid check"
+  },
+  "xero": {
+   "status": "docs-only",
+   "covers": "overdue invoice detection, internal history note, reminder email, paid check"
+  }
  },
  "gaps": [
   "Mindbody: help pages were read, but there is no ops file for it in core/sdk/platforms, so it is not built. Its docs describe automatic card updates only, not failed-charge retries or failed-payment notices.",
@@ -47,7 +102,8 @@
   "Xero cannot tell a failed card or direct debit from an unpaid invoice, so an overdue Xero invoice stands in for a failed payment.",
   "Xero is read one page at a time (first 100 authorised invoices). Paging is not built.",
   "A Stripe invoice that also synced into Xero would count twice. Not de-duplicated.",
-  "No call evidence and no sandbox run yet: the Stripe test mode and a Xero demo company are needed before this runs for a client."
+  "No call evidence and no sandbox run yet: the Stripe test mode and a Xero demo company are needed before this runs for a client.",
+  "Xero reminder approval: a reminder is queued with the invoice as seen at queue time, so a member who pays between queueing and approval is still emailed. Needs a core runtime hook that re-checks each live act before it runs (core/workflows/runtime.ts); not built here."
  ],
  "evidence": {
   "calls": "0 of 1 discovery call describes failed-payment handling (1 call read, 0 rejected)",

@@ -83,6 +83,8 @@ export async function followUp(ctx: Ctx<Settings>) {
   }
   for (const q of open) {
     if (q.status !== "sent" || !q.sent_at) continue;
+    // A platform with no refresh cannot show that the client accepted or declined, so no chase goes out on its quotes.
+    if (!ADAPTERS[q.platform].refresh) continue;
     const n = q.followups?.length ?? 0;
     if (n >= days.length || ctx.now.getTime() - Date.parse(q.sent_at) < days[n] * DAY) continue;
     const id = await adapter(q.platform, "followUp").followUp!(ctx, q, n + 1);

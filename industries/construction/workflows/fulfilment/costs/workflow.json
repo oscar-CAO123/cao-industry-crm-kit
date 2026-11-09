@@ -9,7 +9,16 @@
  "families": {
   "job-cost-tracking": {
    "evidence": "10 construction calls on job costs in the worklist; the mining pass read 18 and 12 describe the process",
-   "steps": ["budget-set", "purchase-orders", "supplier-bills", "timesheets", "cost-to-date-check", "record-keeping", "client-claims", "other"],
+   "steps": [
+    "budget-set",
+    "purchase-orders",
+    "supplier-bills",
+    "timesheets",
+    "cost-to-date-check",
+    "record-keeping",
+    "client-claims",
+    "other"
+   ],
    "covered_by": {
     "budget-set": "budget-watch (reads the Xero budget lines as the baseline)",
     "purchase-orders": "spend-watch (open purchase orders count as committed cost)",
@@ -24,22 +33,45 @@
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "budget-watch", "schedule": "0 22 * * *", "entry": "budget-watch", "summary": "Read each budget line for the period from Xero and keep it as the baseline."},
-  {"name": "spend-watch", "schedule": "0 */2 * * *", "entry": "spend-watch", "summary": "Compare committed and actual cost with the budget for each account code and record every line over budget."},
-  {"name": "timesheet-approval", "schedule": "15 * * * *", "entry": "timesheet-approval", "summary": "Queue each draft timesheet in Xero payroll for a person to approve."}
+  {
+   "name": "budget-watch",
+   "schedule": "0 22 * * *",
+   "entry": "budget-watch",
+   "summary": "Read each budget line for the period from Xero and keep it as the baseline."
+  },
+  {
+   "name": "spend-watch",
+   "schedule": "0 */2 * * *",
+   "entry": "spend-watch",
+   "summary": "Compare committed and actual cost with the budget for each account code and record every line over budget."
+  },
+  {
+   "name": "timesheet-approval",
+   "schedule": "15 * * * *",
+   "entry": "timesheet-approval",
+   "summary": "Queue each draft timesheet in Xero payroll for a person to approve."
+  }
  ],
  "draft_ops": {
   "xero": [
-   "accounting.getBudgets", "accounting.getBudget", "accounting.getPurchaseOrders", "accounting.getInvoices",
+   "accounting.getBudgets",
+   "accounting.getBudget",
+   "accounting.getPurchaseOrders",
+   "accounting.getInvoices",
    "payroll-au-v2.getTimesheets"
   ]
  },
  "live_ops": {
-  "xero": ["payroll-au-v2.approveTimesheet"]
+  "xero": [
+   "payroll-au-v2.approveTimesheet"
+  ]
  },
  "draft_ops_note": "Draft operations here are reads only. The crons write their own figures to the workflow store, which reaches nobody outside the business. Approving a timesheet moves wages, so it is a live operation and is only ever queued.",
  "adapters": {
-  "xero": {"status": "docs-only", "covers": "budget baseline, committed and actual cost per account code, draft timesheets and their approval"}
+  "xero": {
+   "status": "docs-only",
+   "covers": "budget baseline, committed and actual cost per account code, draft timesheets and their approval"
+  }
  },
  "gaps": [
   "Buildxact: the platform runs cost-plus jobs and holds the job budget, but its ops file maps only sign-in, so no budget or cost read can run. Its help pages describe no overrun alert.",
@@ -50,7 +82,8 @@
   "Purchase order to bill matching: a billed order is counted by its bill only. A bill that arrives without a matching order is counted as actual cost, so the committed figure can read low until orders are raised.",
   "Client claims, progress claims and variations: not in the adapter. The mapped Xero operations do not cover a job-level variation or progress claim.",
   "Judgment steps stay with a person: what an overrun means for a job, whether to raise a variation, and whether to hold a supplier bill.",
-  "Every adapter is docs-only until a Xero demo company proves the reads and the timesheet approval."
+  "Every adapter is docs-only until a Xero demo company proves the reads and the timesheet approval.",
+  "Needs core: timesheet-approval queues every Draft Xero timesheet and does not read x-labour's hold record. Where both workflows run on one Xero organisation, a held person can be queued here. Fixing it needs one shared hold record or one approval path for timesheets, which is outside this folder."
  ],
  "evidence": {
   "calls": "10 construction calls on costs in the worklist; 18 calls read and 12 describe the process in the mining pass",

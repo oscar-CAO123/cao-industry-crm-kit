@@ -17,9 +17,11 @@ const NOW = new Date("2026-11-09T00:00:00Z");
 type Hit = { method: string; path: string; search: string; body: any };
 let hits: Hit[] = [];
 let events: Record<string, any[]> = {};
+let byId: Record<string, any> = {};
 
 function fake() {
   hits = [];
+  byId = {};
   events = {
     [M1]: [{ id: E1, matter: { id: M1 }, subject: "Settlement", startTime: "2026-12-10T00:00:00", isDeleted: false }],
     [M2]: [],
@@ -34,6 +36,7 @@ function fake() {
       if (p === "/matters" && m === "GET") return json({ value: [{ id: M1, status: "Open" }, { id: M2, status: "Open" }] });
       if (p === "/events" && m === "GET") return json({ value: events[u.searchParams.get("MatterId") ?? ""] ?? [] });
       if (p === "/events" && m === "POST") return json({ id: E_NEW });
+      if (/^\/events\/[^/]+$/.test(p) && m === "GET") { const ev = byId[p.split("/")[2]]; return ev ? json(ev) : new Response("not found", { status: 404 }); }
       if (/^\/events\/[^/]+$/.test(p) && m === "PUT") return json({ id: E1 });
       if (/^\/events\/[^/]+\/reminders$/.test(p) && m === "POST") return json({ id: R1 });
       return new Response("not faked: " + m + " " + p, { status: 404 });
@@ -143,4 +146,44 @@ test("reminders: skipped until the firm sets them, then one per settlement event
   assert.equal(rem[0].path, `/events/${E1}/reminders`);
   assert.equal(rem[0].body.offset, 3);
   assert.deepEqual(rem[0].body.userIds, [U1]);
+});
+
+test("an event the register window no longer sees is read by id, and its date change is queued", async () => {
+  const store = new MemoryStore();
+  events[M1] = [];
+  byId[E2] = { id: E2, matter: { id: M1 }, subject: "Settlement", startTime: "2027-03-01T00:00:00", isDeleted: false };
+  await store.put("agreed", M1, { matter_id: M1, date: "2026-12-04", source: "signed contract", recorded: NOW.toISOString(), event_id: E2 });
+  const ctx = ctxFor(store);
+  await register(ctx);
+  assert.deepEqual(await check(ctx), { created: 0, queued: 1, skipped: 0 });
+  assert.equal(writes().length, 0, "nothing written by a cron");
+  assert.equal(hits.filter((h) => h.method === "POST").length, 0, "no second settlement event");
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /from 2027-03-01 to 2026-12-04/);
+  const done = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(done.status, "done");
+  assert.equal(hits.find((h) => h.method === "PUT")!.path, `/events/${E2}`);
+});
+
+test("a settlement event that was deleted is left for a person, never moved", async () => {
+  const store = new MemoryStore();
+  events[M1] = [];
+  byId[E2] = { id: E2, matter: { id: M1 }, subject: "Settlement", startTime: "2027-03-01T00:00:00", isDeleted: true };
+  await store.put("agreed", M1, { matter_id: M1, date: "2026-12-04", source: "signed contract", recorded: NOW.toISOString(), event_id: E2 });
+  const ctx = ctxFor(store);
+  await register(ctx);
+  assert.deepEqual(await check(ctx), { created: 0, queued: 0, skipped: 1 });
+  assert.equal(Object.keys(await store.list("approvals")).length, 0);
+  assert.equal(writes().length, 0);
+});
+
+test("the agreed record's source is stripped of control characters and capped in the approval summary", async () => {
+  const store = new MemoryStore();
+  await store.put("agreed", M1, { matter_id: M1, date: "2026-12-04", source: "conveyancer\u0007 email\n" + "x".repeat(300), recorded: NOW.toISOString() });
+  const ctx = ctxFor(store);
+  await register(ctx);
+  await check(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.ok(!/[\u0000-\u001f\u007f]/.test(ap.summary), "no control characters");
+  assert.ok(ap.summary.length < 260, "source is capped");
 });

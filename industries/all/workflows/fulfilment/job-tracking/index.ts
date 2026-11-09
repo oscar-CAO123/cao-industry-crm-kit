@@ -2,7 +2,7 @@
 // None of them sends. Judgment (what a stall means, what to tell a client) stays with the person who approves the queue.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Adapter, Platform, Settings, Tracked } from "./types.ts";
-import { DAY, keyOf } from "./types.ts";
+import { DAY, keyOf, oneLine } from "./types.ts";
 import { servicem8 } from "./adapters/servicem8.ts";
 import { asana } from "./adapters/asana.ts";
 
@@ -44,7 +44,7 @@ export async function progress(ctx: Ctx<Settings>) {
     const since = Date.parse(t.last_client_update ?? t.opened);
     const newProgress = !!t.last_activity && Date.parse(t.last_activity) > since;
     if (newProgress && (now - since) / DAY >= every && t.status !== "Completed" && t.status !== "Unsuccessful") {
-      const id = await a.clientMessage(ctx, t, `Update on ${t.title}`,
+      const id = await a.clientMessage(ctx, t, `Update on ${oneLine(t.title, 120)}`,
         `Hi ${t.contact.name ?? "there"}, here is a quick update on ${t.title}. It is ${plain(t.status)}. Reply to this message if you have questions.`,
         keyOf(`progress:${t.key}:${ctx.now.toISOString().slice(0, 10)}`));
       if (id) { t.last_client_update = ctx.now.toISOString(); queued++; }
@@ -64,7 +64,7 @@ export async function closeOut(ctx: Ctx<Settings>) {
     const t: Tracked = { ...old, ...(await a.refresh(ctx, old)) };
     if (t.status === "Completed") {
       await a.note(ctx, t, `Finished on ${ctx.now.toISOString().slice(0, 10)}. Check the final time, materials and invoice before closing it out.`);
-      await a.clientMessage(ctx, t, `Your job is complete: ${t.title}`,
+      await a.clientMessage(ctx, t, `Your job is complete: ${oneLine(t.title, 120)}`,
         `Hi ${t.contact.name ?? "there"}, ${t.title} is complete. Thank you for working with ${ctx.settings.business_name ?? "us"}.`,
         keyOf(`complete:${t.key}`));
       t.closed = ctx.now.toISOString();

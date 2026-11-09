@@ -1,5 +1,5 @@
-// Cliniko: an agreement is a patient form made from the business's agreement template. The cron drafts it in the patient's
-// record and never sends it: Cliniko's API maps no send, so a person sends it from the patient record.
+// Cliniko: an agreement is a patient form made from the business's agreement template. The cron queues its creation for
+// approval, and it is created unsent in the patient's record: Cliniko's API maps no send, so a person sends it from the record.
 // Field names come from Cliniko's official OpenAPI pages for patient-case, patient-form and signature (mapped in ops.json).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { ID, id, type Settings } from "../types.ts";
@@ -20,11 +20,12 @@ export async function activeCases(ctx: Ctx<Settings>): Promise<{ patient_id: str
   return out;
 }
 
-/** Drafts the agreement as an unsent form in the patient's record. Returns the new form's id. */
-export async function draftAgreement(ctx: Ctx<Settings>, patientId: string, templateId: string): Promise<string> {
-  const r = await ctx.draft<any>({ platform: P, op: "patient-form.createpatientform", summary: `draft agreement form for patient ${patientId}`,
-    input: { params: { patient_id: id(patientId, "patient"), patient_form_template_id: id(templateId, "agreement template"), email_to_patient_on_completion: false } } });
-  return id(r.data?.id, "new patient form");
+/** Queued for a person's approval: creating a form may email the patient (the careplan workflow treats this op as live too).
+ *  Once approved, the agreement is created unsent in the patient's record. Returns the approval id. */
+export function queueAgreement(ctx: Ctx<Settings>, patientId: string, templateId: string): Promise<string> {
+  const pid = id(patientId, "patient"), tid = id(templateId, "agreement template");
+  return ctx.queue({ platform: P, op: "patient-form.createpatientform", key: `agreement-${pid}-${tid}`, summary: `create unsent agreement form for patient ${pid}`,
+    input: { params: { patient_id: pid, patient_form_template_id: tid, email_to_patient_on_completion: false } } });
 }
 
 /** One patient form, read fresh. */

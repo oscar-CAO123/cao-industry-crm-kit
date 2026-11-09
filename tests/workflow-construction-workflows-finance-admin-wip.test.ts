@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { wipSnapshot, progressClaim, chase } from "../industries/construction/workflows/finance-admin/wip/index.ts";
 import type { Settings, Job } from "../industries/construction/workflows/finance-admin/wip/types.ts";
 import fs from "node:fs";
@@ -15,7 +15,7 @@ const NOW = new Date("2026-11-09T22:00:00Z");
 const DAY = 864e5;
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 
-type Hit = { method: string; path: string; body: any };
+type Hit = { method: string; path: string; body: any; headers: Record<string, string> };
 type Inv = { InvoiceID: string; Type: string; Status: string; SubTotal: number; AmountDue: number; DueDate: string; InvoiceNumber: string; Contact: { ContactID: string } };
 let hits: Hit[] = [];
 let invoices: Inv[] = [];
@@ -31,7 +31,7 @@ function fake() {
     fetch: (async (url: any, init: any) => {
       const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
-      hits.push({ method: m, path: p, body });
+      hits.push({ method: m, path: p, body, headers: init?.headers ?? {} });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
@@ -104,7 +104,7 @@ test("progress claim: a DRAFT invoice and one approval to authorise and email; n
   assert.equal(sends().length, 0, "nothing emailed by a cron");
   const [ap] = Object.values(await store.list<Approval>("approvals"));
   assert.deepEqual(ap.acts.map((a) => a.op), ["accounting.updateInvoice", "accounting.emailInvoice"]);
-  assert.match(ap.summary, /\$2,000\.00 retention held back/);
+  assert.match(ap.summary, /the invoice carries the full amount, \$2,000\.00 retention recorded, not taken off this invoice/);
   assert.deepEqual(await progressClaim(context(WF, S, store, NOW, () => {})), { drafted: 0 }, "not due again");
   assert.equal(creates().length, 1);
   assert.equal(Object.keys(await store.list("approvals")).length, 1, "re-runs never queue twice");
@@ -149,4 +149,24 @@ test("a job with a bad contact id is skipped, never called", async () => {
   assert.deepEqual(await progressClaim(context(WF, bad, store, NOW, (m) => logs.push(m))), { drafted: 0 });
   assert.equal(hits.length, 0);
   assert.ok(logs.some((l) => /skip job: .*ContactID/.test(l)), logs.join(" | "));
+});
+
+test("progress claim: the email carries an idempotency key per claim, so a retried approval cannot email twice", async () => {
+  const store = new MemoryStore();
+  await progressClaim(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, ap.id, "owner", NOW);
+  const key = sends()[0].headers["Idempotency-Key"];
+  assert.ok(key, "the email has an Idempotency-Key header");
+  assert.match(key, /^email:00000000-0000-4000-8000-000000000001:claim:1$/);
+});
+
+test("progress claim: a rejected claim is not billed, so the next claim raises the same progress again", async () => {
+  const store = new MemoryStore();
+  await progressClaim(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  await reject(WF, store, ap.id, "owner", NOW);
+  assert.deepEqual(await progressClaim(context(WF, S, store, new Date(NOW.getTime() + 31 * DAY), () => {})), { drafted: 1 }, "rejected progress is claimed again");
+  assert.equal(creates()[1].body.Invoices[0].LineItems[0].UnitAmount, 40000, "the full 40 per cent, not nothing");
+  assert.equal(sends().length, 0, "still nothing emailed");
 });

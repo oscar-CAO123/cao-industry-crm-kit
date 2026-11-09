@@ -6,7 +6,7 @@ import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, EMAIL } from "../types.ts";
 
 export const P = "microsoft-365";
-const ID = /^[A-Za-z0-9=_\-!.]{1,400}$/;
+const ID = /^[A-Za-z0-9][A-Za-z0-9=_\-!.]{0,399}$/;
 
 export function mailbox(ctx: Ctx<Settings>): string {
   const box = ctx.settings.microsoft_365?.mailbox;

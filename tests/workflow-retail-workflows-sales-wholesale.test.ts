@@ -135,5 +135,26 @@ test("a stockist with no valid email is held before any invoice is drafted", asy
   assert.equal(invoiceDrafts().length, 0);
 });
 
+test("customer email addresses stay out of the cron log, for both an invoice send and a chase", async () => {
+  const logs: string[] = [];
+  const store = new MemoryStore();
+  const ctx = context(WF, SETTINGS, store, NOW, (m) => logs.push(m));
+  await store.put("accounts", ACCOUNT.id, { ...ACCOUNT, status: "contact-ready", xero_contact_id: CID });
+  await store.put("orders", ORDER.id, ORDER);
+  await invoice(ctx);
+  assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 1, "the send was queued, so its log line was written");
+
+  const chaseStore = new MemoryStore(), chaseLogs: string[] = [];
+  const late = new Date("2026-12-20T00:00:00Z");
+  await chaseStore.put("accounts", ACCOUNT.id, { ...ACCOUNT, status: "contact-ready", xero_contact_id: CID });
+  await chaseStore.put("orders", ORDER.id, { ...ORDER, status: "invoiced", invoice_id: INV, due: "2026-11-20" });
+  overdueRows = [{ InvoiceID: INV, InvoiceNumber: "INV-0001", DueDate: "2026-11-20", AmountDue: 540, Status: "AUTHORISED" }];
+  assert.deepEqual(await chase(context(WF, SETTINGS, chaseStore, late, (m) => chaseLogs.push(m))), { queued: 1 });
+
+  const all = [...logs, ...chaseLogs];
+  assert.ok(all.length > 0);
+  assert.ok(all.every((l) => !l.includes(ACCOUNT.email)), all.join("\n"));
+});
+
 // Typed Order for the assertions above.
 type Order = import("../industries/retail/workflows/sales/wholesale/types.ts").Order;

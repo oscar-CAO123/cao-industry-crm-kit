@@ -15,10 +15,10 @@ const S: any = { family: "job-cost-tracking", budget_from: "2026-07-01", budget_
 
 type Hit = { method: string; path: string; query: URLSearchParams; body: any };
 let hits: Hit[] = [];
-let approved = 0;
+let approved = 0, poPages = 1, budgetCount = 1;
 
 function fake() {
-  hits = []; approved = 0;
+  hits = []; approved = 0; poPages = 1; budgetCount = 1;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -29,15 +29,15 @@ function fake() {
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
       // Budgets: account 500 budget 1000, account 510 budget 400
-      if (p.endsWith("/Budgets") && m === "GET") return json({ Budgets: [{ BudgetID: B1, Description: "FY27 cost budget" }] });
+      if (p.endsWith("/Budgets") && m === "GET") return json({ Budgets: Array.from({ length: budgetCount }, (_, i) => ({ BudgetID: i === 0 ? B1 : `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`, Description: "FY27 cost budget" })) });
       if (p.endsWith(`/Budgets/${B1}`)) return json({ Budgets: [{ BudgetID: B1, Description: "FY27 cost budget", BudgetLines: [
         { AccountCode: "500", BudgetBalances: [{ Period: "2026-11", UnitAmount: 1000, Amount: 1 }] },
         { AccountCode: "510", BudgetBalances: [{ Period: "2026-11", UnitAmount: 400, Amount: 1 }] }] }] });
       // Purchase orders: 700 authorised and 300 billed on 500, 50 submitted on 510
-      if (p.endsWith("/PurchaseOrders")) return json({ PurchaseOrders: u.searchParams.get("page") === "1" ? [
+      if (p.endsWith("/PurchaseOrders")) { const pg = Number(u.searchParams.get("page")); return json({ PurchaseOrders: pg === 1 ? [
         { Status: "AUTHORISED", LineItems: [{ AccountCode: "500", LineAmount: 700 }] },
         { Status: "BILLED", LineItems: [{ AccountCode: "500", LineAmount: 300 }] },
-        { Status: "SUBMITTED", LineItems: [{ AccountCode: "510", LineAmount: 50 }] }] : [] });
+        { Status: "SUBMITTED", LineItems: [{ AccountCode: "510", LineAmount: 50 }] }] : pg <= poPages ? [{ Status: "SUBMITTED", LineItems: [{ AccountCode: "510", LineAmount: 1 }] }] : [] }); }
       // Bills: 450 authorised on 500, a 9999 draft on 500 that must not count
       if (p.endsWith("/Invoices")) return json({ Invoices: u.searchParams.get("page") === "1" ? [
         { Type: "ACCPAY", Status: "AUTHORISED", LineItems: [{ AccountCode: "500", LineAmount: 450 }] },
@@ -111,3 +111,17 @@ test("a draft call cannot run the approval operation", async () => {
   await assert.rejects(ctx.draft({ platform: "xero", op: "payroll-au-v2.approveTimesheet", summary: "x" }), /not a draft operation/);
   assert.equal(approved, 0);
 });
+
+test("spend-watch: a purchase order list past the page cap is an error, never a partial total", async () => {
+  poPages = 25;
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await budgetWatch(ctx);
+  await assert.rejects(spendWatch(ctx), /more than 20 pages/);
+  assert.equal(await store.get("spend", "spend:500"), undefined, "nothing recorded from a partial read");
+});
+
+test("budget-watch: more budgets than the baseline holds is an error, never a silent cut", async () => {
+  budgetCount = 51;
+  await assert.rejects(budgetWatch(context(WF, S, new MemoryStore(), NOW, () => {})), /51 budgets in Xero, more than 50/);
+});
+

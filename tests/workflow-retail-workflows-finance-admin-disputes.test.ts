@@ -146,6 +146,17 @@ test("respond: a submit is queued once staged evidence exists, and runs only on 
   assert.deepEqual(await respond(ctx), { queued: 0, invalid: 0, flagged: 0, held: 0 }, "re-runs never queue twice");
 });
 
+test("respond: the queued Square submit names the staged evidence type and text the approver is approving", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("evidence", "DSP_1001", { evidence_type: "PROOF_OF_DELIVERY_DOCUMENTATION", text: "Tracked parcel delivered 3 Nov.", written_by: "owner" });
+  await watch(ctx);
+  await store.put("dispute_decisions", "DSP_1001", { decision: "submit", decided_by: "owner" });
+  await respond(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /PROOF_OF_DELIVERY_DOCUMENTATION/);
+  assert.match(ap.summary, /Tracked parcel delivered 3 Nov\./);
+});
+
 test("respond: a submit with no evidence staged is held, never queued", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await watch(ctx);

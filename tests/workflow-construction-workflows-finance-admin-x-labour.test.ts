@@ -176,3 +176,32 @@ test("approve: each clean Draft timesheet is queued once, held people are not, a
   assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_A)!.status, "Approved");
   assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_B)!.status, "Draft", "the held person stays in draft");
 });
+
+test("mirror: a queued approval is withdrawn once its person is held, so partial hours cannot be approved", async () => {
+  events = [ev(31, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(32, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF"),
+    ev(33, STAFF_B, "2026-11-02 06:00:00", "CLOCK_ON"), ev(34, STAFF_B, "2026-11-02 14:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  assert.deepEqual(await wf.mirror(ctx), { mirrored: 2, flagged: 0, unmapped: 0, failed: 0, held: 0 });
+  assert.deepEqual(await wf.approve(ctx), { queued: 2, held: 0 });
+  events = [...events, ev(35, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON")];
+  await wf.mirror(ctx);
+  const all = Object.values(await store.list<Approval>("approvals"));
+  const a = all.find((x) => x.summary.includes(EMP_A))!, b = all.find((x) => x.summary.includes(EMP_B))!;
+  assert.equal(a.status, "rejected", "A is clocked on again, so A's queued approval is withdrawn");
+  assert.equal(b.status, "pending", "B is still clean and stays queued");
+  await assert.rejects(approve(WF, store, a.id, "owner", NOW), /already rejected/);
+  assert.equal(count(isLive), 0, "nothing approved");
+});
+
+test("mirror: a timesheet a crashed run created in Xero is reused, never duplicated", async () => {
+  events = [ev(21, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(22, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  assert.equal(createdSheets(), 1);
+  for (const k of Object.keys(await store.list("xts"))) await store.put("xts", k, undefined);
+  events = [...events, ev(23, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON"), ev(24, STAFF_A, "2026-11-03 15:00:00", "CLOCK_OFF")];
+  assert.deepEqual(await wf.mirror(ctx), { mirrored: 1, flagged: 0, unmapped: 0, failed: 0, held: 0 });
+  assert.equal(createdSheets(), 1, "no second draft timesheet for the same person and period");
+  assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_A)!.totalHours, 16, "the new shift is a line on the existing draft");
+});
+

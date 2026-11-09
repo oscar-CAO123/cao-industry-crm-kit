@@ -38,10 +38,11 @@ export async function review(ctx: Ctx<Settings>) {
 }
 
 /** Why a rainfall proposal is refused before it reaches the queue, or undefined when it is fine. */
-function refusal(p: RainProposal, now: number, watched: Set<string>): string | undefined {
+function refusal(p: RainProposal, now: number, watched: Set<string>, read: Set<string>): string | undefined {
   if (p.kind !== "rainfall") return "unknown kind";
   if (!FARM.test(String(p.farm_id ?? ""))) return "farm id is not a plain id";
   if (watched.size && !watched.has(p.farm_id)) return "farm is not in farm_ids";
+  if (!read.has(p.farm_id)) return "farm was not read by collect";
   if (!SENSOR.test(String(p.sensor_id ?? ""))) return "sensor id is not a plain id";
   if (!(typeof p.value === "number" && Number.isFinite(p.value) && p.value >= 0 && p.value <= 500)) return "value must be 0 to 500 mm";
   if (!(typeof p.time === "number" && p.time >= now - 400 * DAY && p.time <= now + DAY)) return "time must be within the last 400 days and at most a day ahead";
@@ -53,10 +54,12 @@ function refusal(p: RainProposal, now: number, watched: Set<string>): string | u
 export async function queueRecords(ctx: Ctx<Settings>) {
   const now = ctx.now.getTime();
   const watched = new Set(ctx.settings.farm_ids ?? []);
+  // Only farms that collect actually read (with farm_ids empty, the five farms the token could see) may be written to.
+  const read = new Set(Object.values(await ctx.store.list<Snapshot>("snapshots")).map((s) => s.farm.id));
   let queued = 0, refused = 0;
   for (const [key, p] of Object.entries(await ctx.store.list<RainProposal>("proposals"))) {
     if (p.status && p.status !== "new") continue;
-    const why = refusal(p, now, watched);
+    const why = refusal(p, now, watched, read);
     if (why) { refused++; await ctx.store.put("proposals", key, { ...p, status: "refused", reason: why }); continue; }
     const approval = await ctx.queue(rainfallAct(p, keyOf(`rain:${p.farm_id}:${p.sensor_id}:${toMs(p.time)}:${p.value}`)));
     await ctx.store.put("proposals", key, { ...p, status: "queued", approval });

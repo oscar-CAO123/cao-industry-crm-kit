@@ -15,6 +15,7 @@ type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let opps: Record<string, any[]> = {};   // GoHighLevel opportunities by pipeline stage
 let deals: Record<string, any[]> = {};  // Pipedrive deals by stage
+let failTasksFor = new Set<string>();   // GoHighLevel contact ids whose task write is refused
 
 function fake() {
   hits = [];
@@ -27,6 +28,8 @@ function fake() {
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       // GoHighLevel
       if (p === "/opportunities/search") return json({ opportunities: opps[u.searchParams.get("pipelineStageId") ?? ""] ?? [], meta: {} });
+      const task = /^\/contacts\/([^/]+)\/tasks$/.exec(p);
+      if (task && m === "POST" && failTasksFor.has(task[1])) return new Response("refused", { status: 400 });
       if (/^\/contacts\/[^/]+\/(tasks|notes)$/.test(p) && m === "POST") return json({ id: "t1" });
       if (p === "/conversations/messages" && m === "POST") return json({ messageId: "m1", conversationId: "c1", status: "pending" });
       if (/^\/opportunities\/[^/]+\/status$/.test(p) && m === "PUT") return json({ id: "o1" });
@@ -57,7 +60,7 @@ const sendHits = () => hits.filter((h) => h.path === "/conversations/messages");
 const stageHits = () => hits.filter((h) => /^\/opportunities\/[^/]+\/status$/.test(h.path) || /^\/api\/v2\/deals\/[^/]+$/.test(h.path));
 
 beforeEach(() => {
-  fake(); opps = {}; deals = {};
+  fake(); opps = {}; deals = {}; failTasksFor = new Set();
   Object.assign(process.env, { GHL_ACCESS_TOKEN: "ghl-test", PIPEDRIVE_API_TOKEN: "pd-test", KIT_ALLOW_WRITES: "1" });
 });
 
@@ -117,6 +120,18 @@ test("follow-ups wait their gap, an approved send runs, and a quiet lead is queu
   assert.equal(sendHits().length, 1);
   assert.equal(sendHits()[0].body.contactId, "cOPP1");
   assert.equal(sendHits()[0].body.type, "SMS");
+});
+
+test("one lead whose CRM write is refused does not stop the other leads in the run", async () => {
+  opps = { NEW1: [opp("OPP1", "NEW1"), opp("OPP2", "NEW1")] };
+  const store = new MemoryStore();
+  await intake(ctxFor(GHL, store));
+  failTasksFor = new Set(["cOPP1"]);
+  assert.deepEqual(await draft(ctxFor(GHL, store)), { touched: 1, held: 0 }, "the refused lead is skipped, the other is touched");
+  assert.equal((await store.get<any>("leads", "gohighlevel:OPP1")).touches, 0, "the refused lead keeps its place");
+  assert.equal((await store.get<any>("leads", "gohighlevel:OPP2")).touches, 1);
+  failTasksFor = new Set();
+  assert.deepEqual(await draft(ctxFor(GHL, store)), { touched: 1, held: 0 }, "the refused lead is tried again on the next run");
 });
 
 test("a lead that leaves the watched stages stops getting touches", async () => {

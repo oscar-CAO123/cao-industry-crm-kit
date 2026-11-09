@@ -15,27 +15,35 @@ const M1 = "11111111-0000-4000-8000-000000000001", M2 = "11111111-0000-4000-8000
 const P1 = "22222222-0000-4000-8000-000000000001";
 const NOW = new Date("2026-11-09T00:00:00Z");
 
-type Hit = { method: string; path: string; body: any };
+type Hit = { method: string; path: string; query: URLSearchParams; body: any };
 let hits: Hit[] = [];
+let lateTxn = false;   // a second page with one more unallocated receipt
 
 function fake() {
-  hits = [];
+  hits = []; lateTxn = false;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
       const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
-      hits.push({ method: m, path: p, body });
+      hits.push({ method: m, path: p, query: u.searchParams, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (p === `/bankaccounts/${A1}/matter-balances`) return json({ value: [
         { matter: { id: M1 }, balance: 1000, availableBalance: 1000 },
         { matter: { id: M2 }, balance: -50, availableBalance: -50 },
         { matter: { id: M3 }, balance: 300, availableBalance: 300 },
       ] });
-      if (p === `/bankaccounts/${A1}/transactions`) return json({ value: [
-        { id: "T1", type: "Deposit", amount: 500, matter: { id: M1 }, enteredDate: "2026-11-08T00:00:00Z" },
-        { id: "T2", type: "Deposit", amount: 200, matter: null, enteredDate: "2026-11-08T01:00:00Z" },
-      ] });
+      if (p === `/bankaccounts/${A1}/transactions`) {
+        const off = Number(u.searchParams.get("Offset") ?? 0);
+        // A full first page (200 rows) so the cron must read the next page; the filler is allocated, so it flags nothing.
+        if (off === 0) return json({ value: [
+          { id: "T1", type: "Deposit", amount: 500, matter: { id: M1 }, enteredDate: "2026-11-08T00:00:00Z" },
+          { id: "T2", type: "Deposit", amount: 200, matter: null, enteredDate: "2026-11-08T01:00:00Z" },
+          ...Array.from({ length: 198 }, (_, i) => ({ id: `F${i}`, type: "Deposit", amount: 1, matter: { id: M1 }, enteredDate: "2026-11-01T00:00:00Z" })),
+        ] });
+        if (off === 200 && lateTxn) return json({ value: [{ id: "LATE", type: "Deposit", amount: 75, matter: null, enteredDate: "2026-11-08T02:00:00Z" }] });
+        return json({ value: [] });
+      }
       if (p === `/bankaccounts/${A1}/requisitions` && m === "POST") return json({ id: "R1" });
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
@@ -110,5 +118,46 @@ test("bad ids, bad amounts and accounts outside settings are refused before any 
   await store.put("requests", "other-acct", { ...base, id: "other-acct", account_id: "ZZ" } satisfies Request);
   assert.deepEqual(await disbursements(ctx), { queued: 0, parked: 3 });
   for (const id of ["bad-payee", "bad-cents", "other-acct"]) assert.equal((await store.get<Request>("requests", id))!.status, "needs-check");
+  assert.equal(writes().length, 0);
+});
+
+test("requisitions waiting for approval reserve the matter's balance, within a run and across runs", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  // M1 holds 1000. Two requests of 600 cannot both be queued against it.
+  const base = { account_id: A1, matter_id: M1, payee_id: P1, status: "requested" as const, requested_at: NOW.toISOString() };
+  await store.put("requests", "req-a", { ...base, id: "req-a", amount: 600 } satisfies Request);
+  await store.put("requests", "req-b", { ...base, id: "req-b", amount: 600 } satisfies Request);
+  assert.deepEqual(await disbursements(ctx), { queued: 1, parked: 1 }, "the second 600 is parked in the same run");
+  assert.match(String((await store.get<Request>("requests", "req-b"))?.reason_parked), /after approvals already waiting/);
+  // 400 is left free by the queued 600. A later request of 300 fits; one of 200 does not.
+  await store.put("requests", "req-c", { ...base, id: "req-c", amount: 300 } satisfies Request);
+  await store.put("requests", "req-d", { ...base, id: "req-d", amount: 200 } satisfies Request);
+  assert.deepEqual(await disbursements(ctx), { queued: 1, parked: 1 }, "a later run respects the reservation");
+  assert.equal((await store.get<Request>("requests", "req-c"))?.status, "queued");
+  assert.equal((await store.get<Request>("requests", "req-d"))?.status, "needs-check");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 2);
+  assert.equal(writes().length, 0, "nothing sent by a cron");
+});
+
+test("a crash between the receipt writes does not drop the unallocated flag", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  let crash = true;
+  const put = store.put.bind(store);
+  store.put = async (ns: string, k: string, v: unknown) => {
+    if (ns === "flags" && crash && k.includes("unalloc")) { crash = false; throw new Error("crash between the two writes"); }
+    return put(ns, k, v);
+  };
+  await assert.rejects(receipts(ctx));
+  assert.deepEqual(await receipts(ctx), { flagged: 1 }, "the flag is raised on the retry");
+  const flags = Object.values(await store.list<Flag>("flags")).filter((f) => f.kind === "unallocated-transaction");
+  assert.equal(flags.length, 1);
+});
+
+test("receipts reads every page of trust transactions, not only the first", async () => {
+  lateTxn = true;
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  assert.deepEqual(await receipts(ctx), { flagged: 2 }, "T2 on page one and LATE on page two");
+  const pages = hits.filter((h) => h.path.endsWith("/transactions")).map((h) => h.query.get("Offset"));
+  assert.deepEqual(pages, ["0", "200"]);
   assert.equal(writes().length, 0);
 });

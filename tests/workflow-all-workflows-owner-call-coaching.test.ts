@@ -5,10 +5,11 @@ import fs from "node:fs";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord } from "../core/workflows/runtime.ts";
+import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { capture, coach, validScore } from "../industries/all/workflows/owner/call-coaching/index.ts";
 import type { Score } from "../industries/all/workflows/owner/call-coaching/types.ts";
 import { main } from "../tools/workflow.ts";
+import { queueRepEmail } from "../industries/all/workflows/owner/call-coaching/adapters/gohighlevel.ts";
 
 const DIR = "industries/all/workflows/owner/call-coaching";
 const WF = JSON.parse(fs.readFileSync(`${DIR}/workflow.json`, "utf8")) as WorkflowRecord;
@@ -50,6 +51,7 @@ function fake() {
       if (p === "/voice-ai/dashboard/call-logs") return json({ total: 1, page: 1, pageSize: 10, callLogs: [{
         id: "call-1", contactId: "CONTACT0001", agentId: "agent-1", createdAt: "2026-11-07T22:00:00Z", duration: 300,
         trialCall: false, executedCallActions: [], summary: "Asked for a quote", transcript: "Caller: I need a quote" }] });
+      if (p === "/contacts/FAILME0001/notes") return new Response("{}", { status: 404 });
       if (/^\/contacts\/[^/]+\/notes$/.test(p) && m === "POST") return json({ note: { id: "n1" } });
       if (p === "/conversations/messages" && m === "POST") return json({ messageId: "m1" });
       return new Response("not faked: " + p, { status: 404 });
@@ -91,6 +93,9 @@ test("coach drafts the note and queues the rep email, and sends nothing", async 
   const pending = await main(["approvals", DIR], store) as any[];
   assert.equal(pending.length, 1);
   assert.match(pending[0].summary, /sam@example\.com/);
+  assert.match(pending[0].summary, /Your call coaching: Discovery call with Ari/, "the approver sees the subject");
+  assert.match(pending[0].summary, /Ask <b>budget<\/b> before quoting\./, "the approver sees the coaching lines");
+  assert.match(pending[0].summary, /Send the pricing sheet/, "the approver sees the next step");
 });
 
 test("the rep email goes only when approved, escaped, and re-runs never queue or repeat", async () => {
@@ -112,6 +117,35 @@ test("the rep email goes only when approved, escaped, and re-runs never queue or
   assert.equal(sent.emailFrom, "coaching@example.com");
   assert.match(sent.html, /&lt;b&gt;budget&lt;\/b&gt;/, "coaching text is escaped in the email");
   assert.doesNotMatch(sent.html, /<b>budget/);
+});
+
+test("one call that fails does not stop the others, and it is tried again on the next run", async () => {
+  const store = new MemoryStore(), ctx = () => context(WF, SETTINGS, store, NOW, () => {});
+  const base = { platform: "gohighlevel", title: "Voice call", happened: NOW.toISOString(), summary: "", next_steps: [], transcript: "x", captured: NOW.toISOString() } as const;
+  await store.put("calls", "gohighlevel:call-a", { ...base, key: "gohighlevel:call-a", ref: "call-a", contactId: "FAILME0001" });
+  await store.put("calls", "gohighlevel:call-b", { ...base, key: "gohighlevel:call-b", ref: "call-b", contactId: "CONTACT0001" });
+  await store.put("scores", "gohighlevel:call-a", GOOD);
+  await store.put("scores", "gohighlevel:call-b", GOOD);
+  assert.deepEqual(await coach(ctx()), { noted: 1, queued: 0 });
+  assert.ok((await store.get<any>("calls", "gohighlevel:call-b")).coached, "the second call is coached");
+  assert.equal((await store.get<any>("calls", "gohighlevel:call-a")).coached, undefined, "the failed call is not marked coached");
+});
+
+test("a rep contact id that is not valid stops the coach run before any write", async () => {
+  const store = new MemoryStore();
+  await capture(context(WF, SETTINGS, store, NOW, () => {}));
+  await store.put("scores", "fireflies:ff-1", GOOD);
+  await assert.rejects(coach(context(WF, { ...SETTINGS, reps: { "sam@example.com": "../bad" } }, store, NOW, () => {})), /settings\.reps/);
+  assert.equal(sends().length + notes().length, 0);
+});
+
+test("a rep email subject is one line: line breaks are removed before it is sent", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await queueRepEmail(ctx, { key: "fireflies:ff-9" }, "REPCONTACT01", "Your call\r\nBcc: nobody@example.com", "<p>Hi</p>", "summary");
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  const subject = ap.acts[0].input!.body!.subject as string;
+  assert.doesNotMatch(subject, /[\r\n]/, "no line break in the subject");
+  assert.equal(subject, "Your call Bcc: nobody@example.com");
 });
 
 test("a cron cannot draft a live operation or queue a read", async () => {

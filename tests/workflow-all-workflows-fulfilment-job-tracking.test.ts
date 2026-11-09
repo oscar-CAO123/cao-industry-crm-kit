@@ -124,6 +124,18 @@ test("client messages escape job text: a hostile description cannot inject marku
   assert.ok(html.includes("&lt;img"), "escaped");
 });
 
+test("subjects carry one line of job text: a line break in a job description cannot start a new header", async () => {
+  s8Desc = "Hot water\r\nBcc: someone@example.com";
+  const store = new MemoryStore();
+  await intake(context(WF, S8, store, new Date("2026-11-01T00:00:00Z"), () => {}));
+  s8Edit = "2026-11-08 06:00:00";
+  await progress(context(WF, S8, store, new Date("2026-11-09T00:00:00Z"), () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  const subject = String(ap.acts[0].input?.body?.subject ?? "");
+  assert.doesNotMatch(subject, /[\u0000-\u001f\u007f]/, "no control characters in the subject");
+  assert.ok(subject.includes("Hot water"), "the job text is still there");
+});
+
 test("close-out: a completed ServiceM8 job gets a draft note and a queued completion email, then closes once", async () => {
   const store = new MemoryStore();
   await intake(context(WF, S8, store, NOW, () => {}));

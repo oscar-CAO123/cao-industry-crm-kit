@@ -12,7 +12,7 @@ import fs from "node:fs";
 
 const FOLDER = "industries/manufacturing/workflows/finance-admin/purchase";
 const WF = JSON.parse(fs.readFileSync(`${FOLDER}/workflow.json`, "utf8")) as WorkflowRecord;
-const S: any = { warehouse_code: "MAIN", reorder_levels: [{ productCode: "OAK-19", minQty: 20, orderQty: 60 }], delivery_days: 14, bill_account_code: "" };
+const S: any = { warehouse_code: "MAIN", reorder_levels: [{ productCode: "OAK-19", minQty: 20, orderQty: 60 }], delivery_days: 14, tax_rate_percent: 10, bill_account_code: "" };
 const NOW = new Date("2026-11-09T00:00:00Z");
 const PO = "11111111-2222-4333-8444-555555555555", CID = "87654321-4321-4321-8321-210987654321", INV = "abcdefab-cdef-4abc-8def-abcdefabcdef";
 
@@ -21,6 +21,7 @@ let hits: Hit[] = [];
 let unl = { stock: [] as any[], products: [] as any[], orders: [] as any[] };
 let unlDrafts: Act[] = [];
 let posted: any[] = [];
+let postFails = false;
 
 function fakeXero() {
   hits = [];
@@ -42,8 +43,8 @@ function fakeXero() {
 }
 
 /** Unleashed reads and the draft order come from these stubs. Any other Unleashed op fails the test. */
-function ctxFor(store: MemoryStore) {
-  const base = context(WF, S, store, NOW, () => {});
+function ctxFor(store: MemoryStore, settings: any = S) {
+  const base = context(WF, settings, store, NOW, () => {});
   return {
     ...base,
     draft: async (a: Act) => {
@@ -53,7 +54,10 @@ function ctxFor(store: MemoryStore) {
       if (a.op === "docs.get_StockOnHand") return { data: { Items: unl.stock } } as any;
       if (a.op === "docs.get_Products") return { data: { Items: unl.products } } as any;
       if (a.op === "docs.get_PurchaseOrders") return { data: { Items: unl.orders } } as any;
-      if (a.op === "docs.post_PurchaseOrders") { posted.push(a.input?.body); return { data: { Guid: PO, OrderNumber: "PO-00042" } } as any; }
+      if (a.op === "docs.post_PurchaseOrders") {
+        if (postFails) throw new Error("unleashed: HTTP 500 after the order was sent");
+        posted.push(a.input?.body); return { data: { Guid: PO, OrderNumber: "PO-00042" } } as any;
+      }
       throw new Error(`unexpected ${a.op}`);
     },
   } as any;
@@ -63,7 +67,7 @@ const OAK = { ProductCode: "OAK-19", SupplierCode: "BERRY", SupplierName: "Berry
 
 beforeEach(() => {
   fakeXero(); setTokenStore(new MemoryTokenStore());
-  unl = { stock: [], products: [], orders: [] }; unlDrafts = []; posted = [];
+  unl = { stock: [], products: [], orders: [] }; unlDrafts = []; posted = []; postFails = false;
   Object.assign(process.env, { XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1" });
 });
 
@@ -86,6 +90,37 @@ test("reorder: a product under its minimum gets one Parked order, once, at the s
   assert.deepEqual(await reorder(ctxFor(store)), { drafted: 0, skipped: 1 }, "an open order is not raised again");
   assert.equal(posted.length, 1);
   assert.ok(unlDrafts.every((a) => !a.op.startsWith("docs.put")), "reorder never places an order");
+});
+
+test("reorder: the draft carries SubTotal, TaxTotal and Total worked out from the line", async () => {
+  unl.stock = [{ ProductCode: "OAK-19", AvailableQty: 5 }];
+  unl.products = [OAK];
+  await reorder(ctxFor(new MemoryStore()));
+  assert.equal(posted[0].SubTotal, 2550);   // 60 x 42.50
+  assert.equal(posted[0].TaxTotal, 255);    // 10%
+  assert.equal(posted[0].Total, 2805);
+});
+
+test("reorder: refuses to run without tax_rate_percent, and drafts nothing", async () => {
+  unl.stock = [{ ProductCode: "OAK-19", AvailableQty: 5 }];
+  unl.products = [OAK];
+  const { tax_rate_percent: _omit, ...noTax } = S;
+  assert.deepEqual(await reorder(ctxFor(new MemoryStore(), noTax)), { drafted: 0, skipped: 0 });
+  assert.equal(unlDrafts.filter((a) => a.op === "docs.post_PurchaseOrders").length, 0);
+});
+
+test("reorder: a draft that throws is kept as failed, and the next run does not raise a second order", async () => {
+  unl.stock = [{ ProductCode: "OAK-19", AvailableQty: 5 }];
+  unl.products = [OAK];
+  const store = new MemoryStore();
+  postFails = true;
+  assert.deepEqual(await reorder(ctxFor(store)), { drafted: 0, skipped: 1 });
+  const row = await store.get<Order>("orders", "OAK-19");
+  assert.equal(row!.status, "failed", "the row is marked failed, not left pending");
+  assert.match(row!.error ?? "", /HTTP 500/);
+  postFails = false;
+  assert.deepEqual(await reorder(ctxFor(store)), { drafted: 0, skipped: 1 }, "the failed row blocks a new order until a person clears it");
+  assert.equal(unlDrafts.filter((a) => a.op === "docs.post_PurchaseOrders").length, 1, "only the one attempt was made");
 });
 
 test("place: a parked order is queued for a person to place, once, and the cron never places it", async () => {

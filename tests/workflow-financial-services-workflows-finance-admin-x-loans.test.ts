@@ -21,9 +21,10 @@ const SETTINGS: any = {
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let inbox: any[] = [];
+let rowsFail = false, rowsWritten = 0;
 
 function fake() {
-  hits = [];
+  hits = []; rowsFail = false; rowsWritten = 0;
   inbox = [{ id: MSG, subject: "Home loan enquiry", from: { emailAddress: { name: "Ari", address: "ari@example.com" } },
     receivedDateTime: "2026-11-08T00:00:00Z", bodyPreview: "Looking at a home loan" }];
   setTransport({
@@ -36,7 +37,11 @@ function fake() {
       if (p.endsWith("/mailFolders/inbox/messages") && m === "GET") return json({ value: inbox });
       if (p.endsWith("/messages") && m === "POST") return json({ id: DRAFT });
       if (p.endsWith(`/messages/${DRAFT}/send`)) return new Response(null, { status: 202 });
-      if (p.endsWith("/rows") && m === "POST") return json({ index: 0 });
+      if (p.endsWith("/rows") && m === "POST") {
+        if (rowsFail) return new Response("register unavailable", { status: 500 });
+        rowsWritten++;
+        return json({ index: 0 });
+      }
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
   });
@@ -78,6 +83,26 @@ test("re-runs never draft or queue the same enquiry twice", async () => {
   await intake(ctx); await draft(ctx);
   assert.equal(drafts().length, 1, "one Outlook draft");
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "one approval");
+});
+
+test("a run that fails after the draft is made does not make a second draft or a second register row", async () => {
+  const store = new MemoryStore();
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  rowsFail = true;
+  await assert.rejects(draft(context(WF, SETTINGS, store, NOW, () => {})));
+  rowsFail = false;
+  assert.deepEqual(await draft(context(WF, SETTINGS, store, NOW, () => {})), { drafted: 1, skipped: 0 });
+  assert.equal(drafts().length, 1, "one Outlook draft across both runs");
+  assert.equal(rowsWritten, 1, "one register row across both runs");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "one approval");
+});
+
+test("the enquiry body preview is not stored: only the subject, name and email are kept", async () => {
+  const store = new MemoryStore();
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  const [e] = Object.values(await store.list<any>("enquiries"));
+  assert.equal("text" in e, false);
+  assert.equal(JSON.stringify(e).includes("Looking at a home loan"), false, "the body preview text is not in the store");
 });
 
 test("a draft operation cannot send, and a live operation cannot be drafted", async () => {

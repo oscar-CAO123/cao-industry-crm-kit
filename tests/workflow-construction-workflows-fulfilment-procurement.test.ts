@@ -47,7 +47,10 @@ function fake() {
       if (p.endsWith("/Contacts")) return json({ Contacts: [{ ContactID: CID, EmailAddress: "ari@example.com" }] });
       if (p.endsWith("/PurchaseOrders") && m === "PUT") return json({ PurchaseOrders: [{ PurchaseOrderID: POID, PurchaseOrderNumber: "PO-0001", Status: "DRAFT" }] });
       if (p.endsWith(`/PurchaseOrders/${POID}`) && m === "POST") return json({ PurchaseOrders: [{ PurchaseOrderID: POID, Status: "AUTHORISED" }] });
-      if (p.endsWith("/Invoices")) return json({ Invoices: bills });
+      if (p.endsWith("/Invoices")) {
+        const pg = Number(u.searchParams.get("page") ?? 1), ps = Number(u.searchParams.get("pageSize") ?? 100);
+        return json({ Invoices: bills.slice((pg - 1) * ps, pg * ps) });
+      }
       // Microsoft Graph
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
       if (p.endsWith("/messages") && m === "POST") return json({ id: `AAMkDraft${++drafts}` });
@@ -145,10 +148,27 @@ test("bill match is draft-only: it logs the bill against the PO once, and only w
   const award = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].op === "accounting.updatePurchaseOrder")!;
   await approve(WF, store, award.id, "owner", NOW);
   const before = live().length;
-  bills = [{ Contact: { ContactID: CID }, Total: 4200 }];
+  bills = [{ Contact: { ContactID: CID }, SubTotal: 4200, Total: 4620 }];   // GST-inclusive total, ex GST subtotal
   assert.deepEqual(await billMatch(ctx), { checked: 1, logged: 1 });
   assert.deepEqual(await billMatch(ctx), { checked: 1, logged: 0 }, "unchanged result is not logged again");
   assert.equal(logged.filter((l) => l.table === "Checks").length, 2, "one scope row and one bill row");
-  assert.equal(logged.at(-1)!.values[3], "Matches the PO");
+  assert.equal(logged.at(-1)!.values[3], "Matches the PO", "a GST-inclusive bill total is not a difference");
   assert.equal(live().length, before, "bill match sends and changes nothing");
+});
+
+test("bill match reads every page of bills: a match on a later page is found, not logged as No bill yet", async () => {
+  inbox = [COMPLETE];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx); await scopeCheck(ctx);
+  regRows = [[KEY_COMPLETE, "2026-11-08", "Roof framing", "Ari", "ari@example.com", "Quote for roof framing", 4200, "Received"]];
+  await orderDraft(ctx);
+  const award = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].op === "accounting.updatePurchaseOrder")!;
+  await approve(WF, store, award.id, "owner", NOW);
+  bills = [
+    ...Array.from({ length: 100 }, (_, i) => ({ Contact: { ContactID: `other-${i}` }, SubTotal: 1, Total: 1 })),   // fills page 1
+    { Contact: { ContactID: CID }, SubTotal: 4200, Total: 4620 },                                                    // page 2
+  ];
+  assert.deepEqual(await billMatch(ctx), { checked: 1, logged: 1 });
+  assert.equal(logged.at(-1)!.values[3], "Matches the PO");
+  assert.equal(hits.filter((h) => h.path.endsWith("/Invoices")).length, 2, "page 1 was full, so page 2 was read; page 2 was short, so the list ended");
 });

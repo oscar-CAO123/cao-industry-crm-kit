@@ -3,7 +3,7 @@
 // so the priced lines live in the kit's store. Field names from ServiceM8's official spec (Job, Note, Material, CompanyContact)
 // and the messaging spec (EmailMessage).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Settings, type Enquiry, type Line, type RateItem, type Variation, type Contact, EMAIL, PHONE, total, keyOf, esc, money, sendSummary, variationHtml } from "../types.ts";
+import { type Settings, type Enquiry, type Line, type RateItem, type Variation, type Contact, EMAIL, PHONE, total, keyOf, esc, sendSummary, variationHtml } from "../types.ts";
 
 const P = "servicem8" as const;
 const WORK_ORDER = "Work Order";                         // only accepted jobs take variations
@@ -51,13 +51,13 @@ export const servicem8 = {
       .filter((m) => UUID.test(String(m.uuid)) && Number.isFinite(Number(m.price)))
       .map((m): RateItem => ({ code: String(m.item_number || m.uuid), name: String(m.name ?? "").slice(0, 200), price: Number(m.price) }));
   },
-  /** Write one internal note on the job, then queue the priced variation to the client for approval. */
+  /** Write one note on the job (no prices: ServiceM8 job notes may show to the client), then queue the priced variation to the client for approval. */
   async draftVariation(ctx: Ctx<Settings>, e: Enquiry, lines: Line[], priced: boolean): Promise<Variation> {
     const job = uuid(e.ref?.job_uuid);
     let record = e.ref?.record_note;
     if (!record) {
       const r = await ctx.draft({ platform: P, op: "servicem8-api.createNotes", summary: `variation record note on job for ${e.title}`,
-        input: { body: { related_object: "job", related_object_uuid: job, note: `${RECORD} ${lines.length} lines, ${money(total(lines))} ex GST, awaiting client approval` } } });
+        input: { body: { related_object: "job", related_object_uuid: job, note: `${RECORD} ${lines.length} lines, awaiting client approval` } } });
       record = uuid(r.headers.get("x-record-uuid"));
       // Remember the note at once: if a later step fails, the next run does not write a second one.
       await ctx.store.put("enquiries", e.id, { ...e, ref: { ...(e.ref ?? {}), record_note: record } });

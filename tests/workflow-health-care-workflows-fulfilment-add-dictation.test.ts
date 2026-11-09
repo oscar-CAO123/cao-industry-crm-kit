@@ -80,6 +80,19 @@ test("draft cron writes a draft note with escaped answers, and never locks it", 
   assert.equal(s.note_id, NOTE);
 });
 
+test("section names, question names and the title are escaped like the answers", async () => {
+  const store = new MemoryStore();
+  await store.put("sessions", "s1", session({ title: "<b>Visit</b> & review",
+    sections: [{ name: "<i>Plan</i>", description: "a & b", questions: [{ name: "Q <script>", answer: "ok" }] }] }));
+  await draft(context(WF, SETTINGS, store, NOW, () => {}));
+  const [create] = writes("POST");
+  assert.equal(create.body.title, "&lt;b&gt;Visit&lt;/b&gt; &amp; review");
+  const sec = create.body.content.sections[0];
+  assert.equal(sec.name, "&lt;i&gt;Plan&lt;/i&gt;");
+  assert.equal(sec.description, "a &amp; b");
+  assert.equal(sec.questions[0].name, "Q &lt;script&gt;");
+});
+
 test("draft cron never creates a second note for the same session", async () => {
   const store = new MemoryStore();
   await store.put("sessions", "s1", session());

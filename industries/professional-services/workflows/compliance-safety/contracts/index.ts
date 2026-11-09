@@ -21,19 +21,26 @@ export async function intake(ctx: Ctx<Settings>) {
 /** Every 30 minutes: a register row and a review note for each new contract. The note's send waits for approval. */
 export async function review(ctx: Ctx<Settings>) {
   let drafted = 0;
-  for (const c of Object.values(await ctx.store.list<Contract>("contracts"))) {
-    if (c.status !== "new") continue;
-    let messageId = c.ref.draft_message;
+  for (const found of Object.values(await ctx.store.list<Contract>("contracts"))) {
+    if (found.status !== "new") continue;
+    let c = found;
     // An approval already queued for this contract (a rejected one included) means the note was drafted before: never draft it twice.
     if (!(await ctx.store.get("approvals", approvalId(ctx.workflow.id, `review:${c.id}`)))) {
-      const note = await m365.reviewNote(ctx, c);
-      await m365.registerRow(ctx, c);
-      await ctx.queue(note.act);
-      messageId = note.messageId;
+      // Each step is saved as soon as it succeeds, so a failure in a later step never repeats an earlier one on the next run.
+      if (!c.ref.draft_message) {
+        const draftId = await m365.reviewNoteDraft(ctx, c);
+        c = { ...c, ref: { ...c.ref, draft_message: draftId } };
+        await ctx.store.put("contracts", c.id, c satisfies Contract);
+      }
+      if (!c.ref.register_row) {
+        await m365.registerRow(ctx, c);
+        c = { ...c, ref: { ...c.ref, register_row: "done" } };
+        await ctx.store.put("contracts", c.id, c satisfies Contract);
+      }
+      await ctx.queue(m365.reviewNoteAct(ctx, c, c.ref.draft_message));
       drafted++;
     }
-    await ctx.store.put("contracts", c.id, { ...c, status: "in-review",
-      ref: { ...c.ref, ...(messageId ? { draft_message: messageId } : {}) } } satisfies Contract);
+    await ctx.store.put("contracts", c.id, { ...c, status: "in-review" } satisfies Contract);
   }
   ctx.log(`review: ${drafted} notes drafted and queued for approval`);
   return { drafted };

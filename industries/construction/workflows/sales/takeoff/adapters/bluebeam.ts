@@ -26,9 +26,11 @@ export async function startMarkups(ctx: Ctx<Settings>, fileId: number): Promise<
   return whole(r.data?.Id);
 }
 
-/** The markups from a finished job, or undefined while the result carries none (see gaps: the done status is not in the spec). */
+/** The markups from a finished job, or undefined while the result carries none. An empty list counts as not yet
+ *  finished (see gaps: the done status is not in the spec), so the cron keeps polling up to max_polls. */
 export async function markups(ctx: Ctx<Settings>, fileId: number, jobId: number): Promise<any[] | undefined> {
   const r = await ctx.draft<any>({ platform: P, op: "ProjectFileJobs_MarkupListResult", summary: `read markup list job ${jobId}`, input: {
     params: { projectId: project(ctx), fileId: whole(fileId), jobId: whole(jobId) } } });
-  return Array.isArray(r.data?.Markups) ? r.data.Markups : undefined;
+  const list = r.data?.Markups;
+  return Array.isArray(list) && list.length ? list : undefined;
 }

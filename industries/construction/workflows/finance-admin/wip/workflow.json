@@ -9,36 +9,89 @@
  "families": {
   "by-hand-or-unstated": {
    "evidence": "6 calls keep WIP, progress claims and variations by hand or name no tool",
-   "steps": ["job-set-up", "cost-capture", "wip-calculation", "progress-claim", "variation-tracking"],
-   "covered_by": {"job-set-up": "settings (contract value and percent complete per job)", "cost-capture": "not covered (cost to date is not read from Xero yet)", "wip-calculation": "wip-snapshot (billed against earned value)", "progress-claim": "progress-claim (DRAFT invoice, approved to send)", "variation-tracking": "not covered (judgment, stays with the business)"}
+   "steps": [
+    "job-set-up",
+    "cost-capture",
+    "wip-calculation",
+    "progress-claim",
+    "variation-tracking"
+   ],
+   "covered_by": {
+    "job-set-up": "settings (contract value and percent complete per job)",
+    "cost-capture": "not covered (cost to date is not read from Xero yet)",
+    "wip-calculation": "wip-snapshot (billed against earned value)",
+    "progress-claim": "progress-claim (DRAFT invoice, approved to send)",
+    "variation-tracking": "not covered (judgment, stays with the business)"
+   }
   },
   "spreadsheet": {
    "evidence": "2 calls keep WIP in a spreadsheet beside Xero",
-   "steps": ["cost-capture", "progress-claim", "record-keeping"],
-   "covered_by": {"cost-capture": "not covered", "progress-claim": "progress-claim", "record-keeping": "wip-snapshot (kept in the store; Xero stays the record)"}
+   "steps": [
+    "cost-capture",
+    "progress-claim",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "cost-capture": "not covered",
+    "progress-claim": "progress-claim",
+    "record-keeping": "wip-snapshot (kept in the store; Xero stays the record)"
+   }
   },
   "job-system": {
    "evidence": "2 calls use a job system (SimPro) alongside Xero",
-   "steps": ["record-keeping"],
-   "covered_by": {"record-keeping": "not covered (SimPro is not in the kit's platform list)"}
+   "steps": [
+    "record-keeping"
+   ],
+   "covered_by": {
+    "record-keeping": "not covered (SimPro is not in the kit's platform list)"
+   }
   }
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "wip-snapshot", "schedule": "0 22 * * 0", "entry": "wip-snapshot", "summary": "Weekly (Monday morning in eastern Australia): each job's billed-to-date against its earned value, kept in the store."},
-  {"name": "progress-claim", "schedule": "0 22 * * *", "entry": "progress-claim", "summary": "Daily: a job whose claim interval has passed gets a DRAFT progress invoice in Xero, and one approval to authorise and email it."},
-  {"name": "chase", "schedule": "30 22 * * *", "entry": "chase", "summary": "Daily: an authorised invoice past due gets its next reminder queued for approval (22:30 UTC is 8 or 9 am in eastern Australia)."}
+  {
+   "name": "wip-snapshot",
+   "schedule": "0 22 * * 0",
+   "entry": "wip-snapshot",
+   "summary": "Weekly (Monday morning in eastern Australia): each job's billed-to-date against its earned value, kept in the store."
+  },
+  {
+   "name": "progress-claim",
+   "schedule": "0 22 * * *",
+   "entry": "progress-claim",
+   "summary": "Daily: a job whose claim interval has passed gets a DRAFT progress invoice in Xero, and one approval to authorise and email it."
+  },
+  {
+   "name": "chase",
+   "schedule": "30 22 * * *",
+   "entry": "chase",
+   "summary": "Daily: an authorised invoice past due gets its next reminder queued for approval (22:30 UTC is 8 or 9 am in eastern Australia)."
+  }
  ],
  "draft_ops": {
-  "xero": ["accounting.getInvoices", "accounting.createInvoices"]
+  "xero": [
+   "accounting.getInvoices",
+   "accounting.createInvoices"
+  ]
  },
  "live_ops": {
-  "xero": ["accounting.updateInvoice", "accounting.emailInvoice"]
+  "xero": [
+   "accounting.updateInvoice",
+   "accounting.emailInvoice"
+  ]
  },
  "draft_ops_note": "Draft operations reach nobody outside the business: reads of invoices, and a Xero invoice in DRAFT. Authorising an invoice and emailing it (a progress claim or a reminder) change what the client sees, so they are live operations and wait for a person.",
- "capabilities": ["invoices.read", "invoices.draft", "invoices.authorise", "invoices.send"],
+ "capabilities": [
+  "invoices.read",
+  "invoices.draft",
+  "invoices.authorise",
+  "invoices.send"
+ ],
  "adapters": {
-  "xero": {"status": "docs-only", "covers": "invoice reads for the billing position, DRAFT progress claim invoices, authorise and email for approval, overdue reminders"}
+  "xero": {
+   "status": "docs-only",
+   "covers": "invoice reads for the billing position, DRAFT progress claim invoices, authorise and email for approval, overdue reminders"
+  }
  },
  "gaps": [
   "Buildxact: the kit maps only its sign-in for this job. Estimates, jobs, WIP reports, completion-percent invoices and retention have no operations, so there is no adapter. Its help pages describe all of these, so this is the first platform to map.",
@@ -52,7 +105,8 @@
   "Reminders: Xero's email sends the invoice itself, so a reminder is the invoice email again with no custom wording. A rejected reminder still counts as sent for the schedule.",
   "Tax: lines post with the sales account's default tax. Confirm that setting with the owner before the first claim is authorised.",
   "Cross-workflow: the invoicing workflow in finance-admin also drafts Xero invoices. Running both on one business could draft two invoices for the same job. No cross-workflow dedupe is built.",
-  "The workflow is docs-only until a Xero demo company proves it against real data."
+  "The workflow is docs-only until a Xero demo company proves it against real data.",
+  "A rejected progress claim is not billed, so its progress is claimed again on the next claim. Its DRAFT invoice stays in Xero and has to be voided or deleted by hand."
  ],
  "evidence": {
   "calls": "17 discovery calls read; 12 describe how they track WIP, progress claims or retention",

@@ -45,14 +45,20 @@ export async function remind(ctx: Ctx<Settings>) {
     if (top < 0) continue;
     const step = top + 1, rkey = `${row.id}-step${step}`;
     if (await ctx.store.get("reminders", rkey)) continue; // this step already went out or is waiting for approval
-    const fresh = await reLeased.invoice(ctx, row.id, today);
-    if (!fresh) { skipped++; ctx.log(`remind: ${row.display} is paid or no longer owing, skipped`); continue; }
-    if (!fresh.email) { skipped++; ctx.log(`remind: ${row.display} has no valid contact email, skipped`); continue; }
-    const d = await mailDraft(ctx, { to: fresh.email, subject: `Rent overdue: ${fresh.display || row.display}`, html: reminderHtml(ctx.settings, fresh, days) });
-    const approval = await ctx.queue({ ...d.act, key: `remind:${row.id}:${step}` },
-      `rent reminder ${step} for ${fresh.display || row.display}: ${money(fresh.amount)} overdue ${days} days, to ${fresh.email}`);
-    await ctx.store.put("reminders", rkey, { invoice: row.id, step, draft: d.messageId, approval, queued: today } satisfies Reminder);
-    queued++;
+    // One invoice's failure (a 404 for a deleted invoice, a 5xx) skips that row only; the rest of the store still gets its reminders.
+    try {
+      const fresh = await reLeased.invoice(ctx, row.id, today);
+      if (!fresh) { skipped++; ctx.log(`remind: ${row.display} is paid or no longer owing, skipped`); continue; }
+      if (!fresh.email) { skipped++; ctx.log(`remind: ${row.display} has no valid contact email, skipped`); continue; }
+      const d = await mailDraft(ctx, { to: fresh.email, subject: `Rent overdue: ${fresh.display || row.display}`, html: reminderHtml(ctx.settings, fresh, days) });
+      const approval = await ctx.queue({ ...d.act, key: `remind:${row.id}:${step}` },
+        `rent reminder ${step} for ${fresh.display || row.display}: ${money(fresh.amount)} overdue ${days} days, to ${fresh.email}`);
+      await ctx.store.put("reminders", rkey, { invoice: row.id, step, draft: d.messageId, approval, queued: today } satisfies Reminder);
+      queued++;
+    } catch (e: any) {
+      skipped++;
+      ctx.log(`remind: ${row.display} failed, skipped for today: ${String(e?.message ?? e).slice(0, 120)}`);
+    }
   }
   ctx.log(`remind: ${queued} queued, ${skipped} skipped`);
   return { queued, skipped };

@@ -3,7 +3,8 @@
 // /api/v2/persons/{id} (emails[]), and v1 PUT /v1/persons/{id}/merge (merge_with_id). The path id is the person merged
 // away and merge_with_id is the person kept: read from the spec wording, not yet proven on a sandbox.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Adapter, type Contact, type Finding, type Settings, ID, tidy } from "../types.ts";
+import { ApiError } from "../../../../../../core/lib/http.ts";
+import { type Adapter, type Contact, type Finding, type Settings, ID, norm, tidy, valid } from "../types.ts";
 
 const P = "pipedrive" as const;
 const PAGE = 100;
@@ -14,6 +15,18 @@ const MERGE = "docs_api_v1.mergePersons";
 
 /** The email entries a person holds, as the CRM returns them. */
 const entries = (list: unknown): any[] => Array.isArray(list) ? list : [];
+
+/** The valid addresses a person holds, normalised. undefined when the person is gone (a merged or deleted record). */
+async function currentEmails(ctx: Ctx<Settings>, id: string): Promise<string[] | undefined> {
+  try {
+    const r = await ctx.draft<any>({ platform: P, op: GET, summary: `re-read person ${id} before merging`,
+      input: { params: { id: Number(id) } } });
+    return entries(r.data?.data?.emails).map((e) => norm(e?.value)).filter(valid);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return undefined;
+    throw err;
+  }
+}
 
 export const pipedrive: Adapter = {
   id: P,
@@ -34,8 +47,11 @@ export const pipedrive: Adapter = {
     return { items, next: next ? String(next) : undefined };
   },
 
-  async queueMerge(ctx: Ctx<Settings>, f: Finding, key: string) {
+  async queueMerge(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string | undefined> {
     if (!ID.test(f.id) || !f.with || !ID.test(f.with)) throw new Error("crm-hygiene: merge needs two plain record ids");
+    // Re-read both persons: the scan may be days old. The merge is queued only while they still share an address.
+    const a = await currentEmails(ctx, f.id), b = await currentEmails(ctx, f.with);
+    if (!a || !b || !a.some((e) => b.includes(e))) return undefined;
     return ctx.queue({ platform: P, op: MERGE, key, summary: f.summary,
       input: { params: { id: Number(f.id) }, body: { merge_with_id: Number(f.with) } } }, f.summary);
   },

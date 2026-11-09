@@ -132,3 +132,16 @@ test("validation: a status name with symbols is refused before any call", async 
   await assert.rejects(intake(ctx), /breakdown_status must be letters/);
   assert.equal(hits.length, 0);
 });
+
+test("escalate: a job title with line breaks cannot change the email subject", async () => {
+  const store = new MemoryStore();
+  const id = `servicem8:${JOB}`;
+  await store.put("faults", id, { id, job_uuid: JOB, company_uuid: CO, title: "Conveyor motor tripping\r\nBcc: someone@example.com",
+    text: "Motor trips", address: "2 Factory Rd", seen: NOW.toISOString(), status: "triaged" });
+  assert.deepEqual(await escalate(context(WF, S, store, LATER, () => {})), { queued: 1, closed: 0 });
+  const [ap] = Object.values(await store.list<any>("approvals"));
+  const subject: string = ap.acts[0].input.body.subject;
+  assert.doesNotMatch(subject, /[\u0000-\u001f\u007f]/, "no control characters in the subject");
+  assert.equal(subject, "Breakdown still open: Conveyor motor tripping  Bcc: someone@example.com");
+  assert.equal(sends().length, 0);
+});

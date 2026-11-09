@@ -4,7 +4,7 @@ import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, type Source, EMAIL, keyOf } from "../types.ts";
 
 const P = "microsoft-365";
-const ID = /^[A-Za-z0-9=_\-!.]{1,400}$/;
+const ID = /^(?!\.{1,2}$)[A-Za-z0-9=_\-!.]{1,400}$/; // "." and ".." are path segments, never message ids
 const cfg = (ctx: Ctx<Settings>) => {
   const m = ctx.settings.microsoft_365;
   if (!m?.mailbox || !EMAIL.test(m.mailbox)) throw new Error("microsoft_365.mailbox (the business's own) is not set");
@@ -16,8 +16,10 @@ export const microsoft365 = {
   /** Walkthrough emails from the mailbox folder that match the search words. */
   async sources(ctx: Ctx<Settings>): Promise<Omit<Source, "status">[]> {
     const m = cfg(ctx);
+    // Only a folder the owner set up for walkthroughs: the inbox takes mail from anyone, and its text would become SOP steps.
+    if (!m.folder || m.folder.trim().toLowerCase() === "inbox") throw new Error("microsoft_365.folder must name a walkthrough folder, not the inbox");
     const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: "read walkthrough emails", input: { params: {
-      "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $search: `"${(m.search ?? "walkthrough").replace(/["\\]/g, "")}"`, $top: 25,
+      "user-id": m.mailbox, "mailFolder-id": m.folder, $search: `"${(m.search ?? "walkthrough").replace(/["\\]/g, "")}"`, $top: 25,
       $select: "id,subject,receivedDateTime,bodyPreview" } } });
     return (r.data?.value ?? []).filter((x: any) => ID.test(String(x.id ?? ""))).map((x: any) => ({
       id: keyOf(`m365:${x.id}`), platform: P, kind: "walkthrough" as const, title: String(x.subject ?? "Walkthrough").slice(0, 200),

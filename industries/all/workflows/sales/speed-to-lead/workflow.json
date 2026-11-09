@@ -60,6 +60,7 @@
   "Time-to-first-contact reporting and retry-until-answered sequences are not shown in the pages read.",
   "Only the first page of messages is checked for an outbound message (20 messages).",
   "Only the SMS channel is built. Email first contact is not built.",
+  "A queued first text is rejected by the chase pass once its lead is past the alert window or has been handled. That pass runs every 10 minutes, so a text approved in the gap still goes out. A check at send time in the runtime would close it.",
   "Qualification and booking on the first call are judgment steps for the team, not automated here."
  ],
  "evidence": {

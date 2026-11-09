@@ -60,5 +60,6 @@ export function reattemptAct(p: Pod) {
   if (!p.destination_id) throw new Error("onfleet: a re-attempt needs the stop's destination id");
   const body: Record<string, unknown> = { destination: onfleetId(p.destination_id), notes: `Re-attempt of ${p.short_id ?? p.task_id}: ${p.failure_reason ?? "failed"}`.slice(0, 500) };
   if (p.recipient_ids.length) body.recipients = p.recipient_ids.slice(0, 1).map(onfleetId);
-  return { platform: P, op: "core.docs.post_tasks", summary: `re-attempt ${p.short_id ?? p.task_id} at ${p.address ?? "the stop"} (failed: ${p.failure_reason ?? "unknown"})`, input: { body }, key: `reattempt:${p.task_id}` };
+  // The summary is logged by the runtime, so it carries the short id and the failure only, never the street address.
+  return { platform: P, op: "core.docs.post_tasks", summary: `re-attempt ${p.short_id ?? p.task_id} (failed: ${p.failure_reason ?? "unknown"} on ${p.completed.slice(0, 10)})`, input: { body }, key: `reattempt:${p.task_id}` };
 }

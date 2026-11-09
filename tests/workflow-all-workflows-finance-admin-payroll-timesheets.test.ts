@@ -192,3 +192,32 @@ test("a cron runs the whole cycle without a single live call", async () => {
   assert.equal(hits.filter(isLive).length, 0);
   assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith("/PayRuns")).length, 0, "not drafted until the timesheets are approved");
 });
+
+test("approve: nothing is queued while an approved shift is unmirrored, and no line is added to a timesheet approved since", async () => {
+  shifts = [shift(1, 101, "2026-11-02", 7.5)];
+  const store = new MemoryStore();
+  await wf.mirror(ctxFor(store));
+  shifts = [shift(1, 101, "2026-11-02", 7.5), shift(2, 101, "2026-11-03", 8)];
+  assert.deepEqual(await wf.approve(ctxFor(store)), { queued: 0, held: 0, waiting: "1 approved shift(s) not mirrored yet" });
+  assert.equal((await pendingApprovals(store)).length, 0, "the approval waits for the shift");
+  await wf.mirror(ctxFor(store));
+  assert.deepEqual(await wf.approve(ctxFor(store)), { queued: 1, held: 0 });
+  await approve(WF, store, (await pendingApprovals(store))[0].id, "owner", NOW);
+  assert.equal(Object.values(xts).filter((t) => t.status === "Approved").length, 1);
+  shifts = [shift(1, 101, "2026-11-02", 7.5), shift(2, 101, "2026-11-03", 8), shift(3, 101, "2026-11-04", 4)];
+  hits = [];
+  assert.deepEqual(await wf.mirror(ctxFor(store)), { mirrored: 0, flagged: 0, unmapped: 0, failed: 1 });
+  assert.equal(hits.filter((h) => /\/Lines$/.test(h.path)).length, 0, "no line added to the approved timesheet");
+  assert.equal((await store.get<{ state: string }>("hours", "deputy:3"))!.state, "needs-check");
+});
+
+test("approve and pay run: a hold from an earlier pay period does not block this one", async () => {
+  shifts = [shift(1, 101, "2026-11-02", 7.5)];
+  const store = new MemoryStore();
+  await store.put("hours", "deputy:99", { state: "needs-check", employee: EMP_A, date: "2026-10-20", hours: 6, reason: "old", at: NOW.toISOString() });
+  await wf.mirror(ctxFor(store));
+  assert.deepEqual(await wf.approve(ctxFor(store)), { queued: 1, held: 0 });
+  await approve(WF, store, (await pendingApprovals(store))[0].id, "owner", NOW);
+  const run = await wf.payRun(ctxFor(store)) as { queued?: string; waiting?: string };
+  assert.ok(run.queued, `expected a queued pay run, got ${JSON.stringify(run)}`);
+});

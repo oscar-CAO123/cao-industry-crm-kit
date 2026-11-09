@@ -77,6 +77,27 @@ test("queue: a second run writes nothing new", async () => {
   assert.equal(writes().length, before);
 });
 
+test("queue: a note the host typed on a waiting row survives the position write", async () => {
+  grid.push(line({ ...ARI, note: "Prefers the window" }));
+  assert.deepEqual(await queue(context(WF, S, new MemoryStore(), NOW, () => {})), { positioned: 1, check: 0 });
+  assert.equal(grid[1][4], 1, "position written");
+  assert.equal(grid[1][7], "Prefers the window", "host note kept");
+});
+
+test("queue: a long host note is written back whole", async () => {
+  const long = "x".repeat(400);
+  grid.push(line({ ...ARI, note: long }));
+  await queue(context(WF, S, new MemoryStore(), NOW, () => {}));
+  assert.equal(grid[1][7], long);
+});
+
+test("queue: a Check reason the cron wrote is cleared once the row is fixed", async () => {
+  grid.push(line({ ...ARI, note: "guest name is missing" }));
+  await queue(context(WF, S, new MemoryStore(), NOW, () => {}));
+  assert.equal(grid[1][7], "", "cron reason cleared");
+  assert.equal(grid[1][4], 1);
+});
+
 test("queue: a waiting row without a guest name or a valid time is marked Check and holds no place in the queue", async () => {
   grid.push(line({ ...ARI, guest: "" }), line(SAM));
   assert.deepEqual(await queue(context(WF, S, new MemoryStore(), NOW, () => {})), { positioned: 1, check: 1 });

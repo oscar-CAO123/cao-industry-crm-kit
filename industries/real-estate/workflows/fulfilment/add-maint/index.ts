@@ -64,7 +64,8 @@ export async function followUp(ctx: Ctx<Settings>) {
       if (j?.status === "Completed") job.status = "done";
     }
     if (job.status === "done" && !job.reported && ctx.settings.owner_email) {
-      await ctx.queue(servicem8.emailAct(job.job_uuid, ctx.settings.owner_email, `Maintenance complete: ${job.title}`.slice(0, 150),
+      // The title is tenant-written and may hold line breaks: a subject is one line.
+      await ctx.queue(servicem8.emailAct(job.job_uuid, ctx.settings.owner_email, `Maintenance complete: ${job.title.replace(/[\r\n]+/g, " ")}`.slice(0, 150),
         `The maintenance request "${job.title}" at ${job.address || "the property"} is complete.`,
         `owner-update:${job.job_uuid}`, `Email the owner that "${job.title}" is complete`));
       job.reported = ctx.now.toISOString();

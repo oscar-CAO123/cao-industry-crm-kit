@@ -123,3 +123,35 @@ test("a rejected payment holds the pack-out and nothing is paid", async () => {
   assert.equal((await store.get<any>("packouts", PKEY)).status, "held");
   assert.equal(payments().length, 0);
 });
+
+const PKEY_B = "grower-b-2026-10-31";
+
+test("two pack-outs on one bill cannot queue more than Xero owes between them", async () => {
+  amountDue = 1000;                                                  // each net is 600: together 1200
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("packouts", PKEY, pack());
+  await store.put("packouts", PKEY_B, pack({ key: PKEY_B, grower: "Orchard Two" }));
+  assert.deepEqual(await statement(ctx), { queued: 1, held: 1 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "only one payment is queued");
+  const b = await store.get<any>("packouts", PKEY_B);
+  assert.equal(b.status, "held");
+  assert.match(b.reason, /already queued against this bill/);
+});
+
+test("two pack-outs on one bill are both queued when Xero owes enough for both", async () => {
+  amountDue = 1500;
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("packouts", PKEY, pack());
+  await store.put("packouts", PKEY_B, pack({ key: PKEY_B, grower: "Orchard Two" }));
+  assert.deepEqual(await statement(ctx), { queued: 2, held: 0 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 2);
+});
+
+test("a rejected payment does not count against the next pack-out on the same bill", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("packouts", PKEY, pack());
+  await statement(ctx);
+  await store.put("approvals", approvalId(WF.id, `pay:${PKEY}`), { ...(await store.get<Approval>("approvals", approvalId(WF.id, `pay:${PKEY}`)))!, status: "rejected" });
+  await store.put("packouts", PKEY_B, pack({ key: PKEY_B, grower: "Orchard Two" }));
+  assert.deepEqual(await statement(ctx), { queued: 1, held: 0 });
+});

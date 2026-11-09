@@ -20,6 +20,7 @@ const NOW = new Date("2026-11-09T00:00:00Z");
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let gdprEmail: Record<string, boolean> = {};
+let gdprPaged: Record<string, any[][]> = {};
 let drafts = 0;
 
 const CONTACTS: Record<string, any> = {
@@ -33,6 +34,7 @@ const CONTACTS: Record<string, any> = {
 function fake() {
   hits = []; drafts = 0;
   gdprEmail = { "101": true, "102": false, "103": true, "104": true };
+  gdprPaged = {};
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -47,6 +49,7 @@ function fake() {
       const gd = p.match(/\/contacts\/(\d+)\/gdpr$/);
       if (gd) {
         const id = gd[1];
+        if (gdprPaged[id]) { const pg = Number(u.searchParams.get("page") ?? 1); return json({ items: gdprPaged[id][pg - 1] ?? [], totalPages: gdprPaged[id].length }); }
         const rows = id === "101"
           ? [{ id: 1, email: false, sms: false, phone: false, modified: "2026-01-01T00:00:00Z" }, { id: 2, email: gdprEmail[id], sms: false, phone: false, modified: "2026-10-01T00:00:00Z" }]
           : [{ id: 3, email: gdprEmail[id], sms: false, phone: false, modified: "2026-10-01T00:00:00Z" }];
@@ -142,4 +145,38 @@ test("bad ids and addresses are refused before they reach a path or a recipient"
   const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
   await assert.rejects(mailDraft(ctx, "not-an-address", "s", "<p>x</p>"), /bad recipient/);
   assert.equal(drafts, 0);
+});
+
+test("consent is read across every GDPR page, so a withdrawal on page two is the one that counts", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  gdprPaged["101"] = [
+    [{ id: 1, email: true, sms: false, phone: false, modified: "2026-01-01T00:00:00Z" }],
+    [{ id: 2, email: false, sms: false, phone: false, modified: "2026-10-15T00:00:00Z" }],
+  ];
+  await ownerList(ctx);
+  assert.deepEqual(await consentCheck(ctx), { checked: 4, eligible: 0, "no-consent": 2, blocked: 2 });
+  assert.equal((await store.get<any>("owners", "101"))!.status, "no-consent");
+  assert.equal(drafted().length, 0);
+});
+
+test("a business or owner name with $ patterns reaches the outreach email as typed", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...SETTINGS, business_name: "Fish $& Chips" }, store, NOW, () => {});
+  await ownerList(ctx); await consentCheck(ctx);
+  await outreach(ctx);
+  const content = drafted()[0].body.body.content as string;
+  assert.ok(content.includes("Fish $&amp; Chips"), "business name kept literal");
+  assert.ok(!content.includes("{business_name}"));
+});
+
+test("a draft id made only of dots is refused before any send path is built", async () => {
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      hits.push({ method: init?.method ?? "GET", path: new URL(String(url)).pathname, body: undefined });
+      return new Response(JSON.stringify({ id: ".." }), { status: 200, headers: { "content-type": "application/json" } });
+    }) as any,
+  });
+  const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
+  await assert.rejects(mailDraft(ctx, "ann@example.com", "s", "<p>x</p>"), /draft not created/);
+  assert.equal(sends().length, 0);
 });

@@ -18,8 +18,8 @@ They read and draft only. Every chase email waits for a person to approve it in 
 document as received or changes a Xero record.
 
 ## Setting it up for a client
-1. Fill `settings.json` from `settings.example.json`: the practice's name, its mailbox for chase emails, and the lookback.
-2. Confirm the Xero contacts have a valid email for each client. Clients without one are listed and never chased.
+1. Fill `settings.json` from `settings.example.json`: the practice's name, its mailbox for chase emails, the client's own email address (`client_email`), and the lookback.
+2. Chase emails go only to `client_email`. A missing or invalid address stops the chase cron. Nothing is ever sent to a supplier or customer on a Xero item.
 3. Agree the reminder days with the practice (`chase_after_days`).
 
 ## When the list looks wrong

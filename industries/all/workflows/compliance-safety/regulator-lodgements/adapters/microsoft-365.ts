@@ -17,7 +17,7 @@ const table = (t: { drive: string; item: string; table: string }) => {
 };
 
 /** Regulator notices that arrived in the mailbox folder (read only). */
-export async function notices(ctx: Ctx<Settings>): Promise<Omit<Notice, "status">[]> {
+export async function notices(ctx: Ctx<Settings>): Promise<(Omit<Notice, "status"> & { text: string })[]> {
   const m = cfg(ctx);
   const q = (m.search ?? "").replace(/["\\]/g, "").trim();
   const params: Record<string, unknown> = { "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $top: 25, $select: "id,subject,from,receivedDateTime,bodyPreview" };
@@ -58,5 +58,5 @@ export async function ownerDraft(ctx: Ctx<Settings>, subject: string, html: stri
 export function noticeHtml(n: Notice, business: string): string {
   const due = n.due ? `Due ${esc(n.due)}.` : "No due date is set for this type of notice. Add one in the lodgement register.";
   return `<p>New regulator notice for ${esc(business)}: <b>${esc(n.title)}</b></p><p>From: ${esc(n.from ?? "unknown")}</p>`
-    + `<p>${due}</p><p>Preview: ${esc(n.text ?? "")}</p><p>A person lodges, answers and marks it done. Nothing has been sent to the regulator.</p>`;
+    + `<p>${due}</p><p>Read the full notice in the compliance mailbox. A person lodges, answers and marks it done. Nothing has been sent to the regulator.</p>`;
 }

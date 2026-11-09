@@ -21,6 +21,7 @@ const ENTRIES = [
   { ".tag": "file", id: "id:AAA111", name: "Supplier invoice May.pdf", path_display: "/Intake/Supplier invoice May.pdf", server_modified: "2026-11-06T09:00:00Z" },
   { ".tag": "file", id: "id:BBB222", name: "Mystery scan.pdf", path_display: "/Intake/Mystery scan.pdf", server_modified: "2026-11-06T10:00:00Z" },
   { ".tag": "folder", id: "id:FFF333", name: "Old", path_display: "/Intake/Old" },
+  { ".tag": "file", id: "id:CCC333", name: "liability note.pdf", path_display: "/Intake/liability note.pdf", server_modified: "2026-11-06T11:00:00Z" },
 ];
 
 function fake() {
@@ -46,7 +47,7 @@ function fake() {
 const S: Settings = {
   intake_folder: "/Intake", review_folder: "/Intake/To review", request_folder: "/Client uploads",
   rules: [{ match: "invoice", label: "Invoice", folder: "/Finance/Supplier invoices" }],
-  checklist: [{ code: "liability", label: "Public liability certificate", match: "liability", within_days: 365 }],
+  checklist: [{ code: "liability", label: "Public liability certificate", match: "liability", within_days: 365, folder: "/Compliance/Certificates" }],
 };
 const moves = () => hits.filter((h) => h.path.endsWith("/files/move_v2"));
 const requests = () => hits.filter((h) => h.path.endsWith("/file_requests/create"));
@@ -96,6 +97,22 @@ test("chase queues a file request for approval, once, and the approval sends it"
 test("a draft run refuses a live operation", async () => {
   const ctx = context(WF, S, new MemoryStore(), NOW, noop);
   await assert.rejects(ctx.draft({ platform: "dropbox", op: "file_requests.create", summary: "x" }), /not a draft operation/);
+});
+
+test("chase: a file the client named, that no rule filed into the checklist folder, does not satisfy the checklist", async () => {
+  const store = new MemoryStore();
+  const ctx = context(WF, S, store, NOW, noop);
+  await CRONS.intake(ctx); await CRONS.file(ctx);
+  assert.equal((await store.get<any>("documents", "id:CCC333"))?.status, "review");
+  await CRONS.chase(ctx);
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "the request is queued: a name alone is not a certificate");
+});
+
+test("chase: a checklist item with no safe folder stops the run before anything is queued", async () => {
+  const store = new MemoryStore();
+  const bad = { ...S, checklist: [{ code: "liability", label: "Public liability certificate", match: "liability", within_days: 365 }] } as unknown as Settings;
+  await assert.rejects(CRONS.chase(context(WF, bad, store, NOW, noop)), /not a safe Dropbox folder path/);
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0);
 });
 
 test("a bad rule folder stops the file run before any move", async () => {

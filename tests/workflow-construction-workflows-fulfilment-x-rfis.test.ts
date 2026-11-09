@@ -114,3 +114,24 @@ test("ids from settings are checked before any call", async () => {
   await assert.rejects(intake(ctx), /bad id/);
   assert.equal(hits.length, 0);
 });
+
+test("one question with a bad due date is parked with its reason; the questions after it still run", async () => {
+  const RFI2 = "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("questions", "q1", { ...QUESTION, due_date: "next week" });
+  await store.put("questions", "q2", { ...QUESTION, id: "q2", rfi_id: RFI2, question_set: true });
+  assert.deepEqual(await draft(ctx), { created: 1, queued: 1, needs_assignee: 1 });
+  const q1 = (await store.get<any>("questions", "q1")) as any, q2 = (await store.get<any>("questions", "q2")) as any;
+  assert.equal(q1.status, "needs-person");
+  assert.match(q1.reason, /due must be a date/);
+  assert.equal(q2.status, "queued");
+  assert.equal(q1.rfi_id, RFI, "the RFI made for the bad question is kept, so a retry never makes a second one");
+});
+
+test("the approval shows the message Fieldwire will email, escaped", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("questions", "q1", { ...QUESTION, message: "Is it 2.4 m or 2.7 m <b>ceiling</b> & why?" });
+  await draft(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /Message: "Is it 2\.4 m or 2\.7 m &lt;b&gt;ceiling&lt;\/b&gt; &amp; why\?"/);
+});

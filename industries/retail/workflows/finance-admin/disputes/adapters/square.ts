@@ -95,11 +95,14 @@ export function refundAct(requestId: string, d: RefundDecision) {
   };
 }
 
-/** The approval act that sends the staged evidence to the bank. */
-export function submitAct(disputeId: string) {
+/** The approval act that sends the staged evidence to the bank. The summary carries the evidence types and the text on
+ *  record, so the approver sees exactly what goes to the bank. */
+export function submitAct(disputeId: string, evidence: { types: readonly string[]; text?: string }) {
   const did = id(disputeId, "square dispute");
+  const types = evidence.types.length ? evidence.types.join(", ") : "none";
+  const text = String(evidence.text ?? "").trim() || "(no text on record)";
   return { platform: P, op: "api.SubmitEvidence", key: `submit:${did}`, input: { params: { dispute_id: did } },
-           summary: `submit the staged evidence for dispute ${did} to the bank` };
+           summary: `submit the staged evidence for dispute ${did} to the bank. Types: ${types}. Text: ${text}` };
 }
 
 /** The approval act that accepts the chargeback. The business gives the money back. */

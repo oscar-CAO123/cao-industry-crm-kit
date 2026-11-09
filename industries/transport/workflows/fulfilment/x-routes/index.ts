@@ -1,5 +1,6 @@
 // The route planning workflow's two crons. Each reads and drafts; the plan cron queues a dispatch for approval.
 // Judgment (a stop with a bad address, a team's constraints the platform cannot hold) belongs to the agent skill in SKILL.md.
+import crypto from "node:crypto";
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Settings, Stop } from "./types.ts";
 import { ID, routeEndOf, storeKey } from "./types.ts";
@@ -28,12 +29,14 @@ export async function plan(ctx: Ctx<Settings>) {
   const unrouted = Object.values(await ctx.store.list<Stop>("stops")).filter((s) => !s.routed && s.address);
   const now = ctx.now.getTime();
   let queued = 0; // dispatch requests made; a request already queued for the same day is reused, not added
+  // The key is the day plus the exact set of unrouted stops, so a stop that arrives later the same day gets its own approval.
+  const stopSet = crypto.createHash("sha256").update(unrouted.map((s) => s.id).sort().join(",")).digest("hex").slice(0, 16);
   for (const team of ctx.settings.teams ?? []) {
     if (!ID.test(team)) { ctx.log(`plan: skipped a team id that does not look like an Onfleet id`); continue; }
     const runs = (await routePlansIn(ctx, now - 12 * HOUR, now + 24 * HOUR)).filter((p) => p.team === team);
     await ctx.store.put("drafts", storeKey(`plan-${team}-${day}`), { at: ctx.now.toISOString(), team, unrouted: unrouted.length, runs_today: runs.length, route_end: routeEnd });
     if (!unrouted.length) continue;
-    await queueDispatch(ctx, team, routeEnd, `dispatch:${team}:${day}`,
+    await queueDispatch(ctx, team, routeEnd, `dispatch:${team}:${day}:${stopSet}`,
       `Auto-dispatch team ${team}: ${unrouted.length} stops not yet in a route, routes end at ${routeEnd ?? "anywhere"}`);
     queued++;
   }

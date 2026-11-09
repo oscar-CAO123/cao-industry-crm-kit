@@ -73,7 +73,8 @@ export async function payments(ctx: Ctx<Settings>) {
   for (const r of await syncOpen(ctx)) {
     if (r.status !== "authorised" || !(r.amount_due ?? 0)) continue;
     for (const p of await s8.paymentsFor(ctx, r.job)) {
-      if (await ctx.store.get<PaymentRecord>("payments", p.uuid)) continue;
+      const prior = await ctx.store.get<PaymentRecord>("payments", p.uuid);
+      if (prior && prior.status !== "parked") continue; // queued or skipped: done. A parked one is checked again, so a fixed setting queues it.
       const amount = round2(Number(p.amount));
       let rec: PaymentRecord = { job: r.job, invoice: r.invoice_id, amount, status: "queued" };
       if (!(amount > 0)) rec = { ...rec, status: "skipped", reason: "zero amount" };

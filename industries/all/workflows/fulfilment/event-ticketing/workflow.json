@@ -56,6 +56,7 @@
   "Run sheets: Eventbrite's schedule operation is a write and is not used. The drafted run sheet holds times, check-in teams and team sizes only.",
   "Check-in: the Eventbrite check-in app is described from help text only. The crons read team sizes and checked-in flags, not live scans.",
   "Paging: Eventbrite returns one page of attendees per call, and the kit's operation map has no continuation parameter. Events above one page (about 50 attendees) are read incompletely. The crons log this and do not advance the register cursor. Fixing it needs a change in core, which this workflow may not make.",
+  "needs-core: attendee paging. Map the continuation token from the pagination object (spec: What's in a paginated response) as a query parameter on get:/events/{event_id}/attendees/ in core/sdk/platforms/eventbrite/ops.json, then the registrations and wrap-up crons follow pages until has_more_items is false. last_item_seen is an ID cutoff used with changed_since, not the page token, so it is not used here.",
   "Refunds: the refund operation is mapped in the kit, but no cron queues one. A refund needs a person's request first, which is not wired.",
   "Humanitix and Moshtix: no operations are mapped in the kit, so there is no adapter. Typeform, named on one call for registration forms, has mapped operations but no platform evidence here, so it is not built.",
   "Evidence is thin: 6 calls, 2 job types, no volumes or turnaround stated. The cron times are defaults to confirm with the client.",

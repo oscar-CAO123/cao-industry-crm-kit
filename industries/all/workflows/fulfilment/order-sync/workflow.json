@@ -44,6 +44,7 @@
   "Xero payment matching and customer receipts are not built. Matching a payment to an invoice is a live action and needs approval.",
   "One draft invoice per order, made the first time the order is seen as shipped. A partial shipment after that needs a person.",
   "First run reads up to 500 of the most recent sales orders (10 pages of 50). Older orders are not pulled.",
+  "Open Cin7 purchase orders are not read. A purchase order raised for a product blocks a new one for it while pending and for 14 days after it is decided, so a late delivery is raised again only after that window.",
   "Both adapters are docs-only until a Cin7 trial account and a Xero demo company prove them."
  ],
  "evidence": {

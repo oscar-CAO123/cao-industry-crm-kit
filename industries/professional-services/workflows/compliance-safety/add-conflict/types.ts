@@ -22,7 +22,7 @@ export interface Lead {
   id: string;        // the Smokeball matter id of the lead
   title: string;
   created: string;
-  status: "new" | "hit" | "clear" | "opened";
+  status: "new" | "hit" | "review" | "clear" | "opened";
   parties: Party[];
   hits: Hit[];
   checked?: string;

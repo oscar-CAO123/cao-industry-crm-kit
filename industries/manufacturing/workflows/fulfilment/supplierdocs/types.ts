@@ -26,6 +26,8 @@ export interface Doc {
   reasons: string[];
   seen: string;
   approval?: string;
+  /** Set when the bill changed in Xero after it was matched. Match leaves such a bill alone until a person clears it. */
+  changed?: string;
 }
 
 export interface Item { code: string; name: string; cost: number }

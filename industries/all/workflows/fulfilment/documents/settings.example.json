@@ -11,8 +11,8 @@
   "output_folder_id": "OUTPUT_FOLDER_ID"
  },
  "documents": [
-  {"kind": "progress report", "template_id": "PROGRESS_REPORT_TEMPLATE_DOC_ID"},
-  {"kind": "letter", "template_id": "LETTER_TEMPLATE_DOC_ID"}
+  {"kind": "progress report", "template_id": "PROGRESS_REPORT_TEMPLATE_DOC_ID", "fields": ["Client name", "Total", "Notes"]},
+  {"kind": "letter", "template_id": "LETTER_TEMPLATE_DOC_ID", "fields": ["Client name", "Notes"]}
  ],
  "share_role": "reader"
 }

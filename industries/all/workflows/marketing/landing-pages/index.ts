@@ -1,5 +1,5 @@
 // The landing-pages workflow's three crons. inventory and results only read the platforms. queue turns each requested
-// page change into one approval: a content update, then the publish of that page if asked. Nothing here publishes.
+// page content change into one approval. Nothing here publishes: a person publishes the page in Webflow.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { type Change, type FormRow, type Platform, type Results, type Settings, DAY, GHL_ID, WEBFLOW_ID, days, iso, keyOf } from "./types.ts";
 import { webflow } from "./adapters/webflow.ts";
@@ -51,7 +51,7 @@ export async function results(ctx: Ctx<Settings>) {
   return { forms: counted };
 }
 
-/** Every 30 minutes: each requested change becomes one approval. Queues only; a person approves it in the CRM shell. */
+/** Every 30 minutes: each requested content change becomes one approval. Queues only; a person approves it in the CRM shell. */
 export async function queue(ctx: Ctx<Settings>) {
   const todo = Object.values(await ctx.store.list<Change>("changes")).filter((c) => c.status === "requested");
   let queued = 0, skipped = 0;
@@ -59,7 +59,7 @@ export async function queue(ctx: Ctx<Settings>) {
     const why = changeProblem(c, ctx.settings);
     if (why) { await ctx.store.put("changes", c.id, { ...c, status: "skipped", reason: why }); skipped++; continue; }
     const acts = webflow.acts(ctx, c, keyOf(`change:${c.id}`));
-    const approval = await ctx.queue(acts, `Webflow page ${c.page_id}: ${c.nodes.length} content nodes${c.publish ? ", then publish that page" : ""}. Live once approved.`);
+    const approval = await ctx.queue(acts, `Webflow page ${c.page_id}: ${c.nodes.length} content nodes. Live once approved.${c.publish ? " Publish the page in Webflow yourself: this workflow never publishes." : ""}`);
     await ctx.store.put("changes", c.id, { ...c, status: "queued", approval, reason: undefined });
     queued++;
   }

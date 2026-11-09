@@ -24,10 +24,11 @@ export async function requests(ctx: Ctx<Settings>): Promise<Omit<Check, "status"
   const m = cfg(ctx);
   const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: "read finished-part requests", input: { params: {
     "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $search: `"${(m.search ?? "photo").replace(/["\\]/g, "")}"`, $top: 25,
-    $select: "id,subject,from,receivedDateTime,bodyPreview" } } });
+    $select: "id,subject,from,receivedDateTime" } } });
+  // The body is not stored: no cron reads it, and the agent reads the request in Outlook by its message id.
   return (r.data?.value ?? []).filter((x: any) => ID.test(String(x.id ?? ""))).map((x: any) => ({
     id: keyOf(`m365:${x.id}`), source: P as const, title: String(x.subject ?? "Finished-part check").slice(0, 120),
-    text: String(x.bodyPreview ?? "").slice(0, 4000), contact: contactOf(x),
+    contact: contactOf(x),
     received: String(x.receivedDateTime ?? ctx.now.toISOString()), ref: { message_id: String(x.id) } }));
 }
 
@@ -45,8 +46,9 @@ export async function draftResult(ctx: Ctx<Settings>, c: Check): Promise<string>
   if (!c.result) throw new Error("photocheck: no result recorded");
   const html = `<p>Hi ${esc(c.contact.name ?? "there")},</p><p>${esc(DECISION_TEXT[c.result.decision])}</p>`
     + `<p>${esc(c.result.note.slice(0, 1000))}</p><p>${esc(ctx.settings.business_name ?? "")}</p>`;
-  const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: `draft result email to ${to}`, input: { params: { "user-id": cfg(ctx).mailbox }, body: {
-    subject: `Result of your finished-part check: ${c.title}`.slice(0, 250), body: { contentType: "HTML", content: html },
+  // The runtime logs this summary, so it names the check, not the customer's address.
+  const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: `draft result email for check ${c.id.slice(0, 20)}`, input: { params: { "user-id": cfg(ctx).mailbox }, body: {
+    subject: `Result of your finished-part check: ${c.title.replace(/[\x00-\x1f\x7f]+/g, " ").trim()}`.slice(0, 250), body: { contentType: "HTML", content: html },
     toRecipients: [{ emailAddress: { address: to } }] } } });
   const id = String(r.data?.id ?? "");
   if (!ID.test(id)) throw new Error("microsoft-365: draft not created");

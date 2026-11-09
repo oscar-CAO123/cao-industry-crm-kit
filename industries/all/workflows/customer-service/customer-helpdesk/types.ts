@@ -92,7 +92,8 @@ export function checkSettings(s: Settings) {
   for (const r of s.answers ?? []) {
     if (!r.name || names.has(r.name)) throw new Error(`customer-helpdesk: each answer rule needs a unique name (${r.name ?? "missing"})`);
     names.add(r.name);
-    for (const w of r.match ?? []) if (!WORD.test(w)) throw new Error(`customer-helpdesk: bad match word "${w}" in rule ${r.name}`);
+    if (!Array.isArray(r.match) || !r.match.length) throw new Error(`customer-helpdesk: answer rule ${r.name} needs match words`);
+    for (const w of r.match) if (!WORD.test(w)) throw new Error(`customer-helpdesk: bad match word "${w}" in rule ${r.name}`);
     if (r.front && !ID.test(r.front.article_id ?? "")) throw new Error(`customer-helpdesk: bad Front article id in rule ${r.name}`);
     if (r.gorgias && !(Number.isInteger(r.gorgias.macro_id) && r.gorgias.macro_id > 0)) throw new Error(`customer-helpdesk: bad Gorgias macro id in rule ${r.name}`);
   }

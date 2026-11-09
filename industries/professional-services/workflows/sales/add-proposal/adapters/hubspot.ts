@@ -28,8 +28,8 @@ export async function readQuoteStatus(ctx: Ctx<Settings>, quoteId: string): Prom
 }
 
 /** The live act that publishes a drafted quote so the client can see it. Queued only; a person approves it. */
-export function publishAct(ctx: Ctx<Settings>, p: Proposal): Act {
-  return { platform: P, op: "crm-quotes-3.patch-/crm/v3/objects/quotes/{quoteId}_update", key: `publish:${p.id}`,
+export function publishAct(ctx: Ctx<Settings>, p: Proposal, key: string): Act {
+  return { platform: P, op: "crm-quotes-3.patch-/crm/v3/objects/quotes/{quoteId}_update", key,
     summary: `publish quote ${p.quote_id} for ${p.title}`,
     input: { params: { quoteId: hsId(p.quote_id) }, body: { properties: { [ctx.settings.hubspot.property.status]: ctx.settings.hubspot.status_values.published } } } };
 }

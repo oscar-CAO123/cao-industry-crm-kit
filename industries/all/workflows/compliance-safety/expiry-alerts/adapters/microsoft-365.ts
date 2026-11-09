@@ -16,13 +16,23 @@ const table = (t: { drive: string; item: string; table: string }) => {
   return { "drive-id": t.drive, "driveItem-id": t.item, "workbookTable-id": t.table };
 };
 
-/** Every row of the register: Holder, Email, Item, Expiry. Rows with no holder or item are skipped. */
+const PAGE = 500, MAX_PAGES = 10;
+
+/** Every row of the register: Holder, Email, Item, Expiry. Rows with no holder or item are skipped.
+ *  Pages through the whole table; a register past MAX_PAGES pages is refused, never read partly. */
 export async function readRegister(ctx: Ctx<Settings>): Promise<RegisterRow[]> {
   const s = ctx.settings;
-  const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: "read expiry register",
-    input: { params: { ...table(cfg(s).register), $top: 500 } } });
+  const values: any[] = [];
+  for (let page = 0; ; page++) {
+    const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: "read expiry register",
+      input: { params: { ...table(cfg(s).register), $top: PAGE, $skip: page * PAGE } } });
+    const rows: any[] = Array.isArray(r.data?.value) ? r.data.value : [];
+    values.push(...rows);
+    if (rows.length < PAGE) break;
+    if (page + 1 >= MAX_PAGES) throw new Error(`expiry register has more than ${PAGE * MAX_PAGES} rows: split it before reading`);
+  }
   const out: RegisterRow[] = [];
-  for (const row of r.data?.value ?? []) {
+  for (const row of values) {
     const v: any[] = Array.isArray(row?.values) ? row.values[0] : [];
     if (!Array.isArray(v)) continue;
     const holder = String(v[0] ?? "").trim().slice(0, 120);

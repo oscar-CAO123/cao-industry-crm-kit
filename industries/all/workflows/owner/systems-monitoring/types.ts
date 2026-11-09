@@ -23,6 +23,7 @@ export interface Check {
   ok: boolean;
   reason?: string;
   seen: string;
+  since?: string;                                              // when this failure began (first run it failed after being ok)
   alerted?: boolean;
 }
 

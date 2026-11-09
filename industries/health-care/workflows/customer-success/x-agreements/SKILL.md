@@ -8,7 +8,7 @@ description: Service agreements for a health-care practice on Cliniko. Use when 
 Built from Cliniko's official API and help-centre pages. No discovery calls describe this workflow yet, so the steps rest on the docs.
 
 ## What runs on its own
-Three crons in `index.ts`, scheduled by `workflow.json`. `intake` drafts one unsent agreement form per active patient case, once per patient and template. `chase` queues an expiry for any agreement still unsigned after `expire_after_days`. `file-record` logs each completed agreement once to the internal register. Nothing is sent by a cron. An expiry changes what the patient sees, so it waits for approval in the CRM shell.
+Three crons in `index.ts`, scheduled by `workflow.json`. `intake` queues one agreement form per active patient case, once per patient and template. Once a person approves it, the form is created unsent in the patient record. `chase` queues an expiry for any agreement still unsigned after `expire_after_days`. `file-record` logs each completed agreement once to the internal register. Nothing is sent by a cron. Creating a form and expiring one both change what the patient sees, so both wait for approval in the CRM shell.
 
 ## Setting it up for a client
 1. Build the agreement as a patient form template in Cliniko, with the privacy policy section and a signature question. Put its id in `settings.json` as `cliniko.agreement_template_id`.
@@ -16,7 +16,8 @@ Three crons in `index.ts`, scheduled by `workflow.json`. `intake` drafts one uns
 3. Set `expire_after_days`.
 
 ## What a person does
-- Send each drafted form from the patient record in Cliniko by email, SMS, QR code or link. The API cannot send it.
+- Approve or reject each queued form creation in the CRM shell. A rejected one is not queued again.
+- Send each created form from the patient record in Cliniko by email, SMS, QR code or link. The API cannot send it.
 - Send the reminder by hand. Approve or reject each queued expiry in the CRM shell.
 - Turn on the PDF-copy email in Cliniko only if the owner wants one. The cron leaves it off.
 

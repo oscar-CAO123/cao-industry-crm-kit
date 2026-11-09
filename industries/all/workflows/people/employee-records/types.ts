@@ -21,14 +21,14 @@ export interface Hire {
 
 /** A pay rise or an employment detail change, written to the "changes" store with status "open". */
 export interface Change {
-  id: string; employee_id: string; kind: "salary" | "employment"; status: "open" | "queued" | "stopped"; reason?: string;
+  id: string; employee_id: string; kind: "salary" | "employment"; status: "open" | "queued" | "stopped" | "failed" | "rejected"; reason?: string;
   effective_date?: string; award_id?: string; classification_id?: string; change_reason?: string;
   cost_centre_id?: string; primary_manager_id?: string; secondary_manager_id?: string; team_ids?: string[];
 }
 
 /** A review cycle, written to the "review-plans" store with status "open". */
 export interface ReviewPlan {
-  id: string; name: string; status: "open" | "queued" | "stopped"; reason?: string; template_ids: string[];
+  id: string; name: string; status: "open" | "queued" | "stopped" | "failed" | "rejected"; reason?: string; template_ids: string[];
   employee_start_date: string; employee_end_date: string; employee_lock_out_date: string;
   reviewer_start_date: string; reviewer_end_date: string; reviewer_lock_out_date: string;
 }

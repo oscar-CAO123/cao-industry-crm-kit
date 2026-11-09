@@ -6,6 +6,7 @@ import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, draft, chase } from "../industries/all/workflows/customer-service/customer-helpdesk/index.ts";
+import { checkSettings } from "../industries/all/workflows/customer-service/customer-helpdesk/types.ts";
 import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/all/workflows/customer-service/customer-helpdesk/workflow.json", "utf8")) as WorkflowRecord;
@@ -102,6 +103,13 @@ test("intake reads open questions inside the lookback window, once, and writes n
   assert.equal(writes().length, 0, "intake is read only");
   const all = await s.list<any>("enquiries");
   assert.deepEqual(Object.values(all).map((e: any) => e.status), ["new", "new", "new", "new"]);
+});
+
+test("settings: an answer rule with no match words is refused before any cron runs", () => {
+  const noMatch = { ...S, answers: [{ name: "hours", front: { article_id: "kba_hours" } }] };
+  assert.throws(() => checkSettings(noMatch), /answer rule hours needs match words/);
+  assert.throws(() => checkSettings({ ...S, answers: [{ name: "hours", match: [], front: { article_id: "kba_hours" } }] }), /needs match words/);
+  checkSettings(S);
 });
 
 test("draft queues matched answers for approval, escalates sensitive ones, parks the rest, and sends nothing", async () => {

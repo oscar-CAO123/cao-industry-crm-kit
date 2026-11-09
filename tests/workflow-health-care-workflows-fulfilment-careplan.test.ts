@@ -71,7 +71,7 @@ test("intake reads new patients and their referral sources, skips a bad id, and 
   assert.deepEqual(await intake(context(WF, S, store, NOW, () => {})), { added: 2 });
   assert.equal(hits.filter((h) => h.method !== "GET").length, 0);
   const list = hits.find((h) => h.path.endsWith("/patients"))!;
-  assert.ok(decodeURIComponent(list.query).includes("created_at:>=2026-10-25T04:00:00Z"), "lookback window is 14 days");
+  assert.deepEqual(new URLSearchParams(list.query).getAll("q[]"), ["created_at:>=2026-10-25T04:00:00Z"], "lookback window is 14 days");
   assert.deepEqual(Object.keys(await store.list("enquiries")).sort(), ["cliniko:101", "cliniko:102"]);
   assert.equal((await store.get<any>("enquiries", "cliniko:101")).referral, "GP referral");
   assert.equal((await store.get<any>("enquiries", "cliniko:102")).referral, null, "a 404 referral is no referral");

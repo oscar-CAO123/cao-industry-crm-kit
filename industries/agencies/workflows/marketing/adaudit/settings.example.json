@@ -1,5 +1,6 @@
 {
  "agency": "Example Agency",
+ "timezone": "Australia/Sydney",
  "meta_accounts": ["act_1234567890"],
  "result_action_types": ["lead", "purchase"],
  "thresholds": {

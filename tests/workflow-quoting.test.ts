@@ -19,10 +19,11 @@ const JOB = "11111111-2222-4333-8444-555555555555", MAT = "aaaaaaaa-bbbb-4ccc-8d
 const QID = "12345678-1234-4234-8234-123456789012", CID = "87654321-4321-4321-8321-210987654321", INV = "abcdefab-cdef-4abc-8def-abcdefabcdef";
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
-let jobStatus = "Quote", xeroStatus = "DRAFT", hasLines = false, produced = false, failXeroUpdate = 0;
+let jobStatus = "Quote", xeroStatus = "DRAFT", produced = false, failXeroUpdate = 0;
+let jobLines: any[] = [];   // ServiceM8 job materials the fake holds: one row per created line
 
 function fake() {
-  hits = []; jobStatus = "Quote"; xeroStatus = "DRAFT"; hasLines = false; produced = false; failXeroUpdate = 0;
+  hits = []; jobStatus = "Quote"; xeroStatus = "DRAFT"; jobLines = []; produced = false; failXeroUpdate = 0;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -36,7 +37,10 @@ function fake() {
       if (p.endsWith("/job.json") && m === "GET") return json(u.searchParams.get("$filter")?.includes("uuid eq") ? [{ uuid: JOB, status: jobStatus }]
         : [{ uuid: JOB, status: "Quote", active: 1, job_description: "Hot water system leaking", job_address: "1 Test St", company_uuid: MAT, date: "2026-11-01" }]);
       if (p.endsWith("/job.json") && m === "POST") return json({ errorCode: 0 }, { "x-record-uuid": JOB });
-      if (p.endsWith("/jobmaterial.json")) { if (m === "POST") hasLines = true; return json(m === "GET" ? (hasLines ? [{ uuid: MAT }] : []) : { errorCode: 0 }); }
+      if (p.endsWith("/jobmaterial.json")) {
+        if (m === "POST") jobLines.push({ uuid: MAT, job_uuid: body.job_uuid, name: body.name, sort_order: body.sort_order });
+        return json(m === "GET" ? jobLines : { errorCode: 0 });
+      }
       if (p.endsWith("/material.json")) return json([{ uuid: MAT, item_number: "CALLOUT", name: "Call-out", price: "120.00" }, { uuid: PDF, item_number: "LAB-HR", name: "Labour hour", price: "95" }]);
       if (p.endsWith("/companycontact.json")) return json([{ first: "Sam", last: "Lee", email: "sam@example.com", mobile: "0412 345 678", is_primary_contact: "1" }]);
       if (p.endsWith("/platform_produce_document")) produced = true;
@@ -150,6 +154,36 @@ test("follow-up comes due after the set days, once; acceptance hands over as a D
   assert.equal(inv.Status, "DRAFT");
   assert.equal(inv.LineItems[0].UnitAmount, 24);
   assert.equal(await store.get<Approval>("approvals", approvalId(WF.id, "send:xero:" + QID)) !== undefined, true);
+});
+
+test("ServiceM8 retry after a part-way failure creates only the lines missing from the job", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S8, store, NOW, () => {});
+  jobLines.push({ uuid: MAT, job_uuid: JOB, name: "Call-out", sort_order: "1" });   // line 1 reached the job before the run failed
+  await store.put("enquiries", `servicem8:${JOB}`, { id: `servicem8:${JOB}`, source: "servicem8", title: "Hot water system leaking", text: "Hot water system leaking",
+    contact: { name: "Sam Lee", email: "sam@example.com" }, received: "2026-11-01", ref: { job_uuid: JOB, address: "1 Test St" }, status: "new" });
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_pricing: 0 });
+  const posted = hits.filter((h) => h.path.endsWith("/jobmaterial.json") && h.method === "POST").map((h) => [h.body.name, h.body.sort_order]);
+  assert.deepEqual(posted, [["Labour hour", "2"]], "line 1 is not created twice and line 2 is not skipped");
+  assert.equal(jobLines.length, 2);
+});
+
+test("a stored ServiceM8 job id that is not a UUID is refused before any call that puts it in a filter or a document request", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S8, store, NOW, () => {});
+  await store.put("enquiries", "servicem8:bad", { id: "servicem8:bad", source: "servicem8", title: "Hot water system leaking", text: "",
+    contact: {}, received: "2026-11-01", ref: { job_uuid: "x' or 1 eq '1" }, status: "new" });
+  await assert.rejects(draft(ctx), /servicem8: bad uuid/);
+  assert.equal(hits.filter((h) => /\/(jobmaterial|attachment)\.json$|platform_produce_document$/.test(h.path)).length, 0);
+});
+
+test("a Microsoft 365 quote has no acceptance check, so no follow-up chase goes out on it", async () => {
+  const M365: any = { ...XERO, intake: ["microsoft-365"], quotes: "microsoft-365", rate_card: "microsoft-365", messages: "microsoft-365",
+    microsoft_365: { mailbox: "quotes@example.com", rate_card: { drive: "drv1", item: "itm1", table: "tbl1" } }, follow_up: { after_days: [3] } };
+  const store = new MemoryStore();
+  await intake(context(WF, M365, store, NOW, () => {})); await draft(context(WF, M365, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, ap.id, "owner", NOW);
+  assert.deepEqual(await followUp(context(WF, M365, store, new Date(NOW.getTime() + 5 * 864e5), () => {})), { queued: 0 });
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith("/messages")).length, 1, "only the quote draft was created");
 });
 
 test("deploy: every target renders every cron, with key names and no key values", () => {

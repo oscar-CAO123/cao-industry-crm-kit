@@ -22,6 +22,13 @@ export async function hires(ctx: Ctx<Settings>) {
       await employmentHero.queueQuickAdd(ctx, h);
       await set({ status: "employee-queued" }); queued++;
     }
+    // A hire stopped because its quick add failed is not lost: if a person re-approves that quick add and it goes through,
+    // the employee id comes from the done approval and the hire carries on to its contract.
+    if (h.status === "stopped" && !h.employee_id) {
+      const ap = await approvalOf(ctx, `hire:${h.id}`);
+      const id = ap?.status === "done" ? ap.results?.[0]?.ref?.id : undefined;
+      if (id && ID.test(id)) await set({ status: "employee-created", employee_id: id, reason: undefined });
+    }
     if (h.status === "employee-queued") {
       const ap = await approvalOf(ctx, `hire:${h.id}`);
       if (refused(ap)) await set({ status: "stopped", reason: ap?.error ?? `employee record ${ap?.status}` });
@@ -50,6 +57,12 @@ export async function hires(ctx: Ctx<Settings>) {
 export async function changes(ctx: Ctx<Settings>) {
   let queued = 0;
   for (const c of Object.values(await ctx.store.list<Change>("changes"))) {
+    if (c.status === "queued") {
+      // A queued change whose approval was refused shows why, instead of waiting forever.
+      const ap = await approvalOf(ctx, `change:${c.id}`);
+      if (ap && refused(ap)) await ctx.store.put("changes", c.id, { ...c, status: ap.status as "failed" | "rejected", reason: ap.error ?? `approval ${ap.status}` });
+      continue;
+    }
     if (c.status !== "open") continue;
     const bad = changeProblem(c);
     if (bad) { await ctx.store.put("changes", c.id, { ...c, status: "stopped", reason: bad }); continue; }
@@ -67,6 +80,12 @@ export async function reviews(ctx: Ctx<Settings>) {
   const existing = await employmentHero.readReviewPeriods(ctx);
   let queued = 0;
   for (const p of Object.values(await ctx.store.list<ReviewPlan>("review-plans"))) {
+    if (p.status === "queued") {
+      // A queued review period whose approval was refused shows why, instead of waiting forever.
+      const ap = await approvalOf(ctx, `review:${p.id}`);
+      if (ap && refused(ap)) await ctx.store.put("review-plans", p.id, { ...p, status: ap.status as "failed" | "rejected", reason: ap.error ?? `approval ${ap.status}` });
+      continue;
+    }
     if (p.status !== "open") continue;
     const bad = planProblem(p);
     if (bad) { await ctx.store.put("review-plans", p.id, { ...p, status: "stopped", reason: bad }); continue; }

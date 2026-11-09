@@ -16,6 +16,7 @@ const BOX = "finance@example.com.au", PRINCIPAL = "principal@example.com.au", DR
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let accountsNow: { id: number; name: string; accountNumber: string; bsbNumber: string; type: string }[] = [];
+let badAccounts = false, failDraft = false;
 
 // Entry 9001 is complete. 9002 has no receipt number and no contact, and its type name holds markup that must be escaped. 9003 is complete.
 const TXS = [
@@ -39,13 +40,13 @@ function fake(txs = TXS) {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
-      if (p.endsWith("/account/trustAccounts") && m === "GET") return json({ items: accountsNow, totalItems: accountsNow.length, urls: {} });
+      if (p.endsWith("/account/trustAccounts") && m === "GET") return badAccounts ? json({ results: accountsNow }) : json({ items: accountsNow, totalItems: accountsNow.length, urls: {} });
       const led = p.match(/\/properties\/(\d+)\/sale\/(\d+)\/trustledger\/transactions$/);
       if (led && m === "GET") {
         const page = Number(u.searchParams.get("page") ?? "1");
         return json(page === 1 ? { items: txs, totalItems: txs.length, urls: { next: "next" } } : { items: [], urls: {} });
       }
-      if (p.endsWith("/messages") && m === "POST") return json({ id: DRAFT });
+      if (p.endsWith("/messages") && m === "POST") return failDraft ? new Response("{}", { status: 500 }) : json({ id: DRAFT });
       if (p.endsWith("/rows") && m === "POST") return json({ index: 0 });
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
       return new Response("not faked: " + p, { status: 404 });
@@ -59,6 +60,7 @@ const pending = async (store: MemoryStore) =>
 
 beforeEach(() => {
   accountsNow = [{ id: 77, name: "Trust A", accountNumber: "000000000", bsbNumber: "000000", type: "sales" }];
+  badAccounts = false; failDraft = false;
   fake();
   setTokenStore(new MemoryTokenStore());
   Object.assign(process.env, { VAULTRE_ACCESS_TOKEN: "v", VAULTRE_API_KEY: "k", M365_ACCESS_TOKEN: "ms", KIT_ALLOW_WRITES: "1" });
@@ -142,4 +144,41 @@ test("a sale id that is not a number is refused before any call is made", async 
   const bad = { ...SET, sale_lives: [{ property_id: "1001/../x", life_id: 2001 }] };
   await assert.rejects(ledger(context(WF, bad, store, NOW, () => {})), /numeric property_id/);
   assert.equal(hits.length, 0);
+});
+
+test("a failed exceptions draft leaves the flagged entry new, so the next run queues it", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  failDraft = true;
+  await assert.rejects(ledger(ctx));
+  assert.equal(await store.get("trust_tx", "9002"), undefined, "the flagged entry is not saved as seen");
+  assert.ok(await store.get("trust_tx", "9001"), "complete entries are saved");
+  failDraft = false;
+  assert.deepEqual(await ledger(ctx), { fresh: 1, flagged: 1, queued: true });
+  assert.equal((await pending(store)).length, 1, "the exceptions email is queued once");
+  assert.equal(sends().length, 0, "nothing sent by a cron");
+});
+
+test("flagged entries with no principal email stop the run before anything is written", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...SET, principal_email: undefined }, store, NOW, () => {});
+  await assert.rejects(ledger(ctx), /principal_email/);
+  assert.equal(rows().length, 0, "no register row");
+  assert.equal(await store.get("trust_tx", "9001"), undefined, "no entry saved as seen");
+  assert.equal((await pending(store)).length, 0);
+});
+
+test("a changed trust account reply stops the accounts cron and marks no account dropped", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await accounts(ctx);
+  badAccounts = true;
+  await assert.rejects(accounts(ctx), /no items list/);
+  assert.equal(rows().length, 1, "no dropped row written");
+  assert.equal((await store.get<any>("accounts", "77")).active, true);
+});
+
+test("the run log never carries the principal's address from the draft step", async () => {
+  const logs: string[] = [];
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, (m) => logs.push(m));
+  await ledger(ctx);
+  assert.ok(logs.some((l) => l.startsWith("draft ")), "the draft step is logged");
+  assert.ok(logs.filter((l) => l.startsWith("draft ")).every((l) => !l.includes(PRINCIPAL)));
 });

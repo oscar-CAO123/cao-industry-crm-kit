@@ -39,7 +39,8 @@ export async function report(ctx: Ctx<Settings>) {
       c.ref = { ...c.ref, draft_message: messageId };
       await ctx.store.put("checks", c.id, c);   // saved before the queue, so a failed queue reuses this draft on the next run
     }
-    await ctx.queue(sendAct(ctx, c, messageId));  // returns the existing approval id if it is already queued
+    // Explicit summary: the runtime logs it, so it names the check, not the customer's address (the act keeps the address).
+    await ctx.queue(sendAct(ctx, c, messageId), `send result for check ${c.id.slice(0, 20)}: ${c.result?.decision}`);  // returns the existing approval id if it is already queued
     await ctx.store.put("checks", c.id, { ...c, status: "queued" } satisfies Check);
     queued++;
   }

@@ -41,7 +41,8 @@
   "Units of measure: each bill line takes the product's own unit. The workflow does not convert units.",
   "The capabilities list in core/capabilities.json has no bill-of-materials entry. The bill operations are named in workflow.json only.",
   "Evidence is one discovery call. Confirm the shape with a second call before a client build.",
-  "No Unleashed sandbox account yet. Field names come from the vendor's API reference, not from a live reply; the create and update body must be checked on a sandbox."
+  "No Unleashed sandbox account yet. Field names come from the vendor's API reference, not from a live reply; the create and update body must be checked on a sandbox.",
+  "A queued bill change carries the lines as they stood when it was queued. If someone edits the live bill in Unleashed before approval, approving the change overwrites that edit. Re-reading the bill before the send needs a pre-send check in core/workflows/runtime.ts (approve); not built here."
  ],
  "evidence": {
   "calls": "4 manufacturing calls read; 1 describes its way of building bills of materials (concrete batching)",

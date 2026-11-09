@@ -45,7 +45,7 @@ function field(body: any, name: string): any {
 
 function searchDoc(organizationId: string | undefined, updatedAfter: string, pageSize: number): string {
   const org = organizationId ? `organizationId: ${lit(organizationId)}, ` : "";
-  return `query Kit { searchCases(input: {${org}sortField: UPDATED_ON, sortDirection: DESCENDING, updatedAfter: ${lit(updatedAfter)}, pageSize: ${pageSize}}) { ... on PageOfCasesMatchingSearch { hasNextPage nextCursor cases { caseId caseStatus lastUpdatedOn } } ${ERRORS} } }`;
+  return `query Kit { searchCases(input: {${org}sortField: UPDATED_ON, sortDirection: ASCENDING, updatedAfter: ${lit(updatedAfter)}, pageSize: ${pageSize}}) { ... on PageOfCasesMatchingSearch { hasNextPage nextCursor cases { caseId caseStatus lastUpdatedOn } } ${ERRORS} } }`;
 }
 function nextPageDoc(cursor: string): string {
   return `query Kit { nextPageOfCases(input: {cursor: ${lit(cursor)}}) { ... on PageOfCasesMatchingSearch { hasNextPage nextCursor cases { caseId caseStatus lastUpdatedOn } } ${ERRORS} } }`;
@@ -59,7 +59,8 @@ function toSummary(c: any): CaseSummary | undefined {
   return { caseId: String(c.caseId), caseStatus: String(c.caseStatus ?? ""), lastUpdatedOn: stamp(c.lastUpdatedOn) };
 }
 
-/** Case summaries updated since a time, newest first, across at most maxPages pages. */
+/** Case summaries updated since a time, oldest first, across at most maxPages pages. Oldest first means a capped read
+ *  leaves the cursor at the newest case it read, so no unread case is ever passed over. */
 export async function listCases(ctx: Ctx<Settings>, updatedAfter: string, maxPages: number): Promise<CaseSummary[]> {
   if (!stamp(updatedAfter)) throw new Error("first-aml: bad time for the case search");
   const organizationId = orgOf(ctx.settings);

@@ -27,6 +27,15 @@ export const smokeball = {
       }));
   },
 
+  /** The client contacts of one matter, as Smokeball holds them at this moment (read before a portal message is queued). */
+  async clients(ctx: Ctx<Settings>, matterId: string): Promise<{ id: string; name?: string }[]> {
+    if (!ID.test(matterId)) throw new Error("smokeball: bad matter id");
+    const r = await ctx.draft<any>({ platform: P, op: "GetMatterById", summary: `read clients of matter ${matterId}`, input: { params: { matterId } } });
+    return (r.data?.clients ?? [])
+      .map((c: any) => ({ id: String(c?.id ?? ""), name: c?.name ? clean(c.name, 120) : undefined }))
+      .filter((c: { id: string }) => ID.test(c.id));
+  },
+
   /** The file list for one matter: names and dates only (the kit classes the download as a write, so content is not read here). */
   async files(ctx: Ctx<Settings>, matterId: string): Promise<FileRecord[]> {
     if (!ID.test(matterId)) throw new Error("smokeball: bad matter id");
@@ -34,7 +43,8 @@ export const smokeball = {
     return (r.data?.value ?? [])
       .filter((f: any) => ID.test(String(f.id ?? "")))
       .map((f: any): FileRecord => ({
-        id: String(f.id), name: clean(f.name ?? "file", 200), ext: f.fileExtension ? clean(f.fileExtension, 10) : undefined,
+        // File names come from other parties' documents: capped and stripped here, and treated as data by the agent (SKILL.md).
+        id: String(f.id), name: clean(f.name ?? "file", 120), ext: f.fileExtension ? clean(f.fileExtension, 10) : undefined,
         created: f.dateCreated ? clean(f.dateCreated, 40) : undefined, modified: f.dateModified ? clean(f.dateModified, 40) : undefined,
         size: Number.isFinite(f.sizeBytes) ? Number(f.sizeBytes) : undefined,
       }));

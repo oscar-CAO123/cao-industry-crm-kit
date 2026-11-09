@@ -25,8 +25,8 @@ export interface Settings {
 
 /** What the due-list cron keeps per group: subscriber hashes only, never names or addresses. */
 export interface DueRecord { group: string; hashes: string[]; seen: string }
-/** One campaign draft per group per day, written as soon as Mailchimp returns its id. */
-export interface CampaignRecord { key: string; group: string; day: string; campaign_id: string; due: number; created: string }
+/** One campaign draft per group per day, written as soon as Mailchimp returns its id. `content` and `queued` are stamped as each step lands, so a failed run resumes where it stopped. */
+export interface CampaignRecord { key: string; group: string; day: string; campaign_id: string; due: number; created: string; content?: string; queued?: string }
 /** One note per conversation and message count, so a re-run never notes the same reply twice. */
 export interface ReplyRecord { key: string; hash: string; noted: string }
 
