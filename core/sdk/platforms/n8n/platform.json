@@ -12,7 +12,7 @@
  "serverVars": {
   "host": {
    "env": "N8N_HOST",
-   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "pattern": "([a-z0-9-]+\\.)+[a-z]{2,63}",
    "envOnly": true,
    "example": "n8n.client.example.org"
   }
@@ -41,7 +41,7 @@
  ],
  "counts": {
   "operations": 175,
-  "read": 58,
-  "write": 117
+  "read": 55,
+  "write": 120
  }
 }

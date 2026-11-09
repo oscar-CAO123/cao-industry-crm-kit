@@ -299,9 +299,9 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";
     if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
     if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
-    if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;
+    if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
     if (id === "time-doctor" && /^\/api\/1\./.test(o.path)) o.auth = { type: "header", header: "Authorization", prefix: "JWT ", env: "TIMEDOCTOR_ACCESS_TOKEN" };  // legacy Data API sign-in
-    if (id === "quickbooks" && o.path.startsWith("/entitlements/")) o.authUnsupported = "QuickBooks entitlements route sits on the /manage base, which the reader did not map; not wired yet";  // public client API: company_id, never the private key
+    if (id === "quickbooks" && o.path.startsWith("/entitlements/")) o.authUnsupported = "QuickBooks entitlements route sits on the /manage base, which the reader did not map; not wired yet";
     if (id === "docusign" && !["esignature", "sdk"].includes(o.api)) {
       const f = DOCUSIGN[o.api];
       if (!f) o.authUnsupported = `DocuSign ${o.api}: its production host and scopes are not mapped yet`;

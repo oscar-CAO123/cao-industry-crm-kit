@@ -1,7 +1,8 @@
 // Sign-in, keys and hosts for the approved-scope tools (9 Nov 2026), from each vendor's own reference pages
 // (endpoint-map/extracted/<tool>.json, each grounded by its reader's check). All are proof "docs": unproven until a sandbox run.
 // Shapes match the platform table in tools/sdk-generate.mjs.
-const HOST = "[a-z0-9-]+(\\.[a-z0-9-]+)+";
+// A DNS name whose last label is letters: never a bare IP address (a private or metadata address).
+const HOST = "([a-z0-9-]+\\.)+[a-z]{2,63}";
 const TOKEN = "token exchange not built yet: supply an access token";
 const GOOGLE_KEYS = ["GOOGLE_MAILBOX", "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"];
 const d = (name, auth, more = {}) => ({ name, auth, proof: "docs", ...more });
