@@ -1782,6 +1782,12 @@
    "calls": 13
   },
   {
+   "tool": "Procore",
+   "platform": "procore",
+   "status": "docs-read",
+   "calls": 12
+  },
+  {
    "tool": "Monday.com",
    "platform": "monday",
    "status": "spec",
@@ -1816,19 +1822,9 @@
    "platform": "google-ads",
    "status": "spec",
    "calls": 7
-  },
-  {
-   "tool": "WhatsApp",
-   "platform": "whatsapp",
-   "status": "spec",
-   "calls": 7
   }
  ],
  "missing_connectors": [
-  {
-   "tool": "Procore",
-   "calls": 12
-  },
   {
    "tool": "Simpro",
    "calls": 12
