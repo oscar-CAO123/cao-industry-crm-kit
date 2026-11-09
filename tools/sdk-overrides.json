@@ -367,5 +367,21 @@
     },
     "readPost": {},
     "drop": {}
+  },
+  "n8n": {
+    "forceWrite": {
+      "getVariables": "GET /variables returns every instance variable with its value; n8n variables often hold keys and passwords, so the agent reads them only with approval (n8n.json)",
+      "getOidcConfiguration": "GET /settings/sso/oidc returns the OIDC sign-in configuration, which carries the identity provider's client settings (n8n.json)",
+      "getSamlConfiguration": "GET /settings/sso/saml returns the SAML sign-in configuration and certificates (n8n.json)"
+    },
+    "readPost": {}
+  },
+  "time-doctor": {
+    "forceWrite": {
+      "auth.logout": "GET /api/1.0/logout ends the current session and invalidates the access token: a state change behind a GET (time-doctor.json)",
+      "auth.logoutById": "GET /api/1.0/logout/by-id invalidates a given access token: a state change behind a GET (time-doctor.json)",
+      "auth_v2_sso.authV2SsoAuthenticate": "GET /api/2.0/auth/v2/sso/{provider}/authenticate starts an SSO sign-in flow, which the agent never does on its own (time-doctor.json)"
+    },
+    "readPost": {}
   }
 }

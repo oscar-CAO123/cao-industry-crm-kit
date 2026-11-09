@@ -1,0 +1,47 @@
+{
+ "id": "n8n",
+ "name": "n8n",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": true,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "host": {
+   "env": "N8N_HOST",
+   "pattern": "([a-z0-9-]+\\.)+[a-z]{2,63}",
+   "envOnly": true,
+   "example": "n8n.client.example.org"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "X-N8N-API-KEY",
+  "env": "N8N_API_KEY"
+ },
+ "keys": [
+  "N8N_API_KEY",
+  "N8N_HOST"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.n8n.io/llms.txt",
+   "official": "vendor-domain: docs.n8n.io"
+  }
+ ],
+ "gaps": [
+  "Parameters and body fields come from each operation's own YAML file. Body fields are the top-level properties of the inline request schema; nested fields are not mapped.",
+  "Response schemas and shared error responses were not mapped; they are not inputs.",
+  "The spec's own paths block is empty; the paths come from openapi.decorator-routes.generated.yml, which is the doc_url for every operation.",
+  "The docs pages do not list an endpoint count, so reference_index_count is null.",
+  "Base URL is per instance: the docs give https:// /api/v1 for self-hosted; n8n Cloud uses its own domain."
+ ],
+ "counts": {
+  "operations": 175,
+  "read": 55,
+  "write": 120
+ }
+}

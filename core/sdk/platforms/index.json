@@ -1,9 +1,15 @@
 {
- "generated": "2026-11-08",
+ "generated": "2026-11-09",
  "platforms": [
   {
    "id": "activecampaign",
    "ops": 342,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "acuity",
+   "ops": 33,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -380,6 +386,12 @@
    "auth": "docs"
   },
   {
+   "id": "looker-studio",
+   "ops": 5,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
    "id": "mailchimp",
    "ops": 405,
    "status": "spec",
@@ -441,9 +453,9 @@
   },
   {
    "id": "n8n",
-   "ops": 0,
+   "ops": 175,
    "status": "docs-read",
-   "note": "nothing public to map"
+   "auth": "docs"
   },
   {
    "id": "notion",
@@ -466,6 +478,12 @@
   {
    "id": "pandadoc",
    "ops": 122,
+   "status": "docs-read",
+   "auth": "docs"
+  },
+  {
+   "id": "paperform",
+   "ops": 61,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -519,9 +537,9 @@
   },
   {
    "id": "procore",
-   "ops": 0,
-   "status": "gated",
-   "note": "nothing public to map"
+   "ops": 459,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "productive",
@@ -549,9 +567,9 @@
   },
   {
    "id": "quickbooks",
-   "ops": 0,
+   "ops": 230,
    "status": "docs-read",
-   "note": "nothing public to map"
+   "auth": "docs"
   },
   {
    "id": "re-leased",
@@ -675,9 +693,9 @@
   },
   {
    "id": "time-doctor",
-   "ops": 0,
+   "ops": 177,
    "status": "docs-read",
-   "note": "nothing public to map"
+   "auth": "docs"
   },
   {
    "id": "trackunit",

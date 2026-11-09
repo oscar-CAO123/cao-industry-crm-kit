@@ -1,0 +1,176 @@
+{
+ "id": "acuity",
+ "name": "Acuity Scheduling",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "acuityscheduling.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "ACUITY_USER_ID",
+  "pass": "ACUITY_API_KEY"
+ },
+ "keys": [
+  "ACUITY_USER_ID",
+  "ACUITY_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.acuityscheduling.com/reference/api-errors",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/appointment-types",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/appointments-addons",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/availability-check-times",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/blocks",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/clients",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/delete-blocks-id",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/delete-certificates-id",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/delete-clients",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/forms",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-appointments",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-appointments-id",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-appointments-id-payments",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-availability-classes",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-availability-dates",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-availability-times",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-blocks-id",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-calendars",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-certificates",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-certificates-check",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-me",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-orders",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/get-products",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/labels",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/meta",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/ordersid",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/post-appointments",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/post-blocks",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/post-certificates",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/post-clients",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/put-appointments-id",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/put-appointments-id-cancel",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/put-appointments-id-reschedule",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  },
+  {
+   "url": "https://developers.acuityscheduling.com/reference/put-clients",
+   "official": "vendor-domain: developers.acuityscheduling.com"
+  }
+ ],
+ "gaps": [
+  "REFUSED https://developers.acuityscheduling.com/reference/overview: HTTP 404",
+  "No OpenAPI, Swagger, Postman or GraphQL file was found or fetched; the endpoint list comes from the saved reference pages.",
+  "Reference index shows the endpoints in the sidebar; the reference overview page returned HTTP 404 and was not saved.",
+  "Plan or partner gating for the Enterprise API group is not stated on the pages read; unverified.",
+  "Two GET pages (clients, labels) have no description line; their summaries are generated as 'List .' and the other text is not from the page.",
+  "Nested form-field sub-parameters (fields, labels in body params) are not mapped as separate params.",
+  "Response schemas are not mapped; the pages show example JSON only."
+ ],
+ "counts": {
+  "operations": 33,
+  "read": 21,
+  "write": 12
+ }
+}

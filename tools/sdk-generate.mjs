@@ -65,6 +65,9 @@ const P = {
 // Wave 3 platforms (8 Nov): their sign-in and hosts live in their own file.
 import { W3 } from "./sdk-platforms-wave3.mjs";
 for (const [k, v] of Object.entries(W3)) if (!P[k]) P[k] = v;
+// Approved-scope tools (9 Nov): their own file too.
+import { APPROVED } from "./sdk-platforms-approved.mjs";
+for (const [k, v] of Object.entries(APPROVED)) if (!P[k]) P[k] = v;
 // Every key a platform reads, for platforms that do not list them by hand.
 function autoKeys(cfg) {
   const names = new Set();
@@ -297,6 +300,8 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
     if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
     if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
+    if (id === "time-doctor" && /^\/api\/1\./.test(o.path)) o.auth = { type: "header", header: "Authorization", prefix: "JWT ", env: "TIMEDOCTOR_ACCESS_TOKEN" };  // legacy Data API sign-in
+    if (id === "quickbooks" && o.path.startsWith("/entitlements/")) o.authUnsupported = "QuickBooks entitlements route sits on the /manage base, which the reader did not map; not wired yet";
     if (id === "docusign" && !["esignature", "sdk"].includes(o.api)) {
       const f = DOCUSIGN[o.api];
       if (!f) o.authUnsupported = `DocuSign ${o.api}: its production host and scopes are not mapped yet`;

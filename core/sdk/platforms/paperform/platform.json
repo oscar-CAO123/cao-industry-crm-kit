@@ -1,0 +1,308 @@
+{
+ "id": "paperform",
+ "name": "Paperform",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.paperform.co"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "PAPERFORM_API_KEY"
+ },
+ "keys": [
+  "PAPERFORM_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://paperform.readme.io/reference/coupons-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/createformcoupon",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/createformwebhook",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/createspace",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/createtranslation",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deleteformcoupon",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deleteformpartialsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deleteformproduct",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deleteformsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deleteformwebhook",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deletepapersignfolderwebhooks",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deletepartialsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deletesubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/deletetranslation",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/downloadpapersigncompleteddocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/form-fields-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/forms-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getfileurls",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getform",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformcoupon",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformfield",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformpartialsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformproduct",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getformwebhook",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getpapersigncompleteddocumenturl",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getpapersigndocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getpapersignfolderwebhooks",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getpartialsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getspace",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getspaceforms",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getsubmission",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/getting-started-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/gettranslation",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformcoupons",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformfields",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformpartialsubmissions",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformproducts",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listforms",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformsubmissions",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listformwebhooks",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listpapersigndocuments",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listpapersignfolders",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listpapersignspaces",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listspaces",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/listtranslations",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersigncanceldocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersigncopydocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersigncreatedraftdocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersigngeneratesignerlink",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersignmovedocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/papersignsenddocument",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/partial-submissions-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/postformproduct",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/postpapersignfolders",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/postpapersignfolderwebhooks",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/products-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/putpapersignfolderwebhooks",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/submissions-1",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateform",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformcoupon",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformfield",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformproduct",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformproductquantity",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformproductsold",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updateformwebhook",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updatespace",
+   "official": "vendor-domain: paperform.readme.io"
+  },
+  {
+   "url": "https://paperform.readme.io/reference/updatetranslation",
+   "official": "vendor-domain: paperform.readme.io"
+  }
+ ],
+ "gaps": [
+  "No OpenAPI, Swagger or Postman file was checked: the task limited this run to the saved pages, so no spec download was attempted.",
+  "Summaries are the first sentence of each page's description. Parameter types are the docs' labels as written (for example 'array of strings', 'date-time'). Parameter descriptions are not kept.",
+  "Body fields are listed as params with in 'body'. Nested object fields are not expanded where the page does not list them.",
+  "Plan tier notes (Standard, Business or Papersign API) are not recorded per operation. The gate is in the page text, not the schema.",
+  "Pages not mapped to an operation (category overviews and the getting-started page): pages/coupons-1.html, pages/form-fields-1.html, pages/forms-1.html, pages/getting-started-1.html, pages/partial-submissions-1.html, pages/products-1.html, pages/submissions-1.html"
+ ],
+ "counts": {
+  "operations": 61,
+  "read": 28,
+  "write": 33
+ }
+}
