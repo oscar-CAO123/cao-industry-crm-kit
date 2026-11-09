@@ -87,6 +87,7 @@ const RESERVED = new Set("break case catch class const continue debugger default
 // Read or write. The network gate reads only GET (and mapped GraphQL queries and RPC reads). On top of that:
 // - Slack and Telegram name actions rather than following HTTP, so their endpoints are reads only when the name says so.
 // - Dropbox is RPC over POST: its list, get and search routes are reads (sent as read-only POSTs); the rest are writes.
+// - Rex is RPC over POST too: read, search, describe, autocomplete, get-, find- and listing-option methods are reads.
 // - Anything whose id, path or summary points to a credential is gated as a write on every platform, even as a GET.
 // - A GET is otherwise the vendor's own statement that the call reads (HTTP's safe method). It is a write only when the
 //   endpoint's OWN name is an action: the first word of its last path segment (Deputy's GET /tasks/{id}/do) or the first
@@ -150,6 +151,16 @@ function readKind(platform, o) {
     const segs = String(o.path).split("/");
     const last = segs[segs.length - 1] === "continue" ? segs[segs.length - 2] : segs[segs.length - 1];  // list_folder/continue pages a read
     return /^(list|get|search|count|check)/.test(last) && !ACTION.test(words(last)) ? ["read", ""] : ["write", ""];
+  }
+  if (platform === "rex") {
+    // Rex is RPC over POST like Dropbox: a method is a read only when its own name says so (read, search, describe...,
+    // autocomplete, get-..., find-..., ...-fields, ...-modes, ...-formats, ...-options) and is not an action.
+    const last = String(o.path).split("/").pop() ?? "";
+    // Reads that hand back a login or auth-flow URL, a shareable link, login emails or attached files stay gated
+    // (reviewed 9 Nov: get-login-flow-url, get-rex-home-modern-vendor-report-url, get-latest-vendor-login-emails, ...).
+    const sensitive = /(url|urls|link|login|auth|ical|files-attached)(-|$)/.exec(last);
+    if (sensitive) return ["write", `sensitive: its name mentions a ${sensitive[1]} (login, auth, link or file)`];
+    return /^(read|search|describe|autocomplete|get|find)(-|$)|-(fields|modes|formats|options)$/.test(last) && !ACTION.test(words(last)) ? ["read", ""] : ["write", ""];
   }
   if (!["GET", "QUERY"].includes(method)) return ["write", ""];
   if (o.kind !== "read") return ["write", "the endpoint map labels it a write"];
