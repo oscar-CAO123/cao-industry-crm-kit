@@ -139,11 +139,12 @@ test("a failed create blocks the plan, and nothing after it is queued", async ()
   failAdset = true;
   const [adset] = await main(["approvals", DIR], store) as any[];
   const res = await approve(WF, store, adset.id, "owner", NOW);
-  assert.equal(res.status, "failed");
+  // A 500 may have been processed: the step waits for a person to check, and the plan blocks on it.
+  assert.equal(res.status, "needs-check");
   await build(ctx);
   const p = await store.get<any>("campaigns", PLAN.id);
   assert.equal(p.status, "blocked");
-  assert.match(p.reason, /^adset: failed/);
+  assert.match(p.reason, /^adset: needs-check/);
   assert.equal(p.approvals.creative, undefined);
   assert.equal(hits.filter((h) => h.path.endsWith("/adcreatives")).length, 0);
 });

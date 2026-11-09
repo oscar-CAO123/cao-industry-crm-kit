@@ -8,8 +8,8 @@
 // Every call still goes through the SDK gate (core/sdk/call.ts): writes need KIT_ALLOW_WRITES=1 on the deploy.
 // The runtime adds the rule above on top, so a cron can never send anything, whatever the deploy allows.
 
-import { callOperation, describe, type CallInput } from "../sdk/call.ts";
-import type { Reply } from "../lib/http.ts";
+import { callOperation, describe, plan, type CallInput } from "../sdk/call.ts";
+import { ApiError, WriteBlocked, type Reply } from "../lib/http.ts";
 import type { Store } from "./store.ts";
 import crypto from "node:crypto";
 
@@ -69,6 +69,9 @@ export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, 
  *  - Each act is marked "started" in the store before it is called, and its created ids (id, uuid, QuoteID, an
  *    x-record-uuid header...) are kept in results, so later steps and crons can use them.
  *  - A failed bundle can be approved again: it resumes at the first act that did not finish, so nothing already done repeats.
+ *    An act only counts as failed when nothing can have happened: its input was refused before sending, the deploy blocks
+ *    writes, or the app answered with a 4xx (other than a timeout). A 5xx, a timeout or a dropped connection may have
+ *    been processed by the app, so that act stays "started" and the approval becomes needs-check (below).
  *  - If an act was started but its outcome never came back (a crash or lost response), or an approval has been running
  *    for over 15 minutes, it becomes needs-check: a person confirms in the platform, then runs it with confirmUnknown
  *    ("done" skips that act, "retry" runs it again). Nothing is ever repeated automatically. */
@@ -115,6 +118,8 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
   const results = [...(ap.results ?? [])];
   try {
     for (const a of ap.acts.slice(results.length)) {
+      // Plan it first (no keys, no network): a bad input fails here, before the act is marked started or anything is sent.
+      await plan(a.platform, a.op, a.input ?? {});
       results.push({ op: a.op, status: "started" });
       await store.put("approvals", id, { ...ap, results });
       const r = await callOperation(a.platform, a.op, a.input ?? {});
@@ -123,9 +128,15 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
     }
     Object.assign(ap, { status: "done", decided: now.toISOString(), results, error: undefined });
   } catch (e: any) {
-    // A call that threw got an answer (an error status) or never reached the network: either way it did not succeed.
-    if (results.at(-1)?.status === "started") results.pop();
-    Object.assign(ap, { status: "failed", decided: now.toISOString(), results, error: String(e?.message ?? e).slice(0, 300) });
+    // Only a refusal that proves nothing happened is a clean failure that may simply be approved again. Anything else
+    // (a 5xx, a timeout, a dropped connection, a failed token exchange) may have been processed by the app: the act
+    // stays "started" and a person checks the platform first, so a send, payment or post can never go out twice.
+    const nothingHappened = e instanceof WriteBlocked || (e instanceof ApiError && e.status >= 400 && e.status < 500 && e.status !== 408);
+    if (results.at(-1)?.status === "started" && nothingHappened) results.pop();
+    const unknown = results.at(-1)?.status === "started";
+    const msg = String(e?.message ?? e).slice(0, 240);
+    Object.assign(ap, { status: unknown ? "needs-check" : "failed", decided: now.toISOString(), results,
+      error: unknown ? `outcome unknown (${msg}): check the platform, then approve with done or retry` : msg });
   }
   await store.put("approvals", id, ap);
   return ap;

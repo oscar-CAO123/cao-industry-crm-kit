@@ -195,8 +195,10 @@ test("review fixes: one send under a double approve; a failed bundle resumes wit
   assert.ok(create, "quote created");
   const [xa] = Object.values(await xs.list<Approval>("approvals"));
   failXeroUpdate = 1;
-  assert.equal((await approve(WF, xs, xa.id, "owner", NOW)).status, "failed");
-  assert.equal((await approve(WF, xs, xa.id, "owner", NOW)).status, "done");
+  // A 500 may have been processed by the app: the approval waits for a person to check, and nothing resends on its own.
+  assert.equal((await approve(WF, xs, xa.id, "owner", NOW)).status, "needs-check");
+  await assert.rejects(approve(WF, xs, xa.id, "owner", NOW), /needs a check/, "approving again without a confirmation sends nothing");
+  assert.equal((await approve(WF, xs, xa.id, "owner", NOW, "retry")).status, "done");
   assert.equal(hits.filter((h) => /\/send$/.test(h.path)).length, 1, "the email went once across the retry");
   await followUp(context(WF, XERO, xs, NOW, () => {}));
   assert.equal(Object.values(await xs.list<any>("quotes"))[0].status, "sent");

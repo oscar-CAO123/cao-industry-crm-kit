@@ -107,8 +107,10 @@ test("a failed publish resumes without repeating the content update", async () =
   await queue(ctx);
   const [ap] = Object.values(await store.list<Approval>("approvals"));
   failPublish = 1;
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "failed");
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  // A 500 may have been processed by the app: the approval waits for a person to check, and nothing resends on its own.
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "needs-check");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /needs a check/, "approving again without a confirmation sends nothing");
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW, "retry")).status, "done");
   const contentUpdates = hits.filter((h) => h.method === "POST" && h.path.endsWith(`${PAGE}/dom`));
   assert.equal(contentUpdates.length, 1, "the content update went once across the retry");
 });

@@ -124,10 +124,12 @@ test("a failed authorisation stays queued for a person to retry", async () => {
   await intake(ctx); await match(ctx); await publish(ctx);
   const [ap] = Object.values(await store.list<Approval>("approvals"));
   failAuthorise = 1;
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "failed");
+  // A 500 may have been processed by the app: the approval waits for a person to check, and nothing resends on its own.
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "needs-check");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /needs a check/, "approving again without a confirmation sends nothing");
   assert.deepEqual(await publish(ctx), { queued: 0, authorised: 0, rejected: 0 });
   assert.equal((await store.get<any>("documents", BILL_A)).status, "queued");
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW, "retry")).status, "done");
 });
 
 test("a rejected authorisation is recorded and the bill is not queued again", async () => {
