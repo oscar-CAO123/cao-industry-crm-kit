@@ -40,8 +40,8 @@
   "Sandbox host not read from Procore's pages: only the production host api.procore.com is mapped"
  ],
  "counts": {
-  "operations": 631,
-  "read": 313,
-  "write": 318
+  "operations": 676,
+  "read": 336,
+  "write": 340
  }
 }

@@ -1,0 +1,46 @@
+{
+ "id": "rex",
+ "name": "Rex",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rpc",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:api(\\.uk)?\\.rexsoftware\\.com)"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "host": {
+   "env": "REX_API_HOST",
+   "default": "api.rexsoftware.com",
+   "pattern": "api(\\.uk)?\\.rexsoftware\\.com"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "REX_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "REX_ACCESS_TOKEN",
+  "REX_API_HOST (optional: api.rexsoftware.com default, api.uk.rexsoftware.com for UK)"
+ ],
+ "sources": [
+  {
+   "url": "https://api-docs.rexsoftware.com/",
+   "official": "vendor-domain: api-docs.rexsoftware.com"
+  }
+ ],
+ "gaps": [
+  "Only the services rendered are mapped (all fully documented services plus the basic ones the real estate workflows name); the other basic services are not",
+  "Inputs are the top-level body fields shown on each method; nested fields are not itemised",
+  "Every Rex call is POST, so the SDK treats reads (read, search, describe) as writes unless an override marks them read-only"
+ ],
+ "counts": {
+  "operations": 1027,
+  "read": 658,
+  "write": 369
+ }
+}

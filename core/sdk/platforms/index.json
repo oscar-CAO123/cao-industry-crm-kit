@@ -537,7 +537,7 @@
   },
   {
    "id": "procore",
-   "ops": 631,
+   "ops": 676,
    "status": "docs-read",
    "auth": "docs"
   },
@@ -579,9 +579,9 @@
   },
   {
    "id": "rex",
-   "ops": 0,
-   "status": "gated",
-   "note": "nothing public to map"
+   "ops": 1027,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "rezdy",
@@ -600,6 +600,12 @@
    "ops": 0,
    "status": "docs-read",
    "note": "nothing public to map"
+  },
+  {
+   "id": "salesforce",
+   "ops": 88,
+   "status": "docs-read",
+   "auth": "docs"
   },
   {
    "id": "semrush",

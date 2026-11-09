@@ -23,6 +23,19 @@ export const APPROVED = {
       keys: ["QUICKBOOKS_ACCESS_TOKEN", "QUICKBOOKS_REALM_ID", "QUICKBOOKS_HOST (optional: sandbox-quickbooks.api.intuit.com for the sandbox)"] }),
   // Auth v2 (Bearer) is current; the legacy /api/1.x Data API routes take "JWT <token>" (set per route in sdk-generate.mjs).
   "time-doctor": d("Time Doctor", { type: "bearer", env: "TIMEDOCTOR_ACCESS_TOKEN", note: TOKEN }),
+  // Each client's own My Domain host (https://MyDomainName.my.salesforce.com, from the REST API guide's resources list);
+  // every resource page signs in with "Authorization: Bearer token". The API version is a path input (v{version}).
+  "salesforce": d("Salesforce (REST API)", { type: "bearer", env: "SALESFORCE_ACCESS_TOKEN", note: TOKEN },
+    { server: "https://{mydomain}.my.salesforce.com", forceServer: true,
+      serverVars: { mydomain: { env: "SALESFORCE_MY_DOMAIN", pattern: "[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(--[a-z0-9]+)?", envOnly: true } },
+      keys: ["SALESFORCE_ACCESS_TOKEN", "SALESFORCE_MY_DOMAIN"],
+      gaps: ["Core REST API resources only; Connect, Analytics, Tooling, Bulk and Metadata APIs not mapped"] }),
+  // Rex is RPC over POST (https://api.rexsoftware.com/v1/rex/SERVICE/METHOD, or the UK host), Bearer token, from
+  // the docs' introduction. Reads are named read, search, describe..., so sdk-generate.mjs marks those read-only.
+  "rex": d("Rex", { type: "bearer", env: "REX_ACCESS_TOKEN", note: TOKEN },
+    { style: "rpc", server: "https://{host}/v1/rex", forceServer: true,
+      serverVars: { host: { env: "REX_API_HOST", default: "api.rexsoftware.com", pattern: "api(\\.uk)?\\.rexsoftware\\.com" } },
+      keys: ["REX_ACCESS_TOKEN", "REX_API_HOST (optional: api.rexsoftware.com default, api.uk.rexsoftware.com for UK)"] }),
   "procore": d("Procore", { type: "bearer", env: "PROCORE_ACCESS_TOKEN", note: TOKEN, extraHeaders: { "Procore-Company-Id": "PROCORE_COMPANY_ID" } },
     // company_id (path, query or body on 209 routes) is pinned to the client's own, like QuickBooks' realmID (pen test, 9 Nov).
     { pinned: { company_id: { allow: [], env: "PROCORE_COMPANY_ID", fill: "$env" } },
