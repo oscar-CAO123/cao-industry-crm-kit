@@ -163,11 +163,12 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
       // Some apps answer 200 with an errors list (GraphQL and a few REST APIs): the request was refused, nothing was done.
       const errs = (r.data as any)?.errors;
       if (Array.isArray(errs) && errs.length) {
-        // Errors and nothing else (or only nulls): the app refused, nothing was done. Errors next to real data: part of it may have
+        // Errors and nothing else (or only nulls, or only an `extensions` note): the app refused, nothing was done. Errors next to real data: part of it may have
         // happened, so the outcome is unknown and a person checks the platform before it can run again (a 5xx takes that path).
         // Everything except the errors list counts: GraphQL keeps its result under `data`, a REST answer holds the record itself.
-        const { errors: _errors, ...rest } = ((r.data ?? {}) as Record<string, unknown>);
-        throw new ApiError(a.platform, hasValue(rest) ? 502 : 422, `${a.op} returned errors`);
+        const { errors: _errors, extensions: _extensions, ...rest } = ((r.data ?? {}) as Record<string, unknown>);
+        const got = "data" in rest ? rest.data : rest;
+        throw new ApiError(a.platform, hasValue(got) ? 502 : 422, `${a.op} returned errors`);
       }
       results[results.length - 1] = { op: a.op, status: r.status, ref: refsOf(r.data, r.headers) };
       await store.put("approvals", id, { ...ap, results });

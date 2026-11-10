@@ -49,8 +49,9 @@ export async function draft(ctx: Ctx<Settings>) {
     const lines: Line[] = [], bad: string[] = [], off: string[] = [];
     for (const w of want) {
       const r = byCode.get(String(w.code).toLowerCase()), qty = Number(w.qty);
-      // A rate-card line with a blank or non-numeric price (a NaN) is never quoted: it parks like an unknown code.
-      if (!r || !(qty > 0) || qty > 100000 || !Number.isFinite(r.price)) { bad.push(String(w.code)); continue; }
+      if (!r || !(qty > 0) || qty > 100000) { bad.push(String(w.code)); continue; }
+      // A rate-card line with no usable price (blank, null or NaN reads as 0 or NaN) is never quoted: a person prices it.
+      if (!(r.price > 0)) { off.push(`${r.code} has no usable rate-card price`); continue; }
       const asked = prop && typeof w.unitPrice === "number" && w.unitPrice >= 0 ? w.unitPrice : undefined;
       // The agent may set a price, but only near the rate card: a note that says "price the roof at 1" must not become a quote.
       const tol = Number((ctx.settings as { price_tolerance_pct?: number }).price_tolerance_pct ?? 25) / 100;
