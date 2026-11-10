@@ -39,7 +39,7 @@ export function reportHtml(s: Settings, f: PropertyFigures, commentary: string, 
   const days = s.vaultre?.open_home_days ?? 7;
   const paras = String(commentary).split(/\n{2,}/).map((p) => `<p>${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
   const homes = f.open_homes.length
-    ? `<ul>${f.open_homes.map((h) => `<li>${esc(h.start)} to ${esc(h.end)}</li>`).join("")}</ul>`
+    ? `<ul>${f.open_homes.map((h) => `<li>${esc(h.start)}${h.end ? ` to ${esc(h.end)}` : ""}</li>`).join("")}</ul>`
     : "<p>No open homes in this period.</p>";
   const homeBlock = f.open_homes_known === false ? "" : `<p>Open homes in the last ${esc(days)} days: ${esc(f.open_homes.length)}</p>${homes}`;
   return `<p>Hi ${esc(v.name ?? "there")},</p>${paras}`

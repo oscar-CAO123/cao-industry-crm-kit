@@ -66,7 +66,7 @@
   }
  },
  "gaps": [
-  "Rex: a business sets platform to rex in settings. Rex has no condition-report service, so the two crons read the property and contact lists only (properties.search and contacts.search, paged by offset to an empty page, refused whole past 50 pages). Not confirmed on a live account: the maximum limit (the next offset is the number of rows already received, and a list shorter than the total Rex reports is refused), whether a search without order_by pages in a stable order (rows are de-duplicated by id), and the id field on every row.",
+  "Rex: a business sets platform to rex in settings. Rex has no condition-report service, so the two crons read the property and contact lists only (properties.search and contacts.search, paged by offset to an empty page, refused whole past 50 pages). Not confirmed on a live account: the maximum limit (the next offset is the number of rows already received, and a list shorter than the total Rex reports is refused), whether a search without order_by pages in a stable order (rows are de-duplicated by id), and the id field on every row. Offset paging cannot see a row added or archived while a read is under way (one run may miss or repeat a row; the next run corrects it), and a reply with no total skips the short-list check.",
   "PropertyMe: its docs say it supports on-site inspections, photos, report sign-off and sending, but it has no kit platform folder, so nothing is built against it. Its Inspections help section returned HTTP 403.",
   "Inspection Express and Inspection Manager, both used on the calls: integrator products with no kit platform folder.",
   "Property Tree and 360 cameras, both named on the calls: no kit platform folder.",

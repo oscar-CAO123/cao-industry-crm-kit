@@ -26,14 +26,16 @@ export const rex = {
     const events = x.related?.listing_events;
     const days = ctx.settings.vaultre?.open_home_days ?? 7;
     const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
-    const from = day(ctx.now.getTime() - days * 864e5), to = day(ctx.now.getTime());
+    const from = day(ctx.now.getTime() - (days - 1) * 864e5), to = day(ctx.now.getTime());   // exactly `days` dates, ending today (UTC)
     const open_homes: OpenHome[] = [];
     if (Array.isArray(events)) for (const e of events) {
       if (e?.event_type !== "open_home" || !DATE.test(String(e.event_date)) || String(e.event_date) < from || String(e.event_date) > to) continue;
       const time = TIME.test(String(e.event_time)) ? String(e.event_time) : "";
-      const mins = Number(e.event_duration_minutes);
-      open_homes.push({ id: Number.isSafeInteger(Number(e.id)) ? Number(e.id) : 0, start: `${e.event_date}${time ? " " + time.slice(0, 5) : ""}`,
-        end: time && Number.isFinite(mins) && mins > 0 ? `${e.event_date} ${new Date(Date.UTC(2000, 0, 1, +time.slice(0, 2), +time.slice(3, 5) + mins)).toISOString().slice(11, 16)}` : "" });
+      const mins = Number(e.event_duration_minutes), startMin = time ? +time.slice(0, 2) * 60 + +time.slice(3, 5) : NaN;
+      // An end past midnight is left blank rather than shown as an earlier time on the same date.
+      const endMin = startMin + mins, ok = Number.isFinite(endMin) && mins > 0 && endMin < 1440;
+      const hhmm = (m: number) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+      open_homes.push({ id: Number.isSafeInteger(Number(e.id)) ? Number(e.id) : 0, start: `${e.event_date}${time ? " " + time.slice(0, 5) : ""}`, end: ok ? `${e.event_date} ${hhmm(endMin)}` : "" });
     }
     return { property_id: id, sale_life_id: 0, heading, address: clean(x.property?.system_search_key, 200), price: clean(x.price_advertise_as, 80),
       open_homes, open_homes_known: Array.isArray(events), as_of: ctx.now.toISOString() };

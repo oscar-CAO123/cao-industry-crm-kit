@@ -24,7 +24,8 @@ beforeEach(() => {
   listing = { result: { price_advertise_as: "Contact Agent", property: { system_search_key: "2 / 265 Roberts Road, Daglish WA 6008" }, related: {
     listing_adverts: [{ advert_type: "brochure", advert_heading: "Brochure" }, { advert_type: "internet", advert_heading: "Sample Listing" }],
     listing_events: [{ id: 1, event_type: "open_home", event_date: "2026-11-07", event_time: "09:30:00", event_duration_minutes: "30" }, { id: 2, event_type: "auction", event_date: "2026-11-08", event_time: "10:00:00", event_duration_minutes: "30" },
-      { id: 3, event_type: "open_home", event_date: "2026-11-30", event_time: "09:30:00", event_duration_minutes: "30" }, { id: 4, event_type: "open_home", event_date: "2026-10-01", event_time: "09:30:00", event_duration_minutes: "30" }] } }, error: null };
+      { id: 3, event_type: "open_home", event_date: "2026-11-30", event_time: "09:30:00", event_duration_minutes: "30" }, { id: 4, event_type: "open_home", event_date: "2026-10-01", event_time: "09:30:00", event_duration_minutes: "30" },
+      { id: 5, event_type: "open_home", event_date: "2026-11-02", event_time: "09:30:00", event_duration_minutes: "30" }, { id: 6, event_type: "open_home", event_date: "2026-11-03", event_time: "23:45:00", event_duration_minutes: "30" }] } }, error: null };
   setTransport({ sleep: async () => {}, log: () => {}, fetch: (async (url: any, init: any) => {
     const u = new URL(String(url)); let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = undefined; }
     hits.push({ method: init?.method ?? "GET", host: u.hostname, path: u.pathname, body });
@@ -73,7 +74,7 @@ test("vendor report on Rex: pull reads the listing record only, taking the inter
   assert.deepEqual(await pull(context(VENDOR, S, store, NOW, () => {})), { read: 1 });
   const f = (await store.get<any>("properties", "1")) as any;
   assert.equal(f.heading, "Sample Listing"); assert.equal(f.address, "2 / 265 Roberts Road, Daglish WA 6008"); assert.equal(f.price, "Contact Agent"); assert.equal(f.open_homes_known, true);
-  assert.deepEqual(f.open_homes, [{ id: 1, start: "2026-11-07 09:30", end: "2026-11-07 10:00" }], "only open homes inside the window, not the auction, a future date or an old one");
+  assert.deepEqual(f.open_homes, [{ id: 1, start: "2026-11-07 09:30", end: "2026-11-07 10:00" }, { id: 6, start: "2026-11-03 23:45", end: "" }], "exactly 7 dates (3 to 9 Nov): not the auction, a future date, an old one or the 8th day back; an end past midnight is blank");
   assert.deepEqual(hits.map((h) => h.path), ["/v1/rex/listings/read"]); assert.equal(hits[0].body.id, 1);
 });
 
@@ -85,10 +86,10 @@ test("vendor report on Rex: the drafted email lists the open home, and the send 
   assert.deepEqual(await draft(ctx), { drafted: 1, waiting: 0 });
   const mail = hits.find((h) => h.host === "graph.microsoft.com")!;
   const html = String(mail.body.body.content);
-  assert.match(html, /Sample Listing/); assert.match(html, /Open homes in the last 7 days: 1/); assert.match(html, /2026-11-07 09:30 to 2026-11-07 10:00/);
+  assert.match(html, /Sample Listing/); assert.match(html, /Open homes in the last 7 days: 2/); assert.match(html, /2026-11-07 09:30 to 2026-11-07 10:00/);
   assert.ok(!hits.some((h) => /\/send$/.test(h.path)));
   const pending = Object.values(await store.list<any>("approvals"));
-  assert.equal(pending.length, 1); assert.match(pending[0].summary, /1 open homes in the window/);
+  assert.equal(pending.length, 1); assert.match(pending[0].summary, /2 open homes in the window/);
 });
 
 test("vendor report on Rex: an error reply, a non-record reply and a bad listing id refuse the read; a bad platform is refused", async () => {

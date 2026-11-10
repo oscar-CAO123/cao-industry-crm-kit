@@ -30,6 +30,7 @@ beforeEach(() => {
     const u = new URL(String(url)), m = init?.method ?? "GET";
     hits.push({ method: m, path: u.pathname, query: u.searchParams, headers: new Headers(init?.headers) });
     if (u.hostname !== "api.procore.com") return new Response("wrong host", { status: 404 });
+    if (u.searchParams.get("project_id") === "9999") return new Response("boom", { status: 404 });
     if (u.pathname === "/rest/v1.1/change_events" && m === "GET") return new Response(JSON.stringify(body(Number(u.searchParams.get("page") ?? 1))), { status: 200, headers: { "content-type": "application/json" } });
     return new Response("not faked: " + m + " " + u.pathname, { status: 404 });
   }) as any });
@@ -125,4 +126,13 @@ test("the default stale window is 14 days", async () => {
   await intake(context(WF, s, store, NOW, () => {}));
   assert.equal((await followUp(context(WF, s, store, new Date(NOW.getTime() + 13 * DAY), () => {}))as any).stale, 0);
   assert.equal((await followUp(context(WF, s, store, new Date(NOW.getTime() + 15 * DAY), () => {}))as any).stale, 1);
+});
+
+test("two projects: one failing read marks nothing gone in the other, and the run fails loudly", async () => {
+  const two: any = { procore: { projects: [{ id: "4242", name: "A" }, { id: "9999", name: "B" }] } };
+  const store = new MemoryStore();
+  await store.put("procoreChanges", "9999:77", { number: "X", title: "t", status: "open", project: "B", project_id: "9999", open_since: NOW.toISOString() });
+  await assert.rejects(intake(context(WF, two, store, NOW, () => {})), /1 project\(s\) not read/);
+  assert.equal(((await store.get<any>("procoreChanges", "9999:77")) as any).gone, undefined, "the failed project's event is left as it was");
+  assert.ok(await store.get("procoreChanges", "4242:1"), "the good project was still recorded");
 });
