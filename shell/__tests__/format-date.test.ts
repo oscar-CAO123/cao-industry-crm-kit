@@ -16,12 +16,16 @@ describe("formatDatePattern", () => {
   it("reads a bare date as that calendar day in the local zone", () => {
     expect(formatDatePattern("2026-01-02", "yyyy-MM-dd")).toBe("2026-01-02");
     expect(formatDatePattern("2026-01-02", "MMM dd yyyy")).toBe("Jan 02 2026");
-    expect(formatDatePattern("2026-13-45", "yyyy-MM-dd")).not.toBe("Invalid date");
+    expect(formatDatePattern("2026-13-45", "yyyy-MM-dd")).toBe("Invalid date");
+    expect(formatDatePattern("2026-02-30", "yyyy-MM-dd")).toBe("Invalid date");
+    expect(formatDatePattern("2024-02-29", "yyyy-MM-dd")).toBe("2024-02-29");
   });
   it("never throws on a missing or invalid date", () => {
     expect(formatDatePattern(null, "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern(undefined, "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern("", "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern("not a date", "yyyy-MM-dd")).toBe("Invalid date");
+    expect(formatDatePattern(Symbol("x"), "yyyy-MM-dd")).toBe("Invalid date");
+    expect(formatDatePattern(BigInt(5), "yyyy-MM-dd")).toBe("Invalid date");
   });
 });
