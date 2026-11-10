@@ -3,12 +3,19 @@
 // are judgment steps in SKILL.md.
 import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
 import { approvalId } from "../../../../../core/workflows/runtime.ts";
-import { listContacts, text } from "../pipeline/adapters/agentbox.ts";
+import * as agentbox from "../pipeline/adapters/agentbox.ts";
+import * as rex from "../pipeline/adapters/rex.ts";
+import { text } from "../pipeline/adapters/agentbox.ts";
 import type { VendorContact } from "../pipeline/types.ts";
 import { emailDraft } from "./adapters/microsoft-365.ts";
 import { type CallLead, type Settings, EMAIL } from "./types.ts";
 
 const DAY = 864e5;
+const listContacts = (ctx: Ctx<Settings>) => {
+  const p = ctx.settings.platform ?? "agentbox";
+  if (p !== "agentbox" && p !== "rex") throw new Error("calls: platform must be agentbox or rex");
+  return (p === "rex" ? rex : agentbox).listContacts(ctx as any);
+};
 const FIRST_CALL_SUBJECT = "A quick call about your property";
 const CHASER_SUBJECT = "Following up on my last email";
 const CHASER_TEXT = "Hi {name}, just following up on my last email in case it got buried. Happy to find a time that suits you.";

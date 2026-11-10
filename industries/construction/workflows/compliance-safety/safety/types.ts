@@ -1,7 +1,7 @@
 // Shared shapes for the safety paperwork workflow. The one adapter (SiteBook) speaks these.
 import crypto from "node:crypto";
 
-export type Platform = "sitebook";
+export type Platform = "sitebook" | "procore";
 
 export interface Settings {
   business_name?: string;
@@ -10,6 +10,8 @@ export interface Settings {
   swms_review_assignee?: string;    // SiteBook personnel id for review actions (optional)
   reminder_days?: number;           // remind about open actions due within this many days (default 2)
   reminder_template_id?: string;    // SiteBook email template for action reminders
+  /** Procore incidents and inspections (separate crons from the SiteBook ones). Project ids are Procore's integers as digit strings. */
+  procore?: { projects: { id: string; name: string }[]; reminder_distribution_ids?: string[] };
 }
 
 export const DAY = 864e5;

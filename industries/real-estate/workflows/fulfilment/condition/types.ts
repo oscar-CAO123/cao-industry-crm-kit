@@ -2,7 +2,7 @@
 // the paging envelope (_embedded, totalCount) and the contact fields (id, forename, surname, email, mobilePhone)
 // are confirmed there. A property's payload is confirmed only as far as its id, so only the id is read.
 
-export interface Settings { business_name?: string }
+export interface Settings { business_name?: string; platform?: "agentbox" | "rex" }  // platform: which system holds the properties and contacts (default agentbox)
 
 export interface Page<T> { pageNumber?: number; totalPageCount?: number; totalCount?: number; _embedded?: T[] | null }
 export interface Property { id: string }

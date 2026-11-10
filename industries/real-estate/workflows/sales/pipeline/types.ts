@@ -3,6 +3,7 @@
 export interface Settings {
   business_name?: string;
   stale_after_days?: number;   // an untracked prospect older than this is listed for follow-up
+  platform?: "agentbox" | "rex";  // which system holds the contacts (default agentbox)
 }
 
 export interface VendorContact {

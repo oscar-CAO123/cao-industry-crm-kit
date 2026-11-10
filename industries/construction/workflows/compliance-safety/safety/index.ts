@@ -4,6 +4,7 @@
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Settings } from "./types.ts";
 import { DAY, guidOrNull } from "./types.ts";
+import * as pc from "./adapters/procore.ts";
 import { jobs, createPrestart, attachSwms, swmsList, raiseReview, openActions, queueReminder } from "./adapters/sitebook.ts";
 
 type PreStart = { checkListId?: string; pending?: boolean; swmsAttached: boolean; created: string };
@@ -72,4 +73,57 @@ export async function reminders(ctx: Ctx<Settings>) {
   return { due_soon: dueSoon };
 }
 
-export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { prestart, "swms-review": swmsReview, reminders };
+type Seen = { first: string; recordable: boolean; closed?: string };
+
+/** Daily: record each Procore incident once (open, recordable or closed since the last run) and log what is new. Reads only; nothing is sent. */
+export async function incidents(ctx: Ctx<Settings>) {
+  if (!ctx.settings.procore) { ctx.log("incidents: no procore settings; nothing to read"); return { new_open: 0, recordable: 0 }; }
+  let newOpen = 0, recordable = 0, closed = 0;
+  const failed: string[] = [];
+  for (const p of pc.projects(ctx)) {
+    let list: Awaited<ReturnType<typeof pc.incidents>>;
+    try { list = await pc.incidents(ctx, p.id); } catch (e) { failed.push(`${p.name}: ${(e as Error).message}`); continue; }
+    for (const i of list) {
+      const key = `${p.id}:${i.id}`, was = await ctx.store.get<Seen>("incidents", key);
+      if (!was && i.open) { newOpen++; if (i.recordable) recordable++; ctx.log(`incidents: new open incident${i.number ? " #" + i.number : ""} on ${p.name}${i.recordable ? " (recordable)" : ""}`); }
+      if (!was) await ctx.store.put("incidents", key, { first: ctx.now.toISOString(), recordable: i.recordable, closed: i.open ? undefined : ctx.now.toISOString() } satisfies Seen);
+      else if (!i.open && !was.closed) { await ctx.store.put("incidents", key, { ...was, closed: ctx.now.toISOString() }); closed++; }
+    }
+  }
+  ctx.log(`incidents: ${newOpen} new open (${recordable} recordable), ${closed} closed since last run`);
+  if (failed.length) throw new Error(`incidents: ${failed.length} project(s) not read, the rest were: ${failed.join("; ")}`);
+  return { new_open: newOpen, recordable, closed };
+}
+
+/** Daily: queue one reminder email for each open Procore inspection past its due date, once per due date. A person approves each send. */
+export async function inspectionReminders(ctx: Ctx<Settings>) {
+  const s = ctx.settings.procore;
+  if (!s) { ctx.log("inspections: no procore settings; nothing to read"); return { overdue: 0 }; }
+  const raw = s.reminder_distribution_ids ?? [];
+  if (raw.some((x) => !/^[1-9]\d{0,11}$/.test(String(x)))) throw new Error("inspections: reminder_distribution_ids must be Procore integer ids as digit strings");
+  const ids = raw.map(Number);
+  if (!ids.length) { ctx.log("inspections: no reminder_distribution_ids set; nothing is queued"); return { overdue: 0 }; }
+  let overdue = 0;
+  const failed: string[] = [];
+  for (const p of pc.projects(ctx)) {
+    let list: Awaited<ReturnType<typeof pc.inspections>>;
+    try { list = await pc.inspections(ctx, p.id); } catch (e) { failed.push(`${p.name}: ${(e as Error).message}`); continue; }
+    for (const i of list) {
+      if (!i.open || !Number.isFinite(i.due) || i.due >= ctx.now.getTime()) continue;
+      const key = `inspection:${p.id}:${i.id}:${new Date(i.due).toISOString().slice(0, 10)}`;
+      if (await ctx.store.get("inspectionReminders", key)) continue;
+      const label = `${i.identifier ? i.identifier + " " : ""}${i.name}`.trim();
+      await pc.queueInspectionEmail(ctx, { project: p.id, id: i.id, key, summary: `Procore email: inspection "${label}" on ${p.name} is past due`,
+        subject: `Inspection overdue: ${label}`,
+        body: `This inspection was due ${new Date(i.due).toISOString().slice(0, 10)} and is still ${i.deficient ? `open with ${i.deficient} deficient item${i.deficient === 1 ? "" : "s"}` : "open"}. Please complete it in Procore.`,
+        status: i.status, distribution_ids: ids });
+      await ctx.store.put("inspectionReminders", key, { queued: ctx.now.toISOString() });
+      overdue++;
+    }
+  }
+  ctx.log(`inspections: ${overdue} overdue queued`);
+  if (failed.length) throw new Error(`inspections: ${failed.length} project(s) not read, the rest were: ${failed.join("; ")}`);
+  return { overdue };
+}
+
+export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { prestart, "swms-review": swmsReview, reminders, incidents, inspections: inspectionReminders };

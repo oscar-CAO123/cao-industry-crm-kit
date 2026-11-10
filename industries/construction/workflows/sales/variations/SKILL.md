@@ -14,6 +14,12 @@ client has extra work, `draft` prices each one from the rate card or a template 
 and `follow-up` chases variations that were sent. They read and draft only. Every email to the client waits for a person to
 approve it in the CRM shell.
 
+## Procore (change events, tracked only)
+A business on Procore sets a `procore` block in settings (`projects` as Procore's integer ids with a name, and `stale_after_days`, default 14)
+and none of the ServiceM8 variation settings; both together are refused. `intake` records each change event once and logs new open ones.
+`follow-up` logs each change event still open past the window, once. `draft` does nothing. The page read shows nothing on approval, so this assumes pricing and approval happen in Procore:
+no rate card, client email or follow-up email is made; a person chases in Procore. Change orders are not read yet.
+
 ## Setting it up for a client
 1. Confirm the job note wording the foreman uses. Fill `variation_words` in `settings.json` from `settings.example.json`.
 2. Agree variation templates with the owner for common extra work (the words that identify it, then rate-card codes and quantities).

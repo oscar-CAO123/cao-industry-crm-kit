@@ -2,7 +2,7 @@
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 
-export type Platform = "servicem8";
+export type Platform = "servicem8" | "procore";
 
 export interface Settings {
   business_name?: string;
@@ -11,6 +11,8 @@ export interface Settings {
   follow_up?: { after_days: number[] };
   quote_valid_days?: number;
   gst_rate?: number;
+  /** Set this block instead of the ServiceM8 flow; the ServiceM8 flow's own settings with it are refused. Project ids are Procore's integers as digit strings. */
+  procore?: { projects: { id: string; name: string }[]; stale_after_days?: number };
 }
 
 export interface Contact { name?: string; email?: string; phone?: string }

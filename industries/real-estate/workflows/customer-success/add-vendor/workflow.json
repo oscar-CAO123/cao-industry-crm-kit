@@ -9,7 +9,17 @@
  "families": {
   "listing-report": {
    "evidence": "no discovery call describes this yet (1 call read, 0 describe a vendor report); steps come from the workflow spec",
-   "steps": ["stats-export", "weekly-figures", "check-figures", "write-commentary", "manager-review", "send-report", "vendor-questions", "price-review-call", "record-keeping"],
+   "steps": [
+    "stats-export",
+    "weekly-figures",
+    "check-figures",
+    "write-commentary",
+    "manager-review",
+    "send-report",
+    "vendor-questions",
+    "price-review-call",
+    "record-keeping"
+   ],
    "covered_by": {
     "stats-export": "cron pull (VaultRE listing record and open homes; portal views and enquiries are a gap)",
     "weekly-figures": "cron pull (open homes in the window)",
@@ -25,25 +35,61 @@
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "pull", "schedule": "0 21 * * 0-4", "entry": "pull", "summary": "Read each listing's record and open homes from VaultRE (7am Monday to Friday in Sydney)."},
-  {"name": "draft", "schedule": "30 21 * * 0-4", "entry": "draft", "summary": "Draft each listing's vendor report in Outlook and queue its send for approval, once commentary is written."}
+  {
+   "name": "pull",
+   "schedule": "0 21 * * 0-4",
+   "entry": "pull",
+   "summary": "Read each listing's record and open homes from VaultRE (7am Monday to Friday in Sydney)."
+  },
+  {
+   "name": "draft",
+   "schedule": "30 21 * * 0-4",
+   "entry": "draft",
+   "summary": "Draft each listing's vendor report in Outlook and queue its send for approval, once commentary is written."
+  }
  ],
  "draft_ops": {
-  "vaultre": ["getProperty", "getPropertyOpenHomes", "addPropertyActivityNote"],
-  "microsoft-365": ["users.CreateMessages"]
+  "vaultre": [
+   "getProperty",
+   "getPropertyOpenHomes",
+   "addPropertyActivityNote"
+  ],
+  "microsoft-365": [
+   "users.CreateMessages"
+  ],
+  "rex": [
+   "listings.read"
+  ]
  },
  "live_ops": {
-  "microsoft-365": ["users.user.messages.message.send"]
+  "microsoft-365": [
+   "users.user.messages.message.send"
+  ]
  },
  "draft_ops_note": "Draft operations reach nobody outside the business: a read of a property or its open homes, an Outlook draft that a person still has to send, and an activity note on the property record. Sending the Outlook draft is a live operation and waits for a person.",
- "capabilities": ["properties.list", "listings.list", "reports.run", "messages.draft"],
+ "capabilities": [
+  "properties.list",
+  "listings.list",
+  "reports.run",
+  "messages.draft"
+ ],
  "adapters": {
-  "vaultre": {"status": "docs-only", "covers": "listing record and open homes read; activity note as the internal record"},
-  "microsoft-365": {"status": "docs-only", "covers": "Outlook draft to the vendor and the one-tap send"}
+  "vaultre": {
+   "status": "docs-only",
+   "covers": "listing record and open homes read; activity note as the internal record"
+  },
+  "microsoft-365": {
+   "status": "docs-only",
+   "covers": "Outlook draft to the vendor and the one-tap send"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "listing record read (heading, address, price, open homes from the listing's events); no note written"
+  }
  },
  "gaps": [
-  "Portal figures (views, enquiries, inspections) are not mapped: realestate.com.au's Campaign API, Rex and Console Cloud have no operations in the kit. Their platform maps are needed before the report carries portal numbers.",
-  "Console Cloud (Reapit PM) and Rex: their help centres describe property management and Rex's manual vendor report, not a sales vendor report run by an API. A live account is needed to confirm.",
+  "Rex: a business sets platform to rex in settings, and each vendor's property_id is the Rex listing id. The report's heading (the internet advert heading), address and price come from listings.read, and the open homes come from the listing's events with event_type open_home within the report window (the day and time carry no zone in the docs sample, so they are shown as Rex gives them). If the reply carries no events list, open homes are left out of the report and it says nothing about them. No note is written to the listing (none in the pages read), and Rex's vendor feedback is not used. Not confirmed on a live account: that listings.read returns the related block by default (the docs sample does, with no fields asked), and the zone of the event times.",
+  "Portal figures (views, enquiries, inspections) are not mapped: realestate.com.au's Campaign API and Console Cloud have no operations in the kit. Their platform maps are needed before the report carries portal numbers.",
   "The VaultRE owner list and feedback summary have no typed response schema in the vendor spec, so the vendor's email is set in settings instead of read from the owner record.",
   "PropertyMe, the tool named on the outside call, has no platform in the kit.",
   "No command or shell form yet writes commentary into the store under commentary. tools/workflow.ts only has propose, which is quoting's. Until one exists, the draft cron waits at needs-commentary.",
@@ -52,6 +98,6 @@
  ],
  "evidence": {
   "calls": "1 call read for this workflow; 0 describe how they make a vendor report, so the steps come from the spec",
-  "platforms": "vendor help centres for console-cloud, realestate-com-au and rex read; none has mapped operations in the kit. The workflow runs on VaultRE and Microsoft 365, which are mapped."
+  "platforms": "vendor help centres for console-cloud, realestate-com-au and rex read. Rex is mapped in the kit (listing read used here); console-cloud and realestate-com-au have no mapped operations. The workflow runs on VaultRE or Rex for the listing, and Microsoft 365 for the email."
  }
 }

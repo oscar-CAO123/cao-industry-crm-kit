@@ -2,14 +2,21 @@
 // The commentary is judgment: the agent skill in SKILL.md writes it into the store, and the draft cron waits for it.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { vaultre } from "./adapters/vaultre.ts";
+import { rex } from "./adapters/rex.ts";
 import { microsoft365 } from "./adapters/microsoft-365.ts";
 import { type Commentary, type PropertyFigures, type Report, type Settings, EMAIL, dayOf, reportHtml, reportKey } from "./types.ts";
+
+const listings = (ctx: Ctx<Settings>) => {
+  const p = ctx.settings.platform ?? "vaultre";
+  if (p !== "vaultre" && p !== "rex") throw new Error("add-vendor: platform must be vaultre or rex");
+  return p === "rex" ? rex : vaultre;
+};
 
 /** Daily, before the draft run: read each listing's record and its open homes from VaultRE. Reads only. */
 export async function pull(ctx: Ctx<Settings>) {
   let read = 0;
   for (const v of ctx.settings.vendors ?? []) {
-    const f = await vaultre.figures(ctx, v);
+    const f = await listings(ctx).figures(ctx, v);
     await ctx.store.put("properties", String(v.property_id), f);
     read++;
   }
@@ -50,8 +57,8 @@ export async function draft(ctx: Ctx<Settings>) {
     }
     const act = microsoft365.sendAct(ctx, messageId, v.email);
     await ctx.queue({ ...act, key: `vendor-report:${key}` },
-      `Send vendor report for ${f.address || f.heading} to ${v.email}: ${f.open_homes.length} open homes in the window`);
-    await vaultre.activityNote(ctx, f, `Vendor report for ${date} drafted and queued for approval.`);
+      `Send vendor report for ${f.address || f.heading} to ${v.email}: ${f.open_homes_known === false ? "open homes not read" : `${f.open_homes.length} open homes in the window`}`);
+    await listings(ctx).activityNote(ctx, f, `Vendor report for ${date} drafted and queued for approval.`);
     await ctx.store.put("reports", key, { key, property_id: v.property_id, date, to: v.email, subject, status: "drafted",
       created: prior?.created ?? ctx.now.toISOString(), message_id: messageId } satisfies Report);
     drafted++;

@@ -17,12 +17,16 @@ reads the contact list hourly. Both read only. Nothing is written to AgentBox, a
 2. Set `REAPIT_ACCESS_TOKEN` in the environment the crons run in. Never put it in a tracked file.
 3. Check the first run lists the properties and contacts the owner expects. The crons read the first page only.
 
+## On Rex
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The same two crons read
+the property and contact lists from Rex. Rex has no condition-report service, so nothing is written.
+
 ## What the person still does
 - Inspects the property on site, and takes the photos and notes.
 - Writes the report and checks it against the last one.
 - Signs it off and sends it. Meter and key readings, disputes and repairs are done by the person, outside this workflow.
 
 ## Not covered yet
-PropertyMe, rex, Inspection Express, Inspection Manager and Property Tree have no kit adapter here. Creating or uploading
+PropertyMe, Inspection Express, Inspection Manager and Property Tree have no kit adapter here. Creating or uploading
 a report in AgentBox is not built, because its document endpoints do not have confirmed fields in the vendor docs. See the
 `gaps` list in `workflow.json`.

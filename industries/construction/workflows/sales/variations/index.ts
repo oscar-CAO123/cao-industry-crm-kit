@@ -5,11 +5,50 @@ import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
 import { approvalId } from "../../../../../core/workflows/runtime.ts";
 import type { Enquiry, Line, Settings, Variation } from "./types.ts";
 import { servicem8 } from "./adapters/servicem8.ts";
+import * as pc from "./adapters/procore.ts";
+
+type Tracked = { number: string; title: string; status: string; project: string; project_id: string; open_since: string; gone?: string; stale_logged?: string };
+
+/** A business sets one system: the ServiceM8 flow (variation_words, templates, follow-ups) or procore. Both together are refused. */
+function procoreOnly(ctx: Ctx<Settings>): boolean {
+  const s = ctx.settings;
+  if (!s.procore) return false;
+  if (s.variation_words || s.variation_templates || s.follow_up) throw new Error("variations: set either the ServiceM8 variation settings or procore, not both");
+  return true;
+}
 
 const DAY = 864e5;
 
 /** Every 15 minutes: notes on accepted jobs that say the client has extra work. */
 export async function intake(ctx: Ctx<Settings>) {
+  if (procoreOnly(ctx)) {
+    // Procore: each change event is recorded once. Pricing and approval stay in Procore, so nothing here is drafted or sent.
+    let added = 0; const failed: string[] = [];
+    for (const p of pc.projects(ctx)) {
+      let list: Awaited<ReturnType<typeof pc.changeEvents>>;
+      try { list = await pc.changeEvents(ctx, p.id); } catch (e) { failed.push(`${p.name}: ${(e as Error).message}`); continue; }
+      const seen = new Set<string>();
+      for (const c of list) {
+        const key = `${p.id}:${c.id}`; seen.add(key);
+        const was = await ctx.store.get<Tracked>("procoreChanges", key);
+        const created = Date.parse(c.created);
+        if (!was) {
+          // The open clock starts when Procore created the event, so an event that was already old when the kit arrived is not given a fresh 14 days.
+          await ctx.store.put("procoreChanges", key, { number: c.number, title: c.title, status: c.status, project: p.name, project_id: p.id, open_since: Number.isFinite(created) ? new Date(created).toISOString() : ctx.now.toISOString() } satisfies Tracked);
+          added++; if (c.open) ctx.log(`intake: new open change event ${c.number} on project ${p.id}`);
+        } else if (was.status !== c.status || was.gone) {
+          // A reopened event starts a new clock; one that came back after missing a read keeps its clock.
+          const reopened = c.open && was.status.toLowerCase() !== "open";
+          await ctx.store.put("procoreChanges", key, { ...was, status: c.status, gone: undefined, ...(reopened ? { open_since: ctx.now.toISOString(), stale_logged: undefined } : {}), ...(c.open ? {} : { stale_logged: undefined }) });
+        }
+      }
+      // A recorded event the list no longer returns (deleted or binned in Procore) is never chased.
+      for (const [key, rec] of Object.entries(await ctx.store.list<Tracked>("procoreChanges"))) if (rec.project_id === p.id && !seen.has(key) && !rec.gone) await ctx.store.put("procoreChanges", key, { ...rec, gone: ctx.now.toISOString() });
+    }
+    ctx.log(`intake: ${added} new change events (Procore)`);
+    if (failed.length) throw new Error(`intake: ${failed.length} project(s) not read, the rest were: ${failed.join("; ")}`);
+    return { added };
+  }
   let added = 0;
   for (const n of await servicem8.notes(ctx)) {
     if (await ctx.store.get("enquiries", n.id)) continue;
@@ -22,6 +61,7 @@ export async function intake(ctx: Ctx<Settings>) {
 
 /** Every 30 minutes: price each new variation from the rate card and queue the client email for approval. */
 export async function draft(ctx: Ctx<Settings>) {
+  if (procoreOnly(ctx)) { ctx.log("draft: Procore holds the pricing and approval; nothing to draft"); return { drafted: 0, needs_pricing: 0 }; }
   const todo = Object.values(await ctx.store.list<Enquiry>("enquiries")).filter((e) => e.status === "new" || e.status === "needs-pricing");
   if (!todo.length) return { drafted: 0, needs_pricing: 0 };
   const rate = await servicem8.rateCard(ctx);
@@ -56,6 +96,19 @@ export async function draft(ctx: Ctx<Settings>) {
 
 /** Daily: learn which variation emails were approved, then queue follow-ups that are due. */
 export async function followUp(ctx: Ctx<Settings>) {
+  if (procoreOnly(ctx)) {
+    // Procore: log each change event still open past the window, once. The chase itself is a person in Procore; no message is queued.
+    const days = ctx.settings.procore?.stale_after_days ?? 14;
+    let stale = 0;
+    const live = new Set(pc.projects(ctx).map((p) => p.id));
+    for (const [key, c] of Object.entries(await ctx.store.list<Tracked>("procoreChanges"))) {
+      if (!live.has(c.project_id) || c.gone || c.status.toLowerCase() !== "open" || c.stale_logged || ctx.now.getTime() - Date.parse(c.open_since) < days * DAY) continue;
+      await ctx.store.put("procoreChanges", key, { ...c, stale_logged: ctx.now.toISOString() });
+      ctx.log(`follow-up: change event ${c.number} on project ${c.project_id} has been open ${days} days or more`);
+      stale++;
+    }
+    return { queued: 0, stale };
+  }
   const vars = await ctx.store.list<Variation>("variations");
   const days = ctx.settings.follow_up?.after_days ?? [3, 7];
   for (const v of Object.values(vars)) {

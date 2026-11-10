@@ -9,7 +9,17 @@
  "families": {
   "appraisal-led": {
    "evidence": "15 real-estate sales calls read; 14 describe this process",
-   "steps": ["enquiry-intake", "first-call", "book-appointment", "appraisal-prep", "appraisal-visit", "agreement-signing", "vendor-follow-up", "marketing-handover", "record-keeping"],
+   "steps": [
+    "enquiry-intake",
+    "first-call",
+    "book-appointment",
+    "appraisal-prep",
+    "appraisal-visit",
+    "agreement-signing",
+    "vendor-follow-up",
+    "marketing-handover",
+    "record-keeping"
+   ],
    "covered_by": {
     "enquiry-intake": "call-sync (contacts read from Agentbox into the call list)",
     "first-call": "call-draft (Outlook draft of the first-call email, queued for approval)",
@@ -25,28 +35,66 @@
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "call-sync", "schedule": "20 * * * *", "entry": "callSync", "summary": "Read the first page of Agentbox contacts and add any new contact to the call list as new; refresh name and email on the ones that changed."},
-  {"name": "call-draft", "schedule": "*/30 * * * *", "entry": "callDraft", "summary": "For each contact the agent marked to-contact, create the first-call email as an Outlook draft and queue its send for approval."},
-  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "followUp", "summary": "Queue a chaser for each sent first-call email whose set days have passed (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  {
+   "name": "call-sync",
+   "schedule": "20 * * * *",
+   "entry": "callSync",
+   "summary": "Read the first page of Agentbox contacts and add any new contact to the call list as new; refresh name and email on the ones that changed."
+  },
+  {
+   "name": "call-draft",
+   "schedule": "*/30 * * * *",
+   "entry": "callDraft",
+   "summary": "For each contact the agent marked to-contact, create the first-call email as an Outlook draft and queue its send for approval."
+  },
+  {
+   "name": "follow-up",
+   "schedule": "0 22 * * *",
+   "entry": "followUp",
+   "summary": "Queue a chaser for each sent first-call email whose set days have passed (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
  ],
  "draft_ops": {
-  "agentbox": ["get:/contacts"],
-  "microsoft-365": ["users.CreateMessages"]
+  "agentbox": [
+   "get:/contacts"
+  ],
+  "microsoft-365": [
+   "users.CreateMessages"
+  ],
+  "rex": [
+   "contacts.search"
+  ]
  },
  "live_ops": {
-  "microsoft-365": ["users.user.messages.message.send"]
+  "microsoft-365": [
+   "users.user.messages.message.send"
+  ]
  },
  "draft_ops_note": "Draft operations are a read of the Agentbox contact list and the creation of an Outlook draft in the agency's own mailbox. A draft sits in Outlook and reaches nobody until it is sent. Sending is a live operation and only ever queued for a person to approve.",
- "capabilities": ["contacts.list", "messages.draft", "messages.send"],
+ "capabilities": [
+  "contacts.list",
+  "messages.draft",
+  "messages.send"
+ ],
  "adapters": {
-  "agentbox": {"status": "docs-only", "covers": "contact list (first page), reused from the real-estate pipeline adapter; fields forename, surname, email and modified from the Reapit Foundations docs example"},
-  "microsoft-365": {"status": "docs-only", "covers": "Outlook draft of the first-call and chaser emails in the agency mailbox, and the approved send; fields subject, body, toRecipients from the Graph v1.0 message schema"}
+  "agentbox": {
+   "status": "docs-only",
+   "covers": "contact list (first page), reused from the real-estate pipeline adapter; fields forename, surname, email and modified from the Reapit Foundations docs example"
+  },
+  "microsoft-365": {
+   "status": "docs-only",
+   "covers": "Outlook draft of the first-call and chaser emails in the agency mailbox, and the approved send; fields subject, body, toRecipients from the Graph v1.0 message schema"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "contact list (paged to an empty page), reused from the Rex pipeline adapter; fields name, email_address and system_modtime from the Rex docs example. The emails stay on Microsoft 365."
+  }
  },
  "gaps": [
+  "Rex: a business sets platform to rex in settings, and the contacts come from Rex's contacts.search (all pages, refused whole past 50 pages). Which contacts to call is still set by a person in the workflow store (status to-contact), so no Rex field is needed. Nothing is written to Rex: a first call is not logged there, and Rex activities and reminders are not used because their body fields are not itemised in the docs read. The email channel is still Microsoft 365. Not confirmed on a live account: the maximum limit (a list shorter than the reported total is refused) and stable paging without order_by (rows are de-duplicated by id). Offset paging cannot see a row added or archived while a read is under way (one run may miss or repeat a row; the next run corrects it), and a reply with no total skips the short-list check.",
   "Paging: the kit's get:/contacts operation maps no query parameters, so only the first page (25 contacts by default) is read. Mapping pageSize and pageNumber needs an ops file change, which this workflow does not make.",
   "Microsoft 365 is not in the platform evidence for this job. It is the mail channel only because Agentbox maps no draft or send operation. The agency's mailbox must be confirmed, and the Graph token (M365_ACCESS_TOKEN) supplied, because the kit's Microsoft 365 token flow is not built yet.",
   "Appraisal prep (due diligence, comparables, the CMA and the listing pack) is judgment in SKILL.md. CoreLogic RP Data and Pricefinder are named on these calls but have no kit platform folder.",
-  "Rex and Reapit: Rex has no kit platform folder. The Reapit docs read are UK marketing pages with no mapped sales-call step, and the Reapit Foundations paths already sit under Agentbox.",
   "GoHighLevel and VaultRE are mapped in the kit and named on these calls, but no platform evidence was read for this job, so neither has an adapter here.",
   "Booking appointments, logging a first call, appraisal follow-up tasks and vendor reporting: the Agentbox docs describe them inside the product, with no API operation. They stay judgment steps.",
   "Reply detection: the follow-up cron does not check whether a contact has replied. The approver checks the inbox before approving a chaser.",
@@ -55,6 +103,6 @@
  ],
  "evidence": {
   "calls": "15 real-estate sales calls read (0 rejected); 14 describe the appraisal-led process, with 2 to 7 calls per step",
-  "platforms": "the Agentbox, Reapit and Rex docs read for these steps; only Agentbox has mapped operations among them (contact list and single-contact read)"
+  "platforms": "the Agentbox, Reapit and Rex docs read for these steps; Agentbox and Rex have mapped operations for the contact list, and the emails go through Microsoft 365."
  }
 }
