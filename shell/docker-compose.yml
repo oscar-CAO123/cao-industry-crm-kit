@@ -15,11 +15,16 @@ services:
     build: { context: .., dockerfile: shell/Dockerfile }
     command: ["node", "shell/scripts/db-apply.mjs"]
     environment: [SHELL_OP_TOKEN, SHELL_VAULT]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     depends_on: [db]
   shell:
     build: { context: .., dockerfile: shell/Dockerfile }
     environment: [SHELL_OP_TOKEN, SHELL_VAULT, KIT_ALLOW_WRITES, NEXT_PUBLIC_APP_NAME, AUTH_SIGNUP_DOMAINS, BETTER_AUTH_URL]
-    ports: ["3000:3000"]
+    # Published on this machine only. Put a TLS proxy in front before it is reachable from anywhere else.
+    ports: ["127.0.0.1:3000:3000"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     depends_on: [migrate]
 volumes:
   db: {}

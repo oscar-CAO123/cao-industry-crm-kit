@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import sendEmail from "@/lib/sendmail";
@@ -22,7 +22,7 @@ export const updateLead = async (data: {
   assigned_to?: string;
   accountIDs?: string;
 }) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session) return { error: "Unauthorized" };
 
   const userId = session.user.id;

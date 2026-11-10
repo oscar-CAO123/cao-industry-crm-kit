@@ -9,7 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, redactForPrint, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { FileStore, type Store } from "../core/workflows/store.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,5 +55,5 @@ export async function main(argv: string[], store: Store = new FileStore()) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main(process.argv.slice(2)).then((r) => console.log(JSON.stringify(r ?? null, null, 1)), (e) => { console.error(String(e?.message ?? e)); process.exit(1); });
+  main(process.argv.slice(2)).then((r) => console.log(JSON.stringify(redactForPrint(r ?? null), null, 1)), (e) => { console.error(String(e?.message ?? e)); process.exit(1); });
 }

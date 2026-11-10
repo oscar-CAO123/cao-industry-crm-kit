@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -7,7 +7,7 @@ export const assignDocumentToCrmTask = async (data: {
   documentId: string;
   taskId: string;
 }) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session) return { error: "Unauthorized" };
 
   const { documentId, taskId } = data;
@@ -40,7 +40,7 @@ export const disconnectDocumentFromCrmTask = async (data: {
   documentId: string;
   taskId: string;
 }) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session) return { error: "Unauthorized" };
 
   const { documentId, taskId } = data;

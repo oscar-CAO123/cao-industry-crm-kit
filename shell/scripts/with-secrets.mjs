@@ -22,7 +22,7 @@
 // - Output names keys, never values. Errors say which name failed, never what it held.
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SHELL_ROOT = path.resolve(HERE, "..");
@@ -34,8 +34,8 @@ export const TOTAL_MS = 60_000;
 /** Names a map may never set: they change how the shell, the dynamic loader or Node run code, or belong to the
  *  helper itself. A value from 1Password under one of these would be code execution, not a key. */
 export function blockedName(name) {
-  return /^(PATH|IFS|ENV|BASH_ENV|HOME|SHELL|PS4|CDPATH|TMPDIR|GCONV_PATH|GLIBC_TUNABLES|LOCPATH|NLSPATH|HOSTALIASES)$/.test(name)
-    || /^(NODE_|NPM_CONFIG_|SSL_|OPENSSL_|PYTHON|LD_|DYLD_|OP_|BASH_FUNC_|MALLOC_)/.test(name)
+  return /^(PATH|IFS|ENV|BASH_ENV|HOME|SHELL|PS4|CDPATH|TMPDIR|GCONV_PATH|GLIBC_TUNABLES|LOCPATH|NLSPATH|HOSTALIASES|BASHOPTS|SHELLOPTS|BROWSER|EDITOR|VISUAL|PAGER|ZDOTDIR)$/.test(name)
+    || /^(NODE_|NPM_|YARN_|PNPM_|BUN_|DENO_|SSL_|OPENSSL_|PYTHON|LD_|DYLD_|OP_|BASH_FUNC_|MALLOC_|GIT_|PERL|RUBY|JAVA_|GEM_|PIP_|COREPACK_|CURL_|XDG_|ELECTRON_)/.test(name)
     || /_PROXY$/i.test(name);
 }
 
@@ -45,6 +45,11 @@ export function refsPath(file, root = SHELL_ROOT) {
   const abs = path.resolve(root, file);
   const rel = path.relative(root, abs);
   if (!rel || rel.startsWith("..") || path.isAbsolute(rel) || !/\.json$/.test(abs)) return null;
+  // A link inside the folder must not lead outside it: when the file exists, its real path has to stay inside too.
+  if (fs.existsSync(abs)) {
+    const real = path.relative(fs.realpathSync(root), fs.realpathSync(abs));
+    if (!real || real.startsWith("..") || path.isAbsolute(real)) return null;
+  }
   return abs;
 }
 
@@ -58,7 +63,9 @@ export function planRefs(raw, vault) {
     if (blockedName(name)) { skipped.push([name, "a name that may never be set from a vault"]); continue; }
     const m = REF.exec(String(ref));
     if (!m) { skipped.push([name, "not an op:// reference"]); continue; }
-    if (decodeURIComponent(m[1]) !== vault) { skipped.push([name, "refers to a vault other than SHELL_VAULT"]); continue; }
+    let refVault;
+    try { refVault = decodeURIComponent(m[1]); } catch { skipped.push([name, "a malformed escape in the vault name"]); continue; } // one bad entry never drops the rest
+    if (refVault !== vault) { skipped.push([name, "refers to a vault other than SHELL_VAULT"]); continue; }
     refs[name] = String(ref);
   }
   return { refs, skipped };
@@ -137,7 +144,7 @@ async function printMode() {
   process.stdout.write(out.join("\n") + (out.length ? "\n" : ""), () => process.exit(0));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (process.argv[2] === "--names") namesMode();
   if (process.argv[2] !== "--print") { console.error("[secrets] run this through shell/scripts/with-secrets.sh"); process.exit(2); }
   // Nothing is allowed to hang a start: the wasm client can keep handles open, so the process ends by force.

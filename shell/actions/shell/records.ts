@@ -8,7 +8,7 @@ import { writeAuditLog, diffObjects } from "@/lib/audit-log";
 import { getPage, tabOf, cleanData } from "@/lib/shell/pages";
 
 type Result = { ok: true } | { ok: false; error: string };
-const fail = (e: unknown): Result => ({ ok: false, error: e instanceof Error ? e.message.slice(0, 200) : "Something went wrong" });
+const fail = (e: unknown): Result => ({ ok: false, error: e instanceof Error && !/prisma|invocation|\bsql\b|postgres/i.test(e.message) ? e.message.slice(0, 200) : "Something went wrong" }); // never database detail
 
 async function target(department: string, slug: string, tab: string) {
   const page = await getPage(department, slug);

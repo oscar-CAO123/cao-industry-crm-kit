@@ -1,6 +1,7 @@
 import { Decimal } from "decimal.js";
 
 export async function fetchFxRate(from: string, to: string, on?: Date): Promise<Decimal> {
+  if (!/^[A-Z]{3}$/.test(from) || !/^[A-Z]{3}$/.test(to)) throw new Error("Currency codes must be 3 capital letters");
   if (from === to) return new Decimal(1);
   const date = on ? on.toISOString().slice(0, 10) : "latest";
   const url = `https://api.frankfurter.app/${date}?from=${from}&to=${to}`;

@@ -46,8 +46,11 @@ export const hubspot: Adapter = {
     // Re-read both records: the scan may be days old. The merge is queued only while they still share an address.
     const a = await currentEmails(ctx, f.id), b = await currentEmails(ctx, f.with);
     if (!a || !b || !a.some((e) => b.includes(e))) return undefined;
+    // A merge cannot be undone and the approval may run a day later: it runs only while the record still holds the shared address.
+    const shared = a.find((e) => b.includes(e))!;
     return ctx.queue({ platform: H, op: MERGE, key, summary: f.summary,
-      input: { body: { primaryObjectId: f.with, objectIdToMerge: f.id } } }, f.summary);
+      input: { body: { primaryObjectId: f.with, objectIdToMerge: f.id } },
+      check: { platform: H, op: GET, input: { params: { contactId: f.id, properties: ["email"] } }, expect: [{ path: "properties.email", equals: shared }] } }, f.summary);
   },
 
   async queueTidy(ctx: Ctx<Settings>, f: Finding, key: string) {

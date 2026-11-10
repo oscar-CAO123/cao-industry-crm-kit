@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import mailer from "@/lib/mail";
@@ -14,7 +14,7 @@ export const createTask = async (data: {
   account: string;
   dueDateAt?: Date;
 }) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session) return { error: "Unauthorized" };
 
   const { title, user, priority, content, account, dueDateAt } = data;

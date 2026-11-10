@@ -1,16 +1,19 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getUser } from "@/actions/get-user";
+import { getStaffUser } from "@/actions/get-user";
 import { serializeDecimals } from "@/lib/serialize-decimals";
 
 export async function duplicateInvoice(invoiceId: string) {
-  const user = await getUser();
+  const user = await getStaffUser();
 
   const source = await prismadb.invoices.findUniqueOrThrow({
     where: { id: invoiceId },
     include: { lineItems: { orderBy: { position: "asc" } } },
   });
+
+  // Copying carries internal notes and bank details, so only the owner or an admin may do it.
+  if (user.role !== "admin" && source.createdBy !== user.id) throw new Error("Forbidden");
 
   const invoice = await prismadb.invoices.create({
     data: {

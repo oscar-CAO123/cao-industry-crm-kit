@@ -24,5 +24,6 @@ COPY --from=build /kit/shell/lib/db-ssl.ts ./shell/lib/db-ssl.ts
 COPY --from=build /kit/shell/secrets.refs.json* ./shell/
 USER node
 EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 CMD node -e "fetch('http://127.0.0.1:3000/api/auth/ok').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 ENTRYPOINT ["sh", "shell/scripts/with-secrets.sh", "--"]
 CMD ["node", "shell/server.js"]

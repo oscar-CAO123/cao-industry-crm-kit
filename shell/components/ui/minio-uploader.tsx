@@ -40,6 +40,7 @@ export function MinioUploader({
             filename: file.name,
             contentType: file.type,
             folder,
+            size: file.size,
           }),
         });
 

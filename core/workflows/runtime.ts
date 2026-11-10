@@ -70,10 +70,15 @@ export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, 
       }
       const key = acts[0].key ?? Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       const id = approvalId(workflow.id, key);
-      if (await store.get<Approval>("approvals", id)) return id; // already queued: a cron that runs again never queues the same thing twice
       const text = summary ?? acts.map((x) => x.summary).join("; ");
-      await store.put("approvals", id, { id, workflow: workflow.id, summary: text, acts, status: "pending", created: now.toISOString() } satisfies Approval);
-      log(`queued for approval ${id} (${acts.map((x) => `${x.platform} ${x.op}`).join(", ")})`); // the summary is stored for the approver, never logged
+      // Under the same lock the approve step takes: two overlapping runs cannot both see "absent", and a late put can never
+      // reset an approval a person has just approved back to pending (which would run it a second time).
+      const fresh = await store.locked("approve-claims", async () => {
+        if (await store.get<Approval>("approvals", id)) return false; // already queued: a cron that runs again never queues the same thing twice
+        await store.put("approvals", id, { id, workflow: workflow.id, summary: text, acts, status: "pending", created: now.toISOString() } satisfies Approval);
+        return true;
+      });
+      if (fresh) log(`queued for approval ${id} (${acts.map((x) => `${x.platform} ${x.op}`).join(", ")})`); // the summary is stored for the approver, never logged
       return id;
     },
   };
@@ -150,7 +155,7 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
       const r = await callOperation(a.platform, a.op, a.input ?? {});
       // Some apps answer 200 with an errors list (GraphQL and a few REST APIs): the request was refused, nothing was done.
       const errs = (r.data as any)?.errors;
-      if (Array.isArray(errs) && errs.length && !(r.data as any)?.data) throw new ApiError(a.platform, 422, `${a.op} returned errors`);
+      if (Array.isArray(errs) && errs.length) throw new ApiError(a.platform, 422, `${a.op} returned errors`);
       results[results.length - 1] = { op: a.op, status: r.status, ref: refsOf(r.data, r.headers) };
       await store.put("approvals", id, { ...ap, results });
     }
@@ -174,4 +179,17 @@ export async function reject(workflow: WorkflowRecord, store: Store, id: string,
   const ap = await store.get<Approval>("approvals", id);
   if (!ap || !["pending", "failed", "needs-check"].includes(ap.status) || ap.workflow !== workflow.id) throw new Error(`no open approval ${id} in ${workflow.id}`);
   await store.put("approvals", id, { ...ap, status: "rejected", decided: now.toISOString(), decided_by: decidedBy });
+}
+
+/** What a command line may print about an approval or a run: ids, status, summaries and results, but never the recipients, bodies
+ *  or amounts inside each act's input. Deploy logs keep what the CLI prints, so client email text must not be in it. */
+export function redactForPrint(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(redactForPrint);
+  if (v && typeof v === "object") {
+    return Object.fromEntries(Object.entries(v as Record<string, unknown>).map(([k, x]) =>
+      k === "acts" && Array.isArray(x)
+        ? [k, x.map((a: any) => ({ platform: a?.platform, op: a?.op, key: a?.key, summary: a?.summary, input: "[hidden]" }))]
+        : [k, redactForPrint(x)]));
+  }
+  return v;
 }

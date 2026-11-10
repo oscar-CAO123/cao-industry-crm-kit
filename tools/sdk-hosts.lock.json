@@ -1,0 +1,966 @@
+{
+ "activecampaign": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.api-us1\\.com"
+  ],
+  "hosts": []
+ },
+ "acuity": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "acuityscheduling.com"
+  ]
+ },
+ "afterpay": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "agencyapi.afterpay.com",
+   "global-api-sandbox.afterpay.com"
+  ]
+ },
+ "agentbox": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "platform.reapit.cloud"
+  ]
+ },
+ "agriwebb": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.agriwebb.com"
+  ]
+ },
+ "ahrefs": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.ahrefs.com"
+  ]
+ },
+ "aircall": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.aircall.io"
+  ]
+ },
+ "airtable": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.airtable.com",
+   "content.airtable.com"
+  ]
+ },
+ "apollo": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.apollo.io"
+  ]
+ },
+ "aroflo": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.aroflo.com"
+  ]
+ },
+ "asana": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "app.asana.com"
+  ]
+ },
+ "bigquery": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "bigquery.googleapis.com"
+  ]
+ },
+ "bluebeam": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.bluebeam.com"
+  ]
+ },
+ "bookeo": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.bookeo.com"
+  ]
+ },
+ "booking-com": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "demandapi.booking.com",
+   "payments-api.booking.com",
+   "supply-xml.booking.com"
+  ]
+ },
+ "brighthr": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.bright.hr"
+  ]
+ },
+ "buildxact": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api-v3.buildxact.com",
+   "login.buildxact.com"
+  ]
+ },
+ "bullhorn": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "rest[a-z0-9-]*\\.bullhornstaffing\\.com"
+  ],
+  "hosts": [
+   "rest.bullhornstaffing.com"
+  ]
+ },
+ "calendesk": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.calendesk.com"
+  ]
+ },
+ "calendly": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.calendly.com",
+   "auth.calendly.com"
+  ]
+ },
+ "canva": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.canva.com"
+  ]
+ },
+ "chidesk": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.chidesk\\.com"
+  ],
+  "hosts": []
+ },
+ "cin7": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.cin7.com"
+  ]
+ },
+ "clay": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.clay.com"
+  ]
+ },
+ "clickup": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.clickup.com"
+  ]
+ },
+ "cliniko": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "api\\.(?:[a-z]{2}[0-9])\\.cliniko\\.com"
+  ],
+  "hosts": []
+ },
+ "clio": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:(au\\.|eu\\.|ca\\.)?)app\\.clio\\.com"
+  ],
+  "hosts": [
+   "api.clio.com"
+  ]
+ },
+ "cloudbeds": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "api\\.(?:cloudbeds)\\.com"
+  ],
+  "hosts": [
+   "api.cloudbeds.com",
+   "api.payments.cloudbeds.com"
+  ]
+ },
+ "cloudtalk": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "analytics-api.cloudtalk.io",
+   "api.cloudtalk.io",
+   "my.cloudtalk.io",
+   "platform-api.cloudtalk.io"
+  ]
+ },
+ "confluence": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+\\.atlassian\\.net)"
+  ],
+  "hosts": []
+ },
+ "deputy": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.(?:[a-z]{2,6})\\.deputy\\.com"
+  ],
+  "hosts": []
+ },
+ "discord": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "discord.com"
+  ]
+ },
+ "docusign": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "[a-z0-9-]+\\.docusign\\.(net|com)"
+  ],
+  "hosts": [
+   "api.docusign.com",
+   "api.docusign.net",
+   "apps.docusign.com",
+   "rooms.docusign.com",
+   "www.docusign.net"
+  ]
+ },
+ "domain": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.domain.com.au"
+  ]
+ },
+ "dropbox": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.dropboxapi.com"
+  ]
+ },
+ "employment-hero": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.employmenthero.com",
+   "oauth.employmenthero.com"
+  ]
+ },
+ "eventbrite": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "www.eventbriteapi.com"
+  ]
+ },
+ "fathom-notetaker": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.fathom.ai"
+  ]
+ },
+ "fergus": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.fergus.com"
+  ]
+ },
+ "fieldwire": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "client-api\\.(?:us|eu|ca)\\.fieldwire\\.com"
+  ],
+  "hosts": [
+   "client-api.super.fieldwire.com"
+  ]
+ },
+ "fireflies": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.fireflies.ai"
+  ]
+ },
+ "first-aml": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.firstaml.com"
+  ]
+ },
+ "forms-live": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:nsw|vic|qld|wa|sa|tas|act|nt)\\.api\\.formslive\\.com\\.au"
+  ],
+  "hosts": []
+ },
+ "front": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api2.frontapp.com"
+  ]
+ },
+ "gocanvas-quarries-and-mines-compliance-templates": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.gocanvas.com",
+   "www.gocanvas.com"
+  ]
+ },
+ "gohighlevel": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "services.leadconnectorhq.com"
+  ]
+ },
+ "google-ads": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "googleads.googleapis.com"
+  ]
+ },
+ "google-analytics": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "analyticsadmin.googleapis.com",
+   "analyticsdata.googleapis.com"
+  ]
+ },
+ "google-workspace": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "admin.googleapis.com",
+   "businessprofileperformance.googleapis.com",
+   "chat.googleapis.com",
+   "docs.googleapis.com",
+   "forms.googleapis.com",
+   "gmail.googleapis.com",
+   "keep.googleapis.com",
+   "meet.googleapis.com",
+   "mybusinessaccountmanagement.googleapis.com",
+   "mybusinessbusinessinformation.googleapis.com",
+   "mybusinessnotifications.googleapis.com",
+   "mybusinessverifications.googleapis.com",
+   "people.googleapis.com",
+   "sheets.googleapis.com",
+   "slides.googleapis.com",
+   "tasks.googleapis.com",
+   "www.googleapis.com"
+  ]
+ },
+ "gorgias": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.gorgias\\.com"
+  ],
+  "hosts": []
+ },
+ "granola": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "public-api.granola.ai"
+  ]
+ },
+ "gravity-forms": {
+  "hostFromEnv": true,
+  "hostPatterns": [],
+  "hosts": []
+ },
+ "hubspot": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.hubapi.com",
+   "private.hubapi.com"
+  ]
+ },
+ "idashboard-trust": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.idashboard.com.au"
+  ]
+ },
+ "jane-app": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.janeapp\\.com"
+  ],
+  "hosts": []
+ },
+ "jotform": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.jotform.com"
+  ]
+ },
+ "justcall": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.justcall.io"
+  ]
+ },
+ "kajabi": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.kajabi.com"
+  ]
+ },
+ "klaviyo": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "a.klaviyo.com"
+  ]
+ },
+ "linkedin": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.linkedin.com"
+  ]
+ },
+ "looker-studio": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "datastudio.googleapis.com"
+  ]
+ },
+ "mailchimp": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:us[0-9]{1,3})\\.api\\.mailchimp\\.com"
+  ],
+  "hosts": []
+ },
+ "make": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:eu1|eu2|us1|us2)\\.make\\.com"
+  ],
+  "hosts": [
+   "www.make.com"
+  ]
+ },
+ "meta-ads": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "graph.facebook.com"
+  ]
+ },
+ "microsoft-365": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "graph.microsoft.com"
+  ]
+ },
+ "microsoft-advertising": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "campaign.api.bingads.microsoft.com",
+   "clientcenter.api.bingads.microsoft.com",
+   "reporting.api.bingads.microsoft.com"
+  ]
+ },
+ "midwinter-adviceos": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "adviceos.com.au"
+  ]
+ },
+ "mobile-message": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.mobilemessage.com.au"
+  ]
+ },
+ "monday": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.monday.com"
+  ]
+ },
+ "myob": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.myob.com"
+  ]
+ },
+ "n8n": {
+  "hostFromEnv": true,
+  "hostPatterns": [],
+  "hosts": []
+ },
+ "notion": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.notion.com"
+  ]
+ },
+ "odoo": {
+  "hostFromEnv": true,
+  "hostPatterns": [],
+  "hosts": []
+ },
+ "onfleet": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "onfleet.com"
+  ]
+ },
+ "pandadoc": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.pandadoc.com"
+  ]
+ },
+ "paperform": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.paperform.co"
+  ]
+ },
+ "phorest": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api-gateway-eu.phorest.com"
+  ]
+ },
+ "pipedrive": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.pipedrive.com",
+   "oauth.pipedrive.com"
+  ]
+ },
+ "plaid": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "production.plaid.com"
+  ]
+ },
+ "podio": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.podio.com"
+  ]
+ },
+ "podium": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.podium.com"
+  ]
+ },
+ "power-bi": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.powerbi.com"
+  ]
+ },
+ "pracsuite": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.pracsuite.com"
+  ]
+ },
+ "procore": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.procore.com"
+  ]
+ },
+ "productive": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.productive.io"
+  ]
+ },
+ "proworkflow": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.proworkflow.com"
+  ]
+ },
+ "pylon": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.usepylon.com"
+  ]
+ },
+ "quickbooks": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:(sandbox-)?quickbooks\\.api\\.intuit\\.com)"
+  ],
+  "hosts": []
+ },
+ "re-leased": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.re-leased.com"
+  ]
+ },
+ "rex": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:api(\\.uk)?\\.rexsoftware\\.com)"
+  ],
+  "hosts": []
+ },
+ "rezdy": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.rezdy.com"
+  ]
+ },
+ "richpanel": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.richpanel.com",
+   "returns-api.richpanel.com"
+  ]
+ },
+ "salesforce": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(--[a-z0-9]+)?)\\.my\\.salesforce\\.com"
+  ],
+  "hosts": []
+ },
+ "semrush": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.semrush.com",
+   "oauth.semrush.com"
+  ]
+ },
+ "servicem8": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.servicem8.com"
+  ]
+ },
+ "shopify": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.myshopify\\.com"
+  ],
+  "hosts": []
+ },
+ "sitebook": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "rpt.sitebook.com.au"
+  ]
+ },
+ "siteminder": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.siteminder.com",
+   "directbooking.siteminder.com"
+  ]
+ },
+ "slack": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "slack.com"
+  ]
+ },
+ "smokeball": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "api\\.smokeball\\.(?:com|com\\.au|co\\.uk)"
+  ],
+  "hosts": []
+ },
+ "square": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "connect.squareup.com"
+  ]
+ },
+ "stripe": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.stripe.com",
+   "files.stripe.com"
+  ]
+ },
+ "supermetrics": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.supermetrics.com",
+   "dts-api.supermetrics.com"
+  ]
+ },
+ "tally": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.tally.so"
+  ]
+ },
+ "tanda": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "my.tanda.co"
+  ]
+ },
+ "telegram": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.telegram.org"
+  ]
+ },
+ "time-doctor": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api2.timedoctor.com"
+  ]
+ },
+ "trackunit": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "iris.trackunit.com"
+  ]
+ },
+ "trello": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.trello.com"
+  ]
+ },
+ "twilio": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "accounts.twilio.com",
+   "api.sendgrid.com",
+   "api.twilio.com",
+   "bulkexports.twilio.com",
+   "chat.twilio.com",
+   "content.twilio.com",
+   "conversations.twilio.com",
+   "events.twilio.com",
+   "flex-api.twilio.com",
+   "frontline-api.twilio.com",
+   "iam.twilio.com",
+   "insights.twilio.com",
+   "intelligence.twilio.com",
+   "ip-messaging.twilio.com",
+   "knowledge.twilio.com",
+   "lookups.twilio.com",
+   "marketplace.twilio.com",
+   "memory.twilio.com",
+   "messaging.twilio.com",
+   "monitor.twilio.com",
+   "notify.twilio.com",
+   "numbers.twilio.com",
+   "oauth.twilio.com",
+   "preview-iam.twilio.com",
+   "preview.twilio.com",
+   "pricing.twilio.com",
+   "proxy.twilio.com",
+   "routes.twilio.com",
+   "serverless.twilio.com",
+   "studio.twilio.com",
+   "supersim.twilio.com",
+   "sync.twilio.com",
+   "taskrouter.twilio.com",
+   "trunking.twilio.com",
+   "trusthub.twilio.com",
+   "verify.twilio.com",
+   "video.twilio.com",
+   "voice.twilio.com",
+   "webhooks.twilio.com",
+   "wireless.twilio.com"
+  ]
+ },
+ "typeform": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.typeform.com"
+  ]
+ },
+ "unleashed": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.unleashedsoftware.com"
+  ]
+ },
+ "vaultre": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "ap-southeast-2.api.vaultre.com.au"
+  ]
+ },
+ "webflow": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.webflow.com"
+  ]
+ },
+ "whatsapp": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "graph.facebook.com"
+  ]
+ },
+ "woocommerce": {
+  "hostFromEnv": true,
+  "hostPatterns": [],
+  "hosts": []
+ },
+ "wordpress": {
+  "hostFromEnv": true,
+  "hostPatterns": [],
+  "hosts": []
+ },
+ "workflowmax": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.workflowmax.com"
+  ]
+ },
+ "xero": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.xero.com"
+  ]
+ },
+ "yotpo": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api-cdn.yotpo.com",
+   "api.yotpo.com"
+  ]
+ },
+ "zapier": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.zapier.com"
+  ]
+ },
+ "zendesk": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "(?:[a-z0-9-]+)\\.(?:zendesk)\\.com"
+  ],
+  "hosts": []
+ },
+ "zenoti": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.zenoti.com"
+  ]
+ },
+ "zoho": {
+  "hostFromEnv": false,
+  "hostPatterns": [
+   "upload\\.zoho\\.(?:com|com\\.au|eu|in|jp|ca|sa)",
+   "www\\.zohoapis\\.(?:com|com\\.au|eu|in|jp|ca|sa)",
+   "zohoapis\\.(?:com|com\\.au|eu|in|jp|ca|sa)"
+  ],
+  "hosts": [
+   "www.zohoapis.com"
+  ]
+ },
+ "zoom": {
+  "hostFromEnv": false,
+  "hostPatterns": [],
+  "hosts": [
+   "api.zoom.us",
+   "fileapi.zoom.us"
+  ]
+ }
+}

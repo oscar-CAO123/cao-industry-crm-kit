@@ -98,7 +98,7 @@ export const W3 = {
   "proworkflow": d("ProWorkflow", H("apikey", "PROWORKFLOW_API_KEY")),
   "pylon": d("Pylon", B("PYLON_API_TOKEN")),
   "re-leased": d("Re-Leased", B("RELEASED_ACCESS_TOKEN", { note: TOKEN })),
-  "rezdy": d("Rezdy", H("apiKey", "REZDY_API_KEY")),
+  "rezdy": d("Rezdy", H("apiKey", "REZDY_API_KEY"), { opRules: [{ server: "https://rc-stubs.rezdy.com", unsupported: "Rezdy's test stub host returns fake answers; a live key must never be sent there. Not wired." }] }),
   "richpanel": d("Richpanel", H("x-richpanel-key", "RICHPANEL_API_KEY")),
   "semrush": d("Semrush", H("Authorization", "SEMRUSH_API_KEY", "Apikey ")),
   "sitebook": d("SiteBook", H("x-api-key", "SITEBOOK_API_KEY")),

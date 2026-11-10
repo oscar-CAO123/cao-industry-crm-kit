@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { filename: rawFilename, contentType, folder: rawFolder = "uploads" } = await req.json();
+  const { filename: rawFilename, contentType, folder: rawFolder = "uploads", size } = await req.json();
 
   // Sanitize: strip any path components to prevent path traversal
   const filename = path.basename(rawFilename ?? "");
@@ -40,10 +40,17 @@ export async function POST(req: NextRequest) {
   const ext = filename.includes(".") ? filename.split(".").pop()?.trim() || "bin" : "bin";
   const key = `${folder}/${randomUUID()}.${ext}`;
 
+  // The size is required and signed into the upload, so the storage service refuses a larger body.
+  const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+  if (!Number.isInteger(size) || size < 1 || size > MAX_UPLOAD_BYTES) {
+    return NextResponse.json({ error: "File too large (25 MB limit)" }, { status: 413 });
+  }
+
   const command = new PutObjectCommand({
     Bucket: MINIO_BUCKET,
     Key: key,
     ContentType: contentType,
+    ContentLength: size,
   });
 
   // Presigned URL valid for 10 minutes

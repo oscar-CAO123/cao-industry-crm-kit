@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -13,7 +13,7 @@ const ENTITY_SLUGS: Record<string, string> = {
 
 export const deleteActivity = async (activityId: string) => {
   try {
-    const session = await getSession();
+    const session = await assertActionSession();
     if (!session) return { error: "Unauthorized" };
 
     // Fetch links BEFORE deleting so we can revalidate after cascade

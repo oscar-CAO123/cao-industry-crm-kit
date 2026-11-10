@@ -1,7 +1,7 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getUser } from "@/actions/get-user";
+import { getStaffUser } from "@/actions/get-user";
 import { Decimal } from "decimal.js";
 import { computeInvoiceTotals, computeLineTotal } from "@/lib/invoices/totals";
 import { updateInvoiceSchema } from "@/types/invoice";
@@ -9,7 +9,7 @@ import { canEditInvoice, type InvoiceStatus } from "@/lib/invoices/permissions";
 import { serializeDecimals } from "@/lib/serialize-decimals";
 
 export async function updateInvoice(invoiceId: string, raw: unknown) {
-  const user = await getUser();
+  const user = await getStaffUser();
   const input = updateInvoiceSchema.parse(raw);
 
   const existing = await prismadb.invoices.findUniqueOrThrow({
@@ -20,7 +20,7 @@ export async function updateInvoice(invoiceId: string, raw: unknown) {
   if (
     !canEditInvoice(
       { status: existing.status as InvoiceStatus, createdBy: existing.createdBy },
-      { id: user.id, isAdmin: user.is_admin }
+      { id: user.id, isAdmin: user.role === "admin" }
     )
   ) {
     throw new Error("Cannot edit this invoice");

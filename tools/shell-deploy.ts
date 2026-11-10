@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const TARGETS = ["docker", "server", "railway", "aws", "gcp", "azure", "vercel", "supabase", "cloudflare", "netlify"] as const;
 export type Target = (typeof TARGETS)[number];
-const CRON5 = /^(\S+) (\S+) (\S+) (\S+) (\S+)$/;
+const CRON5 = /^[0-9*\/,-]+( [0-9*\/,-]+){4}$/; // five fields of digits, * / , - only: it is pasted into shell and SQL
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const WEB = "sh shell/scripts/with-secrets.sh -- node shell/server.js";
 const BASE_KEYS = ["DATABASE_URL", "DIRECT_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
@@ -59,8 +59,8 @@ export function keyNames(industries: string[]): string[] {
 }
 
 export function awsCron(s: string): string {
-  const m = CRON5.exec(s); if (!m) throw new Error(`bad cron ${s}`);
-  let [, mi, h, dom, mon, dow] = m;
+  if (!CRON5.test(s)) throw new Error(`bad cron ${s}`);
+  let [mi, h, dom, mon, dow] = s.split(" ");
   const step = (x: string) => x.replace(/^\*\//, "0/");
   if (dow === "*") dow = "?"; else dom = "?";
   return `cron(${step(mi)} ${step(h)} ${dom} ${mon} ${dow} *)`;
@@ -83,7 +83,7 @@ export function render(target: Target, js: Job[], keys: string[]): Record<string
     case "server":
       return { ...common, "config.env.example": env,
         "crm-shell.service": `[Unit]\nDescription=CRM shell\nAfter=network-online.target\n\n[Service]\nWorkingDirectory=/opt/crm-shell\n# /etc/crm-shell/op-token.env holds ONLY OP_SERVICE_ACCOUNT_TOKEN=..., owned by root, chmod 600.\nEnvironmentFile=/etc/crm-shell/op-token.env\nEnvironmentFile=/opt/crm-shell/config.env\nExecStart=/usr/bin/${WEB}\nUser=crm-shell\nRestart=always\nNoNewPrivileges=true\nProtectSystem=strict\nPrivateTmp=true\n\n[Install]\nWantedBy=multi-user.target\n`,
-        "crontab": note + js.map((j) => `${j.schedule} cd /opt/crm-shell && set -a && . /etc/crm-shell/op-token.env && . ./config.env && ${cronCmd(j)} >> /var/log/crm-shell-${j.slug}.log 2>&1`).join("\n") + "\n" };
+        "crontab": note + "# root's crontab. config.env is read as shell, so it must be owned by root and not writable by crm-shell (chown root:root, chmod 644). The job itself runs as crm-shell.\n" + js.map((j) => `${j.schedule} cd /opt/crm-shell && set -a && . /etc/crm-shell/op-token.env && . ./config.env && runuser -u crm-shell -- ${cronCmd(j)} >> /var/log/crm-shell-${j.slug}.log 2>&1`).join("\n") + "\n" };
     case "railway":
       return { ...common, "README.txt": `${note}Set OP_SERVICE_ACCOUNT_TOKEN as a sealed variable on every service; nothing else secret goes in Railway.\n`,
         "web/railway.json": JSON.stringify({ build: { builder: "DOCKERFILE", dockerfilePath: "shell/Dockerfile" }, deploy: { startCommand: WEB, healthcheckPath: "/sign-in", restartPolicyType: "ALWAYS" } }, null, 2) + "\n",

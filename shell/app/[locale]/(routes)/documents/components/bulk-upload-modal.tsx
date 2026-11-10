@@ -88,6 +88,7 @@ export function BulkUploadModal({ accountId }: BulkUploadModalProps) {
           filename: item.file.name,
           contentType: item.file.type,
           folder,
+          size: item.file.size,
         }),
       });
 

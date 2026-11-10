@@ -1,7 +1,7 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getUser } from "@/actions/get-user";
+import { getStaffUser } from "@/actions/get-user";
 import { Decimal } from "decimal.js";
 import { computeInvoiceTotals } from "@/lib/invoices/totals";
 import { canIssueInvoice, type InvoiceStatus } from "@/lib/invoices/permissions";
@@ -14,7 +14,7 @@ import type { InvoicePdfData, PdfParty } from "@/lib/invoices/pdf/templates/defa
 import { serializeDecimals } from "@/lib/serialize-decimals";
 
 export async function issueInvoice(raw: unknown) {
-  const user = await getUser();
+  const user = await getStaffUser();
   const input = issueInvoiceSchema.parse(raw);
 
   // Read invoice and settings outside the transaction to avoid holding locks during network calls
@@ -29,7 +29,7 @@ export async function issueInvoice(raw: unknown) {
   if (
     !canIssueInvoice(
       { status: invoice.status as InvoiceStatus, createdBy: invoice.createdBy },
-      { id: user.id, isAdmin: user.is_admin }
+      { id: user.id, isAdmin: user.role === "admin" }
     )
   ) {
     throw new Error("Cannot issue this invoice");

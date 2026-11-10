@@ -12,6 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
 import { main } from "../../tools/workflow.ts";
+import { redactForPrint } from "../../core/workflows/runtime.ts";
 import { PgStore } from "./pg-store.ts";
 import { pgPoolConfig } from "../lib/db-ssl.ts";
 
@@ -33,5 +34,5 @@ export async function run(argv: string[]): Promise<unknown> {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  run(process.argv.slice(2)).then((r) => console.log(JSON.stringify(r ?? null)), (e) => { console.error(String(e?.message ?? e).slice(0, 300)); process.exit(1); });
+  run(process.argv.slice(2)).then((r) => console.log(JSON.stringify(redactForPrint(r ?? null))), (e) => { console.error(String(e?.message ?? e).slice(0, 300)); process.exit(1); });
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth-server";
+import { hasRole, STAFF_ROLES } from "@/lib/security/session-status";
 import { prismadb } from "@/lib/prisma";
 
 const FIELD_MAP: Record<string, string> = {
@@ -14,6 +15,8 @@ const FIELD_MAP: Record<string, string> = {
   mobile_phone:    "mobile_phone",
 };
 
+const URL_FIELDS = new Set(["website", "social_linkedin", "social_twitter", "social_facebook", "social_instagram"]);
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -22,6 +25,9 @@ export async function PATCH(
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!hasRole(session.user, STAFF_ROLES)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const { enrichmentFields } = await request.json();
@@ -32,7 +38,11 @@ export async function PATCH(
   const updates: Record<string, string> = {};
   for (const [key, value] of Object.entries(enrichmentFields)) {
     const column = FIELD_MAP[key];
-    if (column) updates[column] = String(value);
+    if (!column) continue;
+    const text = String(value).slice(0, 2000);
+    // Links are shown as clickable hrefs, so only http(s) addresses are stored.
+    if (URL_FIELDS.has(column) && text !== "" && !/^https?:\/\/[^\s]+$/i.test(text)) continue;
+    updates[column] = text;
   }
 
   if (Object.keys(updates).length === 0) {

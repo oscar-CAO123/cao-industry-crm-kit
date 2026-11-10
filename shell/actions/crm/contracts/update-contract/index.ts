@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 
 import { prismadb } from "@/lib/prisma";
 import { UpdateContract } from "./schema";
@@ -10,7 +10,7 @@ import { writeAuditLog, diffObjects } from "@/lib/audit-log";
 import { getSnapshotRate, getDefaultCurrency } from "@/lib/currency";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const session = await getSession();
+  const session = await assertActionSession();
 
   if (!session?.user?.email) {
     return {

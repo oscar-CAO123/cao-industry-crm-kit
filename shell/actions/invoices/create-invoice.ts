@@ -1,14 +1,14 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getUser } from "@/actions/get-user";
+import { getStaffUser } from "@/actions/get-user";
 import { Decimal } from "decimal.js";
 import { computeInvoiceTotals, computeLineTotal } from "@/lib/invoices/totals";
 import { createInvoiceSchema } from "@/types/invoice";
 import { serializeDecimals } from "@/lib/serialize-decimals";
 
 export async function createInvoice(raw: unknown) {
-  const user = await getUser();
+  const user = await getStaffUser();
   const input = createInvoiceSchema.parse(raw);
 
   const taxRates = await prismadb.invoice_TaxRates.findMany({

@@ -6,8 +6,7 @@
  "authProof": "docs",
  "style": "rest",
  "hosts": [
-  "api.rezdy.com",
-  "rc-stubs.rezdy.com"
+  "api.rezdy.com"
  ],
  "hostFromEnv": false,
  "hostPatterns": [],

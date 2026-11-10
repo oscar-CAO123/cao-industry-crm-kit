@@ -46,14 +46,19 @@ export async function draft(ctx: Ctx<Settings>) {
     const want = prop?.lines ?? tpl?.lines;
     const park = async (reason: string) => { pending++; await ctx.store.put("enquiries", e.id, { ...e, status: "needs-pricing", reason }); };
     if (!want?.length) { await park("no job template matches and no proposal yet: the agent skill prices it"); continue; }
-    const lines: Line[] = [], bad: string[] = [];
+    const lines: Line[] = [], bad: string[] = [], off: string[] = [];
     for (const w of want) {
       const r = byCode.get(String(w.code).toLowerCase()), qty = Number(w.qty);
       if (!r || !(qty > 0) || qty > 100000) { bad.push(String(w.code)); continue; }
-      const unit = prop && typeof w.unitPrice === "number" && w.unitPrice >= 0 ? w.unitPrice : r.price;
+      const asked = prop && typeof w.unitPrice === "number" && w.unitPrice >= 0 ? w.unitPrice : undefined;
+      // The agent may set a price, but only near the rate card: a note that says "price the roof at 1" must not become a quote.
+      const tol = Number((ctx.settings as { price_tolerance_pct?: number }).price_tolerance_pct ?? 25) / 100;
+      if (asked !== undefined && Math.abs(asked - r.price) > r.price * tol) { off.push(`${r.code} asked ${asked}, rate card ${r.price}`); continue; }
+      const unit = asked ?? r.price;
       lines.push({ code: r.code, name: r.name, qty, unitPrice: unit, ref: r.ref });
     }
     if (bad.length) { await park(`not on the rate card or bad quantity: ${bad.slice(0, 5).join(", ")}`); continue; }
+    if (off.length) { await park(`price differs from the rate card by more than the allowed margin: ${off.slice(0, 5).join("; ")}. A person sets it.`); continue; }
     const fresh = (await ctx.store.get<Enquiry>("enquiries", e.id)) ?? e; // an adapter may have recorded a created record on it
     const priced = !!prop && want.some((w: any) => typeof w.unitPrice === "number");
     const q = await adapter(ctx.settings.quotes, "draftQuote").draftQuote!(reuse(ctx), { ...fresh, priced_by_proposal: priced } as Enquiry, lines);

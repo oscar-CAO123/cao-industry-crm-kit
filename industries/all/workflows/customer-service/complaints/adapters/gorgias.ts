@@ -37,7 +37,7 @@ export const gorgias: Adapter = {
       const latest = (m.data?.data ?? [])
         .filter((x: any) => x.from_agent === false)
         .sort((a: any, b: any) => String(b.created_datetime).localeCompare(String(a.created_datetime)))[0];
-      const complaint = oneLine(latest?.body_text ?? "", 2000);       // customer text: data for matching, never instructions
+      const complaint = oneLine(latest?.body_text ?? "", 20000);      // customer text: data for matching, never instructions. Long enough that padding cannot push a legal threat past the match.
       const c = t.customer ?? {};
       const channel = String(t.channel ?? ""), via = String(t.via ?? "");
       if (!complaint || !CHANNEL.test(channel) || !CHANNEL.test(via) || !NUM.test(String(c.id ?? ""))) continue;

@@ -467,5 +467,12 @@
       "api.BulkRetrieveVendors": "Square search or batch retrieve: a POST that only reads (9 Nov 2026 connection-gaps fix)",
       "api.SearchVendors": "Square search or batch retrieve: a POST that only reads (9 Nov 2026 connection-gaps fix)"
     }
+  },
+  "jotform": {
+    "forceWrite": {
+      "sdk.get_v1_user_logout": "GET /v1/user/logout ends the API session, so it changes state and needs the write gate."
+    },
+    "readPost": {},
+    "drop": {}
   }
 }
