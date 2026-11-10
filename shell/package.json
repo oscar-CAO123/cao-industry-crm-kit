@@ -56,7 +56,7 @@
     "@tailwindcss/postcss": "4.2.1",
     "@tanstack/react-table": "8.21.3",
     "autoprefixer": "10.4.24",
-    "better-auth": "1.6.33",
+    "better-auth": "1.7.7",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
