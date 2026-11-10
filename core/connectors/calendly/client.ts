@@ -1,11 +1,11 @@
 // Calendly helper: who has booked, and when. Read only.
 // Key: CALENDLY_API_TOKEN (a personal access token).
 //
-// Source, from the CAO CRM at commit 28aa5d91:
+// Source, from the reference CRM at commit 28aa5d91:
 //   me, listScheduledEvents, listInvitees, bookings
-//     scripts/cao-crm-pipeline-advancer.ts and scripts/cao-crm-cold-lead-promoter.ts
+//     scripts/crm-pipeline-advancer.ts and scripts/crm-cold-lead-promoter.ts
 //     (users/me for the organisation, active events only, pagination.next_page, invitees 8 at a time)
-//   cancelledBookings  scripts/cao-crm-pipeline-advancer.ts fetchCancelledBookings (status=canceled, who cancelled, reason)
+//   cancelledBookings  scripts/crm-pipeline-advancer.ts fetchCancelledBookings (status=canceled, who cancelled, reason)
 // Changed on purpose: the CRM stops at 6 pages and logs; the kit throws, so a short list is never mistaken for a full one.
 
 import { call, checkUrl, type AppSpec } from "../../lib/http.ts";

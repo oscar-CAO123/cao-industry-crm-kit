@@ -36,7 +36,7 @@ const SAFE_KEY = /^[a-z0-9][a-z0-9._-]*$/i;
 
 export class FileTokenStore implements TokenStore {
   dir: string;
-  constructor(dir = process.env.KIT_TOKEN_DIR || path.join(os.homedir(), ".cao-kit-tokens")) {
+  constructor(dir = process.env.KIT_TOKEN_DIR || path.join(os.homedir(), ".kit-tokens")) {
     this.dir = dir;
   }
   private file(key: string): string {

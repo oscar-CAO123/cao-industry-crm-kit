@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-twilio",
+  "name": "kit-sdk-twilio",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to twilio@6.3.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

@@ -54,7 +54,7 @@ accepted. Otherwise use `verify-full` and the server's CA certificate.
 
 Schema changes apply once the database is set, with the same string the shell uses:
 
-    node scripts/with-secrets.mjs -- node scripts/db-apply.mjs
+    sh scripts/with-secrets.sh -- node scripts/db-apply.mjs
 
 It uses `DIRECT_URL` when it is set and `DATABASE_URL` otherwise. It prints each file it applies, or that the database is
 up to date. Run it before the first sign-in.

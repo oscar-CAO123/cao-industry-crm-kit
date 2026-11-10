@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Apply the shell's database changes: every db/NNNN_name.sql file, in order, once each.
 //
-//   node shell/scripts/with-secrets.mjs -- node shell/scripts/db-apply.mjs            (applies)
+//   sh shell/scripts/with-secrets.sh -- node shell/scripts/db-apply.mjs            (applies)
 //   node shell/scripts/db-apply.mjs --check                                            (checks the files, no database)
 //
 // Rules, enforced here (they are why prisma db push and prisma migrate are never used on a live database):
@@ -50,7 +50,7 @@ async function apply(list) {
   const { default: pg } = await import("pg");
   const { pgPoolConfig } = await import("../lib/db-ssl.ts");
   const url = migrationUrl();
-  if (!url) throw new Error("DATABASE_URL (or DIRECT_URL) is not set (it comes from 1Password through with-secrets.mjs)");
+  if (!url) throw new Error("DATABASE_URL (or DIRECT_URL) is not set (it comes from 1Password through with-secrets.sh)");
   const pool = new pg.Pool({ ...pgPoolConfig(url), max: 1 });
   const c = await pool.connect();
   try {

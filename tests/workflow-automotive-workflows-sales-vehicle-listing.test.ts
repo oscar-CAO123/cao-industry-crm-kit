@@ -143,7 +143,7 @@ test("approval runs the send, then follow-up marks the vehicle listed", async ()
   await store.put("proposals", id, { description: DESCRIPTION });
   await draft(ctx());
   const v = await store.get<any>("vehicles", id);
-  const done = await approve(WF, store, v.approval, "oscar", NOW);
+  const done = await approve(WF, store, v.approval, "owner", NOW);
   assert.equal(done.status, "done");
   assert.equal(sends().length, 1);
   await followUp(ctx());
@@ -169,7 +169,7 @@ test("a sold vehicle gets one transfer checklist queued, never sent, with no buy
   const id = Object.values(await store.list<any>("vehicles"))[0].id;
   await store.put("proposals", id, { description: DESCRIPTION });
   await draft(ctx());
-  await approve(WF, store, (await store.get<any>("vehicles", id)).approval, "oscar", NOW);
+  await approve(WF, store, (await store.get<any>("vehicles", id)).approval, "owner", NOW);
   await followUp(ctx());
   assert.equal((await store.get<any>("vehicles", id)).status, "listed");
 

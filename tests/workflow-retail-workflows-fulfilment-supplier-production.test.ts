@@ -126,7 +126,7 @@ test("approving the queued authorisation sends the PO to AUTHORISED only when a 
   await store.put("proposals", "1001", { lines: [{ code: "TEE-BLK", qty: 500 }] });
   await draft(ctx);
   const [ap] = Object.values(await store.list<Approval>("approvals"));
-  const done = await approve(WF, store, ap.id, "oscar", NOW);
+  const done = await approve(WF, store, ap.id, "owner", NOW);
   assert.equal(done.status, "done");
   const auth = hits.find((h) => h.method === "POST" && h.path.endsWith(`/PurchaseOrders/${PO}`));
   assert.equal(auth?.body.PurchaseOrders[0].Status, "AUTHORISED");
@@ -151,7 +151,7 @@ test("deposit: nothing happens until the PO is AUTHORISED; then one bill is draf
   assert.equal(deposits.length, 1);
   assert.deepEqual(deposits[0].acts.map((x) => x.op), ["accounting.updateInvoice", "accounting.createPayment"]);
   assert.deepEqual(await deposit(ctx), { queued: 0 });
-  const r = await approve(WF, store, deposits[0].id, "oscar", NOW);
+  const r = await approve(WF, store, deposits[0].id, "owner", NOW);
   assert.equal(r.status, "done");
   const pay = hits.find((h) => h.path.endsWith("/Payments"));
   assert.equal(pay?.body.Amount, 630);

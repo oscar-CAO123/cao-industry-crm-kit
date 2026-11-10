@@ -102,7 +102,7 @@
     }
   },
   "gaps": [
-    "Trigger: no booked-call route is mapped for HubSpot or Apollo here. Deals that close within the window stand in for upcoming calls. Confirm with Oscar which trigger the clients use.",
+    "Trigger: no booked-call route is mapped for HubSpot or Apollo here. Deals that close within the window stand in for upcoming calls. Confirm with the owner which trigger the clients use.",
     "Clay: the platform's mapped operations are saved-search and routine runs that find new prospects, not a brief for a booked call. No adapter is built. Clay's Account Research Agents are in open beta, so their output is not a stable field set to map.",
     "Call prep and discovery questions: the questions are built from fixed fields (jobs, news). The rep's own call prep is not in this build.",
     "Share brief: the brief sits on the HubSpot deal, which the team can see. No email or Slack share is built.",

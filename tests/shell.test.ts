@@ -38,20 +38,6 @@ test("launcher: refs must be op:// references in the one vault", () => {
   } finally { fs.rmSync(dir, { recursive: true }); }
 });
 
-test("launcher: a key also set in the host's plain settings stops the start", () => {
-  assert.throws(() => secrets.checkHost({ DATABASE_URL: "op://Biz/db/url" }, { DATABASE_URL: "postgres://x" }), /plain text/);
-  assert.doesNotThrow(() => secrets.checkHost({ DATABASE_URL: "op://Biz/db/url" }, { PATH: "/bin" }));
-});
-
-test("launcher: the app never receives the 1Password token, and errors never carry a value", async () => {
-  const env = secrets.childEnv({ OP_SERVICE_ACCOUNT_TOKEN: "t1", SHELL_OP_TOKEN: "t2", PATH: "/bin" }, { DATABASE_URL: "v" });
-  assert.deepEqual(env, { PATH: "/bin", DATABASE_URL: "v" });
-  const VALUE = "super-secret-value-123";
-  await assert.rejects(secrets.resolveAll({ A: "op://Biz/a/b" }, async () => { throw new Error(`denied ${VALUE}`); }), (e: Error) => !e.message.includes(VALUE) && /could not read A/.test(e.message));
-  await assert.rejects(secrets.resolveAll({ A: "op://Biz/a/b" }, async () => ""), /A is empty/);
-  assert.deepEqual(await secrets.resolveAll({ A: "op://Biz/a/b" }, async () => VALUE), { A: VALUE });
-});
-
 test("no key files, env files or filled refs file anywhere in the shell", () => {
   const bad = walk(SHELL).filter((f) => /(^|\/)(\.env(\..+)?|.*\.pem|.*\.key|secrets\.refs\.json)$/.test(rel(f)) && !rel(f).endsWith(".example"));
   assert.deepEqual(bad.map(rel), []);
@@ -73,7 +59,7 @@ test("every environment name the shell reads is declared: a key in the refs exam
 
 test("the image starts every process through the launcher", () => {
   const d = read(path.join(SHELL, "Dockerfile"));
-  assert.match(d, /ENTRYPOINT \["node", "shell\/scripts\/with-secrets\.mjs", "--"\]/);
+  assert.match(d, /ENTRYPOINT \["sh", "shell\/scripts\/with-secrets\.sh", "--"\]/);
   assert.doesNotMatch(d, /^ENV .*(TOKEN|SECRET|PASSWORD|KEY)=/m);
 });
 
@@ -225,7 +211,7 @@ test("every deploy target renders for every industry, with key names and op:// p
       for (const v of Object.values(refs)) assert.match(String(v), /^op:\/\/YOUR_VAULT\//);
       for (const [f, body] of Object.entries(files)) {
         assert.doesNotMatch(String(body), /(sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{20,}|postgres(ql)?:\/\/[^<\s]+:[^<\s]+@)/, `${t}/${f}`);
-        if (/run\.ts run/.test(String(body))) assert.match(String(body), /with-secrets\.mjs|run\.ts run/);
+        if (/run\.ts run/.test(String(body))) assert.match(String(body), /with-secrets\.sh|run\.ts run/);
       }
     }
   }

@@ -4,13 +4,13 @@
 // Aircall has no message-history endpoint (every /messages read 404s, even on Pro), so a workflow
 // that needs past texts keeps its own copy as they are sent or received.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   listCalls          the CRM's Aircall call scorer script (follows meta.next_page_link)
-//   getCall            scripts/cao-crm-aircall-reconciler.ts
+//   getCall            scripts/crm-aircall-reconciler.ts
 //   searchCalls        lib/aircall-comms.ts fetchAircallCalls
 //   getTranscript      lib/aircall-comms.ts fetchAircallTranscript
-//   listContacts       scripts/cao-crm-aircall-contact-sync.ts getExistingContacts (pages by meta.total)
-//   createContact      scripts/cao-crm-aircall-contact-sync.ts createContact
+//   listContacts       scripts/crm-aircall-contact-sync.ts getExistingContacts (pages by meta.total)
+//   createContact      scripts/crm-aircall-contact-sync.ts createContact
 //   sendSms            lib/aircall-sms-send.ts sendSms
 //   listUsers, listNumbers   NEW: written from Aircall's API docs, not yet run in production
 

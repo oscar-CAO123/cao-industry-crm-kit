@@ -1,4 +1,4 @@
-// The one way a helper talks to an outside app. Ported from the CAO CRM's read-only fetch gate
+// The one way a helper talks to an outside app. Ported from the reference CRM's read-only fetch gate
 // (scripts/lib-read-only-fetch.ts) and its write rule (KIT_ALLOW_WRITES above every network write).
 //
 // Rules, enforced here so no helper can forget them:

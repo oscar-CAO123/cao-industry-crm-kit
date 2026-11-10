@@ -108,7 +108,7 @@ test("stock-check queues a purchase order for approval, never raises it, and que
   assert.equal(approvals[0].acts[0].op, "post /api/v1/PurchaseOrders");
   assert.equal(writes().filter((h) => h.path.endsWith("/PurchaseOrders")).length, 0, "nothing is raised before approval");
 
-  const done = await approve(WF, store, approvals[0].id, "oscar", NOW);
+  const done = await approve(WF, store, approvals[0].id, "owner", NOW);
   assert.equal(done.status, "done");
   assert.equal(done.results?.[0]?.ref?.id, "555", "the created purchase order id is kept");
   const po = writes().find((h) => h.path.endsWith("/PurchaseOrders"));
@@ -127,14 +127,14 @@ test("a purchase order for a code is not queued again while it is pending, raise
   const ctx = (d: Date) => context(WF, SETTINGS, store, d, () => {});
   await intake(ctx(NOW)); await stockCheck(ctx(NOW));
   const [raised] = Object.values(await store.list<Approval>("approvals"));
-  await approve(WF, store, raised.id, "oscar", NOW);
+  await approve(WF, store, raised.id, "owner", NOW);
   await stockCheck(ctx(NEXT_DAY));
   assert.equal(Object.keys(await store.list("approvals")).length, 1, "a raised order blocks the next day's order");
 
   const other = new MemoryStore(), c2 = (d: Date) => context(WF, SETTINGS, other, d, () => {});
   await intake(c2(NOW)); await stockCheck(c2(NOW));
   const [rejected] = Object.values(await other.list<Approval>("approvals"));
-  await reject(WF, other, rejected.id, "oscar", NOW);
+  await reject(WF, other, rejected.id, "owner", NOW);
   await stockCheck(c2(NEXT_DAY));
   assert.equal(Object.keys(await other.list("approvals")).length, 1, "a rejected order blocks the next day's order");
 

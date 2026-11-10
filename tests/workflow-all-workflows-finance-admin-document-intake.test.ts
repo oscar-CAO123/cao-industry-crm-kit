@@ -87,7 +87,7 @@ test("chase queues a file request for approval, once, and the approval sends it"
   const pending = Object.values(await store.list<Approval>("approvals"));
   assert.equal(pending.length, 1, "a second run must not queue the same request again");
   assert.equal(pending[0].status, "pending");
-  const ap = await approve(WF, store, pending[0].id, "oscar", NOW);
+  const ap = await approve(WF, store, pending[0].id, "owner", NOW);
   assert.equal(ap.status, "done");
   assert.equal(requests().length, 1);
   assert.equal(requests()[0].body.destination, "/Client uploads");

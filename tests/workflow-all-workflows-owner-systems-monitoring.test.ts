@@ -129,7 +129,7 @@ test("a failure that clears and comes back for the same reasons is alerted again
   await check(at(0));
   assert.deepEqual(await alert(at(0)), { alerted: 3 });
   const [first] = Object.keys(await store.list("approvals"));
-  await approve(WF, store, first, "oscar", NOW);
+  await approve(WF, store, first, "owner", NOW);
   // everything is fixed an hour later, then the same three things fail again for the same reasons
   world.connections[1].expire = "2030-01-01T00:00:00Z";
   world.scenarios[1].dlqCount = 0; world.logs[902] = [{ status: 1, timestamp: NOW.getTime() + HOUR }];
@@ -151,10 +151,10 @@ test("approval: the owner's approval sends the alert once", async () => {
   await check(context(WF, SET, store, NOW, () => {}));
   await alert(context(WF, SET, store, NOW, () => {}));
   const id = Object.keys(await store.list("approvals"))[0];
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   assert.equal(sends().length, 1);
-  await assert.rejects(approve(WF, store, id, "oscar", NOW), /already done/);
+  await assert.rejects(approve(WF, store, id, "owner", NOW), /already done/);
 });
 
 test("check: a platform that cannot be read is a failing check, and the other platform still runs", async () => {

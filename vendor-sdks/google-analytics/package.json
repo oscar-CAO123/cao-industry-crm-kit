@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-google-analytics",
+  "name": "kit-sdk-google-analytics",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @google-analytics/data@7.3.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

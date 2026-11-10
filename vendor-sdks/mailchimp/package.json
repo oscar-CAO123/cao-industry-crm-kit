@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-mailchimp",
+  "name": "kit-sdk-mailchimp",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @mailchimp/mailchimp_marketing@3.0.80, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

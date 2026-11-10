@@ -5,7 +5,7 @@ FROM node:22.18-slim AS build
 WORKDIR /kit
 COPY . .
 WORKDIR /kit/shell
-RUN corepack enable && pnpm install --no-frozen-lockfile && DATABASE_URL=postgresql://placeholder:5432/build pnpm build
+RUN corepack enable && pnpm install --frozen-lockfile && DATABASE_URL=postgresql://placeholder:5432/build pnpm build
 
 FROM node:22.18-slim
 ENV NODE_ENV=production KIT_ROOT=/kit PORT=3000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1
@@ -24,5 +24,5 @@ COPY --from=build /kit/shell/lib/db-ssl.ts ./shell/lib/db-ssl.ts
 COPY --from=build /kit/shell/secrets.refs.json* ./shell/
 USER node
 EXPOSE 3000
-ENTRYPOINT ["node", "shell/scripts/with-secrets.mjs", "--"]
+ENTRYPOINT ["sh", "shell/scripts/with-secrets.sh", "--"]
 CMD ["node", "shell/server.js"]

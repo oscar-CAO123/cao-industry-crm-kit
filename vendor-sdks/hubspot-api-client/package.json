@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-hubspot-api-client",
+  "name": "kit-sdk-hubspot-api-client",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @hubspot/api-client@14.1.3, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

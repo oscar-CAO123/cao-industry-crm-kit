@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-mondaydotcomorg-api",
+  "name": "kit-sdk-mondaydotcomorg-api",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @mondaydotcomorg/api@14.3.1, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

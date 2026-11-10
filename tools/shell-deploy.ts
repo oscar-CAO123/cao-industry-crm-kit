@@ -2,9 +2,9 @@
 // commands; only the scheduler and the place the one 1Password token is kept change.
 //   node tools/shell-deploy.ts <target> <out-dir> <industry> [industry ...]
 // Targets: docker, server, railway, aws, gcp, azure, vercel, supabase, cloudflare, netlify.
-// - Web app:   node shell/scripts/with-secrets.mjs -- node shell/server.js
-// - Each cron: node shell/scripts/with-secrets.mjs -- node shell/workflows/run.ts run <workflow-dir> <entry>
-// - Schema:    node shell/scripts/with-secrets.mjs -- node shell/scripts/db-apply.mjs
+// - Web app:   sh shell/scripts/with-secrets.sh -- node shell/server.js
+// - Each cron: sh shell/scripts/with-secrets.sh -- node shell/workflows/run.ts run <workflow-dir> <entry>
+// - Schema:    sh shell/scripts/with-secrets.sh -- node shell/scripts/db-apply.mjs
 // Container targets (docker, server, railway, aws, gcp, azure) run the cron command on a schedule. URL-only schedulers
 // (vercel, supabase, cloudflare, netlify) call the shell's trigger route /api/workflows/run with a bearer token.
 // No secret value is ever written by this tool: it writes key NAMES and op:// placeholders only.
@@ -17,7 +17,7 @@ export const TARGETS = ["docker", "server", "railway", "aws", "gcp", "azure", "v
 export type Target = (typeof TARGETS)[number];
 const CRON5 = /^(\S+) (\S+) (\S+) (\S+) (\S+)$/;
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
-const WEB = "node shell/scripts/with-secrets.mjs -- node shell/server.js";
+const WEB = "sh shell/scripts/with-secrets.sh -- node shell/server.js";
 const BASE_KEYS = ["DATABASE_URL", "DIRECT_URL", "BETTER_AUTH_SECRET", "GOOGLE_ID", "GOOGLE_SECRET", "SMTP_URL", "MINIO_ACCESS_KEY", "MINIO_SECRET_KEY", "KIT_RUNNER_TOKEN"];
 
 export interface Job { workflow: string; dir: string; entry: string; schedule: string; slug: string }
@@ -67,8 +67,8 @@ export function awsCron(s: string): string {
 }
 
 const oneLine = () => note.replace(/^# /gm, "").replace(/\n/g, " ").trim();
-const cronCmd = (j: Job) => `node shell/scripts/with-secrets.mjs -- node shell/workflows/run.ts run ${j.dir} ${j.entry}`;
-const note = "# Every process starts through shell/scripts/with-secrets.mjs: the host holds ONLY OP_SERVICE_ACCOUNT_TOKEN (plus SHELL_VAULT,\n# the vault name). All times UTC. Crons read and draft; every send, payment or live change waits for the approval click.\n";
+const cronCmd = (j: Job) => `sh shell/scripts/with-secrets.sh -- node shell/workflows/run.ts run ${j.dir} ${j.entry}`;
+const note = "# Every process starts through shell/scripts/with-secrets.sh: the host holds ONLY OP_SERVICE_ACCOUNT_TOKEN (plus SHELL_VAULT,\n# the vault name). All times UTC. Crons read and draft; every send, payment or live change waits for the approval click.\n";
 
 export function render(target: Target, js: Job[], keys: string[]): Record<string, string> {
   const refs = JSON.stringify(Object.fromEntries(keys.map((k) => [k, `op://YOUR_VAULT/${k.toLowerCase().replace(/_/g, "-")}/credential`])), null, 2) + "\n";
@@ -94,10 +94,10 @@ export function render(target: Target, js: Job[], keys: string[]): Record<string
     }
     case "gcp":
       return { ...common, "deploy.sh": `#!/bin/sh\n${note}# The token lives in Secret Manager as "crm-op-token".\nset -e\nIMAGE="$1"; REGION="\${REGION:-australia-southeast1}"; VAULT="$2"\ngcloud run deploy crm-shell --image "$IMAGE" --region "$REGION" --set-secrets OP_SERVICE_ACCOUNT_TOKEN=crm-op-token:latest --set-env-vars SHELL_VAULT="$VAULT",KIT_ALLOW_WRITES=1\n` +
-        js.map((j) => `gcloud run jobs deploy crm-${j.slug} --image "$IMAGE" --region "$REGION" --set-secrets OP_SERVICE_ACCOUNT_TOKEN=crm-op-token:latest --set-env-vars SHELL_VAULT="$VAULT",KIT_ALLOW_WRITES=1 --command node --args shell/scripts/with-secrets.mjs,--,node,shell/workflows/run.ts,run,${j.dir},${j.entry}\ngcloud scheduler jobs create http crm-${j.slug} --location "$REGION" --schedule "${j.schedule}" --time-zone UTC --http-method POST --uri "https://$REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/$(gcloud config get-value project)/jobs/crm-${j.slug}:run" --oauth-service-account-email "\${SCHEDULER_SA}"`).join("\n") + "\n" };
+        js.map((j) => `gcloud run jobs deploy crm-${j.slug} --image "$IMAGE" --region "$REGION" --set-secrets OP_SERVICE_ACCOUNT_TOKEN=crm-op-token:latest --set-env-vars SHELL_VAULT="$VAULT",KIT_ALLOW_WRITES=1 --command sh --args shell/scripts/with-secrets.sh,--,node,shell/workflows/run.ts,run,${j.dir},${j.entry}\ngcloud scheduler jobs create http crm-${j.slug} --location "$REGION" --schedule "${j.schedule}" --time-zone UTC --http-method POST --uri "https://$REGION-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/$(gcloud config get-value project)/jobs/crm-${j.slug}:run" --oauth-service-account-email "\${SCHEDULER_SA}"`).join("\n") + "\n" };
     case "azure":
       return { ...common, "deploy.sh": `#!/bin/sh\n${note}# The token lives in Key Vault as "crm-op-token"; the apps read it through a managed identity reference.\nset -e\nRG="$1"; ENV="$2"; IMAGE="$3"; VAULT="$4"; KV_URI="$5"\nSECRET="op-token=keyvaultref:$KV_URI/secrets/crm-op-token,identityref:system"\naz containerapp create -g "$RG" -n crm-shell --environment "$ENV" --image "$IMAGE" --ingress external --target-port 3000 --system-assigned --secrets "$SECRET" --env-vars OP_SERVICE_ACCOUNT_TOKEN=secretref:op-token SHELL_VAULT="$VAULT" KIT_ALLOW_WRITES=1\n` +
-        js.map((j) => `az containerapp job create -g "$RG" -n crm-${j.slug.slice(0, 28)} --environment "$ENV" --image "$IMAGE" --trigger-type Schedule --cron-expression "${j.schedule}" --replica-timeout 1800 --system-assigned --secrets "$SECRET" --env-vars OP_SERVICE_ACCOUNT_TOKEN=secretref:op-token SHELL_VAULT="$VAULT" KIT_ALLOW_WRITES=1 --command node --args "shell/scripts/with-secrets.mjs" "--" "node" "shell/workflows/run.ts" "run" "${j.dir}" "${j.entry}"`).join("\n") + "\n" };
+        js.map((j) => `az containerapp job create -g "$RG" -n crm-${j.slug.slice(0, 28)} --environment "$ENV" --image "$IMAGE" --trigger-type Schedule --cron-expression "${j.schedule}" --replica-timeout 1800 --system-assigned --secrets "$SECRET" --env-vars OP_SERVICE_ACCOUNT_TOKEN=secretref:op-token SHELL_VAULT="$VAULT" KIT_ALLOW_WRITES=1 --command sh --args "shell/scripts/with-secrets.sh" "--" "node" "shell/workflows/run.ts" "run" "${j.dir}" "${j.entry}"`).join("\n") + "\n" };
     case "vercel":
       return { ...common, "vercel.json": JSON.stringify({ crons: js.map((j) => ({ path: `/api/workflows/run?workflow=${encodeURIComponent(j.workflow)}&cron=${j.entry}`, schedule: j.schedule })) }, null, 2) + "\n",
         "README.txt": `${note}Vercel runs the Next app itself. Set OP_SERVICE_ACCOUNT_TOKEN as a sensitive environment variable and CRON_SECRET\nto the same value as KIT_RUNNER_TOKEN in 1Password. The start command must keep the launcher: build with "next build",\nand point the database at a Postgres the business owns.\n` };

@@ -125,7 +125,7 @@ test("approving the merge runs it; the tidies wait for their own approval", asyn
   const store = new MemoryStore();
   await scan(ctxFor(HS, store)); await queue(ctxFor(HS, store));
   const merge = (await approvals(store)).find((a) => a.acts[0].op.endsWith("merge_merge"))!;
-  const done = await approve(WF, store, merge.id, "oscar", NOW);
+  const done = await approve(WF, store, merge.id, "owner", NOW);
   assert.equal(done.status, "done");
   const sent = hits.find((h) => h.method === "POST" && h.path === "/crm/v3/objects/contacts/merge");
   assert.deepEqual(sent?.body, { primaryObjectId: "101", objectIdToMerge: "102" });
@@ -164,7 +164,7 @@ test("pipedrive: pages follow the cursor, the oldest person is kept, and the tid
   assert.deepEqual(merge.acts[0].input, { params: { id: 2 }, body: { merge_with_id: 1 } });
   const tidy = aps.find((a) => a.acts[0].op === "openapi-v2.updatePerson")!;
   assert.deepEqual(tidy.acts[0].input, { params: { id: 1 }, body: { emails: [{ value: "dana@shop.com", primary: true }] } });
-  await approve(WF, store, merge.id, "oscar", NOW);
+  await approve(WF, store, merge.id, "owner", NOW);
   const sent = hits.find((h) => h.method === "PUT");
   assert.equal(sent?.path, "/v1/persons/2/merge");
   assert.deepEqual(sent?.body, { merge_with_id: 1 });

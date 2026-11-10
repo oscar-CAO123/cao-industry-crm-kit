@@ -1,6 +1,6 @@
 // Fireflies helper: list and read meeting transcripts.
 //
-// Source, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   listTranscripts    lib/fireflies.ts fetchRecentTranscripts (50 a page, skip paging, no sentence text)
 //   getTranscript, transcriptText   NEW: from Fireflies' GraphQL docs, not yet run in production
 // Key: FIREFLIES_API_KEY. Fireflies answers everything on one GraphQL endpoint by POST, so the gate

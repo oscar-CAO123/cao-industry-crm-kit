@@ -115,7 +115,7 @@ test("follow-ups wait their gap, an approved send runs, and a quiet lead is queu
   assert.equal(stageHits().length, 0, "a cron never moves a stage");
 
   const first = (await approvals(store)).find((a) => a.acts[0].key === "touch:gohighlevel:OPP1:0")!;
-  const done = await approve(WF, store, first.id, "oscar", DAYS(24));
+  const done = await approve(WF, store, first.id, "owner", DAYS(24));
   assert.equal(done.status, "done");
   assert.equal(sendHits().length, 1);
   assert.equal(sendHits()[0].body.contactId, "cOPP1");

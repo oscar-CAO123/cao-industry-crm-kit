@@ -59,13 +59,16 @@ export function render(dir: string, settings: any, target: (typeof TARGETS)[numb
     case "docker":
       return {
         "Dockerfile": `FROM node:22-slim\nWORKDIR /kit\nCOPY . .\nENV KIT_STATE_DIR=/state KIT_SETTINGS=/config/settings.json\nVOLUME ["/state"]\nUSER node\nENTRYPOINT ["node", "tools/workflow.ts"]\n`,
-        "run.sh": `#!/bin/sh\n${note}# usage: ./run.sh <cron>   (mount settings at /config and keep /state on a volume)\nexec docker run --rm --env-file kit.env -e KIT_ALLOW_WRITES=1 -v kit-state:/state -v "$PWD/config:/config:ro" ${slug} run ${dir} "$1"\n`,
+        "run.sh": `#!/bin/sh\n${note}# usage: ./run.sh <cron>   (mount settings at /config and keep /state on a volume)\nset -eu\nM=$(stat -c %a kit.env 2>/dev/null || stat -f %Lp kit.env)\n[ "$M" = "600" ] || { echo "kit.env must be chmod 600 (it is $M): keys never sit in a readable file" >&2; exit 1; }\nexec docker run --rm --env-file kit.env -e KIT_ALLOW_WRITES=1 -v kit-state:/state -v "$PWD/config:/config:ro" ${slug} run ${dir} "$1"\n`,
         "kit.env.example": keys.map((k) => `${k}=`).join("\n") + "\n",
         "crontab": note + "# On the Docker host, all times UTC, from the folder holding run.sh, kit.env and config/.\n" + crons.map((c) => `${c.schedule} cd /opt/kit-deploy && ./run.sh ${c.entry} >> /var/log/kit-${c.name}.log 2>&1`).join("\n") + "\n",
       };
     case "server":
-      return { "crontab": note + "# All times UTC. Keys live in /etc/kit/env (chmod 600).\n" + crons.map((c) =>
-        `${c.schedule} cd /opt/kit && . /etc/kit/env && KIT_SETTINGS=/etc/kit/settings.json KIT_STATE_DIR=/var/lib/kit KIT_ALLOW_WRITES=1 ${cmd(c)} >> /var/log/kit-${c.name}.log 2>&1`).join("\n") + "\n" };
+      return {
+        "run.sh": `#!/bin/sh\n${note}# usage: /opt/kit/run.sh <cron>. Keys live in /etc/kit/env, which must be chmod 600.\nset -eu\nF=/etc/kit/env\nM=$(stat -c %a "$F" 2>/dev/null || stat -f %Lp "$F")\n[ "$M" = "600" ] || { echo "$F must be chmod 600 (it is $M): keys never sit in a readable file" >&2; exit 1; }\nset -a; . "$F"; set +a\ncd /opt/kit\nexport KIT_SETTINGS=/etc/kit/settings.json KIT_STATE_DIR=/var/lib/kit KIT_ALLOW_WRITES=1\nexec node tools/workflow.ts run ${dir} "$1"\n`,
+        "crontab": note + "# All times UTC. Keys live in /etc/kit/env (chmod 600); run.sh refuses to start if it is any more open.\n" + crons.map((c) =>
+          `${c.schedule} /opt/kit/run.sh ${c.entry} >> /var/log/kit-${c.name}.log 2>&1`).join("\n") + "\n",
+      };
     case "railway":
       return Object.fromEntries(crons.map((c) => [`${c.name}/railway.json`, JSON.stringify({
         $schema: "https://railway.com/railway.schema.json", build: { builder: "DOCKERFILE" },

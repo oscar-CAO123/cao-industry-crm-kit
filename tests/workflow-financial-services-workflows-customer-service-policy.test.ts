@@ -95,12 +95,12 @@ test("approval sends the reply once; a second approval is refused", async () => 
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await intake(ctx); await draft(ctx);
   const id = approvalId(WF.id, "reply:101");
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   const puts = writes().filter((h) => h.method === "PUT" && h.path === "/api/v2/tickets/101");
   assert.equal(puts.length, 1);
   assert.equal(puts[0].body.ticket.comment.public, true);
-  await assert.rejects(approve(WF, store, id, "oscar", NOW), /already done/);
+  await assert.rejects(approve(WF, store, id, "owner", NOW), /already done/);
   assert.equal(writes().length, 1);
 });
 
@@ -108,7 +108,7 @@ test("follow-up marks the reply sent, queues one chaser when due, and closes sol
   const store = new MemoryStore();
   const first = context(WF, SETTINGS, store, NOW, () => {});
   await intake(first); await draft(first);
-  await approve(WF, store, approvalId(WF.id, "reply:101"), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, "reply:101"), "owner", NOW);
 
   assert.equal((await followUp(context(WF, SETTINGS, store, NOW, () => {}))).queued, 0, "not due on the day of the reply");
   const later = new Date(NOW.getTime() + 4 * DAY);
@@ -122,7 +122,7 @@ test("follow-up closes an answer once its ticket is solved", async () => {
   const store = new MemoryStore();
   const first = context(WF, SETTINGS, store, NOW, () => {});
   await intake(first); await draft(first);
-  await approve(WF, store, approvalId(WF.id, "reply:101"), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, "reply:101"), "owner", NOW);
   ticketStatus = "solved";
   const later = new Date(NOW.getTime() + 4 * DAY);
   assert.equal((await followUp(context(WF, SETTINGS, store, later, () => {}))).queued, 0);

@@ -6,7 +6,7 @@ where code can check it (`tests/shell.test.ts` in the kit root, `pnpm test` and 
 
 ## Never
 1. **Never store a key in plain text.** Keys live in the business's one 1Password vault. The deployed app, its crons
-   and the schema tool start through `scripts/with-secrets.mjs`; on a laptop, keys reach a command only through
+   and the schema tool start through `scripts/with-secrets.sh`; on a laptop, keys reach a command only through
    `tools/op-scoped`. No `.env` file with a value, no key in the repo, in a settings file, in a log or in a host's
    plain settings. A new key name goes in `secrets.refs.example.json` and the business's vault, nowhere else.
 2. **Never send, pay or change a live record without the approval click.** Workflow crons read and draft

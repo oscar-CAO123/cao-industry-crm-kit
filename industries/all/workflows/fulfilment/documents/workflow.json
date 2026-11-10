@@ -33,7 +33,7 @@
  "gaps": [
   "Microsoft 365 (Word, Excel, OneDrive, Outlook): no adapter. The platform evidence maps no operations for it, so templates and shares do not run there yet.",
   "Record sources other than a Google Sheet (Simpro, Xero, Monday.com, Style Arcade, ShiftCare and similar): named in the calls, not mapped here. Ready rows must be put into the records tab first.",
-  "PandaDoc (named in the calls for proposals and sending): its document operations are mapped in the kit, but the platform evidence has no support rows for this job, so no adapter is built. Worth a go-ahead from Oscar before building.",
+  "PandaDoc (named in the calls for proposals and sending): its document operations are mapped in the kit, but the platform evidence has no support rows for this job, so no adapter is built. Worth a go-ahead before building.",
   "Canva (named for template picking): not mapped as a document platform here.",
   "Reports that need judgment (progress reports from quoting ratios, financial commentary, letters that answer a specific question) are agent-skill work. The cron only fills named fields from the record.",
   "Templates are plain Google Docs with {{Header}} placeholders. Tables, images and headers or footers are not filled; a placeholder left in them is not caught.",
