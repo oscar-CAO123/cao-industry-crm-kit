@@ -21,5 +21,5 @@
     "GOOGLE_SERVICE_ACCOUNT_JSON",
     "or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET + a saved refresh token"
   ],
-  "source": "Ported from the CAO CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
 }

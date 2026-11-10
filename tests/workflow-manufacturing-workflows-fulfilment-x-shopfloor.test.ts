@@ -118,7 +118,7 @@ test("an approved completion sends one signed POST through the gate, and a re-ru
   await completeBuilds(withReads(store, { assemblies: rows }));
   const [id] = Object.keys(await store.list("approvals"));
   assert.equal(netHits, 0, "queued, not sent");
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done", ap.error);
   assert.equal(netHits, 1, "exactly one request, after approval");
   assert.equal(lastReq?.method, "POST");

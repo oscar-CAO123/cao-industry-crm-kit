@@ -16,7 +16,7 @@ const WF = JSON.parse(fs.readFileSync("industries/all/workflows/marketing/custom
 const FORM = "FORM_abcdefghijKLMNOP_12345";
 const SHEET = "SHEET_abcdefghijklmnopqrstu1234";
 const OWNER = "owner@example.com";
-const MAILBOX = "oscar@example.com";
+const MAILBOX = "owner@example.com";
 const NOW = new Date("2026-11-08T00:00:00Z");
 
 type Hit = { method: string; path: string; body: any };

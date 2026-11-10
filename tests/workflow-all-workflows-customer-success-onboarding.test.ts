@@ -115,7 +115,7 @@ test("welcome drafts the email and queues its send; only an approval sends it", 
   const aps = await approvalsOf(store);
   assert.equal(aps.length, 2);
   const send = aps.find((a) => a.acts[0].op === "gmail.users.drafts.send")!;
-  const done = await approve(WF, store, send.id, "oscar", NOW);
+  const done = await approve(WF, store, send.id, "owner", NOW);
   assert.equal(done.status, "done");
   const sent = hits.find((h) => h.path === "/gmail/v1/users/me/drafts/send");
   assert.equal(sent?.body.id, "draft-1", "the approval sends the draft that was checked");
@@ -125,7 +125,7 @@ test("approving the invitation calls HubSpot with the invitee and the welcome fl
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   await setup(ctx);
   const inv = (await approvalsOf(store)).find((a) => a.acts[0].op === INVITE)!;
-  assert.equal((await approve(WF, store, inv.id, "oscar", NOW)).status, "done");
+  assert.equal((await approve(WF, store, inv.id, "owner", NOW)).status, "done");
   const call = hits.find((h) => h.path === "/settings/users/2026-09")!;
   assert.equal(call.body.email, "team@example-plumbing.com.au");
   assert.equal(call.body.sendWelcomeEmail, true);

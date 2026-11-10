@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-meta-ads",
+  "name": "kit-sdk-meta-ads",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to facebook-nodejs-business-sdk@26.0.3, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

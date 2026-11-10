@@ -18,5 +18,5 @@
     "META_PAGE_TOKEN",
     "META_PIXEL_ID"
   ],
-  "source": "Ported from the CAO CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
 }

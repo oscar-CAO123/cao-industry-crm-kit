@@ -1,7 +1,7 @@
 // Google Calendar helper: list events, check free and busy time, and create events. Creating an
 // event sends no invitations unless the caller asks.
 //
-// Source, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   listEvents         lib/google-calendar.ts listEventsInRange and normaliseEvent. Changed on purpose: untitled
 //                      events are kept (busy time), and a list too long to finish throws instead of stopping at 2,500.
 //   createEvent        lib/google-calendar.ts createClientZoomEvent (one meeting link, conferencing off, auto-Meet stripped)

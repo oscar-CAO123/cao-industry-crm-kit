@@ -62,7 +62,7 @@ test("runtime: the SDK gate blocks an approved allocation when the deploy does n
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await ctx.queue(servicem8Act());
   process.env.KIT_ALLOW_WRITES = "0";
-  const ap = await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  const ap = await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "owner", NOW);
   assert.equal(ap.status, "failed");
   assert.match(ap.error ?? "", /write|WriteBlocked|KIT_ALLOW_WRITES/i);
   assert.equal(allocs().length, 0, "no allocation reached the platform");
@@ -96,10 +96,10 @@ test("an approved allocation runs once and records the job as dispatched", async
   jobStatus = "Work Order";
   await dispatch(ctx);
   const id = approvalId(WF.id, `dispatch:${JOB}`);
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   assert.deepEqual(allocs().at(-1)!.body, { job_uuid: JOB, staff_uuid: STAFF });
-  await assert.rejects(approve(WF, store, id, "oscar"), /already done/);
+  await assert.rejects(approve(WF, store, id, "owner"), /already done/);
   await followUp(ctx);
   assert.equal((await store.get<any>("jobs", JOB)).status, "in-work");
 });
@@ -126,7 +126,7 @@ test("completion queues the owner update for approval, with the description esca
   await intake(ctx);
   jobStatus = "Work Order";
   await dispatch(ctx);
-  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "owner", NOW);
   await followUp(ctx);
   jobStatus = "Completed";
   assert.deepEqual(await followUp(ctx), { queued: 1 });
@@ -145,7 +145,7 @@ test("a stalled job gets one progress check per step, queued for approval", asyn
   await intake(ctx);
   jobStatus = "Work Order";
   await dispatch(ctx);
-  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "owner", NOW);
   await followUp(ctx);                        // dispatched on NOW, nothing due yet
   const later = new Date(NOW.getTime() + 2 * DAY);
   const laterCtx = context(WF, S, store, later, () => {});
@@ -163,7 +163,7 @@ test("a text progress check goes out as an SMS to an Australian mobile when the 
   await intake(smsCtx);
   jobStatus = "Work Order";
   await dispatch(smsCtx);
-  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "owner", NOW);
   const later = context(WF, { ...S, follow_up: { after_days: [2], channel: "sms" } }, store, new Date(NOW.getTime() + 3 * DAY), () => {});
   assert.deepEqual(await followUp(later), { queued: 1 });
   const ap = await store.get<Approval>("approvals", approvalId(WF.id, `follow1:${JOB}`));
@@ -177,7 +177,7 @@ test("an owner update subject is one line even when the tenant's job title has l
   await intake(ctx);
   jobStatus = "Work Order";
   await dispatch(ctx);
-  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, `dispatch:${JOB}`), "owner", NOW);
   await followUp(ctx);
   jobStatus = "Completed";
   assert.deepEqual(await followUp(ctx), { queued: 1 });

@@ -25,7 +25,7 @@ in the CRM shell. Nothing in this skill changes that.
 2. Write the new content as Webflow DOM nodes, each with a string `id` of 64 characters or fewer, and add a change record to
    the store collection `changes` with `platform: "webflow"`, the page id, `nodes`, and `publish: true or false`, status `requested`.
 3. The `queue` cron checks the record and queues it. A record that fails the check is skipped with the reason written on it.
-4. The owner or Oscar approves the queued item in the CRM shell. Approval runs the content update. The page is published in Webflow by a person.
+4. The owner approves the queued item in the CRM shell. Approval runs the content update. The page is published in Webflow by a person.
 
 ## Not covered
 Creating a new page, choosing the offer, the audience and the copy strategy, template and AI Studio builds, pixel and tracking

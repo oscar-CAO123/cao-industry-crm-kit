@@ -1,6 +1,6 @@
 ---
 name: rental-compliance
-description: Keeps rental compliance on track for a residential property manager on VaultRE. Crons read open maintenance and tasks, draft internal follow-up tasks for stalled jobs, and queue contractor bookings for approval. Use when Oscar or the operator asks about rental compliance, safety certificates, smoke alarm checks or expiry tracking for a residential portfolio.
+description: Keeps rental compliance on track for a residential property manager on VaultRE. Crons read open maintenance and tasks, draft internal follow-up tasks for stalled jobs, and queue contractor bookings for approval. Use when the owner or the operator asks about rental compliance, safety certificates, smoke alarm checks or expiry tracking for a residential portfolio.
 ---
 
 # Rental compliance

@@ -1,4 +1,4 @@
-# CAO industry kit
+# Industry kit
 
 For a placed operator, working in Claude Code or Codex. Read this first.
 

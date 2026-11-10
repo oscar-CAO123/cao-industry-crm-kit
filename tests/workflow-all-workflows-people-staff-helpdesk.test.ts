@@ -165,12 +165,12 @@ test("an answered Gmail question is drafted in its thread, queued, and sent only
   assert.equal(hits.filter((h) => h.method === "POST" && h.url.pathname === "/gmail/v1/users/me/drafts").length, 1);
   assert.equal(Object.values(await store.list<Approval>("approvals")).filter((a) => a.summary.startsWith("Reply to Sam Lee")).length, 1);
 
-  const done = await approve(WF, store, mine[0].id, "oscar", NOW);
+  const done = await approve(WF, store, mine[0].id, "owner", NOW);
   assert.equal(done.status, "done");
   const sent = hits.filter((h) => h.url.pathname === "/gmail/v1/users/me/drafts/send");
   assert.equal(sent.length, 1);
   assert.deepEqual(sent[0].body, { id: "DRAFT1" });
-  await assert.rejects(approve(WF, store, mine[0].id, "oscar", NOW), /already done/);
+  await assert.rejects(approve(WF, store, mine[0].id, "owner", NOW), /already done/);
 });
 
 test("an answered Chat question is queued as a threaded Chat reply and posted only on approval", async () => {
@@ -183,7 +183,7 @@ test("an answered Chat question is queued as a threaded Chat reply and posted on
   assert.equal(hits.filter(isSend).length, 0);
   const ap = Object.values(await store.list<Approval>("approvals")).find((a) => a.summary.startsWith("Reply to Priya Shah"));
   assert.ok(ap);
-  await approve(WF, store, ap.id, "oscar", NOW);
+  await approve(WF, store, ap.id, "owner", NOW);
   const post = hits.find((h) => h.method === "POST" && h.url.pathname === "/v1/spaces/AAAA/messages");
   assert.ok(post);
   assert.equal(post.url.searchParams.get("messageReplyOption"), "REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD");
@@ -201,7 +201,7 @@ test("an answered Slack question is queued as a thread reply, escaped, and poste
   assert.equal(hits.filter((h) => h.url.pathname.endsWith("/chat.postMessage")).length, 0);
   const ap = Object.values(await store.list<Approval>("approvals")).find((a) => a.summary.includes("Can someone share"));
   assert.ok(ap);
-  await approve(WF, store, ap.id, "oscar", NOW);
+  await approve(WF, store, ap.id, "owner", NOW);
   const post = hits.find((h) => h.url.pathname.endsWith("/chat.postMessage"));
   assert.ok(post);
   assert.equal(post.body.channel, "C0123456789");
@@ -245,7 +245,7 @@ test("a Chat reply is escaped, so a mention in the answer cannot ping the whole 
   await draft(ctx);
   const ap = Object.values(await store.list<Approval>("approvals")).find((a) => a.summary.startsWith("Reply to Priya Shah"));
   assert.ok(ap);
-  await approve(WF, store, ap.id, "oscar", NOW);
+  await approve(WF, store, ap.id, "owner", NOW);
   const post = hits.find((h) => h.method === "POST" && h.url.pathname === "/v1/spaces/AAAA/messages");
   assert.ok(post);
   assert.equal(post.body.text, "Ask &lt;users/all&gt; &amp; check the HR folder.");

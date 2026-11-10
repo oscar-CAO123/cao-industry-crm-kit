@@ -1,11 +1,11 @@
 // Gmail helper: search, read, and create drafts. There is deliberately no send function. A person
-// reads the draft and presses send, which is how CAO runs its own mail.
+// reads the draft and presses send, which is how the reference CRM runs its mail.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   search, getMessage, parseFrom   lib/google-gmail.ts gmailSearch, gmailGetMessage, parseFrom.
 //                      Changed on purpose: search reads every page up to the limit; the CRM reads one page.
 //   bodyText, afterClause   scripts/lib-google-dwd.ts
-//   rawMessage, createDraft scripts/cao-crm-email-drafter.ts buildMimeEmail and the drafts call, with its
+//   rawMessage, createDraft scripts/crm-email-drafter.ts buildMimeEmail and the drafts call, with its
 //                      header-injection guard. Plain text here where the CRM sends HTML.
 //   reply threading (threadId, In-Reply-To)   NEW: from Gmail's API docs, not yet run in production
 

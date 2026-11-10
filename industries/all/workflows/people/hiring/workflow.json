@@ -98,7 +98,7 @@
   "Seek (named in 5 calls, the most named job board): not a platform in the kit. Posting the ad and pulling its applications both need its own adapter.",
   "JobAdder (job board with SEEK posting, the only platform with hiring docs): docs only, no operations file. Nothing is mapped.",
   "Bullhorn (2 calls): its operations are mapped, but its sign-in (a login call returning a REST session and token) is not wired, so it cannot run yet.",
-  "Meta Ads (3 calls, used for seasonal hiring): paid spend. Left out until Oscar approves a job-ad campaign on its own.",
+  "Meta Ads (3 calls, used for seasonal hiring): paid spend. Left out until the owner approves a job-ad campaign on its own.",
   "ApplyEasy (onboarding, 1 call) and onboarding systems: not in the kit. Employment Hero and BrightHR are mapped, but creating an employee is a live change, so onboarding is not automated here.",
   "CV attachments are not read: the attachment list operation is not mapped. The crons use the email's opening text only, so shortlisting from a full CV is a person's judgment.",
   "Shortlisting, phone screens, reference checks, offers and contracts are people's judgment (the 'shortlist' step is a decision the owner records, not a score the kit makes).",

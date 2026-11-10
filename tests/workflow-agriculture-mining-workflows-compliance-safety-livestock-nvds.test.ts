@@ -95,7 +95,7 @@ test("a write is only queued, runs once on approval, and a re-queue never duplic
   assert.equal((await store.get<Approval>("approvals", id1))?.status, "pending");
   assert.equal(Object.keys(await store.list("approvals")).length, 1);
 
-  const ap = await approve(WF, store, id1, "oscar", NOW);
+  const ap = await approve(WF, store, id1, "owner", NOW);
   assert.equal(ap.status, "done");
   assert.equal(mutationsRun, 1, "the approved write runs exactly once");
 });

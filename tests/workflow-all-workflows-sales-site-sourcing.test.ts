@@ -126,7 +126,7 @@ test("an approved enquiry goes to the listing with the sender and the owner's te
   const ctx = context(WF, settings(), store, NOW, () => {});
   await scan(ctx); await deskCheck(ctx); await shortlist(store, "domain:1001"); await enquire(ctx);
   const id = approvalId(WF.id, "enquire:domain:1001");
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   const sent = enquiries();
   assert.equal(sent.length, 1);
@@ -143,7 +143,7 @@ test("a rejected enquiry is never sent and the site is marked skipped", async ()
   const store = new MemoryStore();
   const ctx = context(WF, settings(), store, NOW, () => {});
   await scan(ctx); await deskCheck(ctx); await shortlist(store, "domain:1001"); await enquire(ctx);
-  await reject(WF, store, approvalId(WF.id, "enquire:domain:1001"), "oscar", NOW);
+  await reject(WF, store, approvalId(WF.id, "enquire:domain:1001"), "owner", NOW);
   await enquire(ctx);
   assert.equal((await store.get<Candidate>("candidates", "domain:1001"))?.status, "skipped");
   assert.equal(enquiries().length, 0);
@@ -164,12 +164,12 @@ test("a site shortlisted again after its enquiry was rejected gets a new approva
   const store = new MemoryStore();
   const ctx = context(WF, settings(), store, NOW, () => {});
   await scan(ctx); await deskCheck(ctx); await shortlist(store, "domain:1001"); await enquire(ctx);
-  await reject(WF, store, approvalId(WF.id, "enquire:domain:1001"), "oscar", NOW);
+  await reject(WF, store, approvalId(WF.id, "enquire:domain:1001"), "owner", NOW);
   await enquire(ctx);
   await shortlist(store, "domain:1001");
   assert.deepEqual(await enquire(ctx), { queued: 1, recorded: 0 });
   assert.equal((await store.get<Candidate>("candidates", "domain:1001"))?.status, "enquiry-queued");
-  const ap = await approve(WF, store, approvalId(WF.id, "enquire:domain:1001:1"), "oscar", NOW);
+  const ap = await approve(WF, store, approvalId(WF.id, "enquire:domain:1001:1"), "owner", NOW);
   assert.equal(ap.status, "done");
   assert.equal(enquiries().length, 1);
   await enquire(ctx);

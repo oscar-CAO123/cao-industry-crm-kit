@@ -4,17 +4,17 @@
 // The CRM found one service user can read every envelope in the account, so reads need no per-user login.
 // An envelope is created as a draft ("created") unless the caller asks to send it.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   accessToken        lib/docusign.ts buildJwt and getDocuSignToken (JWT grant, "signature impersonation")
 //   listEnvelopes      lib/docusign.ts listEnvelopes (100 a page, start_position)
 //   getEnvelope        lib/docusign.ts getEnvelope (with the recipients and custom-field fallbacks)
 //   downloadSigned     lib/docusign.ts downloadSignedPdf (combined, with the certificate)
 //   createFromTemplate NEW: a plain template-roles envelope from DocuSign's docs, defaulting to a draft.
 //                      The CRM's send-sa route builds a composite envelope from its own stamped document
-//                      with tabs copied off the template; that is CAO's agreement layout, so it stays out.
+//                      with tabs copied off the template; that is one business's agreement layout, so it stays out.
 //   baseUri            NEW: reads the account's API host from DocuSign's userinfo instead of the CRM's fixed
 //                      AU host, so the same code works for any region and for the sandbox. Not yet run in production.
-// CAO's signatory map, rep names and the crm_lead_id field name are now parameters.
+// The original signatory map, rep names and the crm_lead_id field name are now parameters.
 
 import { call, type AppSpec } from "../../lib/http.ts";
 import { optional, secret } from "../../lib/secrets.ts";

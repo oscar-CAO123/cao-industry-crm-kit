@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { sanitise } from "../core/lib/sanitise.mjs";
 import { coverage, loadConnectors } from "../tools/coverage.mjs";
-test("Michael's test: known tools are found and unknown ones reported missing", () => {
+test("Discovery test: known tools are found and unknown ones reported missing", () => {
   const r = coverage(["Xero", "DocuSign", "Meta Ads", "Some Local App"]);
   assert.deepEqual(r.missing, ["Some Local App"]);
   assert.equal(r.notTested.length, 3);
