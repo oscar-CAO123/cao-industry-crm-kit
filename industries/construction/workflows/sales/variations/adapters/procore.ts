@@ -40,3 +40,33 @@ export async function changeEvents(ctx: Ctx<Settings>, project: string): Promise
   }
   throw new Error(`procore: the change event list for project ${pid} is longer than ${MAX_PAGES} pages; refused whole`);
 }
+
+/** Prime and commitment change orders, read from the vendor's documented paginated array endpoints. */
+export async function changeOrders(ctx: Ctx<Settings>, project: string, kind: "prime" | "commitment") {
+  const pid = num(project), out = new Map<string, { id: string; number: string; status: string; title: string }>();
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const r = await ctx.draft<any[]>({ platform: P, op: `${kind}-change-orders.show-all-${kind}-change-orders`, summary: `${kind} change orders in ${pid}, page ${page}`, input: { params: { project_id: pid, page, per_page: PER_PAGE } } });
+    if (!Array.isArray(r.data)) throw new Error("procore: change orders did not come back as a list");
+    if (!r.data.length) return [...out.values()];
+    for (const row of r.data) {
+      const id = String(num(row?.id));
+      if (out.has(id)) throw new Error("procore: repeated change order in paginated list");
+      out.set(id, { id, number: clean(row.number, 40), status: clean(row.status, 80), title: clean(row.title, 160) });
+    }
+  }
+  throw new Error("procore: change orders exceed page limit; refused whole");
+}
+
+/** Full snapshot per project and kind. Failed reads leave the previous snapshot intact and fail the cron. */
+export async function trackOrders(ctx: Ctx<Settings>) {
+  let count = 0;
+  for (const project of projects(ctx)) {
+    for (const kind of ["prime", "commitment"] as const) {
+      const rows = await changeOrders(ctx, project.id, kind);
+      await ctx.store.put("procore-orders", `${project.id}:${kind}`, { read_at: ctx.now.toISOString(), rows });
+      count += rows.length;
+    }
+  }
+  ctx.log(`change orders: ${count} tracked; pricing and approval stay in Procore`);
+  return { tracked: count };
+}

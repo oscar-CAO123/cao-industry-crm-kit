@@ -23,6 +23,12 @@ Copy `settings.example.json` to the client's settings and fill in:
 
 Smokeball's sign-in is unproven. Run a sandbox read before any live use.
 
+## On Rex
+Set `"platform": "rex"` and `"rex": { "contract_statuses": [...] }` (Rex's own status words for the contracts to watch) in settings, and `REX_ACCESS_TOKEN`
+in the environment. `register` reads the contracts still to settle. `check` flags an agreed date that differs from the contract's expected settlement
+date, once; a person changes the date in Rex. `reminders` lists contracts settling within `remind_days` in the store. Nothing is written to Rex.
+The Smokeball-only settings can be left out.
+
 ## Judgment steps (the agent or a person does these)
 
 - Read the signed contract or the solicitor's written confirmation. Write the agreed date (YYYY-MM-DD), its source and the matter id into the `agreed` store. Never write a date the source does not state.
@@ -31,4 +37,4 @@ Smokeball's sign-in is unproven. Run a sandbox read before any live use.
 
 ## Not covered
 
-Rex (no mapped operations). The solicitor mailbox and the conveyancer's own portal. Trust portal deposit requests. Cooling-off, finance and title dates. Only the settlement date is tracked.
+The Rex date change and Rex reminders (writes not built). The solicitor mailbox and the conveyancer's own portal. Trust portal deposit requests. Cooling-off, finance and title dates. Only the settlement date is tracked.

@@ -33,6 +33,9 @@ Read the findings in the approval summary, then open the job in ServiceM8 and ch
 counts photos; it cannot judge condition.
 
 ## Not covered yet
-Inspection Express, Property Tree and 360 cameras; PropertyMe and Rex (no kit operations mapped); assigning inspectors; the
+Inspection Express, Property Tree and 360 cameras; PropertyMe; Rex rental condition inspections and appointment tracking; assigning inspectors; the
 formatted report PDF; reinspections; tenant replies. Do these the business's usual way and record the result on the job so
 the record stays in one place.
+
+## Rex viewing feedback
+Set `platform` to `rex` to read viewing feedback into `rex-viewings/current`. These are property viewings, not rental condition inspections. The draft and report crons do nothing on Rex. No appointment fields, condition findings or owner reports are inferred. Status remains docs-only.

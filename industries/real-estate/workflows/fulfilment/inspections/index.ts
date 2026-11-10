@@ -1,13 +1,20 @@
+import { viewingFeedback } from "./adapters/rex.ts";
 // The inspections workflow's three crons. Each is deterministic: it reads, drafts an internal note, or queues one email.
 // Judgment (who attends, the condition of the property, whether the photos are right) stays with a person.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Inspection, Settings } from "./types.ts";
 import { openInspections, findingsFor, draftNote, reportHtml } from "./adapters/servicem8.ts";
 
+function onRex(ctx: Ctx<Settings>) {
+  const p = ctx.settings.platform ?? "servicem8";
+  if (p !== "rex" && p !== "servicem8") throw new Error("inspections: platform must be rex or servicem8");
+  return p === "rex";
+}
 const MAX_PHOTOS = (s: Settings) => Math.min(Math.max(Number(s.report_max_photos ?? 10), 0), 20);
 
 /** Every 15 minutes: inspection jobs booked in ServiceM8. A job already known keeps its draft state. */
 export async function intake(ctx: Ctx<Settings>) {
+  if (onRex(ctx)) return viewingFeedback(ctx);
   let added = 0;
   for (const j of await openInspections(ctx)) {
     const old = await ctx.store.get<Inspection>("inspections", j.id);
@@ -24,6 +31,7 @@ export async function intake(ctx: Ctx<Settings>) {
 
 /** Every 30 minutes: for each finished visit, write the staff notes and photo count into one internal note on the job. */
 export async function draft(ctx: Ctx<Settings>) {
+  if (onRex(ctx)) { ctx.log("Rex viewing feedback only; no property condition report"); return { drafted: 0 }; }
   const todo = Object.values(await ctx.store.list<Inspection>("inspections")).filter((i) => i.status === "open" && i.visited);
   let drafted = 0;
   for (const i of todo) {
@@ -41,6 +49,7 @@ export async function draft(ctx: Ctx<Settings>) {
 
 /** Hourly: queue the owner's report email for approval. Waits when there is no owner email or no findings yet. */
 export async function report(ctx: Ctx<Settings>) {
+  if (onRex(ctx)) return { queued: 0, waiting: 0 };
   let queued = 0, waiting = 0;
   for (const i of Object.values(await ctx.store.list<Inspection>("inspections"))) {
     if (i.status !== "drafted") continue;
