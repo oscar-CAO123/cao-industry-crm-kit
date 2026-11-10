@@ -10,5 +10,14 @@
  "swms_review_days": 90,
  "swms_review_assignee": "",
  "reminder_days": 2,
- "reminder_template_id": ""
+ "reminder_template_id": "",
+ "procore": {
+  "projects": [
+   {
+    "id": "",
+    "name": ""
+   }
+  ],
+  "reminder_distribution_ids": []
+ }
 }
