@@ -200,22 +200,6 @@
       "status": "pinned, not wired yet"
     },
     {
-      "app": "monday",
-      "folder": "mondaydotcomorg-api",
-      "package": "@mondaydotcomorg/api",
-      "version": "14.3.1",
-      "repo": "mondaycom/monday-graphql-api",
-      "provenance": true,
-      "packages_in_tree": 12,
-      "vendor_proof": [
-        "vendor docs name it: https://developer.monday.com/api-reference/docs/api-sdk, https://developer.monday.com/api-reference/docs/javascript-sdk",
-        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
-        "github-verified: org mondaycom is_verified, website monday.com",
-        "npm maintainer email on monday.com"
-      ],
-      "status": "blocked: GraphQL; also pulls zod with high advisory GHSA-mrhx-c7xc-m3w5"
-    },
-    {
       "app": "onfleet",
       "folder": "onfleet",
       "package": "@onfleet/node-onfleet",
@@ -226,20 +210,6 @@
       "vendor_proof": [
         "GitHub API 19:35: org onfleet is_verified on onfleet.com",
         "npm maintainer email on onfleet.com"
-      ],
-      "status": "pinned, not wired yet"
-    },
-    {
-      "app": "twilio",
-      "folder": "sendgrid-mail",
-      "package": "@sendgrid/mail",
-      "version": "8.1.6",
-      "repo": "sendgrid/sendgrid-nodejs",
-      "provenance": false,
-      "packages_in_tree": 31,
-      "vendor_proof": [
-        "vendor docs name it: https://www.twilio.com/llms.txt",
-        "GitHub API 19:35: org sendgrid is_verified on sendgrid.com"
       ],
       "status": "pinned, not wired yet"
     },
@@ -537,22 +507,6 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "github-verified: org twilio is_verified, website www.twilio.com",
         "npm maintainer email on twilio.com"
-      ],
-      "status": "pinned, not wired yet"
-    },
-    {
-      "app": "webflow",
-      "folder": "webflow",
-      "package": "webflow-api",
-      "version": "3.3.4",
-      "repo": "webflow/js-webflow-api",
-      "provenance": true,
-      "packages_in_tree": 103,
-      "vendor_proof": [
-        "vendor docs name it: https://developers.webflow.com/mcp/tools/data-tools, https://developers.webflow.com/mcp/tools/utility-tools",
-        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
-        "github-verified: org webflow is_verified, website webflow.com",
-        "npm maintainer email on webflow.com"
       ],
       "status": "pinned, not wired yet"
     },
