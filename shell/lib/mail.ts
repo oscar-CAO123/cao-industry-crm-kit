@@ -5,7 +5,7 @@
 //   address that asked for it. Anything to a customer, supplier or anyone outside the business is a live action:
 //   it goes through a workflow's approval queue (core/workflows/runtime.ts), never through this module.
 // - Plain SMTP, so it works with any provider. SMTP_URL (smtp://user:pass@host:587) comes from the secret store
-//   at process start (shell/scripts/with-secrets.ts); it is never written to a file or a log.
+//   at process start (shell/scripts/with-secrets.sh); it is never written to a file or a log.
 // - With no SMTP_URL the message is dropped and logged by subject only, so a deploy without mail still runs.
 import nodemailer from "nodemailer";
 import { render } from "@react-email/render";

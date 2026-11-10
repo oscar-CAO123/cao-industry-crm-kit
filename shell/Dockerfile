@@ -24,5 +24,5 @@ COPY --from=build /kit/shell/lib/db-ssl.ts ./shell/lib/db-ssl.ts
 COPY --from=build /kit/shell/secrets.refs.json* ./shell/
 USER node
 EXPOSE 3000
-ENTRYPOINT ["node", "shell/scripts/with-secrets.mjs", "--"]
+ENTRYPOINT ["sh", "shell/scripts/with-secrets.sh", "--"]
 CMD ["node", "shell/server.js"]

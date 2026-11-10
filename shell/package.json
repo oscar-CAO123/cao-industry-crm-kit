@@ -10,12 +10,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "node scripts/with-secrets.mjs -- node .next/standalone/shell/server.js",
+    "start": "sh scripts/with-secrets.sh -- node .next/standalone/shell/server.js",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit -p .",
     "test": "jest",
     "test:e2e": "playwright test",
-    "db:apply": "node scripts/with-secrets.mjs -- node scripts/db-apply.mjs",
+    "db:apply": "sh scripts/with-secrets.sh -- node scripts/db-apply.mjs",
     "db:seed": "tsx prisma/seeds/seed.ts",
     "workflow": "node workflows/run.ts"
   },

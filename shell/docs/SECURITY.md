@@ -13,7 +13,7 @@ LLM Top 10 2025 and CIS Controls v8.1.
   a strict referrer policy and a closed permissions policy on every response. The app is never indexed.
 - **Input (ASVS V2):** template and record data is validated against the page's own field list; unknown fields are
   dropped; template files are schema-checked before use.
-- **Secrets (A02, A03):** see `CREDENTIALS.md`. Nothing in plain text, one vault, a launcher that fails closed.
+- **Secrets (A02, A03):** see `CREDENTIALS.md`. Nothing in plain text, one vault, a launcher that keeps the token away from the service and never lets a key problem stop it.
 - **Data:** Postgres over verified TLS on any provider (`lib/db-ssl.ts`), additive-only schema changes
   (`scripts/db-apply.mjs`), soft deletes, an audit log of every change, template apply and approval decision.
 - **Outbound actions (LLM06 excessive agency):** nothing reaches outside without the approval click (`APPROVALS.md`).

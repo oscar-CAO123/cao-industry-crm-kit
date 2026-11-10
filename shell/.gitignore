@@ -17,7 +17,7 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 
-# Keys never live in this repo. They live in 1Password and reach a process through scripts/with-secrets.mjs.
+# Keys never live in this repo. They live in 1Password and reach a process through scripts/with-secrets.sh.
 # These patterns stop a stray key file from ever being committed.
 .env
 .env.*

@@ -5,7 +5,7 @@
 //   node shell/workflows/run.ts approve   <workflow-dir> <approval-id> <who> [done|retry]
 //   node shell/workflows/run.ts reject    <workflow-dir> <approval-id> <who>
 // It refuses any workflow that is not switched on in this CRM (shell_Workflows.enabled).
-// Keys arrive in the environment from the secret layer (shell/scripts/with-secrets.mjs); writes still need
+// Keys arrive in the environment from the secret layer (shell/scripts/with-secrets.sh); writes still need
 // KIT_ALLOW_WRITES=1, and the workflow runtime lets a cron run only its draft operations.
 import fs from "node:fs";
 import path from "node:path";

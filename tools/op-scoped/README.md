@@ -33,4 +33,4 @@ business's one 1Password vault through this helper, never from a file. Nothing i
 
 Edit the source here, run `redteam/run.sh` (fake credentials only; expect 0 fails in SDK mode and only T4 in `--cli`
 mode), then reinstall. To bump a pinned package in `requirements.lock`, security-sweep the new release first.
-The deployed CRM uses the same vault through `shell/scripts/with-secrets.mjs`; see `shell/docs/CREDENTIALS.md`.
+The deployed CRM uses the same vault through `shell/scripts/with-secrets.sh`; see `shell/docs/CREDENTIALS.md`.

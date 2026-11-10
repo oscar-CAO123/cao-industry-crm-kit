@@ -15,5 +15,5 @@ Workflows ask for capabilities in `core/capabilities.json`, never a vendor by na
 ## The CRM shell (`shell/`)
 8. The business's CRM is `shell/`: departments in the navigation, a page per core function, and one click on Approvals before anything a workflow drafts reaches a customer, moves money or changes a live record. Read `shell/AGENTS.md` first.
 9. Admin, Templates applies the industry: `industries/<industry>/crm-shell/template.json` switches on its pages and its built workflows, after a preview of every change, and can be undone. It never adds records.
-10. Keys live in the business's one 1Password vault. On your laptop every key reaches a command through `tools/op-scoped` (Touch ID). The deployed CRM and its crons start through `shell/scripts/with-secrets.mjs` and hold only the 1Password service account token. Never write a key to a file.
+10. Keys live in the business's one 1Password vault. On your laptop every key reaches a command through `tools/op-scoped` (Touch ID). The deployed CRM and its crons start through `shell/scripts/with-secrets.sh` and hold only the 1Password service account token. Never write a key to a file.
 11. Deploy anywhere with `node tools/shell-deploy.ts <target> <out-dir> <industry>` (docker, server, railway, aws, gcp, azure, vercel, supabase, cloudflare, netlify).
