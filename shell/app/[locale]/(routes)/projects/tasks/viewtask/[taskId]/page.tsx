@@ -1,6 +1,6 @@
 import { getTask } from "@/actions/projects/get-task";
 import React from "react";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 import { getDocuments } from "@/actions/documents/get-documents";
 import { getTaskComments } from "@/actions/projects/get-task-comments";
@@ -77,7 +77,7 @@ const TaskPage = async (props: TaskPageProps) => {
                       Date created
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {moment(task.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                      {formatDatePattern(task.createdAt, "yyyy-MM-dd HH:mm:ss")}
                     </p>
                   </div>
                 </div>
@@ -86,7 +86,7 @@ const TaskPage = async (props: TaskPageProps) => {
                   <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">Date due</p>
                     <p className="text-sm text-muted-foreground">
-                      {moment(task.dueDateAt).format("YYYY-MM-DD HH:mm")}
+                      {formatDatePattern(task.dueDateAt, "yyyy-MM-dd HH:mm")}
                     </p>
                   </div>
                 </div>
@@ -97,7 +97,7 @@ const TaskPage = async (props: TaskPageProps) => {
                       Last modified
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {moment(task.lastEditedAt).format("YYYY-MM-DD HH:mm:ss")}
+                      {formatDatePattern(task.lastEditedAt, "yyyy-MM-dd HH:mm:ss")}
                     </p>
                   </div>
                 </div>

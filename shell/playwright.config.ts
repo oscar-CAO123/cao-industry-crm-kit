@@ -1,13 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
 import path from "path";
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
+ * Read environment variables from file with Node's own loader. A value already set is kept, so .env.local is read
+ * first and wins over .env.
  */
-dotenv.config({ path: path.resolve(__dirname, ".env") });
-dotenv.config({ path: path.resolve(__dirname, ".env.local"), override: true });
+for (const f of [".env.local", ".env"]) {
+  try { process.loadEnvFile(path.resolve(__dirname, f)); } catch { /* no such file */ }
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.

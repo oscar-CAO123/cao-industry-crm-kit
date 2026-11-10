@@ -7,7 +7,7 @@ import { DocumentRow } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { ProcessingStatusBadge } from "./processing-status-badge";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 const MIME_LABELS: Record<string, { label: string; className: string }> = {
   "application/pdf": { label: "PDF", className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
@@ -58,7 +58,7 @@ export const columns: ColumnDef<DocumentRow>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[80px] text-muted-foreground text-sm">
-        {moment(row.getValue("createdAt")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("createdAt"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: true,

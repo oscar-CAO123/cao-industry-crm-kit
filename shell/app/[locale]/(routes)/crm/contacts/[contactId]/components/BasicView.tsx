@@ -17,7 +17,7 @@ import {
   User,
   Youtube,
 } from "lucide-react";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { prismadb } from "@/lib/prisma";
 import Link from "next/link";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
@@ -79,7 +79,7 @@ export async function BasicView({ data }: OppsViewProps) {
                   <p className="text-sm font-medium leading-none">Birthday</p>
                   <p className="text-sm text-muted-foreground">
                     {data.birthday
-                      ? moment(data.birthday).format("MMM DD YYYY")
+                      ? formatDatePattern(data.birthday, "MMM dd yyyy")
                       : "N/A"}
                   </p>
                 </div>
@@ -113,7 +113,7 @@ export async function BasicView({ data }: OppsViewProps) {
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Created</p>
                   <p className="text-sm text-muted-foreground">
-                    {moment(data.created_on).format("MMM DD YYYY")}
+                    {formatDatePattern(data.created_on, "MMM dd yyyy")}
                   </p>
                 </div>
                 <div className="space-y-1">
@@ -130,7 +130,7 @@ export async function BasicView({ data }: OppsViewProps) {
                     Last update
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {moment(data.updatedAt).format("MMM DD YYYY")}
+                    {formatDatePattern(data.updatedAt, "MMM dd yyyy")}
                   </p>
                 </div>
                 <div className="space-y-1">

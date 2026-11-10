@@ -1,6 +1,6 @@
 "use client";
 
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Check, EyeIcon, Pencil, PlusCircle, PlusIcon } from "lucide-react";
@@ -175,7 +175,7 @@ function TaskItem({ task, onDelete, onDone, onEdit, router }: any) {
         </DropdownMenu>
       </div>
       <div className="py-1">
-        Due date: {moment(task.dueDateAt).format("YYYY-MM-DD")}
+        Due date: {formatDatePattern(task.dueDateAt, "yyyy-MM-dd")}
       </div>
       <div className="my-2">
         <p

@@ -17,7 +17,7 @@ import {
   Percent,
   Ruler,
 } from "lucide-react";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { Decimal } from "@prisma/client/runtime/client";
 import { formatCurrency } from "@/lib/currency";
 
@@ -57,7 +57,7 @@ const statusLabel: Record<string, string> = {
 
 export function BasicView({ data }: BasicViewProps) {
   const formatDate = (date: Date | null | undefined) =>
-    date ? moment(date).format("MMM DD, YYYY") : "N/A";
+    date ? formatDatePattern(date, "MMM dd, yyyy") : "N/A";
 
   const formatValue = (value: number | null | undefined) =>
     value != null

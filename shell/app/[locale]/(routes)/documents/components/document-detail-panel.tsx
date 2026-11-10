@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { ProcessingStatusBadge } from "./processing-status-badge";
 import { getDocumentVersions } from "@/actions/documents/get-document-versions";
 import { toast } from "sonner";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { DocumentRow } from "../data/schema";
 
 interface DocumentDetailPanelProps {
@@ -78,7 +78,7 @@ export function DocumentDetailPanel({
             </div>
             <div>
               <span className="text-muted-foreground">Created</span>
-              <div>{document.createdAt ? moment(document.createdAt).format("MMM D, YYYY") : "—"}</div>
+              <div>{document.createdAt ? formatDatePattern(document.createdAt, "MMM d, yyyy") : "—"}</div>
             </div>
             <div>
               <span className="text-muted-foreground">Account</span>
@@ -108,7 +108,7 @@ export function DocumentDetailPanel({
                     <span>Version {v.version}</span>
                   </div>
                   <span className="text-muted-foreground text-xs">
-                    {v.createdAt ? moment(v.createdAt).format("MMM D, YYYY") : ""}{" "}
+                    {v.createdAt ? formatDatePattern(v.createdAt, "MMM d, yyyy") : ""}{" "}
                     {v.created_by?.name ? `by ${v.created_by.name}` : ""}
                   </span>
                 </div>

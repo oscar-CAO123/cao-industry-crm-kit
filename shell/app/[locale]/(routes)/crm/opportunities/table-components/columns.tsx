@@ -9,7 +9,7 @@ import { statuses } from "../table-data/data";
 import { Opportunity } from "../table-data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import Link from "next/link";
 import { formatCurrency, convertAmount, type Rate } from "@/lib/currency-format";
 import { Decimal } from "@prisma/client/runtime/index-browser"; // browser-safe build of the same Decimal
@@ -54,7 +54,7 @@ export const createColumns = (config: OpportunityConfig): ColumnDef<Opportunity>
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {moment(row.getValue("close_date")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("close_date"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: false,
