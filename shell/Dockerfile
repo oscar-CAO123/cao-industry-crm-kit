@@ -5,7 +5,7 @@ FROM node:22.18-slim AS build
 WORKDIR /kit
 COPY . .
 WORKDIR /kit/shell
-RUN corepack enable && pnpm install --no-frozen-lockfile && DATABASE_URL=postgresql://placeholder:5432/build pnpm build
+RUN corepack enable && pnpm install --frozen-lockfile && DATABASE_URL=postgresql://placeholder:5432/build pnpm build
 
 FROM node:22.18-slim
 ENV NODE_ENV=production KIT_ROOT=/kit PORT=3000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1
