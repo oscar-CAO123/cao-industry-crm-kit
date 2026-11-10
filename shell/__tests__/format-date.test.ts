@@ -13,6 +13,11 @@ describe("formatDatePattern", () => {
     expect(formatDatePattern(new Date(2026, 0, 2).toISOString(), "yyyy-MM-dd")).toBe("2026-01-02");
     expect(formatDatePattern(new Date(2026, 0, 2).getTime(), "yyyy-MM-dd")).toBe("2026-01-02");
   });
+  it("reads a bare date as that calendar day in the local zone", () => {
+    expect(formatDatePattern("2026-01-02", "yyyy-MM-dd")).toBe("2026-01-02");
+    expect(formatDatePattern("2026-01-02", "MMM dd yyyy")).toBe("Jan 02 2026");
+    expect(formatDatePattern("2026-13-45", "yyyy-MM-dd")).not.toBe("Invalid date");
+  });
   it("never throws on a missing or invalid date", () => {
     expect(formatDatePattern(null, "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern(undefined, "yyyy-MM-dd")).toBe("Invalid date");

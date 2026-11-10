@@ -120,7 +120,8 @@ async function main() {
   console.log("Lead Types seeded");
 
   // Test user for E2E runs only: the same switch that turns on the test sign-in code route. A normal seed must not
-  // create an admin, or the first real person to sign in is not made the admin.
+  // create an admin, or the first real person to sign in is not made the admin. For the e2e tests seed with
+  // ENABLE_TEST_OTP=1 pnpm db:seed.
   if (process.env.ENABLE_TEST_OTP === "1") {
     const testUserEmail = process.env.TEST_USER_EMAIL || "test@example.com";
     await prisma.users.upsert({

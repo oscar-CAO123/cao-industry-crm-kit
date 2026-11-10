@@ -6,6 +6,8 @@ import { format } from "date-fns";
  */
 export function formatDatePattern(value: unknown, pattern: string): string {
   if (value === null || value === undefined || value === "") return "Invalid date";
-  const d = value instanceof Date ? value : new Date(value as string | number);
+  // A bare date ("2026-01-02") is a calendar day in the viewer's own zone, as moment read it; new Date() would read it as UTC.
+  const bare = typeof value === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+  const d = value instanceof Date ? value : bare ? new Date(Number(bare[1]), Number(bare[2]) - 1, Number(bare[3])) : new Date(value as string | number);
   return Number.isNaN(d.getTime()) ? "Invalid date" : format(d, pattern);
 }

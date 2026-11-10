@@ -1,13 +1,17 @@
 import { defineConfig, devices } from "@playwright/test";
 import path from "path";
+import { readFileSync } from "node:fs";
+import { parseEnv } from "node:util";
 
 /**
- * Read environment variables from file with Node's own loader. A value already set is kept, so .env.local is read
- * first and wins over .env.
+ * Read environment variables from file with Node's own parser (no dotenv package). Variables already exported win over
+ * .env; .env.local wins over both, as before.
  */
-for (const f of [".env.local", ".env"]) {
-  try { process.loadEnvFile(path.resolve(__dirname, f)); } catch { /* no such file */ }
+function readEnv(file: string): Record<string, string> {
+  try { return parseEnv(readFileSync(path.resolve(__dirname, file), "utf8")) as Record<string, string>; } catch { return {}; }
 }
+for (const [k, v] of Object.entries(readEnv(".env"))) if (process.env[k] === undefined) process.env[k] = v;
+Object.assign(process.env, readEnv(".env.local"));
 
 /**
  * See https://playwright.dev/docs/test-configuration.
