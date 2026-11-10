@@ -26,9 +26,9 @@ const secs = (iso: string) => iso.replace(/\.\d+Z$/, "Z");
 /**
  * RFIs in a project changed between a time and now, every page followed with page and per_page (the two paging inputs
  * Procore's list page documents). Procore's page does not state a maximum per_page, so a short page is NOT taken as the
- * last: paging runs until a page comes back empty or brings nothing new (a server that ignores `page` would otherwise
- * repeat page one). `complete` is false when the page cap is hit: the rows are then dropped and the watermark is held,
- * never read in part.
+ * last: paging runs until a page comes back EMPTY. A server that ignored `page` would never return an empty page, so the
+ * window runs to the page cap and is refused whole (the watermark is held and the intake log says so) rather than read in
+ * part. `complete` is false only then: the rows are dropped, never read in part.
  */
 export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, since: string): Promise<{ rows: RfiRow[]; complete: boolean }> {
   const pid = num(project);
@@ -38,13 +38,12 @@ export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, sinc
     const r = await ctx.draft<any[]>({ platform: P, op: OP.list, summary: `RFIs changed since ${since}, page ${page}`,
       input: { params: { project_id: pid, page, per_page: PER_PAGE, "filters[updated_at]": window } } });
     const list = Array.isArray(r.data) ? r.data : [];
-    const before = rows.size;
     for (const x of list) {
       if (!Number.isInteger(x?.id) || x.id <= 0) continue;
       rows.set(String(x.id), { id: String(x.id), project: String(pid), name: clean(x.subject, 160), status: clean(x.status, 40),
         due: clean(x.due_date, 20), updated: clean(x.updated_at, 40), seen: ctx.now.toISOString() });
     }
-    if (list.length === 0 || rows.size === before) return { rows: [...rows.values()], complete: true };
+    if (list.length === 0) return { rows: [...rows.values()], complete: true };
   }
   return { rows: [], complete: false };
 }

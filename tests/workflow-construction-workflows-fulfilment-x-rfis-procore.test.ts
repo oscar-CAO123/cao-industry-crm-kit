@@ -30,7 +30,7 @@ function fake() {
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (u.hostname !== "api.procore.com") return new Response("wrong host", { status: 404 });
       if (p === `${BASE}/rfis` && m === "GET" && pages) return json(pages[Math.min(Number(u.searchParams.get("page") ?? 1), pages.length) - 1]);
-      if (p === `${BASE}/rfis` && m === "GET") return json(listOut);
+      if (p === `${BASE}/rfis` && m === "GET") return json(Number(u.searchParams.get("page") ?? 1) === 1 ? listOut : []);
       if (p === `${BASE}/rfis` && m === "POST") return new Response(JSON.stringify({ id: RFI, subject: body?.rfi?.subject, draft: true }), { status: 201, headers: { "content-type": "application/json" } });
       if (p === `${BASE}/rfis/${RFI}` && m === "PATCH") return json({ id: RFI, status: "open" });
       return new Response("not faked: " + m + " " + p, { status: 404 });
@@ -98,11 +98,20 @@ test("intake does not assume a page size: a server that caps pages at 50 still h
   assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T13:00:00Z" });
 });
 
-test("intake: a server that ignores the page number stops at the repeat, with each RFI kept once", async () => {
+test("intake: a server that ignores the page number never returns an empty page, so the window is refused whole, not read in part", async () => {
   pages = [[row(6000, "2026-11-07T12:00:00Z"), row(6001, "2026-11-07T12:00:00Z")]];
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
-  assert.deepEqual(await intake(ctx), { seen: 2, added: 2 });
-  assert.equal(hits.filter((h) => h.method === "GET").length, 2, "page two brought nothing new, so paging stopped");
+  assert.deepEqual(await intake(ctx), { seen: 0, added: 0 });
+  assert.equal(hits.filter((h) => h.method === "GET").length, 20, "runs to the page cap");
+  assert.equal(await store.get("watermarks", `rfis:${PROJ}`), undefined, "the watermark does not move");
+  assert.deepEqual(Object.keys(await store.list("rfis")), [], "nothing is kept");
+});
+
+test("intake: an overlapping page with nothing new does not end paging early", async () => {
+  pages = [[row(7000, "2026-11-07T12:00:00Z"), row(7001, "2026-11-07T12:00:00Z")], [row(7001, "2026-11-07T12:00:00Z")], [row(7002, "2026-11-07T13:00:00Z")], []];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { seen: 3, added: 3 }, "the RFI on page three is read although page two added nothing");
+  assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T13:00:00Z" });
 });
 
 test("intake: a window past the page cap is refused whole and the watermark is held", async () => {
