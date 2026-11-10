@@ -1,16 +1,18 @@
-// Shared shapes for the defects workflow. The only platform is ServiceM8: a job's defect checklist section is the register's source.
+// Shared shapes for the defects workflow. Two platforms: ServiceM8 (a job's defect checklist section is the register's source) or Procore (the project's punch list). A business sets one.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 
-export type Platform = "servicem8";
+export type Platform = "servicem8" | "procore";
 
 export interface TradeContact { match: string; name: string; email: string }
 export interface Settings {
   family: "defects-on-jobs";
   business_name?: string;
-  defect_section: string;          // the checklist section on a job that holds its defects
+  defect_section?: string;         // ServiceM8: the checklist section on a job that holds its defects (not used with procore)
   first_reminder_after_days?: number;
   reminder_every_days?: number;
-  trade_contacts?: TradeContact[]; // who chases a defect: matched by a word in the defect's name
+  trade_contacts?: TradeContact[]; // ServiceM8: who chases a defect: matched by a word in the defect's name
+  /** Set this block instead of defect_section; both together are refused. Project ids are Procore's integers as digit strings. */
+  procore?: { projects: { id: string; name: string }[] };
 }
 
 /** One defect: a checklist item in the defect section of a job. Kept in the store under the checklist item's uuid. */

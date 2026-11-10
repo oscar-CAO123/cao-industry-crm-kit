@@ -1,8 +1,9 @@
-// The labour-by-person workflow's two crons. Each reads ServiceM8 clock events, drafts Xero timesheet lines, or queues one
+// The labour-by-person workflow's two crons. Each reads ServiceM8 clock events (or Procore timecards), drafts Xero timesheet lines, or queues one
 // approval for a person. No cron approves a timesheet or pays anyone.
 import { type Ctx, type Approval, reject } from "../../../../../core/workflows/runtime.ts";
 import { type Holds, type Settings, type ShiftRec, type XeroTimesheet, GUID, HOLDS_NS, clean, keyFor, period } from "./types.ts";
 import { shiftsFrom, staffEvents } from "./adapters/servicem8.ts";
+import { timecardHours } from "./adapters/procore.ts";
 import { addLine, approveAct, createTimesheet, timesheetsIn } from "./adapters/xero.ts";
 
 const DEFAULT_MAX_HOURS = 12;
@@ -38,7 +39,9 @@ export async function mirror(ctx: Ctx<Settings>) {
   const max = s.max_hours_per_shift ?? DEFAULT_MAX_HOURS;
   const at = ctx.now.toISOString();
   const holdKey = keyFor("period", p.start);
-  const { events, bad } = await staffEvents(ctx, p);
+  // The hours come from ServiceM8 clock events, or from Procore timecards when `procore` is set. Procore entries are already hours, so there is nothing to pair.
+  const src = s.procore ? await timecardHours(ctx, p) : undefined;
+  const { events, bad } = src ? { events: [], bad: src.bad } : await staffEvents(ctx, p);
   if (bad) {
     // A clock row that does not check out means nothing can be trusted for this period: everyone mapped is held until a person checks.
     const everyone = Object.values(s.employee_map ?? {}).filter((g) => GUID.test(g));
@@ -47,7 +50,7 @@ export async function mirror(ctx: Ctx<Settings>) {
     ctx.log(`mirror: ${bad} clock row(s) did not check out, so every mapped person is held`);
     return { blocked: bad };
   }
-  const { shifts, open, problem } = shiftsFrom(events);
+  const { shifts, open, problem } = src ? { shifts: src.shifts, open: [] as string[], problem: [] as string[] } : shiftsFrom(events);
   let mirrored = 0, flagged = 0, unmapped = 0, failed = 0;
   for (const sh of shifts) {
     const rk = keyFor("shift", sh.key);
@@ -58,7 +61,7 @@ export async function mirror(ctx: Ctx<Settings>) {
     }
     const employee = (s.employee_map ?? {})[sh.staff];
     if (!employee || !GUID.test(employee)) { unmapped++; continue; }
-    const base = { period: p.start, staff: sh.staff, date: sh.date, hours: sh.hours, at };
+    const base = { period: p.start, staff: sh.staff, date: sh.date, hours: sh.hours, at, ...(src ? { source: "procore" as const } : {}) };
     if (sh.hours > max) {
       flagged++;
       await ctx.store.put("shifts", rk, { ...base, state: "flagged", reason: `${sh.hours} hours in one shift, over ${max}` } satisfies ShiftRec);
@@ -89,6 +92,20 @@ export async function mirror(ctx: Ctx<Settings>) {
   }
   // Held from approval: anyone still clocked on, with a clock problem, or with a shift that is flagged, creating or needs a check.
   const held = new Set<string>([...open, ...problem]);
+  if (src) {
+    // An entry mirrored while it was in the paid status can change in Procore afterwards: reverted, deleted, or its hours edited. The Xero draft
+    // line stays, so that person is held from approval until a person checks, instead of approving hours Procore no longer shows.
+    const current = new Map(src.shifts.map((sh) => [keyFor("shift", sh.key), sh]));
+    for (const [rk, rec] of Object.entries(await ctx.store.list<ShiftRec>("shifts"))) {
+      if (rec.source !== "procore" || rec.period !== p.start || rec.state !== "mirrored") continue;
+      const now = current.get(rk);
+      if (!now || now.hours !== rec.hours || now.date !== rec.date) {
+        // Recorded as needs-check, like any shift with an unclear outcome: that holds the person on every run until a person looks, and it is logged once.
+        await ctx.store.put("shifts", rk, { ...rec, state: "needs-check", reason: "the Procore entry changed or left the paid status after it was mirrored", at } satisfies ShiftRec);
+        ctx.log(`mirror: a mirrored Procore entry for ${rec.staff} on ${rec.date} changed or left the paid status: held from approval`);
+      }
+    }
+  }
   for (const r of Object.values(await ctx.store.list<ShiftRec>("shifts"))) if (r.period === p.start && r.state !== "mirrored") held.add(r.staff);
   const employees = [...held].map((st) => s.employee_map?.[st]).filter((g): g is string => !!g && GUID.test(g));
   await ctx.store.put(HOLDS_NS, holdKey, { employees, at, start: p.start, end: p.end } satisfies Holds);

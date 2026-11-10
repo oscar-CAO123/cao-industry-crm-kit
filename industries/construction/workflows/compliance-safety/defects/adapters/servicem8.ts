@@ -23,7 +23,8 @@ export const servicem8: Adapter = {
   },
   /** Items in the defect section of one job, with whether each is ticked. */
   async defectItems(ctx, jobUuid) {
-    const job = uuid(jobUuid), want = ctx.settings.defect_section.trim().toLowerCase();
+    const job = uuid(jobUuid), want = (ctx.settings.defect_section ?? "").trim().toLowerCase();
+    if (!want) throw new Error("servicem8: set defect_section in settings");
     return (await list<any>(ctx, "servicem8-api.listJobChecklists", `job_uuid eq '${job}'`))
       .filter((c) => String(c.section_name ?? "").trim().toLowerCase() === want && UUID.test(String(c.uuid)))
       .map((c) => ({ uuid: String(c.uuid), name: String(c.name ?? "").replace(/[\r\n\t]+/g, " ").trim().slice(0, 200), active: c.active !== 0, completed_at: doneAt(c.completed_timestamp) }));
