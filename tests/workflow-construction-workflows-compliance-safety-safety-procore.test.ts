@@ -15,6 +15,7 @@ const NOW = new Date("2026-11-09T00:00:00Z");
 
 type Hit = { method: string; path: string; query: URLSearchParams; body: any; headers: Headers };
 let hits: Hit[] = [];
+let showStatus = "Open";
 let inc: any[] = [], insp: any[] = [], incBody: (page: number) => any = (p) => (p === 1 ? inc : []);
 
 function fake() {
@@ -31,6 +32,7 @@ function fake() {
     { id: 24, name: "Gone", identifier: "INS-24", status: "Open", due_at: "2026-11-01T00:00:00Z", deleted: true },
   ];
   incBody = (p) => (p === 1 ? inc : []);
+  showStatus = "Open";
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -41,6 +43,7 @@ function fake() {
       if (u.hostname !== "api.procore.com") return new Response("wrong host", { status: 404 });
       const page = Number(u.searchParams.get("page") ?? 1);
       if (p === "/rest/v1.0/projects/4242/incidents" && m === "GET") return json(incBody(page));
+      if (/^\/rest\/v1\.0\/projects\/4242\/checklist\/lists\/\d+$/.test(p) && m === "GET") return json({ id: 21, status: showStatus });
       if (p === "/rest/v1.0/projects/4242/checklist/lists" && m === "GET") return json(page === 1 ? insp : []);
       if (/^\/rest\/v1\.0\/projects\/4242\/checklist\/lists\/\d+\/send_email$/.test(p) && m === "POST") return new Response(null, { status: 204 });
       return new Response("not faked: " + m + " " + p, { status: 404 });
@@ -128,4 +131,45 @@ test("a bad project id is refused before any call, and the SiteBook prestart sti
   await assert.rejects(incidents(ctx), /bad id/);
   assert.equal(hits.length, 0);
   assert.deepEqual(await prestart(context(WF, SETTINGS, new MemoryStore(), NOW, () => {})), { created: 0, attached: 0 });
+});
+
+test("incidents: a second page is read, and the per_page sent is the documented 1000", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  incBody = (p) => (p === 1 ? [{ id: 31, title: "a", status: "open" }] : p === 2 ? [{ id: 32, title: "b", status: "open" }] : []);
+  assert.equal((await incidents(ctx) as any).new_open, 2);
+  assert.equal(hits[0].query.get("per_page"), "1000"); assert.equal(hits.length, 3);
+});
+
+test("incidents: one project failing does not stop the next being read, and the run still fails loudly", async () => {
+  const two: any = { procore: { projects: [{ id: "9999", name: "Bad" }, { id: "4242", name: "Good" }] } };
+  const store = new MemoryStore(), ctx = context(WF, two, store, NOW, () => {});
+  await assert.rejects(incidents(ctx), /1 project\(s\) not read/);
+  assert.ok(await store.get("incidents", "4242:11"), "the good project was still recorded");
+});
+
+test("incidents: the log line carries the incident number, never the title", async () => {
+  const lines: string[] = [], ctx = context(WF, SETTINGS, new MemoryStore(), NOW, (m: string) => lines.push(m));
+  await incidents(ctx);
+  assert.ok(lines.some((l) => /new open incident #3/.test(l))); assert.ok(!lines.some((l) => /Slip on stairs/.test(l)));
+});
+
+test("inspections: an approval given after the inspection was closed in Procore sends nothing", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await inspectionReminders(ctx);
+  showStatus = "Closed";
+  const pending = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, pending[0].id, "owner", NOW);
+  assert.equal(writes().length, 0, "the email was not sent");
+  assert.equal(((await store.get<Approval>("approvals", pending[0].id)) as any).status, "rejected");
+});
+
+test("inspections: a bad distribution id refuses the setting rather than dropping the recipient", async () => {
+  const ctx = context(WF, { procore: { projects: SETTINGS.procore.projects, reminder_distribution_ids: ["134", "456 "] } }, new MemoryStore(), NOW, () => {});
+  await assert.rejects(inspectionReminders(ctx), /must be Procore integer ids/);
+  assert.equal(hits.length, 0);
+});
+
+test("more than 100 projects in settings is refused, not truncated", async () => {
+  const many: any = { procore: { projects: Array.from({ length: 101 }, (_, i) => ({ id: String(i + 1), name: "p" })) } };
+  await assert.rejects(incidents(context(WF, many, new MemoryStore(), NOW, () => {})), /more than 100 projects/);
 });

@@ -21,6 +21,10 @@ their record in the workflow store. Nothing is sent, booked or written back to A
    against a real account before relying on the list.
 3. Check the first list with the agency. It covers the first page of contacts only.
 
+## On Rex
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host). Contacts come from Rex
+(all pages, not only the first), and the detail read uses Rex's contact read. Rex leads are not used yet. Nothing is written to Rex.
+
 ## Judgment steps the agent does
 - Stage: decide each untracked prospect's stage (for example new, contacted, appraisal booked) and record it in the workflow
   store. Agentbox has no mapped stage write, so the stage lives in the store.

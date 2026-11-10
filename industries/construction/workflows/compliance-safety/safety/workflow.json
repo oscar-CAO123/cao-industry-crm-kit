@@ -21,7 +21,7 @@
    "covered_by": {
     "pre-start": "draft (pre-start checklist from a template, with the SWMS attached)",
     "swms-prepare": "draft (SWMS attached to the checklist, review action raised when due)",
-    "incident-report": "draft on Procore (open incidents recorded from the project's incident log; SiteBook has no incident endpoint)",
+    "incident-report": "read on Procore (open incidents are recorded from the project's incident log; nothing is created in Procore, and SiteBook has no incident endpoint)",
     "sign-off": "not yet (see gaps)",
     "file-store": "not yet (Dropbox has no platform in the kit)",
     "report-regulator": "not yet (see gaps)",
@@ -73,7 +73,8 @@
   ],
   "procore": [
    "incidents.list-incidents",
-   "checklists.list-checklists-inspections"
+   "checklists.list-checklists-inspections",
+   "checklists.show-checklist-inspection"
   ]
  },
  "live_ops": {
@@ -105,7 +106,7 @@
   }
  },
  "gaps": [
-  "Procore: incidents and site inspections only. Pre-start, SWMS and toolbox talks are not in its crawled pages, so those stay on SiteBook. A business sets a procore block in settings; the SiteBook crons and the Procore crons are separate and each skips when its own settings are absent.",
+  "Procore: incidents and site inspections only. The incident and checklist pages read for this build carry no pre-start, SWMS or toolbox talk records (Procore may hold some in other tools, not mapped here), so those stay on SiteBook. A business sets a procore block in settings; the two Procore crons skip when it is absent, as do the SiteBook pre-start and reminders crons without theirs (swms-review has no such guard and needs the SiteBook key).",
   "Sitemate: its help pages map inspections, inductions and actions, but the kit has no Sitemate platform and no ops file, so nothing is mapped.",
   "SiteBook incident and sign-off records: the incident create endpoint and the sign-off body fields are not in the docs crawl, so incident-report and sign-off stay on paper.",
   "SiteBook regulator and electrical portal lodgements: no endpoint in the docs crawl. The licensed person keys these in by hand.",
@@ -115,8 +116,9 @@
   "Dropbox document folders, ASA Safety and AWSA Safety: no platform in the kit, so the file store and the safety-system step stay with the business.",
   "Judgment steps stay with the agent skill in SKILL.md: writing the SWMS for a new task, close-out photo selection, and the handover pack.",
   "Every adapter is docs-only until a SiteBook sandbox or trial account proves the calls.",
-  "Procore not confirmed on a live account: whether the inspection list returns due_at and deficient_item_count on each row, the maximum per_page, and the id kind send_email wants in distribution_ids (the page shows integers but does not itemise distribution members), so the business sets reminder_distribution_ids by hand. The incident list can be filtered by status and updated_at, which the cron does not use yet.",
-  "Procore incident create, update and any record types (injury, near miss) are not used: the incidents cron reads only, and a person raises or edits incidents in Procore."
+  "Procore not confirmed on a live account: the maximum per_page for inspections (incidents document 1000), and the id kind send_email wants in distribution_ids (the page shows integers but does not itemise distribution members), so the business sets reminder_distribution_ids by hand. The incident list can be filtered by status and updated_at, which the cron does not use yet.",
+  "Procore incident create, update and any record types (injury, near miss) are not used: the incidents cron reads only, and a person raises or edits incidents in Procore.",
+  "An inspection reminder re-reads the inspection when approved and closes itself if the status changed since it was queued."
  ],
  "evidence": {
   "calls": "13 of 31 read safety discovery calls describe how they do it; SWMS preparation is 90 percent manual in those calls",

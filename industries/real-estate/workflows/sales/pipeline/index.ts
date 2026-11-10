@@ -2,7 +2,15 @@
 // Nothing here sends, books or changes a contact in Agentbox. The stage and follow-up judgment belongs to SKILL.md.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Prospect, Settings, VendorContact } from "./types.ts";
-import { listContacts, getContact, text } from "./adapters/agentbox.ts";
+import * as agentbox from "./adapters/agentbox.ts";
+import * as rex from "./adapters/rex.ts";
+import { text } from "./adapters/agentbox.ts";
+
+const adapter = (ctx: Ctx<Settings>) => {
+  const p = ctx.settings.platform ?? "agentbox";
+  if (p !== "agentbox" && p !== "rex") throw new Error("pipeline: platform must be agentbox or rex");
+  return p === "rex" ? rex : agentbox;
+};
 
 const DAY = 864e5;
 const MAX_DETAIL = 25;
@@ -20,7 +28,7 @@ const toProspect = (c: VendorContact, firstSeen: string): Prospect => ({
 /** Hourly: add each contact on the first page that the pipeline has not seen, and refresh the ones that changed. */
 export async function pipelineSync(ctx: Ctx<Settings>) {
   const now = ctx.now.toISOString();
-  const contacts = await listContacts(ctx);
+  const contacts = await adapter(ctx).listContacts(ctx);
   let added = 0, updated = 0;
   for (const c of contacts) {
     const prior = await ctx.store.get<Prospect>("prospects", c.id);
@@ -49,7 +57,7 @@ export async function prospectReview(ctx: Ctx<Settings>) {
     if (detailed >= MAX_DETAIL) break;
     if (p.stage !== "untracked" || p.detail_checked) continue;
     detailed++;
-    const c = await getContact(ctx, p.id);
+    const c = await adapter(ctx).getContact(ctx, p.id);
     const fresh = c ? toProspect(c, p.first_seen) : undefined;
     await ctx.store.put("prospects", p.id, {
       ...p,

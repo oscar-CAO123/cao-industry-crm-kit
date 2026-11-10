@@ -21,7 +21,7 @@ Nothing in this skill sends a message or changes what a customer sees.
 A business on Procore sets a `procore` block in settings (its project ids, and the Procore distribution ids a reminder goes to).
 Two more crons run from it. `incidents` records each incident once and logs new open and recordable ones; it reads only.
 `inspections` queues one reminder email for each open inspection that is past its due date, once per due date, for approval.
-Pre-starts, SWMS and toolbox talks have no Procore records in its pages, so they stay on SiteBook (or paper).
+The incident and checklist pages read for this build carry no pre-start, SWMS or toolbox talk records, so those stay on SiteBook (or paper). An inspection reminder is re-checked when approved and closes itself if the inspection has since changed status.
 
 ## Setting it up for a client
 1. Confirm the client uses SiteBook and that its API key is set as `SITEBOOK_API_KEY` on the deploy.

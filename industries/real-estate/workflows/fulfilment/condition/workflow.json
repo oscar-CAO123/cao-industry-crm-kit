@@ -9,30 +9,66 @@
  "families": {
   "all": {
    "evidence": "2 discovery calls describe this way of doing condition reports",
-   "steps": ["on-site-inspection", "photos-and-notes", "record-keeping"],
-   "covered_by": {"on-site-inspection": "skill (the person inspects on site)", "photos-and-notes": "skill (photos and notes stay with the person)", "record-keeping": "crons read the property and contact lists; the report record itself is a gap"}
+   "steps": [
+    "on-site-inspection",
+    "photos-and-notes",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "on-site-inspection": "skill (the person inspects on site)",
+    "photos-and-notes": "skill (photos and notes stay with the person)",
+    "record-keeping": "crons read the property and contact lists; the report record itself is a gap"
+   }
   }
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "properties", "schedule": "*/30 * * * *", "entry": "properties", "summary": "Read the property list so a report starts from the right property."},
-  {"name": "contacts", "schedule": "15 * * * *", "entry": "contacts", "summary": "Read the contact list so a report goes to the right owner or tenant."}
+  {
+   "name": "properties",
+   "schedule": "*/30 * * * *",
+   "entry": "properties",
+   "summary": "Read the property list so a report starts from the right property."
+  },
+  {
+   "name": "contacts",
+   "schedule": "15 * * * *",
+   "entry": "contacts",
+   "summary": "Read the contact list so a report goes to the right owner or tenant."
+  }
  ],
  "draft_ops": {
-  "agentbox": ["get:/properties", "get:/contacts"]
+  "agentbox": [
+   "get:/properties",
+   "get:/contacts"
+  ],
+  "rex": [
+   "properties.search",
+   "contacts.search"
+  ]
  },
  "live_ops": {
-  "agentbox": []
+  "agentbox": [],
+  "rex": []
  },
  "draft_ops_note": "Reads only. Nothing in this workflow writes to a platform: the document upload endpoints are mapped but their body fields are not confirmed in the vendor docs, so they are a gap.",
- "capabilities": ["properties.list", "contacts.list"],
+ "capabilities": [
+  "properties.list",
+  "contacts.list"
+ ],
  "adapters": {
-  "agentbox": {"status": "docs-only", "covers": "property and contact lists (reads only)"}
+  "agentbox": {
+   "status": "docs-only",
+   "covers": "property and contact lists (reads only)"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "property and contact lists (reads only, paged to an empty page)"
+  }
  },
  "gaps": [
+  "Rex: a business sets platform to rex in settings. Rex has no condition-report service, so the two crons read the property and contact lists only (properties.search and contacts.search, paged by offset to an empty page, refused whole past 20 pages). Not confirmed on a live account: the maximum limit, whether a search without order_by pages in a stable order (rows are de-duplicated by id), and the id field on every row.",
   "PropertyMe: its docs say it supports on-site inspections, photos, report sign-off and sending, but it has no kit platform folder, so nothing is built against it. Its Inspections help section returned HTTP 403.",
   "Inspection Express and Inspection Manager, both used on the calls: integrator products with no kit platform folder.",
-  "rex: none of the 30 pages pulled describe condition reports, and it has no kit platform folder.",
   "Property Tree and 360 cameras, both named on the calls: no kit platform folder.",
   "AgentBox: the docs pulled do not describe condition reports. The document upload endpoints (post:/documents, post:/documents/signedUrl) are mapped in the kit, but their body fields are not in the vendor docs, so no upload or report write is built. A live account is needed.",
   "AgentBox paging: the docs name pageSize and pageNumber, but the kit maps no params for get:/properties or get:/contacts, so the crons read the first page only. Changing the kit is out of scope for this workflow.",
