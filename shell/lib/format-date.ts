@@ -12,7 +12,8 @@ export function formatDatePattern(value: unknown, pattern: string): string {
     const bare = typeof value === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
     if (bare) {
       const [y, m, day] = [Number(bare[1]), Number(bare[2]), Number(bare[3])];
-      d = new Date(y, m - 1, day);
+      d = new Date(2000, 0, 1);
+      d.setFullYear(y, m - 1, day); // not new Date(y, ...): that maps the years 0 to 99 onto 1900 to 1999
       // An impossible day (2026-02-30, 2026-13-45) would roll over into the next month or year; moment rejects it.
       if (d.getFullYear() !== y || d.getMonth() !== m - 1 || d.getDate() !== day) return "Invalid date";
     } else {

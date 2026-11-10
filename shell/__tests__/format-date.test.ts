@@ -19,6 +19,7 @@ describe("formatDatePattern", () => {
     expect(formatDatePattern("2026-13-45", "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern("2026-02-30", "yyyy-MM-dd")).toBe("Invalid date");
     expect(formatDatePattern("2024-02-29", "yyyy-MM-dd")).toBe("2024-02-29");
+    expect(formatDatePattern("0050-01-01", "yyyy-MM-dd")).toBe("0050-01-01");
   });
   it("never throws on a missing or invalid date", () => {
     expect(formatDatePattern(null, "yyyy-MM-dd")).toBe("Invalid date");
