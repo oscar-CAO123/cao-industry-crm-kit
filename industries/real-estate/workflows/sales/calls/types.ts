@@ -1,4 +1,4 @@
-// Shared shapes for the calls workflow. Field names come from the Reapit Foundations docs example (Agentbox contacts)
+// Shared shapes for the calls workflow (contacts from AgentBox or Rex). Field names come from the Reapit Foundations docs example (Agentbox contacts)
 // and the Microsoft Graph v1.0 message schema (Outlook drafts).
 
 export interface Settings {
@@ -6,6 +6,7 @@ export interface Settings {
   microsoft_365?: { mailbox: string; folder?: string };   // the agency's own mailbox
   first_call_text?: string;                               // first-call email; {name} is the contact's first name
   follow_up?: { after_days: number[] };                   // days after the first-call send for each chaser
+  platform?: "agentbox" | "rex";                          // which system holds the contacts (default agentbox); the emails stay on Microsoft 365
 }
 
 /** One contact the calls workflow is working. Only a person sets "to-contact", in the workflow store or the CRM shell. */

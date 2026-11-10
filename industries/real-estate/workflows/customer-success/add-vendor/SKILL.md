@@ -18,6 +18,11 @@ They read and draft only. Nothing reaches a vendor until a person approves the s
    and email for each, the mailbox the report goes from, and how many days of open homes the report covers.
 2. Confirm the listing ids and vendor emails with the agent. The vendor email is set by hand for now (see gaps).
 
+## On Rex
+Set `"platform": "rex"` in settings, with each vendor's `property_id` as the Rex listing id, and `REX_ACCESS_TOKEN` in the environment (and
+`REX_API_HOST` for the UK host). The report's heading, address and price come from the Rex listing. Open homes are not read from Rex, so the
+report leaves that section out. No note is written to the listing.
+
 ## Writing the commentary (the judgment step)
 The draft cron waits for commentary. For each listing the report needs, the agent:
 - Reads the figures the pull cron stored for that listing (address, price, open homes in the window).

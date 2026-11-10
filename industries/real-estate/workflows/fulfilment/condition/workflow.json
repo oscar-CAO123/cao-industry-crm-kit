@@ -78,6 +78,6 @@
  ],
  "evidence": {
   "calls": "3 calls read, 2 describe their process; the remaining call gave no process detail",
-  "platforms": "the platform map for this job: PropertyMe partial, AgentBox unknown except its document endpoints, rex none. Only AgentBox has a kit folder."
+  "platforms": "the platform map for this job: PropertyMe partial, AgentBox unknown except its document endpoints, Rex mapped for properties and contacts only (no condition-report service). AgentBox and Rex have kit folders."
  }
 }

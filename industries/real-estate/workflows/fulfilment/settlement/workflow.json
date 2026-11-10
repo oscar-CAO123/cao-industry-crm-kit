@@ -9,29 +9,71 @@
  "families": {
   "all": {
    "evidence": "3 discovery calls describe this way of working: settlement dates and solicitor liaison are typed by hand on every deal",
-   "steps": ["settlement-date-agreed", "settlement-date-typed", "date-change", "reminders-and-chasing"],
-   "covered_by": {"settlement-date-agreed": "agreed record (judgment: read the signed contract or the solicitor's confirmation, see SKILL.md)", "settlement-date-typed": "register and check (Smokeball calendar event on the matter)", "date-change": "check queues the change for approval", "reminders-and-chasing": "reminders cron (one reminder per settlement event)"}
+   "steps": [
+    "settlement-date-agreed",
+    "settlement-date-typed",
+    "date-change",
+    "reminders-and-chasing"
+   ],
+   "covered_by": {
+    "settlement-date-agreed": "agreed record (judgment: read the signed contract or the solicitor's confirmation, see SKILL.md)",
+    "settlement-date-typed": "register and check (Smokeball calendar event on the matter)",
+    "date-change": "check queues the change for approval",
+    "reminders-and-chasing": "reminders cron (one reminder per settlement event)"
+   }
   }
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "register", "schedule": "*/30 * * * *", "entry": "register", "summary": "Read the open matters and their settlement events into the register. Reads only."},
-  {"name": "check", "schedule": "10,40 * * * *", "entry": "check", "summary": "Compare each agreed date with the register: draft a missing settlement event, queue a changed date for approval."},
-  {"name": "reminders", "schedule": "0 22 * * *", "entry": "reminders", "summary": "Draft one reminder per upcoming settlement event (22:00 UTC is 8 or 9 am in eastern Australia). Does nothing until the reminder settings are set."}
+  {
+   "name": "register",
+   "schedule": "*/30 * * * *",
+   "entry": "register",
+   "summary": "Read the open matters and their settlement events into the register. Reads only."
+  },
+  {
+   "name": "check",
+   "schedule": "10,40 * * * *",
+   "entry": "check",
+   "summary": "Compare each agreed date with the register: draft a missing settlement event, queue a changed date for approval."
+  },
+  {
+   "name": "reminders",
+   "schedule": "0 22 * * *",
+   "entry": "reminders",
+   "summary": "Draft one reminder per upcoming settlement event (22:00 UTC is 8 or 9 am in eastern Australia). Does nothing until the reminder settings are set."
+  }
  ],
  "draft_ops": {
-  "smokeball": ["GetMatters", "GetEvents", "GetEventById", "CreateEvent", "CreateReminder"]
+  "smokeball": [
+   "GetMatters",
+   "GetEvents",
+   "GetEventById",
+   "CreateEvent",
+   "CreateReminder"
+  ]
  },
  "live_ops": {
-  "smokeball": ["UpdateEvent"]
+  "smokeball": [
+   "UpdateEvent"
+  ]
  },
  "draft_ops_note": "Draft operations reach nobody outside the business: reads of matters and events, a new settlement event on the matter's calendar, and a reminder on that event. Moving an existing settlement date is a live operation: it changes a date the solicitors, the vendor and the buyer rely on, so it waits for a person.",
- "capabilities": ["matters.list", "events.read", "events.create", "reminders.create", "events.update"],
+ "capabilities": [
+  "matters.list",
+  "events.read",
+  "events.create",
+  "reminders.create",
+  "events.update"
+ ],
  "adapters": {
-  "smokeball": {"status": "docs-only", "covers": "open matters, settlement calendar events on each matter, reminders; date change queued for approval"}
+  "smokeball": {
+   "status": "docs-only",
+   "covers": "open matters, settlement calendar events on each matter, reminders; date change queued for approval"
+  }
  },
  "gaps": [
-  "Rex: no API operations are mapped in the kit and the pages read do not cover settlement dates, so Rex is not built here.",
+  "Rex: the kit maps Rex's API (1,027 operations) but the map has no settlement service and no inspection service, and the pages read do not cover settlement dates, so Rex is not built here.",
   "Smokeball's official spec has no settlement field. The settlement date is a calendar event on the matter whose subject contains the settlement word. The firm must confirm that convention in its own account before any live use.",
   "Smokeball is spec-only: the sign-in comes from vendor docs and is unproven, and nothing has run against a real account. It needs a sandbox or live test.",
   "Reminders need the firm's Smokeball offset type, offset type id and staff ids (settings.reminder). Until they are set, the reminders cron drafts nothing.",
@@ -42,6 +84,6 @@
  ],
  "evidence": {
   "calls": "3 of the real-estate discovery calls on settlement describe this way of working; the variants file reads 7 calls, 3 of them describing the process",
-  "platforms": "Smokeball and Rex help and product pages (real-estate-settlement-platforms.json): Smokeball partial with mapped matter, event and reminder operations; Rex unknown with no operations"
+  "platforms": "Smokeball and Rex help and product pages (real-estate-settlement-platforms.json): Smokeball partial with mapped matter, event and reminder operations; Rex mapped in the kit but with no settlement service"
  }
 }

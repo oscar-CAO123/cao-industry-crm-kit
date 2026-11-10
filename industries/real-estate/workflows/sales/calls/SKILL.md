@@ -23,6 +23,11 @@ Nothing is sent by a cron. Every email waits in the CRM shell for a person to ap
    is not built in the kit yet, so supply the token directly.
 3. Check the first contact list with the agency. It covers the first page of contacts only.
 
+## On Rex
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host). The contact list then comes from
+Rex (all pages). The emails still go through the agency's Microsoft 365 mailbox, and the person still marks who to call in the store.
+Nothing is written to Rex; a first call is not logged there.
+
 ## Judgment steps the agent does
 - Choosing who to call: read the call list, then set a contact to `to-contact` in the CRM shell. Only those get a draft.
   Set a contact to `skipped` with a reason when the agency does not want to call them.

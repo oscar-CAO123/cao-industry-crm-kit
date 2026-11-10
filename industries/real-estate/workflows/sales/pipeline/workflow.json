@@ -78,6 +78,6 @@
  ],
  "evidence": {
   "calls": "3 real-estate pipeline sales calls",
-  "platforms": "3 platforms named in the platform evidence (agentbox, reapit, rex). Agentbox is the only one with mapped kit operations: a contact list read and a contact read. Reapit and Rex have no mapped operations here."
+  "platforms": "3 platforms named in the platform evidence (agentbox, reapit, rex). Agentbox and Rex have mapped kit operations for the contact list and one contact read. Reapit has no separate kit folder (its Foundations paths sit under Agentbox)."
  }
 }
