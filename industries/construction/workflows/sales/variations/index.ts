@@ -7,7 +7,7 @@ import type { Enquiry, Line, Settings, Variation } from "./types.ts";
 import { servicem8 } from "./adapters/servicem8.ts";
 import * as pc from "./adapters/procore.ts";
 
-type Tracked = { number: string; title: string; status: string; project: string; first: string; stale_logged?: string };
+type Tracked = { number: string; title: string; status: string; project: string; project_id: string; open_since: string; gone?: string; stale_logged?: string };
 
 /** A business sets one system: the ServiceM8 flow (variation_words, templates, follow-ups) or procore. Both together are refused. */
 function procoreOnly(ctx: Ctx<Settings>): boolean {
@@ -23,14 +23,30 @@ const DAY = 864e5;
 export async function intake(ctx: Ctx<Settings>) {
   if (procoreOnly(ctx)) {
     // Procore: each change event is recorded once. Pricing and approval stay in Procore, so nothing here is drafted or sent.
-    let added = 0;
-    for (const p of pc.projects(ctx)) for (const c of await pc.changeEvents(ctx, p.id)) {
-      const key = `${p.id}:${c.id}`;
-      const was = await ctx.store.get<Tracked>("procoreChanges", key);
-      if (!was) { await ctx.store.put("procoreChanges", key, { number: c.number, title: c.title, status: c.status, project: p.name, first: ctx.now.toISOString() } satisfies Tracked); added++; if (c.open) ctx.log(`intake: new open change event ${c.number} "${c.title}" on ${p.name}`); }
-      else if (was.status !== c.status) await ctx.store.put("procoreChanges", key, { ...was, status: c.status, ...(c.open ? {} : { stale_logged: undefined }) });
+    let added = 0; const failed: string[] = [];
+    for (const p of pc.projects(ctx)) {
+      let list: Awaited<ReturnType<typeof pc.changeEvents>>;
+      try { list = await pc.changeEvents(ctx, p.id); } catch (e) { failed.push(`${p.name}: ${(e as Error).message}`); continue; }
+      const seen = new Set<string>();
+      for (const c of list) {
+        const key = `${p.id}:${c.id}`; seen.add(key);
+        const was = await ctx.store.get<Tracked>("procoreChanges", key);
+        const created = Date.parse(c.created);
+        if (!was) {
+          // The open clock starts when Procore created the event, so an event that was already old when the kit arrived is not given a fresh 14 days.
+          await ctx.store.put("procoreChanges", key, { number: c.number, title: c.title, status: c.status, project: p.name, project_id: p.id, open_since: Number.isFinite(created) ? new Date(created).toISOString() : ctx.now.toISOString() } satisfies Tracked);
+          added++; if (c.open) ctx.log(`intake: new open change event ${c.number} on project ${p.id}`);
+        } else if (was.status !== c.status || was.gone) {
+          // A reopened event starts a new clock; one that came back after missing a read keeps its clock.
+          const reopened = c.open && was.status.toLowerCase() !== "open";
+          await ctx.store.put("procoreChanges", key, { ...was, status: c.status, gone: undefined, ...(reopened ? { open_since: ctx.now.toISOString(), stale_logged: undefined } : {}), ...(c.open ? {} : { stale_logged: undefined }) });
+        }
+      }
+      // A recorded event the list no longer returns (deleted or binned in Procore) is never chased.
+      for (const [key, rec] of Object.entries(await ctx.store.list<Tracked>("procoreChanges"))) if (rec.project_id === p.id && !seen.has(key) && !rec.gone) await ctx.store.put("procoreChanges", key, { ...rec, gone: ctx.now.toISOString() });
     }
     ctx.log(`intake: ${added} new change events (Procore)`);
+    if (failed.length) throw new Error(`intake: ${failed.length} project(s) not read, the rest were: ${failed.join("; ")}`);
     return { added };
   }
   let added = 0;
@@ -84,10 +100,11 @@ export async function followUp(ctx: Ctx<Settings>) {
     // Procore: log each change event still open past the window, once. The chase itself is a person in Procore; no message is queued.
     const days = ctx.settings.procore?.stale_after_days ?? 14;
     let stale = 0;
+    const live = new Set(pc.projects(ctx).map((p) => p.id));
     for (const [key, c] of Object.entries(await ctx.store.list<Tracked>("procoreChanges"))) {
-      if (c.status.toLowerCase() !== "open" || c.stale_logged || ctx.now.getTime() - Date.parse(c.first) < days * DAY) continue;
+      if (!live.has(c.project_id) || c.gone || c.status.toLowerCase() !== "open" || c.stale_logged || ctx.now.getTime() - Date.parse(c.open_since) < days * DAY) continue;
       await ctx.store.put("procoreChanges", key, { ...c, stale_logged: ctx.now.toISOString() });
-      ctx.log(`follow-up: change event ${c.number} "${c.title}" on ${c.project} has been open ${days} days or more`);
+      ctx.log(`follow-up: change event ${c.number} on project ${c.project_id} has been open ${days} days or more`);
       stale++;
     }
     return { queued: 0, stale };

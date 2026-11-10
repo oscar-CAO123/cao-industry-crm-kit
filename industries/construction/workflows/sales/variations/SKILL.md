@@ -17,8 +17,8 @@ approve it in the CRM shell.
 ## Procore (change events, tracked only)
 A business on Procore sets a `procore` block in settings (`projects` as Procore's integer ids with a name, and `stale_after_days`, default 14)
 and none of the ServiceM8 variation settings; both together are refused. `intake` records each change event once and logs new open ones.
-`follow-up` logs each change event still open past the window, once. `draft` does nothing. Procore holds the pricing and the owner's approval,
-so no rate card, client email or follow-up email is made; a person chases in Procore. Change orders are not read yet.
+`follow-up` logs each change event still open past the window, once. `draft` does nothing. The page read shows nothing on approval, so this assumes pricing and approval happen in Procore:
+no rate card, client email or follow-up email is made; a person chases in Procore. Change orders are not read yet.
 
 ## Setting it up for a client
 1. Confirm the job note wording the foreman uses. Fill `variation_words` in `settings.json` from `settings.example.json`.

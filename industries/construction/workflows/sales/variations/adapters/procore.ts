@@ -9,7 +9,7 @@ import type { Settings } from "../types.ts";
 
 const P = "procore";
 const OP = "change-events.list-change-events";
-export const MAX_PAGES = 20;
+export const MAX_PAGES = 50;
 const PER_PAGE = 100;
 
 const num = (v: unknown) => { const s = String(v ?? ""); if (!/^[1-9]\d{0,11}$/.test(s)) throw new Error("procore: bad id"); return Number(s); };
@@ -18,7 +18,9 @@ const clean = (v: unknown, max: number) => String(v ?? "").replace(/[\u0000-\u00
 export interface ChangeEvent { id: string; number: string; title: string; status: string; open: boolean; created: string }
 
 export function projects(ctx: Ctx<Settings>): { id: string; name: string }[] {
-  return (ctx.settings.procore?.projects ?? []).slice(0, 100).map((p) => ({ id: String(num(p.id)), name: clean(p.name, 200) }));
+  const all = ctx.settings.procore?.projects ?? [];
+  if (all.length > 100) throw new Error("procore: more than 100 projects in settings; split them across two workflows");
+  return all.map((p) => ({ id: String(num(p.id)), name: clean(p.name, 200) }));
 }
 
 /** Every live change event in a project. Paging runs to an empty page; a project past MAX_PAGES, a 200 that is not a list or a row with no id is refused whole. */

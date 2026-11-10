@@ -80,7 +80,7 @@ test("a non-list reply, a row with no id, a project past 20 pages and a bad proj
   body = (p) => (p === 1 ? [{ title: "no id" }] : []);
   await assert.rejects(intake(ctx), /no usable id/);
   body = (p) => [{ id: p, number: "n", title: "t", status: { mapped_to_status: "closed" } }];
-  await assert.rejects(intake(ctx), /longer than 20 pages/);
+  await assert.rejects(intake(ctx), /not read/);
   const n = hits.length;
   await assert.rejects(intake(context(WF, { procore: { projects: [{ id: "../1", name: "x" }] } }, new MemoryStore(), NOW, () => {})), /bad id/);
   assert.equal(hits.length, n);
@@ -89,4 +89,40 @@ test("a non-list reply, a row with no id, a project past 20 pages and a bad proj
 test("runtime: the change event list is a draft operation and cannot be queued", async () => {
   const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
   await assert.rejects(ctx.queue({ platform: "procore", op: "change-events.list-change-events", summary: "x" }), /not a live operation/);
+});
+
+test("a recorded event that is later deleted, or reopened, or old when first seen, gets the right stale clock", async () => {
+  const store = new MemoryStore(), c0 = context(WF, SETTINGS, store, NOW, () => {});
+  events[0].created_at = "2026-10-01T00:00:00Z";            // already 39 days old on first sight
+  await intake(c0);
+  assert.equal(((await store.get<any>("procoreChanges", "4242:1")) as any).open_since, "2026-10-01T00:00:00.000Z");
+  assert.deepEqual(await followUp(c0), { queued: 0, stale: 1 }, "stale straight away, from its created date");
+  // reopen: closed then open again starts a new clock
+  const d1 = context(WF, SETTINGS, store, new Date(NOW.getTime() + DAY), () => {});
+  events[0].status = { name: "Closed", mapped_to_status: "closed" }; await intake(d1);
+  const d30 = new Date(NOW.getTime() + 30 * DAY); events[0].status = { name: "open", mapped_to_status: "open" };
+  await intake(context(WF, SETTINGS, store, d30, () => {}));
+  assert.deepEqual(await followUp(context(WF, SETTINGS, store, new Date(d30.getTime() + DAY), () => {})), { queued: 0, stale: 0 }, "open one day: not stale");
+  // deleted: the list stops returning it, it is marked gone and never chased
+  events.splice(0, 1);
+  const d60 = new Date(NOW.getTime() + 60 * DAY);
+  await intake(context(WF, SETTINGS, store, d60, () => {}));
+  assert.ok(((await store.get<any>("procoreChanges", "4242:1")) as any).gone);
+  assert.deepEqual(await followUp(context(WF, SETTINGS, store, new Date(d60.getTime() + 40 * DAY), () => {})), { queued: 0, stale: 0 });
+});
+
+test("a removed project is no longer chased, and 101 projects are refused", async () => {
+  const store = new MemoryStore(); await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  const other: any = { procore: { projects: [{ id: "9", name: "Other" }], stale_after_days: 10 } };
+  assert.deepEqual(await followUp(context(WF, other, store, new Date(NOW.getTime() + 20 * DAY), () => {})), { queued: 0, stale: 0 });
+  const many: any = { procore: { projects: Array.from({ length: 101 }, (_, i) => ({ id: String(i + 1), name: "p" })) } };
+  await assert.rejects(intake(context(WF, many, new MemoryStore(), NOW, () => {})), /more than 100 projects/);
+});
+
+test("the default stale window is 14 days", async () => {
+  const store = new MemoryStore(), s: any = { procore: { projects: SETTINGS.procore.projects } };
+  events[0].created_at = NOW.toISOString();
+  await intake(context(WF, s, store, NOW, () => {}));
+  assert.equal((await followUp(context(WF, s, store, new Date(NOW.getTime() + 13 * DAY), () => {}))as any).stale, 0);
+  assert.equal((await followUp(context(WF, s, store, new Date(NOW.getTime() + 15 * DAY), () => {}))as any).stale, 1);
 });
