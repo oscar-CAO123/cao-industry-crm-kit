@@ -17,7 +17,7 @@ import {
   Text,
   User,
 } from "lucide-react";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { Clapperboard } from "lucide-react";
 import { prismadb } from "@/lib/prisma";
 import { getAllCrmData } from "@/actions/crm/get-crm-data";
@@ -140,7 +140,7 @@ export async function BasicView({ data }: OppsViewProps) {
                 Expected close date
               </p>
               <p className="text-sm text-muted-foreground">
-                {moment(data.close_date).format("MMM DD YYYY")}
+                {formatDatePattern(data.close_date, "MMM dd yyyy")}
               </p>
             </div>
           </div>
@@ -149,7 +149,7 @@ export async function BasicView({ data }: OppsViewProps) {
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">Date created</p>
               <p className="text-sm text-muted-foreground">
-                {moment(data.createdAt).format("MMM DD YYYY")}
+                {formatDatePattern(data.createdAt, "MMM dd yyyy")}
               </p>
             </div>
             <div className="space-y-1">
@@ -164,7 +164,7 @@ export async function BasicView({ data }: OppsViewProps) {
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">Last update</p>
               <p className="text-sm text-muted-foreground">
-                {moment(data.updatedAt).format("MMM DD YYYY")}
+                {formatDatePattern(data.updatedAt, "MMM dd yyyy")}
               </p>
             </div>
             <div className="space-y-1">

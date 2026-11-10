@@ -9,7 +9,7 @@ import { statuses } from "../table-data/data";
 import { Lead } from "../table-data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 export const columns: ColumnDef<Lead>[] = [
   {
@@ -19,7 +19,7 @@ export const columns: ColumnDef<Lead>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {moment(row.getValue("createdAt")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("createdAt"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: false,
@@ -32,7 +32,7 @@ export const columns: ColumnDef<Lead>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {moment(row.getValue("updatedAt")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("updatedAt"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: false,
@@ -46,7 +46,7 @@ export const columns: ColumnDef<Lead>[] = [
     cell: ({ row }) => (
       <div className="w-[150px]">
         {row.getValue("customerSignedDate")
-          ? moment(row.getValue("customerSignedDate")).format("YY-MM-DD")
+          ? formatDatePattern(row.getValue("customerSignedDate"), "yy-MM-dd")
           : "Not signed yet"}
       </div>
     ),

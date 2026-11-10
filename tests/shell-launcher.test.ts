@@ -139,6 +139,34 @@ test("with no token the command still starts, and the resolver is never run", ()
   assert.ok(!fs.existsSync(s.seen), "the resolver was not started");
 });
 
+test("a token in a mounted secret file reaches only the resolver, never the command's environment", () => {
+  const s = stubNode();
+  const f = path.join(s.dir, "op-token");
+  fs.writeFileSync(f, "file-token-1\n");
+  const r = run(s, show, { STUB_OUT: `V FOO ${b64("val")}\n`, SHELL_OP_TOKEN_FILE: f });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout, "val|unset|gone|gone", "keys load and no token variable is left for the service");
+  assert.equal(fs.readFileSync(s.seen, "utf8"), "file-token-1", "the resolver got the file's token, trimmed");
+  assert.ok(!r.stderr.includes("file-token-1"));
+});
+
+test("a token variable wins over the token file, and a missing, empty or unreadable file never stops the start", () => {
+  const s = stubNode();
+  const f = path.join(s.dir, "op-token");
+  fs.writeFileSync(f, "file-token");
+  const both = run(s, show, { STUB_OUT: `V FOO ${b64("v")}\n`, OP_SERVICE_ACCOUNT_TOKEN: "env-token", SHELL_OP_TOKEN_FILE: f });
+  assert.equal(both.status, 0);
+  assert.equal(fs.readFileSync(s.seen, "utf8"), "env-token");
+  fs.rmSync(s.seen);
+  for (const [label, file] of [["missing", path.join(s.dir, "nope")], ["empty", (() => { const e = path.join(s.dir, "empty"); fs.writeFileSync(e, "  \n"); return e; })()], ["a directory", s.dir]] as const) {
+    const r = run(s, ["sh", "-c", "printf ran"], { STUB_OUT: `V FOO ${b64("v")}\n`, SHELL_OP_TOKEN_FILE: file });
+    assert.equal(r.status, 0, label);
+    assert.equal(r.stdout, "ran", label);
+    assert.match(r.stderr, /starting without 1Password keys/, label);
+    assert.ok(!fs.existsSync(s.seen), `${label}: the resolver was not started`);
+  }
+});
+
 test("a mapped name is cleared even when nothing loads: no token, or a resolver that fails", () => {
   const show2 = ["sh", "-c", 'printf "%s|%s|%s" "${BAR-unset}" "${BAZ-unset}" "${KEEP-unset}"'];
   const names = "BAR\nBAZ\nNODE_OPTIONS\nbad-name\n";

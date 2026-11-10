@@ -6,7 +6,7 @@ import { statuses } from "../table-data/data";
 import { Account } from "../table-data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import Link from "next/link";
 
 export const columns: ColumnDef<Account>[] = [
@@ -17,7 +17,7 @@ export const columns: ColumnDef<Account>[] = [
     ),
     cell: ({ row }) => (
       <div className="">
-        {moment(row.getValue("createdAt")).format("YY/MM/DD-HH:mm")}
+        {formatDatePattern(row.getValue("createdAt"), "yy/MM/dd-HH:mm")}
       </div>
     ),
     enableSorting: false,

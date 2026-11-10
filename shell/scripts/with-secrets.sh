@@ -4,9 +4,11 @@
 #
 #   sh shell/scripts/with-secrets.sh -- node shell/server.js
 #
-# The host holds exactly one secret, OP_SERVICE_ACCOUNT_TOKEN (a read-only 1Password service account for the
-# business's own vault; SHELL_OP_TOKEN is the same thing under a name op-scoped may set on a laptop), plus
-# SHELL_VAULT, the vault's name.
+# The host holds exactly one secret, the token of a read-only 1Password service account for the business's own vault,
+# plus SHELL_VAULT, the vault's name. It arrives in one of two ways: as the variable OP_SERVICE_ACCOUNT_TOKEN
+# (SHELL_OP_TOKEN is the same thing under a name op-scoped may set on a laptop), or, preferred in a container, as a
+# mounted secret file (/run/secrets/shell_op_token, or the path in SHELL_OP_TOKEN_FILE), which never appears in the
+# container's environment. The variable wins when both are set.
 #
 # How it works, and why it is a shell script:
 # - A short-lived child (node with-secrets.mjs --print) reads the keys and prints each as NAME plus its value in
@@ -63,7 +65,13 @@ clear_mapped() {
 
 load_secrets() {
   token="${OP_SERVICE_ACCOUNT_TOKEN:-${SHELL_OP_TOKEN:-}}"
-  if [ -z "$token" ]; then warn "OP_SERVICE_ACCOUNT_TOKEN missing; starting without 1Password keys"; return; fi
+  # A mounted secret file keeps the token out of the container's environment, where `docker inspect` and the host's
+  # process list can show it. The file is read here, once, by this script; the service is started without it.
+  if [ -z "$token" ]; then
+    tokfile="${SHELL_OP_TOKEN_FILE:-/run/secrets/shell_op_token}"
+    if [ -f "$tokfile" ] && [ -r "$tokfile" ]; then token=$(tr -d ' \t\r\n' < "$tokfile" 2>/dev/null) || token=; fi
+  fi
+  if [ -z "$token" ]; then warn "OP_SERVICE_ACCOUNT_TOKEN missing (and no token file); starting without 1Password keys"; return; fi
   if ! command -v base64 >/dev/null 2>&1; then warn "base64 not found; starting without 1Password keys"; return; fi
   if ! out=$(OP_SERVICE_ACCOUNT_TOKEN="$token" node "$HERE/with-secrets.mjs" --print </dev/null); then
     warn "the keys could not be loaded; starting without 1Password keys"
@@ -94,5 +102,5 @@ load_secrets() {
 
 clear_mapped
 load_secrets
-unset token out names rest line kind name b64 value OP_SERVICE_ACCOUNT_TOKEN SHELL_OP_TOKEN
+unset token tokfile out names rest line kind name b64 value OP_SERVICE_ACCOUNT_TOKEN SHELL_OP_TOKEN SHELL_OP_TOKEN_FILE
 exec "$@"

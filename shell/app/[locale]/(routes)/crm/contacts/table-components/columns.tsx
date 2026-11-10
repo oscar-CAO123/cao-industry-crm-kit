@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Opportunity } from "../table-data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 type ConfigItem = { id: string; name: string };
 
@@ -41,7 +41,7 @@ export const createColumns = (contactTypes: ConfigItem[] = []): ColumnDef<Opport
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {moment(row.getValue("created_on")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("created_on"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: false,

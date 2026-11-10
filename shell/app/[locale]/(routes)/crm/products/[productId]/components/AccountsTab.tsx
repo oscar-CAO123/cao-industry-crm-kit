@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { Decimal } from "@prisma/client/runtime/index-browser"; // browser-safe build of the same Decimal
 import { formatCurrency } from "@/lib/currency-format";
 
@@ -45,7 +45,7 @@ export function AccountsTab({
   productCurrency,
 }: AccountsTabProps) {
   const formatDate = (date: string | Date | null | undefined) =>
-    date ? moment(date).format("MMM DD, YYYY") : "-";
+    date ? formatDatePattern(date, "MMM dd, yyyy") : "-";
 
   const formatPrice = (value: number | null) => {
     const amount = value ?? productPrice;

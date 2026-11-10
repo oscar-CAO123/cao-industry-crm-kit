@@ -1,4 +1,4 @@
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 import { getDocuments } from "@/actions/documents/get-documents";
 import { extractDocuments } from "@/lib/junction-helpers";
@@ -58,19 +58,19 @@ const CRMTaskPage = async (props: TaskPageProps) => {
               <tr>
                 <td className="py-2 px-4 border-b">Date created</td>
                 <td className="py-2 px-4 border-b">
-                  {moment(task.createdAt).format("YYYY-MM-DD")}
+                  {formatDatePattern(task.createdAt, "yyyy-MM-dd")}
                 </td>
               </tr>
               <tr>
                 <td className="py-2 px-4 border-b">Date due</td>
                 <td className="py-2 px-4 border-b">
-                  {moment(task.dueDateAt).format("YYYY-MM-DD")}
+                  {formatDatePattern(task.dueDateAt, "yyyy-MM-dd")}
                 </td>
               </tr>
               <tr>
                 <td className="py-2 px-4 border-b">Date modified</td>
                 <td className="py-2 px-4 border-b">
-                  {moment(task.lastEditedAt).format("YYYY-MM-DD")}
+                  {formatDatePattern(task.lastEditedAt, "yyyy-MM-dd")}
                 </td>
               </tr>
               <tr>

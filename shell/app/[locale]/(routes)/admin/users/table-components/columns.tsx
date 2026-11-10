@@ -1,6 +1,6 @@
 "use client";
 
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -27,7 +27,7 @@ export const columns: ColumnDef<AdminUser>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[130px]">
-        {moment(row.getValue("created_on")).format("YYYY/MM/DD-HH:mm")}
+        {formatDatePattern(row.getValue("created_on"), "yyyy/MM/dd-HH:mm")}
       </div>
     ),
     enableSorting: true,
@@ -40,7 +40,7 @@ export const columns: ColumnDef<AdminUser>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-[150px]">
-        {/*   {moment(row.getValue("lastLoginAt")).format("YYYY/MM/DD-HH:mm")} */}
+        {/*   {formatDatePattern(row.getValue("lastLoginAt"), "yyyy/MM/dd-HH:mm")} */}
         {formatDistanceToNowStrict(
           new Date(row.original.lastLoginAt || new Date()),
           {

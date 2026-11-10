@@ -22,7 +22,7 @@ import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -128,7 +128,7 @@ export function TeamConversations({
                     </p>
                   </div>
                   <div className="text-xs opacity-50">
-                    {moment(comment.createdAt).format("YYYY-MM-DD-HH:mm")}
+                    {formatDatePattern(comment.createdAt, "yyyy-MM-dd-HH:mm")}
                   </div>
                 </div>
               </div>

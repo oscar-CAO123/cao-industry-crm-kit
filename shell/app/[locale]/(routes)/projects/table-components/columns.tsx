@@ -8,7 +8,7 @@ import { visibility } from "../data/data";
 import { Task } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import Link from "next/link";
 
 export const columns: ColumnDef<Task>[] = [
@@ -19,7 +19,7 @@ export const columns: ColumnDef<Task>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {moment(row.getValue("date_created")).format("YY-MM-DD")}
+        {formatDatePattern(row.getValue("date_created"), "yy-MM-dd")}
       </div>
     ),
     enableSorting: true,

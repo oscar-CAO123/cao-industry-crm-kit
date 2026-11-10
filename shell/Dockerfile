@@ -1,6 +1,7 @@
 # The CRM shell image. Build from the kit repo root:  docker build -f shell/Dockerfile -t crm-shell .
 # One image runs everywhere: the web app (default command), any workflow cron, and the schema apply.
-# The only secret the host gives it is OP_SERVICE_ACCOUNT_TOKEN; every other key is read from 1Password at start.
+# The only secret the host gives it is the 1Password token, best as a mounted file (/run/secrets/shell_op_token) so it is not
+# in the container environment; OP_SERVICE_ACCOUNT_TOKEN as a variable also works. Every other key is read from 1Password at start.
 FROM node:22.18-slim AS build
 WORKDIR /kit
 COPY . .

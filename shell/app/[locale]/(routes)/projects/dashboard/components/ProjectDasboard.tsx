@@ -1,6 +1,6 @@
 "use client";
 
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import Link from "next/link";
 
 import { TeamConversations } from "../../tasks/viewtask/[taskId]/components/team-conversation";
@@ -108,7 +108,7 @@ const ProjectDashboardCockpit = ({
                   task.dueDateAt < new Date() ? "text-red-500 text-xs" : ""
                 }
               >
-                Due date: {moment(task.dueDateAt).format("YYYY-MM-DD")}
+                Due date: {formatDatePattern(task.dueDateAt, "yyyy-MM-dd")}
               </div>
               <div>
                 <p
@@ -214,7 +214,7 @@ const ProjectDashboardCockpit = ({
                     : "text-xs"
                 }
               >
-                Due date: {moment(task.dueDateAt).format("YYYY-MM-DD")}
+                Due date: {formatDatePattern(task.dueDateAt, "yyyy-MM-dd")}
               </div>
               <div>
                 <p

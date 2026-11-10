@@ -1,11 +1,11 @@
 import { prismadb } from "@/lib/prisma";
 import { getSession } from "@/lib/auth-server";
-import dayjs from "dayjs";
+import { addDays, startOfDay } from "date-fns";
 
 export const getTasksPastDue = async () => {
   const session = await getSession();
-  const today = dayjs().startOf("day");
-  const nextWeek = dayjs().add(7, "day").startOf("day");
+  const today = startOfDay(new Date());
+  const nextWeek = startOfDay(addDays(new Date(), 7));
   if (session) {
     const getTaskPastDue = await prismadb.tasks.findMany({
       where: {
@@ -54,9 +54,9 @@ export const getTasksPastDue = async () => {
           },
           {
             dueDateAt: {
-              //lte: dayjs().add(7, "day").toDate(),
-              gt: today.toDate(), // Due date is greater than or equal to today
-              lt: nextWeek.toDate(), // Due date is less than next week (not including today)
+              //lte: addDays(new Date(), 7),
+              gt: today, // Due date is greater than or equal to today
+              lt: nextWeek, // Due date is less than next week (not including today)
             },
           },
           {

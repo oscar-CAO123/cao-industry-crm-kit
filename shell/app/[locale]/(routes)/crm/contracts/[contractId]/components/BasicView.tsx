@@ -16,7 +16,7 @@ import {
   Bell,
   PenLine,
 } from "lucide-react";
-import moment from "moment";
+import { formatDatePattern } from "@/lib/format-date";
 import Link from "next/link";
 import { prismadb } from "@/lib/prisma";
 import { formatCurrency as formatCurrencyUtil } from "@/lib/currency";
@@ -44,7 +44,7 @@ export async function BasicView({ data }: BasicViewProps) {
   if (!data) return <div>Contract not found</div>;
 
   const formatDate = (date: Date | null | undefined) =>
-    date ? moment(date).format("MMM DD, YYYY") : "N/A";
+    date ? formatDatePattern(date, "MMM dd, yyyy") : "N/A";
 
   const formatValue = (value: number | string | null | undefined) =>
     value != null
