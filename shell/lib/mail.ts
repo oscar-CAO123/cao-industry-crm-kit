@@ -7,7 +7,7 @@
 // - Plain SMTP, so it works with any provider. SMTP_URL (smtp://user:pass@host:587) comes from the secret store
 //   at process start (shell/scripts/with-secrets.sh); it is never written to a file or a log.
 // - With no SMTP_URL the message is dropped and logged by subject only, so a deploy without mail still runs.
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 import { render } from "@react-email/render";
 import type { ReactElement } from "react";
 import { prismadb } from "@/lib/prisma";
@@ -23,8 +23,8 @@ export interface MailMessage {
 
 export class MailRefused extends Error {}
 
-let transport: nodemailer.Transporter | null | undefined;
-function smtp(): nodemailer.Transporter | null {
+let transport: Transporter | null | undefined;
+function smtp(): Transporter | null {
   if (transport === undefined) transport = process.env.SMTP_URL ? nodemailer.createTransport(process.env.SMTP_URL) : null;
   return transport;
 }

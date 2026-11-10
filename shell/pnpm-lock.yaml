@@ -36,7 +36,6 @@ overrides:
   moment@>=2.0.0 <3.0.0: 2.31.0
   mqtt>ws: 7.5.11
   mysql2@>=3.0.0 <4.0.0: 3.23.1
-  nodemailer@<8.0.4: '>=8.0.4'
   path-to-regexp@>=8.0.0 <8.4.0: 8.4.0
   picomatch@>=2.0.0 <2.3.2: 2.3.2
   picomatch@>=4.0.0 <4.0.4: 4.0.4
@@ -198,8 +197,8 @@ importers:
         specifier: 0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       nodemailer:
-        specifier: 8.0.5
-        version: 8.0.5
+        specifier: 10.1.4
+        version: 10.1.4
       papaparse:
         specifier: 5.5.3
         version: 5.5.3
@@ -5010,9 +5009,9 @@ packages:
     resolution: {integrity: sha512-OmO8+GM1JUZqXET720VrJCwkjUCXmCMQm0Z3UDDRbfNLHS4NEAvY60j5jiFv0tkKw2PNNlqOLhahVmwJIOLDIQ==}
     engines: {node: '>=18'}
 
-  nodemailer@8.0.5:
-    resolution: {integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==}
-    engines: {node: '>=6.0.0'}
+  nodemailer@10.1.4:
+    resolution: {integrity: sha512-EsMnOR2oRv4LGnWvHgcVYkkQ4O2j8KO4WTw6l+PHR4sOXo8SAgIraxtEnGDmotjbhv0hDsu3IuDIFZm8iXwO4A==}
+    engines: {node: '>=20.0.0'}
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -11646,7 +11645,7 @@ snapshots:
 
   node-releases@2.0.60: {}
 
-  nodemailer@8.0.5: {}
+  nodemailer@10.1.4: {}
 
   normalize-path@3.0.0: {}
 
