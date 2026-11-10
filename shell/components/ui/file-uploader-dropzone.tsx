@@ -18,7 +18,7 @@ const UPLOADER_CONFIG: Record<
 > = {
   profilePhotoUploader: { folder: "avatars", accept: { "image/*": [] }, maxSizeMB: 4 },
   imageUploader: { folder: "images", accept: { "image/*": [] }, maxSizeMB: 4 },
-  pdfUploader: { folder: "documents", accept: { "application/pdf": [".pdf"] }, maxSizeMB: 64 },
+  pdfUploader: { folder: "documents", accept: { "application/pdf": [".pdf"] }, maxSizeMB: 25 },
   docUploader: {
     folder: "documents",
     accept: {
@@ -26,7 +26,7 @@ const UPLOADER_CONFIG: Record<
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
       "text/plain": [".txt"],
     },
-    maxSizeMB: 64,
+    maxSizeMB: 25,
   },
 };
 

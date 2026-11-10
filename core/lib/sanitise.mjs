@@ -1,7 +1,8 @@
 // Clean outside text before an agent reads it. Returns the text and any flags.
-// Hidden characters: zero width, bidirectional marks and isolates, soft hyphen, variation selectors, annotation marks and
-// the whole tag block (U+E0000 to U+E007F) that can spell a message no person sees.
-const HIDDEN = /[­؜᠎​-‏‪-‮⁠-⁤⁦-⁩︀-️﻿￹-￻]|[\u{E0000}-\u{E007F}]|[\u{E0100}-\u{E01EF}]/gu;
+// Hidden characters: zero width space, bidirectional marks and isolates, variation selectors, annotation marks and the whole tag
+// block (U+E0000 to U+E007F) that can spell a message no person sees. The joiners used in emoji and in Persian and Indic scripts
+// (U+200C, U+200D), the emoji variation selector (U+FE0F) and the soft hyphen are ordinary text and are left alone.
+const HIDDEN = /[\u061C\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u2064\u2066-\u2069\uFE00-\uFE0D\uFEFF\uFFF9-\uFFFB]|[\u{E0000}-\u{E007F}]|[\u{E0100}-\u{E01EF}]/gu;
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 // Letters from other alphabets that look like Latin ones. Used to MATCH the patterns only; the returned text is not changed by it.
 const LOOKALIKE = {
@@ -48,18 +49,24 @@ export function sanitise(input, { maxLength = 20000 } = {}) {
  * Looks through what a vendor sent (any JSON shape) and lists the flags found, with how many strings carried each.
  * The data is not changed: the caller decides what to do with text that is marked. Bounded in depth and in strings read.
  */
-export function scanData(data, { maxStrings = 5000, maxDepth = 12 } = {}) {
+export function scanData(data, { maxStrings = 50000, maxDepth = 12, window = 5000, maxWindows = 20 } = {}) {
   const found = new Map();
-  let seen = 0;
+  let seen = 0, limited = false;
+  const add = (f) => found.set(f, (found.get(f) ?? 0) + 1);
   const walk = (v, depth) => {
-    if (seen >= maxStrings || depth > maxDepth || v == null) return;
+    if (seen >= maxStrings || depth > maxDepth) { if (v != null) limited = true; return; }
+    if (v == null) return;
     if (typeof v === "string") {
       seen++;
       if (v.length < 4) return;
-      for (const f of sanitise(v, { maxLength: 5000 }).flags) if (f !== "truncated") found.set(f, (found.get(f) ?? 0) + 1);
+      // A long string is read in overlapping windows, so words cannot hide behind padding or straddle a cut.
+      const step = window - 200, count = Math.min(maxWindows, Math.ceil(v.length / step));
+      for (let w = 0; w < count; w++) for (const f of sanitise(v.slice(w * step, w * step + window), { maxLength: window }).flags) if (f !== "truncated") add(f);
+      if (v.length > maxWindows * step + 200) limited = true;
     } else if (Array.isArray(v)) { for (const x of v) walk(x, depth + 1); }
     else if (typeof v === "object") { for (const x of Object.values(v)) walk(x, depth + 1); }
   };
   walk(data, 0);
+  if (limited) found.set("scan-limit", 1);   // part of a very large answer was not read
   return [...found.entries()].map(([flag, strings]) => ({ flag, strings }));
 }

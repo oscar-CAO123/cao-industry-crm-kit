@@ -140,6 +140,20 @@ test("a request with no template is parked, then drafted from the agent's propos
   fs.rmSync(LINES);
 });
 
+test("an agent price far from the rate card parks the quote for a person; one near it is kept", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...S8, job_templates: [] }, store, NOW, () => {});
+  await intake(ctx);
+  fs.writeFileSync(LINES, JSON.stringify([{ code: "LAB-HR", qty: 3, unitPrice: 1 }]));   // rate card says 95
+  await main(["propose", FOLDER, `servicem8:${JOB}`, LINES], store);
+  assert.deepEqual(await draft(ctx), { drafted: 0, needs_pricing: 1 }, "a price of 1 against a rate of 95 is parked");
+  const parked: any = Object.values(await store.list<any>("enquiries"))[0];
+  assert.match(parked.reason, /differs from the rate card/);
+  fs.writeFileSync(LINES, JSON.stringify([{ code: "LAB-HR", qty: 3, unitPrice: 100 }]));  // within 25%
+  await main(["propose", FOLDER, `servicem8:${JOB}`, LINES], store);
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_pricing: 0 });
+  fs.rmSync(LINES);
+});
+
 test("Xero quote from an Outlook request: DRAFT in Xero, email draft with the PDF, one approval sends and marks SENT", async () => {
   const store = new MemoryStore(), ctx = context(WF, XERO, store, NOW, () => {});
   await intake(ctx); await draft(ctx);

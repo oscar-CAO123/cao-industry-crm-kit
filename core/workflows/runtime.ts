@@ -19,6 +19,13 @@ export interface Act { platform: string; op: string; input?: CallInput; summary:
   check?: Check }
 export interface Check { platform: string; op: string; input?: CallInput; expect: { path: string; equals: string | number | boolean | null }[] }
 const CHECK_PATH = /^[A-Za-z0-9_-]{1,64}(\.[A-Za-z0-9_-]{1,64}){0,7}$/;
+/** True when a value holds anything other than nulls and empty containers. */
+function hasValue(v: unknown): boolean {
+  if (v === null || v === undefined) return false;
+  if (Array.isArray(v)) return v.some(hasValue);
+  if (typeof v === "object") return Object.values(v as object).some(hasValue);
+  return true;
+}
 /** The value at a dot path ("Invoices.0.Status"), or undefined. */
 function at(data: unknown, path: string): unknown {
   return path.split(".").reduce<any>((o, k) => (o === null || o === undefined ? undefined : o[k]), data);
@@ -155,7 +162,12 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
       const r = await callOperation(a.platform, a.op, a.input ?? {});
       // Some apps answer 200 with an errors list (GraphQL and a few REST APIs): the request was refused, nothing was done.
       const errs = (r.data as any)?.errors;
-      if (Array.isArray(errs) && errs.length) throw new ApiError(a.platform, 422, `${a.op} returned errors`);
+      if (Array.isArray(errs) && errs.length) {
+        // Errors and nothing else (or only nulls): the app refused, nothing was done. Errors next to real data: part of it may have
+        // happened, so the outcome is unknown and a person checks the platform before it can run again (a 5xx takes that path).
+        const got = (r.data as any)?.data;
+        throw new ApiError(a.platform, hasValue(got) ? 502 : 422, `${a.op} returned errors`);
+      }
       results[results.length - 1] = { op: a.op, status: r.status, ref: refsOf(r.data, r.headers) };
       await store.put("approvals", id, { ...ap, results });
     }

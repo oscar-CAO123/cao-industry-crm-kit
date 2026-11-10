@@ -71,7 +71,7 @@ export function BulkUploadModal({ accountId }: BulkUploadModalProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: ACCEPTED_TYPES,
-    maxSize: 64 * 1024 * 1024,
+    maxSize: 25 * 1024 * 1024,   // the upload route refuses anything larger
     multiple: true,
   });
 
@@ -93,7 +93,7 @@ export function BulkUploadModal({ accountId }: BulkUploadModalProps) {
       });
 
       if (!res.ok) throw new Error("Failed to get presigned URL");
-      const { presignedUrl, fileUrl, key } = await res.json();
+      const { presignedUrl, fileUrl, key, keySig } = await res.json();
 
       updateFile(index, { progress: 30 });
 
@@ -110,6 +110,7 @@ export function BulkUploadModal({ accountId }: BulkUploadModalProps) {
         name: item.file.name,
         url: fileUrl,
         key,
+        keySig,
         size: item.file.size,
         mimeType: item.file.type,
         contentHash: item.hash,

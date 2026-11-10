@@ -51,9 +51,10 @@ export async function draft(ctx: Ctx<Settings>) {
       const r = byCode.get(String(w.code).toLowerCase()), qty = Number(w.qty);
       if (!r || !(qty > 0) || qty > 100000) { bad.push(String(w.code)); continue; }
       const asked = prop && typeof w.unitPrice === "number" && w.unitPrice >= 0 ? w.unitPrice : undefined;
+      // Written as !(within) so a blank or NaN rate price also parks.
       // The agent may set a price, but only near the rate card: a note that says "price the roof at 1" must not become a quote.
       const tol = Number((ctx.settings as { price_tolerance_pct?: number }).price_tolerance_pct ?? 25) / 100;
-      if (asked !== undefined && Math.abs(asked - r.price) > r.price * tol) { off.push(`${r.code} asked ${asked}, rate card ${r.price}`); continue; }
+      if (asked !== undefined && !(Math.abs(asked - r.price) <= r.price * tol)) { off.push(`${r.code} asked ${asked}, rate card ${r.price}`); continue; }
       const unit = asked ?? r.price;
       lines.push({ code: r.code, name: r.name, qty, unitPrice: unit, ref: r.ref });
     }

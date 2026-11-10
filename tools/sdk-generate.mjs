@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { scanData } from "../core/lib/sanitise.mjs";
+import { hostEntry, sameHosts } from "./sdk-host-lock.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = process.argv[2];
@@ -408,8 +409,8 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
   // Host list: must equal the reviewed lock. A new or widened list stops the run until a person accepts it.
-  const gotHosts = { hosts: [...platform.hosts].sort(), hostPatterns: [...platform.hostPatterns].sort(), hostFromEnv: !!platform.hostFromEnv };
-  if (JSON.stringify(hostLock[id]) !== JSON.stringify(gotHosts)) {
+  const gotHosts = hostEntry(platform);
+  if (!sameHosts(hostLock[id], gotHosts)) {
     if (process.env.SDK_ACCEPT_HOSTS !== "1") {
       console.error(`${id}: the host list changed (${JSON.stringify(gotHosts)}). The key is sent to these hosts. Read them, then rerun with SDK_ACCEPT_HOSTS=1 to update tools/sdk-hosts.lock.json.`);
       process.exit(1);

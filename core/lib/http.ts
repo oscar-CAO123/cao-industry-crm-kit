@@ -148,6 +148,7 @@ export function isRead(spec: AppSpec, method: Method, u: URL): boolean {
 
 /** Longest wait for a vendor, and the most bytes read from one answer, unless the caller sets its own. */
 const TIMEOUT_MS = 30_000;
+const DOWNLOAD_TIMEOUT_MS = 300_000;   // a file up to the byte cap may take longer than a JSON answer
 const MAX_BYTES = 50 * 1024 * 1024;
 
 /** A download redirect may leave the app's hosts, but never to a machine name that is not a public host. */
@@ -200,7 +201,8 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
   const max = o.retries ?? 3;
   for (let attempt = 0; ; attempt++) {
     const t0 = Date.now();
-    const signal = o.signal ? AbortSignal.any([o.signal, AbortSignal.timeout(TIMEOUT_MS)]) : AbortSignal.timeout(TIMEOUT_MS); // each try gets its own clock
+    const clock = AbortSignal.timeout(o.binary ? DOWNLOAD_TIMEOUT_MS : TIMEOUT_MS);
+    const signal = o.signal ? AbortSignal.any([o.signal, clock]) : clock; // each try gets its own clock
     let res = await transport.fetch(u.toString(), { method, headers, body, redirect: "manual", signal });
     transport.log(`[${spec.app}] ${w} ${res.status} ${Date.now() - t0}ms`);
     if (o.followDownloadRedirects && method === "GET") {

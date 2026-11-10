@@ -36,12 +36,18 @@ export async function PATCH(
   }
 
   const updates: Record<string, string> = {};
+  const rejected: string[] = [];
   for (const [key, value] of Object.entries(enrichmentFields)) {
     const column = FIELD_MAP[key];
     if (!column) continue;
     const text = String(value).slice(0, 2000);
-    // Links are shown as clickable hrefs, so only http(s) addresses are stored.
-    if (URL_FIELDS.has(column) && text !== "" && !/^https?:\/\/[^\s]+$/i.test(text)) continue;
+    // Links are shown as clickable hrefs, so only http(s) addresses are stored. A bare address like "acme.com.au" gets https://.
+    if (URL_FIELDS.has(column) && text !== "") {
+      const withScheme = /^[a-z][a-z0-9+.-]*:/i.test(text) ? text : /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(text) ? `https://${text}` : "";
+      if (!/^https?:\/\/[^\s]+$/i.test(withScheme)) { rejected.push(key); continue; }
+      updates[column] = withScheme;
+      continue;
+    }
     updates[column] = text;
   }
 
@@ -55,5 +61,5 @@ export async function PATCH(
     select: { id: true },
   });
 
-  return NextResponse.json({ success: true, id: contact.id });
+  return NextResponse.json({ success: true, id: contact.id, ...(rejected.length ? { rejected } : {}) });
 }
