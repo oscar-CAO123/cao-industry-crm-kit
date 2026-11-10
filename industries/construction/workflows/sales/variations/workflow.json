@@ -9,36 +9,91 @@
  "families": {
   "all": {
    "evidence": "6 of 25 discovery calls describe how they raise variations; every step in those calls is done by hand",
-   "steps": ["variation-trigger", "site-check", "scope-change", "price-variation", "client-approval", "invoice-variation", "record-keeping"],
-   "covered_by": {"variation-trigger": "intake (a job note that says variation or extra work)", "site-check": "skill (photos and notes from the site)", "scope-change": "draft (priced from the rate card or a template, or a proposal)", "price-variation": "draft", "client-approval": "approval (the client approves outside ServiceM8; a person records it)", "invoice-variation": "skill (a person adds the approved lines to the job for invoicing)", "record-keeping": "draft (a job note)"}
+   "steps": [
+    "variation-trigger",
+    "site-check",
+    "scope-change",
+    "price-variation",
+    "client-approval",
+    "invoice-variation",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "variation-trigger": "intake (a job note that says variation or extra work)",
+    "site-check": "skill (photos and notes from the site)",
+    "scope-change": "draft (priced from the rate card or a template, or a proposal)",
+    "price-variation": "draft",
+    "client-approval": "approval (the client approves outside ServiceM8; a person records it)",
+    "invoice-variation": "skill (a person adds the approved lines to the job for invoicing)",
+    "record-keeping": "draft (a job note)"
+   }
   }
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Notes on accepted jobs that say the client has extra work."},
-  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Price each variation from the rate card, note it on the job, queue the client email for approval."},
-  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue follow-ups on variations sent for approval that are due (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  {
+   "name": "intake",
+   "schedule": "*/15 * * * *",
+   "entry": "intake",
+   "summary": "Notes on accepted jobs that say the client has extra work."
+  },
+  {
+   "name": "draft",
+   "schedule": "*/30 * * * *",
+   "entry": "draft",
+   "summary": "Price each variation from the rate card, note it on the job, queue the client email for approval."
+  },
+  {
+   "name": "follow-up",
+   "schedule": "0 22 * * *",
+   "entry": "follow-up",
+   "summary": "Queue follow-ups on variations sent for approval that are due (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
  ],
  "draft_ops": {
-  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listNotes", "servicem8-api.listMaterials", "servicem8-api.listCompanyContacts", "servicem8-api.createNotes"]
+  "servicem8": [
+   "servicem8-api.listJobs",
+   "servicem8-api.listNotes",
+   "servicem8-api.listMaterials",
+   "servicem8-api.listCompanyContacts",
+   "servicem8-api.createNotes"
+  ],
+  "procore": [
+   "change-events.list-change-events"
+  ]
  },
  "live_ops": {
-  "servicem8": ["messaging-api.send_email"]
+  "servicem8": [
+   "messaging-api.send_email"
+  ]
  },
  "draft_ops_note": "Draft operations reach nobody outside the business: reads of jobs, notes, the rate card and contacts, and one internal note on the job that records the variation. Sending the variation or a follow-up is a live operation and waits for a person.",
- "capabilities": ["jobs.list", "contacts.list", "messages.draft"],
+ "capabilities": [
+  "jobs.list",
+  "contacts.list",
+  "messages.draft",
+  "change-events.list"
+ ],
  "adapters": {
-  "servicem8": {"status": "docs-only", "covers": "variation notes on accepted jobs, rate-card pricing, the job record note, the client email for approval, and follow-up emails"}
+  "servicem8": {
+   "status": "docs-only",
+   "covers": "variation notes on accepted jobs, rate-card pricing, the job record note, the client email for approval, and follow-up emails"
+  },
+  "procore": {
+   "status": "docs-only",
+   "covers": "change events read per project and tracked; no pricing, email or write (Procore holds pricing and approval)"
+  }
  },
  "gaps": [
+  "Procore: the workflow tracks change events only. It reads each project's change events, records each once and logs the ones open past stale_after_days. Procore itself holds the pricing (change items, then the prime change order) and the owner's approval, so no rate card, client email or follow-up email is made. A business sets either the procore block or the ServiceM8 variation settings, not both.",
   "Buildxact: only its sign-in is mapped (5 operations, none for jobs or variations). Its help centre covers variations on a job, so its variation and change-order endpoints are the first thing to map.",
-  "Procore: not in the kit's platform list, so it has no operations here. Its change event and change order endpoints are needed.",
   "Client approval: ServiceM8 keeps no variation or change-order record and no acceptance flow, per the platform evidence. The client approves by reply or signature outside the platform, and a person records it. The kit has no command for that yet, so follow-ups stop after the set count.",
   "Invoicing an approved variation: ServiceM8 invoices sync to Xero. A person adds the approved lines to the job. No cron does this.",
   "Site check: a skill step (photos and notes from the site). ServiceM8 has no site-inspection support in the evidence.",
   "Variation PDF: the Quote template prints the whole job rather than the variation alone, so the email carries the priced lines as an HTML table and no PDF is attached. A variation-only template needs checking on a live account.",
   "The job note's related_object value 'job' is not spelled out in the ServiceM8 spec. Confirm it on a live account. Job notes are assumed to be internal; confirm the client portal does not show them.",
-  "The adapter is docs-only until a ServiceM8 trial account proves it."
+  "The adapter is docs-only until a ServiceM8 trial account proves it.",
+  "Procore not confirmed on a live account: the status words a change event returns (only 'open' is shown on the page, so only 'open' counts as open), the maximum per_page, and whether the list needs the Procore-Company-Id header on this endpoint (it is sent). Change orders (prime and commitment) are not read: their pages were not rendered for this build."
  ],
  "evidence": {
   "calls": "6 of 25 construction discovery calls describe how they raise variations; every step in those calls is manual",
