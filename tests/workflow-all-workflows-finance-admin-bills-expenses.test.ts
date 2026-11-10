@@ -8,6 +8,7 @@ import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { describe } from "../core/sdk/call.ts";
 import { enter, review, CRONS } from "../industries/all/workflows/finance-admin/bills-expenses/index.ts";
+import { authoriseAct } from "../industries/all/workflows/finance-admin/bills-expenses/adapters/xero.ts";
 import { render, TARGETS } from "../tools/deploy.ts";
 import type { Bill } from "../industries/all/workflows/finance-admin/bills-expenses/types.ts";
 
@@ -20,9 +21,10 @@ const NOW = new Date("2026-11-08T00:00:00Z");
 type Hit = { method: string; path: string; url: string; body: any };
 let hits: Hit[] = [];
 let poSubtotal = 300, dupe = false, overdueRows: any[] = [], contactIsCustomer = false;
+let failCreate = 0; // when set, creating a bill answers with this status
 
 function fake() {
-  hits = []; poSubtotal = 300; dupe = false; contactIsCustomer = false;
+  hits = []; poSubtotal = 300; dupe = false; contactIsCustomer = false; failCreate = 0;
   overdueRows = [
     { InvoiceID: INV, InvoiceNumber: "OLD-1", Type: "ACCPAY", Status: "AUTHORISED", AmountDue: 110, DueDate: "2026-10-30T00:00:00", Contact: { Name: "Acme Supplies" } },
     { InvoiceID: "11111111-2222-4333-8444-555555555555", InvoiceNumber: "NEW-2", Type: "ACCPAY", Status: "AUTHORISED", AmountDue: 55, DueDate: "2026-12-01T00:00:00", Contact: { Name: "Bolt Co" } },
@@ -42,7 +44,10 @@ function fake() {
       if (p.endsWith("/PurchaseOrders")) return json({ PurchaseOrders: [{ PurchaseOrderID: PO, PurchaseOrderNumber: "PO-100", SubTotal: poSubtotal, Total: poSubtotal * 1.1 }] });
       if (p.endsWith("/Invoices") && m === "GET" && u.searchParams.get("Statuses") === "AUTHORISED") return json({ Invoices: overdueRows });
       if (p.endsWith("/Invoices") && m === "GET") return json({ Invoices: dupe ? [{ InvoiceID: INV, Type: "ACCPAY", InvoiceNumber: "INV-7" }] : [] });
-      if (p.endsWith("/Invoices") && m === "PUT") return json({ Invoices: [{ InvoiceID: INV, Status: "DRAFT", Type: "ACCPAY" }] });
+      if (p.endsWith("/Invoices") && m === "PUT") {
+        if (failCreate) return new Response("down", { status: failCreate });
+        return json({ Invoices: [{ InvoiceID: INV, Status: "DRAFT", Type: "ACCPAY" }] });
+      }
       if (p.endsWith("/Invoices") && m === "POST") return json({ Invoices: [{ InvoiceID: INV, Status: "AUTHORISED" }] });
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
@@ -178,4 +183,39 @@ test("deploy: every target renders both crons with no key values", () => {
     assert.ok(!/\b(x|y|r1|tok)\b.*XERO|Bearer [A-Za-z0-9]{8}/.test(all), `${t} carries no key values`);
   }
   assert.deepEqual(Object.keys(CRONS).sort(), WF.crons.map((c) => c.entry).sort());
+});
+
+test("enter: a transient Xero failure leaves the bill new, so the next run enters it once", async () => {
+  const store = new MemoryStore();
+  await store.put("bills", "acme-inv-7", bill());
+  failCreate = 503;
+  assert.deepEqual(await enter(context(WF, SETTINGS, store, NOW, () => {})).then((c) => [c.parked, c.retry]), [0, 1]);
+  const b = await store.get<Bill>("bills", "acme-inv-7");
+  assert.equal(b!.status, "new", "not parked: the next run retries it");
+  assert.equal(Object.keys(await store.list("approvals")).length, 0, "nothing queued by the failed run");
+  failCreate = 0;
+  await enter(context(WF, SETTINGS, store, NOW, () => {}));
+  assert.equal((await store.get<Bill>("bills", "acme-inv-7"))!.status, "entered");
+  assert.equal(billPuts().length, 2, "the failed try and the retry; Xero holds one bill because the key is the same");
+  assert.equal(Object.keys(await store.list("approvals")).length, 1);
+});
+
+test("enter: a refusal from Xero that is not transient parks the bill for a person", async () => {
+  const store = new MemoryStore();
+  await store.put("bills", "acme-inv-7", bill());
+  failCreate = 400;
+  await enter(context(WF, SETTINGS, store, NOW, () => {}));
+  const b = await store.get<Bill>("bills", "acme-inv-7");
+  assert.equal(b!.status, "needs-review");
+  assert.match(b!.reason!, /Xero did not take this bill/);
+});
+
+test("authorise: a stored invoice id that is not a Xero id is refused before it reaches the live body", async () => {
+  assert.throws(() => authoriseAct("acme-inv-7", bill(), "not-a-guid"), /bad id/);
+  const store = new MemoryStore();
+  await store.put("bills", "acme-inv-7", bill({ status: "entered", ref: { invoice_id: "1 OR 1=1" } }));
+  await enter(context(WF, SETTINGS, store, NOW, () => {}));
+  assert.equal((await store.get<Bill>("bills", "acme-inv-7"))!.status, "needs-review");
+  assert.equal(Object.keys(await store.list("approvals")).length, 0, "no authorisation queued");
+  assert.equal(writes().length, 0, "nothing written to Xero");
 });

@@ -1,5 +1,5 @@
 // The speed-to-lead workflow's three crons. Each reads, drafts internal tasks, or queues a text for approval. None sends.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { approvalId, reject, type Approval, type Ctx } from "../../../../../core/workflows/runtime.ts";
 import { type Lead, type Settings, MIN, HOUR, checkSettings, firstTouch } from "./types.ts";
 import { gohighlevel as ghl } from "./adapters/gohighlevel.ts";
 
@@ -33,34 +33,66 @@ export async function intake(ctx: Ctx<Settings>) {
   }
   for (const lead of await openLeads(ctx)) {
     if (lead.alerted) continue;
-    await ghl.task(ctx, lead.contact, ctx.settings.owner_user_id, `New lead ${lead.name}: reach out now`,
-      `Came in at ${lead.created}. Nobody has contacted them yet.`);
-    await ctx.store.put("leads", lead.key, { ...lead, alerted: ctx.now.toISOString() });
-    alerted++;
+    try {
+      await ghl.task(ctx, lead.contact, ctx.settings.owner_user_id, `New lead ${lead.name}: reach out now`,
+        `Came in at ${lead.created}. Nobody has contacted them yet.`);
+      await ctx.store.put("leads", lead.key, { ...lead, alerted: ctx.now.toISOString() });
+      alerted++;
+    } catch (e: any) {
+      // One lead's failed write must not stop the others: this lead is still unalerted, so the next run tries again.
+      ctx.log(`intake: alert for ${lead.key} failed, retried next run: ${String(e?.message ?? e).slice(0, 120)}`);
+    }
   }
   ctx.log(`intake: ${added} new, ${alerted} alerted`);
   return { added, alerted };
 }
 
+/** A queued first text expires once its lead is past the alert window or has been handled. Its approval is rejected
+ *  here, under the same lock approve() takes, so an old text is refused instead of sent. */
+async function expireQueued(ctx: Ctx<Settings>): Promise<number> {
+  let expired = 0;
+  for (const lead of Object.values(await ctx.store.list<Lead>("leads"))) {
+    if (!lead.chased || (!lead.closed && age(ctx, lead) <= windowMs(ctx.settings))) continue;
+    const id = approvalId(ctx.workflow.id, `chase:${lead.key}`);
+    const rejected = await ctx.store.locked("approve-claims", async () => {
+      const ap = await ctx.store.get<Approval>("approvals", id);
+      if (ap?.status !== "pending") return false;
+      await reject(ctx.workflow, ctx.store, id, "speed-to-lead: expired", ctx.now);
+      return true;
+    });
+    if (rejected) {
+      expired++;
+      if (!lead.closed) await close(ctx, lead, "first text expired before approval");
+    }
+  }
+  return expired;
+}
+
 /** Every 10 minutes: once a lead has waited the set time with no reply, queue one first text for approval. */
 export async function chase(ctx: Ctx<Settings>) {
   checkSettings(ctx.settings);
+  const expired = await expireQueued(ctx);
   let queued = 0;
   for (const lead of await openLeads(ctx)) {
-    if (lead.chased) continue;
-    if (age(ctx, lead) < ctx.settings.first_touch.after_minutes * MIN) continue;
-    if (age(ctx, lead) > windowMs(ctx.settings)) { await close(ctx, lead, "stale"); continue; }
-    if (!lead.phone) continue;   // nothing to text; the escalation still runs
-    const state = await stateOf(ctx, lead);
-    if (state !== "waiting") { await close(ctx, lead, state === "touched" ? "contacted" : "moved on"); continue; }
-    const message = firstTouch(ctx.settings, lead);
-    await ctx.queue({ platform: P, op: "conversations.send-a-new-message", key: `chase:${lead.key}`, summary: `First text to ${lead.name}`,
-      input: { body: { type: "SMS", subType: "SMS", contactId: lead.contact, message, status: "pending" } } },
-      `First text to ${lead.name} (${lead.phone}): "${message}"`);
-    await ctx.store.put("leads", lead.key, { ...lead, chased: ctx.now.toISOString() });
-    queued++;
+    try {
+      if (lead.chased) continue;
+      if (age(ctx, lead) < ctx.settings.first_touch.after_minutes * MIN) continue;
+      if (age(ctx, lead) > windowMs(ctx.settings)) { await close(ctx, lead, "stale"); continue; }
+      if (!lead.phone) continue;   // nothing to text; the escalation still runs
+      const state = await stateOf(ctx, lead);
+      if (state !== "waiting") { await close(ctx, lead, state === "touched" ? "contacted" : "moved on"); continue; }
+      const message = firstTouch(ctx.settings, lead);
+      const first = lead.name.split(" ")[0] || "lead";   // the approval text carries no phone number and no full name
+      await ctx.queue({ platform: P, op: "conversations.send-a-new-message", key: `chase:${lead.key}`, summary: `First text to ${first}`,
+        input: { body: { type: "SMS", subType: "SMS", contactId: lead.contact, message, status: "pending" } } },
+        `First text to ${first} (${lead.key}): "${message}"`);
+      await ctx.store.put("leads", lead.key, { ...lead, chased: ctx.now.toISOString() });
+      queued++;
+    } catch (e: any) {
+      ctx.log(`chase: ${lead.key} failed, retried next run: ${String(e?.message ?? e).slice(0, 120)}`);
+    }
   }
-  ctx.log(`chase: ${queued} queued for approval`);
+  ctx.log(`chase: ${queued} queued for approval, ${expired} expired`);
   return { queued };
 }
 
@@ -69,15 +101,19 @@ export async function escalate(ctx: Ctx<Settings>) {
   checkSettings(ctx.settings);
   let drafted = 0;
   for (const lead of await openLeads(ctx)) {
-    if (lead.escalated) continue;
-    if (age(ctx, lead) < ctx.settings.escalate_after_minutes * MIN) continue;
-    if (age(ctx, lead) > windowMs(ctx.settings)) { await close(ctx, lead, "stale"); continue; }
-    const state = await stateOf(ctx, lead);
-    if (state !== "waiting") { await close(ctx, lead, state === "touched" ? "contacted" : "moved on"); continue; }
-    await ghl.task(ctx, lead.contact, ctx.settings.senior_user_id, `Not contacted in ${ctx.settings.escalate_after_minutes} minutes: ${lead.name}`,
-      `Created ${lead.created}. Check the lead and call them.`);
-    await ctx.store.put("leads", lead.key, { ...lead, escalated: ctx.now.toISOString() });
-    drafted++;
+    try {
+      if (lead.escalated) continue;
+      if (age(ctx, lead) < ctx.settings.escalate_after_minutes * MIN) continue;
+      if (age(ctx, lead) > windowMs(ctx.settings)) { await close(ctx, lead, "stale"); continue; }
+      const state = await stateOf(ctx, lead);
+      if (state !== "waiting") { await close(ctx, lead, state === "touched" ? "contacted" : "moved on"); continue; }
+      await ghl.task(ctx, lead.contact, ctx.settings.senior_user_id, `Not contacted in ${ctx.settings.escalate_after_minutes} minutes: ${lead.name}`,
+        `Created ${lead.created}. Check the lead and call them.`);
+      await ctx.store.put("leads", lead.key, { ...lead, escalated: ctx.now.toISOString() });
+      drafted++;
+    } catch (e: any) {
+      ctx.log(`escalate: ${lead.key} failed, retried next run: ${String(e?.message ?? e).slice(0, 120)}`);
+    }
   }
   ctx.log(`escalate: ${drafted} tasks drafted`);
   return { drafted };

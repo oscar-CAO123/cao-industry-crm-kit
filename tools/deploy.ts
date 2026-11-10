@@ -25,8 +25,18 @@ export function awsCron(s: string): string {
   return `cron(${step(mi)} ${step(h)} ${dom} ${mon} ${dow} *)`;
 }
 
-export function secretNames(settings: any): string[] {
+/** Key names for every app this deploy uses: the apps the settings name (as a value, or as a section such as
+ *  `sitebook: {...}` or `microsoft_365: {...}`) that are also in the workflow's own draft or live operations. */
+export function secretNames(settings: any, wf?: { draft_ops?: Record<string, string[]>; live_ops?: Record<string, string[]> }): string[] {
+  const ops = new Set<string>([...Object.keys(wf?.draft_ops ?? {}), ...Object.keys(wf?.live_ops ?? {})]);
+  const named = new Set<string>();
+  const add = (v: unknown) => { if (typeof v === "string") named.add(v.toLowerCase().replace(/_/g, "-")); };
+  for (const [k, v] of Object.entries(settings ?? {})) {
+    add(k);
+    if (Array.isArray(v)) v.forEach(add); else add(v);
+  }
   const used = new Set<string>([...(settings.intake ?? []), settings.quotes, settings.rate_card, settings.messages].filter(Boolean));
+  for (const p of named) if (ops.has(p) && fs.existsSync(path.join(ROOT, "core/sdk/platforms", p, "platform.json"))) used.add(p);
   const keys = new Set<string>();
   for (const p of used) {
     if (!/^[a-z0-9-]+$/.test(p)) throw new Error(`bad platform ${p}`);
@@ -40,7 +50,7 @@ export function render(dir: string, settings: any, target: (typeof TARGETS)[numb
   const wf = JSON.parse(fs.readFileSync(path.join(ROOT, dir, "workflow.json"), "utf8"));
   const crons: Cron[] = wf.crons;
   for (const c of crons) if (!NAME.test(c.name) || !NAME.test(c.entry) || !CRON5.test(c.schedule)) throw new Error(`bad cron ${c.name}`);
-  const keys = secretNames(settings);
+  const keys = secretNames(settings, wf);
   const slug = String(wf.id).replace(/[^a-z0-9]+/gi, "-").toLowerCase();
   const cmd = (c: Cron) => `node tools/workflow.ts run ${dir} ${c.entry}`;
   const env = ["KIT_SETTINGS=/config/settings.json", "KIT_STATE_DIR=/state", "KIT_ALLOW_WRITES=1"];

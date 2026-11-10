@@ -38,9 +38,18 @@ export async function handOff(ctx: Ctx<Settings>) {
       rec.done!.push(name);
       await save();
     };
-    const contact = checkId(h.contact_id, "contact id");
-    const to = checkId(h.to_user_id, "user id");
-    const opp = h.opportunity_id ? checkId(h.opportunity_id, "opportunity id") : undefined;
+    let contact: string, to: string, opp: string | undefined;
+    try {
+      contact = checkId(h.contact_id, "contact id");
+      to = checkId(h.to_user_id, "user id");
+      opp = h.opportunity_id ? checkId(h.opportunity_id, "opportunity id") : undefined;
+    } catch (e: any) {
+      // A malformed id holds this hand-off for a person; it must not stop the loop for every later hand-off.
+      ctx.log(`hand-off: held for a check: ${String(e?.message ?? e).slice(0, 120)}`);
+      rec.status = "needs-check";
+      await save();
+      continue;
+    }
     if (h.status_change && (!opp || !STATUSES.includes(h.status_change) || (h.status_change === "lost" && !h.lost_reason_id))) {
       rec.status = "needs-check";
       await save();

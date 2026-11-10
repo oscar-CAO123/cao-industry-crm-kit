@@ -22,13 +22,11 @@ export async function enquiries(ctx: Ctx<Settings>): Promise<Enquiry[]> {
   const word = (m.search ?? "order").replace(/["\\]/g, "").slice(0, 60) || "order";
   const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: "read buyer enquiries", input: { params: {
     "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $search: `"${word}"`, $top: 25,
-    $select: "id,subject,from,receivedDateTime,bodyPreview" } } });
+    $select: "id,subject,receivedDateTime" } } });
   return (Array.isArray(r.data?.value) ? r.data.value : []).filter((x: any) => ID.test(String(x.id ?? ""))).map((x: any): Enquiry => ({
     id: keyOf(`m365:${x.id}`),
     title: String(x.subject ?? "Buyer enquiry").slice(0, 120),
-    from: EMAIL.test(x.from?.emailAddress?.address ?? "") ? String(x.from.emailAddress.address) : "",
     received: String(x.receivedDateTime ?? ""),
-    preview: String(x.bodyPreview ?? "").slice(0, 1000),
   }));
 }
 

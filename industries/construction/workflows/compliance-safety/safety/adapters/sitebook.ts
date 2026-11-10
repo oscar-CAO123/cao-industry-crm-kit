@@ -42,10 +42,14 @@ export async function swmsList(ctx: Ctx<Settings>): Promise<{ id: string; title:
   return out;
 }
 
-/** Create a pre-start checklist from the template for one job. Returns the new checklist id. */
-export async function createPrestart(ctx: Ctx<Settings>, templateId: string, jobId: string, title: string): Promise<string> {
+/** Create a pre-start checklist from the template for one job. Returns the new checklist id. SiteBook needs an AssetId or an
+ *  AssetGroupId on create; the caller passes whichever the business set. */
+export async function createPrestart(ctx: Ctx<Settings>, templateId: string, jobId: string, title: string,
+                                     asset: { asset_id?: string; asset_group_id?: string }): Promise<string> {
   const r = await ctx.draft<any>({ platform: P, op: "docs.post_v1_checklists", summary: `pre-start checklist: ${title}`,
-    input: { body: { CheckListId: guid(templateId), JobId: guid(jobId), Title: title.slice(0, 200) } } });
+    input: { body: { CheckListId: guid(templateId), JobId: guid(jobId), Title: title.slice(0, 200),
+                     ...(asset.asset_id ? { AssetId: guid(asset.asset_id) } : {}),
+                     ...(asset.asset_group_id ? { AssetGroupId: guid(asset.asset_group_id) } : {}) } } });
   return guid(first(r.data, "checkLists")?.CheckListId);
 }
 

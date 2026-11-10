@@ -16,9 +16,9 @@ const paragraphs = (s: string) => text(s, 20000).split(/\n{2,}/).map((p) => p.tr
 export function noteContent(sections: Section[]) {
   return {
     sections: sections.slice(0, 50).map((sec) => ({
-      name: text(sec.name, 200),
-      description: text(sec.description, 500),
-      questions: (sec.questions ?? []).slice(0, 100).map((q) => ({ name: text(q.name, 200), type: "text", answer: paragraphs(q.answer) })),
+      name: esc(text(sec.name, 200)),
+      description: esc(text(sec.description, 500)),
+      questions: (sec.questions ?? []).slice(0, 100).map((q) => ({ name: esc(text(q.name, 200)), type: "text", answer: paragraphs(q.answer) })),
     })),
   };
 }
@@ -28,7 +28,7 @@ export async function createDraftNote(ctx: Ctx<Settings>, s: Session): Promise<s
   const template = s.template_id || ctx.settings.default_template_id;
   const body = {
     patient_id: id(s.patient_id, "patient id"),
-    title: text(s.title, 200),
+    title: esc(text(s.title, 200)),
     draft: true,
     content: noteContent(s.sections),
     ...(s.attendee_id ? { attendee_id: id(s.attendee_id, "attendee id") } : {}),

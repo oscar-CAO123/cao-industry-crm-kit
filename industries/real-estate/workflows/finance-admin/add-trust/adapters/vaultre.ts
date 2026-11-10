@@ -11,7 +11,9 @@ const num = (v: unknown, what: string): string => { const s = String(v ?? ""); i
 /** Every trust account on the agency's VaultRE account: id and name only (the bank details are not read). */
 export async function trustAccounts(ctx: Ctx<Settings>): Promise<{ id: string; name: string }[]> {
   const r = await ctx.draft<any>({ platform: P, op: "getTrustAccounts", summary: "trust accounts", input: { params: { pagesize: 50 } } });
-  return (Array.isArray(r.data?.items) ? r.data.items : []).map((a: any) => ({ id: num(a?.id, "trust account id"), name: text(a?.name, 200) }));
+  // A reply without an items list is a changed shape, not an empty account list: throw, so the accounts cron never marks every account dropped.
+  if (!Array.isArray(r.data?.items)) throw new Error("vaultre: trust accounts reply has no items list");
+  return r.data.items.map((a: any) => ({ id: num(a?.id, "trust account id"), name: text(a?.name, 200) }));
 }
 
 /** Every trust ledger transaction for one sale life, page by page. */

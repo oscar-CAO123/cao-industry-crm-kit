@@ -69,8 +69,11 @@ export interface Platform {
   defaultScope?: string;
   /** How form-encoded lists are written: a[0]=x (default, Stripe) or a=x&a=y (Twilio). */
   formArrays?: FormArrays;
-  /** A list value for a query param repeats the key (AroFlo where=a&where=b). */
-  queryArrays?: "repeat";
+  /** How a list value goes in the query. repeat: key=a&key=b (AroFlo). brackets: key[]=a&key[]=b, for params the vendor names with [] (Cliniko q[]).
+   *  comma: key=a,b in one value (Productive include, sort). Unset: the value is sent as one JSON string. */
+  queryArrays?: "repeat" | "brackets" | "comma";
+  /** An object value for a query param is flattened the deepObject way: key[field]=v, key[field][op]=v (Productive filter). Unset: one JSON string. */
+  queryObjects?: "deepObject";
 }
 export interface CallInput {
   /** Values for the endpoint's mapped params, by name. Each goes where the spec says (path, query, header, body). */
@@ -316,6 +319,31 @@ function appSpec(p: Platform, url: URL, readPost: boolean): AppSpec {
   };
 }
 
+/** A list sent as repeated or comma-joined values: each item must be a plain value; with noComma, no item may hold a comma. */
+function listValues(id: string, opId: string, name: string, v: unknown[], noComma = false): string[] {
+  return v.map((x) => {
+    if (x === null || (typeof x !== "string" && typeof x !== "number" && typeof x !== "boolean")) throw new Error(`${id} ${opId}: ${name} takes plain values only`);
+    const s = String(x);
+    if (noComma && s.includes(",")) throw new Error(`${id} ${opId}: a ${name} value may not hold a comma`);
+    return s;
+  });
+}
+
+const DEEP_FIELD = /^[A-Za-z0-9_.-]{1,64}$/;
+/** deepObject query: name[field][sub]=value for each nested field. A list at the end is one comma-separated value. */
+function deepPairs(id: string, opId: string, name: string, v: unknown, depth = 0): [string, string][] {
+  if (v === undefined || v === null) return [];
+  if (depth > 4) throw new Error(`${id} ${opId}: ${name} nests too deeply`);
+  if (Array.isArray(v)) return [[name, listValues(id, opId, name, v, true).join(",")]];
+  if (typeof v === "object") {
+    return Object.entries(v as Record<string, unknown>).flatMap(([field, x]) => {
+      if (!DEEP_FIELD.test(field)) throw new Error(`${id} ${opId}: ${name} has a field name that is not allowed`);
+      return deepPairs(id, opId, `${name}[${field}]`, x, depth + 1);
+    });
+  }
+  return [[name, String(v)]];
+}
+
 /** Build the request for an endpoint without sending it. Keys are shown as [redacted]. */
 export async function plan(id: string, opId: string, input: CallInput = {}, withKeys = false): Promise<Planned> {
   const { platform: p } = load(id);
@@ -364,6 +392,9 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
       route = route.replace(new RegExp(`\\{${esc}\\}|:${esc}\\b`, "g"), encodePathValue(k, v, x.reserved === true, x.pattern ?? ""));
     } else if (x.in === "query") {
       if (Array.isArray(v) && p.queryArrays === "repeat") repeats.push(...v.map((s) => [k, String(s)] as [string, string]));
+      else if (Array.isArray(v) && p.queryArrays === "brackets" && k.endsWith("[]")) repeats.push(...listValues(id, opId, k, v).map((s) => [k, s] as [string, string]));
+      else if (Array.isArray(v) && p.queryArrays === "comma") query[k] = listValues(id, opId, k, v, true).join(",");
+      else if (v && typeof v === "object" && p.queryObjects === "deepObject") repeats.push(...deepPairs(id, opId, k, v));
       else query[k] = typeof v === "object" ? JSON.stringify(v) : String(v);
     }
     else if (x.in === "header") {
@@ -484,7 +515,8 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
 
 /** Call an endpoint. Reads go straight through; writes need KIT_ALLOW_WRITES=1. */
 // Only a GET or a GraphQL query can be a read, whatever the label says.
-const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
+// Square names its searches /search-catalog-items and its batch reads /batch-retrieve or /bulk-retrieve (9 Nov 2026).
+export const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_|\/search-[a-z-]+$|-retrieve$)/i;
 function opIsRead(p: Platform, o: Op): boolean {
   return o.kind === "read" && (o.method === "GET" || (o.method === "QUERY" && p.style === "graphql")
     || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && READPOST_PATH.test(o.path)))));

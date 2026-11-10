@@ -57,7 +57,8 @@ export async function queueReply(ctx: Ctx<Settings>, e: Enquiry, text: string): 
   const to = e.sender.email;
   if (!to || !EMAIL.test(to)) throw new Error("google-workspace: no valid address to reply to");
   const subject = `Re: ${oneLine(e.subject, 150) || "your email"}`;
-  const d = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: `draft reply to ${to}`,
+  // The run log gets no customer address: the approval summary below is the one place it is shown.
+  const d = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: "draft reply on the thread",
     input: { params: { userId: ME }, body: { message: { raw: mime(to, subject, text), threadId: threadId(e) } } } });
   const draftId = String(d.data?.id ?? "");
   if (!ID.test(draftId)) throw new Error("google-workspace: draft not created");

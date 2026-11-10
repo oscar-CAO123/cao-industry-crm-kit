@@ -1,6 +1,6 @@
 // Xero: the bills and sales invoices this workflow checks, the history notes it leaves on them, and the two live
 // actions (a bill payment and a reminder email). Reads and notes are drafts; a payment or an email is only ever queued.
-import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import type { Check, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../../core/workflows/runtime.ts";
 import { type Invoice, type Settings, GUID, day, money } from "../types.ts";
 
@@ -32,19 +32,25 @@ export async function noteOn(ctx: Ctx<Settings>, id: string, key: string, text: 
     input: { params: { InvoiceID: guid(id), "Idempotency-Key": idem(`note:${id}:${key}`) }, body: { HistoryRecords: [{ Details: text.slice(0, 500) }] } } });
 }
 
+/** The check run at approval: the invoice must still be authorised for the amount the cron read. A draft read of the invoice. */
+const invoiceCheck = (id: string, amount: number): Check => ({ platform: P, op: "accounting.getInvoice", input: { params: { InvoiceID: guid(id) } },
+  expect: [{ path: "Invoices.0.Status", equals: "AUTHORISED" }, { path: "Invoices.0.AmountDue", equals: amount }] });
+
 /** A bill payment for the amount owed, from the configured bank account. Queued only: a person approves it. */
 export function queuePayment(ctx: Ctx<Settings>, inv: Invoice, amount: number): Promise<string> {
   const key = `pay:${inv.InvoiceID}:${amount}`;
   const text = `Pay ${inv.Contact?.Name ?? "supplier"} ${inv.InvoiceNumber ?? ""} ${money(amount)} from account ${ctx.settings.bank_account_code}`;
-  return ctx.queue({ platform: P, op: "accounting.createPayment", key, summary: text,
+  return ctx.queue({ platform: P, op: "accounting.createPayment", key, summary: text, check: invoiceCheck(inv.InvoiceID, amount),
     input: { params: { "Idempotency-Key": idem(key) },
              body: { Invoice: { InvoiceID: guid(inv.InvoiceID) }, Account: { Code: ctx.settings.bank_account_code }, Date: day(ctx.now), Amount: amount,
                      Reference: String(inv.InvoiceNumber ?? "").slice(0, 255) } } }, text);
 }
 
-/** A reminder email for an overdue sales invoice, sent by Xero to the contact. Queued only: a person approves it. */
+/** A reminder email for an overdue sales invoice, sent by Xero to the contact. Queued only: a person approves it.
+ *  The amount owed is in the key, so a reminder rejected because the invoice changed can be queued again for the new amount. */
 export function queueReminder(ctx: Ctx<Settings>, inv: Invoice, step: number, text: string): Promise<string> {
-  const key = `chase:${inv.InvoiceID}:${step}`;
-  return ctx.queue({ platform: P, op: "accounting.emailInvoice", key, summary: text,
+  const owed = Number(inv.AmountDue ?? 0);
+  const key = `chase:${inv.InvoiceID}:${step}:${owed}`;
+  return ctx.queue({ platform: P, op: "accounting.emailInvoice", key, summary: text, check: invoiceCheck(inv.InvoiceID, owed),
     input: { params: { InvoiceID: guid(inv.InvoiceID), "Idempotency-Key": idem(key) } } }, text);
 }

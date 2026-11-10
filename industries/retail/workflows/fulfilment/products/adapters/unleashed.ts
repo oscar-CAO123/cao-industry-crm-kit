@@ -18,23 +18,29 @@ function toProduct(i: any): Product | undefined {
   };
 }
 
+/** Unleashed lists 200 rows a page and the reads send no page number, so a read is partial when more pages are indicated. */
+const PAGE_ROWS = 200;
+const partialRead = (data: any, rows: unknown[]) => Number(data?.Pagination?.NumberOfPages ?? 1) > 1 || rows.length >= PAGE_ROWS;
+
 export const unleashed = {
   id: P,
-  /** The first page of the product list (no page number is mapped, so only the first page is read). */
-  async products(ctx: Ctx<Settings>): Promise<Product[]> {
+  /** The first page of the product list (no page number is mapped, so only the first page is read). partial: more rows exist than were read. */
+  async products(ctx: Ctx<Settings>): Promise<{ items: Product[]; partial: boolean }> {
     const r = await ctx.draft<any>({ platform: P, op: "docs.get_Products", summary: "read products (first page)" });
-    return (r.data?.Items ?? []).map(toProduct).filter((p: Product | undefined): p is Product => !!p);
+    const rows: any[] = r.data?.Items ?? [];
+    return { items: rows.map(toProduct).filter((p: Product | undefined): p is Product => !!p), partial: partialRead(r.data, rows) };
   },
-  /** The first page of stock on hand, one row per product per warehouse. */
-  async stock(ctx: Ctx<Settings>): Promise<StockLevel[]> {
+  /** The first page of stock on hand, one row per product per warehouse. partial: totals per product may be incomplete. */
+  async stock(ctx: Ctx<Settings>): Promise<{ levels: StockLevel[]; partial: boolean }> {
     const r = await ctx.draft<any>({ platform: P, op: "docs.get_StockOnHand", summary: "read stock on hand (first page)" });
     const out: StockLevel[] = [];
-    for (const i of r.data?.Items ?? []) {
+    const rows: any[] = r.data?.Items ?? [];
+    for (const i of rows) {
       const code = text(i?.ProductCode, 100), qty = num(i?.QtyOnHand);
       if (!CODE.test(code) || qty === undefined) continue;
       out.push({ code, guid: GUID.test(String(i.ProductGuid ?? "")) ? String(i.ProductGuid) : undefined, warehouse: text(i.WarehouseCode, 15) || undefined, qty });
     }
-    return out;
+    return { levels: out, partial: partialRead(r.data, rows) };
   },
   /** Queue one product to be marked obsolete. A person approves it; the cron never runs it. */
   async queueObsolete(ctx: Ctx<Settings>, p: Product): Promise<string> {

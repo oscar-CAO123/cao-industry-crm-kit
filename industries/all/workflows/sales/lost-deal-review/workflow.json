@@ -20,7 +20,7 @@
   {"name": "rollup", "schedule": "0 22 * * 0", "entry": "rollup", "summary": "Weekly roll-up of lost and won counts and the top lost reasons (22:00 UTC Sunday is 8 or 9 am Monday in eastern Australia)."}
  ],
  "draft_ops": {
-  "gohighlevel": ["opportunities.get-lost-reason", "opportunities.search-opportunity"]
+  "gohighlevel": ["opportunities.get-lost-reason", "opportunities.search-opportunity", "opportunities.get-opportunity"]
  },
  "live_ops": {
   "gohighlevel": ["opportunities.update-opportunity-status"]

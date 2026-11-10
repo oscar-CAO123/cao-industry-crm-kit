@@ -39,9 +39,15 @@ export async function deals(ctx: Ctx_, status: "lost" | "won"): Promise<Deal[]> 
   return out;
 }
 
-/** Queue a re-open of a lost deal (status back to open). Live: a person approves it in the CRM shell. */
+/** Queue a re-open of a lost deal (status back to open). Live: a person approves it in the CRM shell. The approval re-reads the
+ *  deal first and is closed unless it is still lost for the reason the cron saw. The key carries the last status change and the
+ *  reason, so a closed approval is queued again only once the deal has changed, and an unchanged deal is never queued twice. */
 export function queueReopen(ctx: Ctx_, d: Deal): Promise<string> {
-  return ctx.queue({ platform: P, op: "opportunities.update-opportunity-status", key: `reopen:${d.id}`,
-    input: { params: { id: ghlId(d.id, "opportunity id") }, body: { status: "open" } },
+  const id = ghlId(d.id, "opportunity id");
+  const reason = String(d.lost_reason_id ?? "");
+  return ctx.queue({ platform: P, op: "opportunities.update-opportunity-status", key: `reopen:${id}:${d.changed_at}:${reason}`,
+    input: { params: { id }, body: { status: "open" } },
+    check: { platform: P, op: "opportunities.get-opportunity", input: { params: { id } },
+      expect: [{ path: "opportunity.status", equals: "lost" }, { path: "opportunity.lostReasonId", equals: reason }] },
     summary: `Re-open lost deal ${d.name} (value $${round2(d.value).toLocaleString("en-AU")}) for another try` });
 }

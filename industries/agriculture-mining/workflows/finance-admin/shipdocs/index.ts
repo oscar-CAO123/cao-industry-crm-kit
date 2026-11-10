@@ -46,11 +46,19 @@ export async function crossCheck(ctx: Ctx<Settings>) {
 
 /** Every 30 minutes: an approved, checked shipment gets its authorise-and-email step queued. Only a person's approval sends it. */
 export async function send(ctx: Ctx<Settings>) {
-  let queued = 0;
+  let queued = 0, held = 0;
   for (const s of await shipments(ctx, ["approved"])) {
     if (!s.checked_at || !s.invoice_id) continue;
     if (!s.buyer.email || !EMAIL.test(s.buyer.email)) {
       await ctx.store.put("shipments", s.id, { ...s, reason: "no valid buyer email: add it before approval" });
+      continue;
+    }
+    // The invoice may have changed in Xero since the last cross-check, so compare it again before anything is queued.
+    let problem: string | null;
+    try { problem = await compareInvoice(ctx, s); } catch (e) { problem = `cross-check failed: ${reasonOf(e)}`; }
+    if (problem) {
+      held++;
+      await ctx.store.put("shipments", s.id, { ...s, status: "mismatch", reason: problem });
       continue;
     }
     const acts = sendActs(s);
@@ -58,7 +66,7 @@ export async function send(ctx: Ctx<Settings>) {
     await ctx.store.put("shipments", s.id, { ...s, status: "queued", reason: undefined });
     queued++;
   }
-  ctx.log(`send: ${queued} queued for approval`);
+  ctx.log(`send: ${queued} queued for approval, ${held} held on a mismatch`);
   return { queued };
 }
 

@@ -61,7 +61,11 @@ export async function enquire(ctx: Ctx<Settings>) {
     if (c.status !== "shortlisted") continue;
     const body = enquiryBody(ctx.settings, c);
     if (!body.message) throw new Error("site-sourcing: the enquiry message is empty in settings");
-    const id = await ctx.queue({ platform: "domain", op: "docs.post_v1_enquiries", input: { body }, key: `enquire:${c.key}` },
+    // A site shortlisted again after its enquiry was rejected needs a new approval: queue() would hand back the rejected one.
+    const prev = c.enquiry_approval ? await ctx.store.get<Approval>("approvals", c.enquiry_approval) : undefined;
+    if (prev?.status === "rejected") c.enquiry_round = (c.enquiry_round ?? 0) + 1;
+    const key = c.enquiry_round ? `enquire:${c.key}:${c.enquiry_round}` : `enquire:${c.key}`;
+    const id = await ctx.queue({ platform: "domain", op: "docs.post_v1_enquiries", input: { body }, key },
       `Send an enquiry to the agent for ${c.address || `listing ${c.listing_id}`} (${c.suburb} ${c.state})`);
     c.status = "enquiry-queued";
     c.enquiry_approval = id;

@@ -24,6 +24,7 @@
   "trackunit": {"status": "docs-only", "covers": "planned services per vehicle, open device issues per vehicle, workshop bookings (queued only)"}
  },
  "gaps": [
+  "Approval runs the booking without re-reading the service: approve() only runs live operations, so a read cannot sit in the approval. The plan cron withdraws a pending booking once its service is no longer due, but a service that completes between a plan run and an approval can still be booked. An approval-time recheck needs a core change.",
   "Trackunit: CAN fault reads need a machine id, not the asset id this workflow holds, so active faults are not read yet. Device health issues stand in for defects.",
   "Trackunit: bookings need the planned service id, so a fault with no planned service cannot be booked automatically. The workshop books those by hand.",
   "Trackunit: parts ordering, cost approval, return-to-service and follow-up are not in the vendor docs, so they are not covered.",

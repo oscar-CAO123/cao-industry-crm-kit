@@ -2,7 +2,19 @@
 import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
 import { approvalId } from "../../../../../core/workflows/runtime.ts";
 import { readBill, queuePayment } from "./adapters/xero.ts";
-import { type Settings, type Packout, type Statement, problem, netOf } from "./types.ts";
+import { type Settings, type Packout, type Statement, problem, netOf, cents } from "./types.ts";
+
+/** Net of the other pack-outs whose payment is queued against the same bill and not rejected. Xero does not show these yet. */
+async function queuedAgainst(ctx: Ctx<Settings>, p: Packout): Promise<number> {
+  let total = 0;
+  for (const q of Object.values(await ctx.store.list<Packout>("packouts"))) {
+    if (q.key === p.key || q.status !== "queued" || q.bill_invoice_id !== p.bill_invoice_id || !q.approval) continue;
+    const ap = await ctx.store.get<Approval>("approvals", q.approval);
+    if (ap?.status === "rejected") continue;
+    total += netOf(q);
+  }
+  return cents(total);
+}
 
 /** Every 30 minutes: check each new pack-out against its Xero bill, draft the statement, queue the payment for approval. */
 export async function statement(ctx: Ctx<Settings>) {
@@ -18,6 +30,11 @@ export async function statement(ctx: Ctx<Settings>) {
     if (bill.type !== "ACCPAY") { await hold("the bill is not a supplier bill"); continue; }
     if (bill.status !== "AUTHORISED") { await hold(`the bill is ${bill.status}, not AUTHORISED`); continue; }
     if (!(bill.amountDue >= net)) { await hold(`Xero shows ${bill.amountDue} owed, less than the net ${net}`); continue; }
+    const alreadyQueued = await queuedAgainst(ctx, p);
+    if (cents(alreadyQueued + net) > bill.amountDue) {
+      await hold(`payments already queued against this bill come to $${alreadyQueued.toFixed(2)}, and this one would take it past the $${bill.amountDue} Xero shows owed`);
+      continue;
+    }
     const drafted: Statement = {
       key: p.key, grower: p.grower, period_end: p.period_end, gross: p.gross, charges: p.charges,
       net, xero_amount_due: bill.amountDue, drafted: ctx.now.toISOString(),

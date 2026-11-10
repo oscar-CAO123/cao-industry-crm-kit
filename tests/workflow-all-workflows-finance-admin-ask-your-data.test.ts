@@ -179,3 +179,11 @@ test("approving an answer sends it once, to the owner; a second approve is refus
 test("every cron in workflow.json has an entry, and the entries match", () => {
   assert.deepEqual(Object.keys(CRONS).sort(), WF.crons.map((c) => c.entry).sort());
 });
+
+test("a folder value that is not a folder name or id is refused before any network call", async () => {
+  const bad = { ...SETTINGS, microsoft_365: { ...SETTINGS.microsoft_365, folder: "../Drafts/x" } };
+  await assert.rejects(readQuestions(context(WF, bad, new MemoryStore(), NOW, () => {})), /folder is not a folder name or id/);
+  assert.equal(hits.length, 0);
+  const ok = { ...SETTINGS, microsoft_365: { ...SETTINGS.microsoft_365, folder: "AQMkADAwATM0MDAAMS1hZTdh=" } };
+  assert.deepEqual(await readQuestions(context(WF, ok, new MemoryStore(), NOW, () => {})), { added: 3 }, "a Graph folder id still works");
+});

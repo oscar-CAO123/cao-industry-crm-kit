@@ -162,3 +162,14 @@ test("a bad client email stops the run before any network call", async () => {
   await assert.rejects(setup(context(WF, bad, new MemoryStore(), NOW, () => {})), /bad email/);
   assert.equal(hits.length, 0);
 });
+
+test("a draft is logged against the client id, never the recipient's address", async () => {
+  const store = new MemoryStore(), logs: string[] = [], ctx = context(WF, SETTINGS, store, NOW, (m) => logs.push(m));
+  await setup(ctx);
+  await welcome(ctx);
+  const drafts = logs.filter((l) => l.startsWith("draft google-workspace gmail.users.drafts.create"));
+  assert.equal(drafts.length, 1);
+  // Logs name only the operation now (core runtime, 9 Nov): no summary, so no client name or address can leak.
+  assert.doesNotMatch(drafts[0], /@/, "no address in the draft log line");
+  assert.equal(hits.filter((h) => h.path === "/gmail/v1/users/me/drafts" && h.method === "POST").length, 1);
+});

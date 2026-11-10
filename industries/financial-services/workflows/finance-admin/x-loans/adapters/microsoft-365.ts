@@ -23,10 +23,9 @@ export async function enquiries(ctx: Ctx<Settings>): Promise<Omit<Enquiry, "stat
   const word = (m.search ?? "loan").replace(/[^A-Za-z0-9 ]/g, "").slice(0, 60) || "loan";
   const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: "read loan enquiries", input: { params: {
     "user-id": m.mailbox, "mailFolder-id": m.folder ?? "inbox", $search: `"${word}"`, $top: 25,
-    $select: "id,subject,from,receivedDateTime,bodyPreview" } } });
+    $select: "id,subject,from,receivedDateTime" } } });
   return (r.data?.value ?? []).filter((x: any) => ID.test(String(x.id ?? ""))).map((x: any) => ({
     id: keyOf(`m365:${x.id}`), source: P, title: String(x.subject ?? "Loan enquiry").slice(0, 120),
-    text: String(x.bodyPreview ?? "").slice(0, 4000),
     contact: { name: String(x.from?.emailAddress?.name ?? "").slice(0, 120) || undefined,
                email: EMAIL.test(x.from?.emailAddress?.address ?? "") ? x.from.emailAddress.address : undefined },
     received: String(x.receivedDateTime ?? ctx.now.toISOString()), ref: { message_id: x.id } }));
@@ -39,7 +38,14 @@ export async function registerRow(ctx: Ctx<Settings>, e: Enquiry, status: string
     body: { values: [[day(ctx.now), cell(e.id), cell(e.contact.name ?? ""), cell(e.contact.email ?? ""), cell(e.title), cell(status)]] } } });
 }
 
-/** The document request as an Outlook draft (a draft operation). Returns the send act for the caller to queue. */
+/** The live act a person approves: send one Outlook draft. Never run by a cron. */
+export function sendAct(ctx: Ctx<Settings>, messageId: string, to: string): Act {
+  if (!ID.test(messageId)) throw new Error("microsoft-365: bad draft id");
+  return { platform: P, op: "users.user.messages.message.send", summary: `send document request to ${to}`,
+    input: { params: { "user-id": cfg(ctx).mailbox, "message-id": messageId } } };
+}
+
+/** The document request as an Outlook draft (a draft operation). Returns the draft id and the send act for the caller to queue. */
 export async function documentRequest(ctx: Ctx<Settings>, e: Enquiry): Promise<{ messageId: string; act: Act }> {
   const m = cfg(ctx), to = e.contact.email;
   if (!to || !EMAIL.test(to)) throw new Error("microsoft-365: bad recipient");
@@ -50,6 +56,5 @@ export async function documentRequest(ctx: Ctx<Settings>, e: Enquiry): Promise<{
     body: { subject: "Documents for your loan enquiry", body: { contentType: "HTML", content: html }, toRecipients: [{ emailAddress: { address: to } }] } } });
   const id = String(r.data?.id ?? "");
   if (!ID.test(id)) throw new Error("microsoft-365: draft not created");
-  return { messageId: id, act: { platform: P, op: "users.user.messages.message.send", summary: `send document request to ${to}`,
-    input: { params: { "user-id": m.mailbox, "message-id": id } } } };
+  return { messageId: id, act: sendAct(ctx, id, to) };
 }

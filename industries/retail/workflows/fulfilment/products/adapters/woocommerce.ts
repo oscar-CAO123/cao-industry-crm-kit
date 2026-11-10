@@ -6,14 +6,18 @@ const P = "woocommerce";
 
 export const woocommerce = {
   id: P,
-  /** The first page of the product list (WooCommerce returns 10 by default; no per_page or page is sent). */
-  async products(ctx: Ctx<Settings>): Promise<Product[]> {
+  /** The first page of the product list (WooCommerce returns 10 by default; no per_page or page is sent).
+   *  partial: a full page means more products may exist than were read. */
+  async products(ctx: Ctx<Settings>): Promise<{ items: Product[]; partial: boolean }> {
     const r = await ctx.draft<any>({ platform: P, op: "docs.get_products", summary: "read products (first page)" });
     const rows: any[] = Array.isArray(r.data) ? r.data : [];
-    return rows.map((i): Product => {
-      const sku = text(i?.sku, 100);
-      return { platform: P, code: sku || `#${text(i?.id, 20)}`, guid: text(i?.id, 20) || undefined, name: text(i?.name, 500) || undefined,
-               sku: sku || undefined, price: num(i?.regular_price) };
-    });
+    return {
+      items: rows.map((i): Product => {
+        const sku = text(i?.sku, 100);
+        return { platform: P, code: sku || `#${text(i?.id, 20)}`, guid: text(i?.id, 20) || undefined, name: text(i?.name, 500) || undefined,
+                 sku: sku || undefined, price: num(i?.regular_price) };
+      }),
+      partial: rows.length >= 10,
+    };
   },
 };

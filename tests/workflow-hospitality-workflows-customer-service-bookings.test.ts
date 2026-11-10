@@ -150,6 +150,64 @@ test("changes: a cancelled booking queues a calendar removal, which runs only on
   assert.equal(hits.filter((h) => h.method === "DELETE").length, 1);
 });
 
+const CANCELLED = { ...ENQUIRY, status: "Cancelled", original: 4800, logged: 4800, booked: 4800, eventId: "hold1abc" };
+const MOVED = { ...ENQUIRY, status: "Moved", original: 4800, logged: 4800, booked: 4800, eventId: "hold1abc",
+  start: "2026-12-06T18:00:00+11:00", end: "2026-12-06T22:00:00+11:00" };
+
+test("a calendar removal sends once when the row is unchanged at approval", async () => {
+  grid.push(line(CANCELLED));
+  const store = new MemoryStore();
+  await changes(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(ap.acts[0].check?.op, "sheets.spreadsheets.values.get", "the approval re-reads the row first");
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal(hits.filter((h) => h.method === "DELETE").length, 1, "the hold was removed once");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
+  assert.equal(hits.filter((h) => h.method === "DELETE").length, 1, "a second approval removes nothing");
+});
+
+test("a calendar removal is not sent when the row changed after it was queued; the approval is rejected", async () => {
+  grid.push(line(CANCELLED));
+  const store = new MemoryStore();
+  await changes(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  (grid[1] as unknown[])[7] = "Held"; // someone set the row back to Held before approval
+  const out = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(out.status, "rejected");
+  assert.equal(out.decided_by, "check");
+  assert.match(String(out.error), /record changed/);
+  assert.equal(hits.filter((h) => h.method === "DELETE").length, 0, "the live hold was not removed");
+});
+
+test("a calendar move is not sent when the row changed after it was queued; the approval is rejected", async () => {
+  grid.push(line(MOVED));
+  const store = new MemoryStore();
+  await changes(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  (grid[1] as unknown[])[2] = "2026-12-07T18:00:00+11:00"; // the start was changed again before approval
+  const out = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(out.status, "rejected");
+  assert.equal(out.decided_by, "check");
+  assert.equal(hits.filter((h) => h.method === "PATCH").length, 0, "the hold was not moved");
+});
+
+test("a removal closed by its check is queued afresh once the row is cancelled again, and not before", async () => {
+  grid.push(line(CANCELLED));
+  const store = new MemoryStore();
+  await changes(context(WF, S, store, NOW, () => {}));
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  (grid[1] as unknown[])[7] = "Held";
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "rejected");
+  assert.deepEqual(await changes(context(WF, S, store, NOW, () => {})), { changes: 0, queued: 0 }, "a row that is not cancelled queues nothing");
+  (grid[1] as unknown[])[7] = "Cancelled";
+  assert.deepEqual(await changes(context(WF, S, store, NOW, () => {})), { changes: 0, queued: 1 }, "cancelled again: queued afresh");
+  assert.deepEqual(await changes(context(WF, S, store, NOW, () => {})), { changes: 0, queued: 1 }, "a second run finds the same fresh approval");
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1, "one fresh approval, the closed one stays closed");
+  assert.equal((await approve(WF, store, pending[0].id, "owner", NOW)).status, "done");
+  assert.equal(hits.filter((h) => h.method === "DELETE").length, 1);
+});
+
 test("changes: a moved booking queues a calendar move, and a row with no hold is marked Check", async () => {
   grid.push(line({ ...ENQUIRY, status: "Moved", original: 4800, logged: 4800, booked: 4800, eventId: "hold1abc",
     start: "2026-12-06T18:00:00+11:00", end: "2026-12-06T22:00:00+11:00" }));

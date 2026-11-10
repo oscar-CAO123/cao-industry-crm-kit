@@ -1,6 +1,7 @@
 // The pminbox workflow's three crons. Each is deterministic: it reads, drafts and queues; it never sends.
 // Judgment (an emergency the keyword rules missed, a reply no template covers) belongs to the agent skill in SKILL.md.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { WriteBlocked } from "../../../../../core/lib/http.ts";
 import type { Category, Enquiry, Settings } from "./types.ts";
 import { classify, replyFor, EMAIL, oneLine } from "./types.ts";
 import * as gmail from "./adapters/google-workspace.ts";
@@ -27,10 +28,17 @@ export async function draft(ctx: Ctx<Settings>) {
   let queued = 0, needs_person = 0;
   for (const e of todo) {
     const text = replyFor(ctx.settings, e);
-    if (!text) { needs_person++; continue; }
-    const approval = await gmail.queueReply(ctx, e, text);
-    await ctx.store.put("enquiries", e.id, { ...e, replied: approval } satisfies Enquiry);
-    queued++;
+    // No template, or no address to reply to: a person answers it. One bad item never stops the run for the rest.
+    if (!text || !e.sender.email || !EMAIL.test(e.sender.email)) { needs_person++; continue; }
+    try {
+      const approval = await gmail.queueReply(ctx, e, text);
+      await ctx.store.put("enquiries", e.id, { ...e, replied: approval } satisfies Enquiry);
+      queued++;
+    } catch (err) {
+      if (err instanceof WriteBlocked) throw err;   // a deploy that blocks writes must stop the run, not hide as "needs a person"
+      needs_person++;
+      ctx.log(`draft: ${e.id} could not be queued: ${String((err as Error)?.message ?? err).slice(0, 160)}`);
+    }
   }
   ctx.log(`draft: ${queued} replies queued, ${needs_person} need a person`);
   return { queued, needs_person };

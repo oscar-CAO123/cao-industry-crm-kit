@@ -37,6 +37,7 @@ export async function draftClaim(ctx: Ctx<Settings>, job: Job, claimNo: number, 
 export const authoriseAct = (invoiceId: string, label: string): Act => ({ platform: P, op: "accounting.updateInvoice", summary: `authorise ${label}`,
   input: { params: { InvoiceID: guid(invoiceId) }, body: { Invoices: [{ InvoiceID: invoiceId, Status: "AUTHORISED" }] } } });
 
-/** Live act: email an invoice to its client through Xero. Only ever queued. */
-export const emailAct = (invoiceId: string, label: string): Act => ({ platform: P, op: "accounting.emailInvoice", summary: `email ${label}`,
-  input: { params: { InvoiceID: guid(invoiceId) } } });
+/** Live act: email an invoice to its client through Xero. Only ever queued. The key is per stage, so each reminder is its own email,
+ *  and a retried approval of the same stage cannot send it twice. */
+export const emailAct = (invoiceId: string, label: string, stage: string): Act => ({ platform: P, op: "accounting.emailInvoice", summary: `email ${label}`,
+  input: { params: { InvoiceID: guid(invoiceId), ...idem(`email:${invoiceId}:${stage}`) } } });

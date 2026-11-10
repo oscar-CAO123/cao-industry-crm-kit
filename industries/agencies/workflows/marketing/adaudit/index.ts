@@ -3,8 +3,21 @@ import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { CampaignRow, Finding, Settings } from "./types.ts";
 import { campaignInsights, queuePause } from "./adapters/meta-ads.ts";
 
+/** Refuse to run without the two settings the audit cannot do without: a result list, and the account timezone. */
+function requireSettings(ctx: Ctx<Settings>) {
+  if (!ctx.settings.result_action_types?.length) throw new Error("adaudit: result_action_types is empty, so results cannot be counted");
+  if (!ctx.settings.timezone) throw new Error("adaudit: timezone is missing (the ad accounts' IANA zone, for example Australia/Sydney)");
+}
+
+/** The calendar day before `now` in a timezone, as YYYY-MM-DD. */
+export function yesterdayIn(now: Date, timeZone: string): string {
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  return new Date(Date.parse(`${today}T00:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
+}
+
 /** 22:00 UTC: read yesterday's campaign results for every Meta account in settings and keep the snapshot. */
 export async function pull(ctx: Ctx<Settings>) {
+  requireSettings(ctx);
   let rows = 0;
   for (const account of ctx.settings.meta_accounts ?? []) {
     const got = await campaignInsights(ctx, account);
@@ -17,9 +30,18 @@ export async function pull(ctx: Ctx<Settings>) {
 
 /** 22:10 UTC: check the snapshot against the thresholds, store the findings, and queue pauses for approval. */
 export async function audit(ctx: Ctx<Settings>) {
+  requireSettings(ctx);
   const t = ctx.settings.thresholds;
+  const expected = yesterdayIn(ctx.now, ctx.settings.timezone);
   const all = Object.values(await ctx.store.list<CampaignRow>("snapshots"));
   const latest = all.reduce((m, r) => (r.date > m ? r.date : m), "");   // only the newest day, so an old day is never queued twice
+  if (latest !== expected) {
+    // The pull did not deliver yesterday: stop, record why, and queue nothing built on older data.
+    const why = `newest snapshot is ${latest || "none"}, not ${expected}: the pull did not finish, so nothing was audited or queued`;
+    await ctx.store.put("audits", expected, { date: expected, findings: [], stopped: why });
+    ctx.log(`audit stopped: ${why}`);
+    return { stopped: why, findings: 0, queued: 0 };
+  }
   const rows = all.filter((r) => r.date === latest);
   const findings: Finding[] = [];
   let queued = 0;

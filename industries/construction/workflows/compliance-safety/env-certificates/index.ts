@@ -49,8 +49,9 @@ export async function chase(ctx: Ctx<Settings>) {
     const c = await s8.contact(ctx, t.company_uuid);
     if (!c.email) { ctx.log(`chase: no valid email on ${t.uuid}`); continue; }
     const text = `Hi ${c.name ?? "there"}, to finish the paperwork for ${t.title} we still need: ${t.missing.join(", ")}. Reply to this email with them.`;
-    await s8.queueChase(ctx, t, c.email, text);
-    await ctx.store.put("jobs", t.uuid, { ...t, chased_at: ctx.now.toISOString() });
+    const n = (t.chases ?? 0) + 1;                       // each interval gets its own approval
+    await s8.queueChase(ctx, t, n, c.email, text);
+    await ctx.store.put("jobs", t.uuid, { ...t, chases: n, chased_at: ctx.now.toISOString() });
     queued++;
   }
   ctx.log(`chase: ${queued} queued for approval`);

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { CRONS } from "../industries/all/workflows/fulfilment/supplier-rfq/index.ts";
 import fs from "node:fs";
 
@@ -21,7 +21,7 @@ const SETTINGS: any = {
   chase_after_days: [3, 7],
 };
 
-type Hit = { method: string; path: string; body: any };
+type Hit = { method: string; path: string; body: any; headers?: any };
 let hits: Hit[] = [];
 let replyList: any[] = [];
 let drafts = 0;
@@ -33,7 +33,7 @@ function fake() {
     fetch: (async (url: any, init: any) => {
       const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
-      hits.push({ method: m, path: p, body });
+      hits.push({ method: m, path: p, body, headers: init?.headers });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
@@ -138,6 +138,7 @@ test("chase: a due chaser goes only to a supplier who has not replied, and a re-
   const store = new MemoryStore();
   await store.put("rfqs", "rfq-001", rfq());
   await run("issue", store);
+  for (const a of await approvals(store)) await approve(WF, store, a.id, "oscar", NOW);
   await store.put("rfqs", "rfq-001", { ...(await store.get<any>("rfqs", "rfq-001")), replied: [ARI] });
   const later = new Date(NOW.getTime() + 4 * 864e5);
   hits = [];
@@ -155,6 +156,22 @@ test("chase: a due chaser goes only to a supplier who has not replied, and a re-
   assert.equal((await approvals(store)).length, chasers.length);
 });
 
+test("chase: a supplier whose RFQ send was rejected or is still waiting gets no chaser", async () => {
+  const store = new MemoryStore();
+  await store.put("rfqs", "rfq-001", rfq());
+  await run("issue", store);
+  const [ariSend, samSend] = [`send:rfq-001:${ARI}`, `send:rfq-001:${SAM}`].map((k) => approvalId(WF.id, k));
+  await approve(WF, store, ariSend, "oscar", NOW);
+  await reject(WF, store, samSend, "oscar", NOW);
+  const later = new Date(NOW.getTime() + 4 * 864e5);
+  hits = [];
+  await run("chase", store, later);
+  const chasers = (await approvals(store)).filter((a) => a.acts[0].key?.startsWith("chase1:"));
+  assert.equal(chasers.length, 1, "only the supplier who received the RFQ is chased");
+  assert.match(chasers[0].acts[0].key!, new RegExp(ARI));
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith("/messages")).length, 1);
+});
+
 test("purchase order: drafted in Xero, authorise only queued, and it runs only on approval", async () => {
   const store = new MemoryStore();
   await store.put("rfqs", "rfq-001", rfq({ status: "issued", issued_at: NOW.toISOString(), award: {
@@ -164,6 +181,7 @@ test("purchase order: drafted in Xero, authorise only queued, and it runs only o
   assert.ok(draft, "the purchase order is drafted");
   assert.equal(draft!.body.PurchaseOrders[0].Status, "DRAFT");
   assert.equal(draft!.body.PurchaseOrders[0].Contact.ContactID, CONTACT);
+  assert.match(String(draft!.headers?.["Idempotency-Key"]), /^rfq-po:rfq-001$/, "the draft carries an idempotency key from the RFQ id");
   assert.equal(hits.some((h) => h.method === "POST" && h.path.includes("/PurchaseOrders/")), false, "nothing is authorised by the cron");
   const aps = await approvals(store);
   assert.equal(aps.length, 1);

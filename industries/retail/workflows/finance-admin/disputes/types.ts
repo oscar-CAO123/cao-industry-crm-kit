@@ -1,17 +1,18 @@
-// Shared shapes for the refund and chargeback workflow. Square is the one adapter built; the rest are in workflow.json gaps.
-export type Platform = "square";
+// Shared shapes for the refund and chargeback workflow. Square and Stripe are built; the rest are in workflow.json gaps.
+export type Platform = "square" | "stripe";
 
 export interface Settings {
   business_name?: string;
   square?: { location_id?: string };
+  stripe?: { enabled?: boolean };  // reads Stripe disputes and refunds too; the key is STRIPE_SECRET_KEY in the client secret store
   lookback_days?: number;      // refunds are read this far back (default 30)
   flag_within_days?: number;   // an open dispute with no decision this close to its deadline is flagged (default 3)
 }
 
 export const CURRENCY = "AUD";
 
-/** Square's dispute states that still need a response from the business. */
-export const OPEN_STATES = new Set(["EVIDENCE_REQUIRED", "INQUIRY_EVIDENCE_REQUIRED"]);
+/** Dispute states that still need a response from the business: Square's, then Stripe's (dispute.status). */
+export const OPEN_STATES = new Set(["EVIDENCE_REQUIRED", "INQUIRY_EVIDENCE_REQUIRED", "needs_response", "warning_needs_response"]);
 
 /** Evidence types Square accepts on a text item (CreateDisputeEvidenceTextRequest.evidence_type). */
 export const EVIDENCE_TYPES = [
@@ -26,14 +27,14 @@ export interface Money { cents: number; currency: string }
 export interface DisputeRecord {
   id: string; platform: Platform; state: string; reason: string; amount: Money; due_at?: string; payment_id?: string;
   evidence_ids: string[]; seen: string;
-  /** evidence types already staged on Square for this dispute */
+  /** evidence types already staged on Square for this dispute (Stripe holds none: its note goes in with the submit) */
   staged: EvidenceType[];
 }
 export interface RefundRecord { id: string; platform: Platform; status: string; payment_id?: string; amount: Money; reason?: string; created_at?: string; seen: string }
 
 /** Written by a person or the agent (namespace "evidence", key = dispute id). The watch cron stages it on Square. */
 export interface EvidenceNote { evidence_type: EvidenceType; text: string; written_by: string }
-/** Written by a person or the agent (namespace "refund_decisions", key = request id). Only "refund" is ever queued. */
+/** Written by a person or the agent (namespace "refund_decisions", key = request id). Only "refund" is ever queued. payment_id: a Square payment id, or a Stripe payment intent (pi_...). */
 export interface RefundDecision { platform: Platform; payment_id: string; amount_cents: number; reason?: string; decision: "refund" | "decline"; decided_by: string }
 /** Written only after the owner says so (namespace "dispute_decisions", key = dispute id). */
 export interface DisputeDecision { decision: "submit" | "accept"; decided_by: string }

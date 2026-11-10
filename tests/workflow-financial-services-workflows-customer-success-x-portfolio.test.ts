@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { reviewDue, prepare, invite, CRONS } from "../industries/financial-services/workflows/customer-success/x-portfolio/index.ts";
 import { queueInvite, hsId, OP_INVITE, OP_LIST } from "../industries/financial-services/workflows/customer-success/x-portfolio/adapters/hubspot.ts";
 import fs from "node:fs";
@@ -63,6 +63,22 @@ test("crons read and draft only: the invite is queued, and nothing reaches a cli
   const pending = Object.values(await store.list<Approval>("approvals"));
   assert.equal(pending.length, 1);
   assert.equal(pending[0].status, "pending");
+});
+
+test("a rejected invite is queued again as a new approval; a pending one is not queued twice", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await reviewDue(ctx); await prepare(ctx);
+  await store.put("slots", "101", SLOT);
+  assert.deepEqual(await invite(ctx), { queued: 1, waiting_for_slot: 0, refused: 0 });
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await reject(WF, store, first.id, "adviser", NOW);
+  assert.deepEqual(await invite(ctx), { queued: 1, waiting_for_slot: 0, refused: 0 }, "the rejected invite is queued again");
+  const all = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(all.length, 2);
+  assert.equal(all.filter((a) => a.status === "pending").length, 1, "one live invite");
+  assert.equal((await store.get<any>("reviews", "101")).status, "invite-queued");
+  assert.deepEqual(await invite(ctx), { queued: 0, waiting_for_slot: 0, refused: 0 }, "a pending invite is not queued again");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 2);
 });
 
 test("a live operation cannot run as a draft, and a read cannot be queued", async () => {

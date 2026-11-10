@@ -30,14 +30,15 @@ export interface Adapter {
   id: Platform;
   /** One page of records that hold an email address. next is the cursor for the following page, when there is one. */
   page(ctx: Ctx<Settings>, cursor?: string): Promise<{ items: Contact[]; next?: string }>;
-  /** Queue the merge of a duplicate into the record kept. */
-  queueMerge(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string>;
+  /** Re-read both records and queue the merge of a duplicate into the record kept. Returns undefined when they no longer share an address. */
+  queueMerge(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string | undefined>;
   /** Re-read the record and queue its email tidy when it still needs one. Returns undefined when nothing needs changing. */
   queueTidy(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string | undefined>;
 }
 
 /** A platform record id from outside: digits only, so it can sit in a path or a body safely. */
-export const ID = /^[0-9]{1,20}$/;
+// At most 15 digits: every such id is exact as a JavaScript number, so Number() in an adapter cannot round it to another record.
+export const ID = /^[0-9]{1,15}$/;
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,253}\.[^\s@]{2,}$/;
 export const norm = (s: unknown) => String(s ?? "").trim().toLowerCase();
 export const valid = (s: string) => s.length <= 254 && EMAIL.test(s);

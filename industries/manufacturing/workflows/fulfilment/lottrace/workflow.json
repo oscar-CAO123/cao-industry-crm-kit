@@ -35,7 +35,7 @@
  "gaps": [
   "Unleashed calls are signed by the SDK (core/sdk/call.ts, provider unleashed) with UNLEASHED_API_ID, UNLEASHED_API_KEY and UNLEASHED_CLIENT_TYPE from the environment. The adapter is proved on a fake network only; no call has reached a real Unleashed account, and the platform is marked tested offline only.",
   "Unleashed reads take the first page of 200 rows; there is no page loop yet. The filters (available, pageSize) are mapped from the vendor docs and sent by name.",
-  "The Unleashed transfer lines in the docs name a product and a quantity, not a batch. A quarantine transfer may move stock without moving the named lot. Needs a sandbox check before any hold is approved.",
+  "The Unleashed transfer lines in the docs name a product and a quantity, not a batch. A quarantine transfer may move stock without moving the named lot. No hold is queued until settings.lot_selection_confirmed is set true, which needs a sandbox transfer that proves the named batch moves.",
   "No runtime command records a hold for the quarantine cron. tools/workflow.ts has run, approvals, approve, reject and propose only, and propose writes quoting proposals. Adding a hold command is a runtime change for core/, listed here, not made here.",
   "Fishbowl: not in the kit, so no adapter. Its help centre returned no pages, so only marketing and glossary pages were read; lot and quarantine steps are unknown.",
   "MRPeasy: not in the kit, so no adapter. It shows the most lot support in its docs (lot numbers at receipt, batch records, recall through RMA), so it is the strongest candidate for a new platform build. Its API operation ids are not mapped.",

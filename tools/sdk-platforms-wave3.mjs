@@ -94,7 +94,7 @@ export const W3 = {
   "power-bi": d("Power BI", B("POWERBI_ACCESS_TOKEN", { note: TOKEN })),
   "pracsuite": d("PracSuite", H("x-api-key", "PRACSUITE_VENDOR_KEY", "", { extraHeaders: { "a-api-key": "PRACSUITE_SUBSCRIBER_KEY" } })),
   "productive": d("Productive", H("X-Auth-Token", "PRODUCTIVE_API_TOKEN", "", { extraHeaders: { "X-Organization-Id": "PRODUCTIVE_ORGANIZATION_ID" } }),
-    { server: "https://api.productive.io/api/v2" }),
+    { server: "https://api.productive.io/api/v2", queryArrays: "comma", queryObjects: "deepObject" }),  // filter[field][op]=v; include and sort as a,b
   "proworkflow": d("ProWorkflow", H("apikey", "PROWORKFLOW_API_KEY")),
   "pylon": d("Pylon", B("PYLON_API_TOKEN")),
   "re-leased": d("Re-Leased", B("RELEASED_ACCESS_TOKEN", { note: TOKEN })),

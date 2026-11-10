@@ -5,6 +5,7 @@ export interface Settings {
   business_name?: string;
   messages?: "microsoft-365";           // how chase emails go out: an Outlook draft, sent only on approval
   microsoft_365?: { mailbox: string };  // the practice's own mailbox
+  client_email?: string;                // the client's own address: every chase goes here, never to a Xero contact
   lookback_days?: number;               // how far back to look, 1 to 365, default 90
   chase_after_days?: number[];          // days after the previous chase for the 2nd and 3rd reminder, default [7, 14]
 }
@@ -35,6 +36,12 @@ export interface Chase { stage: number; last: string; key: string }
 export const keyOf = (s: string) => safeKey(s, 120);
 export const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 export const money = (n: number) => `$${n.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+/** The client's own address. Refused when missing: a chase never falls back to a supplier or customer on an item. */
+export function clientEmail(s: Settings): string {
+  if (!EMAIL.test(s.client_email ?? "")) throw new Error("client_email is not set: chase emails go to the client's own address");
+  return s.client_email!;
+}
 
 export function lookback(s: Settings): number {
   const n = Number(s.lookback_days ?? 90);

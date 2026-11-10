@@ -18,11 +18,13 @@ export interface Settings {
   reminder_days?: number;                      // remind when an open lodgement is due within this many days (default 7)
 }
 
-/** A regulator notice read from the mailbox. "registered" once its register row and owner draft exist. */
+/** A regulator notice as stored: the title and the message reference only. The body preview is read to match the
+ *  notice rules and is never stored. "registered" once its register row and owner draft exist. */
 export interface Notice {
-  id: string; title: string; from?: string; received: string; text?: string;
+  id: string; title: string; from?: string; received: string;
   ref?: Record<string, string>;
   status: "new" | "registered";
+  due_days?: number;                           // from the first notice rule that matched, fixed at intake
   due?: string;                                // YYYY-MM-DD, empty when no rule matched
   registered?: string;
 }

@@ -19,7 +19,7 @@ export interface Diagnosis {
   address?: string;
   contact: Contact;
   received: string;
-  status: "new" | "needs-notes" | "drafted" | "queued" | "no-email";
+  status: "new" | "needs-notes" | "drafted" | "check" | "queued" | "no-email";   // check: the note is filed but its id was not returned
   reason?: string;
   note_uuid?: string;
   photos?: number;

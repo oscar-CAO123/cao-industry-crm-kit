@@ -11,16 +11,29 @@ const cfg = (ctx: Ctx<Settings>) => {
   return r;
 };
 
-/** Contacts tagged as applicants and updated since the last run (first page only). */
-export async function applicantContacts(ctx: Ctx<Settings>, since?: string): Promise<Applicant[]> {
+const MAX_PAGES = 20;
+
+/** Contacts tagged as applicants and updated since the last run, following MetaData.NextPageUrl up to MAX_PAGES pages.
+ *  complete is false when pages remain past the cap, so the caller holds its cursor. */
+export async function applicantContacts(ctx: Ctx<Settings>, since?: string): Promise<{ rows: Applicant[]; complete: boolean }> {
   const r = cfg(ctx);
-  const res = await ctx.draft<any>({ platform: "re-leased", op: "Contacts_Get", summary: "read applicant contacts", input: { params: {
-    companyId: r.company_id, ...(r.applicant_tag ? { tag: clean(r.applicant_tag, 60) } : {}), ...(since ? { updatedAfterDate: since } : {}), includeTags: false } } });
-  const rows: any[] = Array.isArray(res.data?.Data) ? res.data.Data : [];
-  return rows.filter((c) => UUID.test(String(c?.Id ?? ""))).map((c) => ({
-    id: String(c.Id), name: clean(c.Name || `${c.FirstName ?? ""} ${c.LastName ?? ""}`, 120) || "Applicant",
-    email: EMAIL.test(String(c.Email ?? "")) ? String(c.Email) : undefined, status: "new" as const, received: String(c.UpdatedDateTime ?? ctx.now.toISOString()),
-  }));
+  const out: Applicant[] = [];
+  let fromId: string | undefined;
+  for (let page = 1; ; page++) {
+    const res = await ctx.draft<any>({ platform: "re-leased", op: "Contacts_Get", summary: `read applicant contacts page ${page}`, input: { params: {
+      companyId: r.company_id, ...(r.applicant_tag ? { tag: clean(r.applicant_tag, 60) } : {}), ...(since ? { updatedAfterDate: since } : {}),
+      ...(fromId ? { fromId } : {}), includeTags: false } } });
+    const rows: any[] = Array.isArray(res.data?.Data) ? res.data.Data : [];
+    for (const c of rows.filter((x) => UUID.test(String(x?.Id ?? "")))) {
+      out.push({ id: String(c.Id), name: clean(c.Name || `${c.FirstName ?? ""} ${c.LastName ?? ""}`, 120) || "Applicant",
+        email: EMAIL.test(String(c.Email ?? "")) ? String(c.Email) : undefined, status: "new" as const, received: String(c.UpdatedDateTime ?? ctx.now.toISOString()) });
+    }
+    const next = res.data?.MetaData?.NextPageUrl;
+    if (!next) return { rows: out, complete: true };
+    if (page >= MAX_PAGES) return { rows: out, complete: false };
+    fromId = new URL(String(next), "https://re-leased.invalid").searchParams.get("fromId") ?? undefined;
+    if (!fromId || !UUID.test(fromId)) return { rows: out, complete: false };
+  }
 }
 
 /** One contact read in full, to confirm the record is usable before a person checks the applicant. */

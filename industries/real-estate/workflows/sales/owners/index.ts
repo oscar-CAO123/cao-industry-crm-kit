@@ -61,7 +61,7 @@ export async function outreach(ctx: Ctx<Settings>) {
     const fresh = await checkOwner(ctx, o);
     if (fresh.status !== "eligible" || !fresh.email) { await ctx.store.put("owners", o.id, fresh); stopped++; continue; }
     const first = fresh.name.split(" ")[0] || "there";
-    const plain = (ctx.settings.outreach_body ?? DEFAULT_BODY).replace("{first_name}", first).replace("{business_name}", ctx.settings.business_name ?? "our team");
+    const plain = (ctx.settings.outreach_body ?? DEFAULT_BODY).replace("{first_name}", () => first).replace("{business_name}", () => ctx.settings.business_name ?? "our team");
     const subject = (ctx.settings.outreach_subject ?? "Checking in about your property").slice(0, 120);
     const d = await mailDraft(ctx, fresh.email, subject, `<p>${esc(plain)}</p>`);
     const approval = await ctx.queue({ ...d.send, key: `outreach:${fresh.id}` }, `Email ${fresh.name || fresh.id} at ${fresh.email}: outreach email from the agency mailbox`);

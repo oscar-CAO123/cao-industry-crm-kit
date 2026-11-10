@@ -105,3 +105,29 @@ test("a bad Bluebeam project id is refused before any call is made", async () =>
   await assert.rejects(takeoff(context(WF, bad, store, NOW, () => {})), /not a project id/);
   assert.equal(hits.filter((h) => h.path.includes("/projects/")).length, 0);
 });
+
+test("an empty markup list is not a finished job: the cron keeps polling and never drafts empty rows", async () => {
+  const store = new MemoryStore();
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  hits = [];
+  // Bluebeam answers every poll with an empty Markups list while the job is still running.
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const p = new URL(String(url)).pathname, m = init?.method ?? "GET";
+      hits.push({ method: m, path: p, body: undefined });
+      const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+      if (p.endsWith(`/projects/${PROJECT}/files`)) return json({ ProjectFiles: [{ Id: FILE, Name: "Tender 4471 plans.pdf" }], TotalCount: 1 });
+      if (p.endsWith(`/files/${FILE}/jobs/markuplist`) && m === "POST") return json({ Id: JOB });
+      if (p.endsWith(`/files/${FILE}/jobs/markuplist/${JOB}`)) return json({ JobStatus: 1, JobStatusMessage: "running", Markups: [] });
+      return new Response("not faked: " + p, { status: 404 });
+    }) as any,
+  });
+  const ctx = context(WF, SETTINGS, store, NOW, () => {});
+  assert.deepEqual(await takeoff(ctx), { drafted: 0, waiting: 1 }, "starts the markup list");
+  for (let i = 0; i < 8; i++) assert.deepEqual(await takeoff(ctx), { drafted: 0, waiting: 1 }, "an empty list is still waiting");
+  assert.equal(hits.filter((h) => h.path.endsWith("/rows") && h.method === "POST").length, 0, "no takeoff rows written");
+  const t = Object.values(await store.list<any>("tenders"))[0];
+  assert.equal(t.status, "needs-check", "after max_polls the tender is flagged for a person, not marked drafted");
+  assert.deepEqual(await takeoff(ctx), { drafted: 0, waiting: 0 }, "a flagged tender is not polled again");
+});

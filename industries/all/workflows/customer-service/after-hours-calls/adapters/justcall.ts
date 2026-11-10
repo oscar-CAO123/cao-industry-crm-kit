@@ -4,14 +4,24 @@ import { safeKey } from "../../../../../../core/workflows/runtime.ts";
 import { type Adapter, type CallRecord, type Settings, toE164 } from "../types.ts";
 
 const P = "justcall";
+const PAGE = 100;
+const MAX_PAGES = 10;
 
 export const justcall: Adapter = {
   id: P,
   async calls(ctx: Ctx<Settings>, since) {
-    const r = await ctx.draft<any>({ platform: P, op: "docs.get_v2_1_calls", summary: "list the latest calls",
-      input: { params: { per_page: 100, page: 1 } } });
-    // The docs confirm the per-call fields; the list wrapper is read as an array or as its data array (see gaps).
-    const rows: any[] = Array.isArray(r.data) ? r.data : Array.isArray(r.data?.data) ? r.data.data : [];
+    // Pages until a short page. The window is cut after the read, because the from_datetime format and the sort order are not
+    // confirmed in the docs. The cap bounds one run; a run that hits it logs that older calls may be unread.
+    const rows: any[] = [];
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const r = await ctx.draft<any>({ platform: P, op: "docs.get_v2_1_calls", summary: `list the calls, page ${page}`,
+        input: { params: { per_page: PAGE, page } } });
+      // The docs confirm the per-call fields; the list wrapper is read as an array or as its data array (see gaps).
+      const batch: any[] = Array.isArray(r.data) ? r.data : Array.isArray(r.data?.data) ? r.data.data : [];
+      rows.push(...batch);
+      if (batch.length < PAGE) break;
+      if (page === MAX_PAGES) ctx.log(`justcall: stopped at ${MAX_PAGES} pages of ${PAGE}; older calls may be unread this run`);
+    }
     const out: Omit<CallRecord, "status" | "urgent">[] = [];
     for (const c of rows) {
       if (!c || (typeof c.id !== "number" && typeof c.id !== "string")) continue;

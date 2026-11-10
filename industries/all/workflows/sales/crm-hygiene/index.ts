@@ -84,6 +84,7 @@ export async function queue(ctx: Ctx<Settings>) {
   for (const f of open) {
     if (f.kind === "duplicate") {
       const approval = await a.queueMerge(ctx, f, `merge:${f.key}`);
+      if (!approval) { await ctx.store.put("findings", f.key, { ...f, status: "resolved", seen_at: now }); resolved++; continue; }
       await ctx.store.put("findings", f.key, { ...f, status: "queued", approval, seen_at: now }); queued++;
       continue;
     }

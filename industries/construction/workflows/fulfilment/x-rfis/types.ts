@@ -23,6 +23,6 @@ export interface RfiRow {
 export interface QuestionRow {
   id: string; project: string; name: string; question: string;
   assignee_user_id?: number; due_date?: string; message?: string;
-  status: "new" | "drafted" | "queued" | "needs-assignee";
+  status: "new" | "drafted" | "queued" | "needs-assignee" | "needs-person";
   rfi_id?: string; question_set?: boolean; reason?: string;
 }

@@ -8,12 +8,21 @@
 // Every call still goes through the SDK gate (core/sdk/call.ts): writes need KIT_ALLOW_WRITES=1 on the deploy.
 // The runtime adds the rule above on top, so a cron can never send anything, whatever the deploy allows.
 
-import { callOperation, describe, type CallInput } from "../sdk/call.ts";
-import type { Reply } from "../lib/http.ts";
+import { callOperation, describe, plan, type CallInput } from "../sdk/call.ts";
+import { ApiError, WriteBlocked, type Reply } from "../lib/http.ts";
 import type { Store } from "./store.ts";
 import crypto from "node:crypto";
 
-export interface Act { platform: string; op: string; input?: CallInput; summary: string; /** de-duplicates queued approvals */ key?: string }
+export interface Act { platform: string; op: string; input?: CallInput; summary: string; /** de-duplicates queued approvals */ key?: string;
+  /** Read the live record just before this act runs (a draft op of this workflow) and send only if each value is still as
+   *  expected: an approval given after someone changed the record in the app is closed instead of overwriting it. */
+  check?: Check }
+export interface Check { platform: string; op: string; input?: CallInput; expect: { path: string; equals: string | number | boolean | null }[] }
+const CHECK_PATH = /^[A-Za-z0-9_-]{1,64}(\.[A-Za-z0-9_-]{1,64}){0,7}$/;
+/** The value at a dot path ("Invoices.0.Status"), or undefined. */
+function at(data: unknown, path: string): unknown {
+  return path.split(".").reduce<any>((o, k) => (o === null || o === undefined ? undefined : o[k]), data);
+}
 /** One approval runs one act, or a short ordered bundle (send the email, then mark the quote sent); it stops at the first failure. */
 export interface Approval { id: string; workflow: string; summary: string; acts: Act[]; status: "pending" | "running" | "done" | "failed" | "rejected" | "needs-check"; created: string; decided?: string; started?: string; results?: { op: string; status: number | "started"; ref?: Record<string, string> }[]; error?: string; decided_by?: string }
 export interface WorkflowRecord {
@@ -44,7 +53,7 @@ export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, 
     async draft(a) {
       if (!allowed(workflow.draft_ops, a)) throw new Error(`${workflow.id}: ${a.platform} ${a.op} is not a draft operation for this workflow`);
       describe(a.platform, a.op); // throws if the operation is not mapped
-      log(`draft ${a.platform} ${a.op}: ${a.summary}`);
+      log(`draft ${a.platform} ${a.op}`); // summaries can name customers: they stay out of logs
       return callOperation(a.platform, a.op, a.input ?? {});
     },
     async queue(a, summary) {
@@ -53,13 +62,18 @@ export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, 
       for (const x of acts) {
         if (!allowed(workflow.live_ops, x)) throw new Error(`${workflow.id}: ${x.platform} ${x.op} is not a live operation for this workflow`);
         describe(x.platform, x.op);
+        if (x.check) {
+          if (!allowed(workflow.draft_ops, x.check)) throw new Error(`${workflow.id}: a check must use a draft (read) operation: ${x.check.platform} ${x.check.op}`);
+          describe(x.check.platform, x.check.op);
+          if (!x.check.expect?.length || x.check.expect.length > 10 || x.check.expect.some((e) => !CHECK_PATH.test(e.path))) throw new Error(`${workflow.id}: a check needs 1 to 10 expected values with plain dot paths`);
+        }
       }
       const key = acts[0].key ?? Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       const id = approvalId(workflow.id, key);
       if (await store.get<Approval>("approvals", id)) return id; // already queued: a cron that runs again never queues the same thing twice
       const text = summary ?? acts.map((x) => x.summary).join("; ");
       await store.put("approvals", id, { id, workflow: workflow.id, summary: text, acts, status: "pending", created: now.toISOString() } satisfies Approval);
-      log(`queued for approval ${id}: ${text}`);
+      log(`queued for approval ${id} (${acts.map((x) => `${x.platform} ${x.op}`).join(", ")})`); // the summary is stored for the approver, never logged
       return id;
     },
   };
@@ -69,6 +83,9 @@ export function context<S>(workflow: WorkflowRecord, settings: S, store: Store, 
  *  - Each act is marked "started" in the store before it is called, and its created ids (id, uuid, QuoteID, an
  *    x-record-uuid header...) are kept in results, so later steps and crons can use them.
  *  - A failed bundle can be approved again: it resumes at the first act that did not finish, so nothing already done repeats.
+ *    An act only counts as failed when nothing can have happened: its input was refused before sending, the deploy blocks
+ *    writes, or the app answered with a 4xx (other than a timeout). A 5xx, a timeout or a dropped connection may have
+ *    been processed by the app, so that act stays "started" and the approval becomes needs-check (below).
  *  - If an act was started but its outcome never came back (a crash or lost response), or an approval has been running
  *    for over 15 minutes, it becomes needs-check: a person confirms in the platform, then runs it with confirmUnknown
  *    ("done" skips that act, "retry" runs it again). Nothing is ever repeated automatically. */
@@ -115,17 +132,39 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
   const results = [...(ap.results ?? [])];
   try {
     for (const a of ap.acts.slice(results.length)) {
+      // Plan it first (no keys, no network): a bad input fails here, before the act is marked started or anything is sent.
+      await plan(a.platform, a.op, a.input ?? {});
+      if (a.check) {
+        const live = await callOperation(a.check.platform, a.check.op, a.check.input ?? {});
+        const off = a.check.expect.find((e) => at(live.data, e.path) !== e.equals);
+        if (off) {
+          const now_ = String(at(live.data, off.path) ?? "nothing").slice(0, 60);
+          Object.assign(ap, { status: "rejected", decided: now.toISOString(), decided_by: "check", results,
+            error: `the record changed after this was queued (${off.path} is now ${now_}, was ${String(off.equals).slice(0, 60)}): nothing was sent` });
+          await store.put("approvals", id, ap);
+          return ap;
+        }
+      }
       results.push({ op: a.op, status: "started" });
       await store.put("approvals", id, { ...ap, results });
       const r = await callOperation(a.platform, a.op, a.input ?? {});
+      // Some apps answer 200 with an errors list (GraphQL and a few REST APIs): the request was refused, nothing was done.
+      const errs = (r.data as any)?.errors;
+      if (Array.isArray(errs) && errs.length && !(r.data as any)?.data) throw new ApiError(a.platform, 422, `${a.op} returned errors`);
       results[results.length - 1] = { op: a.op, status: r.status, ref: refsOf(r.data, r.headers) };
       await store.put("approvals", id, { ...ap, results });
     }
     Object.assign(ap, { status: "done", decided: now.toISOString(), results, error: undefined });
   } catch (e: any) {
-    // A call that threw got an answer (an error status) or never reached the network: either way it did not succeed.
-    if (results.at(-1)?.status === "started") results.pop();
-    Object.assign(ap, { status: "failed", decided: now.toISOString(), results, error: String(e?.message ?? e).slice(0, 300) });
+    // Only a refusal that proves nothing happened is a clean failure that may simply be approved again. Anything else
+    // (a 5xx, a timeout, a dropped connection, a failed token exchange) may have been processed by the app: the act
+    // stays "started" and a person checks the platform first, so a send, payment or post can never go out twice.
+    const nothingHappened = e instanceof WriteBlocked || (e instanceof ApiError && e.status >= 400 && e.status < 500 && e.status !== 408);
+    if (results.at(-1)?.status === "started" && nothingHappened) results.pop();
+    const unknown = results.at(-1)?.status === "started";
+    const msg = String(e?.message ?? e).slice(0, 240);
+    Object.assign(ap, { status: unknown ? "needs-check" : "failed", decided: now.toISOString(), results,
+      error: unknown ? `outcome unknown (${msg}): check the platform, then approve with done or retry` : msg });
   }
   await store.put("approvals", id, ap);
   return ap;

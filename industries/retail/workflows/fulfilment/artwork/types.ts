@@ -7,6 +7,8 @@ export interface Settings {
   store: Platform;
   /** The most images a product may hold after the update (existing plus new). Default 10. */
   max_images?: number;
+  /** The hosts the business serves mockup images from (for example "assets.example.com.au"). Listing refuses to run without them. */
+  asset_hosts?: string[];
 }
 
 /** A product as the store holds it, reduced to what this workflow reads. */

@@ -11,6 +11,8 @@ const SPACE_MSG = /^spaces\/[A-Za-z0-9_-]{1,120}\/messages\/[A-Za-z0-9_.-]{1,120
 const SPACE_THREAD = /^spaces\/[A-Za-z0-9_-]{1,120}\/threads\/[A-Za-z0-9_.-]{1,120}$/;
 const SHEET = /^[A-Za-z0-9_-]{10,100}$/;
 const RANGE = /^[A-Za-z0-9 !:'$]{1,120}$/;
+/** Chat reads &, < and > as markup, so they are escaped and no mention (<users/all>) or link can be forged. */
+const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const header = (p: any, name: string): string =>
   String(p?.headers?.find((h: any) => String(h?.name ?? "").toLowerCase() === name.toLowerCase())?.value ?? "");
@@ -102,7 +104,7 @@ export const googleWorkspace: Adapter & { logRow(ctx: Ctx<Settings>, q: Question
       if (!SPACE.test(q.thread.chat_space)) throw new Error("google-workspace: bad Chat space");
       return { act: { platform: P, op: "chat.spaces.messages.create", summary: `reply in Chat to ${q.asker.name ?? "staff"}`,
         input: { params: { parent: q.thread.chat_space, messageReplyOption: "REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD" },
-          body: { text: clean(text, 4000), ...(q.thread.chat_thread ? { thread: { name: q.thread.chat_thread } } : {}) } } } };
+          body: { text: esc(clean(text, 4000)), ...(q.thread.chat_thread ? { thread: { name: q.thread.chat_thread } } : {}) } } } };
     }
     return replyGmail(ctx, q, text);
   },

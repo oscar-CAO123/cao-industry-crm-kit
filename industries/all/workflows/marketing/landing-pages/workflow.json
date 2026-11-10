@@ -5,7 +5,7 @@
  "department": "marketing",
  "version": 1,
  "status": "docs-only",
- "summary": "Keeps the business's existing landing pages current in Webflow and GoHighLevel. Crons read each site's pages and form results for the owner and queue every page change, and its publish if asked, for a person's approval. Crons read and queue; nothing goes live without a person.",
+ "summary": "Keeps the business's existing landing pages current in Webflow and GoHighLevel. Crons read each site's pages and form results for the owner and queue every page content change for a person's approval. Crons read and queue; a person approves each change and publishes the page in Webflow.",
  "families": {
   "all": {
    "evidence": "32 discovery calls name this workflow; 15 were read for steps and tools, 6 describe the process",
@@ -33,10 +33,10 @@
     "build-page": "change (existing Webflow pages only; the mapped API creates no new page)",
     "forms-and-tracking": "results (form submissions per form, last N days)",
     "review-and-test": "not covered (a person tests the page in the platform)",
-    "publish": "queue (a page publish is a live approval)",
+    "publish": "not covered by the crons: a person publishes the page in Webflow (no page-level publish is mapped)",
     "traffic-link": "not covered (ad and link set-up is in the ad workflows)",
     "measure-results": "results (form submissions per form; Webflow analytics not read)",
-    "update-edit": "change (queued, approved, then published)",
+    "update-edit": "change (queued and approved; the page is published by a person in Webflow)",
     "approval": "approval (every content update and publish waits for a person)",
     "record-keeping": "inventory and results (each run keeps the figures in the store)",
     "other": "not covered"
@@ -61,7 +61,7 @@
    "name": "queue",
    "schedule": "*/30 * * * *",
    "entry": "queue",
-   "summary": "Turns each requested page change into one approval: content update, then publish if asked. Queues only."
+   "summary": "Turns each requested page content change into one approval. Queues only."
   }
  ],
  "draft_ops": {
@@ -69,13 +69,13 @@
   "gohighlevel": ["funnels.getFunnels", "funnels.getPagesByFunnelId", "forms.get-forms", "forms.get-forms-submissions"]
  },
  "live_ops": {
-  "webflow": ["2.pages_update-static-content", "2.sites_publish"]
+  "webflow": ["2.pages_update-static-content"]
  },
- "draft_ops_note": "Draft operations are reads only. A Webflow content update changes what a visitor sees once the page is published, and a publish puts it live, so both are live operations: the queue cron only queues them, and a person approves each one. GoHighLevel has no live operation here.",
+ "draft_ops_note": "Draft operations are reads only. A Webflow content update changes what a visitor sees once the page is published, so it is a live operation: the queue cron only queues it, and a person approves it. Webflow publish is not mapped to any act, because it publishes the whole site. GoHighLevel has no live operation here.",
  "adapters": {
   "webflow": {
    "status": "docs-only",
-   "covers": "site pages and forms (read), form submissions (read), and a page change as one approval: content update, then publish of that page"
+   "covers": "site pages and forms (read), form submissions (read), and a page content change as one approval (the page is published by a person in Webflow)"
   },
   "gohighlevel": {
    "status": "docs-only",
@@ -83,6 +83,7 @@
   }
  },
  "gaps": [
+  "Webflow publish is not queued: its endpoint publishes every staged change on the site and takes no page id, so a page-only publish cannot be approved safely. Add a page-level publish or a list of staged changes before it can be queued.",
   "HubSpot: the landing page CMS endpoints (create, update draft, push live) are mapped in the kit, but no adapter is built. Its build and publish support is partial in the mining run, so it ranks third.",
   "New pages are not created. The Webflow operations mapped here include no create-page operation, and GoHighLevel's AI Studio and Funnel AI build operations are not mapped. An owner builds a new page in the platform, and the next inventory run lists it.",
   "Copy, offer, brief and audience decisions, page request intake and template choice are judgment steps. The agent writes the content as DOM nodes into a change record; nothing in the workflow decides the offer.",

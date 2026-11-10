@@ -7,6 +7,7 @@ import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, draft, train } from "../industries/all/workflows/people/sops-training/index.ts";
 import { main } from "../tools/workflow.ts";
+import { microsoft365 } from "../industries/all/workflows/people/sops-training/adapters/microsoft-365.ts";
 import fs from "node:fs";
 
 const DIR = "industries/all/workflows/people/sops-training";
@@ -14,9 +15,11 @@ const WF = JSON.parse(fs.readFileSync(`${DIR}/workflow.json`, "utf8")) as Workfl
 const PROJECT = "1200000000000001", TRAINEE = "jordan@example.com.au";
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
+const WALK = { id: "AAMkWalk1", subject: "Walkthrough: hot water", receivedDateTime: "2026-11-08T00:00:00Z", bodyPreview: "Recording is in the link below." };
+let mailRows: any[] = [WALK];
 
 function fake() {
-  hits = [];
+  hits = []; mailRows = [WALK];
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -29,7 +32,7 @@ function fake() {
       if (p === "/wiki/api/v2/pages" && m === "POST") return json({ id: "222", status: "draft", version: { number: 1 } });
       if (p === "/wiki/api/v2/pages/222" && m === "PUT") return json({ id: "222", status: "current", version: { number: 2 } });
       // Microsoft Graph
-      if (p.endsWith("/messages") && m === "GET") return json({ value: [{ id: "AAMkWalk1", subject: "Walkthrough: hot water", receivedDateTime: "2026-11-08T00:00:00Z", bodyPreview: "Recording is in the link below." }] });
+      if (p.endsWith("/messages") && m === "GET") return json({ value: mailRows });
       if (p.endsWith("/messages") && m === "POST") return json({ id: "AAMkDraft1" }, 201);
       if (/\/messages\/AAMkDraft1\/send$/.test(p)) return new Response(null, { status: 202 });
       // Asana (app.asana.com/api/1.0)
@@ -45,7 +48,7 @@ const SET: any = {
   family: "all", business_name: "Test Trades", signoff: "Operations team",
   know_how: ["confluence", "microsoft-365"],
   confluence: { source_space_id: "123456", sop_space_id: "234567" },
-  microsoft_365: { mailbox: "training@example.com.au", search: "walkthrough" },
+  microsoft_365: { mailbox: "training@example.com.au", folder: "Walkthroughs", search: "walkthrough" },
   asana: { project_gid: PROJECT },
   trainees: [{ name: "Jordan Example", email: TRAINEE }],
 };
@@ -151,4 +154,33 @@ test("an approved publish runs once; then each trainee gets one task and one app
   assert.equal(hits.find((h) => h.method === "PUT" && h.path === "/api/1.0/tasks/9001")!.body.data.assignee, TRAINEE);
   assert.equal(sends().length, 1, "the training email went once");
   await assert.rejects(approve(WF, store, trainApproval.id, "owner", NOW), /already done/);
+});
+
+test("walkthrough mail is read only from a named folder: the inbox and an unset folder are refused before any read", async () => {
+  for (const folder of [undefined, "Inbox"]) {
+    const store = new MemoryStore();
+    const set = { ...SET, microsoft_365: { mailbox: "training@example.com.au", search: "walkthrough", ...(folder ? { folder } : {}) } };
+    await assert.rejects(intake(context(WF, set, store, NOW, () => {})), /walkthrough folder/);
+    assert.equal(hits.filter((h) => h.method === "GET" && h.path.endsWith("/messages")).length, 0, "no mail was read");
+  }
+});
+
+test("walkthrough message ids '.' and '..' are path segments and are dropped, not read", async () => {
+  mailRows = [{ id: "..", subject: "Walkthrough: bad" }, { id: ".", subject: "Walkthrough: bad" }, WALK];
+  const ctx = context(WF, SET, new MemoryStore(), NOW, () => {});
+  const rows = await microsoft365.sources(ctx);
+  assert.equal(rows.length, 1);
+  assert.deepEqual(rows[0].ref, { message_id: WALK.id });
+});
+
+test("the publish approval shows the source text beside the draft", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await intake(ctx);
+  const src = Object.values(await store.list<any>("sources")).find((s) => s.platform === "confluence")!;
+  await store.put("proposals", src.id, { title: "Hot water safety", steps: ["Isolate the valve"] });
+  await draft(ctx);
+  const sop = (await store.get<any>("sources", src.id)).sop;
+  const ap = await store.get<Approval>("approvals", sop.approval);
+  assert.match(ap!.summary, /Source text: Isolate the valve first\./);
+  assert.match(ap!.summary, /Hot water safety/);
 });

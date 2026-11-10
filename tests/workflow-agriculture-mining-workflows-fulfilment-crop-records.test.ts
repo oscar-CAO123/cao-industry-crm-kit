@@ -97,6 +97,7 @@ test("once records and rainfall are present, the review flags only the field sti
 test("a rainfall proposal is queued by the cron and written only after approval", async () => {
   const store = new MemoryStore();
   const ctx = context(WF, S, store, NOW, () => {});
+  await collect(ctx);
   await store.put("proposals", "p1", { kind: "rainfall", farm_id: "FARM1", sensor_id: "GAUGE-1", value: 12.5, time: NOW.getTime() - HOUR, mode: "absolute" });
 
   assert.deepEqual(await queueRecords(ctx), { queued: 1, refused: 0 });
@@ -115,6 +116,7 @@ test("a rainfall proposal is queued by the cron and written only after approval"
 test("re-runs of the queue cron never queue the same reading twice", async () => {
   const store = new MemoryStore();
   const ctx = context(WF, S, store, NOW, () => {});
+  await collect(ctx);
   await store.put("proposals", "p1", { kind: "rainfall", farm_id: "FARM1", sensor_id: "GAUGE-1", value: 5, time: NOW.getTime() - HOUR });
   assert.deepEqual(await queueRecords(ctx), { queued: 1, refused: 0 });
   assert.deepEqual(await queueRecords(ctx), { queued: 0, refused: 0 });
@@ -125,6 +127,7 @@ test("re-runs of the queue cron never queue the same reading twice", async () =>
 test("bad proposals are refused before they reach the queue", async () => {
   const store = new MemoryStore();
   const ctx = context(WF, S, store, NOW, () => {});
+  await collect(ctx);
   const t = NOW.getTime() - HOUR;
   await store.put("proposals", "wrong-farm", { kind: "rainfall", farm_id: "FARM9", sensor_id: "GAUGE-1", value: 5, time: t });
   await store.put("proposals", "negative", { kind: "rainfall", farm_id: "FARM1", sensor_id: "GAUGE-1", value: -3, time: t });
@@ -133,6 +136,25 @@ test("bad proposals are refused before they reach the queue", async () => {
   assert.deepEqual(await queueRecords(ctx), { queued: 0, refused: 4 });
   assert.equal(Object.keys(await store.list("approvals")).length, 0);
   assert.equal((await store.get<any>("proposals", "negative")).status, "refused");
+  assert.equal(mutationsRun, 0);
+});
+
+test("with farm_ids empty, only a farm that collect read can be written to", async () => {
+  const OPEN: any = { ...S, farm_ids: [] };
+  const t = NOW.getTime() - HOUR;
+  const unread = { kind: "rainfall", farm_id: "FARM2", sensor_id: "GAUGE-1", value: 5, time: t };
+  const read = { kind: "rainfall", farm_id: "FARM1", sensor_id: "GAUGE-1", value: 5, time: t };
+
+  const before = new MemoryStore();
+  await before.put("proposals", "p1", read);
+  assert.deepEqual(await queueRecords(context(WF, OPEN, before, NOW, () => {})), { queued: 0, refused: 1 }, "collect has not run, so nothing is writable");
+
+  const store = new MemoryStore(), ctx = context(WF, OPEN, store, NOW, () => {});
+  await collect(ctx);
+  await store.put("proposals", "p-read", read);
+  await store.put("proposals", "p-unread", unread);
+  assert.deepEqual(await queueRecords(ctx), { queued: 1, refused: 1 });
+  assert.equal((await store.get<any>("proposals", "p-unread")).reason, "farm was not read by collect");
   assert.equal(mutationsRun, 0);
 });
 

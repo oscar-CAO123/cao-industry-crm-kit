@@ -7,6 +7,7 @@ import { type Settings, type BudgetRow, type Timesheet, GUID, round } from "../t
 
 const P = "xero";
 const MAX_PAGES = 20;   // a hard stop on paging, so a bad response cannot loop forever
+const MAX_BUDGETS = 50;
 const idem = (s: string) => ({ "Idempotency-Key": safeKey(s, 120) });
 
 const guid = (v: unknown) => { const s = String(v ?? ""); if (!GUID.test(s)) throw new Error("xero: bad id"); return s; };
@@ -17,8 +18,10 @@ const amount = (v: unknown) => { const n = Number(v); if (!Number.isFinite(n)) t
 export async function readBudgets(ctx: Ctx<Settings>): Promise<BudgetRow[]> {
   const s = ctx.settings;
   const list = await ctx.draft<any>({ platform: P, op: "accounting.getBudgets", summary: "list budgets" });
+  const budgets: any[] = list.data?.Budgets ?? [];
+  if (budgets.length > MAX_BUDGETS) throw new Error(`costs: ${budgets.length} budgets in Xero, more than ${MAX_BUDGETS}, so the baseline would be incomplete`);
   const out: BudgetRow[] = [];
-  for (const b of (list.data?.Budgets ?? []).slice(0, 50)) {
+  for (const b of budgets) {
     const id = guid(b.BudgetID);
     const one = await ctx.draft<any>({ platform: P, op: "accounting.getBudget", summary: `budget ${id.slice(0, 8)} for the period`,
       input: { params: { BudgetID: id, DateFrom: s.budget_from, DateTo: s.budget_to } } });
@@ -34,16 +37,16 @@ export async function readBudgets(ctx: Ctx<Settings>): Promise<BudgetRow[]> {
   return out;
 }
 
-/** Walk one paged list. The rows are read as data; nothing in them is run or sent. */
+/** Walk one paged list. The rows are read as data; nothing in them is run or sent. Running past the page cap is an error, never a partial total. */
 async function pages(ctx: Ctx<Settings>, op: string, base: Record<string, unknown>, key: "PurchaseOrders" | "Invoices"): Promise<any[]> {
   const out: any[] = [];
   for (let page = 1; page <= MAX_PAGES; page++) {
     const r = await ctx.draft<any>({ platform: P, op, summary: `${op} page ${page}`, input: { params: { ...base, page } } });
     const rows: any[] = r.data?.[key] ?? [];
-    if (!rows.length) break;
+    if (!rows.length) return out;
     out.push(...rows);
   }
-  return out;
+  throw new Error(`costs: ${op} has more than ${MAX_PAGES} pages, so the spend total would be incomplete`);
 }
 
 /** Bills dated in the period. The dates are checked digits, so the filter text cannot be changed by the data. */
@@ -85,10 +88,13 @@ export async function draftTimesheets(ctx: Ctx<Settings>): Promise<Timesheet[]> 
   }));
 }
 
+/** The approval key for one timesheet: the same timesheet is queued once, and a withdrawn one is found by it. */
+export const timesheetKey = (timesheetID: string) => `timesheet:${timesheetID}`;
+
 /** The approval for one timesheet. It is only ever queued: a person approves it in the CRM shell. */
 export const approveTimesheetAct = (t: Timesheet): Act => ({
   platform: P, op: "payroll-au-v2.approveTimesheet",
-  input: { params: { TimesheetID: t.timesheetID, ...idem(`timesheet:${t.timesheetID}`) } },
+  input: { params: { TimesheetID: t.timesheetID, ...idem(timesheetKey(t.timesheetID)) } },
   summary: `approve timesheet ${t.timesheetID.slice(0, 8)} (${t.totalHours} hours, ${t.startDate} to ${t.endDate})`,
-  key: `timesheet:${t.timesheetID}`,
+  key: timesheetKey(t.timesheetID),
 });

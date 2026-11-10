@@ -37,7 +37,7 @@ export async function registrations(ctx: Ctx<Settings>) {
     const cursorKey = `attendees-${id}`;
     const cursor = await ctx.store.get<{ changed_since: string }>("cursor", cursorKey);
     const { items, more } = await attendees(ctx, id, cursor?.changed_since);
-    if (more) { incomplete++; ctx.log(`registrations ${id}: more than one page of attendees, register incomplete`); }
+    if (more) { incomplete++; ctx.log(`registrations ${id}: attendee list refused, register not updated for this event`); }
     for (const a of items) {
       const aid = String(a.id ?? "");
       if (!isId(aid)) continue;
@@ -83,7 +83,7 @@ export async function wrapUp(ctx: Ctx<Settings>) {
     const ev = await readEvent(ctx, id);
     if (!(endMs(ev) < now)) { waiting++; continue; } // not ended yet, or no end time
     const { items, more } = await attendees(ctx, id);
-    if (more) incomplete++;
+    if (more) { incomplete++; continue; }   // refused list: no counts are drafted from part of it
     const counts = new Map<string, { sold: number; checked_in: number; cancelled: number; refunded: number }>();
     for (const a of items) {
       const k = a.ticket_class_name ?? "unknown";

@@ -86,6 +86,17 @@ test("a time entry a person records is queued, never written, and re-runs never 
   const approvals = Object.values(await store.list<Approval>("approvals"));
   assert.equal(approvals.length, 1);
   assert.equal(approvals[0].acts[0].op, "openapi.Activity#create");
+  // The approver must see the exact value Clio will book: hours as entered, and the seconds quantity sent.
+  assert.match(approvals[0].summary, /log 1\.5 h \(Clio quantity 5400 seconds\)/);
+});
+
+test("capture keeps ids, dates and flags only, never the note text", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await capture(ctx);
+  const saved = JSON.stringify(await store.list("captured"));
+  assert.doesNotMatch(saved, /Client call/, "note text must not be stored");
+  assert.match(saved, /"has_note":true/);
+  assert.match(saved, /"matter_id":77/);
 });
 
 test("an approved entry reaches Clio once, with hours sent as seconds on the fee earner's matter", async () => {

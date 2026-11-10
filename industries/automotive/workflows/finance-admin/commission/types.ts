@@ -47,6 +47,6 @@ export function checkSettings(s: Settings): void {
   if (!Array.isArray(s.reps) || !s.reps.length) throw new Error("commission: set reps");
   for (const r of s.reps) {
     xid(r.employee_id, `employee_id for ${r.name}`);
-    if (!r.match || r.match.length > 100) throw new Error(`commission: ${r.name} needs a match text of 1 to 100 characters`);
+    if (!r.match || r.match.length < 3 || r.match.length > 100) throw new Error(`commission: ${r.name} needs a match text of 3 to 100 characters`);
   }
 }

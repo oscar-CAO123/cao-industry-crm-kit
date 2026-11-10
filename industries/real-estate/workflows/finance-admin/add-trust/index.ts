@@ -29,31 +29,37 @@ export async function accounts(ctx: Ctx<Settings>) {
 export async function ledger(ctx: Ctx<Settings>) {
   const today = day(ctx.now);
   const lives = ctx.settings.sale_lives ?? [];
-  const flagged: Tx[] = [];
-  let fresh = 0;
+  const principal = ctx.settings.principal_email;
+  // Read every sale first. Nothing is written until the principal's address is known to be valid, so a missing setting stops the run
+  // before any register row or saved entry, and the next run sees the same entries as new.
+  const batches: { sale: string; added: Tx[]; bad: Tx[] }[] = [];
   for (const s of lives) {
     if (!NUM.test(String(s.property_id)) || !NUM.test(String(s.life_id))) throw new Error("ledger: sale_lives needs numeric property_id and life_id");
     const txs = await vaultre.ledger(ctx, s.property_id, s.life_id);
     const added: Tx[] = [];
     for (const t of txs) if (!(await ctx.store.get("trust_tx", t.id))) added.push(t);
     if (!added.length) continue;
-    const bad = added.filter((t) => missing(t));
-    const total = Math.round(added.reduce((n, t) => n + t.amount, 0) * 100) / 100;
-    await registerRow(ctx, [today, added[0].sale, added.length, total, bad.length, bad.map((t) => t.id).join(", ")]);
-    for (const t of added) await ctx.store.put("trust_tx", t.id, t);
-    fresh += added.length;
-    flagged.push(...bad);
+    batches.push({ sale: added[0].sale, added, bad: added.filter((t) => missing(t)) });
+  }
+  const flagged = batches.flatMap((b) => b.bad);
+  if (flagged.length && (!principal || !EMAIL.test(principal))) throw new Error("ledger: principal_email must be a valid address before entries can be flagged");
+  let fresh = 0;
+  for (const b of batches) {
+    const total = Math.round(b.added.reduce((n, t) => n + t.amount, 0) * 100) / 100;
+    await registerRow(ctx, [today, b.sale, b.added.length, total, b.bad.length, b.bad.map((t) => t.id).join(", ")]);
+    for (const t of b.added) if (!missing(t)) await ctx.store.put("trust_tx", t.id, t);
+    fresh += b.added.length;
   }
   let queued = false;
-  const principal = ctx.settings.principal_email;
-  if (flagged.length && principal) {
-    if (!EMAIL.test(principal)) throw new Error("ledger: principal_email is not a valid address");
+  if (flagged.length) {
     const lines = flagged.map((t) => `<li>Sale ${esc(t.sale)}, entry ${esc(t.id)} (${esc(t.type || "type not given")}, ${esc(t.date || "date not given")}): ${esc(missing(t))}</li>`).join("");
-    const d = await mailDraft(ctx, { to: principal, subject: `Trust ledger: ${flagged.length} entries to check`,
+    const d = await mailDraft(ctx, { to: principal!, subject: `Trust ledger: ${flagged.length} entries to check`,
       html: `<p>${esc(ctx.settings.business_name ?? "")} trust ledger check for ${esc(today)}. These new entries need a look before the reconciliation is signed off:</p><ul>${lines}</ul>` });
     await ctx.queue({ ...d.act, key: safeKey(`trust-exceptions:${today}:${flagged.map((t) => t.id).join(",")}`) },
       `trust exceptions ${today}: ${flagged.length} entries to check`);
     queued = true;
+    // Flagged entries count as seen only once their exception is queued, so a failed draft is picked up again on the next run.
+    for (const t of flagged) await ctx.store.put("trust_tx", t.id, t);
   }
   ctx.log(`ledger: ${fresh} new entries across ${lives.length} sales, ${flagged.length} to check`);
   return { fresh, flagged: flagged.length, queued };

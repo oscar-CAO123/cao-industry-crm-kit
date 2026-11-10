@@ -37,7 +37,7 @@
   "Dealer-system integration (the dealer's stock system to the register): none mapped. The register is filled from an Excel stock list the dealer keeps.",
   "Lender payout figures and finance clearance: not documented by the PPSR pages; a person reads the search certificate.",
   "Reading search results into a buy or hold decision: a judgment step for the owner. The skill never makes it.",
-  "Reads cover the first 1,000 rows of each workbook table. A register longer than that needs a paged read before it is used.",
+  "Workbook reads page through each table to its last row, up to 50,000 rows. A longer table stops the run with an error rather than being read in part.",
   "Evidence is thin: one discovery call and the two platform pages. Confirm the steps with the dealer before the crons go live."
  ],
  "evidence": {

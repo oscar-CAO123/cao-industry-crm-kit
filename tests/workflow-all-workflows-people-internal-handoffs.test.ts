@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, draft, followUp } from "../industries/all/workflows/people/internal-handoffs/index.ts";
 import type { Handover, Settings } from "../industries/all/workflows/people/internal-handoffs/types.ts";
 import fs from "node:fs";
@@ -21,13 +21,14 @@ let hits: Hit[] = [];
 let tasks: Record<string, { completed: boolean; stories: any[] }> = {};
 let nextGid = 7001;
 let slackMessages: any[] = [];
+let dmFailures = 0; // how many direct-message opens fail before one works
 
 const ASANA_TASK = { gid: "5001", name: "Quote for hot water at 1 Test St", notes: "Sam Lee wants a quote. <!channel> please check the site.", created_at: "2026-11-08T01:00:00Z" };
 const SLACK_MSG = { type: "message", ts: "1731024000.000100", user: "U0999999999", text: "Install enquiry for Eva Chen at 2 Test St" };
 const BOT_MSG = { type: "message", bot_id: "B0001", ts: "1731024200.000300", text: "Handovers open: 0" };
 
 function fake() {
-  hits = []; tasks = {}; nextGid = 7001;
+  hits = []; tasks = {}; nextGid = 7001; dmFailures = 0;
   slackMessages = [SLACK_MSG, BOT_MSG];
   setTransport({
     sleep: async () => {}, log: () => {},
@@ -50,7 +51,10 @@ function fake() {
       }
       // Slack (slack.com/api)
       if (p === "/api/conversations.history" && m === "GET") return json({ ok: true, messages: slackMessages });
-      if (p === "/api/conversations.open" && m === "POST") return json({ ok: true, channel: { id: DM } });
+      if (p === "/api/conversations.open" && m === "POST") {
+        if (dmFailures > 0) { dmFailures--; return json({ ok: false, error: "internal_error" }); }
+        return json({ ok: true, channel: { id: DM } });
+      }
       if (p === "/api/chat.postMessage" && m === "POST") return json({ ok: true, ts: "1731024300.000400", channel: body?.channel });
       return new Response("not faked: " + m + " " + p, { status: 404 });
     }) as any,
@@ -193,4 +197,26 @@ test("follow-up marks the handover passed on, chases once after 24 hours, and st
   assert.equal((await followUp(ctxAt(store, settings(), at(80)))).acknowledged, 1);
   assert.equal(find(await handovers(store), "Quote").status, "acknowledged");
   assert.equal(mutations().length, 3, "only the three approved acts ran (assign, note, message); no chase ran by itself");
+});
+
+test("a failed direct message does not lose the record task: the next run reuses it", async () => {
+  const store = new MemoryStore(), ctx = ctxAt(store, settings());
+  await intake(ctx);
+  dmFailures = 1;
+  assert.deepEqual(await draft(ctx), { queued: 0, needs_routing: 2 }, "the routed request parks when the direct message fails");
+  assert.equal(creates().length, 1, "the routed request got its record task before the direct message failed");
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_routing: 1 });
+  assert.equal(creates().length, 1, "the re-run reuses the saved record task and creates no more");
+  assert.equal(find(await handovers(store), "Quote").status, "queued");
+  assert.equal((await approvals(store)).length, 1);
+});
+
+test("a refused handover leaves the open list and is never retried or counted as open", async () => {
+  const store = new MemoryStore(), ctx = ctxAt(store, settings());
+  await intake(ctx); await draft(ctx);
+  const [ap] = await approvals(store);
+  await reject(WF, store, ap.id, "owner", NOW);
+  assert.deepEqual(await followUp(ctxAt(store, settings(), at(1))), { passed: 0, chased: 0, acknowledged: 0, closed: 0, status_queued: false });
+  assert.equal(find(await handovers(store), "Quote").status, "rejected");
+  assert.equal(mutations().length, 0, "nothing sent for a refused handover");
 });

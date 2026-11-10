@@ -44,7 +44,7 @@
   "Xero: the Files inbox is not read, so a document sitting in the Xero inbox but not yet attached still counts as missing.",
   "Xero: the Xero pages in the evidence do not cover document requests or client portals, so email is the only request channel.",
   "Judgment: whether an item really needs a document (bank fees, transfers, small cash) stays with the accountant. The list includes every unattached item in the lookback.",
-  "Contacts with no valid email are listed but never chased. The client's email has to be on the Xero contact.",
+  "Chase emails go to settings.client_email, the client's own address. The Xero contact on each item (a supplier or customer) is never chased, and the chase cron refuses to run without client_email.",
   "A rejected chase still counts as sent for its stage, so the next reminder follows on schedule. Resending a rejected chase needs a runtime change.",
   "The Xero adapter is docs-only until a Xero demo organisation proves the reads. Deploy's secretNames reads only intake, quotes, rate_card and messages, so the Xero and Microsoft keys are not listed for this workflow. add-bas has the same gap."
  ],

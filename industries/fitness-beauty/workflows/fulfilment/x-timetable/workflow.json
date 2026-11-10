@@ -36,7 +36,7 @@
   "Creating or editing a class, assigning or swapping instructors, and moving a class to a new time have no mapped Bookeo operation. They stay manual in the platform.",
   "Check-in and attendance records have no mapped Bookeo operation.",
   "Bookeo capacity is not a single field here. Fill rate is seats left plus non-cancelled bookings for the same event, which is an approximation until a live account confirms it.",
-  "The Bookeo adapter reads the first 100 rows of each list and does not follow pagination yet.",
+  "The Bookeo adapter follows pageNavigationToken for each list, up to 5,000 rows, and stops loudly past that. Paging is tested on a fake network only, so the info token shape is unverified on a live account.",
   "Member notices for a moved or changed class (not a cancellation) have no mapped operation. The Bookeo cancellation notice goes out through notifyCustomer.",
   "Every adapter stays docs-only until a Bookeo sandbox account proves it."
  ],

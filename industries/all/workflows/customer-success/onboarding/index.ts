@@ -53,7 +53,7 @@ export async function welcome(ctx: Ctx<Settings>) {
     if (r.stage !== "set-up") continue;
     if (!c.email) { ctx.log(`welcome: ${c.id} has no email, skipped`); continue; }
     const { subject, text } = welcomeText(ctx.settings, c);
-    if (!r.welcome_draft) { r.welcome_draft = await google.draft(ctx, c.email, subject, text); await save(ctx, key, r); drafted++; }
+    if (!r.welcome_draft) { r.welcome_draft = await google.draft(ctx, c.email, subject, text, c.id); await save(ctx, key, r); drafted++; }
     r.welcome_approval = await google.queueSend(ctx, r.welcome_draft, `Send the welcome email to ${c.email}: ${clean(subject, 120)}`, `welcome:${key}`);
     r.stage = "welcome-queued";
     await save(ctx, key, r);
@@ -78,7 +78,7 @@ export async function progress(ctx: Ctx<Settings>) {
       const text = p.open === 0
         ? `${clean(c.name, 120)} has finished onboarding: all ${total} steps are done.`
         : `${clean(c.name, 120)} has ${p.done} of ${total} onboarding steps done, with ${p.open} still open.`;
-      await google.draft(ctx, owner, `Onboarding: ${clean(c.name, 80)}`, text);
+      await google.draft(ctx, owner, `Onboarding: ${clean(c.name, 80)}`, text, c.id);
       r.owner_note_open = p.open;
       noted++;
     }

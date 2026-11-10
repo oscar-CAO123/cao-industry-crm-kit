@@ -19,6 +19,7 @@ const KLAVIYO_CAMPAIGN = "01JABCDEFGH";
 type Hit = { method: string; path: string; query: URLSearchParams; headers: Record<string, string>; body: any };
 let hits: Hit[] = [];
 let contacts: { id: string; email: string; tags: string[] }[] = [];
+let tagFail = new Set<string>();   // contact ids whose tag call answers 404, as a deleted contact would
 
 /** 250 contacts. Even ones carry the lapsed tag; contact 0 also carries the sent tag, so it is never picked up. */
 function seed() {
@@ -32,6 +33,7 @@ function seed() {
 
 function fake() {
   hits = [];
+  tagFail = new Set();
   seed();
   setTransport({
     sleep: async () => {}, log: () => {},
@@ -47,7 +49,10 @@ function fake() {
         return json({ contacts: page, count: page.length });
       }
       if (/^\/contacts\/[^/]+\/campaigns\/[^/]+$/.test(p) && m === "POST") return json({});
-      if (/^\/contacts\/[^/]+\/tags$/.test(p) && m === "POST") return json({ tags: [] });
+      if (/^\/contacts\/[^/]+\/tags$/.test(p) && m === "POST") {
+        if (tagFail.has(p.split("/")[2])) return new Response("contact not found", { status: 404 });
+        return json({ tags: [] });
+      }
       if (/^\/contacts\/[^/]+\/tasks$/.test(p) && m === "POST") return json({ task: {} });
       if (p === "/api/campaign-send-jobs" && m === "POST") return json({ data: { type: "campaign-send-job", id: "job1" } }, 202);
       return new Response("not faked: " + p, { status: 404 });
@@ -159,6 +164,40 @@ test("klaviyo: one send is queued, not run; approval sends the campaign's send j
   assert.equal(job.headers.revision, "2026-10-15");
 });
 const KLV_ID = KLAVIYO_CAMPAIGN;
+
+test("a contact that cannot be tagged does not stop the other enrolments; it stays queued, and is tagged on a later run", async () => {
+  const { store, ctx } = at(GHL);
+  await listBuild(ctx);
+  await queueSend(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals")).sort((a, b) => a.id.localeCompare(b.id));
+  await approve(WF, store, first.id, "owner", NOW);            // enrols ctc0002, ctc0004, ctc0006, ctc0008, ctc0010
+  tagFail.add("ctc0004");
+  assert.deepEqual(await queueSend(ctx), { queued: 50 }, "the run finishes and queues the next batch");
+  const cands = Object.values(await store.list<Candidate>("candidates"));
+  const bad = cands.find((c) => c.id === "ctc0004")!;
+  assert.equal(bad.status, "queued", "the untaggable contact is not marked sent");
+  assert.ok(bad.tag_error, "the failure is recorded on the contact");
+  assert.equal(cands.filter((c) => c.status === "sent").length, 4, "the other four contacts in that approval are recorded sent");
+  tagFail.clear();
+  await queueSend(ctx);
+  const healed = await store.get<Candidate>("candidates", bad.key);
+  assert.equal(healed?.status, "sent", "the next run tags it once the contact can be tagged");
+  assert.equal(healed?.tag_error, undefined);
+  assert.equal(hits.filter((h) => h.path === "/contacts/ctc0004/tags").length, 2, "one failed try, then one success on the next run");
+});
+
+test("approval summaries and the run log name a contact by a masked address; the send input carries no address", async () => {
+  const store = new MemoryStore(), logs: string[] = [];
+  const ctx = context(WF, GHL, store, NOW, (m) => logs.push(m));
+  await listBuild(ctx);
+  await queueSend(ctx);
+  const aps = Object.values(await store.list<Approval>("approvals"));
+  const summaries = aps.map((a) => a.summary).join("\n");
+  assert.match(summaries, /pe\*\*\*@example\.com/, "person2 shows as pe***@example.com");
+  assert.doesNotMatch(summaries, /person\d+@example\.com/, "no full address in any approval summary");
+  assert.doesNotMatch(logs.join("\n"), /person\d+@example\.com/, "no full address in the run log");
+  assert.ok(aps.flatMap((a) => a.acts).every((x) => !JSON.stringify(x.input).includes("@")), "the enrolments carry contact ids only");
+});
 
 test("workflow.json and the crons agree: draft ops are reads, tags and tasks only; every cron is listed and exported", () => {
   assert.deepEqual([...WF.draft_ops.gohighlevel].sort(), ["contacts.add-tags", "contacts.create-task", "contacts.get-contacts"]);

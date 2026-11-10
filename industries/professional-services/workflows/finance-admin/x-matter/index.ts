@@ -55,7 +55,8 @@ export async function reply(ctx: Ctx<Settings>) {
   for (const e of await emailsWith(ctx, "filed")) {
     if (!e.reply || e.reply_approval) continue;
     if (!e.contact_id) { parked++; await save(ctx, { ...e, reason: "no contact on the matter to message: reply by hand" }); continue; }
-    const id = await ctx.queue(sm.portalAct(ctx, e), `portal reply to ${e.from} on ${e.subject}`);
+    // The approval names the receiving contact (the one whose own email matched the sender), so the approver sees who gets it.
+    const id = await ctx.queue(sm.portalAct(ctx, e), `portal reply to ${e.from} (contact ${e.contact_id}) on ${e.subject}`);
     await save(ctx, { ...e, reply_approval: id });
     queued++;
   }

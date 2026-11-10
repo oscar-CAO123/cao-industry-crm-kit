@@ -121,6 +121,31 @@ test("alert: one draft and one queued send for the new failures; a re-run drafts
   assert.equal(Object.keys(await store.list("approvals")).length, 1);
 });
 
+test("a failure that clears and comes back for the same reasons is alerted again, not the old approval", async () => {
+  const store = new MemoryStore();
+  const HOUR = 3600e3;
+  const at = (ms: number) => context(WF, SET, store, new Date(NOW.getTime() + ms), () => {});
+  const expiry = world.connections[1].expire, dlq = world.scenarios[1].dlqCount, logs = world.logs[902];
+  await check(at(0));
+  assert.deepEqual(await alert(at(0)), { alerted: 3 });
+  const [first] = Object.keys(await store.list("approvals"));
+  await approve(WF, store, first, "oscar", NOW);
+  // everything is fixed an hour later, then the same three things fail again for the same reasons
+  world.connections[1].expire = "2030-01-01T00:00:00Z";
+  world.scenarios[1].dlqCount = 0; world.logs[902] = [{ status: 1, timestamp: NOW.getTime() + HOUR }];
+  world.health[1].status = "serviceOperational";
+  await check(at(HOUR));
+  assert.deepEqual(await alert(at(HOUR)), { alerted: 0 }, "cleared items are not alerted");
+  world.connections[1].expire = expiry;
+  world.scenarios[1].dlqCount = dlq; world.logs[902] = logs;
+  world.health[1].status = "serviceDegradation";
+  await check(at(2 * HOUR));
+  assert.deepEqual(await alert(at(2 * HOUR)), { alerted: 3 });
+  const approvals = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(approvals.length, 2, "the second occurrence has its own approval");
+  assert.equal(approvals.find((a) => a.id !== first)!.status, "pending", "and waits for a person");
+});
+
 test("approval: the owner's approval sends the alert once", async () => {
   const store = new MemoryStore();
   await check(context(WF, SET, store, NOW, () => {}));

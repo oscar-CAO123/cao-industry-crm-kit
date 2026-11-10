@@ -17,6 +17,7 @@ export interface Proposal {
   fee_ex_gst: number;
   status: "scoped" | "drafted" | "publish-queued" | "published" | "accepted" | "declined";
   quote_id?: string;
+  publish_attempt?: number;  // 1 until a publish is rejected; each re-queue after a rejection uses the next attempt's approval key
   created: string;
 }
 

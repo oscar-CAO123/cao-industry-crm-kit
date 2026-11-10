@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { describe as describeOp } from "../core/sdk/call.ts";
 import { intake, stockCheck, invoice, billMatch, CRONS } from "../industries/all/workflows/fulfilment/order-sync/index.ts";
 import { checkReorder, type Settings } from "../industries/all/workflows/fulfilment/order-sync/types.ts";
@@ -117,6 +117,40 @@ test("stock-check queues a purchase order for approval, never raises it, and que
 
   await stockCheck(ctx());
   assert.equal(Object.keys(await store.list("approvals")).length, 1, "a run after approval does not queue it again");
+});
+
+test("a purchase order for a code is not queued again while it is pending, raised or rejected within the window", async () => {
+  salesOrders = [SO_OPEN];
+  stock = [{ code: "BOLT-M8", available: 100, branchName: "Main" }];
+  const NEXT_DAY = new Date("2026-11-09T00:00:00Z");
+  const store = new MemoryStore();
+  const ctx = (d: Date) => context(WF, SETTINGS, store, d, () => {});
+  await intake(ctx(NOW)); await stockCheck(ctx(NOW));
+  const [raised] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, raised.id, "oscar", NOW);
+  await stockCheck(ctx(NEXT_DAY));
+  assert.equal(Object.keys(await store.list("approvals")).length, 1, "a raised order blocks the next day's order");
+
+  const other = new MemoryStore(), c2 = (d: Date) => context(WF, SETTINGS, other, d, () => {});
+  await intake(c2(NOW)); await stockCheck(c2(NOW));
+  const [rejected] = Object.values(await other.list<Approval>("approvals"));
+  await reject(WF, other, rejected.id, "oscar", NOW);
+  await stockCheck(c2(NEXT_DAY));
+  assert.equal(Object.keys(await other.list("approvals")).length, 1, "a rejected order blocks the next day's order");
+
+  await stockCheck(ctx(new Date("2026-11-30T00:00:00Z")));
+  assert.equal(Object.keys(await store.list("approvals")).length, 2, "after the window a new order can be queued");
+});
+
+test("a sales order re-read after a failed invoice keeps the invoice error until an invoice is drafted", async () => {
+  salesOrders = [SO_SHIPPED];
+  const store = new MemoryStore();
+  const ctx = () => context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx());
+  await store.put("orders", "so-102", { ...(await store.get<any>("orders", "so-102")), error: "invoice not drafted: test" });
+  await store.put("state", "cin7-watermark", { at: "2026-11-07T00:00:00Z" });
+  await intake(ctx());
+  assert.equal((await store.get<any>("orders", "so-102")).error, "invoice not drafted: test", "the failure is not erased by a re-read");
 });
 
 test("invoice drafts one DRAFT Xero invoice per shipped order, with an idempotency key", async () => {

@@ -6,6 +6,7 @@ import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, acknowledge, followUp } from "../industries/all/workflows/sales/lead-capture/index.ts";
+import * as gh from "../industries/all/workflows/sales/lead-capture/adapters/gohighlevel.ts";
 import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/all/workflows/sales/lead-capture/workflow.json", "utf8")) as WorkflowRecord;
@@ -29,7 +30,8 @@ function fake() {
       if (p === "/conversations/search") {
         if (u.searchParams.get("contactId")) return json({ conversations: [{ id: "conv1", contactId: "ctc1", unreadCount: 0 }] });
         return json({ conversations: [
-          { id: "chat1", contactId: "ctc2", unreadCount: 1, fullName: "Sam <i>Ng</i>", email: "sam@example.com", phone: "", type: "Live_Chat" },
+          { id: "chat1", contactId: "ctc2", unreadCount: 1, fullName: "Sam <i>Ng</i>", email: "sam@example.com", phone: "", type: "Live_Chat", lastMessageDate: "2026-11-08T00:30:00.000Z" },
+          { id: "chat3", contactId: "ctc4", unreadCount: 1, fullName: "Old Chat", email: "old-chat@example.com", lastMessageDate: "2026-10-01T00:00:00.000Z" },
           { id: "chat2", contactId: "ctc3", unreadCount: 0, fullName: "Quiet Visitor", email: "quiet@example.com" },
         ], total: 2 });
       }
@@ -73,6 +75,7 @@ test("intake: the first run only sets the baseline; later runs record new leads,
   const later = context(WF, SETTINGS, store, new Date(NOW.getTime() + HOUR), () => {});
   assert.deepEqual(await intake(later), { added: 2 });
   assert.equal(opps().length, 2, "one opportunity for the form lead, one for the open chat");
+  assert.ok(!hits.some((h) => h.path === "/contacts/ctc4/tags"), "an unread chat from before the baseline is not imported");
   assert.equal(opps()[0].body.pipelineStageId, "STAGE1");
   assert.equal(opps()[0].body.assignedTo, "USER1");
   assert.equal(sends().length, 0, "intake sends nothing");
@@ -110,6 +113,23 @@ test("approval sends the escaped acknowledgement once; a second approval is refu
   assert.equal(sent[0].body.html, "<p>Hi Ari, thanks for getting in touch with Smith &amp; Co &lt;test&gt;.</p>", "business name is escaped, not raw");
   await assert.rejects(approve(WF, store, ap.id, "owner", t1), /already done/);
   assert.equal(sends().length, 1);
+});
+
+test("approval summaries show a masked address; the lead is still reached by contact id", async () => {
+  const store = new MemoryStore(), t1 = new Date(NOW.getTime() + HOUR);
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  await intake(context(WF, SETTINGS, store, t1, () => {}));
+  await acknowledge(context(WF, SETTINGS, store, t1, () => {}));
+  const ari = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].input?.body?.contactId === "ctc1")!;
+  assert.ok(!ari.summary.includes("ari@example.com"), "the full address is not in the summary");
+  assert.match(ari.summary, /a\*\*\*@example\.com/);
+});
+
+test("a phone number in an approval summary shows only its last two digits", () => {
+  const act = gh.messageAct(SETTINGS, { key: "k", contactId: "ctc9", name: "Lee", phone: "+61 400 111 222", received: "", status: "captured", followups: [], source: "form", ref: "r" } as any,
+    "SMS", "Hi {first}", "Subject", "ack:k", "acknowledgement");
+  assert.equal(act?.summary, "acknowledgement text to ***22");
+  assert.equal(act?.input?.body?.message, "Hi Lee");
 });
 
 test("follow-up waits for the set hours, queues up to the maximum, and skips a lead with an unanswered message", async () => {

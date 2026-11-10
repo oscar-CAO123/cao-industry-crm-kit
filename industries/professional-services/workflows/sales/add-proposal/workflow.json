@@ -40,7 +40,7 @@
   "Sending the proposal to the client, the signing envelope and follow-ups are not in the pages read. No send or follow-up operation is mapped, so this build only publishes, which the client sees as a status change.",
   "Fee-setting rules, engagement letter terms and the choice of scope are judgment steps for the agent skill, not platform steps.",
   "A draft create is not idempotent. If the process stops after HubSpot accepts a create but before the store is written, a rerun can make a second draft quote. Check HubSpot before approving a rerun.",
-  "A rejected publish approval leaves the proposal at publish-queued. A person resets it to drafted before it can be queued again.",
+  "A rejected publish approval leaves the proposal at publish-queued. A person resets it to drafted; the next publish run then queues a new approval under a new key.",
   "The adapter is docs-only until a HubSpot test account proves the create, read and update calls."
  ],
  "evidence": {

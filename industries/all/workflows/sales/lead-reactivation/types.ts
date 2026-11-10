@@ -27,6 +27,7 @@ export interface Candidate {
   approval?: string;                    // approval id that holds the enrolment
   sent_at?: string;
   tasked_at?: string;
+  tag_error?: string;                   // the last failure to tag the contact as sent; the contact stays queued and is tried again
 }
 
 export const DAY = 864e5;

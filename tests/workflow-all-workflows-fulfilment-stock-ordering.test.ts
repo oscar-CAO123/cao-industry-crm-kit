@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, approvalId, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { stockCheck, reorderDraft, poCheck } from "../industries/all/workflows/fulfilment/stock-ordering/index.ts";
 import { checkRules, type Settings } from "../industries/all/workflows/fulfilment/stock-ordering/types.ts";
 import fs from "node:fs";
@@ -144,6 +144,18 @@ test("po-check closes a billed order, so a later low stock drafts a new one", as
   assert.equal(c.closed, 1);
   await stockCheck(ctx(NEXT)); await reorderDraft(ctx(NEXT));
   assert.equal(writes().filter((h) => h.method === "PUT").length, 2);
+});
+
+test("a rejected authorisation closes its order, so the item can be drafted again the next day", async () => {
+  const store = new MemoryStore();
+  const ctx = (d: Date) => context(WF, SETTINGS, store, d, () => {});
+  await stockCheck(ctx(NOW)); await reorderDraft(ctx(NOW));
+  const ap = await reject(WF, store, approvalId(WF.id, `authorise:${PO}`), "oscar", NOW).then(() => store.get<Approval>("approvals", approvalId(WF.id, `authorise:${PO}`)));
+  assert.equal(ap?.status, "rejected");
+  await stockCheck(ctx(NEXT)); await reorderDraft(ctx(NEXT));
+  assert.equal(writes().filter((h) => h.method === "PUT").length, 2, "a new draft is made once the rejected order is closed");
+  const recs = Object.values(await store.list<any>("reorders"));
+  assert.deepEqual(recs.map((r) => r.stage).sort(), ["awaiting-approval", "closed"]);
 });
 
 test("a bad rule fails before any call is made", async () => {

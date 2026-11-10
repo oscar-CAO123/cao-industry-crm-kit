@@ -14,6 +14,10 @@ function check(s: Settings) {
   for (const h of Object.values(g.records.columns)) if (!HEADER.test(h)) throw new Error(`documents: column name "${h}" is not a valid header`);
   if (!Array.isArray(s.documents) || !s.documents.length) throw new Error("documents: at least one document template is needed");
   for (const d of s.documents) if (!d.kind || !ID.test(d.template_id)) throw new Error(`documents: template for "${d.kind}" needs a valid template_id`);
+  for (const d of s.documents) {
+    if (!Array.isArray(d.fields) || !d.fields.length) throw new Error(`documents: template for "${d.kind}" needs a fields list naming the record columns it uses`);
+    for (const h of d.fields) if (!HEADER.test(h)) throw new Error(`documents: field "${h}" for "${d.kind}" is not a valid column name`);
+  }
   if (s.share_role && !ROLES.includes(s.share_role)) throw new Error("documents: share_role must be reader or commenter");
 }
 
@@ -30,8 +34,9 @@ export async function intake(ctx: Ctx<Settings>) {
     if (!ID.test(id)) { skipped++; continue; }
     if (await ctx.store.get("requests", requestKey(id))) continue;
     const kind = oneLine(row[c.kind], 60), email = (row[c.email] ?? "").trim();
-    const known = ctx.settings.documents.some((d) => d.kind === kind);
-    const fields = Object.fromEntries(Object.entries(row).filter(([h]) => HEADER.test(h)).map(([h, v]) => [h, oneLine(v, 500)]));
+    const tpl = ctx.settings.documents.find((d) => d.kind === kind), known = !!tpl;
+    const used = new Set(tpl?.fields ?? []);  // only the columns this kind's template fills are kept on the request
+    const fields = Object.fromEntries(Object.entries(row).filter(([h]) => used.has(h)).map(([h, v]) => [h, oneLine(v, 500)]));
     await save(ctx, { id, kind, email: EMAIL.test(email) ? email : undefined, fields, received: ctx.now.toISOString(),
       status: known ? "new" : "needs-person", reason: known ? undefined : `no template for kind "${kind}"` });
     added++;

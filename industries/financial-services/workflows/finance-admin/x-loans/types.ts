@@ -15,7 +15,7 @@ export interface Settings {
 
 export interface Contact { name?: string; email?: string }
 export interface Enquiry {
-  id: string; source: Platform; title: string; text?: string; contact: Contact; received: string;
+  id: string; source: Platform; title: string; contact: Contact; received: string;
   ref?: Record<string, string>;
   status: "new" | "drafted" | "skipped";
   reason?: string;

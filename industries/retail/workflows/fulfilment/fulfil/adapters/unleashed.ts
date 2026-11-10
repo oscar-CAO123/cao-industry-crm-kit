@@ -1,6 +1,7 @@
 // Unleashed: the sales orders a business fulfils from. Reads sales orders and stock on hand, and builds the sales
 // shipment that the dispatch cron queues for approval. Field names come from the vendor spec
 // (endpoint-map/raw/unleashed/pages: SalesOrders, StockOnHand, SalesShipments). Every list reply is { Pagination, Items }.
+import { randomUUID } from "node:crypto";
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Order, type OrderLine, type Settings, type Stock, GUID, ORDER_NO, SKU, day, units } from "../types.ts";
 
@@ -42,12 +43,15 @@ export function toOrder(row: Row, now: Date): Order | null {
   return { key: `ord-${number}`, number, guid, customer: String(row.CustomerName ?? "").slice(0, 200), lines, status: "new", seen: now.toISOString() };
 }
 
-/** The sales shipment body for one order, as the SalesShipments POST takes it. */
+/** The sales shipment body for one order, as the SalesShipments POST takes it. Guid and ShipmentStatus are required by the
+ *  vendor; the SDK skips its required-body check once a body is passed, so both are set here. "Dispatched" is the vendor's own example value. */
 export function shipmentBody(ctx: Ctx<Settings>, o: Order) {
   return {
+    Guid: randomUUID(),
     OrderNumber: o.number,
     OrderGuid: o.guid,
     DispatchDate: day(ctx.now),
+    ShipmentStatus: "Dispatched",
     Warehouse: { WarehouseCode: ctx.settings.unleashed.warehouse_code },
     SalesShipmentLines: o.lines.map((l) => ({ SalesOrderLineNumber: l.line, Product: { ProductCode: l.sku }, ShipmentQty: l.qty })),
   };

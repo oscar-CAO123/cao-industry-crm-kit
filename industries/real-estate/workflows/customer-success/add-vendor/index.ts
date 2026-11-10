@@ -31,10 +31,14 @@ export async function draft(ctx: Ctx<Settings>) {
         status, created: prior?.created ?? ctx.now.toISOString(), reason, message_id: prior?.message_id } satisfies Report);
     };
     if (!EMAIL.test(v.email)) { await park("needs-check", "vendor email in settings is not valid"); continue; }
+    // Figures and commentary must be dated today: an earlier day's numbers or text never go out under today's date.
+    const today = (iso?: string) => { const t = Date.parse(String(iso ?? "")); return Number.isFinite(t) && dayOf(new Date(t)) === date; };
     const f = await ctx.store.get<PropertyFigures>("properties", String(v.property_id));
     if (!f) { await park("needs-figures", "pull has not read this listing yet"); continue; }
+    if (!today(f.as_of)) { await park("needs-figures", "pull has not read this listing today"); continue; }
     const c = await ctx.store.get<Commentary>("commentary", String(v.property_id));
     if (!c?.text) { await park("needs-commentary", "no commentary yet: the agent writes it"); continue; }
+    if (!today(c.written)) { await park("needs-commentary", "commentary was not written today: the agent writes it again"); continue; }
 
     const subject = `Vendor report: ${f.address || f.heading || `listing ${f.property_id}`}`;
     let messageId = prior?.message_id;

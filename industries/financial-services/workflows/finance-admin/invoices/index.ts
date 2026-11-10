@@ -2,6 +2,7 @@
 // Judgment (purchase order matching, supplier queries, unusual amounts) stays with the bookkeeper, see SKILL.md.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { type Check, type ChaseRecord, type Invoice, type Settings, DAY, day, money, msDate } from "./types.ts";
+import type { Approval } from "../../../../../core/workflows/runtime.ts";
 import { readInvoices, readInvoice, attachmentCount, noteOn, queuePayment, queueReminder, dateTime } from "./adapters/xero.ts";
 
 /** What an invoice needs before a person relies on it. Pure, so the rules can be read and tested without Xero. */
@@ -28,13 +29,17 @@ export async function check(ctx: Ctx<Settings>) {
   const known: Record<string, Check> = await ctx.store.list<Check>("checks");
   let checked = 0, flagged = 0;
   for (const [kind, inv] of [...bills.map((i) => ["bill", i] as const), ...sales.map((i) => ["sales", i] as const)]) {
-    const fingerprint = `${inv.Total ?? ""}|${inv.DueDate ?? ""}|${inv.Status}`;
+    // The attachment count and the account codes are part of the fingerprint, so fixing a bill (coding it, attaching the
+    // source document) makes it checked again instead of staying needs-review.
+    const documents = kind === "bill" ? await attachmentCount(ctx, inv.InvoiceID) : 0;
+    const codes = (inv.LineItems ?? []).map((l) => l.AccountCode ?? "");
+    const fingerprint = JSON.stringify([inv.Total ?? "", inv.DueDate ?? "", inv.Status, codes, documents]);
     if (known[inv.InvoiceID]?.fingerprint === fingerprint) continue; // checked, and nothing has changed since
     const supplier = inv.Contact?.Name ?? "";
     const dupeOf = kind === "bill" && supplier && inv.InvoiceNumber
       ? Object.values(known).find((c) => c.kind === "bill" && c.invoice !== inv.InvoiceID && c.supplier === supplier && c.number === inv.InvoiceNumber)?.invoice
       : undefined;
-    const hasDocument = kind === "bill" ? (await attachmentCount(ctx, inv.InvoiceID)) > 0 : true;
+    const hasDocument = kind === "bill" ? documents > 0 : true;
     const reasons = assess(inv, kind, ctx.settings, hasDocument, dupeOf);
     const verdict = reasons.length ? "needs-review" : "passed";
     const rec: Check = { invoice: inv.InvoiceID, kind, supplier, number: inv.InvoiceNumber, verdict, reasons, fingerprint, checked: ctx.now.toISOString() };
@@ -76,14 +81,19 @@ export async function chase(ctx: Ctx<Settings>) {
     const due = msDate(inv.DueDate), owed = Number(inv.AmountDue ?? 0);
     if (due === undefined || !(owed > 0)) continue;
     const rec: ChaseRecord = records[inv.InvoiceID] ?? { sent: [] };
+    // A reminder the check rejected (the invoice changed after it was queued) was never sent: it is taken off the count,
+    // so this run can queue it again, for the invoice as it now stands.
+    const last = rec.sent.at(-1);
+    const ap = last?.approval ? await ctx.store.get<Approval>("approvals", last.approval) : undefined;
+    if (ap?.status === "rejected" && ap.decided_by === "check") rec.sent.pop();
     const step = rec.sent.length + 1;
     if (step > steps.length || rec.sent.some((s) => s.on === today)) continue;
     const late = Math.floor((ctx.now.getTime() - due) / DAY);
     if (late < steps[step - 1]) continue;
     const email = inv.Contact?.EmailAddress;
     if (!email) { ctx.log(`chase: no email on the contact for ${inv.InvoiceNumber}`); continue; }
-    await queueReminder(ctx, inv, step, `Reminder ${step} for ${inv.InvoiceNumber}: ${money(owed)}, ${late} days overdue, to ${email}`);
-    rec.sent.push({ step, on: today });
+    const approval = await queueReminder(ctx, inv, step, `Reminder ${step} for ${inv.InvoiceNumber}: ${money(owed)}, ${late} days overdue, to ${email}`);
+    rec.sent.push({ step, on: today, approval });
     await ctx.store.put("chases", inv.InvoiceID, rec);
     queued++;
   }

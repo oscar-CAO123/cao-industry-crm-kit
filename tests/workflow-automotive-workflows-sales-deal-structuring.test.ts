@@ -154,3 +154,61 @@ test("follow-up marks a deal submitted once its send is done, then chases after 
   await followUp(context(WF, SETTINGS, store, FOUR_DAYS, () => {}));
   assert.equal(Object.keys(await store.list("approvals")).length, 3, "a second run does not chase again");
 });
+
+// A store that lets a draft write to a deal in the instant between follow-up reading the deal list and writing a deal back.
+class RacingStore extends MemoryStore {
+  armed = false;
+  async list<T>(ns: string) {
+    const r = await super.list<T>(ns);
+    if (ns === "deals" && this.armed) { this.armed = false; const d: any = (r as any)["101"]; await this.put("deals", "101", { ...d, reason: "written during follow-up" }); }
+    return r;
+  }
+}
+
+test("follow-up never reverts a deal that a draft wrote after follow-up read the list", async () => {
+  const store = new RacingStore();
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  await store.put("proposals", "101", PROP);
+  await draft(context(WF, SETTINGS, store, NOW, () => {}));
+  await approve(WF, store, approvalId(WF.id, "submit:101:lender-a"), "oscar", NOW);
+  await followUp(context(WF, SETTINGS, store, NOW, () => {}));
+  store.armed = true;
+  await followUp(context(WF, SETTINGS, store, FOUR_DAYS, () => {}));
+  const deal = await store.get<any>("deals", "101");
+  assert.equal(deal.reason, "written during follow-up", "the draft's write survives");
+  assert.equal(deal.status, "submitted");
+  assert.equal(deal.followups.length, 1, "the chase is still recorded");
+});
+
+test("one deal's failed write does not stop the deals after it on the same run", async () => {
+  const pdDeals = [
+    { id: 101, title: "Broken deal", value: 1, currency: "AUD", stage_id: 2, person_id: 7 },
+    { id: 102, title: "Good deal", value: 2, currency: "AUD", stage_id: 2, person_id: 8 },
+  ];
+  let n = 0;
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
+      let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
+      const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { "content-type": "application/json" } });
+      if (p.endsWith("/deals") && m === "GET") return json({ success: true, data: pdDeals, additional_data: { next_cursor: null } });
+      if (p.endsWith("/notes") && m === "POST") return json({ success: true, data: { id: 1 } });
+      if (p.endsWith("/messages") && m === "POST") {
+        if (String(body.subject).includes("Broken")) return json({ error: "refused" }, 400);
+        return json({ id: `AAMkDraft${++n}` });
+      }
+      if (p.endsWith("/rows") && m === "POST") return json({ index: 0 });
+      return new Response("not faked: " + p, { status: 404 });
+    }) as any,
+  });
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { added: 2 });
+  await store.put("proposals", "101", PROP);
+  await store.put("proposals", "102", PROP);
+  const r = await draft(ctx) as any;
+  assert.equal(r.failed, 1, "the broken deal is counted, not thrown");
+  assert.equal(r.packed, 1, "the deal after it is still packed");
+  assert.equal((await store.get<any>("deals", "102")).status, "packed");
+  assert.equal((await store.get<any>("deals", "101")).status, "new", "the broken deal is retried on a later run");
+});

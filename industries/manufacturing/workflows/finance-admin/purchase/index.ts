@@ -7,13 +7,15 @@ import { unleashed } from "./adapters/unleashed.ts";
 import { xero } from "./adapters/xero.ts";
 
 const DAY = 864e5;
-/** A product with an order in one of these states already has one in hand: do not raise another. */
-const OPEN = new Set(["pending", "parked", "placed", "received"]);
+/** A product with an order in one of these states already has one in hand, or one a person must check: do not raise another. */
+const OPEN = new Set(["pending", "parked", "placed", "received", "failed"]);
 
 /** Hourly: stock under its minimum with no open order becomes a Parked purchase order in Unleashed. */
 export async function reorder(ctx: Ctx<Settings>) {
   const levels = ctx.settings.reorder_levels ?? [];
   if (!levels.length) { ctx.log("reorder: no reorder_levels in settings"); return { drafted: 0, skipped: 0 }; }
+  const taxPct = ctx.settings.tax_rate_percent;
+  if (typeof taxPct !== "number" || !(taxPct >= 0 && taxPct <= 100)) { ctx.log("reorder: tax_rate_percent is missing or not 0 to 100, so no order is totalled"); return { drafted: 0, skipped: 0 }; }
   const stock = await unleashed.stock(ctx);
   const products = new Map((await unleashed.products(ctx)).map((p: any) => [String(p.ProductCode), p]));
   const orders = await ctx.store.list<Order>("orders");
@@ -31,16 +33,30 @@ export async function reorder(ctx: Ctx<Settings>) {
     // Written before the call: if the reply is lost, the next run waits for a person's check instead of raising a second order.
     await ctx.store.put("orders", code, { product_code: code, status: "pending", created: ctx.now.toISOString(),
       supplier_code: supplier, supplier_name: supplierName } satisfies Order);
+    // Unleashed requires SubTotal, TaxTotal and Total on the order, so they are worked out from the line here.
+    const subTotal = Math.round(qty * price * 100) / 100;
+    const taxTotal = Math.round(subTotal * taxPct) / 100;
+    const total = Math.round((subTotal + taxTotal) * 100) / 100;
     const body = {
       Supplier: { SupplierCode: supplier }, Warehouse: { WarehouseCode: ctx.settings.warehouse_code }, OrderStatus: "Parked",
       DeliveryDate: day(new Date(ctx.now.getTime() + (ctx.settings.delivery_days ?? 14) * DAY)),
       Comments: `Reorder: stock ${have} under minimum ${lvl.minQty}`,
       PurchaseOrderLines: [{ LineNumber: 1, Product: { ProductCode: code }, OrderQuantity: qty, UnitPrice: price }],
+      SubTotal: subTotal, TaxTotal: taxTotal, Total: total,
     };
-    const made = await unleashed.draftOrder(ctx, body, `draft PO for ${code} from ${supplierName}`);
+    let made: { guid: string; number: string };
+    try { made = await unleashed.draftOrder(ctx, body, `draft PO for ${code} from ${supplierName}`); }
+    catch (e: any) {
+      // The order may or may not exist in Unleashed, so the row is "failed": it blocks a second order until a person checks and clears it.
+      await ctx.store.put("orders", code, { product_code: code, status: "failed", created: ctx.now.toISOString(),
+        supplier_code: supplier, supplier_name: supplierName, body, error: String(e?.message ?? e).slice(0, 240) } satisfies Order);
+      ctx.log(`reorder: ${code} draft failed, a person checks Unleashed and clears the row`);
+      skipped++;
+      continue;
+    }
     await ctx.store.put("orders", code, { product_code: code, status: "parked", created: ctx.now.toISOString(),
       supplier_code: supplier, supplier_name: supplierName, guid: made.guid, number: made.number, body,
-      total_ex_gst: Math.round(qty * price * 100) / 100 } satisfies Order);
+      total_ex_gst: subTotal } satisfies Order);
     drafted++;
   }
   ctx.log(`reorder: ${drafted} drafted, ${skipped} skipped`);

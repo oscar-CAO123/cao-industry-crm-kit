@@ -9,10 +9,20 @@ const ids = (t: Table) => {
   return { "drive-id": t.drive, "driveItem-id": t.item, "workbookTable-id": t.table };
 };
 
-/** The first 1,000 rows of a table, each as its array of cell values. */
+const PAGE = 1000, MAX_PAGES = 50;
+
+/** Every row of a table, each as its array of cell values, read a page at a time until a short page ends it.
+ *  A table past MAX_PAGES pages stops the run with an error rather than being read in part. */
 export async function tableRows(ctx: Ctx<Settings>, t: Table): Promise<any[][]> {
-  const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: `read ${t.table}`, input: { params: { ...ids(t), $top: 1000 } } });
-  return (r.data?.value ?? []).map((row: any) => (Array.isArray(row.values?.[0]) ? row.values[0] : []));
+  const out: any[][] = [];
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: `read ${t.table}, rows from ${page * PAGE + 1}`,
+      input: { params: { ...ids(t), $top: PAGE, $skip: page * PAGE } } });
+    const rows: any[] = r.data?.value ?? [];
+    for (const row of rows) out.push(Array.isArray(row.values?.[0]) ? row.values[0] : []);
+    if (rows.length < PAGE) return out;
+  }
+  throw new Error(`microsoft-365: ${t.table} has more than ${MAX_PAGES * PAGE} rows; stopped rather than read part of it`);
 }
 
 /** Add rows to a register (an internal record: a draft operation). Formula-looking cells are neutralised. */

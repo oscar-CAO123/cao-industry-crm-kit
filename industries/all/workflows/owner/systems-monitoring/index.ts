@@ -28,7 +28,8 @@ export async function check(ctx: Ctx<Settings>) {
     for (const it of items) {
       seen.add(it.key);
       const cur = await ctx.store.get<Check>("checks", it.key);
-      await ctx.store.put("checks", it.key, { ...it, seen: now, alerted: !it.ok && !!cur && !cur.ok && cur.alerted === true } satisfies Check);
+      const since = it.ok ? undefined : cur && !cur.ok && cur.since ? cur.since : now;
+      await ctx.store.put("checks", it.key, { ...it, seen: now, since, alerted: !it.ok && !!cur && !cur.ok && cur.alerted === true } satisfies Check);
       checked++;
       if (!it.ok) failing++;
     }
@@ -36,7 +37,7 @@ export async function check(ctx: Ctx<Settings>) {
     if (!unreadable.includes(p)) {
       for (const [key, c] of Object.entries(await ctx.store.list<Check>("checks"))) {
         if (c.platform !== p || seen.has(key)) continue;
-        await ctx.store.put("checks", key, { ...c, ok: true, reason: undefined, alerted: false, seen: now } satisfies Check);
+        await ctx.store.put("checks", key, { ...c, ok: true, reason: undefined, since: undefined, alerted: false, seen: now } satisfies Check);
       }
     }
   }
@@ -51,7 +52,8 @@ export async function alert(ctx: Ctx<Settings>) {
   if (!todo.length) return { alerted: 0 };
   const to = ctx.settings.alert_to;
   if (!to || !EMAIL.test(to)) throw new Error("systems-monitoring: alert_to is not a valid address");
-  const fingerprint = todo.map((c) => `${c.key}=${c.reason ?? ""}`).join("|");
+  // The start of each failure is in the key: the same failure that clears and comes back is a new alert, not the old approval.
+  const fingerprint = todo.map((c) => `${c.key}@${c.since ?? ""}=${c.reason ?? ""}`).join("|");
   const rows = todo.map((c) => `<li><b>${esc(c.name)}</b> (${esc(c.platform)}): ${esc(c.reason ?? "failing")}</li>`).join("");
   const html = `<p>Hi ${esc(ctx.settings.business_name ?? "there")}, ${todo.length} check${todo.length === 1 ? "" : "s"} failed in today's run:</p>`
     + `<ul>${rows}</ul><p>Nothing has been changed. Check each item on its platform.</p>`;

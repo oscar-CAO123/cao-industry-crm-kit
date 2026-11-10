@@ -105,7 +105,7 @@ function replyRaw(s: Settings, e: Enquiry, b: Booking): string {
 
 /** Creates the reply as a Gmail draft in the enquiry's thread. Returns the draft id. */
 export async function draftReply(ctx: Ctx<Settings>, e: Enquiry, b: Booking): Promise<string> {
-  const r = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: `reply draft to ${e.from}`,
+  const r = await ctx.draft<any>({ platform: P, op: "gmail.users.drafts.create", summary: `reply draft for enquiry ${e.id}`,
     input: { params: { userId: ME }, body: { message: { threadId: e.thread_id, raw: replyRaw(ctx.settings, e, b) } } } });
   const id = String(r.data?.id ?? "");
   if (!MSG_ID.test(id)) throw new Error("google-workspace: the reply draft came back without an id");

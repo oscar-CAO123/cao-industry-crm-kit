@@ -39,6 +39,9 @@
   "Booking: calendar slots and appointments are read only. Writing a booking needs a live account to confirm the calendar and resource setup.",
   "Acknowledgement send: the vendor spec marks subType and status as required on conversations/messages. The adapter does not send them until a live account confirms the values, so a live send may fail at the vendor and show as a failed approval.",
   "SMS: an SMS acknowledgement or follow-up needs consent checks before it is queued. Email is the default channel.",
+  "Approval summaries and the run log: each queued summary carries the client's or lead's name, and the runtime logs every summary (core/workflows/runtime.ts). Needs a core change so the runtime logs the approval id only, or the names come out of the summary line.",
+  "Live chats: a chat is imported only when its lastMessageDate, a field of the conversation object, is after the intake baseline. That field name is not in the kit's captured GoHighLevel ops, so until a sandbox confirms it no live chat is imported (a missed lead, never an old one).",
+  "Acknowledgement and follow-up send body (subType, status): the send op has no body schema in the kit's captured ops, so the values are not guessed. A sandbox run must confirm them before any send is approved live.",
   "Owner routing: the opportunity is assigned to one owner from settings. Round-robin or territory routing is not built.",
   "Every adapter is docs-only until a sandbox GoHighLevel location proves the reads, the tag, the opportunity and an approved send."
  ],

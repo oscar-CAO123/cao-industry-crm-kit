@@ -61,12 +61,16 @@ export async function file(ctx: Ctx<Settings>) {
 export async function chase(ctx: Ctx<Settings>) {
   const s = ctx.settings;
   const dest = safePath(s.request_folder, "request_folder");
+  // A checklist folder that is missing or unsafe stops the run before anything is queued.
+  const checks = (s.checklist ?? []).map((c) => ({ ...c, folder: safePath(c.folder, `checklist folder for ${c.code}`) }));
   const docs = Object.values(await ctx.store.list<Doc>("documents"));
   const month = ctx.now.toISOString().slice(0, 7);
   let queued = 0;
-  for (const c of s.checklist ?? []) {
+  for (const c of checks) {
     const cutoff = ctx.now.getTime() - c.within_days * DAY;
-    const have = docs.some((d) => d.name.toLowerCase().includes(c.match.toLowerCase()) && Date.parse(d.received) >= cutoff);
+    // Only a document a rule has filed into this checklist's folder counts. A file the client named, sitting in review, does not.
+    const have = docs.some((d) => d.status === "filed" && (d.to ?? "").toLowerCase().startsWith(`${c.folder}/`.toLowerCase())
+      && d.name.toLowerCase().includes(c.match.toLowerCase()) && Date.parse(d.received) >= cutoff);
     if (have) continue;
     await ctx.queue(dropbox.fileRequest(`Please send: ${c.label}`, dest,
       `file request for ${c.label}: no file named "${c.match}" in the last ${c.within_days} days`, `chase:${c.code}:${month}`));

@@ -19,7 +19,8 @@ export function createAct(s: Settings, p: CampaignPlan, step: Step, ids: Partial
   }
   if (step === "adset") {
     if (!NUM.test(ids.campaign ?? "")) throw new Error("meta-ads: the campaign id is not set yet");
-    return { platform: P, op: "AdAccount.post.adsets", key, summary: `Meta ad set for ${p.name} (created PAUSED)`,
+    const budget = (p.daily_budget_minor / 100).toFixed(2);
+    return { platform: P, op: "AdAccount.post.adsets", key, summary: `Meta ad set for ${p.name} (created PAUSED): daily budget ${budget} in the ad account currency, ages ${p.age_min ?? 18} to ${p.age_max ?? 65}`,
       input: { params: { ...base, name: `${p.name} ad set`, campaign_id: ids.campaign, status: "PAUSED",
         daily_budget: p.daily_budget_minor, billing_event: "IMPRESSIONS",
         optimization_goal: lead ? "LEAD_GENERATION" : "LINK_CLICKS",

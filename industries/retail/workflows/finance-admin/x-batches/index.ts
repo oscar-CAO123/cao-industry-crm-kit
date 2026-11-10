@@ -51,6 +51,8 @@ export async function adjust(ctx: Ctx<Settings>) {
       continue;
     }
     if (p.status !== "proposed") continue;
+    // Without a branch an adjustment could land on any branch's stock. Hold the proposal until the branch is set.
+    if (!ctx.settings.cin7?.branch_id) { ctx.log(`adjust: ${p.key} held: set cin7.branch_id in settings first`); continue; }
     try {
       const q = Number(p.qty_adjusted);
       if (!Number.isFinite(q) || q === 0 || Math.abs(q) > 100000) throw new Error("quantity must be a non-zero number up to 100000");

@@ -17,6 +17,7 @@ const S: any = { business_name: "Test Electrical", owner_email: "owner@example.c
   microsoft_365: { mailbox: BOX, register: { drive: "DRV1", item: "ITEM1", table: "Expiry" } }, remind_within_days: 30, digest_within_days: 90 };
 const serial = (y: number, m: number, d: number) => (Date.UTC(y, m - 1, d) - Date.UTC(1899, 11, 30)) / 864e5;
 // Holder | Email | Item | Expiry
+let TABLE: unknown[][] | undefined; // a longer register for the paging tests; the default is ROWS
 const ROWS: unknown[][] = [
   ["Sam <i>Lee</i>", "sam@example.com", "Working at heights licence", "2026-11-20"],   // due in 12 days
   ["Ari Patel", "ari@example.com", "Public liability certificate", serial(2026, 10, 1)], // lapsed, Excel date value
@@ -29,7 +30,7 @@ type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let seq = 0;
 function fake() {
-  hits = []; seq = 0;
+  hits = []; seq = 0; TABLE = undefined;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -37,7 +38,10 @@ function fake() {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
-      if (p.endsWith("/rows") && m === "GET") return json({ value: ROWS.map((values, index) => ({ index, values: [values] })) });
+      if (p.endsWith("/rows") && m === "GET") {
+        const all = TABLE ?? ROWS, top = Number(u.searchParams.get("$top") ?? all.length), skip = Number(u.searchParams.get("$skip") ?? 0);
+        return json({ value: all.slice(skip, skip + top).map((values, i) => ({ index: skip + i, values: [values] })) });
+      }
       if (/\/users\/[^/]+\/messages$/.test(p) && m === "POST") return json({ id: `AAMk${++seq}` });
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
       return new Response("not faked: " + p, { status: 404 });
@@ -120,4 +124,21 @@ test("every cron named in workflow.json exists, and no send is a draft operation
   for (const c of WF.crons) assert.equal(typeof CRONS[c.entry], "function", `${c.entry} is exported`);
   assert.ok(!(WF.draft_ops["microsoft-365"] ?? []).some((op) => /send/.test(op)));
   assert.deepEqual(WF.live_ops["microsoft-365"], ["users.user.messages.message.send"]);
+});
+
+test("a register longer than one page is read in full, every page", async () => {
+  const many: unknown[][] = Array.from({ length: 1203 }, (_, i) => [`Holder ${i}`, `h${i}@example.com`, `Item ${i}`, "2027-03-01"]);
+  TABLE = [...ROWS, ...many];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  const out = await scan(ctx);
+  assert.equal(out.items, 5 + 1203, "all 1,208 rows are read, not the first 500");
+  const stored = Object.values(await store.list<any>("expiry-items"));
+  assert.equal(stored.length, 1208);
+  assert.ok(stored.some((r) => r.holder === "Holder 1202"), "the last row of the register is stored");
+});
+
+test("a register past the page cap is refused rather than read partly", async () => {
+  TABLE = Array.from({ length: 5001 }, (_, i) => [`Holder ${i}`, `h${i}@example.com`, `Item ${i}`, "2027-03-01"]);
+  const ctx = context(WF, S, new MemoryStore(), NOW, () => {});
+  await assert.rejects(scan(ctx), /more than 5000 rows/);
 });

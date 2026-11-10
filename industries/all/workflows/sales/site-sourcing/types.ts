@@ -42,6 +42,8 @@ export interface Candidate {
   checked?: string;
   desk?: { suburb_performance?: unknown; schools?: unknown };
   enquiry_approval?: string;
+  /** Counts the shortlistings after a rejected enquiry; each one queues under its own approval key. */
+  enquiry_round?: number;
 }
 
 export const candidateKey = (listingId: string) => safeKey(`domain:${listingId}`, 90);

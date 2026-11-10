@@ -25,13 +25,14 @@ type Hit = { method: string; path: string; q: string; body: any };
 let hits: Hit[] = [];
 let runs: any[] = [];
 
-const invoices = [
+const INVOICES: any[] = [
   { InvoiceID: INV(1), Status: "PAID", Type: "ACCREC", SubTotal: 40000, Reference: "SL-101 Ranger sale" },
   { InvoiceID: INV(2), Status: "PAID", Type: "ACCREC", SubTotal: 20000, Reference: "SL-102 service" },
   { InvoiceID: INV(3), Status: "PAID", Type: "ACCREC", SubTotal: 10000, Reference: "PN-201" },
   { InvoiceID: INV(4), Status: "PAID", Type: "ACCREC", SubTotal: 5000, Reference: "walk-in" },
   { InvoiceID: INV(5), Status: "AUTHORISED", Type: "ACCREC", SubTotal: 9999, Reference: "SL-103" },
 ];
+let invoices: any[] = INVOICES;   // a test may change what Xero holds; beforeEach puts it back
 
 function fake() {
   hits = []; runs = [];
@@ -62,7 +63,7 @@ function fake() {
 const posts = (path: string) => hits.filter((h) => h.method === "POST" && h.path.endsWith(path));
 
 beforeEach(() => {
-  fake(); setTokenStore(new MemoryTokenStore());
+  fake(); invoices = INVOICES; setTokenStore(new MemoryTokenStore());
   Object.assign(process.env, { XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1" });
 });
 
@@ -116,4 +117,35 @@ test("queue-post: waits until every row is on the run, queues the post once, and
   assert.equal(ap.status, "done");
   assert.deepEqual(posts(`/PayRuns/${RUN}`)[0].body, [{ PayRunStatus: "POSTED" }]);
   await assert.rejects(approve(WF, store, approvals[0].id, "owner"), /already done/);
+});
+
+test("figures: a sale whose reference matches two reps is counted as unmatched, never given to the first rep", async () => {
+  invoices = [...INVOICES, { InvoiceID: INV(6), Status: "PAID", Type: "ACCREC", SubTotal: 7000, Reference: "SL-PN-300 joint" }];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await figures(ctx), { sales: 5, unmatched: 2, rows: 2 });
+  assert.equal((await store.get<any>("commission", `2026-10:${E1.toLowerCase()}`))!.sales_ex_gst, 60000, "Sam keeps only his own sales");
+  assert.equal((await store.get<any>("commission", `2026-10:${E2.toLowerCase()}`))!.sales_ex_gst, 10000);
+});
+
+test("settings: a match text under 3 characters stops the run before Xero is read", async () => {
+  const short = { ...S, reps: [{ name: "Sam Lee", employee_id: E1, match: "S" }] };
+  const ctx = context(WF, short, new MemoryStore(), NOW, () => {});
+  await assert.rejects(figures(ctx), /needs a match text of 3 to 100 characters/);
+  assert.equal(hits.filter((h) => h.method === "GET").length, 0, "nothing read from Xero");
+});
+
+test("once the pay post is queued, a rep whose row was none cannot be added to the run afterwards", async () => {
+  const TOM = "00000000-0000-4000-8000-000000000005";
+  const S3 = { ...S, reps: [...S.reps, { name: "Tom Bell", employee_id: TOM, match: "TB-" }] };
+  const store = new MemoryStore(), ctx = context(WF, S3, store, NOW, () => {});
+  await figures(ctx);
+  assert.equal((await store.get<any>("commission", `2026-10:${TOM.toLowerCase()}`))!.status, "none");
+  await draftPay(ctx);
+  assert.equal((await queuePost(ctx)).queued, 1);
+  invoices = [...INVOICES, { InvoiceID: INV(6), Status: "PAID", Type: "ACCREC", SubTotal: 8000, Reference: "TB-301" }];
+  assert.deepEqual(await figures(ctx), { locked: true }, "figures stop once the post is queued");
+  assert.equal((await store.get<any>("commission", `2026-10:${TOM.toLowerCase()}`))!.status, "none", "Tom's row is not recalculated");
+  assert.deepEqual(await draftPay(ctx), { entered: 0, locked: true });
+  assert.equal(posts(`/Payslip/${S1}`).length, 1, "no second payslip write");
+  assert.equal(Object.keys(await store.list<Approval>("approvals")).length, 1, "still one approval, the one the approver will see");
 });

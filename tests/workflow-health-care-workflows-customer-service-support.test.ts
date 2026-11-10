@@ -19,6 +19,7 @@ type Hit = { method: string; host: string; path: string; query: string; body: an
 let hits: Hit[] = [];
 let ticketStatus = "pending";
 let tickets: any[] = [];
+let missingTickets = new Set<number>();
 const users: Record<number, { id: number; name: string; email: string }> = {
   7: { id: 7, name: "Sam Lee", email: "sam@example.com" },
   8: { id: 8, name: "Pat Ng", email: "pat@example.com" },
@@ -29,7 +30,7 @@ const patients = [
 ];
 
 function fake() {
-  hits = []; ticketStatus = "pending";
+  hits = []; ticketStatus = "pending"; missingTickets = new Set();
   tickets = [
     { id: 101, status: "new", subject: "Appointment question", description: "Can I book a physio appointment for my knee on Thursday?", requester_id: 7, created_at: "2026-11-08T23:00:00Z" },
     { id: 102, status: "new", subject: "Pain after surgery", description: "I had surgery last week and the pain is getting worse, what should I do?", requester_id: 8, created_at: "2026-11-08T23:05:00Z" },
@@ -41,13 +42,16 @@ function fake() {
       const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, host: u.host, path: p, query: u.search, body });
-      const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+      const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { "content-type": "application/json" } });
       if (u.host === SUB) {
         if (p === "/api/v2/tickets" && m === "GET") return json({ tickets });
-        if (/^\/api\/v2\/tickets\/\d+$/.test(p) && m === "GET") return json({ ticket: { id: Number(p.split("/").pop()), status: ticketStatus } });
+        if (/^\/api\/v2\/tickets\/\d+$/.test(p) && m === "GET") {
+          const tid = Number(p.split("/").pop());
+          return missingTickets.has(tid) ? json({ error: "RecordNotFound" }, 404) : json({ ticket: { id: tid, status: ticketStatus } });
+        }
         if (/^\/api\/v2\/tickets\/\d+$/.test(p) && m === "PUT") return json({ ticket: { id: Number(p.split("/").pop()) } });
         const user = /^\/api\/v2\/users\/(\d+)$/.exec(p);
-        if (user && m === "GET") return json({ user: users[Number(user[1])] });
+        if (user && m === "GET") return users[Number(user[1])] ? json({ user: users[Number(user[1])] }) : json({ error: "RecordNotFound" }, 404);
       }
       if (u.host === CLINIKO && p === "/v1/patients" && m === "GET") {
         const email = u.searchParams.get("email"), first = u.searchParams.get("first_name"), last = u.searchParams.get("last_name");
@@ -143,6 +147,66 @@ test("chasers come due after the set days, once; a reply from the enquirer hands
   ticketStatus = "open";
   await followUp(at(6));
   assert.equal((await store.get<any>("enquiries", "zendesk:101")).status, "needs-staff");
+});
+
+test("a requester the help desk cannot read does not stop intake: the ticket is stored without a contact", async () => {
+  tickets = [
+    { id: 103, status: "new", subject: "Gone user", description: "Can I change my appointment time?", requester_id: 99, created_at: "2026-11-08T23:10:00Z" },
+    { id: 101, status: "new", subject: "Appointment question", description: "Can I book a physio appointment for my knee on Thursday?", requester_id: 7, created_at: "2026-11-08T23:00:00Z" },
+  ];
+  const store = new MemoryStore(), logs: string[] = [];
+  assert.deepEqual(await intake(context(WF, S, store, NOW, (m) => logs.push(m))), { added: 2 });
+  assert.deepEqual((await store.get<any>("enquiries", "zendesk:103")).contact, {});
+  assert.deepEqual((await store.get<any>("enquiries", "zendesk:101")).contact, { name: "Sam Lee", email: "sam@example.com" });
+  assert.match(logs.join("\n"), /ticket 103 could not be read/);
+});
+
+test("a deleted ticket is flagged for staff and the follow-up carries on to the next enquiry", async () => {
+  tickets = [
+    { id: 101, status: "new", subject: "Appointment question", description: "Can I book a physio appointment for my knee on Thursday?", requester_id: 7, created_at: "2026-11-08T23:00:00Z" },
+    { id: 104, status: "new", subject: "Parking", description: "Is there parking near the clinic on Thursday?", requester_id: 8, created_at: "2026-11-08T23:01:00Z" },
+  ];
+  const store = new MemoryStore();
+  await intake(context(WF, S, store, NOW, () => {}));
+  await draft(context(WF, S, store, NOW, () => {}));
+  for (const ap of await approvalsOf(store)) await approve(WF, store, ap.id, "owner", NOW);
+  missingTickets.add(101);
+  const later = context(WF, S, store, new Date(NOW.getTime() + 2 * DAY), () => {});
+  assert.deepEqual(await followUp(later), { queued: 1 });
+  assert.equal((await store.get<any>("enquiries", "zendesk:101")).status, "needs-staff");
+  assert.equal((await store.get<any>("enquiries", "zendesk:104")).followups.length, 1);
+  assert.equal(puts().length, 2, "only the two approved replies were ever sent; the chaser is queued, not sent");
+});
+
+test("the greeting is a plain first name only; markup or an odd name falls back to there, and no markup reaches the approval", async () => {
+  users[9] = { id: 9, name: "<a href=x>Ana</a> Ross", email: "ana@example.com" };
+  users[10] = { id: 10, name: "Mary-Jane O'Neil", email: "mj@example.com" };
+  tickets = [
+    { id: 105, status: "new", subject: "Hours", description: "What are your opening hours?", requester_id: 9, created_at: "2026-11-08T23:10:00Z" },
+    { id: 106, status: "new", subject: "Saturdays", description: "Do you open on Saturdays?", requester_id: 10, created_at: "2026-11-08T23:11:00Z" },
+  ];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx); await draft(ctx);
+  const approvals = await approvalsOf(store);
+  assert.equal(approvals.find((a) => a.acts[0].input && JSON.stringify(a.acts[0].input).includes('"ticket_id":105'))!.summary.includes("<"), false);
+  for (const ap of approvals) await approve(WF, store, ap.id, "owner", NOW);
+  const body = (tid: number) => puts().find((p) => p.path === `/api/v2/tickets/${tid}`)!.body.ticket.comment.body as string;
+  assert.match(body(105), /^Hi there,/);
+  assert.doesNotMatch(body(105), /<a/);
+  assert.match(body(106), /^Hi Mary-Jane,/);
+});
+
+test("enquiry text is screened in draft and then dropped; the record keeps the ticket, contact and status", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  assert.match((await store.get<any>("enquiries", "zendesk:101")).text, /^Can I book/, "held until the draft step");
+  await draft(ctx);
+  for (const id of ["zendesk:101", "zendesk:102"]) {
+    const e = await store.get<any>("enquiries", id);
+    assert.equal("text" in e, false, `${id} keeps no enquiry text`);
+    assert.equal("title" in e, false, `${id} keeps no enquiry title`);
+  }
+  assert.equal((await store.get<any>("enquiries", "zendesk:102")).status, "clinician");
 });
 
 test("deploy: every target renders every cron", () => {

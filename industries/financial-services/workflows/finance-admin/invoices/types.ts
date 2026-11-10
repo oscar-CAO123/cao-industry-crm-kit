@@ -16,8 +16,9 @@ export interface Check {
   verdict: Verdict; reasons: string[]; fingerprint: string; checked: string;
 }
 
-/** Reminders already queued for one overdue invoice. A rejected reminder still counts as sent. */
-export interface ChaseRecord { sent: { step: number; on: string }[] }
+/** Reminders already queued for one overdue invoice. A reminder a person rejects still counts as sent; one the invoice check
+ *  rejects was never sent, so chase() takes it off the count (approval is the approval id). */
+export interface ChaseRecord { sent: { step: number; on: string; approval?: string }[] }
 
 export interface Line { Description?: string; AccountCode?: string; LineAmount?: number }
 export interface Invoice {

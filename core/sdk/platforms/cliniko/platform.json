@@ -11,6 +11,7 @@
   "api\\.(?:[a-z]{2}[0-9])\\.cliniko\\.com"
  ],
  "pinned": {},
+ "queryArrays": "brackets",
  "serverVars": {
   "shard": {
    "env": "CLINIKO_SHARD",

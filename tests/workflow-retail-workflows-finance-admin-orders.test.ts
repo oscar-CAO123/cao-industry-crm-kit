@@ -46,6 +46,8 @@ function fake() {
       // Xero
       if (p.endsWith("/Items")) return json({ Items: ITEMS });
       if (p.endsWith("/Contacts")) return json({ Contacts: m === "GET" ? [] : [{ ContactID: CID }] });
+      // An order whose title is "Order 9999" makes Xero fail every time, to test that one failure does not stop the others.
+      if (p.endsWith("/Invoices") && m !== "GET" && body?.Invoices?.[0]?.Reference === "Order 9999") return new Response("xero down", { status: 500 });
       if (p.endsWith("/Invoices")) return json({ Invoices: [{ InvoiceID: INV, Status: "DRAFT" }] });
       return new Response("not faked: " + m + " " + p, { status: 404 });
     }) as any,
@@ -114,6 +116,45 @@ test("re-runs never create or queue twice; approval sends the confirmation once"
   assert.equal(sends().length, 1, "sent once");
   assert.equal(sends()[0].body.id, DRAFT);
   await assert.rejects(approve(WF, store, pending[0].id, "owner"), /already done/);
+});
+
+test("the invoice uses the Xero rate card price; an agent-proposed price is ignored", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  fs.writeFileSync(LINES, JSON.stringify([{ code: "TEA-GREEN", qty: 2, unitPrice: 0.01 }]));
+  await main(["propose", FOLDER, `gmail-${MSG}`, LINES], store);
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_lines: 0 });
+  assert.equal(invoices()[0].body.Invoices[0].LineItems[0].UnitAmount, 12.5, "the rate card price, not the proposed 0.01");
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /\$25\.00 ex GST/);
+  assert.doesNotMatch(ap.summary, /override/);
+});
+
+test("an owner price override in settings is used and named in the approval summary", async () => {
+  const store = new MemoryStore(), ctx = context(WF, { ...S, price_overrides: { "TEA-GREEN": 10 } }, store, NOW, () => {});
+  await intake(ctx);
+  fs.writeFileSync(LINES, JSON.stringify([{ code: "TEA-GREEN", qty: 2, unitPrice: 0.01 }, { code: "MUG-01", qty: 1 }]));
+  await main(["propose", FOLDER, `gmail-${MSG}`, LINES], store);
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_lines: 0 });
+  assert.deepEqual(invoices()[0].body.Invoices[0].LineItems.map((l: any) => l.UnitAmount), [10, 18]);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /owner price override on TEA-GREEN/);
+});
+
+test("one order that Xero refuses is parked with its reason, and the order after it still goes through", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  fs.writeFileSync(LINES, JSON.stringify([{ code: "MUG-01", qty: 1 }]));
+  await main(["propose", FOLDER, `gmail-${MSG}`, LINES], store);
+  await store.put("enquiries", "gmail-BAD", { id: "gmail-BAD", title: "Order 9999", contact: { name: "Bo", email: "bo@example.com" },
+    received: NOW.toISOString(), status: "new" });
+  await store.put("proposals", "gmail-BAD", { lines: [{ code: "MUG-01", qty: 1 }], at: NOW.toISOString() });
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_lines: 1 });
+  assert.equal((await store.get<any>("enquiries", `gmail-${MSG}`)).status, "queued");
+  const bad = await store.get<any>("enquiries", "gmail-BAD");
+  assert.equal(bad.status, "needs-lines");
+  assert.match(bad.reason, /^not drafted: /);
+  assert.equal(sends().length, 0, "nothing sent by a cron");
 });
 
 test("a line code not on the Xero item list parks the order instead of inventing a price", async () => {

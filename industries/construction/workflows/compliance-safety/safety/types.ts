@@ -5,7 +5,7 @@ export type Platform = "sitebook";
 
 export interface Settings {
   business_name?: string;
-  prestart?: { template_checklist_id: string; swms_id?: string; job_title_prefix?: string };
+  prestart?: { template_checklist_id: string; swms_id?: string; job_title_prefix?: string; asset_id?: string; asset_group_id?: string };
   swms_review_days?: number;        // how old a SWMS review may be before a review action is raised (default 90)
   swms_review_assignee?: string;    // SiteBook personnel id for review actions (optional)
   reminder_days?: number;           // remind about open actions due within this many days (default 2)

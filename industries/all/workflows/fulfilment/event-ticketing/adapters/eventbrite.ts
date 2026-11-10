@@ -25,17 +25,35 @@ export async function ticketClasses(ctx: Ctx<Settings>, eventId: string): Promis
   return r.data?.ticket_classes ?? [];
 }
 
-/** One page of attendees. `more` is true when Eventbrite has further pages, which the kit's operation map cannot request. */
+/** Most pages one event's attendee list is followed through. Beyond it the list is refused, never read in part. */
+export const MAX_ATTENDEE_PAGES = 20;
+
+/**
+ * Every page of attendees, followed by the continuation token (spec: Paginated Responses). `more` is true only when the
+ * list was refused: the page cap was hit, or Eventbrite said there are more pages but gave no token. A refused list
+ * returns no items, so a caller never counts or registers part of an event.
+ */
 export async function attendees(ctx: Ctx<Settings>, eventId: string, changedSince?: string): Promise<{ items: Attendee[]; more: boolean }> {
-  const params: Record<string, unknown> = { event_id: eid(eventId) };
+  const base: Record<string, unknown> = { event_id: eid(eventId) };
   if (changedSince) {
     const d = new Date(changedSince);
     if (Number.isNaN(d.getTime())) throw new Error("eventbrite: bad changed_since");
-    params.changed_since = d.toISOString();
+    base.changed_since = d.toISOString();
   }
-  const r = await ctx.draft<{ attendees?: Attendee[]; pagination?: { has_more_items?: boolean } }>({ platform: P,
-    op: "get:/events/{event_id}/attendees/", summary: `read attendees for event ${eventId}`, input: { params } });
-  return { items: r.data?.attendees ?? [], more: r.data?.pagination?.has_more_items === true };
+  const items: Attendee[] = [];
+  let continuation: string | undefined;
+  for (let page = 1; page <= MAX_ATTENDEE_PAGES; page++) {
+    const params = continuation ? { ...base, continuation } : base;
+    const r = await ctx.draft<{ attendees?: Attendee[]; pagination?: { has_more_items?: boolean; continuation?: string } }>({ platform: P,
+      op: "get:/events/{event_id}/attendees/", summary: `read attendees for event ${eventId}, page ${page}`, input: { params } });
+    items.push(...(r.data?.attendees ?? []));
+    const pg = r.data?.pagination;
+    if (pg?.has_more_items !== true) return { items, more: false };
+    if (!pg.continuation) break;
+    continuation = pg.continuation;
+  }
+  ctx.log(`attendees ${eventId}: more than ${MAX_ATTENDEE_PAGES} pages or no continuation token; list refused, nothing read`);
+  return { items: [], more: true };
 }
 
 export async function teams(ctx: Ctx<Settings>, eventId: string): Promise<Team[]> {

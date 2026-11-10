@@ -34,11 +34,17 @@ export async function auditRegister(ctx: Ctx<Settings>) {
   return { entries: rows.length };
 }
 
-/** Every 15 minutes: queue a quarantine transfer for each new hold. Holds that fail validation are skipped, never queued. */
+/** Every 15 minutes: queue a quarantine transfer for each new hold. Holds that fail validation are skipped, never queued.
+ *  Nothing is queued until settings.lot_selection_confirmed is set: the transfer line names no batch. */
 export async function quarantine(ctx: Ctx<Settings>) {
   let queued = 0, skipped = 0;
   const to = ctx.settings.quarantine_warehouse;
-  for (const raw of Object.values(await ctx.store.list<Hold>("holds"))) {
+  const holds = Object.values(await ctx.store.list<Hold>("holds"));
+  if (!ctx.settings.lot_selection_confirmed) {
+    ctx.log(`quarantine: ${holds.length} holds not queued, settings.lot_selection_confirmed is not set (a sandbox transfer must confirm Unleashed moves the named batch)`);
+    return { queued: 0, skipped: holds.length };
+  }
+  for (const raw of holds) {
     if (raw.queued) continue;
     const h: Hold = { ...raw, qty: Number(raw.qty) };
     const ok = !!guidOf(h.guid) && PRODUCT.test(h.product) && CODE.test(h.from) && CODE.test(to) && h.from !== to

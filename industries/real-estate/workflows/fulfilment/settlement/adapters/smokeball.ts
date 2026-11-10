@@ -1,6 +1,7 @@
 // Smokeball: open matters, settlement calendar events on each matter, and their reminders.
 // Field names come from Smokeball's official spec (EventDto, ReminderDto, the Event and Matter responses).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import { ApiError } from "../../../../../../core/lib/http.ts";
 import { uuid, isDay, dayOf, addDays, type Settings, type SettlementEvent } from "../types.ts";
 
 const P = "smokeball";
@@ -39,6 +40,23 @@ export async function settlementEvents(ctx: Ctx<Settings>, matterId: string): Pr
     try { out.push({ event_id: uuid(e.id, "event id"), date, subject: String(e.subject).slice(0, 200) }); } catch { /* not a real event id: skip */ }
   }
   return out;
+}
+
+/** One settlement event read by its id, whatever its date, read only. Undefined when it is gone, deleted, or no longer a
+ *  settlement on this matter. Used when the register window (today to the horizon) cannot see the event any more. */
+export async function settlementEventById(ctx: Ctx<Settings>, matterId: string, eventId: string): Promise<SettlementEvent | undefined> {
+  const id = uuid(eventId, "event id");
+  let e: any;
+  try {
+    e = (await ctx.draft({ platform: P, op: "GetEventById", summary: `read settlement event ${id}`, input: { params: { eventId: id } } })).data;
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return undefined;
+    throw err;
+  }
+  const date = isDay(String(e?.startTime ?? "").slice(0, 10));
+  if (!date || e.isDeleted || !String(e.subject ?? "").toLowerCase().includes(ctx.settings.settlement_subject.toLowerCase())) return undefined;
+  if (e.matter && String(e.matter.id ?? "") !== matterId) return undefined;
+  return { event_id: id, date, subject: String(e.subject).slice(0, 200) };
 }
 
 /** The EventDto for a settlement: an all-day, non-billable event on the matter with no attendees, so nothing invites anyone. */

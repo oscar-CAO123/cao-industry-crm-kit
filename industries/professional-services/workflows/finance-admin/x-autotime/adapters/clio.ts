@@ -64,10 +64,11 @@ export async function openMatters(ctx: Ctx<Settings>): Promise<Matter[]> {
 
 /** The live act for a time entry: queued by the entries cron, run only after a person approves it. Hours go out as seconds. */
 export function entryAct(ctx: Ctx<Settings>, r: Request): Act {
+  const seconds = Math.round(hours(r.hours) * 3600);
   const data: Record<string, unknown> = {
     type: "TimeEntry",
     date: day(r.date),
-    quantity: Math.round(hours(r.hours) * 3600),
+    quantity: seconds,
     matter: { id: clioId(r.matter_id, "matter") },
     user: { id: clioId(ctx.settings.clio_user_id, "user") },
     non_billable: r.billable === undefined ? ctx.settings.default_non_billable === true : r.billable === false,
@@ -75,6 +76,6 @@ export function entryAct(ctx: Ctx<Settings>, r: Request): Act {
     ...(ctx.settings.default_activity_description_id ? { activity_description: { id: clioId(ctx.settings.default_activity_description_id, "activity description") } } : {}),
   };
   return { platform: P, op: "openapi.Activity#create", key: safeKey(`time:${r.id}`),
-    summary: `log ${hours(r.hours)} h on matter ${r.matter_id} for ${r.date}${r.note ? `: ${String(r.note).slice(0, 80)}` : ""}`,
+    summary: `log ${hours(r.hours)} h (Clio quantity ${seconds} seconds) on matter ${r.matter_id} for ${r.date}${r.note ? `: ${String(r.note).slice(0, 80)}` : ""}`,
     input: { body: { data } } };
 }

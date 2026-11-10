@@ -19,6 +19,7 @@ const ANIMALS = [
 ];
 const GROUPS = [{ managementGroupId: "G1", name: "Breeders", species: "cattle", type: "mob" }, { managementGroupId: "G2", name: "Ewes", species: "sheep", type: "mob" }];
 
+let ANIMALS_OVERRIDE: any[] | undefined;   // a test can replace the farm's animal list
 let calls: { query: string; variables: any }[] = [];
 let mutationsRun = 0;
 
@@ -35,7 +36,8 @@ function fake() {
       if (/managementGroups\(/.test(q)) return json({ managementGroups: GROUPS });
       if (/animals\(/.test(q)) {
         const skip = Number(body.variables?.skip ?? 0), limit = Number(body.variables?.limit ?? 100);
-        return json({ animals: ANIMALS.slice(skip, skip + limit) });
+        const list = ANIMALS_OVERRIDE ?? ANIMALS;
+        return json({ animals: list.slice(skip, skip + limit) });
       }
       return new Response("not faked: " + q.slice(0, 80), { status: 404 });
     }) as any,
@@ -44,6 +46,7 @@ function fake() {
 
 beforeEach(() => {
   fake();
+  ANIMALS_OVERRIDE = undefined;
   setTokenStore(new MemoryTokenStore());
   Object.assign(process.env, { AGRIWEBB_ACCESS_TOKEN: "test-token", KIT_ALLOW_WRITES: "1" });
 });
@@ -95,4 +98,37 @@ test("a write is only queued, runs once on approval, and a re-queue never duplic
   const ap = await approve(WF, store, id1, "oscar", NOW);
   assert.equal(ap.status, "done");
   assert.equal(mutationsRun, 1, "the approved write runs exactly once");
+});
+
+test("a tag on two different animals is ambiguous, so its NVD line needs a check", async () => {
+  const store = new MemoryStore();
+  await store.put("stock", "x1", { key: "x1", animal_id: "x1", eid: "DUP-1", read: "2026-11-01T00:00:00Z" });
+  await store.put("stock", "x2", { key: "x2", animal_id: "x2", eid: "DUP-1", read: "2026-11-01T00:00:00Z" });
+  await store.put("nvd-requests", "req-d", { id: "req-d", tags: ["DUP-1"], status: "new" });
+  assert.deepEqual(await nvdDraft(context(WF, S, store, NOW, () => {})), { drafted: 0, needs_check: 1 });
+  const r = await store.get<any>("nvd-requests", "req-d");
+  assert.equal(r.status, "needs-check");
+  assert.equal(r.lines[0].matched, false);
+  assert.equal(r.lines[0].ambiguous, true);
+  assert.equal(r.lines[0].animal_id, undefined, "neither animal is picked");
+});
+
+test("an animal a complete read no longer lists is marked gone and its tag does not match", async () => {
+  const store = new MemoryStore();
+  await store.put("stock", "gone-1", { key: "gone-1", animal_id: "gone-1", eid: "982000999000001", read: "2026-11-01T00:00:00Z" });
+  await store.put("nvd-requests", "req-g", { id: "req-g", tags: ["982000999000001"], status: "new" });
+  await stockRegister(context(WF, S, store, NOW, () => {}));
+  assert.ok((await store.get<any>("stock", "gone-1")).gone, "sold or dead animal is marked gone");
+  assert.equal((await store.get<any>("stock", "a1"))?.gone, undefined, "animals still listed are not marked");
+  await nvdDraft(context(WF, S, store, NOW, () => {}));
+  assert.equal((await store.get<any>("nvd-requests", "req-g")).status, "needs-check");
+});
+
+test("a capped animal read marks nothing gone", async () => {
+  ANIMALS_OVERRIDE = Array.from({ length: 100 }, (_, i) => ({ animalId: `b${i}`, managementGroupId: "G1",
+    identity: { name: `B${i}`, eid: `98200020${String(i).padStart(4, "0")}`, vid: null, managementTag: null } }));
+  const store = new MemoryStore();
+  await store.put("stock", "gone-2", { key: "gone-2", animal_id: "gone-2", eid: "982000888000001", read: "2026-11-01T00:00:00Z" });
+  await stockRegister(context(WF, { ...S, max_pages: 1 }, store, NOW, () => {}));
+  assert.equal((await store.get<any>("stock", "gone-2"))?.gone, undefined, "one page of 100 is not the whole farm");
 });

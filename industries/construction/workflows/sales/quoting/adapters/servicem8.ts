@@ -45,7 +45,8 @@ export const servicem8: Adapter = {
       .map((m): RateItem => ({ code: String(m.item_number || m.uuid), name: String(m.name ?? ""), price: Number(m.price), ref: { material_uuid: m.uuid } }));
   },
   async draftQuote(ctx, e: Enquiry, lines: Line[]) {
-    let job = e.ref?.job_uuid;
+    // A stored job id goes into OData filters and document requests below, so it is checked like every other id.
+    let job = e.ref?.job_uuid ? uuid(e.ref.job_uuid) : undefined;
     if (!job) {
       const r = await ctx.draft({ platform: P, op: "servicem8-api.createJobs", summary: `create quote job for ${e.title}`,
         input: { body: { status: "Quote", job_description: `${e.title}\n${e.text ?? ""}`.slice(0, 4000), job_address: e.ref?.address ?? "" } } });
@@ -53,8 +54,12 @@ export const servicem8: Adapter = {
       // Remember the job at once: if a later step fails, the next run reuses it instead of creating another.
       await ctx.store.put("enquiries", e.id, { ...e, ref: { ...(e.ref ?? {}), job_uuid: job } });
     }
+    // Only the lines not yet on the job are created. A line is on the job when a row has its position and name, so a
+    // run that failed part-way resumes and the job ends with every line once.
     const existing = await list<any>(ctx, "servicem8-api.listJobMaterials", `job_uuid eq '${job}'`);
-    for (const [i, l] of (existing.length ? [] : lines).entries()) {
+    const on = new Set(existing.map((x) => `${String(x.sort_order)}|${String(x.name)}`));
+    const missing = lines.map((l, i) => ({ l, i })).filter(({ l, i }) => !on.has(`${i + 1}|${l.name}`));
+    for (const { l, i } of missing) {
       await ctx.draft({ platform: P, op: "servicem8-api.createJobMaterials", summary: `line ${l.code} x${l.qty}`,
         input: { body: { job_uuid: job, ...(l.ref?.material_uuid ? { material_uuid: l.ref.material_uuid } : {}), name: l.name, quantity: String(l.qty), price: String(l.unitPrice), sort_order: String(i + 1) } } });
     }

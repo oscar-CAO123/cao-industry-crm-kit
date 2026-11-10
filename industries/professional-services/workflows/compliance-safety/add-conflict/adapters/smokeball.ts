@@ -51,13 +51,18 @@ export async function partiesOf(ctx: Ctx<Settings>, matterId: string): Promise<P
   return out.filter((p) => p.name.length > 1);
 }
 
-/** Contacts whose name matches a party, other than the lead's own parties. Read only. */
-export async function nameMatches(ctx: Ctx<Settings>, party: Party, own: Set<string>): Promise<Hit[]> {
+/** Contacts whose name matches a party, other than the lead's own parties. Read only.
+ *  One page is read. A full page may hold more matches than came back, so `full` is set and the caller must not treat the party as clear. */
+export async function nameMatches(ctx: Ctx<Settings>, party: Party, own: Set<string>): Promise<{ hits: Hit[]; full: boolean }> {
+  const limit = ctx.settings.search_limit ?? 20;
   const r = await ctx.draft<any>({ platform: P, op: "GetContacts", summary: `search contacts for ${party.name}`,
-    input: { params: { Search: clean(party.name, 80), Limit: ctx.settings.search_limit ?? 20 } } });
-  return (r.data?.value ?? [])
-    .map((c: any) => ({ party: party.name, contact_id: id(c.id), name: displayName(c) }))
-    .filter((h: Hit) => !own.has(h.contact_id));
+    input: { params: { Search: clean(party.name, 80), Limit: limit } } });
+  const rows: any[] = r.data?.value ?? [];
+  return {
+    hits: rows.map((c: any) => ({ party: party.name, contact_id: id(c.id), name: displayName(c) }))
+      .filter((h: Hit) => !own.has(h.contact_id)),
+    full: rows.length >= limit,
+  };
 }
 
 /** The live operation: a lead becomes a matter. Only ever queued for approval. */

@@ -6,6 +6,7 @@ import { approvalId } from "../../../../../core/workflows/runtime.ts";
 import type { DisputeDecision, DisputeRecord, EvidenceNote, RefundDecision, Settings } from "./types.ts";
 import { OPEN_STATES } from "./types.ts";
 import { listDisputes, listRefunds, stageEvidence, refundAct, submitAct, acceptAct } from "./adapters/square.ts";
+import * as stripe from "./adapters/stripe.ts";
 
 const DAY = 864e5;
 
@@ -18,16 +19,25 @@ async function queueOnce(ctx: Ctx<Settings>, act: Act): Promise<boolean> {
   return true;
 }
 
-/** Every 30 minutes: read disputes and recent refunds, record them, and stage the evidence notes a person has written. */
+/** Stripe is read only when the client has switched it on in settings. */
+const stripeOn = (ctx: Ctx<Settings>) => ctx.settings.stripe?.enabled === true;
+
+/** Every 30 minutes: read disputes and recent refunds, record them, and stage the evidence notes a person has written.
+ *  Square holds staged evidence on the dispute; a Stripe note is sent with its submit, so nothing is staged for Stripe here. */
 export async function watch(ctx: Ctx<Settings>) {
   const seen = ctx.now.toISOString();
-  const { disputes, skipped: badDisputes } = await listDisputes(ctx, seen);
-  const { refunds, skipped: badRefunds } = await listRefunds(ctx, seen, ctx.now);
+  const sq = await listDisputes(ctx, seen);
+  const sqRefunds = await listRefunds(ctx, seen, ctx.now);
+  const st = stripeOn(ctx) ? await stripe.listDisputes(ctx, seen) : { disputes: [], skipped: 0 };
+  const stRefunds = stripeOn(ctx) ? await stripe.listRefunds(ctx, seen, ctx.now) : { refunds: [], skipped: 0 };
+  const disputes = [...sq.disputes, ...st.disputes];
+  const refunds = [...sqRefunds.refunds, ...stRefunds.refunds];
+  const badDisputes = sq.skipped + st.skipped, badRefunds = sqRefunds.skipped + stRefunds.skipped;
   let staged = 0, stageFailed = 0;
   for (const d of disputes) {
     const prev = await ctx.store.get<DisputeRecord>("disputes", d.id);
     d.staged = prev?.staged ?? [];
-    if (OPEN_STATES.has(d.state)) {
+    if (d.platform === "square" && OPEN_STATES.has(d.state)) {
       const note = await ctx.store.get<EvidenceNote>("evidence", d.id);
       if (note && !d.staged.includes(note.evidence_type)) {
         try {
@@ -53,9 +63,11 @@ export async function refunds(ctx: Ctx<Settings>) {
   let queued = 0, declined = 0, invalid = 0;
   for (const [req, d] of Object.entries(decisions)) {
     if (d.decision === "decline") { declined++; continue; }
-    if (d.decision !== "refund" || d.platform !== "square") continue;
+    if (d.decision !== "refund" || (d.platform !== "square" && d.platform !== "stripe")) continue;
     try {
-      if (await queueOnce(ctx, refundAct(req, d))) queued++;
+      if (d.platform === "stripe" && !stripeOn(ctx)) throw new Error("stripe is not switched on for this workflow");
+      const act = d.platform === "stripe" ? stripe.refundAct(req, d) : refundAct(req, d);
+      if (await queueOnce(ctx, act)) queued++;
     } catch (e: any) {
       invalid++;
       ctx.log(`refund decision not queued: ${String(e?.message ?? e).slice(0, 120)}`);
@@ -74,6 +86,7 @@ export async function respond(ctx: Ctx<Settings>) {
   const flagged: string[] = [], held: string[] = [];
   for (const d of Object.values(disputes)) {
     if (!OPEN_STATES.has(d.state)) continue;
+    if (d.platform === "stripe" && !stripeOn(ctx)) continue;
     const dec = decisions[d.id];
     if (!dec) {
       if (d.due_at && Date.parse(d.due_at) - ctx.now.getTime() < within) flagged.push(d.id);
@@ -81,10 +94,18 @@ export async function respond(ctx: Ctx<Settings>) {
     }
     try {
       if (dec.decision === "accept") {
+        if (d.platform === "stripe") throw new Error("accepting a Stripe dispute (closing it) is not built yet");
         if (await queueOnce(ctx, acceptAct(d.id))) queued++;
       } else if (dec.decision === "submit") {
-        if (!d.staged.length) { held.push(d.id); continue; }   // nothing staged yet: never submit an empty file
-        if (await queueOnce(ctx, submitAct(d.id))) queued++;
+        if (d.platform === "stripe") {
+          const note = await ctx.store.get<EvidenceNote>("evidence", d.id);
+          if (!note) { held.push(d.id); continue; }   // no written evidence yet: never submit an empty dispute
+          if (await queueOnce(ctx, stripe.submitAct(d.id, note))) queued++;
+        } else {
+          if (!d.staged.length) { held.push(d.id); continue; }   // nothing staged yet: never submit an empty file
+          const note = await ctx.store.get<EvidenceNote>("evidence", d.id);
+          if (await queueOnce(ctx, submitAct(d.id, { types: d.staged, text: note?.text }))) queued++;
+        }
       }
     } catch (e: any) {
       invalid++;

@@ -26,22 +26,37 @@ export async function draft(ctx: Ctx<Settings>) {
   let drafted = 0, parked = 0;
   for (const o of todo) {
     const park = async (reason: string) => { parked++; await ctx.store.put("enquiries", o.id, { ...o, status: "needs-lines", reason }); };
-    if (!o.contact.email || !EMAIL.test(o.contact.email)) { await park("no usable customer email"); continue; }
-    const prop = await ctx.store.get<{ lines: { code: string; qty: number; unitPrice?: number }[] }>("proposals", o.id);
-    if (!prop?.lines?.length) { await park("no line proposal yet: the agent reads the email and proposes lines"); continue; }
-    const lines: Line[] = [], bad: string[] = [];
-    for (const w of prop.lines) {
-      const it = byCode.get(String(w.code).toLowerCase()), qty = Number(w.qty);
-      if (!it || !(qty > 0) || qty > 100000) { bad.push(String(w.code)); continue; }
-      lines.push({ code: it.code, name: it.name, qty, unitPrice: typeof w.unitPrice === "number" && w.unitPrice >= 0 ? w.unitPrice : it.price, itemId: it.itemId });
+    // One order's failure parks that order with its reason; the orders after it still go through.
+    try {
+      if (!o.contact.email || !EMAIL.test(o.contact.email)) { await park("no usable customer email"); continue; }
+      const prop = await ctx.store.get<{ lines: { code: string; qty: number; unitPrice?: number }[] }>("proposals", o.id);
+      if (!prop?.lines?.length) { await park("no line proposal yet: the agent reads the email and proposes lines"); continue; }
+      const overrides = ctx.settings.price_overrides ?? {}, overridden: string[] = [];
+      const lines: Line[] = [], bad: string[] = [];
+      for (const w of prop.lines) {
+        const it = byCode.get(String(w.code).toLowerCase()), qty = Number(w.qty);
+        if (!it || !(qty > 0) || qty > 100000) { bad.push(String(w.code)); continue; }
+        // The Xero rate card sets the price. A price the agent proposes is never used (an order email can steer the agent);
+        // only a price the owner put in settings for this code replaces the rate card.
+        let unitPrice = it.price;
+        if (Object.prototype.hasOwnProperty.call(overrides, it.code)) {
+          const v = Number(overrides[it.code]);
+          if (!Number.isFinite(v) || v < 0) throw new Error(`owner price override for ${it.code} is not a usable price`);
+          unitPrice = v; overridden.push(it.code);
+        }
+        lines.push({ code: it.code, name: it.name, qty, unitPrice, itemId: it.itemId });
+      }
+      if (bad.length) { await park(`not on the Xero item list or bad quantity: ${bad.slice(0, 5).join(", ")}`); continue; }
+      const invoice = await xero.draftInvoice(ctx, o, lines);
+      const draftId = await gmail.confirmation(ctx, o, confirmationText(ctx.settings, o, lines));
+      const sum = `Send order confirmation to ${o.contact.email}: ${lines.length} lines, ${money(total(lines))} ex GST` +
+        (overridden.length ? ` (owner price override on ${overridden.join(", ")})` : "");
+      await ctx.queue(gmail.sendAct(o, draftId, sum), sum);
+      await ctx.store.put("enquiries", o.id, { ...o, status: "queued", reason: undefined, ref: { ...o.ref, invoice_id: invoice, draft_id: draftId } });
+      drafted++;
+    } catch (e: any) {
+      await park(`not drafted: ${String(e?.message ?? e).slice(0, 160)}`);
     }
-    if (bad.length) { await park(`not on the Xero item list or bad quantity: ${bad.slice(0, 5).join(", ")}`); continue; }
-    const invoice = await xero.draftInvoice(ctx, o, lines);
-    const draftId = await gmail.confirmation(ctx, o, confirmationText(ctx.settings, o, lines));
-    const sum = `Send order confirmation to ${o.contact.email}: ${lines.length} lines, ${money(total(lines))} ex GST`;
-    await ctx.queue(gmail.sendAct(o, draftId, sum), sum);
-    await ctx.store.put("enquiries", o.id, { ...o, status: "queued", reason: undefined, ref: { ...o.ref, invoice_id: invoice, draft_id: draftId } });
-    drafted++;
   }
   ctx.log(`draft: ${drafted} drafted, ${parked} need lines`);
   return { drafted, needs_lines: parked };

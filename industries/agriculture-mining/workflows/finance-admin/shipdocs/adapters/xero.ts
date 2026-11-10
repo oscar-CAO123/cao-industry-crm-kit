@@ -8,13 +8,19 @@ const P = "xero";
 const idem = (s: string) => ({ "Idempotency-Key": safeKey(s, 120) });
 const day = (d: Date) => d.toISOString().slice(0, 10);
 
+/** The existing Xero contact with exactly this email, or undefined. Never creates one. */
+async function findContactId(ctx: Ctx<Settings>, email: string): Promise<string | undefined> {
+  const r = await ctx.draft<any>({ platform: P, op: "accounting.getContacts", summary: "find buyer", input: { params: { searchTerm: email, summaryOnly: true } } });
+  const hit = (r.data?.Contacts ?? []).find((c: any) => String(c.EmailAddress ?? "").toLowerCase() === email.toLowerCase());
+  return hit ? guid(hit.ContactID) : undefined;
+}
+
 /** Finds the buyer by email, or creates them. Xero ignores a repeated create with the same key. */
 async function contactId(ctx: Ctx<Settings>, s: Shipment): Promise<string> {
   const email = s.buyer.email && EMAIL.test(s.buyer.email) ? s.buyer.email : undefined;
   if (email) {
-    const r = await ctx.draft<any>({ platform: P, op: "accounting.getContacts", summary: "find buyer", input: { params: { searchTerm: email, summaryOnly: true } } });
-    const hit = (r.data?.Contacts ?? []).find((c: any) => String(c.EmailAddress ?? "").toLowerCase() === email.toLowerCase());
-    if (hit) return guid(hit.ContactID);
+    const hit = await findContactId(ctx, email);
+    if (hit) return hit;
   }
   const name = (s.buyer.name || email || s.title).slice(0, 255);
   const r = await ctx.draft<any>({ platform: P, op: "accounting.createContacts", summary: `create buyer ${name}`,
@@ -49,6 +55,11 @@ export async function compareInvoice(ctx: Ctx<Settings>, s: Shipment): Promise<s
     if (Number(b.Quantity) !== a.qty || round2(Number(b.UnitAmount)) !== round2(a.unitPrice)) return `line ${i + 1} differs from the shipment`;
   }
   if (round2(Number(inv.Total)) !== shipTotal(s.lines)) return "invoice total differs from the shipment";
+  // Authorise and email go to the invoice's contact, not to the buyer email on the record: they must be the same contact.
+  if (s.buyer.email && EMAIL.test(s.buyer.email)) {
+    const buyer = await findContactId(ctx, s.buyer.email);
+    if (!buyer || String(inv.Contact?.ContactID ?? "").toLowerCase() !== buyer.toLowerCase()) return "the Xero invoice is not addressed to the buyer email on the record";
+  }
   return null;
 }
 

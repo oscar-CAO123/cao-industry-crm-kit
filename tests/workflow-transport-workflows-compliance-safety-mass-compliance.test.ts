@@ -96,6 +96,15 @@ test("an approved note runs once, against the right vehicle, with the note text"
   assert.match(patch[0].body.note, /missing brand, model/);
 });
 
+test("the approval says the note will be overwritten and shows the text that replaces it", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await register(ctx);
+  await massCheck(ctx);
+  const forTwo = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].input?.body?.identifier?.value === uid(2))!;
+  assert.match(forTwo.summary, /overwrites the note/);
+  assert.ok(forTwo.summary.includes("missing brand, model"), "the summary shows the new note text");
+});
+
 test("a draft cannot run the note operation", async () => {
   const ctx = context(WF, S, new MemoryStore(), NOW, () => {});
   await assert.rejects(

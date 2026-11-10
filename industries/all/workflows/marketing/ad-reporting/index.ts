@@ -34,13 +34,19 @@ export async function review(ctx: Ctx<Settings>) {
   const min = s.min_spend_before_judging ?? 100, limit = s.max_cost_per_lead, cap = s.pauses_per_run ?? 10;
   const pending: string[] = [];
   if (limit !== undefined) {
-    for (const r of [...snap.rows].sort((a, b) => b.spend - a.spend)) {
+    // An over-limit period runs from the first review that finds the ad over the limit until a review that does not.
+    // Its pause is keyed by the day the period began: a rejected pause stays rejected for that period, and an ad that was
+    // paused or stopped and then runs over the limit again starts a new period with its own approval.
+    const since = (await ctx.store.get<Record<string, string>>("pauses", "since")) ?? {};
+    const over = [...snap.rows].sort((a, b) => b.spend - a.spend)
+      .filter((r) => running.has(r.ad_id) && r.spend >= min && (r.leads === 0 || r.spend / r.leads > limit));
+    const next: Record<string, string> = {};
+    for (const r of over) next[r.ad_id] = since[r.ad_id] ?? snap.at.slice(0, 10);
+    await ctx.store.put("pauses", "since", next);
+    for (const r of over) {
       if (pending.length >= cap) break;
-      if (!running.has(r.ad_id) || r.spend < min) continue;
-      const over = r.leads === 0 || r.spend / r.leads > limit;
-      if (!over) continue;
       const why = r.leads === 0 ? `${money(r.spend)} spent, no leads` : `${money(r.spend / r.leads)} per lead, over the ${money(limit)} limit`;
-      pending.push(await ctx.queue(meta.pauseAct(r.ad_id, why), `Pause "${r.ad_name || r.ad_id}": ${why} (last 7 days)`));
+      pending.push(await ctx.queue(meta.pauseAct(r.ad_id, why, next[r.ad_id]), `Pause "${r.ad_name || r.ad_id}": ${why} (last 7 days)`));
     }
   }
   const spend = snap.rows.reduce((n, r) => n + r.spend, 0), leads = snap.rows.reduce((n, r) => n + r.leads, 0);

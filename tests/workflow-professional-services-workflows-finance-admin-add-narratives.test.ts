@@ -21,6 +21,7 @@ type Hit = { method: string; path: string; query: URLSearchParams; body: any };
 let hits: Hit[] = [];
 let invoiceStatus = "DRAFT";
 let createFails = false;
+let feedFlood = false;
 
 const FEED = [
   { timeEntryId: E1, userId: "u1", projectId: PROJ, taskId: T1, dateUtc: "2026-11-05T00:00:00", duration: 90, description: "Reviewed the Q3 accounts and sent queries", status: "ACTIVE" },
@@ -29,7 +30,7 @@ const FEED = [
 ];
 
 function fake() {
-  hits = []; invoiceStatus = "DRAFT"; createFails = false;
+  hits = []; invoiceStatus = "DRAFT"; createFails = false; feedFlood = false;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -39,7 +40,13 @@ function fake() {
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
-      if (p.endsWith(`/Projects/${PROJ}/Time`) && m === "GET") return json({ pagination: { page: 1, pageSize: 100, pageCount: 1, itemCount: FEED.length }, items: FEED });
+      if (p.endsWith(`/Projects/${PROJ}/Time`) && m === "GET") {
+        // Xero returns only entries dated on or after dateAfterUtc, as the real filter does.
+        const after = (u.searchParams.get("dateAfterUtc") ?? "").slice(0, 10);
+        if (feedFlood) return json({ items: Array.from({ length: 100 }, (_, i) => ({ timeEntryId: `eeeeeeee-0000-4000-8000-${String(i).padStart(12, "0")}`,
+          taskId: T1, dateUtc: "2026-11-05T00:00:00", duration: 1, status: "ACTIVE", description: "flood" })) });
+        return json({ pagination: { page: 1, pageSize: 100, pageCount: 1, itemCount: FEED.length }, items: FEED.filter((i) => !after || i.dateUtc.slice(0, 10) >= after) });
+      }
       if (p.endsWith(`/Projects/${PROJ}/Tasks`)) return json({ pagination: {}, items: [
         { taskId: T1, name: "Advisory", rate: { currency: "AUD", value: 150 } }, { taskId: T2, name: "Compliance", rate: { currency: "AUD", value: 200 } }] });
       if (p.endsWith(`/Projects/${PROJ}`) && m === "GET") return json({ projectId: PROJ, contactId: CONTACT, name: "Harbour Dental" });
@@ -164,6 +171,24 @@ test("no email and no delete is ever sent to Xero in the whole flow", async () =
   await draft(ctx);
   await approve(WF, store, (await pending(store))[0].id, "owner", NOW);
   assert.equal(hits.filter((h) => h.method === "DELETE" || /email|send/i.test(h.path)).length, 0);
+});
+
+test("an unbilled entry older than the lookback that Xero still lists as ACTIVE stays new, never marked gone", async () => {
+  const store = new MemoryStore();
+  await capture(context(WF, SET, store, NOW, () => {}));
+  const later = new Date(NOW.getTime() + 40 * 864e5);
+  assert.deepEqual(await capture(context(WF, SET, store, later, () => {})), { read: 3, added: 0, gone: 0 });
+  for (const id of [E1, E2, E3]) assert.equal((await store.get<any>("entries", id))!.status, "new", id);
+  const q = hits.filter((h) => h.path.endsWith(`/Projects/${PROJ}/Time`)).at(-1)!.query;
+  assert.ok(q.get("dateAfterUtc")!.slice(0, 10) <= "2026-11-05", "the read reaches back to the oldest waiting entry");
+});
+
+test("a capture that hits the time entry page cap refuses, so no waiting entry is marked gone", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await capture(ctx);
+  feedFlood = true;
+  await assert.rejects(capture(ctx), /capture refused/);
+  for (const id of [E1, E2, E3]) assert.equal((await store.get<any>("entries", id))!.status, "new", id);
 });
 
 test("with KIT_ALLOW_WRITES off the draft invoice is blocked before any socket opens", async () => {

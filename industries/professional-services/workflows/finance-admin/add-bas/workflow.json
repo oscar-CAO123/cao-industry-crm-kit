@@ -31,7 +31,7 @@
   {"name": "exceptions", "schedule": "40 22 * * *", "entry": "exceptions", "summary": "List the transactions the accountant must check by hand before the BAS."}
  ],
  "draft_ops": {
-  "xero": ["accounting.getBankTransactions", "accounting.getTaxRates"]
+  "xero": ["accounting.getBankTransactions", "accounting.getBankTransaction", "accounting.getTaxRates"]
  },
  "live_ops": {
   "xero": ["accounting.updateBankTransaction"]
@@ -47,6 +47,7 @@
   "Document scanning: the evidence says about 30 of the 50 minutes is scanning, but no operation reads attachment contents. The exceptions list flags missing documents only.",
   "Partner sign-off, lodgement and client communication are judgment and human steps. The evidence does not show a platform step for them.",
   "Coding rules are per client and must be agreed with the accountant before code-lines queues anything. With no rules, nothing is queued.",
+  "Needs core: an approved coding change is sent exactly as it was queued, with no re-read, so a line the accountant coded by hand after queueing is overwritten. The runtime's approve step must re-read the transaction and refuse unless it is still a single uncoded, unreconciled line. The cron cannot close this window: it runs once a day and approval can come sooner.",
   "The Xero adapter is docs-only until a Xero demo organisation proves the reads and the coding update."
  ],
  "evidence": {

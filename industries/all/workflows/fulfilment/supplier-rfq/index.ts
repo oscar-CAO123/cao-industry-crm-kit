@@ -1,6 +1,6 @@
 // The supplier RFQ workflow's four crons. Each reads, drafts or queues. None sends: every send, every chaser send and
 // every authorised purchase order waits in the approval queue for a person.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { type Approval, type Ctx, approvalId } from "../../../../../core/workflows/runtime.ts";
 import type { Rfq, Settings } from "./types.ts";
 import { RFQ_ID, EMAIL, day } from "./types.ts";
 import { microsoft365 } from "./adapters/microsoft-365.ts";
@@ -10,6 +10,9 @@ const DAY = 864e5;
 const rfqs = async (ctx: Ctx<Settings>) => Object.values(await ctx.store.list<Rfq>("rfqs")).filter((r) => RFQ_ID.test(r.id));
 const save = (ctx: Ctx<Settings>, r: Rfq) => ctx.store.put("rfqs", r.id, r);
 const validSuppliers = (r: Rfq) => r.suppliers.filter((s) => EMAIL.test(s.email));
+/** True only once the supplier's RFQ send has been approved and run. A rejected or still-waiting send is not done. */
+const rfqSent = async (ctx: Ctx<Settings>, rfq: Rfq, email: string) =>
+  (await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `send:${rfq.id}:${email}`)))?.status === "done";
 
 /** Every 15 minutes: one RFQ draft per supplier, each send queued for approval, the issue logged to the register. */
 export async function issue(ctx: Ctx<Settings>) {
@@ -49,6 +52,7 @@ export async function chase(ctx: Ctx<Settings>) {
     const replied = new Set(rfq.replied ?? []);
     rfq.chase_drafts ??= {};
     for (const s of validSuppliers(rfq).filter((x) => !replied.has(x.email.toLowerCase()))) {
+      if (!(await rfqSent(ctx, rfq, s.email))) { ctx.log(`chase: RFQ ${rfq.id} not chased to ${s.email}, its send has not completed`); continue; }
       const k = `${round}:${s.email.toLowerCase()}`;
       if (!rfq.chase_drafts[k]) { rfq.chase_drafts[k] = await microsoft365.draftChase(ctx, rfq, s, round); await save(ctx, rfq); }
       await ctx.queue(microsoft365.sendAct(ctx, rfq.chase_drafts[k], s.email, `chase${round}:${rfq.id}:${s.email.toLowerCase()}`, `chaser ${round} for RFQ ${rfq.id} to ${s.email}`));

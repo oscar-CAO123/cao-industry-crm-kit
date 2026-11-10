@@ -7,7 +7,7 @@ import type { CaseRecord, Settings } from "./types.ts";
 
 const DAY = 864e5;
 
-/** Every 30 minutes: read cases updated since the last run and record each person's and entity's check state. */
+/** Every 30 minutes: read cases updated since the last run (oldest first) and record each person's and entity's check state. */
 export async function caseWatch(ctx: Ctx<Settings>) {
   const cur = await ctx.store.get<{ updated_after?: string }>("cursor", "first-aml");
   const days = ctx.settings.first_aml?.lookback_days ?? 30;
@@ -24,22 +24,41 @@ export async function caseWatch(ctx: Ctx<Settings>) {
   return { read: found.length };
 }
 
-/** Every hour: for each case with an open screening or verification result, queue one note listing the person IDs and checks. */
+const NOTE_MAX = 1000;
+
+/** The open-items note for a case, cut to the platform's note limit. Whatever does not fit is counted, not dropped silently. */
+export function openNote(open: PersonCheck[], date: string): string {
+  const head = `Open items for compliance review (${date}): `, tail = ". A person clears or escalates each item.";
+  const parts = open.map((p) => `${p.kind} ${p.id}: ${p.open.join(", ")}`.slice(0, 300));
+  const build = (n: number) => [parts.slice(0, n).join("; "), n < parts.length ? `and ${parts.length - n} more, see the case in First AML` : ""]
+    .filter(Boolean).join("; ");
+  let n = parts.length;
+  while (n > 0 && head.length + build(n).length + tail.length > NOTE_MAX) n--;
+  return head + build(n) + tail;
+}
+
+/** Every hour: for each case with an open screening or verification result, queue one note listing the person IDs and checks.
+ *  One case that cannot be queued is logged and counted; it never stops the other cases. */
 export async function openItems(ctx: Ctx<Settings>) {
   const cases = Object.values(await ctx.store.list<CaseRecord>("cases"));
-  let queued = 0;
+  let queued = 0, failed = 0;
   for (const c of cases) {
     const open = c.people.filter((p) => p.state === "open");
     if (!open.length) continue;
-    const text = open.map((p) => `${p.kind} ${p.id}: ${p.open.join(", ")}`).join("; ");
-    const digest = crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
-    const note = `Open items for compliance review (${ctx.now.toISOString().slice(0, 10)}): ${text}. A person clears or escalates each item.`;
-    const summary = `Add an open-items note to case ${c.caseId}: ${open.length} person(s) with open checks`;
-    await ctx.queue({ platform: "first-aml", op: "mutation.addCaseNote", input: noteInput(c.caseId, note), summary, key: `note:${c.caseId}:${digest}` }, summary);
-    queued++;
+    try {
+      const text = open.map((p) => `${p.kind} ${p.id}: ${p.open.join(", ")}`).join("; ");
+      const digest = crypto.createHash("sha256").update(text).digest("hex").slice(0, 16);
+      const note = openNote(open, ctx.now.toISOString().slice(0, 10));
+      const summary = `Add an open-items note to case ${c.caseId}: ${open.length} person(s) with open checks`;
+      await ctx.queue({ platform: "first-aml", op: "mutation.addCaseNote", input: noteInput(c.caseId, note), summary, key: `note:${c.caseId}:${digest}` }, summary);
+      queued++;
+    } catch (e: any) {
+      failed++;
+      ctx.log(`open-items: case ${c.caseId} not queued: ${String(e?.message ?? e).slice(0, 160)}`);
+    }
   }
-  ctx.log(`open-items: ${queued} notes queued for approval`);
-  return { queued };
+  ctx.log(`open-items: ${queued} notes queued for approval, ${failed} cases failed`);
+  return { queued, failed };
 }
 
 export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { "case-watch": caseWatch, "open-items": openItems };

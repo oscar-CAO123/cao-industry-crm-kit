@@ -35,6 +35,7 @@
     "microsoft-365": {"status": "docs-only", "covers": "quote replies read from the quote folder, comparison and chaser drafts, chaser sends queued for approval, Excel register rows"}
   },
   "gaps": [
+    "Needs core/workflows/runtime.ts: a chaser queued on one day is sent when a person approves it, even if that supplier's quote arrived in the meantime. The send needs a pre-send check on live acts, run inside approve() before the send, that drops the chaser if a quote from that supplier has arrived. Not built here, because the runtime is outside this folder.",
     "Odoo: the kit folder holds one docs-read operation (the version endpoint). Its purchase-requisition, RFQ and vendor pricing steps have no mapped operations, so no adapter is built for it.",
     "Acumatica: the evidence names requisitions and RFQs, but the kit has no Acumatica platform folder, so no operations are mapped.",
     "Like-for-like checks, price ranking, negotiation and the award are judgment steps for the agent skill and the estimator. The crons never parse or rank a price.",

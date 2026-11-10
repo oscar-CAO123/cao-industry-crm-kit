@@ -44,7 +44,7 @@
   "Reminders: Xero's API has no reminder send mapped, so a reminder is the invoice email again, with Xero's own wording.",
   "Payments are one bill at a time. Xero's batch payment operation is mapped but not used, so each bill keeps its own approval.",
   "SMSF bank transaction classing and reconciliation (the unclear family) need a bank feed adapter. Not built.",
-  "A rejected reminder still counts as sent, so the next reminder is measured from the day the rejected one was queued.",
+  "A reminder a person rejects still counts as sent, so the next reminder is measured from the day it was queued. A reminder the invoice check rejects is queued again for the amount then owed.",
   "Tax types and GST are not set by this workflow. Confirm the account tax settings with the business before the first payment is approved.",
   "The payment and reminder calls are unverified against a live Xero demo company. The workflow stays docs-only until one proves them."
  ],

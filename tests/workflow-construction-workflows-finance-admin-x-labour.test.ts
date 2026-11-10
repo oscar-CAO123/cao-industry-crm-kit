@@ -85,6 +85,8 @@ function fake() {
         t.status = "Approved";
         return json({ timesheet: { timesheetID: t.timesheetID, status: "Approved" } });
       }
+      const one = p.match(/\/Timesheets\/([^/]+)$/);
+      if (one && m === "GET") { const t = xts[one[1]]; return t ? json({ timesheet: { timesheetID: t.timesheetID, employeeID: t.employeeID, status: t.status, totalHours: t.totalHours } }) : new Response("{}", { status: 404 }); }
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
   });
@@ -175,4 +177,87 @@ test("approve: each clean Draft timesheet is queued once, held people are not, a
   assert.equal(count(isLive), 1, "the approved timesheet is approved once");
   assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_A)!.status, "Approved");
   assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_B)!.status, "Draft", "the held person stays in draft");
+});
+
+test("mirror: a queued approval is withdrawn once its person is held, so partial hours cannot be approved", async () => {
+  events = [ev(31, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(32, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF"),
+    ev(33, STAFF_B, "2026-11-02 06:00:00", "CLOCK_ON"), ev(34, STAFF_B, "2026-11-02 14:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  assert.deepEqual(await wf.mirror(ctx), { mirrored: 2, flagged: 0, unmapped: 0, failed: 0, held: 0 });
+  assert.deepEqual(await wf.approve(ctx), { queued: 2, held: 0 });
+  events = [...events, ev(35, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON")];
+  await wf.mirror(ctx);
+  const all = Object.values(await store.list<Approval>("approvals"));
+  const a = all.find((x) => x.summary.includes(EMP_A))!, b = all.find((x) => x.summary.includes(EMP_B))!;
+  assert.equal(a.status, "rejected", "A is clocked on again, so A's queued approval is withdrawn");
+  assert.equal(b.status, "pending", "B is still clean and stays queued");
+  await assert.rejects(approve(WF, store, a.id, "owner", NOW), /already rejected/);
+  assert.equal(count(isLive), 0, "nothing approved");
+});
+
+test("mirror: a timesheet a crashed run created in Xero is reused, never duplicated", async () => {
+  events = [ev(21, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(22, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  assert.equal(createdSheets(), 1);
+  for (const k of Object.keys(await store.list("xts"))) await store.put("xts", k, undefined);
+  events = [...events, ev(23, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON"), ev(24, STAFF_A, "2026-11-03 15:00:00", "CLOCK_OFF")];
+  assert.deepEqual(await wf.mirror(ctx), { mirrored: 1, flagged: 0, unmapped: 0, failed: 0, held: 0 });
+  assert.equal(createdSheets(), 1, "no second draft timesheet for the same person and period");
+  assert.equal(Object.values(xts).find((t) => t.employeeID === EMP_A)!.totalHours, 16, "the new shift is a line on the existing draft");
+});
+
+test("holds: mirror writes each held person to the shared timesheet-holds record, with the pay period, and keeps none under the old name", async () => {
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  const h = await store.get<{ employees: string[]; start: string; end: string }>("timesheet-holds", "period:2026-11-02");
+  assert.ok(h, "the hold is in the shared namespace");
+  assert.deepEqual([...h.employees].sort(), [EMP_B, EMP_C].sort(), "B has a shift over the limit and C is still clocked on");
+  assert.equal(h.start, "2026-11-02");
+  assert.equal(h.end, "2026-11-15");
+  assert.equal(await store.get("holds", "period:2026-11-02"), undefined, "no hold is kept under the old private name");
+});
+
+test("approve: an unchanged Draft timesheet is re-read and approved once", async () => {
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  await wf.approve(ctx);
+  const [ap] = await pendingApprovals(store);
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal(count((h) => h.method === "GET" && /\/Timesheets\/[^/]+$/.test(h.path)), 1, "the timesheet was re-read just before the approval");
+  assert.equal(count(isLive), 1, "approved once");
+});
+
+test("approve: a timesheet that gained hours after it was queued is closed and not approved", async () => {
+  events = [ev(41, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(42, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  await wf.approve(ctx);
+  const [ap] = await pendingApprovals(store);
+  events = [...events, ev(43, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON"), ev(44, STAFF_A, "2026-11-03 15:00:00", "CLOCK_OFF")];
+  await wf.mirror(ctx);                                        // the second day lands as a line: 16 hours now
+  const done = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(done.status, "rejected");
+  assert.equal(done.decided_by, "check");
+  assert.match(done.error ?? "", /the record changed after this was queued .*nothing was sent/);
+  assert.equal(count(isLive), 0, "nothing approved");
+  assert.equal(Object.values(xts)[0].status, "Draft");
+});
+
+test("approve: a closed timesheet is queued again once its hours settle, and never twice", async () => {
+  events = [ev(51, STAFF_A, "2026-11-02 07:00:00", "CLOCK_ON"), ev(52, STAFF_A, "2026-11-02 15:00:00", "CLOCK_OFF")];
+  const store = new MemoryStore(), ctx = ctxFor(store);
+  await wf.mirror(ctx);
+  await wf.approve(ctx);
+  const [first] = await pendingApprovals(store);
+  events = [...events, ev(53, STAFF_A, "2026-11-03 07:00:00", "CLOCK_ON"), ev(54, STAFF_A, "2026-11-03 15:00:00", "CLOCK_OFF")];
+  await wf.mirror(ctx);
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "rejected");
+  await wf.approve(ctx);
+  await wf.approve(ctx);
+  const pending = await pendingApprovals(store);
+  assert.equal(pending.length, 1, "one fresh approval for the 16 hours, not one per run");
+  assert.notEqual(pending[0].id, first.id);
+  assert.equal((await approve(WF, store, pending[0].id, "owner", NOW)).status, "done");
+  assert.equal(count(isLive), 1);
 });

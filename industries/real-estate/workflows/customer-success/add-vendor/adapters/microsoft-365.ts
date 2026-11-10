@@ -16,7 +16,7 @@ export const microsoft365 = {
   /** Create the Outlook draft and return its id. Nothing is sent. */
   async mailDraft(ctx: Ctx<Settings>, m: { to: string; subject: string; html: string }): Promise<string> {
     if (!EMAIL.test(m.to)) throw new Error("microsoft-365: bad recipient");
-    const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: `draft vendor report to ${m.to}`,
+    const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: "draft vendor report",
       input: { params: { "user-id": box(ctx) }, body: {
         subject: m.subject.slice(0, 250), body: { contentType: "HTML", content: m.html }, toRecipients: [{ emailAddress: { address: m.to } }] } } });
     const id = String(r.data?.id ?? "");

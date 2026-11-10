@@ -5,7 +5,7 @@
  "department": "customer-success",
  "version": 1,
  "status": "docs-only",
- "summary": "Service agreements for a health-care practice: each active patient case gets its agreement form drafted, unsent, in the patient record; an agreement still unsigned after the set days gets an expiry queued for approval; a completed agreement is logged once to the register. Crons read and draft; nobody's agreement is sent by a cron, and a person approves every change a patient sees.",
+ "summary": "Service agreements for a health-care practice: each active patient case gets its agreement form queued for approval, then created unsent in the patient record; an agreement still unsigned after the set days gets an expiry queued for approval; a completed agreement is logged once to the register. Crons read and draft; nobody's agreement is sent by a cron, and a person approves every change a patient sees.",
  "families": {},
  "steps": {
   "agreement-trigger": "partial: active patient cases drive the draft, not Cliniko's own form-on-booking placeholder (that setting is not read)",
@@ -25,23 +25,25 @@
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Active patient cases with no agreement yet: draft the agreement form in the patient record, unsent."},
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Active patient cases with no agreement yet: queue the agreement form for approval; once approved it is created unsent in the patient record."},
   {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Agreements unsigned after the set days: queue an expiry for approval (22:00 UTC is 8 or 9 am in eastern Australia)."},
   {"name": "file-record", "schedule": "15 * * * *", "entry": "file-record", "summary": "Completed agreements: log each once to the internal register."}
  ],
  "draft_ops": {
-  "cliniko": ["patient-case.listactivepatientcases", "patient-form.createpatientform", "patient-form.getpatientform", "signature.getsignature"]
+  "cliniko": ["patient-case.listactivepatientcases", "patient-form.getpatientform", "signature.getsignature"]
  },
  "live_ops": {
-  "cliniko": ["patient-form.updatepatientform"]
+  "cliniko": ["patient-form.createpatientform", "patient-form.updatepatientform"]
  },
- "draft_ops_note": "Draft operations reach nobody outside the business: reads, and an agreement form created unsent in a patient record. Expiring a form changes what the patient sees, so it is a live operation and waits for a person.",
+ "draft_ops_note": "Draft operations are reads only. Creating an agreement form and expiring one both change what the patient can see, so both are live operations: a cron queues them and a person approves each one.",
  "capabilities": ["agreements.draft", "agreements.expire", "agreements.read", "signatures.read"],
  "adapters": {
   "cliniko": {"status": "docs-only", "covers": "active patient case to unsent agreement form, expiry of an unsigned form (approval), signed-form record to the register"}
  },
  "gaps": [
-  "Cliniko: the API maps no send for a patient form. A person sends the drafted form from the patient record by email, SMS, QR code or link.",
+  "Cliniko: the API maps no send for a patient form. A person sends the created form from the patient record by email, SMS, QR code or link.",
+  "Cliniko: a rejected form creation is not queued again, so that patient case gets no agreement until someone starts it by hand in Cliniko.",
+  "Cliniko: the 21-day clock starts when the form is created (when a person approves the creation), not when a person sends it to the patient. Needs a sent date set in the CRM shell (shell change).",
   "Cliniko: the chase reminder is manual for the same reason. The only automated change is the expiry, which waits for approval.",
   "Cliniko: the trigger is every active patient case. Confirm with the owner that each one needs an agreement, or narrow the trigger before going live.",
   "Cliniko: list replies are read as one page (up to 100 active cases per run). Larger caseloads need paging added.",

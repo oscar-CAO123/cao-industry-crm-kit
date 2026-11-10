@@ -98,8 +98,10 @@ test("a failed share stays failed and retries only on a person's approval", asyn
   const id = await ctx.queue({ platform: "fireflies", op: "mutation.shareMeeting", summary: "share", key: "share:ff-meet-2",
     input: { params: { input: { meeting_id: "ff-meet-2", emails: ["client@example.com"] } }, select: "success message" } });
   shareFails = 1;
-  assert.equal((await approve(WF, store, id, "adviser", NOW)).status, "failed");
-  assert.equal((await approve(WF, store, id, "adviser", NOW)).status, "done");
+  // A 500 may have been processed by the app: the approval waits for a person to check, and nothing resends on its own.
+  assert.equal((await approve(WF, store, id, "adviser", NOW)).status, "needs-check");
+  await assert.rejects(approve(WF, store, id, "adviser", NOW), /needs a check/, "approving again without a confirmation sends nothing");
+  assert.equal((await approve(WF, store, id, "adviser", NOW, "retry")).status, "done");
   assert.equal(writes().length, 2);
 });
 

@@ -37,8 +37,11 @@ export const pipedrive: Adapter = {
   },
 
   async queueMove(ctx: Ctx<Settings>, d: Deal, to: string, key: string, summary: string) {
-    if (!NUM.test(d.id) || !NUM.test(to)) throw new Error("pipeline-advance: Pipedrive move needs numeric ids");
+    if (!NUM.test(d.id) || !NUM.test(to) || !NUM.test(d.stage)) throw new Error("pipeline-advance: Pipedrive move needs numeric ids");
+    // The approval re-reads the deal and is closed unless it is still open at the stage the cron saw.
     return ctx.queue({ platform: P, op: PATCH, key, summary,
-      input: { params: { id: Number(d.id) }, body: { stage_id: Number(to) } } }, summary);
+      input: { params: { id: Number(d.id) }, body: { stage_id: Number(to) } },
+      check: { platform: P, op: GET, input: { params: { id: Number(d.id) } },
+        expect: [{ path: "data.stage_id", equals: Number(d.stage) }, { path: "data.status", equals: d.status }] } }, summary);
   },
 };

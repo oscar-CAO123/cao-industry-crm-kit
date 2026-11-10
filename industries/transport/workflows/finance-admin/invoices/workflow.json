@@ -38,6 +38,7 @@
   "Payments: Xero's bank feeds record payments, and this workflow only reads their result. It does not record payments. Disputes, credit notes and short payments are not covered.",
   "Reminders: Xero's API has no reminder-send operation mapped, so a reminder is the invoice email again. Xero's own reminder settings are readable but not used here.",
   "Reverse billing (RCTI) to drivers and subcontractors: not covered.",
+  "Core change needed: core/workflows/runtime.ts logs every queued approval summary in full, so the customer's email in the authorise-and-email summary reaches the cron log. The fix is for runtime to log only the approval id; until then the email stays in the summary the approver sees.",
   "GST: each line posts with the account's default tax. Confirm the sales account's tax setting with the owner before the first invoice is authorised.",
   "Xero pages read were general small business guides, so transport steps come from the calls, not from product help. The workflow is docs-only until a Xero demo company proves it against real data."
  ],

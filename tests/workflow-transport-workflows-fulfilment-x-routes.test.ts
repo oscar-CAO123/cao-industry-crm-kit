@@ -7,6 +7,7 @@ import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, plan, CRONS } from "../industries/transport/workflows/fulfilment/x-routes/index.ts";
+import { storeKey } from "../industries/transport/workflows/fulfilment/x-routes/types.ts";
 
 const DIR = "industries/transport/workflows/fulfilment/x-routes";
 const WF = JSON.parse(fs.readFileSync(`${DIR}/workflow.json`, "utf8")) as WorkflowRecord;
@@ -133,4 +134,18 @@ test("the write gate still blocks a dispatch approval when the deploy does not a
   const r = await approve(WF, store, ap.id, "owner", NOW);
   assert.equal(r.status, "failed");
   assert.equal(dispatches().length, 0);
+});
+
+test("a stop that arrives later the same day gets its own dispatch approval", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx);
+  assert.equal((await plan(ctx)).queued, 1);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await approve(WF, store, first.id, "owner", NOW);
+  await store.put("stops", storeKey("Task9late0000"), { id: "Task9late0000", routed: false, address: "9 Late Rd", seen: NOW.toISOString() });
+  assert.equal((await plan(context(WF, S, store, NOW, () => {}))).queued, 1, "the later stop is queued, not held until tomorrow");
+  const all = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(all.length, 2);
+  assert.equal(all.filter((a) => a.status === "pending").length, 1, "only the new dispatch waits for approval");
+  assert.equal(dispatches().length, 1, "the cron still sends nothing");
 });

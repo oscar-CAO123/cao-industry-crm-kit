@@ -34,9 +34,17 @@ export function awardAct(purchaseOrderId: string, label: string): Act {
     input: { params: { PurchaseOrderID: id, ...idem(`award:${id}`) }, body: { PurchaseOrders: [{ PurchaseOrderID: id, Status: "AUTHORISED" }] } } };
 }
 
-/** Authorised and paid supplier bills, first page only. */
+/** Authorised and paid supplier bills, every page. A short page ends the list; past the cap it fails rather than
+ *  comparing a partial list (a bill on a missing page would otherwise read as "No bill yet"). */
+const PAGE = 100, MAX_PAGES = 50;
 export async function bills(ctx: Ctx<Settings>): Promise<any[]> {
-  const r = await ctx.draft<any>({ platform: P, op: "accounting.getInvoices", summary: "read supplier bills",
-    input: { params: { where: 'Type=="ACCPAY"', Statuses: "AUTHORISED,PAID", page: 1, pageSize: 100 } } });
-  return r.data?.Invoices ?? [];
+  const out: any[] = [];
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const r = await ctx.draft<any>({ platform: P, op: "accounting.getInvoices", summary: `read supplier bills, page ${page}`,
+      input: { params: { where: 'Type=="ACCPAY"', Statuses: "AUTHORISED,PAID", page, pageSize: PAGE } } });
+    const rows: any[] = r.data?.Invoices ?? [];
+    out.push(...rows);
+    if (rows.length < PAGE) return out;
+  }
+  throw new Error(`xero: more than ${MAX_PAGES * PAGE} supplier bills, so bill match cannot compare them all`);
 }

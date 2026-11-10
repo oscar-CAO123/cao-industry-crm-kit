@@ -11,7 +11,7 @@ export async function mailDraft(ctx: Ctx<Settings>, m: { to: string; subject: st
   if (!EMAIL.test(m.to)) throw new Error("microsoft-365: bad recipient");
   const box = ctx.settings.microsoft_365?.mailbox;
   if (!box || !EMAIL.test(box)) throw new Error("microsoft-365: microsoft_365.mailbox is not set");
-  const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: `draft exceptions email to ${m.to}`, input: { params: { "user-id": box }, body: {
+  const r = await ctx.draft<any>({ platform: P, op: "users.CreateMessages", summary: "draft exceptions email", input: { params: { "user-id": box }, body: {
     subject: m.subject.slice(0, 250), body: { contentType: "HTML", content: m.html }, toRecipients: [{ emailAddress: { address: m.to } }] } } });
   const id = String(r.data?.id ?? "");
   if (!ID.test(id)) throw new Error("microsoft-365: draft not created");

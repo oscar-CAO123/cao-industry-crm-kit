@@ -16,8 +16,8 @@ export interface Contact { name?: string; email?: string }
 export interface Enquiry {
   id: string;                      // "zendesk:<ticket id>"
   ticket: number;
-  title: string;
-  text: string;
+  title?: string;                  // held only until the draft step has screened it, then dropped
+  text?: string;                   // held only until the draft step has screened it, then dropped
   contact: Contact;
   received: string;
   patient?: { id: string; matched_by: "email" | "name" };   // the record id only: no clinical data is kept

@@ -40,9 +40,11 @@ const AT: Record<string, any[]> = {
 };
 const TEAMS: Record<string, any[]> = { "222": [{ id: "71", name: "Check-in A", attendee_count: 2 }] };
 let more: Record<string, boolean> = {};
+// Attendee pages per event, served by continuation token: token "tokN" asks for page N (0-based). Empty for most tests.
+let PAGES: Record<string, any[][]> = {};
 
 function fake() {
-  hits = []; more = {};
+  hits = []; more = {}; PAGES = {};
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -55,6 +57,10 @@ function fake() {
       const tc = p.match(/^\/v3\/events\/(\d+)\/ticket_classes\/$/);
       if (tc && m === "GET") return json({ ticket_classes: TC[tc[1]] ?? [], pagination: { has_more_items: false } });
       const at = p.match(/^\/v3\/events\/(\d+)\/attendees\/$/);
+      if (at && m === "GET" && PAGES[at[1]]) {
+        const pages = PAGES[at[1]], i = Number(u.searchParams.get("continuation")?.replace("tok", "") ?? 0), last = i === pages.length - 1;
+        return json({ attendees: pages[i], pagination: { has_more_items: !last, continuation: last ? undefined : `tok${i + 1}` } });
+      }
       if (at && m === "GET") return json({ attendees: AT[at[1]] ?? [], pagination: { has_more_items: more[at[1]] === true } });
       const tm = p.match(/^\/v3\/events\/(\d+)\/teams\/$/);
       if (tm && m === "GET") return json({ teams: TEAMS[tm[1]] ?? [], pagination: { has_more_items: false } });
@@ -148,6 +154,35 @@ test("registrations: a partial page is flagged and the cursor does not advance",
   const out = await registrations(ctx) as any;
   assert.equal(out.incomplete, 1);
   assert.equal(await store.get("cursor", "attendees-222"), undefined);
+});
+
+const attendeeOn = (id: string) => ({ id, changed: "2026-11-07T12:00:00Z", order_id: `order-${id}`, ticket_class_name: "General", status: "Attending", checked_in: false, cancelled: false, refunded: false, profile: { name: `Guest ${id}` } });
+
+test("registrations: a list on two pages is read in full, the second page asked by its continuation token", async () => {
+  PAGES["222"] = [[attendeeOn("9501")], [attendeeOn("9502")]];
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  const out = await registrations(ctx) as any;
+  assert.equal(out.incomplete, 0);
+  assert.ok(await store.get("register", "222-9501"), "page one is kept");
+  assert.ok(await store.get("register", "222-9502"), "page two is kept");
+  const asks = hits.filter((h) => h.path === "/v3/events/222/attendees/").map((h) => h.query.get("continuation"));
+  assert.deepEqual(asks, [null, "tok1"], "the first call has no token, the second carries the token from page one");
+  assert.deepEqual(await store.get("cursor", "attendees-222"), { changed_since: "2026-11-07T12:00:00Z" });
+});
+
+test("cap: a list past the page cap is refused whole in registrations and wrap-up; nothing is written from part of it", async () => {
+  PAGES["222"] = Array.from({ length: 25 }, (_, i) => [attendeeOn(String(9600 + i))]);
+  PAGES["333"] = Array.from({ length: 25 }, (_, i) => [attendeeOn(String(9700 + i))]);
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  const reg = await registrations(ctx) as any;
+  assert.equal(reg.incomplete, 2, "both long lists are flagged incomplete");
+  assert.equal(hits.filter((h) => h.path === "/v3/events/222/attendees/").length, 20, "stops at the page cap");
+  assert.equal(await store.get("register", "222-9600"), undefined, "no rows from a refused list");
+  assert.equal(await store.get("cursor", "attendees-222"), undefined, "the cursor does not advance");
+  const wu = await wrapUp(ctx) as any;
+  assert.equal(wu.incomplete, 1, "the ended event with a long list is flagged");
+  assert.equal(await store.get("wrap-up", "event-333"), undefined, "no counts drafted from part of the list");
+  assert.equal(writes().length, 0, "still read only");
 });
 
 test("run-day: only the event inside the window is drafted, with its check-in teams", async () => {

@@ -210,3 +210,36 @@ test("a re-attempt always names a destination, and a stop without one is refused
   const act = reattemptAct({ ...p, destination_id: "D-X" });
   assert.equal((act.input as any).body.destination, "D-X");
 });
+
+test("a re-attempt summary keeps the street address out (it is logged) and shows the failure date", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await pods(ctx);
+  await reattempt(ctx);
+  const ap = Object.values(await store.list<Approval>("approvals"))[0];
+  assert.doesNotMatch(ap.summary, /Brannan|888|94103/, "no street address in the summary or the log line");
+  assert.match(ap.summary, /2026-11-08/, "the failure date is in the summary");
+  assert.match(ap.summary, /UNABLE_TO_LOCATE/);
+});
+
+test("a stop that failed more than a week ago is not queued for a re-attempt", async () => {
+  tasks.OLD1 = task("OLD1", { hoursAgo: 24 * 10, reason: "UNABLE_TO_LOCATE", photo: null });
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await pods(ctx);
+  const r = await reattempt(ctx);
+  assert.equal(r.queued, 1, "only the recent failure F1 is queued");
+  assert.equal((await store.get<Pod>("pods", "pod:OLD1"))?.status, "failed");
+  assert.equal(writes().length, 0);
+});
+
+test("re-attempts queued per run are capped, newest failure first", async () => {
+  pageSize = 64; // an earlier test leaves the page size at 2
+  for (let i = 0; i < 25; i++) tasks[`X${String(i).padStart(2, "0")}`] = task(`X${String(i).padStart(2, "0")}`, { hoursAgo: 1 + i, reason: "UNABLE_TO_LOCATE", photo: null });
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await pods(ctx);
+  const r = await reattempt(ctx);
+  assert.equal(r.queued, 20, "no more than 20 approvals in one run");
+  const queuedIds = Object.values(await store.list<Pod>("pods")).filter((p) => p.status === "reattempt-queued").map((p) => p.task_id).sort();
+  assert.equal(queuedIds.length, 20);
+  assert.ok(queuedIds.includes("X00"), "the newest failure is queued");
+  assert.ok(!queuedIds.includes("X24"), "the oldest failure waits");
+});

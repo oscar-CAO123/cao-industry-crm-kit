@@ -23,7 +23,9 @@ export async function massCheck(ctx: Ctx<Settings>) {
     const missing = need.filter((f) => v[f] === undefined || v[f] === "");
     if (!missing.length) { clear++; continue; }
     const note = `Mass check: the register is missing ${missing.join(", ")}. Add these before the next compliance review.`;
-    await ctx.queue(noteAct(v.id, note, safeKey(`mass-note.${v.id}.${missing.join(",")}`)), `Note on ${v.name || v.id}: missing ${missing.join(", ")}`);
+    // The note write replaces the whole note on the vehicle, so the approval says so and shows the text that will replace it.
+    const summary = `Replace the whole note on ${v.name || v.id} (this overwrites the note now there). New note: "${note}"`;
+    await ctx.queue(noteAct(v.id, note, safeKey(`mass-note.${v.id}.${missing.join(",")}`)), summary);
     flagged++;
   }
   ctx.log(`mass-check: ${flagged} flagged, ${clear} clear`);

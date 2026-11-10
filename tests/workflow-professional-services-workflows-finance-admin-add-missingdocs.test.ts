@@ -11,7 +11,7 @@ import { sinceFilter } from "../industries/professional-services/workflows/finan
 
 const DIR = "industries/professional-services/workflows/finance-admin/add-missingdocs";
 const WF = JSON.parse(fs.readFileSync(`${DIR}/workflow.json`, "utf8")) as WorkflowRecord;
-const SETTINGS: any = { business_name: "Test Bookkeeping", messages: "microsoft-365", microsoft_365: { mailbox: "accounts@example.com.au" }, lookback_days: 90, chase_after_days: [7, 14] };
+const SETTINGS: any = { business_name: "Test Bookkeeping", messages: "microsoft-365", microsoft_365: { mailbox: "accounts@example.com.au" }, client_email: "accounts@acme.example.com", lookback_days: 90, chase_after_days: [7, 14] };
 const NOW = new Date("2026-11-09T00:00:00Z");
 const C1 = "11111111-2222-4333-8444-555555555555";   // Acme, has an email
 const C2 = "66666666-7777-4888-8999-aaaaaaaaaaaa";   // No Email Co, no email
@@ -20,10 +20,10 @@ const B1 = "bbbbbbbb-bbbb-4ccc-8ddd-000000000001", B2 = "bbbbbbbb-bbbb-4ccc-8ddd
 
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
-let t1Attached = false, mailN = 0;
+let t1Attached = false, mailN = 0, bankFlood = false;
 
 function fake() {
-  hits = []; t1Attached = false; mailN = 0;
+  hits = []; t1Attached = false; mailN = 0; bankFlood = false;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -34,6 +34,8 @@ function fake() {
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
       // Xero accounting
+      if (p.endsWith("/BankTransactions") && bankFlood) return json({ BankTransactions: Array.from({ length: 100 }, (_, i) => ({
+        BankTransactionID: `cccccccc-0000-4000-8000-${String(i).padStart(12, "0")}`, Type: "SPEND", Status: "AUTHORISED", HasAttachments: true, Date: "2026-10-20T00:00:00", Total: 1 })) });
       if (p.endsWith("/BankTransactions")) return json({ BankTransactions: [
         { BankTransactionID: T1, Type: "SPEND", Status: "AUTHORISED", HasAttachments: t1Attached, Date: "2026-10-20T00:00:00", Total: 55.5, Reference: "Officeworks", Contact: { ContactID: C1, Name: "Acme Pty Ltd" }, LineItems: [{ Description: "Printer paper" }] },
         { BankTransactionID: T2, Type: "RECEIVE", Status: "AUTHORISED", HasAttachments: true, Date: "2026-10-21T00:00:00", Total: 900, Contact: { ContactID: C1, Name: "Acme Pty Ltd" } },
@@ -79,7 +81,7 @@ test("scan lists only unattached bank transactions and bills, with each client's
   assert.deepEqual(await scan(ctxFor(store)), { missing: 3, cleared: 0 });
   const rows = Object.values(await store.list<any>("missing"));
   assert.deepEqual(rows.map((r) => r.xero_id).sort(), [B1, B2, T1].sort(), "T2 has an attachment, T3 is a transfer");
-  assert.equal(rows.find((r) => r.xero_id === B2).email, undefined, "a client with no email is listed, not chased");
+  assert.equal(rows.find((r) => r.xero_id === B2).email, undefined, "an item whose contact has no email is still listed");
   assert.equal(xeroWrites().length, 0, "scan only reads");
   assert.equal(sends().length, 0);
 });
@@ -90,16 +92,36 @@ test("the lookback window is a validated date filter, and a bad lookback is refu
   await assert.rejects(scan(ctxFor(new MemoryStore(), NOW, { ...SETTINGS, lookback_days: 400 })), /lookback_days/);
 });
 
-test("chase drafts one email per client with an email, queues it for approval, and never sends", async () => {
+test("chase drafts one email to the client's own address, queues it for approval, and never sends", async () => {
   const store = new MemoryStore(), ctx = ctxFor(store);
   await scan(ctx);
-  assert.deepEqual(await chase(ctx), { queued: 1 }, "Acme only: No Email Co has no email");
+  assert.deepEqual(await chase(ctx), { queued: 1 }, "one chase for the whole client");
   assert.equal(drafts().length, 1, "one Outlook draft");
+  assert.equal(drafts()[0].body.toRecipients[0].emailAddress.address, "accounts@acme.example.com", "to the client, not a Xero contact");
   assert.equal(sends().length, 0, "nothing sent by a cron");
   const [ap] = Object.values(await store.list<Approval>("approvals"));
   assert.equal(ap.status, "pending");
   assert.deepEqual(ap.acts.map((a) => a.op), ["users.user.messages.message.send"]);
-  assert.match(ap.summary, /ap@acme\.example\.com: 2 item\(s\) with no document, \$355\.50/);
+  assert.match(ap.summary, /accounts@acme\.example\.com: 3 item\(s\) with no document, \$395\.50/);
+});
+
+test("chase refuses to run without the client's own address, and never falls back to a Xero contact", async () => {
+  const store = new MemoryStore();
+  const { client_email, ...noClient } = SETTINGS;
+  await scan(ctxFor(store));
+  await assert.rejects(chase(ctxFor(store, NOW, noClient)), /client_email is not set/);
+  await assert.rejects(chase(ctxFor(store, NOW, { ...SETTINGS, client_email: "ap@acme.example.com; x" })), /client_email is not set/);
+  assert.equal(drafts().length, 0, "no draft, so no email to a supplier or customer");
+});
+
+test("a scan that hits the page cap refuses, so nothing is cleared from a partial list", async () => {
+  const store = new MemoryStore();
+  await scan(ctxFor(store));
+  bankFlood = true;
+  await assert.rejects(scan(ctxFor(store)), /scan refused/);
+  const rows = Object.values(await store.list<any>("missing"));
+  assert.equal(rows.length, 3);
+  assert.ok(rows.every((r) => r.status === "missing"), "nothing cleared from the partial read");
 });
 
 test("re-runs never queue or draft the same chase twice", async () => {
@@ -143,5 +165,5 @@ test("an item that gets its document drops off the list and is no longer chased"
   assert.equal(cleared.status, "cleared");
   assert.deepEqual(await chase(ctx), { queued: 1 });
   const [ap] = Object.values(await store.list<Approval>("approvals"));
-  assert.match(ap.summary, /1 item\(s\)/, "only the bill is left to chase");
+  assert.match(ap.summary, /2 item\(s\)/, "the cleared transaction is left off; the two bills are still chased");
 });

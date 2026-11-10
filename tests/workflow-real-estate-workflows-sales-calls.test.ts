@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { setTransport } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
+import { context, approve, reject, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { callSync, callDraft, followUp } from "../industries/real-estate/workflows/sales/calls/index.ts";
 import type { CallLead } from "../industries/real-estate/workflows/sales/calls/types.ts";
 
@@ -149,4 +149,38 @@ test("a chaser is queued once each set number of days has passed after an approv
   assert.equal(drafts().length, 3, "one first call and two chasers drafted");
   assert.equal(sends().length, 1, "only the approved first call was sent; the chasers are queued, not sent");
   assert.equal(Object.keys(await store.list("approvals")).length, 3);
+});
+
+test("a rejected first call is queued again once a person sends the contact back to to-contact, then sent", async () => {
+  const store = new MemoryStore();
+  await callSync(run(store));
+  await setStatus(store, "OXF18000001", "to-contact");
+  await callDraft(run(store));
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  await reject(WF, store, first.id, "owner", NOW);
+  await setStatus(store, "OXF18000001", "to-contact");
+  assert.deepEqual(await callDraft(run(store)), { queued: 1, no_email: 0 });
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1, "one new pending send");
+  assert.notEqual(pending[0].id, first.id);
+  assert.equal(sends().length, 0, "nothing sent by a cron");
+  assert.equal(await approve(WF, store, pending[0].id, "owner", NOW).then((a) => a.status), "done");
+  assert.equal(sends().length, 1);
+  assert.deepEqual(await followUp(run(store, 0)), { sent: 1, queued: 0 });
+});
+
+test("a draft id made only of dots is refused before any send path is built", async () => {
+  const store = new MemoryStore();
+  await callSync(run(store));
+  await setStatus(store, "OXF18000001", "to-contact");
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any, init: any) => {
+      hits.push({ method: init?.method ?? "GET", path: new URL(String(url)).pathname, body: undefined });
+      return new Response(JSON.stringify({ id: ".." }), { status: 200, headers: { "content-type": "application/json" } });
+    }) as any,
+  });
+  await assert.rejects(callDraft(run(store)), /draft not created/);
+  assert.equal(Object.keys(await store.list("approvals")).length, 0);
+  assert.equal(sends().length, 0);
 });

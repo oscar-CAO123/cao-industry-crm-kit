@@ -6,6 +6,7 @@ import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, allocate, notify } from "../industries/all/workflows/fulfilment/scheduling-dispatch/index.ts";
+import { clientText } from "../industries/all/workflows/fulfilment/scheduling-dispatch/adapters/servicem8.ts";
 import fs from "node:fs";
 
 const DIR = "industries/all/workflows/fulfilment/scheduling-dispatch";
@@ -70,6 +71,13 @@ const writes = () => hits.filter((h) => h.method !== "GET");
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
   Object.assign(process.env, { SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+});
+
+test("the client text carries one short line of the customer's first name", () => {
+  const t = clientText("Test Services", "Sam\r\nReply STOP " + "x".repeat(200), "Monday 9 November");
+  assert.doesNotMatch(t, /[\u0000-\u001f\u007f]/, "no control characters");
+  assert.ok(t.length < 200, `the name is capped, text was ${t.length} characters`);
+  assert.equal(clientText("Test Services", undefined, MON_LABEL), "Hi there, your visit with Test Services is booked for Monday 9 November.");
 });
 
 test("runtime: a draft cannot run a live operation and a cron cannot queue a draft one", async () => {

@@ -16,8 +16,9 @@ export async function intake(ctx: Ctx<Settings>) {
     const since = mark?.at ?? new Date(ctx.now.getTime() - DAY).toISOString();
     let latest = since;
     for (const f of await fw.formsUpdatedSince(ctx, project, since)) {
-      if (!(await ctx.store.get("forms", f.id))) added++;
-      await ctx.store.put("forms", f.id, f satisfies FormRow);
+      const prev = await ctx.store.get<FormRow>("forms", f.id);
+      if (!prev) added++;
+      await ctx.store.put("forms", f.id, { ...f, ...(prev?.carry ? { carry: true } : {}) } satisfies FormRow);
       seen++;
       if (f.updated > latest) latest = f.updated;
     }
@@ -51,14 +52,18 @@ export async function report(ctx: Ctx<Settings>) {
   const to = (s.report_recipients ?? "").split(",").map((x) => x.trim()).filter(Boolean);
   if (!to.length || to.some((x) => !EMAIL.test(x))) throw new Error("report: report_recipients must be comma-separated email addresses");
   const since = ctx.now.getTime() - (ctx.settings.report_window_hours ?? 24) * HOUR;
-  const forms = Object.values(await ctx.store.list<FormRow>("forms"))
-    .filter((f) => complete.has(f.status) && Date.parse(f.updated) >= since)
-    .sort((a, b) => a.updated.localeCompare(b.updated))
-    .slice(0, s.report_max_per_run ?? 20);
+  const candidates = Object.values(await ctx.store.list<FormRow>("forms"))
+    .filter((f) => complete.has(f.status) && (Date.parse(f.updated) >= since || f.carry === true))
+    .sort((a, b) => a.updated.localeCompare(b.updated));
+  const cap = s.report_max_per_run ?? 20;
+  // Forms the cap leaves behind carry over to the next run, so the 24-hour window cannot drop them.
+  for (const f of candidates.slice(cap)) if (!f.carry) await ctx.store.put("forms", f.id, { ...f, carry: true } satisfies FormRow);
+  const forms = candidates.slice(0, cap);
   for (const f of forms) {
     const subject = clean(`${ctx.settings.business_name ?? "Completed form"}: ${f.name}`, 200);
     const body = clean(`Attached is the completed form "${f.name}", completed ${f.updated.slice(0, 10)}.`, 1000);
     await fw.queueFormEmail(ctx, f, to, subject, body);
+    if (f.carry) { const { carry: _done, ...rest } = f; await ctx.store.put("forms", f.id, rest satisfies FormRow); }
   }
   ctx.log(`report: ${forms.length} completed forms ready for approval`);
   return { queued: forms.length };

@@ -37,8 +37,8 @@ export async function newContracts(ctx: Ctx<Settings>): Promise<Omit<Contract, "
   return out;
 }
 
-/** Outlook draft to the owner with the contract's details. Returns the send act for approval. */
-export async function reviewNote(ctx: Ctx<Settings>, c: Contract): Promise<{ messageId: string; act: Act }> {
+/** Outlook draft to the owner with the contract's details. Returns the draft's message id. */
+export async function reviewNoteDraft(ctx: Ctx<Settings>, c: Contract): Promise<string> {
   const m = cfg(ctx), to = ownerEmail(ctx.settings);
   const files = c.attachments.map((a) => `${esc(a.name)} (${Math.max(1, Math.round(a.size / 1024))} KB)`).join(", ") || "none";
   const html = `<p>New contract to read: ${esc(c.title)}</p>`
@@ -48,8 +48,15 @@ export async function reviewNote(ctx: Ctx<Settings>, c: Contract): Promise<{ mes
     subject: `Review: ${c.title}`.slice(0, 250), body: { contentType: "HTML", content: html }, toRecipients: [{ emailAddress: { address: to } }] } } });
   const id = String(r.data?.id ?? "");
   if (!ID.test(id)) throw new Error("microsoft-365: review note draft not created");
-  return { messageId: id, act: { platform: P, op: "users.user.messages.message.send", key: `review:${c.id}`,
-    summary: `send review note to ${to} for ${c.title}`, input: { params: { "user-id": m.mailbox, "message-id": id } } } };
+  return id;
+}
+
+/** The send act for a review note already drafted by reviewNoteDraft, for the caller to queue for approval. */
+export function reviewNoteAct(ctx: Ctx<Settings>, c: Contract, messageId: string): Act {
+  const m = cfg(ctx), to = ownerEmail(ctx.settings);
+  if (!ID.test(messageId)) throw new Error("microsoft-365: bad review note id");
+  return { platform: P, op: "users.user.messages.message.send", key: `review:${c.id}`,
+    summary: `send review note to ${to} for ${c.title}`, input: { params: { "user-id": m.mailbox, "message-id": messageId } } };
 }
 
 /** A row in the client's contract register (an internal log, so it is a draft operation). */
@@ -59,7 +66,7 @@ export async function registerRow(ctx: Ctx<Settings>, c: Contract): Promise<void
   for (const v of [reg.drive, reg.item, reg.table]) if (!ID.test(v)) throw new Error("microsoft-365: bad register id");
   await ctx.draft({ platform: P, op: "drives.items.workbook.tables.CreateRows", summary: "add contract to register", input: {
     params: { "drive-id": reg.drive, "driveItem-id": reg.item, "workbookTable-id": reg.table },
-    body: { values: [[c.received.slice(0, 10), cell(c.id), cell(c.title), cell(c.from.name ?? ""), cell(c.from.email ?? ""), c.attachments.length, "In review"]] } } });
+    body: { values: [[cell(c.received.slice(0, 10)), cell(c.id), cell(c.title), cell(c.from.name ?? ""), cell(c.from.email ?? ""), c.attachments.length, "In review"]] } } });
 }
 
 /** Outlook draft reminder to an unsigned signer. Returns the send act for approval. */

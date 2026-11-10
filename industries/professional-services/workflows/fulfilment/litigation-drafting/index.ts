@@ -51,10 +51,11 @@ export async function draft(ctx: Ctx<Settings>) {
       await ctx.store.put("drafts", cur.key, cur);
     }
     if (cur.status === "memo-written" && cur.client_message) {
-      const contact = m.clients[0];
+      // Read the matter's clients as Smokeball holds them now: the copy stored at intake can be out of date.
+      const contact = (await smokeball.clients(ctx, cur.matter))[0];
       if (!contact) { await ctx.store.put("drafts", cur.key, { ...cur, status: "no-contact" }); continue; }
-      await ctx.queue(smokeball.clientMessage(cur.matter, contact, cur.client_message,
-        `portal message to the client on ${m.title}: ${cur.title}`, cur.key));
+      await ctx.queue(smokeball.clientMessage(cur.matter, contact.id, cur.client_message,
+        `portal message to ${contact.name ?? contact.id} on ${m.title}: ${cur.title}`, cur.key));
       queued++;
       await ctx.store.put("drafts", cur.key, { ...cur, status: "done" });
     }

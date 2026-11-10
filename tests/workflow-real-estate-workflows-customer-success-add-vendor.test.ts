@@ -18,7 +18,7 @@ const S: any = {
   vaultre: { open_home_days: 7 },
   microsoft_365: { mailbox: "listings@example.com" },
 };
-const COMMENTARY = { text: "Two open homes this week and steady enquiry.\n\nWe will review the price next Thursday." };
+const COMMENTARY = { text: "Two open homes this week and steady enquiry.\n\nWe will review the price next Thursday.", written: NOW.toISOString() };
 
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
@@ -116,7 +116,7 @@ test("with commentary: one Outlook draft and one queued send; nothing is sent by
 test("the report email is escaped and carries only the stored figures", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await pull(ctx);
-  await store.put("commentary", "101", { text: "Good <b>week</b> & calm" });
+  await store.put("commentary", "101", { text: "Good <b>week</b> & calm", written: NOW.toISOString() });
   await draft(ctx);
   const body = drafts()[0].body;
   assert.match(body.body.content, /Good &lt;b&gt;week&lt;\/b&gt; &amp; calm/);
@@ -159,4 +159,32 @@ test("approval sends the Outlook draft once, and a second approval is refused", 
   assert.match(sends()[0].path, new RegExp(`/messages/${DRAFT_ID}/send$`));
   await assert.rejects(approve(WF, store, pending.id, "owner", NOW), /already done/);
   assert.equal(sends().length, 1);
+});
+
+test("figures or commentary dated before today are parked, never drafted", async () => {
+  const yesterday = new Date(NOW.getTime() - 864e5).toISOString();
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await pull(ctx);
+  await store.put("commentary", "101", COMMENTARY);
+  const f: any = await store.get("properties", "101");
+  await store.put("properties", "101", { ...f, as_of: yesterday });
+  assert.deepEqual(await draft(ctx), { drafted: 0, waiting: 1 });
+  assert.equal(((await store.get<any>("reports", `101:${DATE}`)) as any).status, "needs-figures");
+  await store.put("properties", "101", f);
+  await store.put("commentary", "101", { ...COMMENTARY, written: yesterday });
+  assert.deepEqual(await draft(ctx), { drafted: 0, waiting: 1 });
+  assert.equal(((await store.get<any>("reports", `101:${DATE}`)) as any).status, "needs-commentary");
+  assert.equal(drafts().length, 0, "no Outlook draft from stale figures or commentary");
+  assert.equal(Object.keys(await store.list("approvals")).length, 0);
+});
+
+test("the run log never carries the vendor's address from the draft step", async () => {
+  const logs: string[] = [];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, (m) => logs.push(m));
+  await pull(ctx);
+  await store.put("commentary", "101", COMMENTARY);
+  await draft(ctx);
+  assert.equal(drafts().length, 1);
+  assert.ok(logs.some((l) => l.startsWith("draft ")), "the draft step is logged");
+  assert.ok(logs.filter((l) => l.startsWith("draft ")).every((l) => !l.includes("pat@example.com")));
 });

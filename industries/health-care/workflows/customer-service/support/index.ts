@@ -3,14 +3,24 @@
 // booking change means, whether a patient needs a call back) stays with staff, as SKILL.md says.
 import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
 import { approvalId } from "../../../../../core/workflows/runtime.ts";
-import type { Enquiry, Settings } from "./types.ts";
+import type { Contact, Enquiry, Settings } from "./types.ts";
 import { cap, clinicalHits, keyOf } from "./types.ts";
 import * as zendesk from "./adapters/zendesk.ts";
 import { findPatient } from "./adapters/cliniko.ts";
 
 const DAY = 864e5;
 
-const firstName = (e: Enquiry) => cap((e.contact.name ?? "").trim().split(/\s+/)[0], 40) || "there";
+/** First name only, letters and hyphens or apostrophes; "there" when the name is missing or odd. Same rule as add-reminders. */
+const firstName = (e: Enquiry) => {
+  const first = cap(e.contact.name, 120).split(" ")[0] ?? "";
+  return /^[A-Za-z][A-Za-z'-]{0,39}$/.test(first) ? first : "there";
+};
+const errorText = (err: unknown) => (err instanceof Error ? err.message : "unknown error").slice(0, 120);
+/** The enquiry text is screened once, in draft, and not kept after that: the record keeps the ticket, contact and status. */
+function unscreened(e: Enquiry): Enquiry {
+  const { title: _title, text: _text, ...kept } = e;
+  return kept;
+}
 
 function replyText(s: Settings, e: Enquiry): string {
   return [
@@ -40,7 +50,11 @@ export async function intake(ctx: Ctx<Settings>) {
   for (const t of await zendesk.newTickets(ctx)) {
     const id = `zendesk:${t.id}`;
     if (await ctx.store.get("enquiries", id)) continue;
-    const contact = t.requester_id ? await zendesk.requester(ctx, t.requester_id) : {};
+    let contact: Contact = {};
+    if (t.requester_id) {
+      try { contact = await zendesk.requester(ctx, t.requester_id); }
+      catch (err) { ctx.log(`intake: requester of ticket ${t.id} could not be read (${errorText(err)}), stored without contact`); }
+    }
     await ctx.store.put("enquiries", id, { id, ticket: t.id, title: cap(t.subject, 200), text: cap(t.description, 4000), contact,
       received: t.created_at ?? ctx.now.toISOString(), status: "new" } satisfies Enquiry);
     added++;
@@ -57,16 +71,17 @@ export async function draft(ctx: Ctx<Settings>) {
   for (const e of todo) {
     const hits = clinicalHits(ctx.settings, `${e.title} ${e.text}`);
     if (hits.length) {
-      await ctx.store.put("enquiries", e.id, { ...e, status: "clinician", reason: `clinical words (${hits.slice(0, 5).join(", ")}): a clinician answers, no automatic reply` } satisfies Enquiry);
+      await ctx.store.put("enquiries", e.id, { ...unscreened(e), status: "clinician", reason: `clinical words (${hits.slice(0, 5).join(", ")}): a clinician answers, no automatic reply` } satisfies Enquiry);
       escalated++;
       continue;
     }
     const patient = ctx.settings.records === "cliniko" ? await findPatient(ctx, e.contact) : undefined;
     const body = replyText(ctx.settings, e);
     const key = keyOf(`reply-${e.ticket}`);
-    const summary = `Reply to ticket ${e.ticket} from ${e.contact.name ?? "the enquirer"} (${patient ? `patient record found by ${patient.matched_by}` : "no single patient record match"}): ${body.slice(0, 160)}`;
+    const who = cap(e.contact.name, 120).replace(/[<>&"`]/g, "") || "the enquirer";
+    const summary = `Reply to ticket ${e.ticket} from ${who} (${patient ? `patient record found by ${patient.matched_by}` : "no single patient record match"}): ${body.slice(0, 160)}`;
     await ctx.queue(zendesk.replyAct(e.ticket, body, key, summary));
-    await ctx.store.put("enquiries", e.id, { ...e, status: "queued", reply_key: key, ...(patient ? { patient } : {}) } satisfies Enquiry);
+    await ctx.store.put("enquiries", e.id, { ...unscreened(e), status: "queued", reply_key: key, ...(patient ? { patient } : {}) } satisfies Enquiry);
     queued++;
   }
   ctx.log(`draft: ${queued} queued, ${escalated} escalated`);
@@ -87,7 +102,14 @@ export async function followUp(ctx: Ctx<Settings>) {
       await ctx.store.put("enquiries", e.id, e);
     }
     if (e.status !== "replied" || !e.replied_at) continue;
-    const t = await zendesk.ticket(ctx, e.ticket);
+    let t: Awaited<ReturnType<typeof zendesk.ticket>>;
+    try { t = await zendesk.ticket(ctx, e.ticket); }
+    catch (err) {
+      // A deleted or unreadable ticket goes to staff; the loop carries on to the next enquiry.
+      ctx.log(`follow-up: ticket ${e.ticket} could not be read (${errorText(err)}), flagged for staff`);
+      await ctx.store.put("enquiries", e.id, { ...e, status: "needs-staff", reason: "the ticket could not be read (deleted or unavailable)" } satisfies Enquiry);
+      continue;
+    }
     if (!t) continue;
     if (t.status === "solved" || t.status === "closed") { await ctx.store.put("enquiries", e.id, { ...e, status: "closed" } satisfies Enquiry); continue; }
     if (t.status === "open") { await ctx.store.put("enquiries", e.id, { ...e, status: "needs-staff", reason: "the enquirer wrote back" } satisfies Enquiry); continue; }

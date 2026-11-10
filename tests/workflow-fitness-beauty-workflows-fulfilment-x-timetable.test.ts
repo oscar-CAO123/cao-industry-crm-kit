@@ -125,3 +125,52 @@ test("bad ids and times from a proposal are rejected, never sent to a path or fi
   assert.equal((await store.get<Proposal>("proposals", "bad1"))!.status, "rejected");
   assert.equal(Object.keys(await store.list("approvals")).length, 0);
 });
+
+test("the Bookeo read follows pageNavigationToken: a booking on a later page is cancelled too", async () => {
+  const LAST = "B150", page1 = Array.from({ length: 100 }, (_, i) => ({ bookingNumber: "B" + (i + 1), productId: "P1", eventId: "E9", startTime: "2026-11-12T18:00:00Z", canceled: false }));
+  const tokens: (string | null)[] = [];
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any) => {
+      const u = new URL(String(url)), p = u.pathname;
+      const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+      if (p.endsWith("/settings/products")) return json({ info: {}, data: [{ productId: "P1", name: "Reformer 45" }] });
+      if (p.endsWith("/availability/slots") || p.endsWith("/resourceblocks")) return json({ info: {}, data: [] });
+      if (p.endsWith("/bookings")) {
+        const tok = u.searchParams.get("pageNavigationToken");
+        tokens.push(tok);
+        if (!tok) return json({ info: { pageNavigationToken: "NEXT1" }, data: page1 });
+        return json({ info: {}, data: [{ bookingNumber: LAST, productId: "P1", startTime: CLASS_AT, canceled: false }] });
+      }
+      return new Response("not mapped", { status: 404 });
+    }) as any,
+  });
+  const store = new MemoryStore(), ctx = () => context(WF, S, store, NOW, () => {});
+  await CRONS.snapshot(ctx());
+  assert.deepEqual(tokens, [null, "NEXT1"], "the second page is asked for by its token");
+  await store.put("proposals", "cx2", { id: "cx2", action: "cancel-class", productId: "P1", startTime: CLASS_AT, reason: "Coach unwell" } satisfies Proposal);
+  await CRONS.changeQueue(ctx());
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.deepEqual(ap.acts.map((a) => a.input?.params?.bookingNumber), [LAST], "the booking on page two is in the cancellation");
+});
+
+test("a cancel proposal stays pending while there is no snapshot or the snapshot is stale", async () => {
+  const store = new MemoryStore();
+  await store.put("proposals", "cx3", { id: "cx3", action: "cancel-class", productId: "P1", startTime: CLASS_AT, reason: "Coach unwell", status: "pending" } satisfies Proposal);
+  await CRONS.changeQueue(context(WF, S, store, NOW, () => {}));
+  assert.equal((await store.get<Proposal>("proposals", "cx3"))!.status, "pending", "no snapshot yet: not marked no-bookings");
+  await CRONS.snapshot(context(WF, S, store, NOW, () => {}));
+  await CRONS.changeQueue(context(WF, S, store, new Date(NOW.getTime() + 2 * 36e5), () => {}));
+  assert.equal((await store.get<Proposal>("proposals", "cx3"))!.status, "pending", "a two-hour-old snapshot is not trusted");
+  assert.equal(Object.keys(await store.list("approvals")).length, 0);
+  assert.equal((await CRONS.changeQueue(context(WF, S, store, NOW, () => {}))).queued, 1, "a fresh snapshot queues it");
+});
+
+test("a proposal start time in another format still matches the booking", async () => {
+  const store = new MemoryStore(), ctx = () => context(WF, S, store, NOW, () => {});
+  await CRONS.snapshot(ctx());
+  await store.put("proposals", "cx4", { id: "cx4", action: "cancel-class", productId: "P1", startTime: "2026-11-12T09:00:00.000Z", reason: "Coach unwell" } satisfies Proposal);
+  assert.equal((await CRONS.changeQueue(ctx())).queued, 1);
+  assert.equal((await store.get<Proposal>("proposals", "cx4"))!.status, "queued");
+});
+

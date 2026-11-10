@@ -52,7 +52,8 @@ const P = {
   "aroflo": { name: "AroFlo", auth: { type: "custom", provider: "aroflo" }, keys: ["AROFLO_SECRET_KEY", "AROFLO_UENCODED", "AROFLO_PENCODED", "AROFLO_ORGENCODED", "AROFLO_HOST_IP (optional)"], queryArrays: "repeat", proof: "docs", server: "https://api.aroflo.com" },
   "bluebeam": { name: "Bluebeam Studio", auth: { type: "bearer", env: "BLUEBEAM_ACCESS_TOKEN", extraHeaders: { client_id: "BLUEBEAM_CLIENT_ID" } }, keys: ["BLUEBEAM_ACCESS_TOKEN", "BLUEBEAM_CLIENT_ID"], proof: "docs",
     gaps: ["Australian Studio host not confirmed: developers.bluebeam.com renders in the browser and gives no readable host to a plain fetch (8 Nov 2026); only the US host api.bluebeam.com is mapped"] },
-  "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs" },
+  "cliniko": { name: "Cliniko", server: "https://api.{shard}.cliniko.com/v1", forceServer: true, serverVars: { shard: { env: "CLINIKO_SHARD", default: "au1", pattern: "[a-z]{2}[0-9]" } }, auth: { type: "basic", user: "CLINIKO_API_KEY", passEmpty: true, extraHeaders: { "User-Agent": "CLINIKO_USER_AGENT" } }, keys: ["CLINIKO_API_KEY", "CLINIKO_USER_AGENT"], proof: "docs",
+    queryArrays: "brackets" },  // q[]=a&q[]=b: only params the spec names with [] repeat their key; other lists keep the default
   "dropbox": { name: "Dropbox", style: "rpc", auth: { type: "bearer", env: "DROPBOX_ACCESS_TOKEN" }, keys: ["DROPBOX_ACCESS_TOKEN"], proof: "docs" },
   "wordpress": { name: "WordPress (core REST API)", auth: { type: "basic", user: "WORDPRESS_USER", pass: "WORDPRESS_APP_PASSWORD" }, keys: ["WORDPRESS_SITE", "WORDPRESS_USER", "WORDPRESS_APP_PASSWORD"], proof: "docs",
     server: "https://{site}/wp-json", hostFromEnv: true, serverVars: { site: { env: "WORDPRESS_SITE", pattern: "[a-z0-9-]+(\\.[a-z0-9-]+)+", envOnly: true } } },
@@ -98,7 +99,7 @@ const SLACK_READ = /^(list|info|history|replies|test)$|^(get|lookup)/;
 const CREDENTIAL = /token|secret|password|passcode|private[ _-]?key|access[ _-]?keys?|recovery[ _-]?keys?|signing[ _-]?keys?|temporary[ _-]?link|signed[ _-]?url|download[ _-]?url|data[ _-]?pack|credential|verification[ _-]?codes?|auth(?:orization)?[ _-]?code|oauth|authori[sz]e|hmac|api[ _-]?keys?|presign/i;
 const ACTION = /(^|[^a-z])(unsubscribe|resubscribe|resume|pause|generate|publish|revoke|upload|send|trigger|execute|restore|retry|reset|cancel|approve|reject|enable|disable|start|stop|clone|duplicate|sync|refresh|rotate|archive|unarchive|delete|create|update|mark|move|copy|import|invite|accept|decline|assign|unassign|lock|unlock|activate|deactivate|terminate|submit|confirm|verify|redeem|purge|wipe|remove|add|set|resend|finalize|finalise|void|pay|charge|refund|capture|notify|dispatch|deliver|transfer|withdraw|merge|book|checkout|subscribe|sign|authorise|authorize)(?=[^a-z]|$)/i;  // resend..authorize added 8 Nov 2026 after the security review
 // A reviewed POST may be a read only if its own path says search, batch read or query.
-const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_)/i;
+const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_|\/search-[a-z-]+$|-retrieve$)/i;  // Square: /search-catalog-items, /batch-retrieve, /bulk-retrieve (9 Nov 2026); same as core/sdk/call.ts
 const SECRET_HEADER = /(^|[-_])(api[-_]?key|secret|password|customer[-_]?token|proposal[-_]?token|z?csrf[-_]?token|access[-_]?token|auth[-_]?token|session[-_]?token)$/i;
 const STRONG =/secret|private[ _-]?key|password|credential|verification code|hmac|signed url|presigned|temporary link|download link|upload (url|link|path)|recovery key|access key/i;  // upload links added 8 Nov 2026 (Smokeball, Trackunit)  // summaries: only clear credential words
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
@@ -394,7 +395,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     id, name: cfg.name, status: m.status, tested: "offline only (fake network); not yet run against a real account",
     authProof: cfg.proof, style: cfg.style ?? "rest", hosts: cfg.hostFromEnv ? [] : hosts, hostFromEnv: !!cfg.hostFromEnv,
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
-    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}),
+    pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}), ...(cfg.queryObjects ? { queryObjects: cfg.queryObjects } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
     sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },

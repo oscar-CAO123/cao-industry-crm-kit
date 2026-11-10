@@ -7,6 +7,7 @@ import { refreshKey } from "../core/connectors/google-workspace/auth.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { programDraft, checkIn, progressSummary, CRONS } from "../industries/fitness-beauty/workflows/fulfilment/client-programs/index.ts";
+import { listRecords } from "../industries/fitness-beauty/workflows/fulfilment/client-programs/adapters/airtable.ts";
 import fs from "node:fs";
 
 const DIR = "industries/fitness-beauty/workflows/fulfilment/client-programs";
@@ -145,4 +146,35 @@ test("all three crons run with no send, and a bad base id or record id never rea
   assert.deepEqual(await programDraft(context(WF, S, new MemoryStore(), NOW, () => {})), { drafted: 1, needs_coach: 0 });
   assert.equal(state.Programs.length, 1, "the malformed row was skipped");
   assert.ok(!hits.some((h) => h.path.includes("..")), "no path built from the malformed id");
+});
+
+/** A fake Airtable table of n rows, served 100 to a page; past the last row no offset is sent. */
+function pagedTable(n: number, neverEnds = false) {
+  let pages = 0;
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any) => {
+      const u = new URL(String(url));
+      if (!u.pathname.startsWith(`/v0/${BASE}/Clients`)) return new Response("not faked", { status: 404 });
+      pages++;
+      const start = Number(u.searchParams.get("offset") ?? 0), end = Math.min(n, start + 100);
+      const records = Array.from({ length: Math.max(0, end - start) }, (_, i) => ({ id: "rec" + String(start + i).padStart(14, "0"), fields: {} }));
+      const more = neverEnds || end < n;
+      return new Response(JSON.stringify(more ? { records, offset: neverEnds ? "stuck" : String(end) } : { records }),
+        { status: 200, headers: { "content-type": "application/json" } });
+    }) as any,
+  });
+  return () => pages;
+}
+
+test("listRecords follows every page of a table bigger than 20 pages, and never stops silently", async () => {
+  const pages = pagedTable(2050);
+  const rows = await listRecords(context(WF, S, new MemoryStore(), NOW, () => {}), "Clients");
+  assert.equal(rows.length, 2050, "every row is read, not the first 2,000");
+  assert.equal(pages(), 21);
+});
+
+test("listRecords throws when a table never ends, so no run goes on with a partial table", async () => {
+  pagedTable(0, true);
+  await assert.rejects(listRecords(context(WF, S, new MemoryStore(), NOW, () => {}), "Clients"), /incomplete/);
 });

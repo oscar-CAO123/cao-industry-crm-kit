@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
-import { context, approve, approvalId, type WorkflowRecord } from "../core/workflows/runtime.ts";
+import { context, approve, reject, approvalId, type WorkflowRecord } from "../core/workflows/runtime.ts";
 import { performance, review, goLive } from "../industries/retail/workflows/marketing/x-flows/index.ts";
 import fs from "node:fs";
 
@@ -87,11 +87,28 @@ test("go-live only queues: nothing reaches Klaviyo until a person approves, and 
   assert.deepEqual(await goLive(ctx), { queued: 1 });
   assert.equal(Object.keys(await store.list<any>("approvals")).length, 1, "one approval, however often the cron runs");
   assert.equal(writes().length, 0, "queued, not sent");
-  const id = approvalId(WF.id, "live:F3");
+  const id = approvalId(WF.id, `live:F3:${NOW.toISOString()}`);
   const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   const patch = hits.find((h) => h.method === "PATCH")!;
   assert.equal(patch.path, "/api/flows/F3");
   assert.deepEqual(patch.body, { data: { type: "flow", id: "F3", attributes: { status: "live" } } });
   await assert.rejects(approve(WF, store, id, "owner"), /already done/);
+});
+
+test("a rejected go-live is not queued again by a re-run, and a fresh ready mark queues a new approval", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await performance(ctx);
+  await store.put("ready", "F3", { flow_id: "F3", marked_by: "owner", marked: NOW.toISOString() });
+  await goLive(ctx);
+  await reject(WF, store, approvalId(WF.id, `live:F3:${NOW.toISOString()}`), "owner", NOW);
+  await goLive(ctx);
+  assert.equal(Object.keys(await store.list<any>("approvals")).length, 1, "a rejected switch is not queued again by a re-run");
+  const later = new Date(NOW.getTime() + 86_400_000);
+  await store.put("ready", "F3", { flow_id: "F3", marked_by: "owner", marked: later.toISOString() });
+  await goLive(ctx);
+  assert.equal(Object.keys(await store.list<any>("approvals")).length, 2, "a fresh ready mark queues a new approval");
+  const ap = await approve(WF, store, approvalId(WF.id, `live:F3:${later.toISOString()}`), "owner", later);
+  assert.equal(ap.status, "done");
+  assert.equal(hits.find((h) => h.method === "PATCH")!.path, "/api/flows/F3");
 });

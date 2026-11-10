@@ -12,10 +12,12 @@ export interface RawEntry { id: string; project_id: string; task_id: string; dat
 /** Chargeable entries still ACTIVE (not yet invoiced) for one project, dated since the window start. Pages until a short page. */
 export async function timeEntries(ctx: Ctx<Settings>, projectId: string, since: string): Promise<RawEntry[]> {
   const pid = guid(projectId), out: RawEntry[] = [];
-  for (let page = 1; page <= MAX_PAGES; page++) {
+  let more = true;
+  for (let page = 1; page <= MAX_PAGES && more; page++) {
     const r = await ctx.draft<any>({ platform: P, op: "projects.getTimeEntries", summary: `time entries, project ${pid}, page ${page}`,
       input: { params: { projectId: pid, states: "ACTIVE", isChargeable: true, dateAfterUtc: since, page, pageSize: PAGE } } });
     const items: any[] = Array.isArray(r.data?.items) ? r.data.items : [];
+    more = items.length === PAGE;
     for (const i of items) {
       if (i?.status && i.status !== "ACTIVE") continue;               // the filter is also checked here
       const minutes = Number(i.duration);
@@ -23,8 +25,9 @@ export async function timeEntries(ctx: Ctx<Settings>, projectId: string, since: 
       out.push({ id: String(i.timeEntryId), project_id: pid, task_id: String(i.taskId ?? ""), date: String(i.dateUtc ?? "").slice(0, 10),
                  minutes, description: String(i.description ?? "").slice(0, 500) });
     }
-    if (items.length < PAGE) break;
   }
+  // A full last page means entries are still waiting: refuse, so capture never marks a partial read's entries gone.
+  if (more) throw new Error(`billing narratives: more than ${MAX_PAGES * PAGE} time entries for project ${pid}: capture refused`);
   return out;
 }
 

@@ -8,6 +8,8 @@ export interface Settings {
   business_name?: string;
   mailbox: string;       // the Gmail address orders arrive at and confirmations go from
   order_search: string;  // Gmail search that finds new order emails, e.g. "label:orders is:unread"
+  /** Owner-agreed prices by Xero item code. Set only by the owner in settings, never from an order email or a proposal. */
+  price_overrides?: Record<string, number>;
 }
 
 export interface Contact { name?: string; email?: string }

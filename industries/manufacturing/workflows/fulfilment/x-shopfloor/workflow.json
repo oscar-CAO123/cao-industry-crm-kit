@@ -39,7 +39,7 @@
   "gaps": [
     "Unleashed is signed in core/sdk (HMAC-SHA256 on each request), so the crons and approvals call it through the gate. It needs UNLEASHED_API_ID, UNLEASHED_API_KEY and UNLEASHED_CLIENT_TYPE in the deploy's secret store. Nothing has run against a live Unleashed account yet.",
     "Acumatica, Fishbowl and Odoo: docs read, but the kit maps no operations for this job (Odoo's ops file holds one docs page). Setup, in-process checks, final inspection, rework or scrap, time logging and dispatch are not covered by any mapped platform.",
-    "Unleashed list calls send no filters, so each cron reads the first page only (200 records by default). Paging is not built.",
+    "Unleashed list calls send no filters, so each cron reads the first page only (200 records by default). Paging is not built: the mapped operation has no page number. When the platform holds more pages, the store's coverage record says so and the board is marked partial, so a build on a later page is never silently missed.",
     "POST /Assemblies/{assemblyGuid}/Complete: the kit maps this operation with no body, so none is sent. Confirm on a sandbox account before approving a live completion.",
     "The ERP named on the calls is not identified, so it is not mapped.",
     "Order release from a sales order, job costing and invoicing, and sales shipments (dispatch) are not built as crons.",

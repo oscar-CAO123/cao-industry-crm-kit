@@ -1,7 +1,7 @@
 // The missed-call text-back workflow's three crons. Each reads, drafts an internal note, or queues a text for approval.
 // None sends. A person approves every text to a caller in the CRM shell.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
-import { type MissedCall, type Settings, checkSettings, lookbackMs, textBody } from "./types.ts";
+import { type MissedCall, type Settings, checkSettings, lookbackMs, masked, textBody } from "./types.ts";
 import { missedCalls, textAct } from "./adapters/justcall.ts";
 import { gohighlevel } from "./adapters/gohighlevel.ts";
 
@@ -31,7 +31,7 @@ export async function textback(ctx: Ctx<Settings>) {
     }
     const when = call.received.replace("T", " ").slice(0, 16);
     await ctx.queue(textAct(ctx.settings, call.caller, textBody(ctx.settings), `textback:${call.key}`),
-      `Text back ${call.caller}: missed call at ${when} UTC`);
+      `Text back ${masked(call.caller)}: missed call at ${when} UTC`);
     await ctx.store.put("calls", call.key, { ...call, texted: ctx.now.toISOString() });
     queued++;
   }

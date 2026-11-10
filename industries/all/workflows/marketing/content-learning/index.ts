@@ -75,13 +75,19 @@ export async function score(ctx: Ctx<Settings>) {
   const limit = s.max_cost_per_lead, min = s.min_spend_before_judging ?? 100, cap = s.pauses_per_run ?? 5;
   const pending: string[] = [];
   if (limit !== undefined) {
-    const candidates = snap.ads.filter((a) => a.running && a.spend >= min).sort((x, y) => y.spend - x.spend);
-    for (const a of candidates) {
+    // An over-limit period runs from the first score that finds the ad over the limit until a score that does not.
+    // Its pause is keyed by the day the period began: a rejected pause stays rejected for that period, and an ad that was
+    // paused or stopped and then runs over the limit again starts a new period with its own approval.
+    const since = (await ctx.store.get<Record<string, string>>("pauses", "since")) ?? {};
+    const over = snap.ads.filter((a) => a.running && a.spend >= min && (a.leads === 0 || (a.cost_per_lead ?? Infinity) > limit))
+      .sort((x, y) => y.spend - x.spend);
+    const next: Record<string, string> = {};
+    for (const a of over) next[a.id] = since[a.id] ?? snap.at.slice(0, 10);
+    await ctx.store.put("pauses", "since", next);
+    for (const a of over) {
       if (pending.length >= cap) break;
-      const over = a.leads === 0 || (a.cost_per_lead ?? Infinity) > limit;
-      if (!over) continue;
       const why = a.leads === 0 ? `${money(a.spend)} spent, no leads` : `${money(a.cost_per_lead as number)} per lead, over the ${money(limit)} limit`;
-      pending.push(await ctx.queue(meta.pauseAct(a.id, why), `Pause "${a.name || a.id}": ${why} (${snap.window})`));
+      pending.push(await ctx.queue(meta.pauseAct(a.id, why, next[a.id]), `Pause "${a.name || a.id}": ${why} (${snap.window})`));
     }
   }
 

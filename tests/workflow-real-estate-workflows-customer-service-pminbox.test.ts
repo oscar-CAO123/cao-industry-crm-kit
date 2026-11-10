@@ -50,7 +50,10 @@ function fake() {
         const msgs = THREADS[one[1]];
         return msgs ? json({ id: one[1], messages: msgs }) : new Response("not found", { status: 404 });
       }
-      if (p === "/gmail/v1/users/me/drafts" && m === "POST") { drafts++; return json({ id: `draft-${drafts}`, message: { id: `m-${drafts}` } }); }
+      if (p === "/gmail/v1/users/me/drafts" && m === "POST") {
+        if (body?.message?.threadId === "thrRefused") return new Response("bad thread", { status: 400 });
+        drafts++; return json({ id: `draft-${drafts}`, message: { id: `m-${drafts}` } });
+      }
       if (p === "/gmail/v1/users/me/drafts/send" && m === "POST") return json({ id: "m-sent" });
       return new Response("not faked: " + m + " " + p, { status: 404 });
     }) as any,
@@ -132,6 +135,34 @@ test("draft queues only the approved template reply, never urgent mail, and neve
   assert.deepEqual(await draft(ctx), { queued: 0, needs_person: 2 });
   assert.equal(creates().length, 1, "re-runs never add a Gmail draft twice");
   assert.equal((await pending(store)).length, 1, "re-runs never queue twice");
+});
+
+test("a maintenance mail with no valid sender is left for a person, and the mail after it still queues", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  const base = { subject: "Broken tap", preview: "The tap is broken", received: NOW.toISOString(), category: "maintenance", status: "triaged" };
+  await store.put("enquiries", "gmail:bad", { ...base, id: "gmail:bad", sender: { name: "Lee" }, ref: { thread_id: "thr9", message_id: "m9" } });
+  await store.put("enquiries", "gmail:thr4", { ...base, id: "gmail:thr4", sender: { email: "kim@example.com" }, ref: { thread_id: "thr4", message_id: "m4" } });
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_person: 1 });
+  assert.equal(creates().length, 1, "no Gmail draft for the mail without an address");
+  assert.equal((await pending(store)).length, 1);
+});
+
+test("one mail Gmail refuses is counted for a person, and the rest of the run still queues", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  const base = { subject: "Broken tap", preview: "The tap is broken", received: NOW.toISOString(), category: "maintenance", status: "triaged" };
+  await store.put("enquiries", "gmail:refused", { ...base, id: "gmail:refused", sender: { email: "sam@example.com" }, ref: { thread_id: "thrRefused", message_id: "mr" } });
+  await store.put("enquiries", "gmail:thr4", { ...base, id: "gmail:thr4", sender: { email: "kim@example.com" }, ref: { thread_id: "thr4", message_id: "m4" } });
+  assert.deepEqual(await draft(ctx), { queued: 1, needs_person: 1 });
+  assert.equal((await pending(store)).length, 1);
+});
+
+test("the run log never carries a customer's address from a reply draft", async () => {
+  const lines: string[] = [];
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, (m) => lines.push(m));
+  await intake(ctx); await draft(ctx);
+  const draftLines = lines.filter((l) => l.startsWith("draft "));
+  assert.ok(draftLines.length > 0);
+  assert.ok(draftLines.every((l) => !l.includes("kim@example.com")), draftLines.join("\n"));
 });
 
 test("an approved reply sends once", async () => {

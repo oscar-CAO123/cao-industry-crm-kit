@@ -25,6 +25,8 @@ export interface Settings {
 export interface FormRow {
   id: string; project: string; name: string; template: string; status: string; kind: string;
   created: string; updated: string; seen: string;
+  /** Set when a completed form was in the window but the daily cap left it unqueued; report keeps it until it is queued. */
+  carry?: boolean;
 }
 export interface ChecklistRow { task: string; project: string; name: string; total: number; open: number; checked_at: string }
 

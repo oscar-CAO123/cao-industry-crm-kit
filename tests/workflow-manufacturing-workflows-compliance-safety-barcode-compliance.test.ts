@@ -146,6 +146,20 @@ test("queue-fixes queues one barcode update per recorded fix, once, and refuses 
   assert.equal((await store.get<Fix>("barcode-fixes", "fix-good"))!.approval, approvals[0].id);
 });
 
+test("queue-fixes: one unreadable product does not stop the fixes after it, and its error stays on that fix", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  fake.products[G(2)] = product(2, "BADCHK", "4006381333932");
+  await store.put("barcode-fixes", "fix-a-deleted", { product: G(9), barcode: "4006381333931" } satisfies Fix);
+  await store.put("barcode-fixes", "fix-b-good", { product: G(2), barcode: "4006381333931" } satisfies Fix);
+  await queueFixes(ctx);
+  const bad = await store.get<Fix>("barcode-fixes", "fix-a-deleted");
+  assert.ok(bad!.error, "the error is recorded on the unreadable fix");
+  assert.equal(bad!.approval, undefined, "it is not queued");
+  const good = await store.get<Fix>("barcode-fixes", "fix-b-good");
+  assert.ok(good!.approval, "the fix after it is still queued");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1);
+});
+
 test("an approved barcode update reaches Unleashed only after approval, once", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
   fake.products[G(2)] = product(2, "BADCHK", "4006381333932");
@@ -179,4 +193,39 @@ test("an approved barcode update is refused without KIT_ALLOW_WRITES and sends n
   assert.equal(done.status, "failed");
   assert.match(done.error ?? "", /write blocked/i);
   assert.equal(writes().length, 0);
+});
+
+test("a barcode send checks the product first: unchanged since it was queued, it sends once", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  fake.products[G(2)] = product(2, "BADCHK", "4006381333932");
+  await store.put("barcode-fixes", "fix-good", { product: G(2), barcode: "4006381333931" } satisfies Fix);
+  await queueFixes(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.ok(ap.acts[0].check, "the send carries a check");
+  assert.equal(ap.acts[0].check!.op, "docs.get_Products_productGuid");
+
+  const done = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(done.status, "done", done.error);
+  assert.deepEqual(reads().slice(-1), [`/Products/${G(2)}`], "the product is re-read just before the send");
+  assert.equal(writes().length, 1, "sent once");
+  assert.equal(writes()[0].body.Barcode, "4006381333931");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
+  assert.equal(writes().length, 1);
+});
+
+test("a barcode send is refused when the product changed after it was queued: nothing is sent and the approval is rejected", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  fake.products[G(2)] = product(2, "BADCHK", "4006381333932");
+  await store.put("barcode-fixes", "fix-good", { product: G(2), barcode: "4006381333931" } satisfies Fix);
+  await queueFixes(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+
+  // Someone corrects the description in Unleashed after the cron queued the barcode change.
+  fake.products[G(2)] = { ...product(2, "BADCHK", "4006381333932"), ProductDescription: "Edited in Unleashed" };
+  const res = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(res.status, "rejected");
+  assert.equal(res.decided_by, "check");
+  assert.match(res.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(writes().length, 0, "no barcode write was sent");
+  assert.deepEqual(res.results ?? [], [], "the act was never marked started");
 });

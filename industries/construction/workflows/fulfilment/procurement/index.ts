@@ -98,9 +98,10 @@ export async function billMatch(ctx: Ctx<Settings>) {
   for (const q of withPo) {
     const po = q.po!;
     const theirs = all.filter((b) => b.Contact?.ContactID === po.contact_id);
+    // The PO is ex GST, so the bill is compared ex GST too (SubTotal), never the GST-inclusive Total.
     const result = !theirs.length ? "No bill yet"
-      : theirs.some((b) => Number(b.Total) === po.total) ? "Matches the PO"
-      : `Differs: bill ${money(Number(theirs[0].Total))} against PO ${money(po.total)}`;
+      : theirs.some((b) => Number(b.SubTotal) === po.total) ? "Matches the PO"
+      : `Differs: bill ${money(Number(theirs[0].SubTotal))} ex GST against PO ${money(po.total)}`;
     if (result !== q.bill_check) {
       await logCheck(ctx, q, "Bill", result);
       q.bill_check = result;

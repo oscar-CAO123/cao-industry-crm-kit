@@ -20,9 +20,10 @@ const HASH_DUE = md5("due@example.com"), HASH_NOT = md5("recent@example.com"), H
 
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
+let failContent = 0; // when set, the campaign body write answers with this status
 
 function fake() {
-  hits = [];
+  hits = []; failContent = 0;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -45,7 +46,10 @@ function fake() {
         ] });
       }
       if (p === "/3.0/campaigns" && m === "POST") return json({ id: CAMP, type: "regular", status: "save" });
-      if (p === `/3.0/campaigns/${CAMP}/content` && m === "PUT") return json({ html: body?.html });
+      if (p === `/3.0/campaigns/${CAMP}/content` && m === "PUT") {
+        if (failContent) return new Response("down", { status: failContent });
+        return json({ html: body?.html });
+      }
       if (p === `/3.0/campaigns/${CAMP}/actions/send` && m === "POST") return new Response(null, { status: 204 });
       if (p === `/3.0/lists/${LIST}/members/${HASH_REPLY}/notes` && m === "POST") return json({ note: body?.note });
       return new Response("not faked: " + p, { status: 404 });
@@ -119,4 +123,30 @@ test("settings with an unchecked list id or address stop before any network call
   assert.throws(() => checkSettings({ ...SETTINGS, reply_to: "not an address" }), /reply_to/);
   assert.throws(() => checkSettings({ ...SETTINGS, groups: [{ ...SETTINGS.groups[0], name: "../../etc" }] }), /group name/);
   assert.equal(hits.length, 0);
+});
+
+test("the approver is told which saved segment sets the recipients, not just the due count", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await dueList(ctx); await draft(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /saved segment 555/);
+  assert.match(ap.summary, /sets the recipients, not the due list/);
+  assert.doesNotMatch(ap.summary, /\(1 due at the last check\)/);
+});
+
+test("a run that fails while setting the body resumes the same campaign on the next run, and queues one send", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await dueList(ctx);
+  failContent = 503;
+  await assert.rejects(draft(ctx), /status 503/);
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0, "nothing queued by the failed run");
+  failContent = 0;
+  assert.deepEqual(await draft(ctx), { drafted: 1, skipped: 0 }, "the next run does not skip the group");
+  assert.equal(creates().length, 1, "still one campaign: the run resumed, it did not draft again");
+  assert.equal(hits.filter((h) => h.path === `/3.0/campaigns/${CAMP}/content` && h.method === "PUT").length, 2, "body set on each try, then left alone");
+  const aps = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(aps.length, 1);
+  assert.equal(aps[0].acts[0].input?.params?.campaign_id, CAMP);
+  assert.deepEqual(await draft(ctx), { drafted: 0, skipped: 1 }, "a later run finds it queued and does nothing");
+  assert.equal(sends().length, 0, "nothing sent by a cron");
 });

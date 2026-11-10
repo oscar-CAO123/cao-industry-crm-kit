@@ -7,6 +7,7 @@ import fs from "node:fs";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, stockCheck, dispatch } from "../industries/retail/workflows/fulfilment/fulfil/index.ts";
+import { shipmentBody } from "../industries/retail/workflows/fulfilment/fulfil/adapters/unleashed.ts";
 import type { Order, Settings } from "../industries/retail/workflows/fulfilment/fulfil/types.ts";
 
 const DIR = "industries/retail/workflows/fulfilment/fulfil";
@@ -84,4 +85,16 @@ test("an approved shipment is attempted and blocked: the write gate, then the mi
   const ap = await approve(WF, store, id, "oscar@test", NOW);
   assert.equal(ap.status, "failed");
   assert.match(ap.error ?? "", /write blocked|not wired/);
+});
+
+test("the shipment body carries every required body field of the SalesShipments POST, since the SDK does not check them", () => {
+  const ops = JSON.parse(fs.readFileSync("core/sdk/platforms/unleashed/ops.json", "utf8")) as { id: string; params: { name: string; in: string; required: boolean }[] }[];
+  const op = ops.find((o) => o.id === "docs.post_SalesShipments")!;
+  const required = op.params.filter((p) => p.in === "body" && p.required).map((p) => p.name);
+  assert.ok(required.includes("Guid") && required.includes("ShipmentStatus"), required.join(", "));
+  const body = shipmentBody({ now: NOW, settings: S } as any, { number: "SO-1001", guid: G1, customer: "Pat Shop", status: "ready", seen: NOW.toISOString(),
+    key: "ord-SO-1001", lines: [{ line: 1, sku: "SKU-A", qty: 2 }] } as Order);
+  for (const name of required) assert.ok(name in body, `missing required body field ${name}`);
+  assert.match(String(body.Guid), /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+  assert.equal(body.ShipmentStatus, "Dispatched");
 });

@@ -24,7 +24,7 @@ export interface Handover {
   title: string;
   text: string;
   received: string;
-  status: "new" | "needs-routing" | "queued" | "passed-on" | "acknowledged" | "done";
+  status: "new" | "needs-routing" | "queued" | "failed" | "rejected" | "passed-on" | "acknowledged" | "done";
   reason?: string;
   ref: Record<string, string>;                      // where the request came from: an Asana task gid, or a Slack channel and ts
   route?: { assignee: string; slack_user?: string; due: string };

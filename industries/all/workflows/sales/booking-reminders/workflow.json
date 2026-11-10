@@ -47,6 +47,7 @@
   "Reminders: the kit sends no reminder. Calendly's own invitee reminders carry this step, and Calendly does not expose whether a reminder went out, so the kit cannot confirm it. Text reminders need an SMS adapter (Twilio, MobileMessage or JustCall have mapped operations here); none is built.",
   "Reschedule and cancel from a client's message: a judgment step. Calendly's cancel is mapped but no cron queues it, so it is not in live_ops yet.",
   "Pagination: each run reads one page of up to 100 events and up to 100 invitees per event. A busy calendar needs the next page followed.",
+  "Approval summaries and the run log: each queued summary carries the client's or lead's name, and the runtime logs every summary (core/workflows/runtime.ts). Needs a core change so the runtime logs the approval id only, or the names come out of the summary line.",
   "Stored personal data: invitee names and emails are kept in the workflow's state store. The business needs a retention rule for that store before go-live.",
   "Calendly is docs-only until a sandbox account proves each call. Its sign-in is the CRM's standard Calendly token (CALENDLY_API_TOKEN), not yet run against a real account."
  ],

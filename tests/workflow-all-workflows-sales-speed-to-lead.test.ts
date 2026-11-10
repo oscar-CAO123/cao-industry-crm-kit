@@ -6,6 +6,7 @@ import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { intake, chase, escalate, CRONS } from "../industries/all/workflows/sales/speed-to-lead/index.ts";
+import type { Lead } from "../industries/all/workflows/sales/speed-to-lead/types.ts";
 import fs from "node:fs";
 
 const WF = JSON.parse(fs.readFileSync("industries/all/workflows/sales/speed-to-lead/workflow.json", "utf8")) as WorkflowRecord;
@@ -17,9 +18,10 @@ const MIN = 60_000;
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let opps: any[] = [], stage = NEW, msgs: any[] = [], convs: any[] = [];
+let failTaskFor = "";   // a contact whose task write answers 500
 
 function fake() {
-  hits = []; stage = NEW; msgs = []; convs = [];
+  hits = []; stage = NEW; msgs = []; convs = []; failTaskFor = "";
   opps = [{ id: OPP, name: "Sam Lee", contactId: CON, pipelineStageId: NEW, status: "open", createdAt: NOW.toISOString(),
             contact: { name: "Sam Lee", phone: "0412 345 678", email: "sam@example.com" } }];
   convs = [{ id: CONV, contactId: CON }];
@@ -34,7 +36,9 @@ function fake() {
       if (p === `/opportunities/${OPP}` && m === "GET") return json({ opportunity: { id: OPP, status: "open", pipelineStageId: stage, contactId: CON } });
       if (p === "/conversations/search") return json({ conversations: convs, total: convs.length });
       if (p === `/conversations/${CONV}/messages`) return json({ messages: msgs, lastMessageId: "m1", nextPage: false });
+      if (failTaskFor && p === `/contacts/${failTaskFor}/tasks` && m === "POST") return new Response("{}", { status: 500 });
       if (p === `/contacts/${CON}/tasks` && m === "POST") return json({ task: { id: "task1" } });
+      if (/^\/contacts\/[^/]+\/tasks$/.test(p) && m === "POST") return json({ task: { id: "task2" } });
       if (p === "/conversations/messages" && m === "POST") return json({ messageId: "msg1", conversationId: CONV });
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
@@ -185,4 +189,39 @@ test("no call reaches a sending path from any cron, whatever the wait", async ()
     await escalate(context(WF, S, store, at(minutes), () => {}));
   }
   assert.equal(sends().length, 0);
+});
+
+test("intake: one lead's failed task write does not stop the run; the others are alerted and the failed one is retried", async () => {
+  const CON2 = "con0002abcd";
+  opps = [{ ...opps[0] }, { ...opps[0], id: "opp0003abcd", contactId: CON2, name: "Pat Kim", contact: { name: "Pat Kim", phone: "0400 111 222" } }];
+  failTaskFor = CON;
+  const store = new MemoryStore();
+  assert.deepEqual(await intake(context(WF, S, store, NOW, () => {})), { added: 2, alerted: 1 });
+  assert.equal(tasks().filter((t) => t.path === `/contacts/${CON2}/tasks`).length, 1, "the second lead still got its alert");
+  assert.equal((await store.get<Lead>("leads", `gohighlevel:${OPP}`))?.alerted, undefined, "the failed lead stays unalerted");
+  failTaskFor = "";
+  assert.deepEqual(await intake(context(WF, S, store, at(5), () => {})), { added: 0, alerted: 1 });
+  assert.equal((await store.get<Lead>("leads", `gohighlevel:${OPP}`))?.alerted !== undefined, true);
+});
+
+test("chase: a queued text still unapproved past the alert window is rejected, and approving it sends nothing", async () => {
+  const store = new MemoryStore();
+  await intake(context(WF, S, store, NOW, () => {}));
+  await chase(context(WF, S, store, at(20), () => {}));
+  const [queued] = Object.values(await store.list<Approval>("approvals"));
+  await chase(context(WF, S, store, at(25 * 60), () => {}));
+  assert.equal((await store.get<Approval>("approvals", queued.id))?.status, "rejected");
+  await assert.rejects(approve(WF, store, queued.id, "owner", at(25 * 60 + 1)), /already rejected/);
+  assert.equal(sends().length, 0);
+});
+
+test("chase: the approval text and the log line carry the first name and lead key, never the phone or full name", async () => {
+  const store = new MemoryStore(), logs: string[] = [];
+  await intake(context(WF, S, store, NOW, () => {}));
+  await chase(context(WF, S, store, at(20), (m) => logs.push(m)));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  const text = [ap.summary, ...logs].join("\n");
+  assert.ok(!text.includes("0412"), "no phone in the summary or the log");
+  assert.ok(!text.includes("Sam Lee"), "no full name in the summary or the log");
+  assert.match(ap.summary, /First text to Sam/);
 });

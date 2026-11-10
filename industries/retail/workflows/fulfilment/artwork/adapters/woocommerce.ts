@@ -16,13 +16,14 @@ export function productId(v: unknown): number {
   return n;
 }
 
-/** An image must be an https URL with no login in it, so the store fetches it from a place the business controls. */
-export function httpsUrl(v: unknown): string {
+/** An image must be an https URL with no login in it, on one of the business's own asset hosts, so the store fetches it from a place the business controls. */
+export function httpsUrl(v: unknown, hosts: readonly string[]): string {
   const s = typeof v === "string" ? v.trim() : "";
   if (!s || s.length > MAX_URL) throw new Error("image URL is missing or too long");
   let u: URL;
   try { u = new URL(s); } catch { throw new Error("image is not a URL"); }
   if (u.protocol !== "https:" || u.username || u.password) throw new Error("image must be an https URL with no login in it");
+  if (!hosts.some((h) => h.toLowerCase() === u.hostname.toLowerCase())) throw new Error("image host is not one of asset_hosts in settings");
   return u.toString();
 }
 
@@ -65,9 +66,9 @@ export async function listProducts(ctx: Ctx<Settings>): Promise<ProductRow[]> {
  * The live operation for one mockup set: the product's existing images kept by id, the new images appended in order.
  * The key comes from the product and the new images only, so a set that is already queued or approved is never queued twice.
  */
-export function mockupAct(p: ProductRow, set: MockupSet, max: number): Act {
+export function mockupAct(p: ProductRow, set: MockupSet, max: number, hosts: readonly string[]): Act {
   const id = productId(set.product_id);
-  const fresh = (Array.isArray(set.images) ? set.images : []).map((i) => ({ src: httpsUrl(i.src), alt: altText(i.alt) }));
+  const fresh = (Array.isArray(set.images) ? set.images : []).map((i) => ({ src: httpsUrl(i.src, hosts), alt: altText(i.alt) }));
   if (!fresh.length) throw new Error("the mockup set has no images");
   const kept = p.images.filter((i) => Number.isInteger(i.id)).map((i) => ({ id: i.id }));
   if (kept.length + fresh.length > max) throw new Error(`would hold ${kept.length + fresh.length} images, the limit is ${max}`);

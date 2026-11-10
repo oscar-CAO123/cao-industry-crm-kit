@@ -44,6 +44,6 @@ export async function note(ctx: Ctx<Settings>, call: { key: string; ref: string;
 export function queueRepEmail(ctx: Ctx<Settings>, call: { key: string }, repContactId: string, subject: string, html: string, summary: string): Promise<string> {
   if (!ID.test(repContactId)) throw new Error("gohighlevel: rep contact id is not valid");
   return ctx.queue({ platform: P, op: "conversations.send-a-new-message", key: `coach:${call.key}`, summary,
-    input: { body: { type: "Email", contactId: repContactId, subject: clip(subject, 200), html: clip(html, 20000),
+    input: { body: { type: "Email", contactId: repContactId, subject: clip(String(subject ?? "").replace(/[\r\n]+/g, " "), 200), html: clip(html, 20000),
                      ...(ctx.settings.coach_from ? { emailFrom: ctx.settings.coach_from } : {}) } } });
 }

@@ -1,5 +1,6 @@
 // Google Workspace: the requests tab, the Drive copy of a template, the text filled into that copy, an email draft and the
 // document log. Reads and internal drafts only. Sending the email reaches the client, so it is only ever queued here.
+import crypto from "node:crypto";
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, ID, EMAIL, oneLine, cell } from "../types.ts";
 
@@ -40,10 +41,18 @@ export const googleWorkspace = {
     return id;
   },
 
-  /** Replace each {{Header}} placeholder in the draft with the record's value, as plain text. Running it twice changes nothing. */
+  /** Replace each {{Header}} placeholder in the draft with the record's value, as plain text. Running it twice changes nothing.
+   *  One batch, two phases: every placeholder first becomes a random token, then each token becomes its value. A value is
+   *  never scanned for placeholders, so a customer value that contains "{{Other}}" stays as written. */
   async fill(ctx: Ctx<Settings>, docId: string, fields: Record<string, string>): Promise<void> {
-    const requests = Object.entries(fields).map(([k, v]) => ({ replaceAllText: { containsText: { text: `{{${k}}}`, matchCase: true }, replaceText: v } }));
-    if (!requests.length) return;
+    const entries = Object.entries(fields);
+    if (!entries.length) return;
+    const nonce = crypto.randomBytes(8).toString("hex");
+    const token = (i: number) => `[[fill:${nonce}:${i}]]`;
+    const requests = [
+      ...entries.map(([k], i) => ({ replaceAllText: { containsText: { text: `{{${k}}}`, matchCase: true }, replaceText: token(i) } })),
+      ...entries.map(([, v], i) => ({ replaceAllText: { containsText: { text: token(i), matchCase: true }, replaceText: v } })),
+    ];
     await ctx.draft({ platform: P, op: "docs.documents.batchUpdate", summary: `fill ${requests.length} fields`,
       input: { params: { documentId: docId }, body: { requests } } });
   },

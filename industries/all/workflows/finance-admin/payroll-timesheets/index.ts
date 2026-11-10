@@ -6,6 +6,13 @@ import { approvedShifts } from "./adapters/deputy.ts";
 import { addLine, approveAct, createPayRunAct, createTimesheet, getPayRunAct, postPayRunAct, timesheetsIn } from "./adapters/xero.ts";
 
 const DEFAULT_MAX_HOURS = 12;
+const HELD_STATES = ["flagged", "needs-check", "creating"];
+
+/** Holds that belong to this pay period. A hold from an earlier period never blocks this one. */
+async function holdsIn(ctx: Ctx<Settings>, p: { start: string; end: string }): Promise<Mirror[]> {
+  return Object.values(await ctx.store.list<Mirror>("hours"))
+    .filter((m) => HELD_STATES.includes(m.state) && !!m.date && m.date >= p.start && m.date <= p.end);
+}
 
 /** Every 30 minutes, Deputy only: approved Deputy shifts in the pay period become draft lines on that person's Xero timesheet.
  *  A shift is mirrored once. A shift over the daily limit is held for a person. A shift whose outcome is unclear is marked
@@ -17,6 +24,8 @@ export async function mirror(ctx: Ctx<Settings>) {
   if (!s.earnings_rate_id || !GUID.test(s.earnings_rate_id)) throw new Error("earnings_rate_id must be a Xero earnings rate GUID");
   const max = s.max_hours_per_shift ?? DEFAULT_MAX_HOURS;
   let mirrored = 0, flagged = 0, unmapped = 0, failed = 0;
+  // Timesheets still Draft in Xero. A line is never added to one that has been approved since it was made.
+  const drafts = new Set((await timesheetsIn(ctx, p, "Draft")).map((t) => t.timesheetID));
   for (const shift of await approvedShifts(ctx)) {
     const key = keyFor("deputy", shift.id);
     if (await ctx.store.get<Mirror>("hours", key)) continue;          // already mirrored, held, or needs a check
@@ -35,10 +44,12 @@ export async function mirror(ctx: Ctx<Settings>) {
       const existing = await ctx.store.get<string>("xts", tsKey);
       let tsId: string;
       if (existing) {
+        if (!drafts.has(existing)) throw new Error("this timesheet is no longer Draft in Xero: check it before more hours go on");
         await addLine(ctx, existing, line, key);
         tsId = existing;
       } else {
         tsId = await createTimesheet(ctx, employee, p, line, key);
+        drafts.add(tsId);
         await ctx.store.put("xts", tsKey, tsId);
       }
       await ctx.store.put("hours", key, { state: "mirrored", employee, date: shift.date, hours: shift.hours, xero_timesheet: tsId, at } satisfies Mirror);
@@ -57,10 +68,18 @@ export async function mirror(ctx: Ctx<Settings>) {
 /** Hourly: each Draft timesheet in the pay period with hours is queued for approval, unless one of that person's shifts is held.
  *  Run it once the period's shifts are approved in Deputy. Approval itself is queued, never run here. */
 export async function approve(ctx: Ctx<Settings>) {
-  const p = period(ctx.settings);
-  const holds = new Set(Object.values(await ctx.store.list<Mirror>("hours"))
-    .filter((m) => m.state === "flagged" || m.state === "needs-check" || m.state === "creating")
-    .map((m) => m.employee));
+  const s = ctx.settings, p = period(s);
+  // An approved Deputy shift that mirror has not written yet would land on a timesheet after its approval was queued, so nothing is queued until it has.
+  if (s.timesheets === "deputy") {
+    let unmirrored = 0;
+    for (const sh of await approvedShifts(ctx)) {
+      const emp = (s.employee_map ?? {})[sh.employee];
+      if (!emp || !GUID.test(emp)) continue;   // mirror skips these without storing them
+      if (!(await ctx.store.get<Mirror>("hours", keyFor("deputy", sh.id)))) unmirrored++;
+    }
+    if (unmirrored) { ctx.log(`approve: ${unmirrored} approved shift(s) not mirrored yet, nothing queued`); return { queued: 0, held: 0, waiting: `${unmirrored} approved shift(s) not mirrored yet` }; }
+  }
+  const holds = new Set((await holdsIn(ctx, p)).map((m) => m.employee));
   let queued = 0, held = 0;
   for (const t of await timesheetsIn(ctx, p, "Draft")) {
     if (!(t.totalHours > 0)) continue;
@@ -80,7 +99,7 @@ export async function payRun(ctx: Ctx<Settings>) {
   let rec = await ctx.store.get<PayRunRec>("payruns", key);
   if (rec?.state === "queued") return { queued: rec.approval, already: true };
   if (rec?.state === "creating") { ctx.log("pay-run: a draft creation has no answer yet, check Xero before anything else"); return { needs_check: true }; }
-  const holds = Object.values(await ctx.store.list<Mirror>("hours")).filter((m) => m.state === "flagged" || m.state === "needs-check" || m.state === "creating").length;
+  const holds = (await holdsIn(ctx, p)).length;
   if (holds) return { waiting: `${holds} shift(s) held or unconfirmed` };
   if (!rec) {
     const sheets = await timesheetsIn(ctx, p);

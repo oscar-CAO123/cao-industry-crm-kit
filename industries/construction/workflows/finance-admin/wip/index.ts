@@ -1,6 +1,6 @@
 // The WIP and retention workflow's three crons. Each reads, drafts or queues; none sends.
 // A progress claim is a DRAFT invoice in Xero until a person approves its authorisation and email. A reminder waits for approval too.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { type Ctx, type Approval, approvalId } from "../../../../../core/workflows/runtime.ts";
 import { clientInvoices, openInvoices, draftClaim, authoriseAct, emailAct } from "./adapters/xero.ts";
 import { type Job, type Settings, type Snapshot, type Claim, type Chase, DAY, GUID, round2, money, day, checkJob } from "./types.ts";
 
@@ -29,6 +29,13 @@ export async function wipSnapshot(ctx: Ctx<Settings>) {
   return { jobs: rows.length, rows };
 }
 
+/** What the last claim counts as billed. A claim its approver rejected is not billed, so the next claim raises that amount again. */
+async function billedBefore(ctx: Ctx<Settings>, last?: Claim): Promise<number> {
+  if (!last) return 0;
+  const ap = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `claim:${last.job}:${last.claim_no}`));
+  return ap?.status === "rejected" ? round2(last.billed_to_date - last.this_claim) : last.billed_to_date;
+}
+
 /** Daily: a job whose claim interval has passed gets a DRAFT Xero invoice for the new progress, and one approval to authorise and email it. */
 export async function progressClaim(ctx: Ctx<Settings>) {
   let drafted = 0;
@@ -36,15 +43,15 @@ export async function progressClaim(ctx: Ctx<Settings>) {
     const last = await ctx.store.get<Claim>("claims", job.id);
     if (last && ctx.now.getTime() - Date.parse(last.claimed_at) < (job.claim_every_days ?? 30) * DAY) continue;
     const target = round2(job.contract_value * job.percent_complete / 100);
-    const thisClaim = round2(target - (last?.billed_to_date ?? 0));
+    const thisClaim = round2(target - await billedBefore(ctx, last));
     if (thisClaim <= 0) continue;
     const n = (last?.claim_no ?? 0) + 1;
     const label = `progress claim ${n} for ${job.name}`;
     const invoiceId = await draftClaim(ctx, job, n, thisClaim);
     const retention = round2(thisClaim * (job.retention_percent ?? 0) / 100);
     const key = `claim:${job.id}:${n}`;
-    await ctx.queue([{ ...authoriseAct(invoiceId, label), key }, emailAct(invoiceId, label)],
-      `Authorise and email ${label}: ${money(thisClaim)} ex GST${retention ? `, ${money(retention)} retention held back` : ""}`);
+    await ctx.queue([{ ...authoriseAct(invoiceId, label), key }, emailAct(invoiceId, label, `claim:${n}`)],
+      `Authorise and email ${label}: ${money(thisClaim)} ex GST, the invoice carries the full amount${retention ? `, ${money(retention)} retention recorded, not taken off this invoice` : ""}`);
     await ctx.store.put("claims", job.id, { job: job.id, claim_no: n, billed_to_date: target, this_claim: thisClaim,
       retention_held: retention, claimed_at: ctx.now.toISOString(), invoice_id: invoiceId } satisfies Claim);
     drafted++;
@@ -67,7 +74,7 @@ export async function chase(ctx: Ctx<Settings>) {
     if (sent >= after.length || late < after[sent]) continue;
     const n = sent + 1;
     const label = `reminder ${n} for invoice ${String(inv.InvoiceNumber ?? id).slice(0, 40)}`;
-    await ctx.queue({ ...emailAct(id, label), key: `chase:${id}:${n}` },
+    await ctx.queue({ ...emailAct(id, label, `reminder:${n}`), key: `chase:${id}:${n}` },
       `Email ${label}: ${money(Number(inv.AmountDue))} due, ${late} days past due`);
     await ctx.store.put("chases", id, { invoice_id: id, reminders: n, last_queued: ctx.now.toISOString() } satisfies Chase);
     queued++;

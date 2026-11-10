@@ -23,10 +23,22 @@ export async function lead(ctx: Ctx<Settings>, id: string): Promise<Row | undefi
   return r.data?.data ?? undefined;
 }
 
-/** Deals changed since a time (RFC 3339) that came from a lead. Reads one page of 100. */
+const PAGE = 100, MAX_PAGES = 50;
+const CURSOR = /^[A-Za-z0-9_=|.-]{1,500}$/;
+
+/** Deals changed since a time (RFC 3339) that came from a lead. Follows next_cursor to the last page, at most 50 pages. */
 export async function dealsSince(ctx: Ctx<Settings>, since: string): Promise<Row[]> {
-  const r = await ctx.draft<any>({ platform: "pipedrive", op: "openapi-v2.getDeals", summary: "read deals changed since last run",
-    input: { params: { updated_since: since, limit: 100 } } });
-  return rows(r.data).filter((d) => Number.isInteger(d.id) && Number.isInteger(d.stage_id)
-    && typeof d.source_lead_id === "string" && UUID.test(d.source_lead_id));
+  const out: Row[] = [];
+  let cursor: string | undefined;
+  for (let page = 0; ; page++) {
+    if (page === MAX_PAGES) throw new Error("referral-partners: more than 5000 deals changed since the last run; nothing was marked done");
+    const r = await ctx.draft<any>({ platform: "pipedrive", op: "openapi-v2.getDeals", summary: "read a page of deals changed since last run",
+      input: { params: { updated_since: since, limit: PAGE, ...(cursor ? { cursor } : {}) } } });
+    out.push(...rows(r.data).filter((d) => Number.isInteger(d.id) && Number.isInteger(d.stage_id)
+      && typeof d.source_lead_id === "string" && UUID.test(d.source_lead_id)));
+    const next = r.data?.additional_data?.next_cursor;
+    if (!next) return out;
+    if (!CURSOR.test(String(next))) throw new Error("referral-partners: Pipedrive cursor is not a plain token");
+    cursor = String(next);
+  }
 }

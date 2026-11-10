@@ -54,6 +54,17 @@ async function listReplies(ctx: Ctx<Settings>): Promise<{ id: string; subject: s
     received: String(x.receivedDateTime ?? ""), preview: String(x.bodyPreview ?? "").slice(0, 4000) }));
 }
 
+/** A message from this supplier in the quote folder that mentions the comparison reference. Intake only logs replies whose
+ *  subject carries the reference, so a quote sent another way is found here, before a chaser is drafted. Returns when it arrived. */
+async function quotedBy(ctx: Ctx<Settings>, c: Comparison, email: string): Promise<string | undefined> {
+  const m = cfg(ctx);
+  const r = await ctx.draft<any>({ platform: P, op: "users.mailFolders.ListMessages", summary: `read quote folder for ${c.id}`, input: { params: {
+    "user-id": m.mailbox, "mailFolder-id": m.quote_folder ?? "inbox", $search: `"${c.id}"`, $top: 50,
+    $select: "id,subject,from,receivedDateTime,bodyPreview" } } });
+  const hit = (r.data?.value ?? []).find((x: any) => String(x.from?.emailAddress?.address ?? "").toLowerCase() === email);
+  return hit ? String(hit.receivedDateTime ?? "") : undefined;
+}
+
 /** One row in the Excel register (a draft operation: an internal record). Text cells are never formulas. */
 async function logRow(ctx: Ctx<Settings>, values: (string | number)[]): Promise<void> {
   const reg = cfg(ctx).register;
@@ -62,4 +73,4 @@ async function logRow(ctx: Ctx<Settings>, values: (string | number)[]): Promise<
     input: { params: table(reg), body: { values: [values.map((v) => (typeof v === "number" ? v : cell(v)))] } } });
 }
 
-export const microsoft365 = { id: P, draftComparison, draftChase, sendAct, listReplies, logRow };
+export const microsoft365 = { id: P, draftComparison, draftChase, sendAct, listReplies, quotedBy, logRow };

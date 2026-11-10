@@ -15,9 +15,12 @@ const BASE = `/api/v3/projects/${PROJ}`;
 type Hit = { method: string; path: string; query: URLSearchParams; body: any };
 let hits: Hit[] = [];
 let rfisOut: any[] = [];
+// Changed-RFI pages, served by last_synced_at: "syncN" asks for page N (0-based). Null means the single page in rfisOut.
+let rfiPages: { rows: any[]; more: boolean }[] | null = null;
+const RFI2 = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeee1";
 
 function fake() {
-  hits = [];
+  hits = []; rfiPages = null;
   rfisOut = [{ id: RFI, name: "Ceiling height at gridline C", mapped_status: "draft", due_date: null, updated_at: "2026-11-07T12:00:00Z" }];
   setTransport({
     sleep: async () => {}, log: () => {},
@@ -26,6 +29,12 @@ function fake() {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, query: u.searchParams, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
+      if (p === `${BASE}/rfis` && m === "GET" && rfiPages) {
+        const i = Number(u.searchParams.get("last_synced_at")?.replace("sync", "") ?? 0), pg = rfiPages[Math.min(i, rfiPages.length - 1)];
+        const headers: Record<string, string> = { "content-type": "application/json", has_more: String(pg.more) };
+        if (pg.more) headers.last_synced_at = `sync${i + 1}`;
+        return new Response(JSON.stringify(pg.rows), { status: 200, headers });
+      }
       if (p === `${BASE}/rfis` && m === "GET") return json(rfisOut);
       if (p === `${BASE}/rfis` && m === "POST") return json({ id: RFI, name: body?.name });
       if (p === `${BASE}/rfis/${RFI}` && m === "PATCH") return json({ id: RFI });
@@ -66,6 +75,27 @@ test("intake keeps each changed RFI once, reads only, and moves the watermark on
   assert.deepEqual(await intake(ctx), { seen: 1, added: 0 }, "the same RFI on a second run is not new");
   assert.equal(hits[1].query.get("filters[updated_at_gt]"), "2026-11-07T12:00:00Z", "the second run asks only for changes");
   assert.equal(writes().length, 0, "intake reads only");
+});
+
+test("intake follows two pages by last_synced_at and keeps the RFIs from both", async () => {
+  const row = (id: string, updated: string) => ({ id, name: `RFI ${id.slice(-4)}`, mapped_status: "draft", due_date: null, updated_at: updated });
+  rfiPages = [{ rows: [row(RFI, "2026-11-07T12:00:00Z")], more: true }, { rows: [row(RFI2, "2026-11-07T13:00:00Z")], more: false }];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { seen: 2, added: 2 });
+  const gets = hits.filter((h) => h.method === "GET" && h.path === `${BASE}/rfis`);
+  assert.deepEqual(gets.map((h) => h.query.get("last_synced_at")), [null, "sync1"], "page two is asked with the token from page one");
+  assert.ok(await store.get("rfis", RFI2), "the second page's RFI is kept");
+  assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T13:00:00Z" });
+  assert.equal(writes().length, 0, "intake reads only");
+});
+
+test("intake: a window past the page cap is refused whole and the watermark is held", async () => {
+  rfiPages = Array.from({ length: 25 }, () => ({ rows: [], more: true }));
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { seen: 0, added: 0 });
+  assert.equal(hits.filter((h) => h.method === "GET" && h.path === `${BASE}/rfis`).length, 20, "stops at the page cap");
+  assert.equal(await store.get("watermarks", `rfis:${PROJ}`), undefined, "the watermark does not move");
+  assert.deepEqual(Object.keys(await store.list("rfis")), [], "nothing is kept from a refused window");
 });
 
 test("draft creates the RFI draft, sets its question, and queues the open without sending it", async () => {
@@ -113,4 +143,25 @@ test("ids from settings are checked before any call", async () => {
   const ctx = context(WF, { ...S, fieldwire: { ...S.fieldwire!, projects: ["not-a-uuid"] } }, new MemoryStore(), NOW, () => {});
   await assert.rejects(intake(ctx), /bad id/);
   assert.equal(hits.length, 0);
+});
+
+test("one question with a bad due date is parked with its reason; the questions after it still run", async () => {
+  const RFI2 = "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff";
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("questions", "q1", { ...QUESTION, due_date: "next week" });
+  await store.put("questions", "q2", { ...QUESTION, id: "q2", rfi_id: RFI2, question_set: true });
+  assert.deepEqual(await draft(ctx), { created: 1, queued: 1, needs_assignee: 1 });
+  const q1 = (await store.get<any>("questions", "q1")) as any, q2 = (await store.get<any>("questions", "q2")) as any;
+  assert.equal(q1.status, "needs-person");
+  assert.match(q1.reason, /due must be a date/);
+  assert.equal(q2.status, "queued");
+  assert.equal(q1.rfi_id, RFI, "the RFI made for the bad question is kept, so a retry never makes a second one");
+});
+
+test("the approval shows the message Fieldwire will email, escaped", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("questions", "q1", { ...QUESTION, message: "Is it 2.4 m or 2.7 m <b>ceiling</b> & why?" });
+  await draft(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, /Message: "Is it 2\.4 m or 2\.7 m &lt;b&gt;ceiling&lt;\/b&gt; &amp; why\?"/);
 });

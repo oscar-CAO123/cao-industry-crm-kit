@@ -20,23 +20,29 @@ export async function intake(ctx: Ctx<Settings>) {
 /** Every 15 minutes: read the parties on each new lead and search the contacts for their names. Records the result only. */
 export async function check(ctx: Ctx<Settings>) {
   const todo = Object.values(await ctx.store.list<Lead>("leads")).filter((l) => l.status === "new");
-  let hit = 0, clear = 0, no_parties = 0;
+  let hit = 0, clear = 0, review = 0, no_parties = 0;
   for (const l of todo) {
     const parties: Party[] = await partiesOf(ctx, l.id);
     if (!parties.length) { no_parties++; continue; }   // stays new: read again on the next run
     const own = new Set(parties.map((p) => p.contact_id));
     const hits: Hit[] = [];
     const seen = new Set<string>();
-    for (const p of parties) for (const h of await nameMatches(ctx, p, own)) {
-      const k = `${h.party}|${h.contact_id}`;
-      if (!seen.has(k)) { seen.add(k); hits.push(h); }
+    let full = false;
+    for (const p of parties) {
+      const r = await nameMatches(ctx, p, own);
+      if (r.full) full = true;
+      for (const h of r.hits) {
+        const k = `${h.party}|${h.contact_id}`;
+        if (!seen.has(k)) { seen.add(k); hits.push(h); }
+      }
     }
-    const status = hits.length ? "hit" : "clear";
-    if (status === "hit") hit++; else clear++;
+    // A search that filled its page is not clear: a match past the page would be missed, so a person checks it first.
+    const status = hits.length ? "hit" : full ? "review" : "clear";
+    if (status === "hit") hit++; else if (status === "review") review++; else clear++;
     await ctx.store.put("leads", l.id, { ...l, status, parties, hits, checked: ctx.now.toISOString() } satisfies Lead);
   }
-  ctx.log(`check: ${clear} clear, ${hit} with name matches, ${no_parties} with no parties yet`);
-  return { clear, hit, no_parties };
+  ctx.log(`check: ${clear} clear, ${hit} with name matches, ${review} to review (full search page), ${no_parties} with no parties yet`);
+  return { clear, hit, review, no_parties };
 }
 
 /** Hourly: a lead with no name matches is queued to open as a matter. The partner approves it; nothing opens by itself. */

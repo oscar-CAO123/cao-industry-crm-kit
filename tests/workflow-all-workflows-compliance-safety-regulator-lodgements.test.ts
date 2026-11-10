@@ -22,9 +22,10 @@ type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
 let rows: string[][] = [];
 let messages: any[] = [];
+let failDrafts = false;
 
 function fake() {
-  hits = []; rows = []; messages = [{ id: MSG, subject: "Regulator notice: <script>x</script>", from: { emailAddress: { name: "Ari", address: "ari@regulator.gov.au" } }, receivedDateTime: "2026-11-08T00:00:00Z", bodyPreview: "=HYPERLINK(1) Please lodge within 14 days" }];
+  hits = []; rows = []; failDrafts = false; messages = [{ id: MSG, subject: "Regulator notice: <script>x</script>", from: { emailAddress: { name: "Ari", address: "ari@regulator.gov.au" } }, receivedDateTime: "2026-11-08T00:00:00Z", bodyPreview: "=HYPERLINK(1) Please lodge within 14 days" }];
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -33,7 +34,7 @@ function fake() {
       hits.push({ method: m, path: p, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
-      if (p.endsWith("/messages") && m === "POST") return json({ id: DRAFT });
+      if (p.endsWith("/messages") && m === "POST") return failDrafts ? new Response("down", { status: 500 }) : json({ id: DRAFT });
       if (p.endsWith("/messages")) return json({ value: messages });
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
       if (p.endsWith("/rows") && m === "GET") return json({ value: rows.map((v) => ({ values: [v] })) });
@@ -127,4 +128,30 @@ test("a bad mailbox or a bad workbook id is refused before any call", async () =
   await assert.rejects(reminders(context(WF, bad, new MemoryStore(), NOW, () => {})), /bad workbook id/);
   const noOwner = { ...SETTINGS, owner_email: "not-an-email" };
   await assert.rejects(intake(context(WF, noOwner, new MemoryStore(), NOW, () => {})), /owner_email is not set/);
+});
+
+test("a notice whose owner note fails after its register row is written is retried without a second register row", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await intake(ctx);
+  failDrafts = true;
+  await assert.rejects(register(ctx));
+  failDrafts = false;
+  assert.deepEqual(await register(ctx), { logged: 1 });
+  assert.equal(rows.length, 1, "the notice is logged once, however many runs it took");
+  assert.equal(rows[0][4], "2026-11-22", "the retry keeps the due date the row was written with");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1);
+});
+
+test("a notice rule matches the body preview, and the preview is not kept in the store", async () => {
+  messages = [{ id: MSG, subject: "Regulator letter", from: { emailAddress: { address: "ari@regulator.gov.au" } }, receivedDateTime: "2026-11-08T00:00:00Z",
+    bodyPreview: "Please lodge the return within 14 days" }];
+  const store = new MemoryStore(), ctx = context(WF, { ...SETTINGS, notice_rules: [{ match: "lodge", due_days: 14 }] }, store, NOW, () => {});
+  await intake(ctx);
+  const [stored] = Object.values(await store.list<any>("notices"));
+  assert.deepEqual(Object.keys(stored).sort(), ["due_days", "from", "id", "received", "ref", "status", "title"]);
+  assert.ok(!("text" in stored), "no body preview in the stored notice");
+  assert.equal(stored.due_days, 14);
+  await register(ctx);
+  assert.equal(rows[0][4], "2026-11-22", "the due date comes from the body match");
+  assert.ok(!drafts()[0].body.body.content.includes("Please lodge"), "the owner note does not repeat the body");
 });

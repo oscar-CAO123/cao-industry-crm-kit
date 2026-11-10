@@ -71,8 +71,10 @@
   "Revisions after a send (revise, 2 calls): not covered. Handled by hand.",
   "The worklist's CRM entry 'proposal-web' has no kit adapter. Proposals enter through the propose command and the store.",
   "Microsoft 365 is named in 12 quoting calls but is not in the platform evidence file. It is included because the Xero adapter sends through it.",
-  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it."
- ],
+  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it.",
+  "Done in quote-build's own copy of the ServiceM8 quote step (adapters/servicem8.ts). Lines are written only when missing, and the send is not queued until every quote line is read back on the job, so a retry cannot leave the job short of the quote total. The construction adapter it imports is unchanged, and its own draftQuote still has the older check.",
+  "Done in quote-build's own copy (adapters/servicem8.ts): the stored job id is UUID-checked before it goes into any OData filter on the job-lines and attachments reads."
+],
  "evidence": {
   "calls": "116 discovery calls in the worklist; 40 read in depth for steps, variants and families",
   "platforms": "the vendors' own help centres for HubSpot, MYOB, ServiceM8 and Xero, mapped step by step; operations checked against the kit's ops.json"

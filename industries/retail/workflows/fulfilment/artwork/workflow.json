@@ -31,6 +31,7 @@
  },
  "gaps": [
   "Figma: no kit platform. The mockups are built and exported outside the kit, to an https location the business controls, then written to the mockups record.",
+  "Needs core: an approved listing update replays the images array built when it was queued. An image added or removed on the live product between queue and approval is dropped on approval. Fix: the runtime re-plans a live act from current product data at approval, or refuses to run when the product changed since it was queued.",
   "Shopify: product media operations are mapped (productCreateMedia, productUpdateMedia, productReorderMedia, productVariantAppendMedia) but index-only: no argument mapping, and the endpoint map holds only doc URLs, so no field names can be confirmed. No Shopify adapter yet.",
   "WooCommerce reads: docs.get_products is read page by page (page and per_page, 100 a page, at most 20 pages, so 2,000 products). A store with more products than that is read only up to the cap.",
   "WooCommerce batch update replaces the images array it is given. The adapter keeps existing images by id and appends the new ones, so nothing already live is dropped.",

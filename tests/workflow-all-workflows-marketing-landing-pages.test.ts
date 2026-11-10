@@ -13,10 +13,10 @@ const SITE = "64a1b2c3d4e5f60718293a4b", PAGE = "64a1b2c3d4e5f60718293a4c", FORM
 const LOC = "ojQjykmwNIU88vfsfzvH", FUNNEL = "iucJ6TdFZiddhq9f6znh", GFORM = "gFormId12345678";
 type Hit = { method: string; path: string; body: any };
 let hits: Hit[] = [];
-let failPublish = 0;
+let failWrite = 0;
 
 function fake() {
-  hits = []; failPublish = 0;
+  hits = []; failWrite = 0;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -29,10 +29,9 @@ function fake() {
       if (p.endsWith(`/sites/${SITE}/forms`)) return json({ forms: [{ id: FORM, displayName: "Enquiry form" }], pagination: {} });
       if (p.endsWith(`/forms/${FORM}/submissions`)) return json({ formSubmissions: [
         { id: "s1", dateSubmitted: "2026-11-07T10:00:00.000Z" }, { id: "s2", dateSubmitted: "2026-10-01T10:00:00.000Z" }], pagination: {} });
-      if (p.endsWith(`/pages/${PAGE}/dom`)) return json({ errors: [] });
-      if (p.endsWith(`/sites/${SITE}/publish`)) {
-        if (failPublish-- > 0) return new Response("{}", { status: 500 });
-        return json({ publishScope: "page" });
+      if (p.endsWith(`/pages/${PAGE}/dom`)) {
+        if (failWrite-- > 0) return new Response("{}", { status: 500 });
+        return json({ errors: [] });
       }
       // GoHighLevel
       if (p.endsWith("/funnels/funnel/list")) return json({ funnels: [{ _id: FUNNEL, name: "Event funnel", locationId: LOC }], count: 1 });
@@ -80,13 +79,13 @@ test("a requested change is queued, never sent; re-runs queue nothing new", asyn
   assert.equal(hits.filter((h) => h.method !== "GET").length, 0, "nothing written by a cron");
   const approvals = Object.values(await store.list<Approval>("approvals"));
   assert.equal(approvals.length, 1);
-  assert.deepEqual(approvals[0].acts.map((a) => a.op), ["2.pages_update-static-content", "2.sites_publish"]);
+  assert.deepEqual(approvals[0].acts.map((a) => a.op), ["2.pages_update-static-content"], "a publish is never queued: it would put the whole site live");
   await queue(ctx);
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "a re-run never queues twice");
   assert.equal((await store.get<Change>("changes", "chg-summer-1"))!.status, "queued");
 });
 
-test("approval runs the content update, then the publish of that page, once", async () => {
+test("approval runs the content update once, and never publishes the site", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await store.put("changes", "chg-summer-1", change());
   await queue(ctx);
@@ -94,23 +93,24 @@ test("approval runs the content update, then the publish of that page, once", as
   const done = await approve(WF, store, ap.id, "owner", NOW);
   assert.equal(done.status, "done");
   const writes = hits.filter((h) => h.method === "POST");
-  assert.deepEqual(writes.map((h) => h.path.split("/").slice(-2).join("/")), [`${PAGE}/dom`, `${SITE}/publish`]);
+  assert.deepEqual(writes.map((h) => h.path.split("/").slice(-2).join("/")), [`${PAGE}/dom`]);
   assert.deepEqual(writes[0].body, { nodes: [{ id: "hero", text: "Summer event tickets" }] });
-  assert.equal(writes[1].body.pageId, PAGE);
-  assert.equal(writes[1].body.publishToWebflowSubdomain, true);
+  assert.equal(hits.filter((h) => h.path.endsWith("/publish")).length, 0, "no site publish");
   await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
 });
 
-test("a failed publish resumes without repeating the content update", async () => {
+test("a content update that fails with a 500 waits for a person: nothing resends on its own", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   await store.put("changes", "chg-summer-2", change({ id: "chg-summer-2" }));
   await queue(ctx);
   const [ap] = Object.values(await store.list<Approval>("approvals"));
-  failPublish = 1;
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "failed");
-  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  failWrite = 1;
+  // A 500 may have been processed by the app: the approval waits for a person to check, and nothing resends on its own.
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "needs-check");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /needs a check/, "approving again without a confirmation sends nothing");
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW, "done")).status, "done");
   const contentUpdates = hits.filter((h) => h.method === "POST" && h.path.endsWith(`${PAGE}/dom`));
-  assert.equal(contentUpdates.length, 1, "the content update went once across the retry");
+  assert.equal(contentUpdates.length, 1, "the content update went once; confirming done does not resend it");
 });
 
 test("a change with a bad id or no nodes is skipped with the reason, and nothing is queued", async () => {

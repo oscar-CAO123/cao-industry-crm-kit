@@ -15,7 +15,7 @@ export interface Settings {
     log_range: string;                                        // for example "Document log!A1": one row per document
     output_folder_id: string;                                 // the Drive folder finished drafts are made in
   };
-  documents: { kind: string; template_id: string }[];         // one Google Doc template per kind of document
+  documents: { kind: string; template_id: string; fields: string[] }[];  // one Google Doc template per kind; fields = the record columns its {{placeholders}} use
   share_role?: "reader" | "commenter";                        // the role given to the client on approval (default reader)
 }
 

@@ -3,7 +3,7 @@
 // bill reaches the platform only after a person approves it.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import { type BomPart, type BomRecord, type Problem, type Settings, keyOf, linesHash, productCode, qtyOf } from "./types.ts";
-import { findProduct, billFor, availableFor, createBill, queueRevision } from "./adapters/unleashed.ts";
+import { CHECK_LINES, findProduct, billFor, availableFor, createBill, queueRevision } from "./adapters/unleashed.ts";
 
 const recordKey = (parent: string) => keyOf(parent);
 
@@ -95,6 +95,11 @@ export async function revise(ctx: Ctx<Settings>) {
       if (missing.length) {
         parked++;
         await problem(ctx, rec.parent, "new-component", `not on the live bill yet: ${missing.join(", ").slice(0, 200)}. This workflow does not add components to a live bill; a person does`);
+        continue;
+      }
+      if (rec.lines.length < 1 || rec.lines.length > CHECK_LINES) {
+        parked++;
+        await problem(ctx, rec.parent, "unverifiable-bill", `the live bill has ${rec.lines.length} components; the send checks 1 to ${CHECK_LINES} of them, so a person makes this change`);
         continue;
       }
       await queueRevision(ctx, rec, parts, hash);

@@ -15,10 +15,10 @@ const SET: any = { sources: ["stripe", "xero"], chase_after_days: [1, 5], retry_
 
 type Hit = { method: string; path: string; search: string; body: any };
 let hits: Hit[] = [];
-let stripePaid = false, xeroPaid = false, xeroEmail = "sam@example.com";
+let stripePaid = false, xeroPaid = false, xeroEmail = "sam@example.com", xeroOwed = 250;
 
 function fake() {
-  hits = []; stripePaid = false; xeroPaid = false; xeroEmail = "sam@example.com";
+  hits = []; stripePaid = false; xeroPaid = false; xeroEmail = "sam@example.com"; xeroOwed = 250;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -37,9 +37,9 @@ function fake() {
       if (p === `/v1/invoices/${SINV}` && m === "GET") return json({ id: SINV, status: stripePaid ? "paid" : "open", amount_remaining: stripePaid ? 0 : 4500 });
       if (p === `/v1/invoices/${SINV}/pay` || p === `/v1/invoices/${SINV}/send`) return json({ id: SINV, status: "paid" });
       // Xero
-      if (p.endsWith("/Invoices") && m === "GET" && u.searchParams.get("IDs")) return json({ Invoices: [{ InvoiceID: XID, Status: xeroPaid ? "PAID" : "AUTHORISED", AmountDue: xeroPaid ? 0 : 250 }] });
+      if (p.endsWith("/Invoices") && m === "GET" && u.searchParams.get("IDs")) return json({ Invoices: [{ InvoiceID: XID, Status: xeroPaid ? "PAID" : "AUTHORISED", AmountDue: xeroPaid ? 0 : xeroOwed }] });
       if (p.endsWith("/Invoices") && m === "GET") return json({ Invoices: [
-        { InvoiceID: XID, InvoiceNumber: "INV-0042", Status: "AUTHORISED", AmountDue: 250, DueDate: "2026-11-01", CurrencyCode: "AUD",
+        { InvoiceID: XID, InvoiceNumber: "INV-0042", Status: "AUTHORISED", AmountDue: xeroOwed, DueDate: "2026-11-01", CurrencyCode: "AUD",
           Contact: { ContactID: XCID, Name: "Sam Lee", ...(xeroEmail ? { EmailAddress: xeroEmail } : {}) } },
         { InvoiceID: "22222222-3333-4444-8555-666666666666", InvoiceNumber: "INV-0043", Status: "AUTHORISED", AmountDue: 90, DueDate: "2026-11-20", Contact: { ContactID: XCID, Name: "Sam Lee" } },
       ] });
@@ -96,6 +96,54 @@ test("chase queues a Stripe retry and a Xero reminder once each; approval runs t
   assert.ok(hits.some((h) => h.method === "POST" && h.path.endsWith(`/Invoices/${XID}/Email`)), "the approved reminder ran");
 });
 
+test("a Xero reminder sends once when the invoice is unchanged at approval", async () => {
+  const store = new MemoryStore();
+  await detect(context(WF, SET, store, NOW, () => {}));
+  const day1 = new Date(NOW.getTime() + 864e5);
+  await chase(context(WF, SET, store, day1, () => {}));
+  const reminder = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].op === "accounting.emailInvoice")!;
+  assert.equal(reminder.acts[0].check?.op, "accounting.getInvoices", "the reminder carries a check on the invoice");
+  assert.equal((await approve(WF, store, reminder.id, "owner", day1)).status, "done");
+  const emails = () => hits.filter((h) => h.method === "POST" && h.path.endsWith(`/Invoices/${XID}/Email`)).length;
+  assert.equal(emails(), 1, "the reminder went out once");
+  assert.ok(hits.findIndex((h) => h.method === "GET" && h.search.includes("IDs=")) < hits.findIndex((h) => h.path.endsWith("/Email")), "the invoice was read before the send");
+  await assert.rejects(approve(WF, store, reminder.id, "owner", day1), /already done/, "a second approval cannot send it again");
+  assert.equal(emails(), 1);
+});
+
+test("a Xero reminder is not sent when the invoice changed after it was queued; the approval is rejected", async () => {
+  const store = new MemoryStore();
+  await detect(context(WF, SET, store, NOW, () => {}));
+  const day1 = new Date(NOW.getTime() + 864e5);
+  await chase(context(WF, SET, store, day1, () => {}));
+  xeroOwed = 100; // a part payment after the reminder was queued
+  const reminder = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].op === "accounting.emailInvoice")!;
+  const ap = await approve(WF, store, reminder.id, "owner", day1);
+  assert.equal(ap.status, "rejected");
+  assert.equal(ap.decided_by, "check");
+  assert.match(String(ap.error), /record changed/);
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith("/Email")).length, 0, "nothing was emailed");
+});
+
+test("a reminder closed by its check is queued again once the invoice is read again, and not before", async () => {
+  const store = new MemoryStore();
+  await detect(context(WF, SET, store, NOW, () => {}));
+  const day1 = new Date(NOW.getTime() + 864e5), day2 = new Date(NOW.getTime() + 2 * 864e5);
+  await chase(context(WF, SET, store, day1, () => {}));
+  const first = Object.values(await store.list<Approval>("approvals")).find((a) => a.acts[0].op === "accounting.emailInvoice")!;
+  xeroOwed = 100;
+  await approve(WF, store, first.id, "owner", day1);
+  assert.deepEqual(await chase(context(WF, SET, store, day2, () => {})), { queued: 0, skipped: 1 }, "the stored amount is still the old one: nothing new yet");
+  assert.deepEqual(await detect(context(WF, SET, store, day2, () => {})), { added: 0 });
+  assert.deepEqual(await chase(context(WF, SET, store, day2, () => {})), { queued: 1, skipped: 0 }, "the amount is refreshed, so the step is queued afresh");
+  const reminders = Object.values(await store.list<Approval>("approvals")).filter((a) => a.acts[0].op === "accounting.emailInvoice");
+  assert.equal(reminders.length, 2);
+  const fresh = reminders.find((a) => a.status === "pending")!;
+  assert.equal(fresh.acts[0].check?.expect[1].equals, 100);
+  assert.equal((await approve(WF, store, fresh.id, "owner", day2)).status, "done");
+  assert.equal(hits.filter((h) => h.method === "POST" && h.path.endsWith(`/Invoices/${XID}/Email`)).length, 1, "only the current amount was emailed");
+});
+
 test("an invoice with no email on file is not queued for a reminder; a person is told", async () => {
   xeroEmail = "";
   const store = new MemoryStore();
@@ -113,4 +161,25 @@ test("reconcile closes a paid failure, notes it, and the chase then has nothing 
   assert.equal(notes().length, 2, "seen note and resolved note in Xero");
   assert.deepEqual(await chase(context(WF, SET, store, day1, () => {})), { queued: 0, skipped: 0 });
   assert.equal(Object.keys(await store.list("approvals")).length, 0);
+});
+
+test("overdue follows Stripe paging: a failed invoice on the second page is still found", async () => {
+  const page2 = "in_Page2Invoice01", seen: (string | null)[] = [];
+  setTransport({
+    sleep: async () => {}, log: () => {},
+    fetch: (async (url: any) => {
+      const u = new URL(String(url));
+      if (u.pathname !== "/v1/invoices") return new Response("not faked: " + u.pathname, { status: 404 });
+      const after = u.searchParams.get("starting_after");
+      seen.push(after);
+      const inv = (id: string) => ({ id, object: "invoice", number: id.slice(-4), status: "open", attempted: true, attempt_count: 1,
+        amount_remaining: 1000, currency: "aud", customer_name: "Pat Doe", customer_email: "pat@example.com" });
+      const body = after === null ? { has_more: true, data: [inv(SINV)] } : { has_more: false, data: [inv(page2)] };
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    }) as any,
+  });
+  const store = new MemoryStore();
+  assert.deepEqual(await detect(context(WF, { ...SET, sources: ["stripe"] }, store, NOW, () => {})), { added: 2 });
+  assert.deepEqual(seen, [null, SINV], "the second page is requested from the last invoice id of the first");
+  assert.ok(await store.get("failures", `stripe:${page2}`), "the invoice on page two is recorded");
 });

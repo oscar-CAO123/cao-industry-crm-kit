@@ -85,3 +85,16 @@ test("chase queues one email per job for approval; approval sends it; re-runs ne
   assert.equal(sends()[0].body.to, "sam@example.com");
   assert.equal(sends()[0].body.regardingJobUUID, SOLAR);
 });
+
+test("a chase after the interval queues a new approval; the first one is not reused", async () => {
+  const store = new MemoryStore();
+  await register(context(WF, S, store, NOW, () => {}));
+  await evidence(context(WF, S, store, NOW, () => {}));
+  assert.deepEqual(await chase(context(WF, S, store, NOW, () => {})), { queued: 1 });
+  const later = new Date(NOW.getTime() + 4 * 864e5);
+  assert.deepEqual(await chase(context(WF, S, store, later, () => {})), { queued: 1 });
+  const aps = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(aps.length, 2, "one approval per chase interval");
+  assert.equal(aps.filter((a) => a.status === "pending").length, 2);
+  assert.equal((await store.get<any>("jobs", SOLAR)).chases, 2);
+});

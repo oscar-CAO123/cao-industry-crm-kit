@@ -85,7 +85,8 @@
   "SiteBook incident and sign-off records: the incident create endpoint and the sign-off body fields are not in the docs crawl, so incident-report and sign-off stay on paper.",
   "SiteBook regulator and electrical portal lodgements: no endpoint in the docs crawl. The licensed person keys these in by hand.",
   "SiteBook field names for list responses (jobs, actions, SWMS) are not confirmed in the docs crawl, which shows request bodies and single-record examples only. The adapter reads them defensively and skips any record without an id.",
-  "SiteBook CheckListId, ActionId and the conditional AssetId on checklist create: the docs say AssetId is required when no AssetGroupId is given, and ActionId is client-supplied. Confirm both on a sandbox account before live use.",
+  "SiteBook CheckListId, ActionId and the conditional AssetId on checklist create: the docs say AssetId is required when no AssetGroupId is given, and ActionId is client-supplied. The pre-start cron does not run until settings set asset_id or asset_group_id, and sends whichever is set. Confirm the requirement and the field names on a sandbox account before live use.",
+  "Pre-start: a job whose checklist create fails after the call is held in the store as pending, so the cron never makes a second checklist for it. A person checks SiteBook for that job, then removes its prestart record from the store before it is retried. The cron never removes it.",
   "Dropbox document folders, ASA Safety and AWSA Safety: no platform in the kit, so the file store and the safety-system step stay with the business.",
   "Judgment steps stay with the agent skill in SKILL.md: writing the SWMS for a new task, close-out photo selection, and the handover pack.",
   "Every adapter is docs-only until a SiteBook sandbox or trial account proves the calls."

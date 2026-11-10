@@ -34,7 +34,12 @@ export const xero: Adapter = {
   async chase(ctx: Ctx<Settings>, f, n) {
     const id = guid(f.invoice), label = f.number ?? id;
     if (!f.contact.email) return "";
-    return ctx.queue({ platform: P, op: "accounting.emailInvoice", key: `chase${n}:${f.key}`, input: { params: { InvoiceID: id } }, summary: `email reminder for invoice ${label}` },
+    // Sent only if the invoice is still authorised and owed the amount the cron saw when it queued this. The key carries
+    // the amount, so a changed invoice is queued afresh and never collides with the closed approval.
+    return ctx.queue({ platform: P, op: "accounting.emailInvoice", key: `chase${n}:${f.key}:${Math.round(f.amount_due * 100)}`,
+      input: { params: { InvoiceID: id } }, summary: `email reminder for invoice ${label}`,
+      check: { platform: P, op: "accounting.getInvoices", input: { params: { IDs: id } },
+        expect: [{ path: "Invoices.0.Status", equals: "AUTHORISED" }, { path: "Invoices.0.AmountDue", equals: f.amount_due }] } },
       `Email payment reminder ${n} for invoice ${label} to ${f.contact.email}: ${money(f.amount_due, f.currency)}`);
   },
 };

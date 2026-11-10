@@ -15,23 +15,29 @@
  },
  "settings": "settings.example.json",
  "crons": [
-  {"name": "watch", "schedule": "*/30 * * * *", "entry": "watch", "summary": "Read disputes and recent refunds from Square, record them, and stage evidence notes that have been written up."},
+  {"name": "watch", "schedule": "*/30 * * * *", "entry": "watch", "summary": "Read disputes and recent refunds from Square (and Stripe when switched on), record them, and stage Square evidence notes that have been written up."},
   {"name": "refunds", "schedule": "*/15 * * * *", "entry": "refunds", "summary": "Queue each refund a person has decided on. Never refunds on its own."},
   {"name": "respond", "schedule": "0 * * * *", "entry": "respond", "summary": "Queue the submit or accept a person has decided on, and flag open disputes nearing their deadline with no decision."}
  ],
  "draft_ops": {
-  "square": ["api.ListDisputes", "api.ListPaymentRefunds", "api.CreateDisputeEvidenceText"]
+  "square": ["api.ListDisputes", "api.ListPaymentRefunds", "api.CreateDisputeEvidenceText"],
+  "stripe": ["openapi_spec3.GetDisputes", "openapi_spec3.GetRefunds"]
  },
  "live_ops": {
-  "square": ["api.RefundPayment", "api.SubmitEvidence", "api.AcceptDispute"]
+  "square": ["api.RefundPayment", "api.SubmitEvidence", "api.AcceptDispute"],
+  "stripe": ["openapi_spec3.PostRefunds", "openapi_spec3.PostDisputesDispute"]
  },
- "draft_ops_note": "Draft operations are reads, plus evidence text staged on a dispute in Square. Staged evidence reaches the bank only when a submit is approved. Anything that refunds money, submits evidence to the bank or accepts a dispute is a live operation and waits for a person.",
+ "draft_ops_note": "Draft operations are reads, plus evidence text staged on a dispute in Square. Staged evidence reaches the bank only when a submit is approved. Stripe disputes and refunds are read only; a Stripe refund or an evidence submission is a live operation. Anything that refunds money, submits evidence to the bank or accepts a dispute waits for a person.",
  "capabilities": ["payments.list", "files.read"],
  "adapters": {
-  "square": {"status": "docs-only", "covers": "disputes, refunds, staged text evidence, submit and accept (approval only)"}
+  "square": {"status": "docs-only", "covers": "disputes, refunds, staged text evidence, submit and accept (approval only)"},
+  "stripe": {"status": "docs-only", "covers": "disputes and refunds read; refund and evidence submission (approval only); switched on in settings; accept (close) not built"}
  },
  "gaps": [
-  "Stripe: disputes, refunds and evidence are mapped, but the SDK sends write bodies as JSON and Stripe takes form-encoded bodies, so its writes are not built. No Stripe adapter until the SDK encodes forms.",
+  "Stripe accept (closing a dispute) is not built. A decision to accept a Stripe dispute is refused and logged, never queued.",
+  "Stripe evidence: every note goes in Stripe's one generic text field (uncategorized_text) on submit. Typed fields, evidence files, and evidence staged without a submit are not built.",
+  "Stripe refunds: the SDK sends no Idempotency-Key header (no mapped header for it), so a refund whose outcome is unknown waits in the runtime's needs-check state. Nothing repeats on its own, but a person must confirm in Stripe before it runs again.",
+  "Stripe refund reasons: the decision's text goes to refund metadata, not Stripe's fixed reason list (duplicate, fraudulent, requested_by_customer).",
   "Xero: a refund shows as a credit note (partial). Not built: a credit note refund needs a GST and allocation choice a person makes.",
   "Refund requests arrive by email (Google Workspace in the calls). No intake adapter; the agent or a person records each decision in refund_decisions.",
   "Refund and dispute capabilities are not in core/capabilities.json. Adding them is a runtime change, so it is listed here and not made in core/.",
@@ -39,10 +45,10 @@
   "Square's pages do not describe logging a request, checking a case against the refund policy, or the search steps for an order. Those are judgment steps for the agent.",
   "Payout reconciliation and matching refunds to sales are not covered by the pages read. No reconcile cron.",
   "Square's dispute states and the refund cancellation rules come from the API spec, not a live account. Confirm both on a sandbox before any live run.",
-  "Docs-only until a Square sandbox account proves the adapter."
+  "Docs-only until a Square sandbox account and a Stripe test account prove the adapters."
  ],
  "evidence": {
   "calls": "2 discovery calls read; 1 describes a refund flow with steps, and both name Google Workspace for inbox intake",
-  "platforms": "Square help pages (refunds, disputes, dispute reports) and the Square API spec; Stripe and Xero pages read but not built (see gaps)"
+  "platforms": "Square help pages (refunds, disputes, dispute reports) and the Square API spec; Stripe's OpenAPI spec for the dispute, refund and evidence fields; Xero pages read but not built (see gaps)"
  }
 }

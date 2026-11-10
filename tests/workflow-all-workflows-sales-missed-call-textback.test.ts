@@ -145,6 +145,20 @@ test("log: with no GoHighLevel setting nothing is written", async () => {
   assert.equal(hits.filter((h) => h.method === "POST").length, 0);
 });
 
+test("summaries and the run log show only the last four digits of a caller; the text and the internal note keep the full number", async () => {
+  const store = new MemoryStore(), logs: string[] = [];
+  const log = (m: string) => logs.push(m);
+  await intake(context(WF, S, store, NOW, log));
+  await textback(context(WF, S, store, at(10), log));
+  await logCalls(context(WF, S, store, at(15), log));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.ok(ap.summary.includes("5678") && !ap.summary.includes("+61412345678"), "approval summary is masked");
+  assert.ok(ap.acts.every((x) => !x.summary.includes("+61412345678")), "act summaries are masked");
+  assert.equal(ap.acts[0].input?.body.contact_number, "+61412345678", "the text itself goes to the full number");
+  assert.ok(logs.length > 0 && !logs.join("\n").includes("+61412345678"), "the run log holds no full number");
+  assert.match(notes()[0].body.body, /\+61412345678/, "the internal note keeps the full number");
+});
+
 test("settings: a JustCall number that is not E.164 is refused before any call", async () => {
   await assert.rejects(intake(context(WF, { ...S, justcall: { number: "0412 345 678" } }, new MemoryStore(), NOW, () => {})), /justcall\.number must be E\.164/);
   assert.equal(hits.length, 0);

@@ -34,7 +34,7 @@ function fake() {
       if (p.endsWith("/Contacts")) return json({ Contacts: [{ ContactID: CID }] });
       if (p.endsWith("/Invoices") && m === "PUT") {
         const src = body.Invoices[0];
-        inv = { InvoiceID: INV, Status: src.Status, Type: src.Type, LineItems: src.LineItems.map((l: any) => ({ ...l, LineAmount: l.Quantity * l.UnitAmount })),
+        inv = { InvoiceID: INV, Status: src.Status, Type: src.Type, Contact: { ContactID: src.Contact.ContactID }, LineItems: src.LineItems.map((l: any) => ({ ...l, LineAmount: l.Quantity * l.UnitAmount })),
                 Total: src.LineItems.reduce((a: number, l: any) => a + l.Quantity * l.UnitAmount, 0) };
         return json({ Invoices: [{ InvoiceID: INV, Status: "DRAFT" }] });
       }
@@ -51,6 +51,9 @@ const liveHits = () => hits.filter((h) => h.path.endsWith(`/Invoices/${INV}/Emai
 const LINES = [{ description: "Peaches, 2 pallets, lot P-22", qty: 2, unitPrice: 4800 }, { description: "Packing, per pallet", qty: 2, unitPrice: 75 }];
 const ship = (over: Partial<Shipment> = {}): Shipment => ({ id: "ship-001", title: "Stone fruit, 2 pallets to Singapore",
   buyer: { name: "Example Buyer Pty Ltd", email: "buyer@example.com" }, lines: LINES, status: "new", ...over });
+// The invoice as Xero holds it once the draft above exists: same lines, same total, same contact.
+const matchingInvoice = () => ({ InvoiceID: INV, Status: "DRAFT", Contact: { ContactID: CID },
+  LineItems: LINES.map((l) => ({ Description: l.description, Quantity: l.qty, UnitAmount: l.unitPrice })), Total: 9750 });
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
@@ -120,6 +123,7 @@ test("send: an approved, checked shipment is only queued; the authorise and emai
 
 test("re-runs never queue the same send twice, and an unchecked shipment is never queued", async () => {
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  inv = matchingInvoice();
   await store.put("shipments", "ship-001", ship({ status: "approved", invoice_id: INV, checked_at: NOW.toISOString() }));
   await CRONS.send(ctx); await CRONS.send(ctx);
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 1, "re-runs never queue twice");
@@ -134,4 +138,37 @@ test("a shipment with no valid buyer email is not queued", async () => {
   assert.deepEqual(await CRONS.send(ctx), { queued: 0 });
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0);
   assert.match((await store.get<Shipment>("shipments", "ship-001"))!.reason!, /buyer email/);
+});
+
+test("send re-checks Xero: an invoice changed after the cross-check is held and never queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("shipments", "ship-001", ship());
+  await CRONS.draft(ctx); await CRONS["cross-check"](ctx);
+  await store.put("shipments", "ship-001", { ...(await store.get<Shipment>("shipments", "ship-001"))!, status: "approved", approved_by: "owner" });
+  inv.LineItems[0].Quantity = 3; inv.Total = 3 * 4800 + 150;
+  assert.deepEqual(await CRONS.send(ctx), { queued: 0 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0, "nothing queued for a changed invoice");
+  const held = (await store.get<Shipment>("shipments", "ship-001"))!;
+  assert.equal(held.status, "mismatch");
+  assert.match(held.reason!, /line 1/);
+  assert.equal(liveHits().length, 0);
+});
+
+test("send holds when the buyer email on the record is not the invoice's contact in Xero", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("shipments", "ship-001", ship());
+  await CRONS.draft(ctx); await CRONS["cross-check"](ctx);
+  // The buyer email is edited after the invoice was drafted: the invoice still points at the old contact.
+  await store.put("shipments", "ship-001", { ...(await store.get<Shipment>("shipments", "ship-001"))!, status: "approved",
+    approved_by: "owner", buyer: { name: "Example Buyer Pty Ltd", email: "new-buyer@example.com" } });
+  assert.deepEqual(await CRONS.send(ctx), { queued: 0 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0);
+  assert.match((await store.get<Shipment>("shipments", "ship-001"))!.reason!, /not addressed to the buyer email/);
+  // A contact swap on the Xero side is held the same way.
+  await store.put("shipments", "ship-001", { ...(await store.get<Shipment>("shipments", "ship-001"))!, status: "approved",
+    buyer: { name: "Example Buyer Pty Ltd", email: "buyer@example.com" } });
+  inv.Contact = { ContactID: "11111111-2222-4333-8444-555555555555" };
+  assert.deepEqual(await CRONS.send(ctx), { queued: 0 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0, "a different Xero contact is never emailed");
+  assert.equal((await store.get<Shipment>("shipments", "ship-001"))!.status, "mismatch");
 });

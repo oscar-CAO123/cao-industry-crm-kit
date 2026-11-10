@@ -14,7 +14,8 @@ export interface Settings {
 }
 
 export type ReviewStatus = "not-due" | "due" | "prepared" | "invite-queued";
-export interface ClientRow { id: string; name: string; due?: string; status: ReviewStatus }
+/** invite_approval is the approval the invite was queued under; invite_round counts invites rejected and queued again. */
+export interface ClientRow { id: string; name: string; due?: string; status: ReviewStatus; invite_approval?: string; invite_round?: number }
 export interface Slot { start: string; end: string }
 export interface Pack { id: string; name: string; due: string; properties: Record<string, string>; prepared: string }
 

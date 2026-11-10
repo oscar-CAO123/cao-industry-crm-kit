@@ -63,6 +63,33 @@ test("crons are keyed by their entry names", () => {
   assert.deepEqual(Object.keys(CRONS).sort(), ["intake", "register", "report"]);
 });
 
+test("the request body is not kept, and the customer's address stays out of every log line", async () => {
+  const store = new MemoryStore(), lines: string[] = [];
+  const log = (m: string) => lines.push(m);
+  await intake(context(WF, S, store, NOW, log));
+  const [key] = Object.keys(await store.list("checks"));
+  const c = await store.get<any>("checks", key);
+  assert.equal(c.text, undefined, "the 4,000-character body preview is not stored");
+  await store.put("checks", key, { ...c, status: "result-ready", result: { decision: "pass", note: "Within drawing." } });
+  await register(context(WF, S, store, NOW, log));
+  assert.deepEqual(await report(context(WF, S, store, NOW, log)), { queued: 1 });
+  assert.ok(lines.length >= 3, "the run logs its steps");
+  assert.ok(lines.every((l) => !l.includes("ari@example.com")), lines.join("\n"));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.acts[0].summary, /ari@example\.com/, "the address stays on the approval record");
+});
+
+test("the result email subject carries no control characters", async () => {
+  const store = new MemoryStore();
+  await store.put("checks", "c-ctrl", { id: "c-ctrl", source: "microsoft-365", title: "Brackets\r\nBcc: someone@example.com\tbatch 42",
+    contact: { name: "Ari", email: "ari@example.com" }, received: NOW.toISOString(), status: "result-ready",
+    result: { decision: "pass", note: "Within drawing." } });
+  assert.deepEqual(await report(context(WF, S, store, NOW, () => {})), { queued: 1 });
+  const subject = drafts()[0].body.subject as string;
+  assert.doesNotMatch(subject, /[\x00-\x1f\x7f]/, "no CR, LF or tab in the subject");
+  assert.match(subject, /Brackets Bcc: someone@example\.com batch 42$/);
+});
+
 test("a request is logged once, its result email is drafted and queued, and only an approval sends it", async () => {
   const store = new MemoryStore();
   const ctx = () => context(WF, S, store, NOW, () => {});

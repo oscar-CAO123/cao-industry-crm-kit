@@ -7,6 +7,9 @@ export interface Settings {
   quarantine_warehouse: string;
   /** WarehouseCodes the stock reads cover. Empty means every warehouse. */
   warehouse_codes?: string[];
+  /** Set true only after a sandbox transfer proves Unleashed moves the named batch: the transfer line names a product and
+   *  quantity, not a batch, so until this is set no hold is queued (a move could leave the held lot where it is). */
+  lot_selection_confirmed?: boolean;
 }
 
 export interface Lot { guid: string; batch: string; product: string; qty: number; warehouse: string; expiry: string; status: string }

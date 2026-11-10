@@ -120,3 +120,26 @@ test("an invoice paid after the scan gets no reminder", async () => {
   assert.deepEqual(await remind(ctx), { queued: 0, skipped: 2 });
   assert.equal((await pending(store)).length, 0);
 });
+
+test("one invoice whose re-read fails does not stop the reminders after it", async () => {
+  const GONE = "44444444-4444-4444-8444-444444444444";
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  // Stored first, so it comes first in store order every day. The API no longer has it (404).
+  await store.put("arrears", GONE, { id: GONE, display: "INV-0009", property: "9 Test St", contact: "Gone", first: "G",
+    email: "gone@example.com", due: "2026-11-01", amount: 300, first_seen: "2026-11-02" });
+  await scan(ctx);
+  assert.deepEqual(await remind(ctx), { queued: 1, skipped: 2 });
+  const p = await pending(store);
+  assert.equal(p.length, 1, "the invoice after the failed one still gets its reminder");
+  assert.equal(p[0].acts[0].input?.params?.["message-id"], DRAFT);
+  assert.equal(sends().length, 0, "nothing sent by a cron");
+});
+
+test("the run log never carries the tenant's address from the draft step", async () => {
+  const logs: string[] = [];
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, (m) => logs.push(m));
+  await scan(ctx);
+  await remind(ctx);
+  assert.ok(logs.some((l) => l.startsWith("draft ")), "the draft step is logged");
+  assert.ok(logs.filter((l) => l.startsWith("draft ")).every((l) => !l.includes("sam@example.com")));
+});

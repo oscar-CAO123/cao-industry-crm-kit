@@ -1,9 +1,14 @@
 // The content-posting workflow's two crons. draft turns each planned post into an unpublished Instagram container (a draft)
 // and queues its live publish for approval. track reads recent posts and keeps the list. Nothing here publishes.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
-import type { PlannedPost, Settings } from "./types.ts";
+import crypto from "node:crypto";
+import { type Approval, type Ctx, approvalId } from "../../../../../core/workflows/runtime.ts";
+import type { Channel, PlannedPost, Settings } from "./types.ts";
 import { problem, setupProblem, keyOf } from "./types.ts";
 import { meta } from "./adapters/meta-ads.ts";
+
+/** Changes whenever the text, picture or channels change, so a reused post id is a new approval, never the old one. */
+const revisionOf = (p: PlannedPost, targets: Channel[]) =>
+  crypto.createHash("sha256").update(JSON.stringify([p.caption.trim(), p.image_url ?? "", targets])).digest("hex").slice(0, 16);
 
 /** Every 30 minutes: plan to draft. A post gets its Instagram container once, and its publish is queued once. */
 export async function draft(ctx: Ctx<Settings>) {
@@ -19,6 +24,12 @@ export async function draft(ctx: Ctx<Settings>) {
     const targets = p.channels.filter((c) => s.channels.includes(c));
     const why = targets.length ? problem(p, targets) : "none of its channels is set up for this client";
     if (why) { await ctx.store.put("posts", p.id, { ...p, status: "skipped", reason: why }); skipped++; continue; }
+    const key = keyOf(`post:${p.id}:${revisionOf(p, targets)}`);
+    const prior = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, key));
+    if (prior?.status === "done" || prior?.status === "rejected") {
+      await ctx.store.put("posts", p.id, { ...p, status: "skipped", reason: "this exact post was already approved or rejected: change its text, picture or channels to post it again" });
+      skipped++; continue;
+    }
     let cur: PlannedPost = { ...p };
     if (targets.includes("instagram") && !cur.instagram) {
       const creation_id = await meta.instagramContainer(ctx, cur);
@@ -27,8 +38,8 @@ export async function draft(ctx: Ctx<Settings>) {
       drafted++;
     }
     if (!cur.queued?.length) {
-      const acts = meta.liveActs(s, cur, targets).map((a, i) => (i === 0 ? { ...a, key: keyOf(`post:${p.id}`) } : a));
-      const id = await ctx.queue(acts, `Publish ${p.id} to ${targets.join(" and ")}: ${cur.caption.trim().slice(0, 80)}`);
+      const acts = meta.liveActs(s, cur, targets).map((a, i) => (i === 0 ? { ...a, key } : a));
+      const id = await ctx.queue(acts, `Publish ${p.id} to ${targets.join(" and ")}: ${cur.caption.trim()}`);
       cur = { ...cur, status: "queued", queued: [id] };
       await ctx.store.put("posts", p.id, cur);
       queued++;

@@ -16,12 +16,15 @@ export function sinceFilter(days: number, now: Date, extra: string): string {
 
 async function readAll(ctx: Ctx<Settings>, op: "accounting.getBankTransactions" | "accounting.getInvoices", where: string, field: "BankTransactions" | "Invoices") {
   const out: any[] = [];
-  for (let page = 1; page <= MAX_PAGES; page++) {
+  let more = true;
+  for (let page = 1; page <= MAX_PAGES && more; page++) {
     const r = await ctx.draft<any>({ platform: P, op, summary: `${field} page ${page}`, input: { params: { where, order: "Date DESC", page, pageSize: PAGE } } });
     const rows: any[] = Array.isArray(r.data?.[field]) ? r.data[field] : [];
     out.push(...rows);
-    if (rows.length < PAGE) break;
+    more = rows.length === PAGE;
   }
+  // A full last page means rows are still waiting: refuse, so the scan never clears items from a partial list.
+  if (more) throw new Error(`xero: ${field} has more than ${MAX_PAGES * PAGE} rows in the lookback: scan refused`);
   return out;
 }
 

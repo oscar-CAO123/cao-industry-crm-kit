@@ -15,13 +15,27 @@ const tableParams = (t: Table) => {
   return { "drive-id": t.drive, "driveItem-id": t.item, "workbookTable-id": t.table };
 };
 
+const PAGE = 500, MAX_ROWS = 10000;
+
+/** Every row of the register, a page at a time. Throws rather than dropping rows once the cap would be reached. */
+async function registerRows(ctx: Ctx<Settings>, t: Table): Promise<any[]> {
+  const rows: any[] = [];
+  for (let skip = 0; ; skip += PAGE) {
+    if (skip >= MAX_ROWS) throw new Error(`microsoft-365: yield register has ${MAX_ROWS} or more rows: split it before it is read`);
+    const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: "read yield register",
+      input: { params: { ...tableParams(t), $top: PAGE, $skip: skip } } });
+    const page: any[] = r.data?.value ?? [];
+    rows.push(...page);
+    if (page.length < PAGE) return rows;
+  }
+}
+
 /** Each register row is [Date, Lot, Area, Gross kg, Packed kg, Waste kg]. A row that does not add up is refused, never guessed at. */
 export async function readRegister(ctx: Ctx<Settings>): Promise<{ lots: Omit<Lot, "seen">[]; rejected: number }> {
-  const r = await ctx.draft<any>({ platform: P, op: "drives.items.workbook.tables.ListRows", summary: "read yield register",
-    input: { params: { ...tableParams(cfg(ctx).register), $top: 500 } } });
+  const rows = await registerRows(ctx, cfg(ctx).register);
   const lots: Omit<Lot, "seen">[] = [];
   let rejected = 0;
-  for (const row of r.data?.value ?? []) {
+  for (const row of rows) {
     const v: unknown[] = row.values?.[0] ?? [];
     const lot = String(v[1] ?? "").trim();
     const gross = num(v[3]), packed = num(v[4]), waste = num(v[5]);

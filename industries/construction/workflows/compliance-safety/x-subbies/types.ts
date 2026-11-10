@@ -24,6 +24,8 @@ export const DAY = 864e5;
 export const EMAIL = /^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
 export const ID = /^[A-Za-z0-9=_\-!.]{1,400}$/;
 export const DBX_PATH = /^\/[^\u0000]{1,500}$/;
+/** A Dropbox job folder: absolute, and with no "." or ".." segment that the API would resolve to another folder. */
+export const dbxPathOk = (p: string) => DBX_PATH.test(p) && !p.split("/").some((seg) => seg === "." || seg === "..");
 export const ISO = /^\d{4}-\d{2}-\d{2}$/;
 export const keyOf = (s: string) => safeKey(s, 90);
 export const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));

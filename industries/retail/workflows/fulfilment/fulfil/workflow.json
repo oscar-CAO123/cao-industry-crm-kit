@@ -39,6 +39,7 @@
   "Xero: the ops file covers purchase orders and tracking categories only, not sales orders or shipments, so record-keeping in Xero is not automated here.",
   "Fishbowl and MaxShip appear in the call evidence but have no kit platform. Shopify is in the kit but was not in the platform evidence, so it has no adapter here.",
   "Paging: only the first page of 200 sales orders is read. The paged path is not in the ops file.",
+  "The SDK (core/sdk/call.ts, the required-body check near line 375) is skipped whenever a body is passed, so a missing required body field is sent to Unleashed and refused there. The shipment body sets Guid and ShipmentStatus itself, and a test checks every required body field against the ops file. Needs core: the SDK should check required body fields.",
   "A shipment created by hand in Unleashed is not seen before a queued dispatch is approved. The approval summary asks the approver to check.",
   "The sales order status for ready orders (settings.unleashed.order_status) is unverified on a live account. The example value is 'Placed'.",
   "Judgment steps stay with people: the order check, short-stock calls, and purchase orders the owner raises when a SKU runs low."

@@ -4,6 +4,7 @@ import { type Proposal, type Settings, type Snapshot, DAY, ID, WHEN, clean, look
 import { bookeo } from "./adapters/bookeo.ts";
 
 const SNAP = "current";
+const FRESH_MS = 60 * 60_000;   // the snapshot cron runs hourly: an older snapshot cannot say what is booked now
 
 /** Hourly: the next weeks of classes, their seats, bookings and room blocks. Reads only. */
 async function snapshot(ctx: Ctx<Settings>) {
@@ -50,7 +51,10 @@ async function changeQueue(ctx: Ctx<Settings>) {
     if (!reason) { await reject("a reason is required"); continue; }
     if (p.action === "cancel-class") {
       if (!p.productId || !ID.test(p.productId) || !p.startTime || !WHEN.test(p.startTime)) { await reject("cancel-class needs a valid productId and startTime"); continue; }
-      const hits = (snap?.bookings ?? []).filter((b) => b.productId === p.productId && b.startTime === p.startTime && !b.canceled);
+      // No snapshot, or one older than the hourly cron: the proposal stays pending until a fresh one can say who is booked.
+      if (!snap || ctx.now.getTime() - Date.parse(snap.taken) > FRESH_MS) continue;
+      const at = Date.parse(p.startTime);
+      const hits = snap.bookings.filter((b) => b.productId === p.productId && !b.canceled && Date.parse(b.startTime ?? "") === at);
       if (!hits.length) { await ctx.store.put("proposals", p.id, { ...p, status: "no-bookings" }); continue; }
       const ids: string[] = [];
       for (let i = 0; i < hits.length; i += 5) {                   // an approval holds up to 5 acts

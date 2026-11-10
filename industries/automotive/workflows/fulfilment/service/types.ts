@@ -66,4 +66,4 @@ export function config(s: Settings) {
 
 /** Fill the reminder template. Every value is plain text from the contact or the settings, capped. */
 export const fill = (template: string, first: string, business: string) =>
-  template.replaceAll("{first}", text(first, 40)).replaceAll("{business}", text(business, 80)).slice(0, 300);
+  template.replaceAll("{first}", () => text(first, 40)).replaceAll("{business}", () => text(business, 80)).slice(0, 300);

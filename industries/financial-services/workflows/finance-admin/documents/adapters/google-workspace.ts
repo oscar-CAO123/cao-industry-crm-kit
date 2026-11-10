@@ -1,7 +1,7 @@
 // Google Workspace: the forms that clients fill in. Responses are read through the Forms API (fields confirmed in the
 // vendor spec: responseId, lastSubmittedTime, respondentEmail, answers keyed by questionId with textAnswers.answers[].value).
 // A chase is a Gmail draft (a draft operation). Its send is only ever queued for a person to approve.
-import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
+import type { Act, Check, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { EMAIL, esc } from "../../../../../construction/workflows/sales/quoting/types.ts";
 import type { Settings } from "../types.ts";
 
@@ -52,12 +52,19 @@ export const google = {
     if (!RESPONSE.test(id)) throw new Error("google-workspace: draft not created");
     return id;
   },
-  /** The live act a person approves: send one Gmail draft. Never run by a cron. */
-  sendAct(draftId: string, to: string, key: string): Act {
+  /** The live act a person approves: send one Gmail draft. Never run by a cron. The check re-reads the response at approval. */
+  sendAct(draftId: string, to: string, key: string, check?: Check): Act {
     if (!RESPONSE.test(draftId)) throw new Error("google-workspace: bad draft id");
-    return { platform: P, op: "gmail.users.drafts.send", summary: `send chase email to ${to}`, key, input: { params: { userId: "me" }, body: { id: draftId } } };
+    return { platform: P, op: "gmail.users.drafts.send", summary: `send chase email to ${to}`, key, check, input: { params: { userId: "me" }, body: { id: draftId } } };
   },
 };
+
+/** The check on a chase: the response must still carry the last-submitted time the cron read, so an answer given since
+ *  the chase was queued stops it. A draft operation (forms.forms.responses.get). */
+export function responseCheck(formId: string, responseId: string, seen: string): Check {
+  if (!FORM.test(formId) || !RESPONSE.test(responseId)) throw new Error("google-workspace: bad form or response id");
+  return { platform: P, op: "forms.forms.responses.get", input: { params: { formId, responseId } }, expect: [{ path: "lastSubmittedTime", equals: seen }] };
+}
 
 /** The chase body: escaped, plain, listing exactly what is missing. */
 export const chaseHtml = (business: string, label: string, missing: string[]) =>

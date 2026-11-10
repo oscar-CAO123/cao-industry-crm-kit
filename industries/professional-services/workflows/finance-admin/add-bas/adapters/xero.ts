@@ -1,7 +1,7 @@
 // Xero for the BAS first pass. Reads the period's authorised bank transactions and the tax rates (draft operations),
 // and queues one coding change per single-line transaction that an agreed rule matches. A coding change edits the
 // books, so it is a live operation: an accountant approves it before Xero is touched.
-import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import type { Check, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { GUID, PERIOD, CODABLE_TYPES, keyOf, type BankLine, type CodingRule, type Settings, type TaxRateRow } from "../types.ts";
 
 const P = "xero";
@@ -77,9 +77,19 @@ export async function queueCoding(ctx: Ctx<Settings>, line: BankLine, rule: Codi
   if (line.line_amount_types) tx.LineAmountTypes = line.line_amount_types;
   if (line.contact_id) tx.Contact = { ContactID: line.contact_id };
   const label = `${line.contact ?? line.description ?? "transaction"} ${line.date.slice(0, 40)}`;
+  // Approval re-reads the line and sends only if it is still the authorised, unreconciled line that was queued, with the
+  // same type, amount and tax type. A line the accountant codes by hand is not caught: an uncoded line has no account code to compare.
+  const expect: Check["expect"] = [
+    { path: "BankTransactions.0.Status", equals: "AUTHORISED" },
+    { path: "BankTransactions.0.IsReconciled", equals: false },
+    { path: "BankTransactions.0.Type", equals: line.type },
+    { path: "BankTransactions.0.LineItems.0.LineAmount", equals: line.amount },
+  ];
+  if (line.tax_type) expect.push({ path: "BankTransactions.0.LineItems.0.TaxType", equals: line.tax_type });
   return ctx.queue({
-    platform: P, op: "accounting.updateBankTransaction", key: keyOf(`coding:${line.id}`),
+    platform: P, op: "accounting.updateBankTransaction", key: keyOf(`coding:${line.id}:${line.amount}:${line.tax_type ?? ""}`),
     summary: `code ${label} to account ${rule.account_code} (${rule.tax_type}) in Xero`,
     input: { params: { BankTransactionID: line.id }, body: { BankTransactions: [tx] } },
-  }, `Code ${label} to account ${rule.account_code} (${rule.tax_type}) in Xero, amount ${line.amount.toFixed(2)}`);
+    check: { platform: P, op: "accounting.getBankTransaction", input: { params: { BankTransactionID: line.id } }, expect },
+  },`Code ${label} to account ${rule.account_code} (${rule.tax_type}) in Xero, amount ${line.amount.toFixed(2)}`);
 }

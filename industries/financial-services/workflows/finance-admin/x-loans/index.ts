@@ -15,7 +15,9 @@ export async function intake(ctx: Ctx<Settings>) {
   return { added };
 }
 
-/** Every 15 minutes: log each new enquiry in the loan register, draft the document request, queue its send for approval. */
+/** Every 15 minutes: log each new enquiry in the loan register, draft the document request, queue its send for approval.
+ *  Each step is saved in the enquiry's ref before the next one, so a run that fails part way reuses the draft and the
+ *  register row it already made instead of making a second of either. */
 export async function draft(ctx: Ctx<Settings>) {
   const todo = Object.values(await ctx.store.list<Enquiry>("enquiries")).filter((e) => e.status === "new");
   let drafted = 0, skipped = 0;
@@ -25,10 +27,19 @@ export async function draft(ctx: Ctx<Settings>) {
       skipped++;
       continue;
     }
-    const d = await m365.documentRequest(ctx, e);
-    await m365.registerRow(ctx, e, "Documents requested");
-    await ctx.queue({ ...d.act, key: `send:${e.id}` }, `Email document request to ${e.contact.email}`);
-    await ctx.store.put("enquiries", e.id, { ...e, status: "drafted", ref: { ...e.ref, draft_message: d.messageId } });
+    const ref: Record<string, string> = { ...(e.ref ?? {}) };
+    if (!ref.draft_message) {
+      const d = await m365.documentRequest(ctx, e);
+      ref.draft_message = d.messageId;
+      await ctx.store.put("enquiries", e.id, { ...e, ref });
+    }
+    if (!ref.register_row) {
+      await m365.registerRow(ctx, e, "Documents requested");
+      ref.register_row = "added";
+      await ctx.store.put("enquiries", e.id, { ...e, ref });
+    }
+    await ctx.queue({ ...m365.sendAct(ctx, ref.draft_message, e.contact.email), key: `send:${e.id}` }, `Email document request to ${e.contact.email}`);
+    await ctx.store.put("enquiries", e.id, { ...e, status: "drafted", ref });
     drafted++;
   }
   ctx.log(`draft: ${drafted} drafted, ${skipped} skipped`);

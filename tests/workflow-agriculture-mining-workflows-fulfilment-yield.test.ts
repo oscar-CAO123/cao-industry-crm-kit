@@ -36,7 +36,10 @@ function fake() {
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
       hits.push({ method: m, path: p, body });
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
-      if (p.endsWith("/rows") && m === "GET") return json({ value: register.map((v, i) => ({ index: i, values: [v] })) });
+      if (p.endsWith("/rows") && m === "GET") {
+        const skip = Number(u.searchParams.get("$skip") ?? 0), top = Number(u.searchParams.get("$top") ?? register.length);
+        return json({ value: register.slice(skip, skip + top).map((v, i) => ({ index: skip + i, values: [v] })) });
+      }
       if (p.endsWith("/rows")) return json({ index: 0 });
       if (/\/users\/[^/]+\/messages$/.test(p) && m === "POST") return json({ id: MSG });
       if (/\/messages\/[^/]+\/send$/.test(p)) return new Response(null, { status: 202 });
@@ -74,6 +77,21 @@ test("the SDK gate still blocks the exception write when the deploy does not all
   process.env.KIT_ALLOW_WRITES = "0";
   await assert.rejects(yieldCheck(ctx), WriteBlocked);
   assert.equal(writes("/rows").length, 0);
+});
+
+test("intake reads every page of a register longer than one page, and stops at the end", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  register = Array.from({ length: 1200 }, (_, i) => ["2026-11-03", `LOT-${i}`, "Shed 2", 100, 90, 5]);
+  assert.deepEqual(await intake(ctx), { added: 1200, read: 1200, rejected: 0 });
+  assert.equal(hits.filter((h) => h.method === "GET").length, 3, "pages of 500, 500 and 200");
+  assert.equal(Object.keys(await store.list("lots")).length, 1200);
+});
+
+test("intake refuses a register past the row cap and stores nothing, rather than dropping the rows past it", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  register = Array.from({ length: 10001 }, (_, i) => ["2026-11-03", `LOT-${i}`, "Shed 2", 100, 90, 5]);
+  await assert.rejects(intake(ctx), /10000 or more rows/);
+  assert.equal(Object.keys(await store.list("lots")).length, 0);
 });
 
 test("intake: stores the lots that add up, refuses the rest, and a second run adds nothing", async () => {

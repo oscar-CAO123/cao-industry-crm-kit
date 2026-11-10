@@ -34,6 +34,7 @@
   "Google Ads: mapped in the kit (customers.googleAds.search, customers.campaigns.mutate) but no adapter here yet. Its OAuth path is not proven in a test, so it is left out rather than shipped untested.",
   "Pixel and conversion-tag checks: no mapped read confirms events are firing. The skill checks this by hand.",
   "Budget pacing: the audit compares yesterday's spend with the account budget in settings, and only as far as the insights call returns it.",
+  "Paging: the insights read returns only the first page of campaign rows. Following paging.next needs core: AdAccount.get.insights in core/sdk/platforms/meta-ads/ops.json maps limit but no after parameter, and the SDK refuses unmapped params. Until then, campaigns past that page are not audited and pacing can be understated.",
   "Creative and targeting review, priorities and client notes are judgment steps for the skill. No mapped platform write exists for a note, so none is drafted.",
   "Every adapter is docs-only until a test ad account proves the reads and the approved pause against real data."
  ],

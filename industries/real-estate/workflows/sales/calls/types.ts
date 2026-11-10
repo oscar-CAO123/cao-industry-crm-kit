@@ -20,6 +20,7 @@ export interface CallLead {
   queued_at?: string;
   sent_at?: string;
   followups?: string[];                                   // when each chaser was queued
+  attempt?: number;                                       // which first-call send this is: each send after a rejection gets a new approval key
 }
 
 export const EMAIL = /^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;

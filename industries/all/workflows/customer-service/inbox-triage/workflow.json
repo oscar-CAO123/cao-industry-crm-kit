@@ -39,6 +39,7 @@
   "Front approval sends the template text as a new reply. It does not send a Front draft, so an edit made in Front does not change what is sent. Gmail approval sends the draft itself.",
   "Front and Google Workspace are docs-only until a live account proves the reads and writes. Front's help pages describe the inbox but not its reply, assign or reminder screens.",
   "Intake polls every 10 minutes. There is no webhook, so a message can wait up to 10 minutes before it is sorted.",
+  "Mail older than lookback_hours (default 24) is not triaged, assigned or answered. Reply approvals are capped at per_run_limit (default 20) a run. A thread whose reply cannot be queued (for example, a sender with no valid address) is parked with reply_error: a person answers it, and it stays in the assign run. A reply that fails to queue for a temporary reason is parked too, so it needs a person to answer rather than a retry.",
   "The four-hour target is a wall-clock reminder, not a business-hours calculation.",
   "Triage calls and calendar booking are judgment work for the agent skill. Nothing here books a call.",
   "Close-out (resolve or archive) is not built. Both platforms can do it, but a person does it for now."

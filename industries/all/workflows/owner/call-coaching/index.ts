@@ -2,8 +2,9 @@
 // It never sends. Judgment (scoring a transcript against the rubric) belongs to the agent skill in SKILL.md, which
 // writes a score per call into the store; the coach cron checks the score before it drafts or queues anything.
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import { WriteBlocked } from "../../../../../core/lib/http.ts";
 import type { CallRecord, Score, Settings } from "./types.ts";
-import { esc, clip } from "./types.ts";
+import { ID, esc, clip } from "./types.ts";
 import * as fireflies from "./adapters/fireflies.ts";
 import * as gohighlevel from "./adapters/gohighlevel.ts";
 
@@ -57,8 +58,11 @@ export async function capture(ctx: Ctx<Settings>) {
   return { added };
 }
 
-/** Hourly: for each scored call, draft the coaching note on its contact and queue the rep email for approval. */
+/** Hourly: for each scored call, queue the rep email for approval and draft the coaching note on its contact.
+ *  Each call is handled on its own: one that fails is logged and tried again on the next run, and the others still run. */
 export async function coach(ctx: Ctx<Settings>) {
+  const badRep = Object.values(ctx.settings.reps ?? {}).find((v) => !ID.test(String(v)));
+  if (badRep !== undefined) throw new Error("call-coaching: settings.reps has a GoHighLevel contact id that is not valid");
   const calls = Object.values(await ctx.store.list<CallRecord>("calls"));
   const scores = await ctx.store.list<Score>("scores");
   let noted = 0, queued = 0;
@@ -66,15 +70,22 @@ export async function coach(ctx: Ctx<Settings>) {
     const s = scores[c.key];
     if (!s || c.coached) continue;
     if (!validScore(s)) { ctx.log(`coach: ${c.key} has an invalid score, skipped`); continue; }
-    let done = false;
-    if (c.platform === "gohighlevel" && (await gohighlevel.note(ctx, c, coachingText(c, s)))) { noted++; done = true; }
-    const repContact = c.rep ? repContactFor(ctx.settings, c.rep) : undefined;
-    if (repContact) {
-      await gohighlevel.queueRepEmail(ctx, c, repContact, `Your call coaching: ${c.title}`, coachingHtml(c, s, ctx.settings.business_name),
-        `Coaching email to ${c.rep} about ${c.title}: ${s.total}/100`);
-      queued++; done = true;
-    } else if (c.platform === "fireflies") ctx.log(`coach: no rep contact for ${clip(c.rep ?? "an unnamed host", 200)}, nothing queued for ${c.key}`);
-    if (done) await ctx.store.put("calls", c.key, { ...c, coached: ctx.now.toISOString() });
+    try {
+      let done = false;
+      // The rep email goes first: queueing is repeatable (the same key returns the same approval), and the note is not,
+      // so a note is never drafted twice when a later step of the same call fails.
+      const repContact = c.rep ? repContactFor(ctx.settings, c.rep) : undefined;
+      if (repContact) {
+        await gohighlevel.queueRepEmail(ctx, c, repContact, `Your call coaching: ${c.title}`, coachingHtml(c, s, ctx.settings.business_name),
+          `Email to ${c.rep}, subject "Your call coaching: ${c.title}":\n${coachingText(c, s)}`);
+        queued++; done = true;
+      } else if (c.platform === "fireflies") ctx.log(`coach: no rep contact for ${clip(c.rep ?? "an unnamed host", 200)}, nothing queued for ${c.key}`);
+      if (c.platform === "gohighlevel" && (await gohighlevel.note(ctx, c, coachingText(c, s)))) { noted++; done = true; }
+      if (done) await ctx.store.put("calls", c.key, { ...c, coached: ctx.now.toISOString() });
+    } catch (e: any) {
+      if (e instanceof WriteBlocked) throw e; // the deploy blocks writes: stop the run, do not log it per call
+      ctx.log(`coach: ${c.key} not coached this run: ${clip(e?.message ?? e, 200)}`);
+    }
   }
   ctx.log(`coach: ${noted} notes drafted, ${queued} rep emails queued`);
   return { noted, queued };

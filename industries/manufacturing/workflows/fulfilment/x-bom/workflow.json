@@ -22,7 +22,7 @@
   {"name": "revise", "schedule": "15 22 * * *", "entry": "revise", "summary": "Daily (22:15 UTC is 8 or 9 am in eastern Australia): queue a change to a live bill when the owner's list differs from it. A person approves it."}
  ],
  "draft_ops": {
-  "unleashed": ["docs.get_Products", "docs.get_BillOfMaterials", "docs.get_StockOnHand_productGuid_AllWarehouses", "docs.post_BillOfMaterials"]
+  "unleashed": ["docs.get_Products", "docs.get_BillOfMaterials", "docs.get_BillOfMaterials_billOfMaterialsGuid", "docs.get_StockOnHand_productGuid_AllWarehouses", "docs.post_BillOfMaterials"]
  },
  "live_ops": {
   "unleashed": ["docs.put_BillOfMaterials_billOfMaterialsGuid"]
@@ -41,7 +41,8 @@
   "Units of measure: each bill line takes the product's own unit. The workflow does not convert units.",
   "The capabilities list in core/capabilities.json has no bill-of-materials entry. The bill operations are named in workflow.json only.",
   "Evidence is one discovery call. Confirm the shape with a second call before a client build.",
-  "No Unleashed sandbox account yet. Field names come from the vendor's API reference, not from a live reply; the create and update body must be checked on a sandbox."
+  "No Unleashed sandbox account yet. Field names come from the vendor's API reference, not from a live reply; the create and update body must be checked on a sandbox.",
+ "A queued bill change is checked before it is sent: the send re-reads the live bill and goes only if its first five component lines (product and quantity) still match what the cron last synced. Not caught: a component added to the live bill after the last sync, and any change beyond those five lines. A bill with more than five components is parked, never queued."
  ],
  "evidence": {
   "calls": "4 manufacturing calls read; 1 describes its way of building bills of materials (concrete batching)",

@@ -27,6 +27,8 @@ export async function catalogue(ctx: Ctx<Settings>) {
 
 /** Every 30 minutes: queue the listing update for each mockup set. Queuing is idempotent, so a set is queued once. */
 export async function listing(ctx: Ctx<Settings>) {
+  const hosts = ctx.settings.asset_hosts ?? [];
+  if (!hosts.length) throw new Error("artwork: settings.asset_hosts must list the host(s) the mockup images are served from");
   const sets = Object.values(await ctx.store.list<MockupSet>("mockups"));
   const max = ctx.settings.max_images ?? 10;
   let ready = 0, rejected = 0, skipped = 0;
@@ -36,7 +38,7 @@ export async function listing(ctx: Ctx<Settings>) {
     const p = await ctx.store.get<ProductRow>("products", String(id));
     if (!p) { skipped++; continue; } // the catalogue has not read this product yet
     let act;
-    try { act = mockupAct(p, set, max); } catch (e: any) { rejected++; ctx.log(`listing: rejected product ${id}: ${e.message}`); continue; }
+    try { act = mockupAct(p, set, max, hosts); } catch (e: any) { rejected++; ctx.log(`listing: rejected product ${id}: ${e.message}`); continue; }
     await ctx.queue(act);
     ready++;
   }

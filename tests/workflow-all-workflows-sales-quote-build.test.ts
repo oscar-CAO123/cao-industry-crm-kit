@@ -17,18 +17,20 @@ const LINES = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "kit-")), "lines.j
 const WF = JSON.parse(fs.readFileSync(`${FOLDER}/workflow.json`, "utf8")) as WorkflowRecord;
 const JOB = "11111111-2222-4333-8444-555555555555", MAT = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee", PDF = "99999999-8888-4777-8666-555555555555";
 const QID = "12345678-1234-4234-8234-123456789012", CID = "87654321-4321-4321-8321-210987654321", INV = "abcdefab-cdef-4abc-8def-abcdefabcdef";
-type Hit = { method: string; path: string; body: any };
+type Hit = { method: string; path: string; search: string; body: any };
 let hits: Hit[] = [];
-let jobStatus = "Quote", xeroStatus = "DRAFT", hasLines = false, produced = false, failXeroUpdate = 0;
+let jobStatus = "Quote", xeroStatus = "DRAFT", produced = false, failXeroUpdate = 0;
+/** The job's ServiceM8 lines, as the fake keeps them. dropLinePost makes a line write answer OK without keeping the line. */
+let jobLines: any[] = [], dropLinePost = false;
 
 function fake() {
-  hits = []; jobStatus = "Quote"; xeroStatus = "DRAFT"; hasLines = false; produced = false; failXeroUpdate = 0;
+  hits = []; jobStatus = "Quote"; xeroStatus = "DRAFT"; jobLines = []; dropLinePost = false; produced = false; failXeroUpdate = 0;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
       const u = new URL(String(url)), m = init?.method ?? "GET", p = u.pathname;
       let body: any; try { body = init?.body ? JSON.parse(init.body) : undefined; } catch { body = init?.body; }
-      hits.push({ method: m, path: p, body });
+      hits.push({ method: m, path: p, search: u.search, body });
       const json = (d: unknown, h: Record<string, string> = {}) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json", ...h } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
@@ -36,7 +38,10 @@ function fake() {
       if (p.endsWith("/job.json") && m === "GET") return json(u.searchParams.get("$filter")?.includes("uuid eq") ? [{ uuid: JOB, status: jobStatus }]
         : [{ uuid: JOB, status: "Quote", active: 1, job_description: "Hot water system leaking", job_address: "1 Test St", company_uuid: MAT, date: "2026-11-01" }]);
       if (p.endsWith("/job.json") && m === "POST") return json({ errorCode: 0 }, { "x-record-uuid": JOB });
-      if (p.endsWith("/jobmaterial.json")) { if (m === "POST") hasLines = true; return json(m === "GET" ? (hasLines ? [{ uuid: MAT }] : []) : { errorCode: 0 }); }
+      if (p.endsWith("/jobmaterial.json")) {
+        if (m === "POST") { if (!dropLinePost) jobLines.push({ uuid: MAT, job_uuid: body.job_uuid, sort_order: body.sort_order, name: body.name, quantity: body.quantity, price: body.price }); return json({ errorCode: 0 }); }
+        return json(jobLines.filter((l) => l.job_uuid === JOB));
+      }
       if (p.endsWith("/material.json")) return json([{ uuid: MAT, item_number: "CALLOUT", name: "Call-out", price: "120.00" }, { uuid: PDF, item_number: "LAB-HR", name: "Labour hour", price: "95" }]);
       if (p.endsWith("/companycontact.json")) return json([{ first: "Sam", last: "Lee", email: "sam@example.com", mobile: "0412 345 678", is_primary_contact: "1" }]);
       if (p.endsWith("/platform_produce_document")) { produced = true; return new Response(new Uint8Array([37, 80, 68, 70]), { status: 200, headers: { "content-type": "application/pdf" } }); }
@@ -165,4 +170,36 @@ test("follow-up comes due after the set days, once; acceptance hands over as a D
   const inv = hits.find((h) => h.path.endsWith("/Invoices"))!.body.Invoices[0];
   assert.equal(inv.Status, "DRAFT");
   assert.equal(inv.LineItems[0].UnitAmount, 24);
+});
+
+test("retry: a line already on the job is not written again, the missing one is, and the job ends with every line", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S8, store, NOW, () => {});
+  await intake(ctx);
+  jobLines.push({ uuid: MAT, job_uuid: JOB, sort_order: "1", name: "Call-out", quantity: "1", price: "120" });   // written by the run that failed
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_pricing: 0 });
+  assert.deepEqual(hits.filter((h) => h.path.endsWith("/jobmaterial.json") && h.method === "POST").map((h) => h.body.name), ["Labour hour"]);
+  assert.deepEqual(jobLines.map((l) => [l.sort_order, l.name]), [["1", "Call-out"], ["2", "Labour hour"]]);
+  assert.equal((await main(["approvals", FOLDER], store) as any[]).length, 1, "the send is queued once the job has every line");
+});
+
+test("a quote line that does not reach the job stops the send: nothing is queued, and the next run finishes the job", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S8, store, NOW, () => {});
+  await intake(ctx);
+  dropLinePost = true;
+  await assert.rejects(draft(ctx), /2 quote line\(s\) are not on job/);
+  assert.equal((await main(["approvals", FOLDER], store) as any[]).length, 0, "no send queued from a short job");
+  dropLinePost = false;
+  assert.deepEqual(await draft(ctx), { drafted: 1, needs_pricing: 0 });
+  assert.deepEqual(jobLines.map((l) => l.name), ["Call-out", "Labour hour"]);
+  assert.equal((await main(["approvals", FOLDER], store) as any[]).length, 1);
+});
+
+test("a stored job id that is not a UUID never reaches an OData filter", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S8, store, NOW, () => {});
+  await intake(ctx);
+  const [e] = Object.values(await store.list<any>("enquiries"));
+  await store.put("enquiries", e.id, { ...e, ref: { ...e.ref, job_uuid: "x' or 1 eq 1" } });
+  await assert.rejects(draft(ctx), /bad uuid/);
+  assert.equal(hits.filter((h) => decodeURIComponent(h.search).includes("1 eq 1")).length, 0, "the id never reached a request");
+  assert.equal(hits.filter((h) => h.method !== "GET").length, 0, "no write either");
 });

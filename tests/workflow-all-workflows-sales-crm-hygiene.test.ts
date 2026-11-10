@@ -78,7 +78,7 @@ beforeEach(() => {
       { id: 3, emails: [{ value: "eve@shop.com" }], add_time: "2024-06-01 09:00:00" },
     ], additional_data: { next_cursor: null } },
   };
-  pdPersons = { "1": { id: 1, emails: [{ value: "Dana@Shop.com", primary: true }] } };
+  pdPersons = { "1": { id: 1, emails: [{ value: "Dana@Shop.com", primary: true }] }, "2": { id: 2, emails: [{ value: "dana@shop.com" }] } };
   Object.assign(process.env, { HUBSPOT_ACCESS_TOKEN: "hs-test", PIPEDRIVE_API_TOKEN: "pd-test", KIT_ALLOW_WRITES: "1" });
 });
 
@@ -168,6 +168,28 @@ test("pipedrive: pages follow the cursor, the oldest person is kept, and the tid
   const sent = hits.find((h) => h.method === "PUT");
   assert.equal(sent?.path, "/v1/persons/2/merge");
   assert.deepEqual(sent?.body, { merge_with_id: 1 });
+});
+
+test("a duplicate that no longer shares an address when queued is dropped, never queued as a merge", async () => {
+  const store = new MemoryStore();
+  await scan(ctxFor(HS, store));                                   // the scan saw 101 and 102 share an address
+  hsContacts = hsContacts.map((c) => (c.id === "102" ? { ...c, email: "ann2@example.com" } : c));
+  await queue(ctxFor(HS, store));                                  // the records have since changed
+  const aps = await approvals(store);
+  assert.equal(aps.filter((a) => a.acts[0].op.endsWith("merge_merge")).length, 0, "no merge is queued");
+  assert.equal(aps.length, 2, "only the two email tidies are queued");
+  assert.equal((await store.get<any>("findings", "dup:hubspot:102:101"))?.status, "resolved");
+});
+
+test("pipedrive: an id longer than 15 digits is never read, so no merge can reach another person", async () => {
+  pdPages.c2.data.push({ id: "12345678901234567890", emails: [{ value: "dana@shop.com" }], add_time: "2024-02-01 09:00:00" });
+  const store = new MemoryStore();
+  const r = await scan(ctxFor(PD, store));
+  assert.equal(r.read, 3, "the long id is not read");
+  await queue(ctxFor(PD, store));
+  const merges = (await approvals(store)).filter((a) => a.acts[0].op === "docs_api_v1.mergePersons");
+  assert.equal(merges.length, 1);
+  assert.deepEqual(merges[0].acts[0].input, { params: { id: 2 }, body: { merge_with_id: 1 } });
 });
 
 test("settings that cannot run are refused before any call", () => {

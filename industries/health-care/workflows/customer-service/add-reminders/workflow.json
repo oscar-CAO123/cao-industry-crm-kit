@@ -39,6 +39,7 @@
   "GoHighLevel: the calls say it sends the reminders and holds the bookings, but it is not in this workflow's platform evidence, so it is not built here.",
   "Runtime change needed: core/sdk/call.ts sends every array parameter as one JSON string, so Cliniko's repeated date-range filter cannot be sent. The adapter sends the start filter only, checks the end in code, and refuses a book of more than 1,000 future appointments rather than reading part of it.",
   "The Cliniko adapter is tested on a fake network only. Field names come from Cliniko's docs pages, and the cancelled-appointment read is unverified on a live account.",
+  "Runtime change needed: a waitlist booking is queued after the slot is checked, but the approval can run hours later, after someone else has booked the slot. The approval path (core/workflows/runtime.ts) would need to re-read the slot before the create runs, or the live slot state shown in the approval summary. Not built here, so a double booking is possible until then.",
   "Evidence is thin: three calls, two of them describing the process, and no waitlist call at all. The waitlist steps come from Cliniko's help pages, not from owners."
  ],
  "evidence": {

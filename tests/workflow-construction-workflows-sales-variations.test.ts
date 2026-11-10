@@ -81,7 +81,8 @@ test("draft prices from the template, writes one job note, queues the client ema
   assert.equal(sends().length, 0, "nothing sent by a cron");
   assert.equal(notes().length, 1);
   assert.equal(notes()[0].body.related_object_uuid, JOB);
-  assert.match(notes()[0].body.note, /^Variation record \(kit\): 2 lines, \$132\.00 ex GST/);
+  assert.match(notes()[0].body.note, /^Variation record \(kit\): 2 lines, awaiting client approval$/);
+  assert.ok(!/[$]|GST/.test(notes()[0].body.note), "the job note carries no price: job notes may show to the client");
   const pending = await main(["approvals", DIR], store) as any[];
   assert.equal(pending.length, 1);
   await draft(ctx); await intake(ctx);

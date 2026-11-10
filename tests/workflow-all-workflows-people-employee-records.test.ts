@@ -158,3 +158,62 @@ test("the SDK write gate refuses an approved write when the deploy does not allo
   assert.equal(ap.status, "failed");
   assert.equal(writes().length, 0, "no write reached the network");
 });
+
+test("hire: a hire stopped by a failed quick add takes the employee id when a later approval goes through", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("hires", "hire-4", hire({ id: "hire-4" }));
+  await hires(ctx);
+  process.env.KIT_ALLOW_WRITES = "0";
+  await approve(WF, store, approvalId(WF.id, "hire:hire-4"), "owner", NOW);
+  await hires(ctx);
+  assert.equal((await store.get<Hire>("hires", "hire-4"))!.status, "stopped");
+
+  process.env.KIT_ALLOW_WRITES = "1";
+  const ap = await approve(WF, store, approvalId(WF.id, "hire:hire-4"), "owner", NOW);
+  assert.equal(ap.status, "done");
+  await hires(ctx);
+  const h = (await store.get<Hire>("hires", "hire-4"))!;
+  assert.equal(h.employee_id, EMP, "the employee id is set from the done approval even after the stop");
+  assert.equal(h.status, "contract-queued", "the hire carries on to its contract");
+});
+
+test("pay rise: a refused approval marks the change failed with its reason instead of leaving it queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  const c: Change = { id: "chg-3", employee_id: "emp-1", kind: "salary", status: "open", effective_date: "2026-12-01",
+    award_id: "a1b2c3d4-e5f6-4890-abcd-ef1234567890", classification_id: "b1b2c3d4-e5f6-4890-abcd-ef1234567890", change_reason: "Annual review" };
+  await store.put("changes", "chg-3", c);
+  await changes(ctx);
+  process.env.KIT_ALLOW_WRITES = "0";
+  const ap = await approve(WF, store, approvalId(WF.id, "change:chg-3"), "owner", NOW);
+  assert.equal(ap.status, "failed");
+  await changes(ctx);
+  const after = (await store.get<Change>("changes", "chg-3"))!;
+  assert.equal(after.status, "failed");
+  assert.ok((after.reason ?? "").length > 0, "the failure reason is kept on the record");
+});
+
+test("review cycle: a refused approval marks the review period failed instead of leaving it queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  const p: ReviewPlan = { id: "rp-2", name: "Mid-year check", status: "open", template_ids: [TPL],
+    employee_start_date: "2026-07-01", employee_end_date: "2026-07-31", employee_lock_out_date: "2026-08-15",
+    reviewer_start_date: "2026-08-01", reviewer_end_date: "2026-08-10", reviewer_lock_out_date: "2026-08-20" };
+  await store.put("review-plans", "rp-2", p);
+  await reviews(ctx);
+  process.env.KIT_ALLOW_WRITES = "0";
+  await approve(WF, store, approvalId(WF.id, "review:rp-2"), "owner", NOW);
+  await reviews(ctx);
+  const after = (await store.get<ReviewPlan>("review-plans", "rp-2"))!;
+  assert.equal(after.status, "failed");
+  assert.ok((after.reason ?? "").length > 0);
+});
+
+test("hire: the console log and the queued summary carry the hire id, not the name or email", async () => {
+  const store = new MemoryStore(), lines: string[] = [], ctx = context(WF, S, store, NOW, (m) => lines.push(m));
+  await store.put("hires", "hire-5", hire({ id: "hire-5" }));
+  await hires(ctx);
+  const ap = await store.get<Approval>("approvals", approvalId(WF.id, "hire:hire-5"));
+  assert.ok(ap);
+  assert.ok(!ap.summary.includes("ari@example.com") && !ap.summary.includes("Ari"), "queued summary has no personal detail");
+  assert.ok(lines.every((l) => !l.includes("ari@example.com") && !l.includes("Ari Chen")), "console log has no personal detail");
+  assert.ok(lines.some((l) => l.includes("hire-5")), "console log names the hire id");
+});

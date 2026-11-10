@@ -27,14 +27,16 @@ let hits: Hit[] = [];
 let leads: any[] = [];
 let deals: any[] = [];
 let contacts: any[] = [];
+let dealPages: any[][] | undefined;   // when set, the deals come back one page at a time through next_cursor
 
-const lead = (id: string, title: string, labels: string[], email?: string) => ({ id, title, label_ids: labels, [FIELD]: email });
+const lead =(id: string, title: string, labels: string[], email?: string) => ({ id, title, label_ids: labels, [FIELD]: email });
 
 function fake() {
   hits = [];
   leads = [lead(LEAD, "Sam Lee, car loan", [LABEL], PARTNER)];
   deals = [];
   contacts = [];
+  dealPages = undefined;
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -48,7 +50,11 @@ function fake() {
         const l = leads.find((x) => x.id === p.split("/").pop());
         return l ? json({ success: true, data: l }) : new Response("{}", { status: 404 });
       }
-      if (p === "/api/v2/deals" && m === "GET") return json({ success: true, data: deals });
+      if (p === "/api/v2/deals" && m === "GET") {
+        if (!dealPages) return json({ success: true, data: deals });
+        const i = u.searchParams.get("cursor") ? Number(u.searchParams.get("cursor")) : 0;
+        return json({ success: true, data: dealPages[i], additional_data: { next_cursor: i + 1 < dealPages.length ? String(i + 1) : undefined } });
+      }
       // ActiveCampaign
       if (p === "/api/3/contacts" && m === "GET") return json({ contacts });
       if (p === "/api/3/contact/sync" && m === "POST") return json({ contact: { id: "900" } });
@@ -148,4 +154,18 @@ test("a bad setting stops every cron before any read", async () => {
   const bad = { ...S, pipedrive: { ...S.pipedrive, referral_label_id: "label" } };
   await assert.rejects(intake(context(WF, bad, new MemoryStore(), NOW, () => {})), /referral_label_id/);
   assert.equal(hits.length, 0);
+});
+
+test("progress follows every page of changed deals, so a deal past the first page still gets its stage tag", async () => {
+  const store = new MemoryStore(), LEAD_FAR = "cccccccc-dddd-4eee-8fff-111111111111";
+  await store.put("referrals", `lead:${LEAD}`, { key: `lead:${LEAD}`, lead_id: LEAD, title: "Referred", partner_email: PARTNER, status: "acknowledged", received: NOW.toISOString() });
+  await store.put("referrals", `lead:${LEAD_FAR}`, { key: `lead:${LEAD_FAR}`, lead_id: LEAD_FAR, title: "Far", partner_email: PARTNER, status: "acknowledged", received: NOW.toISOString() });
+  const page1 = Array.from({ length: 100 }, (_, i) => ({ id: 1000 + i, stage_id: 9, source_lead_id: LEAD2 }));
+  dealPages = [page1, [{ id: 5000, stage_id: 2, source_lead_id: LEAD_FAR }]];
+  contacts = [{ id: "555", email: PARTNER }];
+  const ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await progress(ctx), { queued: 1 });
+  const ap = await approve(WF, store, approvalId(WF.id, "stage:5000:2"), "owner", NOW);
+  assert.equal(ap.status, "done");
+  assert.deepEqual(hits.find((h) => h.path === "/api/3/contacts/555/tags")!.body, { tags: ["referral-approved"] });
 });

@@ -17,20 +17,21 @@ const recordId = (id: unknown) => {
   return s;
 };
 
-/** Every row of one table, following Airtable's offset pages (capped so one run cannot loop forever). */
+/** Every row of one table, following Airtable's offset pages to the end. A table past the page cap throws: a partial
+ *  read would make recent clients look quiet, so the run stops rather than go on with missing rows. */
 export async function listRecords(ctx: Ctx<Settings>, table: string): Promise<AtRecord[]> {
   const a = cfg(ctx);
   if (!TABLE.test(table)) throw new Error("airtable: bad table name");
   const out: AtRecord[] = [];
   let offset: string | undefined;
-  for (let page = 0; page < 20; page++) {
+  for (let page = 0; page < 500; page++) {                  // 500 pages of 100 rows: 50,000 rows
     const params: Record<string, unknown> = { baseId: a.base_id, tableIdOrName: table, pageSize: 100, ...(offset ? { offset } : {}) };
     const r = await ctx.draft<any>({ platform: P, op: "docs.get_baseId_tableIdOrName", summary: `read ${table}`, input: { params } });
     for (const x of r.data?.records ?? []) if (RECORD_ID.test(String(x?.id ?? ""))) out.push({ id: x.id, createdTime: x.createdTime, fields: x.fields ?? {} });
     offset = typeof r.data?.offset === "string" ? r.data.offset : undefined;
-    if (!offset) break;
+    if (!offset) return out;
   }
-  return out;
+  throw new Error(`airtable: ${table} has more than 50,000 rows; the read is incomplete, so the run stops here`);
 }
 
 /** Create one row (a draft operation). Returns the new record id. */

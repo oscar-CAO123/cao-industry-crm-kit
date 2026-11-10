@@ -150,9 +150,11 @@ test("approval: a completion Unleashed refuses is marked failed, and a later app
   const id = approvalId(WF.id, `complete:${G1}`);
   completeStatus = 500;
   const failed = await approve(WF, store, id, "owner", NOW);
-  assert.equal(failed.status, "failed");
+  // A 500 may have been processed: it waits for a person to check, and approving again alone sends nothing.
+  assert.equal(failed.status, "needs-check");
+  await assert.rejects(approve(WF, store, id, "owner", NOW), /needs a check/);
   completeStatus = 200;
-  const retried = await approve(WF, store, id, "owner", NOW);
+  const retried = await approve(WF, store, id, "owner", NOW, "retry");
   assert.equal(retried.status, "done");
   assert.equal(completes().length, 2, "one refused attempt, one accepted");
 });

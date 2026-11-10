@@ -139,11 +139,12 @@ test("a failed create blocks the plan, and nothing after it is queued", async ()
   failAdset = true;
   const [adset] = await main(["approvals", DIR], store) as any[];
   const res = await approve(WF, store, adset.id, "owner", NOW);
-  assert.equal(res.status, "failed");
+  // A 500 may have been processed: the step waits for a person to check, and the plan blocks on it.
+  assert.equal(res.status, "needs-check");
   await build(ctx);
   const p = await store.get<any>("campaigns", PLAN.id);
   assert.equal(p.status, "blocked");
-  assert.match(p.reason, /^adset: failed/);
+  assert.match(p.reason, /^adset: needs-check/);
   assert.equal(p.approvals.creative, undefined);
   assert.equal(hits.filter((h) => h.path.endsWith("/adcreatives")).length, 0);
 });
@@ -167,4 +168,28 @@ test("review reads the last seven days per campaign and only reads", async () =>
   const latest: any = await store.get("reviews", "latest");
   assert.equal(latest.days, 7);
   assert.deepEqual(latest.rows, [{ campaign_id: "1001", campaign_name: "Spring leads", spend: "12.40", impressions: "900", clicks: "20", results: 18 }]);
+});
+
+test("a plan edited after it passed is checked again before anything is queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("campaigns", PLAN.id, PLAN);
+  await plan(ctx);
+  // The owner raises the budget over the cap after plan() passed it.
+  await store.put("campaigns", PLAN.id, { ...(await store.get<any>("campaigns", PLAN.id)), daily_budget_minor: 60000 });
+  assert.deepEqual(await build(ctx), { built: 0, waiting: 0, blocked: 1, rejected: 0 });
+  assert.equal((await store.get<any>("campaigns", PLAN.id)).status, "blocked");
+  assert.equal(Object.values(await store.list<any>("approvals")).length, 0, "nothing is queued");
+  assert.equal(hits.filter((h) => h.method === "POST").length, 0);
+});
+
+test("the ad set approval shows the daily budget and the age range", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put("campaigns", PLAN.id, { ...PLAN, age_min: 25, age_max: 54 });
+  await plan(ctx); await build(ctx);
+  await approve(WF, store, (await main(["approvals", DIR], store) as any[])[0].id, "owner", NOW);
+  await build(ctx);
+  const adset = (await main(["approvals", DIR], store) as any[]).find((x) => /ad set/.test(x.summary));
+  assert.ok(adset, "the ad set is queued");
+  assert.match(adset.summary, /daily budget 50\.00/);
+  assert.match(adset.summary, /ages 25 to 54/);
 });

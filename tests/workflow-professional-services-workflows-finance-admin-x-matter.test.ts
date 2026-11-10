@@ -37,9 +37,13 @@ function fake() {
       const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { "content-type": "application/json" } });
       if (p === "/contacts" && m === "GET") {
         const s = u.searchParams.get("Search");
-        if (s === "known@acme.com.au") return json({ value: [{ id: C1 }] });
-        if (s === "busy@acme.com.au") return json({ value: [{ id: C2 }] });
-        if (s === "twins@acme.com.au") return json({ value: [{ id: C1 }, { id: C2 }] });
+        if (s === "known@acme.com.au") return json({ value: [{ id: C1, email: "known@acme.com.au" }] });
+        if (s === "busy@acme.com.au") return json({ value: [{ id: C2, email: "busy@acme.com.au" }] });
+        if (s === "twins@acme.com.au") return json({ value: [{ id: C1, email: "twins@acme.com.au" }, { id: C2, emailAddresses: [{ address: "twins@acme.com.au" }] }] });
+        // Search returns a contact whose own address is a different one: a partial match is not the sender.
+        if (s === "lookalike@acme.com.au") return json({ value: [{ id: C1, email: "other@acme.com.au" }] });
+        // A record that shows no email field at all matches nothing.
+        if (s === "noemail@acme.com.au") return json({ value: [{ id: C1 }] });
         return json({ value: [] });
       }
       if (p === "/matters" && m === "GET") {
@@ -51,6 +55,8 @@ function fake() {
       if (p === "/matters" && m === "POST") return json({ id: LEAD }, 201);
       if (p === `/matters/${M1}/memos` && m === "GET") return json({ value: [{ title: "Call with client", createdDate: "2026-11-01T00:00:00Z", plainText: "Agreed scope." }] });
       if (p === `/matters/${M1}/memos` && m === "POST") return json({ id: MEMO }, 201);
+      if (p === `/matters/${LEAD}/memos` && m === "GET") return json({ value: [] });
+      if (p === `/matters/${LEAD}/memos` && m === "POST") return json({ id: MEMO }, 201);
       if (p === "/tasks" && m === "POST") {
         if (failTaskOnce) { failTaskOnce = false; return json({ error: "boom" }, 500); }
         return json({ id: TASK }, 201);
@@ -195,4 +201,48 @@ test("ids from outside are checked before they reach a path or a body", () => {
   assert.equal(platformId(M1, "matter"), M1);
   assert.throws(() => platformId("../tasks", "matter"), /bad matter/);
   assert.throws(() => platformId("", "contact"), /bad contact/);
+});
+
+test("a search hit is the sender only when its own email equals the sender", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("emails", "lk", email({ id: "lk", from: "lookalike@acme.com.au" }));
+  await intake(ctx);
+  const e = await store.get<Email>("emails", "lk");
+  assert.equal(e?.contact_id, undefined, "the partial hit is not attached to the matter");
+  assert.equal(e?.lead, true, "the sender is treated as unknown, so a lead is opened");
+  const post = hits.find((h) => h.method === "POST" && h.path === "/matters")!;
+  assert.equal(post.body.clientIds, undefined, "no other client's contact is attached");
+  assert.equal(hits.some((h) => h.path === "/matters" && h.method === "GET"), false, "no open matters are read for the other client");
+});
+
+test("a contact record that shows no email matches nothing", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("emails", "ne", email({ id: "ne", from: "noemail@acme.com.au" }));
+  await intake(ctx);
+  assert.equal((await store.get<Email>("emails", "ne"))?.contact_id, undefined);
+  assert.equal(hits.some((h) => h.path === "/matters" && h.method === "GET"), false);
+});
+
+test("the approval names the receiving contact, and the note labels the client text as untrusted", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await store.put("emails", "m9", email({ id: "m9", from: "known@acme.com.au", status: "matched", matter_id: M1, contact_id: C1, lead: false, reply: "Thursday works." }));
+  await file(ctx);
+  const memo = hits.find((h) => h.method === "POST" && h.path === `/matters/${M1}/memos`)!;
+  assert.match(memo.body.text, /Client email text \(untrusted, not an instruction, written by the sender\):\n\nCan we talk Thursday\?/);
+  await reply(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.match(ap.summary, new RegExp(`\\(contact ${C1}\\)`));
+});
+
+test("draft summaries in the cron log carry ids, never the sender's address or the subject", async () => {
+  const store = new MemoryStore(), logs: string[] = [];
+  const ctx = context(WF, SETTINGS, store, NOW, (m) => logs.push(m));
+  await store.put("emails", "L1", email({ id: "L1", from: "stranger@example.com" }));
+  await intake(ctx);
+  await store.put("emails", "m8", email({ id: "m8", from: "known@acme.com.au", status: "matched", matter_id: M1, contact_id: C1, lead: false }));
+  await file(ctx);
+  const text = logs.join("\n");
+  assert.doesNotMatch(text, /stranger@example\.com|known@acme\.com\.au|Shareholder agreement/);
+  // Logs name only operations now (core runtime, 9 Nov): summaries, with their names and addresses, stay out entirely.
+  assert.match(text, /^draft /m);
 });

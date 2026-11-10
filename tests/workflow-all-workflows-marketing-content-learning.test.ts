@@ -192,3 +192,31 @@ test("score before any pull writes nothing and queues nothing", async () => {
   assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0);
   assert.equal(hits.length, 0);
 });
+
+test("a rejected pause is not asked again while the ad stays over the limit", async () => {
+  const store = new MemoryStore();
+  const day1 = new Date("2026-11-08T21:30:00Z"), day2 = new Date("2026-11-09T21:30:00Z");
+  await pull(context(WF, SET, store, day1)); await score(context(WF, SET, store, day1));
+  const [id] = Object.keys(await store.list<Approval>("approvals"));
+  await reject(WF, store, id, "owner", day1);
+  await pull(context(WF, SET, store, day2)); await score(context(WF, SET, store, day2));
+  const all = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(all.length, 1, "the same over-limit period does not queue a new pause");
+  assert.equal(all[0].status, "rejected");
+});
+
+test("an ad paused by approval and reactivated over the limit gets its own approval", async () => {
+  const store = new MemoryStore();
+  const day1 = new Date("2026-11-08T21:30:00Z"), day2 = new Date("2026-11-09T21:30:00Z"), day3 = new Date("2026-11-10T21:30:00Z");
+  await pull(context(WF, SET, store, day1)); await score(context(WF, SET, store, day1));
+  const [first] = Object.keys(await store.list<Approval>("approvals"));
+  await approve(WF, store, first, "owner", day1);
+  activeIds = ["1002", "1003"];          // 1001 is paused now
+  await pull(context(WF, SET, store, day2)); await score(context(WF, SET, store, day2));
+  activeIds = ["1001", "1002", "1003"];  // reactivated and over the limit again
+  await pull(context(WF, SET, store, day3));
+  assert.equal((await score(context(WF, SET, store, day3))).queued, 1);
+  const pauses = Object.values(await store.list<Approval>("approvals")).filter((a) => a.acts[0].input?.params?.["Ad-id"] === "1001");
+  assert.equal(pauses.length, 2, "the new over-limit period has its own approval");
+  assert.equal(pauses.filter((a) => a.status === "pending").length, 1);
+});

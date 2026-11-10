@@ -36,7 +36,11 @@ function fake() {
         if (m === "POST" && clear) { grid[Number(clear[1]) - 1] = []; return json({}); }
         const row = p.match(/\/values\/Waitlist!A(\d+):H\d+$/);
         if (m === "PUT" && row) { grid[Number(row[1]) - 1] = [...body.values[0]]; return json({}); }
-        if (m === "GET") return json({ range: "Waitlist", values: grid });
+        // Like the API: cells come back as text, and trailing empty cells are dropped from each row.
+        const cells = (r: unknown[] = []) => { const t = r.map((x) => String(x ?? "")); while (t.length && t.at(-1) === "") t.pop(); return t; };
+        const one = p.match(/\/values\/Waitlist!A(\d+):H\d+$/);
+        if (m === "GET" && one) { const row = cells(grid[Number(one[1]) - 1]); return json(row.length ? { range: `Waitlist!A${one[1]}:H${one[1]}`, values: [row] } : { range: `Waitlist!A${one[1]}:H${one[1]}` }); }
+        if (m === "GET") return json({ range: "Waitlist", values: grid.map(cells) });
       }
       return new Response("not faked: " + p, { status: 404 });
     }) as any,
@@ -75,6 +79,27 @@ test("queue: a second run writes nothing new", async () => {
   const before = writes().length;
   assert.deepEqual(await queue(context(WF, S, new MemoryStore(), NOW, () => {})), { positioned: 0, check: 0 });
   assert.equal(writes().length, before);
+});
+
+test("queue: a note the host typed on a waiting row survives the position write", async () => {
+  grid.push(line({ ...ARI, note: "Prefers the window" }));
+  assert.deepEqual(await queue(context(WF, S, new MemoryStore(), NOW, () => {})), { positioned: 1, check: 0 });
+  assert.equal(grid[1][4], 1, "position written");
+  assert.equal(grid[1][7], "Prefers the window", "host note kept");
+});
+
+test("queue: a long host note is written back whole", async () => {
+  const long = "x".repeat(400);
+  grid.push(line({ ...ARI, note: long }));
+  await queue(context(WF, S, new MemoryStore(), NOW, () => {}));
+  assert.equal(grid[1][7], long);
+});
+
+test("queue: a Check reason the cron wrote is cleared once the row is fixed", async () => {
+  grid.push(line({ ...ARI, note: "guest name is missing" }));
+  await queue(context(WF, S, new MemoryStore(), NOW, () => {}));
+  assert.equal(grid[1][7], "", "cron reason cleared");
+  assert.equal(grid[1][4], 1);
 });
 
 test("queue: a waiting row without a guest name or a valid time is marked Check and holds no place in the queue", async () => {
@@ -148,4 +173,44 @@ test("a cron cannot run the clear: it is a live operation only", async () => {
   const ctx = context(WF, S, new MemoryStore(), NOW, () => {});
   await assert.rejects(ctx.draft({ platform: "google-workspace", op: "sheets.spreadsheets.values.clear", input: { params: { spreadsheetId: SHEET, range: "Waitlist!A2:H2" } }, summary: "x" }), /not a draft operation/);
   await assert.rejects(ctx.queue({ platform: "google-workspace", op: "sheets.spreadsheets.values.get", summary: "x" }), /not a live operation/);
+});
+
+test("a clear sends once when the row still holds what was queued", async () => {
+  grid.push(line({ ...ARI, status: "Left", outcome: "2026-12-05T18:30:00+11:00" }));
+  const store = new MemoryStore();
+  await close(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal(clears().length, 1, "cleared once");
+  assert.deepEqual(grid[1], []);
+  await assert.rejects(approve(WF, store, ap.id, "owner"), /already done/);
+});
+
+test("a clear is rejected and nothing is cleared when the row changed after it was queued", async () => {
+  grid.push(line({ ...ARI, status: "Left", outcome: "2026-12-05T18:30:00+11:00" }));
+  const store = new MemoryStore();
+  await close(context(WF, S, store, NOW, () => {}));
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  grid[1] = line({ ...SAM, status: "Seated", outcome: "2026-12-05T18:40:00+11:00" });   // the sheet shifted: this row now holds someone else
+  const after = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(after.status, "rejected");
+  assert.equal(after.decided_by, "check");
+  assert.match(after.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(clears().length, 0, "no clear sent");
+  assert.equal(grid[1][0], "Sam Cho", "the other guest's row is untouched");
+});
+
+test("after a rejected clear, a re-run queues the changed row once and never the unchanged one again", async () => {
+  grid.push(line({ ...ARI, status: "Left", outcome: "2026-12-05T18:30:00+11:00" }));
+  const store = new MemoryStore();
+  await close(context(WF, S, store, NOW, () => {}));
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  grid[1] = line({ ...ARI, status: "Left", outcome: "2026-12-05T18:35:00+11:00" });   // the outcome time was corrected after queueing
+  await approve(WF, store, first.id, "owner", NOW);
+  await close(context(WF, S, store, NOW, () => {}));
+  await close(context(WF, S, store, NOW, () => {}));
+  const approvals = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(approvals.length, 2, "one rejected approval and one fresh approval for the edited row, no more");
+  assert.equal(approvals.filter((a) => a.status === "pending").length, 1);
+  assert.equal(clears().length, 0, "nothing cleared by a cron");
 });
