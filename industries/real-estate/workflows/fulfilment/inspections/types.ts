@@ -2,6 +2,7 @@
 export type Platform = "servicem8";
 
 export interface Settings {
+  platform?: "servicem8" | "rex";
   business_name?: string;
   inspection_match: string;     // a word in the job description that marks an inspection job, e.g. "inspection"
   report_max_photos?: number;   // photos attached to the owner's report email (default 10, at most 20)

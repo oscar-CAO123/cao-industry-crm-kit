@@ -3,6 +3,10 @@
 
 export interface Settings {
   business_name?: string;
+  /** Which system holds the settlement date: Smokeball (default) or Rex. With rex, the Smokeball-only settings below can be left out. */
+  platform?: "smokeball" | "rex";
+  /** Rex: the contract statuses to watch (Rex's own words, set by the business). The settlement date is the contract's date_expec_settlement. */
+  rex?: { contract_statuses: string[] };
   matter_status: string[];      // Smokeball matter statuses to watch, e.g. ["Open"]
   settlement_subject: string;   // calendar event subject that marks a settlement, e.g. "Settlement"
   time_zone: string;            // IANA zone for the settlement event, e.g. "Australia/Sydney"
@@ -15,6 +19,8 @@ export interface Settings {
 export interface SettlementEvent { event_id: string; date: string; subject: string }
 /** The register: one entry per open matter, rewritten on every register run. */
 export interface Matter { matter_id: string; status?: string; events: SettlementEvent[]; seen: string }
+/** Rex: an agreed date that differs from the contract's expected settlement date. Nothing is written to Rex; a person changes it there. */
+export interface Discrepancy { contract_id: string; agreed: string; rex?: string; flagged: string }
 /** The agreed date for a matter. Written by the agent or a person; event_id is pinned by the check cron. */
 export interface Agreed { matter_id: string; date: string; source: string; recorded: string; event_id?: string }
 

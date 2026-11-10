@@ -130,4 +130,9 @@ export async function followUp(ctx: Ctx<Settings>) {
   return { queued };
 }
 
-export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { intake, draft, "follow-up": followUp };
+export async function changeOrders(ctx: Ctx<Settings>) {
+  if (!procoreOnly(ctx)) return { tracked: 0 };
+  return pc.trackOrders(ctx);
+}
+
+export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { intake, draft, "follow-up": followUp, "change-orders": changeOrders };

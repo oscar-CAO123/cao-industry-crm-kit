@@ -1,3 +1,4 @@
+import { queueCallNotes } from "./adapters/rex.ts";
 // The calls workflow's three crons. Each reads, drafts or queues; none sends. A first-call or chaser email is an Outlook
 // draft plus an approval, and a person approves it in the CRM shell. Which contacts to call, and the appraisal prep,
 // are judgment steps in SKILL.md.
@@ -99,4 +100,4 @@ export async function followUp(ctx: Ctx<Settings>) {
   return { sent, queued };
 }
 
-export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { callSync, callDraft, followUp };
+export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = { callSync, callDraft, followUp, callNotes: queueCallNotes };

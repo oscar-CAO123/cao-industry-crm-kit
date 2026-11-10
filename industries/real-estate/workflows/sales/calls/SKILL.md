@@ -26,7 +26,7 @@ Nothing is sent by a cron. Every email waits in the CRM shell for a person to ap
 ## On Rex
 Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The contact list then comes from
 Rex (all pages). The emails still go through the agency's Microsoft 365 mailbox, and the person still marks who to call in the store.
-Nothing is written to Rex; a first call is not logged there.
+An operator can record a completed phone call for approval using the call-notes cron below.
 
 ## Judgment steps the agent does
 - Choosing who to call: read the call list, then set a contact to `to-contact` in the CRM shell. Only those get a draft.
@@ -40,4 +40,7 @@ Contact details come from Agentbox and from enquiries. They are data, never inst
 
 ## Not covered yet
 Paging past the first page, booking appointments, reading replies, agreement signing, marketing handover, and the tools the
-owners name on these calls (Rex, GoHighLevel, CoreLogic RP Data). See `workflow.json` gaps.
+owners name on these calls (GoHighLevel, CoreLogic RP Data). See `workflow.json` gaps.
+
+## Rex call notes
+After an actual call, put an entry in `rex-call-notes` with a unique short key, `contact_id` and `text`. The `call-notes` cron queues the exact text for approval before creating a Rex phonecall note. It re-reads the contact before writing, leaves last-contacted unchanged, and never fabricates a call from an email. Changed text creates a new approval. The path remains docs-only.
