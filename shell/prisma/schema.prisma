@@ -964,6 +964,7 @@ model Session {
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
+  impersonatedBy String?
   userId    String   @db.Uuid
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
