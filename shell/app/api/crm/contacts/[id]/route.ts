@@ -43,7 +43,7 @@ export async function PATCH(
     const text = String(value).slice(0, 2000);
     // Links are shown as clickable hrefs, so only http(s) addresses are stored. A bare address like "acme.com.au" gets https://.
     if (URL_FIELDS.has(column) && text !== "") {
-      const withScheme = /^[a-z][a-z0-9+.-]*:/i.test(text) ? text : /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(text) ? `https://${text}` : "";
+      const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(text) || /^(mailto|tel|javascript|data|file):/i.test(text) ? text : /^[\w-]+(\.[\w-]+)+(:\d{1,5})?(\/\S*)?$/.test(text) ? `https://${text}` : "";
       if (!/^https?:\/\/[^\s]+$/i.test(withScheme)) { rejected.push(key); continue; }
       updates[column] = withScheme;
       continue;

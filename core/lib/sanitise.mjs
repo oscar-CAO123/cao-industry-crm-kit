@@ -40,8 +40,11 @@ export function sanitise(input, { maxLength = 20000 } = {}) {
   let text = raw.normalize("NFKC").replace(HIDDEN, "").replace(CONTROL, "");
   text = stripMarkup(text);
   // Match on a copy with lookalike letters folded and all runs of white space (line breaks, doubled spaces) made single.
-  const probe = fold(text).replace(/\s+/g, " ");
-  for (const [re, name] of PATTERNS) if (re.test(probe)) flags.push(name);
+  // Joiners, the soft hyphen and variation selectors stay in the returned text (they are ordinary in emoji and Persian). For matching
+  // the text is read twice, with those characters dropped ("ign<joiner>ore") and with each one read as a space ("ignore<joiner>previous").
+  const JOINERS = /[\u00AD\u200C\u200D\uFE0E\uFE0F]/g;
+  const probes = [text.replace(JOINERS, ""), text.replace(JOINERS, " ")].map((t) => fold(t).replace(/\s+/g, " "));
+  for (const [re, name] of PATTERNS) if (probes.some((p) => re.test(p))) flags.push(name);
   return { text, flags: [...new Set(flags)], safe: flags.every((f) => f === "truncated") };
 }
 
