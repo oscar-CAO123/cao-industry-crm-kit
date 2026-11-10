@@ -11,7 +11,8 @@ import { pipelineSync, prospectReview } from "../industries/real-estate/workflow
 
 const load = (d: string) => JSON.parse(fs.readFileSync(`industries/real-estate/workflows/${d}/workflow.json`, "utf8")) as WorkflowRecord;
 const COND = load("fulfilment/condition"), PIPE = load("sales/pipeline");
-const OPS = new Set((JSON.parse(fs.readFileSync("core/sdk/platforms/rex/ops.json", "utf8")) as { id: string }[]).map((o) => o.id));
+const REXOPS = JSON.parse(fs.readFileSync("core/sdk/platforms/rex/ops.json", "utf8")) as { id: string; kind: string }[];
+const OPS = new Set(REXOPS.map((o) => o.id)), KINDS = new Map(REXOPS.map((o) => [o.id, o.kind]));
 const NOW = new Date("2026-11-09T00:00:00Z");
 const S: any = { platform: "rex" };
 
@@ -45,8 +46,8 @@ beforeEach(() => {
   Object.assign(process.env, { REX_ACCESS_TOKEN: "rex-token" }); delete process.env.KIT_ALLOW_WRITES;
 });
 
-test("every Rex draft op is a mapped read operation, none is live", () => {
-  for (const w of [COND, PIPE]) { for (const op of w.draft_ops.rex) assert.ok(OPS.has(op), `${op} is mapped`); assert.deepEqual(w.live_ops.rex ?? [], []); }
+test("every Rex draft op is a mapped operation of kind read, none is live", () => {
+  for (const w of [COND, PIPE]) { for (const op of w.draft_ops.rex) { assert.ok(OPS.has(op), `${op} is mapped`); assert.ok(KINDS.get(op) === "read", `${op} is a read`); } assert.deepEqual(w.live_ops.rex ?? [], []); }
 });
 
 test("condition on Rex: reads properties and contacts through POST searches, skips archived rows, writes nothing", async () => {
@@ -58,7 +59,7 @@ test("condition on Rex: reads properties and contacts through POST searches, ski
   assert.equal(((await store.get<any>("contacts", "6")) as any).name, "Will Wyman");
   assert.ok(hits.every((h) => h.method === "POST" && /^\/v1\/rex\//.test(h.path)));
   assert.equal(hits[0].headers.get("authorization"), "Bearer rex-token");
-  assert.deepEqual([hits[0].body.limit, hits[0].body.offset, hits[1].body.offset], [50, 0, 50], "paged by offset to an empty page");
+  assert.deepEqual([hits[0].body.limit, hits[0].body.offset, hits[1].body.offset], [50, 0, 2], "paged by rows received to an empty page");
 });
 
 test("condition: without platform set, the AgentBox path is unchanged, and a bad platform is refused", async () => {
@@ -71,7 +72,7 @@ test("Rex lists refuse the whole read for a non-list reply, a Rex error, a bad r
   page = () => ({ result: {}, error: null }); await assert.rejects(properties(ctx), /did not come back as a list/);
   page = () => ({ result: { rows: [] }, error: { message: "x" } }); await assert.rejects(properties(ctx), /returned an error/);
   page = (_s, o) => ({ result: { rows: o === 0 ? [{ id: "../x" }] : [] }, error: null }); await assert.rejects(properties(ctx), /no usable id/);
-  page = (_s, o) => ({ result: { rows: [{ id: String(o + 1) }] }, error: null }); await assert.rejects(properties(ctx), /longer than 20 pages/);
+  page = (_s, o) => ({ result: { rows: [{ id: String(o + 1) }] }, error: null }); await assert.rejects(properties(ctx), /longer than 50 pages/);
 });
 
 test("pipeline on Rex: adds each contact once, refreshes one whose modified stamp changed, and the detail read goes to contacts.read", async () => {
@@ -91,4 +92,16 @@ test("pipeline on Rex: a contact id that is not a Rex id never reaches the detai
   const store = new MemoryStore(); await store.put("prospects", "OXF1", { id: "OXF1", name: "x", first_seen: NOW.toISOString(), stage: "untracked" });
   await assert.rejects(prospectReview(context(PIPE, S, store, NOW, () => {})), /bad contact id/);
   assert.equal(hits.length, 0);
+});
+
+test("Rex paging: the offset follows the rows received, so a server that returns fewer than 50 a page loses none, and a short total is refused", async () => {
+  const all = Array.from({ length: 45 }, (_, i) => ({ id: String(i + 1), name: "c" + i, system_record_state: "active" }));
+  page = (_s, o) => ({ result: { rows: all.slice(o, o + 20), total: 45 }, error: null });     // Rex caps a page at 20
+  const store = new MemoryStore();
+  assert.deepEqual(await contacts(context(COND, S, store, NOW, () => {})), { read: 45 });
+  assert.deepEqual(hits.map((h) => h.body.offset), [0, 20, 40, 45]);
+  page = (_s, o) => ({ result: { rows: all.slice(o, o + 20).slice(0, o >= 20 ? 0 : 20), total: 45 }, error: null });
+  await assert.rejects(contacts(context(COND, S, new MemoryStore(), NOW, () => {})), /came back short \(20 of 45\)/);
+  page = (_s, o) => ({ result: { rows: all.slice(o, o + 20), total: 45 }, error: null });
+  assert.deepEqual(await pipelineSync(context(PIPE, S, new MemoryStore(), NOW, () => {})), { seen: 45, added: 45, updated: 0 });
 });

@@ -18,7 +18,7 @@ reads the contact list hourly. Both read only. Nothing is written to AgentBox, a
 3. Check the first run lists the properties and contacts the owner expects. The crons read the first page only.
 
 ## On Rex
-Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host). The same two crons read
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The same two crons read
 the property and contact lists from Rex. Rex has no condition-report service, so nothing is written.
 
 ## What the person still does

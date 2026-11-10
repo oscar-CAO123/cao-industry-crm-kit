@@ -22,7 +22,7 @@ their record in the workflow store. Nothing is sent, booked or written back to A
 3. Check the first list with the agency. It covers the first page of contacts only.
 
 ## On Rex
-Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host). Contacts come from Rex
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). Contacts come from Rex
 (all pages, not only the first), and the detail read uses Rex's contact read. Rex leads are not used yet. Nothing is written to Rex.
 
 ## Judgment steps the agent does

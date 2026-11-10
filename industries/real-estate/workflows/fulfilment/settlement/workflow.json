@@ -73,7 +73,7 @@
   }
  },
  "gaps": [
-  "Rex: the kit maps Rex's API (1,027 operations) but the map has no settlement service and no inspection service, and the pages read do not cover settlement dates, so Rex is not built here.",
+  "Rex: the kit maps Rex's API (1,027 operations) but the map has no service named for settlement, its contracts services were not read for this, and the pages read do not cover settlement dates, so Rex is not built here.",
   "Smokeball's official spec has no settlement field. The settlement date is a calendar event on the matter whose subject contains the settlement word. The firm must confirm that convention in its own account before any live use.",
   "Smokeball is spec-only: the sign-in comes from vendor docs and is unproven, and nothing has run against a real account. It needs a sandbox or live test.",
   "Reminders need the firm's Smokeball offset type, offset type id and staff ids (settings.reminder). Until they are set, the reminders cron drafts nothing.",
@@ -84,6 +84,6 @@
  ],
  "evidence": {
   "calls": "3 of the real-estate discovery calls on settlement describe this way of working; the variants file reads 7 calls, 3 of them describing the process",
-  "platforms": "Smokeball and Rex help and product pages (real-estate-settlement-platforms.json): Smokeball partial with mapped matter, event and reminder operations; Rex mapped in the kit but with no settlement service"
+  "platforms": "Smokeball and Rex help and product pages (real-estate-settlement-platforms.json): Smokeball partial with mapped matter, event and reminder operations; Rex mapped in the kit but with no service named for settlement"
  }
 }

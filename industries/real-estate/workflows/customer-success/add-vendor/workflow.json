@@ -84,11 +84,11 @@
   },
   "rex": {
    "status": "docs-only",
-   "covers": "listing record read (heading, address, price); no open homes, no note written"
+   "covers": "listing record read (heading, address, price, open homes from the listing's events); no note written"
   }
  },
  "gaps": [
-  "Rex: a business sets platform to rex in settings, and each vendor's property_id is the Rex listing id. The report's heading, address and price come from listings.read. Open homes are not read, because the Rex docs read do not show how a calendar event is marked as an open home or linked to a listing in a search; the report then leaves the open home section out and says nothing about open homes. No note is written to the listing (no listing note in the pages read), and Rex's vendor feedback is not used. Not confirmed on a live account: the listing fields on the read (listing_adverts, price_advertise_as, property.system_search_key) with default fields.",
+  "Rex: a business sets platform to rex in settings, and each vendor's property_id is the Rex listing id. The report's heading (the internet advert heading), address and price come from listings.read, and the open homes come from the listing's events with event_type open_home within the report window (the day and time carry no zone in the docs sample, so they are shown as Rex gives them). If the reply carries no events list, open homes are left out of the report and it says nothing about them. No note is written to the listing (none in the pages read), and Rex's vendor feedback is not used. Not confirmed on a live account: that listings.read returns the related block by default (the docs sample does, with no fields asked), and the zone of the event times.",
   "Portal figures (views, enquiries, inspections) are not mapped: realestate.com.au's Campaign API and Console Cloud have no operations in the kit. Their platform maps are needed before the report carries portal numbers.",
   "The VaultRE owner list and feedback summary have no typed response schema in the vendor spec, so the vendor's email is set in settings instead of read from the owner record.",
   "PropertyMe, the tool named on the outside call, has no platform in the kit.",

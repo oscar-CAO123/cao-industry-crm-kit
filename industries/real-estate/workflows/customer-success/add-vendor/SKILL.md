@@ -20,8 +20,7 @@ They read and draft only. Nothing reaches a vendor until a person approves the s
 
 ## On Rex
 Set `"platform": "rex"` in settings, with each vendor's `property_id` as the Rex listing id, and `REX_ACCESS_TOKEN` in the environment (and
-`REX_API_HOST` for the UK host). The report's heading, address and price come from the Rex listing. Open homes are not read from Rex, so the
-report leaves that section out. No note is written to the listing.
+`REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The report's heading, address, price and open homes come from the Rex listing and its events. No note is written to the listing.
 
 ## Writing the commentary (the judgment step)
 The draft cron waits for commentary. For each listing the report needs, the agent:

@@ -24,7 +24,7 @@ Nothing is sent by a cron. Every email waits in the CRM shell for a person to ap
 3. Check the first contact list with the agency. It covers the first page of contacts only.
 
 ## On Rex
-Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host). The contact list then comes from
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The contact list then comes from
 Rex (all pages). The emails still go through the agency's Microsoft 365 mailbox, and the person still marks who to call in the store.
 Nothing is written to Rex; a first call is not logged there.
 
