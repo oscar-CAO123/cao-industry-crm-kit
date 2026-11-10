@@ -1,8 +1,9 @@
-// The labour-by-person workflow's two crons. Each reads ServiceM8 clock events, drafts Xero timesheet lines, or queues one
+// The labour-by-person workflow's two crons. Each reads ServiceM8 clock events (or Procore timecards), drafts Xero timesheet lines, or queues one
 // approval for a person. No cron approves a timesheet or pays anyone.
 import { type Ctx, type Approval, reject } from "../../../../../core/workflows/runtime.ts";
 import { type Holds, type Settings, type ShiftRec, type XeroTimesheet, GUID, HOLDS_NS, clean, keyFor, period } from "./types.ts";
 import { shiftsFrom, staffEvents } from "./adapters/servicem8.ts";
+import { timecardHours } from "./adapters/procore.ts";
 import { addLine, approveAct, createTimesheet, timesheetsIn } from "./adapters/xero.ts";
 
 const DEFAULT_MAX_HOURS = 12;
@@ -38,7 +39,9 @@ export async function mirror(ctx: Ctx<Settings>) {
   const max = s.max_hours_per_shift ?? DEFAULT_MAX_HOURS;
   const at = ctx.now.toISOString();
   const holdKey = keyFor("period", p.start);
-  const { events, bad } = await staffEvents(ctx, p);
+  // The hours come from ServiceM8 clock events, or from Procore timecards when `procore` is set. Procore entries are already hours, so there is nothing to pair.
+  const src = s.procore ? await timecardHours(ctx, p) : undefined;
+  const { events, bad } = src ? { events: [], bad: src.bad } : await staffEvents(ctx, p);
   if (bad) {
     // A clock row that does not check out means nothing can be trusted for this period: everyone mapped is held until a person checks.
     const everyone = Object.values(s.employee_map ?? {}).filter((g) => GUID.test(g));
@@ -47,7 +50,7 @@ export async function mirror(ctx: Ctx<Settings>) {
     ctx.log(`mirror: ${bad} clock row(s) did not check out, so every mapped person is held`);
     return { blocked: bad };
   }
-  const { shifts, open, problem } = shiftsFrom(events);
+  const { shifts, open, problem } = src ? { shifts: src.shifts, open: [] as string[], problem: [] as string[] } : shiftsFrom(events);
   let mirrored = 0, flagged = 0, unmapped = 0, failed = 0;
   for (const sh of shifts) {
     const rk = keyFor("shift", sh.key);

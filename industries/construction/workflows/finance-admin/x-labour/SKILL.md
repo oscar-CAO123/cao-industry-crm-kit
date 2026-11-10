@@ -1,12 +1,18 @@
 ---
 name: construction-labour-by-person
-description: Labour by person for a construction business that clocks crews on in ServiceM8 and runs payroll in Xero. Use when setting this up for a client, when a person asks why a timesheet is not approved, or when a person is held or a shift is marked needs-check.
+description: Labour by person for a construction business that records crew hours in ServiceM8 (clock events) or Procore (timecards) and runs payroll in Xero. Use when setting this up for a client, when a person asks why a timesheet is not approved, or when a person is held or a shift is marked needs-check.
 ---
 
 # Labour by person
 
 Built from how 40 Australian construction businesses described tracking labour by person on discovery calls. Crews clock on and
 off in a time app, hours are split across jobs, checked, approved, costed and paid. Most of it is manual.
+
+## Procore instead of ServiceM8
+Set `procore.mirror_status` (the timesheet status whose hours are paid, for example `approved`; there is no default) in settings and
+the `mirror` cron reads Procore timecard entries for the pay period instead of ServiceM8 clock events. Each entry is one block of hours,
+so there is nothing to pair; the `employee_map` keys are Procore user ids. Everything after that (Xero draft timesheets, holds,
+the queued approval) is unchanged. The token is `PROCORE_ACCESS_TOKEN` and the company id `PROCORE_COMPANY_ID`.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:
