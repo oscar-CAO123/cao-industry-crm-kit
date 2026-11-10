@@ -59,7 +59,8 @@
   "xero": [
    "payroll-au-v2.getTimesheets",
    "payroll-au-v2.createTimesheet",
-   "payroll-au-v2.createTimesheetLine"
+   "payroll-au-v2.createTimesheetLine",
+   "payroll-au-v2.getTimesheet"
   ]
  },
  "live_ops": {
@@ -96,10 +97,9 @@
   "The ServiceM8 staff time event list is read without paging. Confirm a full pay period is not cut short on a live account.",
   "Xero's API can approve a timesheet, but its docs do not describe the approval screen. Confirm on a live Xero Payroll AU account.",
   "The platform evidence file says the ServiceM8 ops file is empty. The kit's ServiceM8 ops file now lists the staff time event operations used here, so that part of the evidence is out of date.",
-  "A timesheet approval queued before another shift lands keeps its original hours in the summary. Check the Xero hours before approving.",
   "Both adapters are docs-only until a ServiceM8 trial account and a Xero demo organisation prove the calls.",
   "Approval is one per timesheet, so a large crew means many approvals in the queue.",
-  "Needs core: a timesheet approval that is already running is not re-checked against the hold before it runs. Mirror withdraws queued approvals for people it holds, but a clock-on that lands between mirror runs (every 30 minutes) can still be approved. The runtime needs a pre-run hold check for approve acts.",
+  "Needs core: a clock-on that lands after a timesheet is queued can still be approved before the next mirror run (every 30 minutes) withdraws it. The approval now re-reads the Xero hours, so a shift that has become a line is caught, but a clock-on with no line yet is not visible to a check. The runtime needs a pre-run hold check for approve acts.",
   "Needs core: the ServiceM8 staff time event read has no paging or count check, and no paging parameter is mapped for it. A truncated read would undercount hours. The op needs its paging mapped, or the platform's page limit confirmed, before a live run."
  ],
  "evidence": {

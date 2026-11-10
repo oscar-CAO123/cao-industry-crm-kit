@@ -1,7 +1,7 @@
 // The labour-by-person workflow's two crons. Each reads ServiceM8 clock events, drafts Xero timesheet lines, or queues one
 // approval for a person. No cron approves a timesheet or pays anyone.
 import { type Ctx, type Approval, reject } from "../../../../../core/workflows/runtime.ts";
-import { type Holds, type Settings, type ShiftRec, type XeroTimesheet, GUID, clean, keyFor, period } from "./types.ts";
+import { type Holds, type Settings, type ShiftRec, type XeroTimesheet, GUID, HOLDS_NS, clean, keyFor, period } from "./types.ts";
 import { shiftsFrom, staffEvents } from "./adapters/servicem8.ts";
 import { addLine, approveAct, createTimesheet, timesheetsIn } from "./adapters/xero.ts";
 
@@ -42,7 +42,7 @@ export async function mirror(ctx: Ctx<Settings>) {
   if (bad) {
     // A clock row that does not check out means nothing can be trusted for this period: everyone mapped is held until a person checks.
     const everyone = Object.values(s.employee_map ?? {}).filter((g) => GUID.test(g));
-    await ctx.store.put("holds", holdKey, { employees: everyone, at } satisfies Holds);
+    await ctx.store.put(HOLDS_NS, holdKey, { employees: everyone, at, start: p.start, end: p.end } satisfies Holds);
     await withdrawHeld(ctx, p, everyone);
     ctx.log(`mirror: ${bad} clock row(s) did not check out, so every mapped person is held`);
     return { blocked: bad };
@@ -91,7 +91,7 @@ export async function mirror(ctx: Ctx<Settings>) {
   const held = new Set<string>([...open, ...problem]);
   for (const r of Object.values(await ctx.store.list<ShiftRec>("shifts"))) if (r.period === p.start && r.state !== "mirrored") held.add(r.staff);
   const employees = [...held].map((st) => s.employee_map?.[st]).filter((g): g is string => !!g && GUID.test(g));
-  await ctx.store.put("holds", holdKey, { employees, at } satisfies Holds);
+  await ctx.store.put(HOLDS_NS, holdKey, { employees, at, start: p.start, end: p.end } satisfies Holds);
   const withdrawn = await withdrawHeld(ctx, p, employees);
   ctx.log(`mirror: ${withdrawn} queued approval(s) withdrawn`);
   ctx.log(`mirror: ${mirrored} mirrored, ${flagged} held over the daily limit, ${unmapped} without a Xero employee, ${failed} need a check, ${employees.length} held`);
@@ -102,14 +102,14 @@ export async function mirror(ctx: Ctx<Settings>) {
  *  Approval itself is queued, never run here. */
 export async function approve(ctx: Ctx<Settings>) {
   const p = period(ctx.settings);
-  const holds = await ctx.store.get<Holds>("holds", keyFor("period", p.start));
+  const holds = await ctx.store.get<Holds>(HOLDS_NS, keyFor("period", p.start));
   if (!holds) return { waiting: "mirror has not run for this period" };
   const heldSet = new Set(holds.employees);
   let queued = 0, heldCount = 0;
   for (const t of await timesheetsIn(ctx, p, "Draft")) {
     if (!(t.totalHours > 0)) continue;
     if (heldSet.has(t.employeeID)) { heldCount++; continue; }
-    await ctx.queue(approveAct(t.timesheetID), `Approve timesheet for employee ${t.employeeID}: ${t.totalHours} hours, ${p.start} to ${p.end}`);
+    await ctx.queue(approveAct(t), `Approve timesheet for employee ${t.employeeID}: ${t.totalHours} hours, ${p.start} to ${p.end}`);
     queued++;
   }
   ctx.log(`approve: ${queued} queued for approval, ${heldCount} held`);

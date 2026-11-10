@@ -34,11 +34,14 @@ export async function getForm(ctx: Ctx<Settings>, formId: string): Promise<any> 
   return r.data;
 }
 
-/** Queued for a person's approval only: expiring a form changes what the patient sees. */
-export function queueExpiry(ctx: Ctx<Settings>, formId: string): Promise<string> {
+/** Queued for a person's approval only: expiring a form changes what the patient sees. The send re-reads the form and goes
+ *  only if it is still unsigned and unexpired as the cron saw it (`seen`, the form read just before queueing). */
+export function queueExpiry(ctx: Ctx<Settings>, formId: string, seen: any): Promise<string> {
   const fid = id(formId, "patient form");
   return ctx.queue({ platform: P, op: "patient-form.updatepatientform", key: `expire:${fid}`, summary: `expire unsigned agreement form ${fid}`,
-    input: { params: { id: fid, expired: true } } });
+    input: { params: { id: fid, expired: true } },
+    check: { platform: P, op: "patient-form.getpatientform", input: { params: { id: fid } },
+      expect: [{ path: "completed", equals: seen?.completed ?? false }, { path: "expired", equals: seen?.expired ?? false }] } });
 }
 
 /** The signature on a completed form, read for the register. */

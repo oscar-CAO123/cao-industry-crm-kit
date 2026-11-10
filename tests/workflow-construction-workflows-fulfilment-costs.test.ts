@@ -7,6 +7,8 @@ import { MemoryStore } from "../core/workflows/store.ts";
 import { context, approve, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { budgetWatch, spendWatch, timesheetApproval } from "../industries/construction/workflows/fulfilment/costs/index.ts";
 import fs from "node:fs";
+import { HOLDS_NS } from "../industries/construction/workflows/fulfilment/costs/types.ts";
+import { HOLDS_NS as LABOUR_HOLDS_NS } from "../industries/construction/workflows/finance-admin/x-labour/types.ts";
 
 const WF = JSON.parse(fs.readFileSync("industries/construction/workflows/fulfilment/costs/workflow.json", "utf8")) as WorkflowRecord;
 const B1 = "11111111-2222-4333-8444-555555555555", T1 = "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee", E1 = "99999999-8888-4777-8666-555555555555";
@@ -125,3 +127,33 @@ test("budget-watch: more budgets than the baseline holds is an error, never a si
   await assert.rejects(budgetWatch(context(WF, S, new MemoryStore(), NOW, () => {})), /51 budgets in Xero, more than 50/);
 });
 
+const holdFor = (start: string, end: string) => ({ employees: [E1], at: "2026-11-08T00:00:00.000Z", start, end });
+
+test("the hold record is the one the labour workflow writes", () => {
+  assert.equal(HOLDS_NS, LABOUR_HOLDS_NS);
+});
+
+test("a person the labour workflow holds for an overlapping pay period is not queued here", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put(HOLDS_NS, "period:2026-11-02", holdFor("2026-11-02", "2026-11-15"));
+  assert.deepEqual(await timesheetApproval(ctx), { waiting: 0, held: 1, withdrawn: 0 });
+  assert.equal(Object.values(await store.list<Approval>("approvals")).length, 0, "nothing queued for the held person");
+  assert.equal(approved, 0);
+});
+
+test("a hold for a pay period that does not overlap the timesheet does not hold it", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await store.put(HOLDS_NS, "period:2026-10-19", holdFor("2026-10-19", "2026-11-01"));
+  assert.deepEqual(await timesheetApproval(ctx), { waiting: 1, held: 0, withdrawn: 0 });
+});
+
+test("a queued approval is withdrawn once the labour workflow holds its person, and stays withdrawn", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await timesheetApproval(ctx), { waiting: 1, held: 0, withdrawn: 0 });
+  await store.put(HOLDS_NS, "period:2026-11-02", holdFor("2026-11-02", "2026-11-15"));
+  assert.deepEqual(await timesheetApproval(ctx), { waiting: 0, held: 1, withdrawn: 1 });
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(ap.status, "rejected");
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already rejected/);
+  assert.equal(approved, 0, "nothing approved");
+});

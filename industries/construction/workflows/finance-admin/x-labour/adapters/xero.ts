@@ -41,8 +41,13 @@ export async function addLine(ctx: Ctx<Settings>, timesheetId: string, line: Lin
     input: { params: { TimesheetID: guid(timesheetId, "xero timesheet"), "Idempotency-Key": keyFor("line", shiftKey) }, body: line } });
 }
 
-/** Approving a timesheet changes what gets paid: it is only ever queued for a person. */
-export function approveAct(timesheetId: string): Act {
-  return { platform: P, op: "payroll-au-v2.approveTimesheet", key: keyFor("approve", timesheetId),
-    summary: `approve timesheet ${timesheetId}`, input: { params: { TimesheetID: guid(timesheetId, "xero timesheet") } } };
+/** Approving a timesheet changes what gets paid: it is only ever queued for a person. The approval re-reads the timesheet first and is
+ *  closed unless it is still a Draft with the hours the cron saw. The key carries those hours, so a timesheet closed by that check is
+ *  queued again once its hours change, and an unchanged one is never queued twice. */
+export function approveAct(t: XeroTimesheet): Act {
+  const id = guid(t.timesheetID, "xero timesheet");
+  return { platform: P, op: "payroll-au-v2.approveTimesheet", key: keyFor("approve", id, String(t.totalHours)),
+    summary: `approve timesheet ${id}`, input: { params: { TimesheetID: id } },
+    check: { platform: P, op: "payroll-au-v2.getTimesheet", input: { params: { TimesheetID: id } },
+      expect: [{ path: "timesheet.status", equals: "Draft" }, { path: "timesheet.totalHours", equals: t.totalHours }] } };
 }

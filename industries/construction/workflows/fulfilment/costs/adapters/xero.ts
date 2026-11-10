@@ -88,10 +88,13 @@ export async function draftTimesheets(ctx: Ctx<Settings>): Promise<Timesheet[]> 
   }));
 }
 
+/** The approval key for one timesheet: the same timesheet is queued once, and a withdrawn one is found by it. */
+export const timesheetKey = (timesheetID: string) => `timesheet:${timesheetID}`;
+
 /** The approval for one timesheet. It is only ever queued: a person approves it in the CRM shell. */
 export const approveTimesheetAct = (t: Timesheet): Act => ({
   platform: P, op: "payroll-au-v2.approveTimesheet",
-  input: { params: { TimesheetID: t.timesheetID, ...idem(`timesheet:${t.timesheetID}`) } },
+  input: { params: { TimesheetID: t.timesheetID, ...idem(timesheetKey(t.timesheetID)) } },
   summary: `approve timesheet ${t.timesheetID.slice(0, 8)} (${t.totalHours} hours, ${t.startDate} to ${t.endDate})`,
-  key: `timesheet:${t.timesheetID}`,
+  key: timesheetKey(t.timesheetID),
 });

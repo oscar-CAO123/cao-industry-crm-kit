@@ -102,8 +102,7 @@
   "Xero cannot tell a failed card or direct debit from an unpaid invoice, so an overdue Xero invoice stands in for a failed payment.",
   "Xero is read one page at a time (first 100 authorised invoices). Paging is not built.",
   "A Stripe invoice that also synced into Xero would count twice. Not de-duplicated.",
-  "No call evidence and no sandbox run yet: the Stripe test mode and a Xero demo company are needed before this runs for a client.",
-  "Xero reminder approval: a reminder is queued with the invoice as seen at queue time, so a member who pays between queueing and approval is still emailed. Needs a core runtime hook that re-checks each live act before it runs (core/workflows/runtime.ts); not built here."
+  "No call evidence and no sandbox run yet: the Stripe test mode and a Xero demo company are needed before this runs for a client."
  ],
  "evidence": {
   "calls": "0 of 1 discovery call describes failed-payment handling (1 call read, 0 rejected)",

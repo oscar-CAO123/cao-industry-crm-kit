@@ -1,7 +1,7 @@
 // The pipeline-advance workflow's two crons. scan reads the open deals and drafts a register of stalled deals in the workflow
 // store; queue re-reads each recorded stage move and queues it for approval. Nothing changes in the CRM until a person approves
 // a queued stage change. Judgment (what actually happened on a deal) stays with the agent in SKILL.md, which records a move.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
+import type { Approval, Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { Adapter, Deal, Finding, Move, Platform, Settings } from "./types.ts";
 import { ID, checkSettings, clip, daysSince } from "./types.ts";
 import { gohighlevel } from "./adapters/gohighlevel.ts";
@@ -55,9 +55,15 @@ export async function scan(ctx: Ctx<Settings>) {
 /** Daily: re-read each pending stage move, check it still goes forward along the pipeline, and queue it for approval. */
 export async function queue(ctx: Ctx<Settings>) {
   const s = ctx.settings, a = adapter(s), now = ctx.now.toISOString();
-  const pending = Object.values(await ctx.store.list<Move>("moves"))
-    .filter((m) => !m.status || m.status === "pending")
-    .slice(0, QUEUE_LIMIT);
+  // A move is queued when it is pending, or when its approval was closed by the check (the deal changed after it was queued).
+  const closedByCheck = async (m: Move) => {
+    if (m.status !== "queued" || !m.approval) return false;
+    const ap = await ctx.store.get<Approval>("approvals", m.approval);
+    return ap?.status === "rejected" && ap.decided_by === "check";
+  };
+  const moves = Object.values(await ctx.store.list<Move>("moves"));
+  const flags = await Promise.all(moves.map((m) => !m.status || m.status === "pending" || closedByCheck(m)));
+  const pending = moves.filter((_, i) => flags[i]).slice(0, QUEUE_LIMIT);
   let queued = 0, skipped = 0;
   for (const m of pending) {
     const skip = async (reason: string) => { skipped++; await ctx.store.put("moves", m.deal, { ...m, status: "skipped", reason, at: now }); };
@@ -70,7 +76,7 @@ export async function queue(ctx: Ctx<Settings>) {
     if (to < 0) { await skip("the target stage is not in stage_order"); continue; }
     if (to <= from) { await skip("the move goes backward or stays where it is"); continue; }
     const summary = clip(`Move ${d.title || `deal ${d.id}`} from stage ${d.stage} to ${m.to}: ${clip(m.why, 200)}`, 300);
-    const approval = await a.queueMove(ctx, d, m.to, `move:${s.platform}:${d.id}:${m.to}`, summary);
+    const approval = await a.queueMove(ctx, d, m.to, `move:${s.platform}:${d.id}:${d.stage}:${m.to}:${d.lastChange}`, summary);
     await ctx.store.put("moves", m.deal, { ...m, status: "queued", approval, at: now }); queued++;
   }
   ctx.log(`queue: ${queued} stage moves queued for approval, ${skipped} skipped`);

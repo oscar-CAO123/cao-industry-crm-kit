@@ -28,6 +28,7 @@ export interface Booking {
   status: string;
   eventId: string;
   note: string;
+  cells: unknown[];                 // the row exactly as the sheet returned it: the checks compare these, not the cleaned values
 }
 
 export const WHEN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/;

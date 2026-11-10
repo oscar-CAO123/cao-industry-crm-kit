@@ -1,9 +1,9 @@
 // The costs workflow's three crons. Each reads and drafts (records in the store) or queues for approval.
 // None of them sends, pays or changes a live record. Judgment (what an overrun means for a job) belongs to the agent in SKILL.md.
-import type { Ctx } from "../../../../../core/workflows/runtime.ts";
-import { safeKey } from "../../../../../core/workflows/runtime.ts";
-import { type Settings, type BudgetRow, type SpendRow, checkSettings, round } from "./types.ts";
-import { readBudgets, readSpend, draftTimesheets, approveTimesheetAct } from "./adapters/xero.ts";
+import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
+import { approvalId, reject, safeKey } from "../../../../../core/workflows/runtime.ts";
+import { type Settings, type BudgetRow, type SpendRow, type Timesheet, type Holds, HOLDS_NS, checkSettings, round } from "./types.ts";
+import { readBudgets, readSpend, draftTimesheets, approveTimesheetAct, timesheetKey } from "./adapters/xero.ts";
 
 /** Daily: read each budget line for the period and keep it as the baseline the spend check compares against. */
 export async function budgetWatch(ctx: Ctx<Settings>) {
@@ -37,13 +37,31 @@ export async function spendWatch(ctx: Ctx<Settings>) {
   return { checked: byCode.size, flagged };
 }
 
-/** Every hour at quarter past: queue each draft timesheet for a person to approve. Nothing is approved here. */
+/** A person is held for a timesheet when x-labour holds them for a pay period that overlaps the timesheet's dates.
+ *  A timesheet with no dates is treated as overlapping, so a hold is never missed for want of a date. */
+const heldFor = (t: Timesheet, holds: Holds[]) => holds.some((h) =>
+  h.employees.includes(t.employeeID ?? "") && (!t.startDate || !t.endDate || (t.startDate <= h.end && t.endDate >= h.start)));
+
+/** Every hour at quarter past: queue each draft timesheet for a person to approve, except a person the labour workflow holds.
+ *  An approval already queued for a person who becomes held is withdrawn here. Nothing is approved here. */
 export async function timesheetApproval(ctx: Ctx<Settings>) {
   checkSettings(ctx.settings);
   const sheets = await draftTimesheets(ctx);
-  for (const t of sheets) await ctx.queue(approveTimesheetAct(t));
-  ctx.log(`timesheet-approval: ${sheets.length} draft timesheets waiting`);
-  return { waiting: sheets.length };
+  const holds = Object.values(await ctx.store.list<Holds>(HOLDS_NS));
+  let queued = 0, held = 0, withdrawn = 0;
+  for (const t of sheets) {
+    if (heldFor(t, holds)) {
+      held++;
+      const id = approvalId(ctx.workflow.id, timesheetKey(t.timesheetID));
+      const ap = await ctx.store.get<Approval>("approvals", id);
+      if (ap?.status === "pending") { await reject(ctx.workflow, ctx.store, id, "timesheet-holds", ctx.now); withdrawn++; }
+      continue;
+    }
+    await ctx.queue(approveTimesheetAct(t));
+    queued++;
+  }
+  ctx.log(`timesheet-approval: ${queued} draft timesheets queued, ${held} held, ${withdrawn} queued approval(s) withdrawn`);
+  return { waiting: queued, held, withdrawn };
 }
 
 export const CRONS: Record<string, (ctx: Ctx<Settings>) => Promise<unknown>> = {

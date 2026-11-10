@@ -1,15 +1,16 @@
 // The quote-build workflow's four crons. Each is deterministic: it reads, drafts and queues; it never sends.
 // Judgment (reading notes, photos or plans, choosing lines for a job with no template, setting a margin) belongs to the
 // agent skill in SKILL.md, which writes a proposal into the store; the draft cron checks it against the rate card.
-// The platform adapters are the construction quoting ones, reused by relative import and not edited here.
+// The platform adapters are the construction quoting ones, reused by relative import and not edited here. ServiceM8 is the one
+// exception: its quote step is copied into adapters/servicem8.ts, which adds a per-line write check and a UUID check.
 import type { Ctx, Approval } from "../../../../../core/workflows/runtime.ts";
 import { approvalId } from "../../../../../core/workflows/runtime.ts";
-import { servicem8 } from "../../../../../industries/construction/workflows/sales/quoting/adapters/servicem8.ts";
+import { servicem8Quote } from "./adapters/servicem8.ts";
 import { xero, draftInvoice } from "../../../../../industries/construction/workflows/sales/quoting/adapters/xero.ts";
 import { microsoft365 } from "../../../../../industries/construction/workflows/sales/quoting/adapters/microsoft-365.ts";
 import { reuse, type Adapter, type Enquiry, type Line, type Platform, type Quote, type Settings } from "./types.ts";
 
-export const ADAPTERS: Record<Platform, Adapter> = { servicem8, xero, "microsoft-365": microsoft365 };
+export const ADAPTERS: Record<Platform, Adapter> = { servicem8: servicem8Quote, xero, "microsoft-365": microsoft365 };
 const adapter = (p: Platform, need: keyof Adapter) => {
   const a = ADAPTERS[p];
   if (!a || !a[need]) throw new Error(`quote-build: ${p} cannot ${need}`);

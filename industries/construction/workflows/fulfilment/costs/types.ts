@@ -20,6 +20,12 @@ export interface SpendRow {
 
 export interface Timesheet { timesheetID: string; employeeID?: string; startDate: string; endDate: string; totalHours: number }
 
+/** The store namespace x-labour writes its holds to (its HOLDS_NS). Read here, so a person it holds is not queued here either. */
+export const HOLDS_NS = "timesheet-holds";
+
+/** One pay period's held Xero employees, as x-labour writes them. */
+export interface Holds { employees: string[]; at: string; start: string; end: string }
+
 export const DATE = /^\d{4}-\d{2}-\d{2}$/;
 export const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

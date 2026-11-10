@@ -24,16 +24,16 @@ const CONTACT = "55555555-5555-4555-8555-555555555555";
 
 const TXNS = [
   { BankTransactionID: A, Type: "SPEND", Date: "/Date(1793491200000+0000)/", Contact: { Name: "Telstra", ContactID: CONTACT },
-    Reference: "INV 8812", LineAmountTypes: "Inclusive", Total: -110, HasAttachments: true, IsReconciled: false,
+    Status: "AUTHORISED", Reference: "INV 8812", LineAmountTypes: "Inclusive", Total: -110, HasAttachments: true, IsReconciled: false,
     LineItems: [{ Description: "Telstra mobile plan", LineAmount: -110, TaxType: "INPUT" }] },
   { BankTransactionID: B, Type: "SPEND", Date: "/Date(1793491200000+0000)/", Contact: { Name: "Unknown Pty Ltd" },
-    Reference: "", LineAmountTypes: "Inclusive", Total: -55, HasAttachments: false, IsReconciled: false,
+    Status: "AUTHORISED", Reference: "", LineAmountTypes: "Inclusive", Total: -55, HasAttachments: false, IsReconciled: false,
     LineItems: [{ Description: "Misc supplies", LineAmount: -55, TaxType: "INPUT" }] },
   { BankTransactionID: C, Type: "SPEND", Date: "/Date(1793491200000+0000)/", Contact: { Name: "Officeworks" },
-    Reference: "", LineAmountTypes: "Inclusive", Total: -220, HasAttachments: true, IsReconciled: false,
+    Status: "AUTHORISED", Reference: "", LineAmountTypes: "Inclusive", Total: -220, HasAttachments: true, IsReconciled: false,
     LineItems: [{ Description: "Paper", LineAmount: -100, TaxType: "INPUT" }, { Description: "Toner", LineAmount: -120, TaxType: "INPUT" }] },
   { BankTransactionID: D, Type: "SPEND", Date: "/Date(1793491200000+0000)/", Contact: { Name: "Officeworks" },
-    Reference: "", LineAmountTypes: "Inclusive", Total: -33, HasAttachments: true, IsReconciled: false,
+    Status: "AUTHORISED", Reference: "", LineAmountTypes: "Inclusive", Total: -33, HasAttachments: true, IsReconciled: false,
     LineItems: [{ Description: "Office supplies", LineAmount: -33, AccountCode: "400", TaxType: "INPUT" }] },
 ];
 const RATES = [
@@ -44,9 +44,10 @@ const RATES = [
 
 type Hit = { method: string; path: string; search: string; body: any };
 let hits: Hit[] = [];
+let overrides: Record<string, any> = {}; // the live Xero record, when a test changes it after a coding change is queued
 
 function fake() {
-  hits = [];
+  hits = []; overrides = {};
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -56,7 +57,11 @@ function fake() {
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (/token$/.test(p)) return json({ access_token: "tok", refresh_token: "r2", expires_in: 1800 });
       if (p.endsWith("/connections")) return json([{ tenantId: "t" }]);
-      if (p.endsWith("/BankTransactions") && m === "GET") return json({ BankTransactions: u.searchParams.get("page") === "1" ? TXNS : [] });
+      if (p.endsWith("/BankTransactions") && m === "GET") return json({ BankTransactions: u.searchParams.get("page") === "1" ? TXNS.map((t) => overrides[t.BankTransactionID] ?? t) : [] });
+      if (/\/BankTransactions\/[^/]+$/.test(p) && m === "GET") {
+        const t = overrides[p.split("/").pop()!] ?? TXNS.find((x) => x.BankTransactionID === p.split("/").pop());
+        return t ? json({ BankTransactions: [t] }) : new Response("not faked: " + p, { status: 404 });
+      }
       if (p.endsWith("/TaxRates") && m === "GET") return json({ TaxRates: RATES });
       if (/\/BankTransactions\/[^/]+$/.test(p) && m === "POST") return json({ BankTransactions: [{ BankTransactionID: p.split("/").pop() }] });
       return new Response("not faked: " + p, { status: 404 });
@@ -149,4 +154,52 @@ test("guards: a period that is not a real date stops before any call; a bad rule
   const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
   await assert.rejects(ctx.draft({ platform: "xero", op: "accounting.updateBankTransaction", summary: "x" }), /not a draft operation/);
   await assert.rejects(ctx.queue({ platform: "xero", op: "accounting.getBankTransactions", summary: "x" }), /not a live operation/);
+});
+
+test("the check: a coding change sends once when the line is unchanged", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await pullPeriod(ctx); await codeLines(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(ap.acts[0].check?.op, "accounting.getBankTransaction", "the approval re-reads the line first");
+  assert.equal((await approve(WF, store, ap.id, "accountant", NOW)).status, "done");
+  assert.equal(coding().length, 1, "sent once");
+  assert.equal(hits.filter((h) => h.method === "GET" && h.path.endsWith(`/BankTransactions/${A}`)).length, 1, "the line was read once, before the send");
+});
+
+test("the check: an amount changed after queueing sends nothing and the approval is rejected", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await pullPeriod(ctx); await codeLines(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  overrides[A] = { ...TXNS[0], Total: -90, LineItems: [{ ...TXNS[0].LineItems[0], LineAmount: -90 }] };
+  const rej = await approve(WF, store, ap.id, "accountant", NOW);
+  assert.equal(rej.status, "rejected");
+  assert.equal(rej.decided_by, "check");
+  assert.match(rej.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(coding().length, 0, "no Xero write");
+});
+
+test("the check: a line reconciled after queueing sends nothing and the approval is rejected", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await pullPeriod(ctx); await codeLines(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  overrides[A] = { ...TXNS[0], IsReconciled: true };
+  assert.equal((await approve(WF, store, ap.id, "accountant", NOW)).status, "rejected");
+  assert.equal(coding().length, 0, "no Xero write");
+});
+
+test("the check: after a rejection, a later run queues a fresh coding change for the changed line, and never twice", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
+  await pullPeriod(ctx); await codeLines(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  overrides[A] = { ...TXNS[0], Total: -90, LineItems: [{ ...TXNS[0].LineItems[0], LineAmount: -90 }] };
+  assert.equal((await approve(WF, store, first.id, "accountant", NOW)).status, "rejected");
+  await pullPeriod(ctx);
+  assert.deepEqual(await codeLines(ctx), { queued: 1 }, "the changed line is queued again");
+  await codeLines(ctx); await pullPeriod(ctx); await codeLines(ctx);
+  const aps = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(aps.length, 2, "one rejected approval and one fresh one, never more");
+  const fresh = aps.find((a) => a.id !== first.id)!;
+  assert.equal(fresh.acts[0].input?.body?.BankTransactions[0].LineItems[0].LineAmount, -90);
+  assert.equal((await approve(WF, store, fresh.id, "accountant", NOW)).status, "done");
+  assert.equal(coding().length, 1, "the fresh change is sent once");
 });

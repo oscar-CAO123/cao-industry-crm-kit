@@ -1,7 +1,8 @@
 // Google Workspace: the venue's waitlist spreadsheet and its guest log. Reads the waitlist, writes positions and
 // quoted waits back, appends to the guest log. Clearing a waitlist row removes it from the host's view, so it is only
 // ever queued for a person to approve.
-import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import type { Check, Ctx } from "../../../../../../core/workflows/runtime.ts";
+import crypto from "node:crypto";
 import { cell, COLUMNS, STATUSES, SHEET_ID, TAB, TZ, type Entry, type Settings } from "../types.ts";
 
 const P = "google-workspace";
@@ -42,6 +43,7 @@ export async function readWaitlist(ctx: Ctx<Settings>): Promise<Entry[]> {
     .map((v, i): Entry => ({
       row: i + 2, guest: str(v[0], 120), party: whole(v[1]), added: str(v[2], 40), quoted: num(v[3]), position: num(v[4]),
       status: status(v[5]), outcome: str(v[6], 40), note: str(v[7], 50000),
+      raw: COLUMNS.map((_, c) => String(v[c] ?? "")),
     }))
     .filter((e) => e.guest !== "" || e.added !== "" || e.status !== "");
 }
@@ -61,10 +63,17 @@ export async function logRows(ctx: Ctx<Settings>, rows: unknown[][]): Promise<vo
       body: { majorDimension: "ROWS", values: rows.map((r) => r.map(safe)) } } });
 }
 
-/** Queue the clearing of a waitlist row for approval. The log comes first, so a cleared row is never lost. */
+/** Queue the clearing of a waitlist row for approval. The log comes first, so a cleared row is never lost.
+ *  At approval the row is read again, and the clear is sent only if the party's cells still hold what the cron read.
+ *  The queue cron's position and quoted wait are left out: it rewrites them, so they would reject a clear for no reason.
+ *  The key carries the row's content, so a row that changes after a rejected clear is queued again, and an unchanged one never twice. */
 export async function queueClear(ctx: Ctx<Settings>, e: Entry, key: string): Promise<void> {
   const who = e.guest || `row ${e.row}`;
-  await ctx.queue({ platform: P, op: "sheets.spreadsheets.values.clear", key: `clear:${key}`, summary: `clear the waitlist row for ${who} (${e.status})`,
+  const cells = [0, 1, 2, 5, 6, 7].filter((c) => e.raw[c] !== "");   // empty trailing cells are dropped by the API, so they cannot be checked
+  const digest = crypto.createHash("sha256").update(JSON.stringify(cells.map((c) => e.raw[c]))).digest("hex").slice(0, 16);
+  const check: Check = { platform: P, op: "sheets.spreadsheets.values.get", input: { params: { spreadsheetId: sheet(ctx), range: `${tabs(ctx).waitlist}!A${e.row}:${LAST}${e.row}` } },
+    expect: cells.map((c) => ({ path: `values.0.${c}`, equals: e.raw[c] })) };
+  await ctx.queue({ platform: P, op: "sheets.spreadsheets.values.clear", key: `clear:${key}:${digest}`, check, summary: `clear the waitlist row for ${who} (${e.status})`,
     input: { params: { spreadsheetId: sheet(ctx), range: `${tabs(ctx).waitlist}!A${e.row}:${LAST}${e.row}` }, body: {} } },
     `Clear ${who} from the waitlist (${e.status}, row ${e.row}), after it is logged`);
 }

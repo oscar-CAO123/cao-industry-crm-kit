@@ -1,7 +1,8 @@
 // Google Workspace: the bookings spreadsheet and the venue calendar. Reads the sheet, checks the calendar for clashes,
 // puts a hold on the calendar with no guests invited, writes rows back and logs booked-value changes. A calendar move
 // or removal reaches the calendar staff use, so it is only ever queued for a person to approve.
-import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import type { Act, Approval, Check, Ctx } from "../../../../../../core/workflows/runtime.ts";
+import { approvalId, safeKey } from "../../../../../../core/workflows/runtime.ts";
 import { cell, COLUMNS, STATUSES, CALENDAR, EVENT_ID, SHEET_ID, TAB, TZ, type Booking, type Settings } from "../types.ts";
 
 const P = "google-workspace";
@@ -42,6 +43,7 @@ export async function readBookings(ctx: Ctx<Settings>): Promise<Booking[]> {
   return grid.slice(1).map((v, i): Booking => ({
     row: i + 2, guest: str(v[0], 120), headcount: whole(v[1]), start: str(v[2], 40), end: str(v[3], 40),
     booked: num(v[4]), original: num(v[5]), logged: num(v[6]), status: status(v[7]), eventId: str(v[8], 1024), note: str(v[9], 300),
+    cells: v,
   }));
 }
 
@@ -76,19 +78,40 @@ export async function hold(ctx: Ctx<Settings>, b: Booking): Promise<string> {
   return id;
 }
 
+const GEN = "booking-generations";
+const COL = { start: 2, end: 3, status: 7, event: 8 };   // column indexes on the bookings tab
+
+/** The check an approval runs first: the bookings tab as the cron read it. The cells the act depends on must still match. */
+function rowCheck(ctx: Ctx<Settings>, b: Booking, cols: number[]): Check {
+  return { platform: P, op: "sheets.spreadsheets.values.get", input: { params: { spreadsheetId: sheet(ctx), range: tabs(ctx).bookings } },
+    expect: cols.map((c) => ({ path: `values.${b.row - 1}.${c}`, equals: b.cells[c] as string })) };
+}
+
+/** Queues a calendar removal or move. When the approval for this key was closed by its check (the row changed after it was
+ *  queued), the hold moves to a new generation: the key changes, so the row as it is now is queued afresh, once. */
+async function queueHold(ctx: Ctx<Settings>, b: Booking, base: string, a: Omit<Act, "key">, text: string): Promise<void> {
+  const slot = safeKey(b.eventId);
+  let gen = (await ctx.store.get<{ n: number }>(GEN, slot))?.n ?? 0;
+  const closed = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, `${base}:${gen}`));
+  if (closed?.status === "rejected" && closed.decided_by === "check") { gen += 1; await ctx.store.put(GEN, slot, { n: gen }); }
+  await ctx.queue({ ...a, key: `${base}:${gen}` }, text);
+}
+
 /** Queue the removal of a calendar hold for approval. */
 export async function queueRemove(ctx: Ctx<Settings>, b: Booking): Promise<void> {
   const who = b.guest || `row ${b.row}`;
-  await ctx.queue({ platform: P, op: "calendar.events.delete", key: `cancel:${b.eventId}`, summary: `remove the calendar hold for ${who}`,
-    input: { params: { calendarId: cal(ctx), eventId: b.eventId, sendUpdates: "none" } } }, `Remove the calendar hold for ${who} (cancelled in the sheet)`);
+  await queueHold(ctx, b, `cancel:${b.eventId}`, { platform: P, op: "calendar.events.delete", summary: `remove the calendar hold for ${who}`,
+    input: { params: { calendarId: cal(ctx), eventId: b.eventId, sendUpdates: "none" } }, check: rowCheck(ctx, b, [COL.status, COL.event]) },
+    `Remove the calendar hold for ${who} (cancelled in the sheet)`);
 }
 
 /** Queue a move of a calendar hold to the times in the sheet, for approval. */
 export async function queueMove(ctx: Ctx<Settings>, b: Booking): Promise<void> {
   const who = b.guest || `row ${b.row}`;
-  await ctx.queue({ platform: P, op: "calendar.events.patch", key: `move:${b.eventId}:${b.start}`, summary: `move the calendar hold for ${who}`,
+  await queueHold(ctx, b, `move:${b.eventId}:${b.start}`, { platform: P, op: "calendar.events.patch", summary: `move the calendar hold for ${who}`,
     input: { params: { calendarId: cal(ctx), eventId: b.eventId, sendUpdates: "none" },
-      body: { start: when(ctx, b.start), end: when(ctx, b.end) } } }, `Move the calendar hold for ${who} to ${b.start}`);
+      body: { start: when(ctx, b.start), end: when(ctx, b.end) } }, check: rowCheck(ctx, b, [COL.status, COL.event, COL.start, COL.end]) },
+    `Move the calendar hold for ${who} to ${b.start}`);
 }
 
 /** Append booked-value changes to the changes tab: an internal log, drafted, never sent. */

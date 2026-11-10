@@ -53,21 +53,38 @@ export async function createBill(ctx: Ctx<Settings>, parentGuid: string, lines: 
   return guid(r.data?.Guid, "bill");
 }
 
+/** The most component lines a send can check on the live bill: the runtime holds a check to 10 values, a product guid and a quantity per line. */
+export const CHECK_LINES = 5;
+
+/** The live bill as the cron last saw it, as a check expects it: each line's component and quantity. */
+function seenBill(rec: BomRecord): { path: string; equals: string | number }[] {
+  return rec.lines.slice(0, CHECK_LINES).flatMap((l, i) => [
+    { path: `BillOfMaterialsLines.${i}.Product.Guid`, equals: l.guid },
+    { path: `BillOfMaterialsLines.${i}.Quantity`, equals: l.qty },
+  ]);
+}
+
 /** A change to a live bill. Queued for a person to approve; no cron sends it. Keyed by the change, so a re-run queues it once.
+ *  The send re-reads the live bill and goes only if its lines still match what the cron saw (rec.lines).
  *  A change already approved (done) is not the same change again: if the live bill has since moved off those lines, the
- *  same lines are queued under the next key. A pending, running, failed or declined change is reused, never queued twice. */
+ *  same lines are queued under the next key. A change the check refused is queued again only once the record has caught
+ *  up with the live bill (its check differs); otherwise it is reused. A pending, running, failed or declined change is reused. */
 export async function queueRevision(ctx: Ctx<Settings>, rec: BomRecord, lines: BomPart[], hash: string) {
   const bill = guid(rec.guid, "bill");
   const base = `bom-rev.${rec.parent}.${hash}`;
+  const expect = seenBill(rec);
+  const sameCheck = (ap: Approval) => JSON.stringify(ap.acts[0]?.check?.expect) === JSON.stringify(expect);
   let key = keyOf(base);
   for (let n = 1; ; n++) {
     const prev = await ctx.store.get<Approval>("approvals", approvalId(ctx.workflow.id, key));
-    if (prev?.status !== "done") break;
+    const superseded = prev?.status === "done" || (prev?.status === "rejected" && prev.decided_by === "check" && !sameCheck(prev));
+    if (!superseded) break;
     key = keyOf(`${base}.${n}`);
   }
   return ctx.queue({
     platform: P, op: "docs.put_BillOfMaterials_billOfMaterialsGuid", key,
     input: { params: { billOfMaterialsGuid: bill }, body: billBody(rec.parent_guid, lines, bill) },
     summary: `Update the bill of materials for ${rec.parent} in Unleashed to ${lines.length} components`,
+    check: { platform: P, op: "docs.get_BillOfMaterials_billOfMaterialsGuid", input: { params: { billOfMaterialsGuid: bill } }, expect },
   }, `Update the bill of materials for ${rec.parent} in Unleashed (${lines.length} components)`);
 }

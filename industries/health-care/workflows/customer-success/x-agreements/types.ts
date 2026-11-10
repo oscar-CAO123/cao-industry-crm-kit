@@ -12,7 +12,9 @@ export interface Agreement {
   approval: string;                              // the approval that creates the form; no form exists until a person approves it
   form_id?: string;                              // set once the approved creation has run
   created: string;                               // when the form was created (the approval's decision), else when it was queued
-  expiry_queued?: string; filed?: string;
+  expiry_queued?: string;
+  expiry_approval?: string;                      // the approval that would expire the form; if the check refused it, the agreement can still be filed
+  filed?: string;
 }
 
 /** Cliniko ids are digit strings. Checked before any id goes into a path, a filter or a store key. */

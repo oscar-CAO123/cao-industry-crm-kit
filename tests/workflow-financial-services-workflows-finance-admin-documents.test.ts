@@ -55,6 +55,8 @@ function fake() {
       const json = (d: unknown) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json" } });
       if (u.hostname === "oauth2.googleapis.com") return json({ access_token: "tok", expires_in: 1800 });
       if (p === "/v1/forms/FORM1/responses") return json({ responses });
+      const one = /^\/v1\/forms\/FORM1\/responses\/(R\d)$/.exec(p);
+      if (m === "GET" && one) return json(responses.find((r) => r.responseId === one[1]) ?? {});
       if (p === `/gmail/v1/users/me/drafts` && m === "POST") { drafts++; return json({ id: `DRAFT${drafts}` }); }
       if (p.endsWith("/drafts/send")) return json({ id: "SENT" });
       return new Response("not faked: " + p, { status: 404 });
@@ -168,4 +170,46 @@ test("a chased submission whose missing answer arrives is ready on the next draf
   assert.equal((await bySender(store, "sam@example.com")).status, "ready");
   assert.deepEqual(await followUp(context(WF, SET, store, new Date(NOW.getTime() + 4 * DAY), () => {})), { queued: 0 });
   assert.equal(draftsMade().length, 1);
+});
+
+test("a chase whose response is unchanged is sent once, when approved", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await intake(ctx); await draft(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.deepEqual(ap.acts[0].check?.expect, [{ path: "lastSubmittedTime", equals: "2026-11-08T02:00:00Z" }]);
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal(sends().length, 1);
+  await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
+  assert.equal(sends().length, 1, "still one send");
+});
+
+test("a chase is rejected and nothing is sent when the client answered after it was queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await intake(ctx); await draft(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  responses[1] = { ...responses[1], lastSubmittedTime: "2026-11-09T01:00:00Z", answers: { ...responses[1].answers, QB: answer("300000") } };
+  const after = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(after.status, "rejected");
+  assert.equal(after.decided_by, "check");
+  assert.match(after.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(sends().length, 0, "no chase sent");
+});
+
+test("an edited response that is still incomplete is chased again once, as a fresh approval", async () => {
+  const store = new MemoryStore(), ctx = context(WF, SET, store, NOW, () => {});
+  await intake(ctx); await draft(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  responses[1] = { ...responses[1], lastSubmittedTime: "2026-11-09T05:00:00Z", answers: { ...responses[1].answers, QC: answer("prefers mornings") } };
+  await approve(WF, store, first.id, "owner", NOW);
+  assert.equal(sends().length, 0);
+  assert.deepEqual(await intake(ctx), { added: 0, updated: 1 });
+  assert.deepEqual(await draft(ctx), { ready: 0, chasing: 1, needs_contact: 1 });
+  await draft(ctx);
+  const all = Object.values(await store.list<Approval>("approvals"));
+  assert.equal(all.length, 2, "the rejected chase and one fresh chase, no more");
+  const fresh = all.find((a) => a.status === "pending")!;
+  assert.equal(draftsMade().length, 2, "a new draft for the new chase, never re-drafted");
+  assert.equal((await approve(WF, store, fresh.id, "owner", NOW)).status, "done");
+  assert.equal(sends().length, 1);
+  assert.deepEqual(sends()[0].body, { id: "DRAFT2" });
 });

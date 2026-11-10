@@ -83,7 +83,7 @@
   "Client claims, progress claims and variations: not in the adapter. The mapped Xero operations do not cover a job-level variation or progress claim.",
   "Judgment steps stay with a person: what an overrun means for a job, whether to raise a variation, and whether to hold a supplier bill.",
   "Every adapter is docs-only until a Xero demo company proves the reads and the timesheet approval.",
-  "Needs core: timesheet-approval queues every Draft Xero timesheet and does not read x-labour's hold record. Where both workflows run on one Xero organisation, a held person can be queued here. Fixing it needs one shared hold record or one approval path for timesheets, which is outside this folder."
+  "Done: timesheet-approval reads the shared timesheet-holds record that x-labour writes, so a person held there is not queued here, and an approval already queued here for a person who becomes held is withdrawn. A withdrawn approval stays rejected, so a person cleared later is not queued again until that approval is dealt with. Needs core: an approval that is already running is not re-checked against the hold before it runs, the same gap x-labour records."
  ],
  "evidence": {
   "calls": "10 construction calls on costs in the worklist; 18 calls read and 12 describe the process in the mining pass",

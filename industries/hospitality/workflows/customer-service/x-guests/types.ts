@@ -30,6 +30,7 @@ export interface Entry {
   status: string;
   outcome: string;                  // RFC 3339 time the party was seated, marked no show or left
   note: string;
+  raw: string[];                    // the eight cells as the sheet returned them, before any trimming: a clear is checked against these
 }
 
 export const WHEN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/;

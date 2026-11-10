@@ -20,7 +20,7 @@
   {"name": "rollup", "schedule": "0 22 * * 0", "entry": "rollup", "summary": "Weekly roll-up of lost and won counts and the top lost reasons (22:00 UTC Sunday is 8 or 9 am Monday in eastern Australia)."}
  ],
  "draft_ops": {
-  "gohighlevel": ["opportunities.get-lost-reason", "opportunities.search-opportunity"]
+  "gohighlevel": ["opportunities.get-lost-reason", "opportunities.search-opportunity", "opportunities.get-opportunity"]
  },
  "live_ops": {
   "gohighlevel": ["opportunities.update-opportunity-status"]
@@ -38,8 +38,7 @@
   "Price comparison against a winning offer or competitor: no platform in the evidence documents it.",
   "Pipeline and stage changes (process-change): not built. Changing a pipeline touches the whole team, so it stays a person's job until a live operation is mapped and approved.",
   "Coaching the rep and sharing lessons with the team: no platform in the evidence documents it.",
-  "The adapter is docs-only until a sandbox GoHighLevel sub-account proves the reads and the re-open.",
-  "NEEDS CORE: a queued re-open runs at approval against the status the review saw. A deal won after it was queued is set back to open. Fix needed in core/workflows/runtime.ts approve(): a precondition hook that re-reads the opportunity and refuses the update unless its status is still lost, wired into the CRM shell's approve path. Not built here, because this folder cannot change core."
+  "The adapter is docs-only until a sandbox GoHighLevel sub-account proves the reads and the re-open."
  ],
  "evidence": {
   "calls": "6 construction and trade discovery calls describe reviewing lost deals; all six are by hand, with no tool named",

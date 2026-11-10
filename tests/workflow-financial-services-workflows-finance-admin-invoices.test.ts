@@ -141,3 +141,39 @@ test("chase: one reminder a day, queued for approval; the customer is emailed on
   assert.deepEqual(await run(new Date(NOW.getTime() + DAY)), { queued: 1 }, "next day, second step (14 days) is due");
   assert.deepEqual(await run(new Date(NOW.getTime() + 2 * DAY)), { queued: 0 }, "no third step is set");
 });
+
+test("payments: a bill whose amount changed after it was queued is rejected and nothing is paid; the next run queues it for the new amount", async () => {
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await check(ctx);
+  assert.deepEqual(await payments(ctx), { queued: 1 });
+  invoices[BILL_A].AmountDue = 100;   // part paid after it was queued
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  const after = await approve(WF, store, first.id, "owner", NOW);
+  assert.equal(after.status, "rejected");
+  assert.equal(after.decided_by, "check");
+  assert.match(after.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(paid().length, 0, "nothing paid");
+  assert.deepEqual(await payments(ctx), { queued: 1 }, "queued again, for 100");
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1, "one fresh approval, alongside the rejected one");
+  assert.equal(pending[0].acts[0].input?.body?.Amount, 100);
+  assert.equal((await approve(WF, store, pending[0].id, "owner", NOW)).status, "done");
+  assert.equal(paid().length, 1);
+  assert.equal(paid()[0].body.Amount, 100);
+});
+
+test("chase: a reminder whose invoice changed after it was queued is rejected and not emailed; the next run queues it again for the amount now owed", async () => {
+  const store = new MemoryStore();
+  const run = (at: Date) => chase(context(WF, S, store, at, () => {}));
+  assert.deepEqual(await run(NOW), { queued: 1 });
+  invoices[SALE_C].AmountDue = 200;   // part paid after it was queued
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "rejected");
+  assert.equal(mailed().length, 0, "nothing emailed");
+  assert.deepEqual(await run(NOW), { queued: 1 }, "queued again the same day, for 200");
+  assert.deepEqual(await run(NOW), { queued: 0 }, "and not again");
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1);
+  assert.equal((await approve(WF, store, pending[0].id, "owner", NOW)).status, "done");
+  assert.equal(mailed().length, 1);
+});

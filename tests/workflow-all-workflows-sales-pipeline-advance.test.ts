@@ -31,9 +31,10 @@ const PD_OLD = "2026-09-01 10:00:00", PD_FRESH = "2026-11-07 09:00:00";
 
 let hits: { method: string; host: string; path: string; query: string; body: any }[] = [];
 let pdCursorSeen: string | null = null;
+let pdStage = 1;
 
 function fake() {
-  hits = []; pdCursorSeen = null; resetGhl();
+  hits = []; pdCursorSeen = null; pdStage = 1; resetGhl();
   setTransport({
     sleep: async () => {}, log: () => {},
     fetch: (async (url: any, init: any) => {
@@ -63,7 +64,7 @@ function fake() {
                                 additional_data: { next_cursor: "c2" } });
           return json({ data: [{ id: 12, title: "Garden wall", stage_id: 1, status: "open", update_time: PD_FRESH, add_time: "2026-10-01 09:00:00" }], additional_data: {} });
         }
-        if (p === "/api/v2/deals/11" && m === "GET") return json({ data: { id: 11, title: "Coastal deck", stage_id: 1, status: "open", update_time: PD_OLD } });
+        if (p === "/api/v2/deals/11" && m === "GET") return json({ data: { id: 11, title: "Coastal deck", stage_id: pdStage, status: "open", update_time: PD_OLD } });
         if (p === "/api/v2/deals/11" && m === "PATCH") return json({ data: { id: 11, stage_id: body?.stage_id } });
       }
       return new Response("not faked: " + p, { status: 404 });
@@ -187,4 +188,60 @@ test("the workflow record lists only reads as draft operations and only the stag
   assert.deepEqual(WF.crons.map((c) => c.entry).sort(), ["queue", "scan"]);
   const act: Act = { platform: "pipedrive", op: "openapi-v2.updateDeal", summary: "x" };
   assert.ok(WF.live_ops.pipedrive.includes(act.op));
+});
+
+test("a stage move is sent once when the deal is still where the cron saw it", async () => {
+  const store = new MemoryStore(), ctx = context(WF, GHL_SETTINGS, store, NOW, () => {});
+  await store.put("moves", "opp1", move("opp1", "stage-c"));
+  await queue(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  assert.equal((await approve(WF, store, ap.id, "owner", NOW)).status, "done");
+  assert.equal(hits.filter((h) => h.method === "GET" && h.path === "/opportunities/opp1").length, 2, "read when queued, and again just before the send");
+  assert.equal(writes().length, 1, "sent once");
+  assert.equal(ghl.opp1.pipelineStageId, "stage-c");
+});
+
+test("a stage move is closed and not sent when the deal moved by hand after it was queued", async () => {
+  const store = new MemoryStore(), ctx = context(WF, GHL_SETTINGS, store, NOW, () => {});
+  await store.put("moves", "opp1", move("opp1", "stage-c"));
+  await queue(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  ghl.opp1.pipelineStageId = "stage-c";                       // moved by hand to the target
+  ghl.opp1.lastStageChangeAt = "2026-11-07T12:00:00.000Z";
+  const done = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(done.status, "rejected");
+  assert.equal(done.decided_by, "check");
+  assert.match(done.error ?? "", /the record changed after this was queued .*nothing was sent/);
+  assert.equal(writes().length, 0, "no stage change was sent");
+});
+
+test("a closed stage move is queued again once the deal is back at the stage the cron saw, and not twice", async () => {
+  const store = new MemoryStore(), ctx = context(WF, GHL_SETTINGS, store, NOW, () => {});
+  await store.put("moves", "opp1", move("opp1", "stage-c"));
+  await queue(ctx);
+  const [first] = Object.values(await store.list<Approval>("approvals"));
+  ghl.opp1.pipelineStageId = "stage-c";
+  ghl.opp1.lastStageChangeAt = "2026-11-07T12:00:00.000Z";
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "rejected");
+  ghl.opp1.pipelineStageId = "stage-b";                       // back at the stage the cron saw, with a new change time
+  ghl.opp1.lastStageChangeAt = "2026-11-07T13:00:00.000Z";
+  assert.deepEqual(await queue(ctx), { queued: 1, skipped: 0 });
+  const pending = Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending");
+  assert.equal(pending.length, 1);
+  assert.notEqual(pending[0].id, first.id);
+  assert.deepEqual(await queue(ctx), { queued: 0, skipped: 0 }, "a queued move is not picked up again");
+  assert.equal(Object.values(await store.list<Approval>("approvals")).filter((a) => a.status === "pending").length, 1);
+});
+
+test("Pipedrive: a stage move is closed and not sent when the deal moved by hand after it was queued", async () => {
+  const store = new MemoryStore();
+  await store.put("moves", "11", { deal: "11", to: "2", why: "Site visit held on 5 Nov, quote requested", at: NOW.toISOString(), status: "pending" });
+  const ctx = context(WF, PD_SETTINGS, store, NOW, () => {});
+  await queue(ctx);
+  const [ap] = Object.values(await store.list<Approval>("approvals"));
+  pdStage = 3;                                                 // moved by hand, past the target
+  const done = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(done.status, "rejected");
+  assert.equal(done.decided_by, "check");
+  assert.equal(writes().length, 0, "no stage change was sent");
 });

@@ -1,7 +1,7 @@
 // Unleashed: the product master. Reads the product list and single products (draft operations); a barcode change is
 // built here as a live act and only ever queued by the cron, so a person approves it before it reaches the record.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
-import { type Product, type Settings, isGuid } from "../types.ts";
+import { type Product, type Settings, isGuid, seenValues } from "../types.ts";
 
 const P = "unleashed";
 const str = (v: unknown) => (v == null ? "" : String(v));
@@ -29,13 +29,14 @@ export const unleashed = {
     if (!p || p.guid !== guid) throw new Error("unleashed: product did not come back as asked");
     return p;
   },
-  /** The barcode update: the product as read, with only Barcode changed. */
+  /** The barcode update: the product as read, with only Barcode changed. Approved only if the product still reads as the cron saw it. */
   setBarcodeAct(p: Product, barcode: string): Act {
     return {
       platform: P, op: "docs.post_Products_id",
       input: { params: { productGuid: p.guid }, body: { ...p.raw, Barcode: barcode } },
       summary: `set barcode on ${p.code} to ${barcode}`,
       key: `barcode:${p.guid}:${barcode}`,
+      check: { platform: P, op: "docs.get_Products_productGuid", input: { params: { productGuid: p.guid } }, expect: seenValues(p.raw) },
     };
   },
 };

@@ -25,6 +25,7 @@ export interface Failure {
   attempts?: number;
   first_seen: string;            // ISO time
   chases: string[];              // ISO times a chase step was queued
+  last_approval?: string;        // approval id of the newest counted chase step, so a step its check closed can be taken back
   status: "open" | "resolved";
   resolved?: string;
 }

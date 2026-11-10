@@ -39,6 +39,11 @@ function answer(method: string, u: URL): Response {
     const b = bills[u.searchParams.get("productGuid") ?? ""];
     return json({ Items: b ? [b] : [] });
   }
+  const one = /^\/BillOfMaterials\/([^/]+)$/.exec(u.pathname);
+  if (method === "GET" && one) {
+    const b = Object.values(bills).find((x: any) => x.Guid === one[1]);
+    return b ? json(b) : json({ Message: "no such bill" }, 404);
+  }
   if (method === "GET" && u.pathname.startsWith("/StockOnHand/")) return json([{ AvailableQty: stock[u.pathname.split("/")[2]] ?? 0 }]);
   if (method === "POST" && u.pathname === "/BillOfMaterials") return json({ Guid: DESK_BILL });
   if (method === "PUT" && u.pathname === `/BillOfMaterials/${BILL}`) return json({ Guid: BILL });
@@ -76,6 +81,20 @@ function seedRecord(store: MemoryStore) {
   return store.put("boms", keyOf("BOOKSHELF"), rec);
 }
 const approvals = async (store: MemoryStore) => Object.values(await store.list<Approval>("approvals"));
+const sentOf = () => hits.filter((h) => h.method !== "GET");
+const DEFAULT_LIVE = [{ guid: SIDE, qty: 2 }, { guid: SHELF, qty: 4 }];
+/** The live bill in the fake, holding these component lines. */
+function liveBill(lines: { guid: string; qty: number }[]) {
+  bills[PARENT] = { Guid: BILL, Product: { Guid: PARENT }, Obsolete: false,
+    BillOfMaterialsLines: lines.map((l) => ({ Product: { Guid: l.guid }, Quantity: l.qty })) };
+}
+/** The record as the hourly check would bring it in step with these live lines. */
+function syncRecord(store: MemoryStore, lines: { guid: string; qty: number }[]) {
+  const code = (g: string) => Object.keys(CATALOG).find((k) => CATALOG[k] === g)!;
+  const parts = lines.map((l) => ({ code: code(l.guid), qty: l.qty, guid: l.guid }));
+  const rec: BomRecord = { parent: "BOOKSHELF", parent_guid: PARENT, guid: BILL, hash: linesHash(parts), created: NOW.toISOString(), lines: parts };
+  return store.put("boms", keyOf("BOOKSHELF"), rec);
+}
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
@@ -126,17 +145,18 @@ test("an approved change is sent only on approval, to the bill's own URL, signed
   await revise(ctx);
   assert.equal(hits.length, 0, "nothing sent before approval");
   const [ap] = await approvals(store);
+  liveBill(DEFAULT_LIVE);
   const res = await approve(WF, store, ap.id, "owner", NOW);
   assert.equal(res.status, "done");
-  assert.equal(hits.length, 1);
-  const put = hits[0];
+  assert.equal(sentOf().length, 1);
+  const put = sentOf()[0];
   assert.equal(put.method, "PUT");
   assert.equal(put.path, `/BillOfMaterials/${BILL}`);
   assert.equal(put.body.Guid, BILL);
   assert.deepEqual(put.body.Product, { Guid: PARENT });
   assertSigned(put);
   await assert.rejects(approve(WF, store, ap.id, "owner", NOW), /already done/);
-  assert.equal(hits.length, 1, "a second approval sends nothing");
+  assert.equal(sentOf().length, 1, "a second approval sends nothing");
 });
 
 test("a change approved earlier is queued again when the live bill has since moved off those lines", async () => {
@@ -144,6 +164,7 @@ test("a change approved earlier is queued again when the live bill has since mov
   await seedRecord(store);
   await revise(ctx);
   const [first] = await approvals(store);
+  liveBill(DEFAULT_LIVE);
   assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "done");
   // The bill is put back to four shelves in Unleashed and the record is brought in step with it, as the hourly check does.
   await seedRecord(store);
@@ -193,4 +214,68 @@ test("bill bodies: components numbered from 1, product by Guid; only an update c
   const changed = billBody(PARENT, [{ guid: SIDE, qty: 2 }], BILL);
   assert.equal(changed.Guid, BILL);
   assert.equal(changed.Product.Guid, PARENT);
+});
+
+test("a bill change re-reads the live bill before it is sent, and sends once when the bill still matches what the cron saw", async () => {
+  const store = new MemoryStore(), ctx = context(WF, settingsWith(6), store, NOW, () => {});
+  await seedRecord(store);
+  await revise(ctx);
+  const [ap] = await approvals(store);
+  assert.ok(ap.acts[0].check, "the change carries a check");
+  liveBill(DEFAULT_LIVE);
+  const res = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(res.status, "done", res.error);
+  assert.ok(hits.some((h) => h.method === "GET" && h.path === `/BillOfMaterials/${BILL}`), "the live bill is read first");
+  assert.equal(sentOf().length, 1, "sent once");
+  assert.equal(sentOf()[0].method, "PUT");
+  assert.deepEqual(sentOf()[0].body.BillOfMaterialsLines.map((l: any) => l.Quantity), [2, 6]);
+});
+
+test("a bill changed in Unleashed after the change was queued sends nothing and the approval is rejected", async () => {
+  const store = new MemoryStore(), ctx = context(WF, settingsWith(6), store, NOW, () => {});
+  await seedRecord(store);
+  await revise(ctx);
+  const [ap] = await approvals(store);
+  liveBill([{ guid: SIDE, qty: 2 }, { guid: SHELF, qty: 5 }]); // someone edits the shelf quantity in Unleashed
+  const res = await approve(WF, store, ap.id, "owner", NOW);
+  assert.equal(res.status, "rejected");
+  assert.equal(res.decided_by, "check");
+  assert.match(res.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(sentOf().length, 0, "no PUT was sent");
+});
+
+test("a refused bill change is queued again only once the record has caught up with the live bill, and never twice", async () => {
+  const store = new MemoryStore(), ctx = context(WF, settingsWith(6), store, NOW, () => {});
+  await seedRecord(store);
+  await revise(ctx);
+  const [first] = await approvals(store);
+  liveBill([{ guid: SIDE, qty: 2 }, { guid: SHELF, qty: 5 }]);
+  assert.equal((await approve(WF, store, first.id, "owner", NOW)).status, "rejected");
+
+  await revise(ctx);
+  assert.equal((await approvals(store)).length, 1, "the record still shows the old lines: the same refused change is not queued again");
+
+  await syncRecord(store, [{ guid: SIDE, qty: 2 }, { guid: SHELF, qty: 5 }]); // the hourly check brings the record in step
+  await revise(ctx);
+  const aps = await approvals(store);
+  assert.equal(aps.length, 2, "a fresh change is queued from the synced record");
+  assert.equal(aps.filter((a) => a.status === "pending").length, 1);
+  await revise(ctx);
+  assert.equal((await approvals(store)).length, 2, "a re-run does not queue the pending change a third time");
+
+  const fresh = aps.find((a) => a.status === "pending")!;
+  assert.equal((await approve(WF, store, fresh.id, "owner", NOW)).status, "done");
+  assert.equal(sentOf().length, 1);
+  assert.equal(sentOf()[0].body.BillOfMaterialsLines[1].Quantity, 6);
+});
+
+test("a bill with more than five components is parked, never queued, because the send could not be checked", async () => {
+  const store = new MemoryStore();
+  const many = Array.from({ length: 6 }, (_, i) => ({ code: `P${i}`, qty: 1, guid: `00000000-0000-4000-8000-00000000000${i}` }));
+  await store.put("boms", keyOf("BOOKSHELF"), { parent: "BOOKSHELF", parent_guid: PARENT, guid: BILL, hash: linesHash(many), created: NOW.toISOString(), lines: many } satisfies BomRecord);
+  const settings: Settings = { boms: [{ parent: "BOOKSHELF", lines: many.map((l) => ({ code: l.code, qty: 2 })) }] };
+  assert.deepEqual(await revise(context(WF, settings, store, NOW, () => {})), { queued: 0, parked: 1 });
+  assert.equal((await approvals(store)).length, 0);
+  const problems = Object.values(await store.list<any>("problems"));
+  assert.equal(problems[0].kind, "unverifiable-bill");
 });

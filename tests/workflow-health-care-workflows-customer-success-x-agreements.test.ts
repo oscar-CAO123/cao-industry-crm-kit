@@ -149,3 +149,26 @@ test("an agreement whose creation has not been approved has no form to chase or 
 test("every cron in workflow.json has an entry in CRONS", () => {
   for (const c of WF.crons) assert.equal(typeof CRONS[c.entry], "function", `${c.name} has a runner`);
 });
+
+test("an expiry re-reads the form before it is sent: an unchanged form expires once, a form completed after queueing is left alone and still filed", async () => {
+  const store = new MemoryStore();
+  await intake(context(WF, SETTINGS, store, NOW, () => {}));
+  await approveCreations(store, NOW);
+  await chase(context(WF, SETTINGS, store, LATER, () => {}));
+  const pending = await approvalsOp(store, "patient-form.updatepatientform");
+  assert.equal(pending.length, 2);
+  const forOne = (formId: string) => pending.find((x) => (x.acts[0].input as any).params.id === formId)!;
+
+  forms["9001"].completed = true; forms["9001"].signatures = [{ id: 4455 }]; // the patient signs after the expiry was queued
+  const refused = await approve(WF, store, forOne("9001").id, "owner", LATER);
+  assert.equal(refused.status, "rejected");
+  assert.equal(refused.decided_by, "check");
+  assert.match(refused.error ?? "", /changed after this was queued .*nothing was sent/);
+  assert.equal(writes().some((h) => h.method === "PATCH" && h.path === "/v1/patient_forms/9001"), false, "the signed form is not expired");
+
+  assert.equal((await approve(WF, store, forOne("9002").id, "owner", LATER)).status, "done");
+  assert.deepEqual(writes().filter((h) => h.method === "PATCH").map((h) => [h.path, h.body]), [["/v1/patient_forms/9002", { expired: true }]]);
+
+  assert.deepEqual(await CRONS["file-record"]!(context(WF, SETTINGS, store, LATER, () => {})), { filed: 1 }, "the refused agreement is still filed");
+  assert.equal((await store.get<any>("register", "9001"))?.signature_id, "4455");
+});

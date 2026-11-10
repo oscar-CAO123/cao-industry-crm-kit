@@ -41,19 +41,28 @@ export async function chase(ctx: Ctx<Settings>) {
     if (ctx.now.getTime() - Date.parse(a.created) < days * DAY) continue;
     const f = await getForm(ctx, formId);
     if (f?.completed === true) continue;                      // file-record logs it
-    if (f?.expired !== true) { await queueExpiry(ctx, formId); queued++; }
+    let expiry: string | undefined;
+    if (f?.expired !== true) { expiry = await queueExpiry(ctx, formId, f); queued++; }
     a.expiry_queued = ctx.now.toISOString();                  // queued, or already expired: stop watching it
+    if (expiry) a.expiry_approval = expiry;
     await ctx.store.put("agreements", a.key, a);
   }
   ctx.log(`chase: ${queued} expiries queued`);
   return { queued };
 }
 
+/** An expiry the check refused (the form changed after it was queued, for example it was completed) leaves the agreement open to be filed. */
+async function expiryRefused(ctx: Ctx<Settings>, a: Agreement): Promise<boolean> {
+  const ap = a.expiry_approval ? await ctx.store.get<Approval>("approvals", a.expiry_approval) : undefined;
+  return ap?.status === "rejected";
+}
+
 /** Hourly: a completed agreement is logged once to the internal register, with its signature reference. Nothing is sent. */
 export async function fileRecord(ctx: Ctx<Settings>) {
   let filed = 0;
   for (const a of Object.values(await ctx.store.list<Agreement>("agreements"))) {
-    if (a.filed || a.expiry_queued) continue;
+    if (a.filed) continue;
+    if (a.expiry_queued && !(await expiryRefused(ctx, a))) continue;
     const formId = await formOf(ctx, a);
     if (!formId) continue;
     const f = await getForm(ctx, formId);

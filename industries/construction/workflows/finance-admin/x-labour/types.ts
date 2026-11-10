@@ -26,8 +26,12 @@ export interface ShiftRec {
   xero_timesheet?: string; reason?: string; at: string;
 }
 
-/** The Xero employees held from approval for one pay period. Each mirror run rewrites it. */
-export interface Holds { employees: string[]; at: string }
+/** The store namespace for holds. Both timesheet workflows read and write it: costs (fulfilment/costs) reads the same name, so a person
+ *  held here is held there too. */
+export const HOLDS_NS = "timesheet-holds";
+
+/** The Xero employees held from approval for one pay period (start to end). Each mirror run rewrites it. */
+export interface Holds { employees: string[]; at: string; start: string; end: string }
 
 /** A Xero timesheet as the crons read it. */
 export interface XeroTimesheet { timesheetID: string; employeeID: string; status: "Draft" | "Approved" | "Completed"; totalHours: number }

@@ -37,8 +37,7 @@
    "Enquiry intake: the workflow starts from a row the venue marks Enquiry. No enquiry channel (web form, email, phone) is mapped.",
    "Deposits, pre-orders, no-show chasing, seating plans, day sheets, service prep and waitlists: no mapped platform describes them in the docs given. They stay judgment steps or a later build.",
    "Calendar free-busy is a read sent as a POST, but the kit's operation is marked write, so the deploy needs KIT_ALLOW_WRITES=1 for the hold cron to check the calendar.",
-   "The Google adapter is docs-only: its field names come from Google's Sheets and Calendar specs, and it has not run against a real Google Workspace account.",
-   "needs-core: an approved calendar removal or move runs against the sheet as it stood when it was queued. If the row is set back to Held or another status before approval, approving still deletes or moves a live hold. Core needs a precondition on an approved act (re-read the row and stop unless it still reads Cancelled or Moved) before this is safe. Until then, a person checks the row before approving."
+   "The Google adapter is docs-only: its field names come from Google's Sheets and Calendar specs, and it has not run against a real Google Workspace account."
  ],
  "evidence": {
    "calls": "7 of 7 hospitality discovery calls that discuss bookings describe how they do it; every step is manual",

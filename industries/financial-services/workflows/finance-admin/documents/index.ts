@@ -3,7 +3,7 @@
 // system stays with the adviser (see SKILL.md).
 import type { Ctx } from "../../../../../core/workflows/runtime.ts";
 import type { FormSpec, Settings, Submission } from "./types.ts";
-import { google, chaseHtml } from "./adapters/google-workspace.ts";
+import { google, chaseHtml, responseCheck } from "./adapters/google-workspace.ts";
 import { keyOf, cell } from "../../../../construction/workflows/sales/quoting/types.ts";
 
 const DAY = 864e5;
@@ -50,7 +50,8 @@ async function chase(ctx: Ctx<Settings>, s: Submission, spec: FormSpec, missing:
     s.drafts[n - 1] = await google.chaseDraft(ctx, s.email!, `Your ${spec.label}: what we still need`, chaseHtml(ctx.settings.business_name ?? "", spec.label, missing));
     await ctx.store.put("submissions", s.id, s);
   }
-  await ctx.queue(google.sendAct(s.drafts[n - 1], s.email!, `chase${n}:${s.id}`), `send chase ${n} to ${s.email} for ${spec.label}: ${missing.join(", ")}`);
+  const check = responseCheck(s.form_id, s.response_id, s.seen);
+  await ctx.queue(google.sendAct(s.drafts[n - 1], s.email!, `chase${n}:${s.id}`, check), `send chase ${n} to ${s.email} for ${spec.label}: ${missing.join(", ")}`);
   s.status = "chasing";
   s.missing = missing;
   s.chased.push(ctx.now.toISOString());

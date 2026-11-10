@@ -31,7 +31,7 @@
   {"name": "exceptions", "schedule": "40 22 * * *", "entry": "exceptions", "summary": "List the transactions the accountant must check by hand before the BAS."}
  ],
  "draft_ops": {
-  "xero": ["accounting.getBankTransactions", "accounting.getTaxRates"]
+  "xero": ["accounting.getBankTransactions", "accounting.getBankTransaction", "accounting.getTaxRates"]
  },
  "live_ops": {
   "xero": ["accounting.updateBankTransaction"]

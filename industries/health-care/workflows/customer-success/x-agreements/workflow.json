@@ -43,7 +43,6 @@
  "gaps": [
   "Cliniko: the API maps no send for a patient form. A person sends the created form from the patient record by email, SMS, QR code or link.",
   "Cliniko: a rejected form creation is not queued again, so that patient case gets no agreement until someone starts it by hand in Cliniko.",
-  "Cliniko: an expiry is approved as queued. The approval does not re-read whether the form was completed in the meantime, so a form completed after queueing can still be expired. Needs the runtime to re-check a live act before it runs (core change).",
   "Cliniko: the 21-day clock starts when the form is created (when a person approves the creation), not when a person sends it to the patient. Needs a sent date set in the CRM shell (shell change).",
   "Cliniko: the chase reminder is manual for the same reason. The only automated change is the expiry, which waits for approval.",
   "Cliniko: the trigger is every active patient case. Confirm with the owner that each one needs an agreement, or narrow the trigger before going live.",

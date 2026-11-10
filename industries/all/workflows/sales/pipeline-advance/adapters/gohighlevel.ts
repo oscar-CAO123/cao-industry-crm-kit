@@ -40,7 +40,10 @@ export const gohighlevel: Adapter = {
 
   async queueMove(ctx: Ctx<Settings>, d: Deal, to: string, key: string, summary: string) {
     if (!ID.test(d.id) || !ID.test(to)) throw new Error("pipeline-advance: GoHighLevel move needs plain ids");
+    // The approval re-reads the deal and is closed unless it is still open at the stage the cron saw.
     return ctx.queue({ platform: P, op: UPDATE, key, summary,
-      input: { params: { id: d.id }, body: { pipelineId: ctx.settings.pipeline_id, pipelineStageId: to } } }, summary);
+      input: { params: { id: d.id }, body: { pipelineId: ctx.settings.pipeline_id, pipelineStageId: to } },
+      check: { platform: P, op: GET, input: { params: { id: d.id } },
+        expect: [{ path: "opportunity.pipelineStageId", equals: d.stage }, { path: "opportunity.status", equals: d.status }] } }, summary);
   },
 };

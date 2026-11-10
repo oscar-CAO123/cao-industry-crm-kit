@@ -15,7 +15,11 @@ export async function intake(ctx: Ctx<Settings>) {
     const mark = await ctx.store.get<{ at: string }>("watermarks", `rfis:${project}`);
     const since = mark?.at ?? new Date(ctx.now.getTime() - DAY).toISOString();
     let latest = since;
-    for (const r of await fw.rfisUpdatedSince(ctx, project, since)) {
+    const got = await fw.rfisUpdatedSince(ctx, project, since);
+    // A refused list leaves the watermark where it was, so no changed RFI is skipped. A window that stays past the cap is
+    // refused on every run until someone narrows it; the log line says so.
+    if (!got.complete) { ctx.log(`intake: changed-RFI list refused past ${fw.MAX_RFI_PAGES} pages; watermark held`); continue; }
+    for (const r of got.rows) {
       if (!(await ctx.store.get("rfis", r.id))) added++;
       await ctx.store.put("rfis", r.id, r satisfies RfiRow);
       seen++;

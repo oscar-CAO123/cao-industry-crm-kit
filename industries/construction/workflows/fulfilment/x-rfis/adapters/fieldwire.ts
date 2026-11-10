@@ -15,15 +15,33 @@ function version(s: Settings): Record<string, string> {
 const uuid = (v: unknown) => { const s = String(v ?? ""); if (!UUID.test(s)) throw new Error("fieldwire: bad id"); return s; };
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
-/** RFIs in a project changed since a time (first page; paging is not followed yet, see gaps). */
-export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, since: string): Promise<RfiRow[]> {
+/** Most pages one changed-RFI list is followed through. Beyond it the list is refused, never read in part. */
+export const MAX_RFI_PAGES = 20;
+
+/**
+ * RFIs in a project changed since a time, every page followed. Fieldwire sends has_more and last_synced_at as response
+ * headers, and the next page is asked with last_synced_at set to that value (spec: pagination headers, regional API).
+ * `complete` is false when the page cap is hit or a page says more follows with no cursor: the rows are then dropped.
+ */
+export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, since: string): Promise<{ rows: RfiRow[]; complete: boolean }> {
   const pid = uuid(project);
-  const r = await ctx.draft<any[]>({ platform: P, op: OP("get_rfis_in_project"), summary: `RFIs changed since ${since}`,
-    input: { params: { ...version(ctx.settings), project_id: pid, "filters[updated_at_gt]": since } } });
-  return (Array.isArray(r.data) ? r.data : []).filter((x) => UUID.test(String(x?.id ?? ""))).map((x): RfiRow => ({
-    id: String(x.id), project: pid, name: clean(x.name, 160), status: clean(x.mapped_status ?? x.status, 40),
-    due: clean(x.due_date, 20), updated: clean(x.updated_at, 40), seen: ctx.now.toISOString(),
-  }));
+  const rows: RfiRow[] = [];
+  let syncedAt: string | undefined;
+  for (let page = 1; page <= MAX_RFI_PAGES; page++) {
+    const params: Record<string, unknown> = { ...version(ctx.settings), project_id: pid, "filters[updated_at_gt]": since };
+    if (syncedAt) params.last_synced_at = syncedAt;
+    const r = await ctx.draft<any[]>({ platform: P, op: OP("get_rfis_in_project"), summary: `RFIs changed since ${since}, page ${page}`,
+      input: { params } });
+    for (const x of Array.isArray(r.data) ? r.data : []) {
+      if (!UUID.test(String(x?.id ?? ""))) continue;
+      rows.push({ id: String(x.id), project: pid, name: clean(x.name, 160), status: clean(x.mapped_status ?? x.status, 40),
+        due: clean(x.due_date, 20), updated: clean(x.updated_at, 40), seen: ctx.now.toISOString() });
+    }
+    if (r.headers?.get?.("has_more") !== "true") return { rows, complete: true };
+    syncedAt = r.headers?.get?.("last_synced_at") ?? undefined;
+    if (!syncedAt) break;
+  }
+  return { rows: [], complete: false };
 }
 
 /** Create the RFI as a draft in Fieldwire. Returns its id at once so a failed later step never creates a second one. */
