@@ -3,7 +3,7 @@ jest.mock("@/lib/prisma", () => ({
     crm_Report_Config: { create: jest.fn(), findMany: jest.fn(), delete: jest.fn(), update: jest.fn() },
   },
 }));
-jest.mock("@/lib/auth-server", () => ({ getSession: jest.fn() }));
+jest.mock("@/lib/auth-server", () => ({ getSession: jest.fn(), assertActionSession: jest.fn() }));
 
 import { prismadb } from "@/lib/prisma";
 import { saveConfig, loadConfigs, deleteConfig, duplicateConfig, toggleShare } from "@/actions/reports/config";
@@ -11,8 +11,10 @@ import { saveConfig, loadConfigs, deleteConfig, duplicateConfig, toggleShare } f
 describe("report config actions", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    const { getSession } = require("@/lib/auth-server");
-    (getSession as jest.Mock).mockResolvedValue({ user: { id: "user-1", email: "test@example.com" } });
+    const { getSession, assertActionSession } = require("@/lib/auth-server");
+    const session = { user: { id: "user-1", email: "test@example.com" } };
+    (getSession as jest.Mock).mockResolvedValue(session);
+    (assertActionSession as jest.Mock).mockResolvedValue(session);
   });
 
   describe("saveConfig", () => {
