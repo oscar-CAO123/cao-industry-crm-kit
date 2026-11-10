@@ -56,7 +56,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-workspace",
@@ -70,7 +72,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-workspace",
@@ -84,7 +88,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-workspace",
@@ -98,7 +104,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-workspace",
@@ -112,7 +120,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-workspace",
@@ -126,7 +136,9 @@
         "npm maintainer email on google.com",
         "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "hubspot",

@@ -1,3 +1,4 @@
+import { encodeMultipart, type UploadPart } from "./multipart.ts";
 // The agent SDK runtime: one gated way to call ANY mapped endpoint of ANY platform.
 //
 // Each platform lives in core/sdk/platforms/<id>/ as two generated files:
@@ -76,6 +77,8 @@ export interface Platform {
   queryObjects?: "deepObject";
 }
 export interface CallInput {
+  /** Explicit vendor field names with text or base64 file data; safe to persist for approval. */
+  multipart?: UploadPart[];
   /** Values for the endpoint's mapped params, by name. Each goes where the spec says (path, query, header, body). */
   params?: Record<string, unknown>;
   /** The request body, for endpoints that take one. Merged with any body-located params. */
@@ -91,7 +94,7 @@ export interface CallInput {
   binary?: boolean;
   signal?: AbortSignal;
 }
-export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; body?: string; kind: "read" | "write"; readPost: boolean }
+export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; body?: string | Uint8Array; multipart?: { name: string; bytes: number; filename?: string; contentType?: string }[]; kind: "read" | "write"; readPost: boolean }
 
 const cache = new Map<string, { platform: Platform; ops: Map<string, Op> }>();
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
@@ -365,6 +368,8 @@ function deepPairs(id: string, opId: string, name: string, v: unknown, depth = 0
 export async function plan(id: string, opId: string, input: CallInput = {}, withKeys = false): Promise<Planned> {
   const { platform: p } = load(id);
   const o = describe(id, opId);
+  if (input.multipart !== undefined && o.bodyType !== "multipart") throw new Error(`${id} ${opId}: this operation is not mapped as multipart`);
+  if (o.bodyType === "multipart" && (input.multipart === undefined || input.body !== undefined)) throw new Error(`${id} ${opId}: supply multipart parts instead of a JSON body`);
   const params: Record<string, unknown> = { ...(input.params ?? {}) };
   for (const [name, pin] of Object.entries(p.pinned ?? {})) {
     if (!o.params.some((x) => x.name === name) && !(o.paramsUnmapped && name in params)) continue;
@@ -389,7 +394,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     for (const k of Object.keys(params)) if (!known.has(k)) throw new Error(`${id} ${opId}: unknown param ${k}`);
   }
   for (const x of o.params) if (x.required && x.in === "path" && (params[x.name] === undefined || params[x.name] === null)) throw new Error(`${id} ${opId}: missing required ${x.name}`);
-  for (const x of o.params) if (x.required && x.in !== "path" && params[x.name] === undefined && !(x.in === "body" && input.body !== undefined)) throw new Error(`${id} ${opId}: missing required ${x.name}`);
+  for (const x of o.params) if (x.required && x.in !== "path" && params[x.name] === undefined && !(x.in === "body" && input.body !== undefined) && !(o.bodyType === "multipart" && ["body", "form", "formData"].includes(x.in) && input.multipart?.some((part) => part.name === x.name))) throw new Error(`${id} ${opId}: missing required ${x.name}`);
 
   const base = serverUrl(p, o, input, withKeys);
   if (p.style === "graphql") return planGraphql(p, o, input, base, withKeys);
@@ -459,10 +464,15 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     u.search = q ? `?${q}` : "";
     if (method !== "GET") { rawBody = enc([...Object.entries(o.fixedForm ?? {}), ...Object.entries((formOut as Record<string, string>) ?? {})]); formOut = undefined; }
   }
+  let upload: Awaited<ReturnType<typeof encodeMultipart>> | undefined;
+  if (o.bodyType === "multipart") {
+    if (json !== undefined || formOut !== undefined || rawBody !== undefined) throw new Error(`${id} ${opId}: upload fields must be explicit multipart parts`);
+    upload = await encodeMultipart(input.multipart!);
+  }
   return {
-    method, url: u.toString(), json, form: formOut, body: rawBody, kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
+    method, url: u.toString(), json, form: formOut, body: upload ? (withKeys ? upload.body : undefined) : rawBody, ...(upload ? { multipart: upload.summary } : {}), kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
     // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
-    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u, rawBody) : signPreview(p, o)) },
+    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u, rawBody) : signPreview(p, o)), ...(upload ? { "Content-Type": upload.contentType } : {}) },
   };
 }
 
@@ -548,7 +558,6 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   if (!isRead && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
-  if (o.bodyType === "multipart") throw new Error(`${p.id} ${o.id}: this endpoint takes a multipart upload, which the kit does not build yet`);
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
   const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary, signal: input.signal });
@@ -577,7 +586,7 @@ function routes(p: Platform, ops: Map<string, Op>) {
   r = [];
   for (const o of ops.values()) {
     let base: string;
-    try { base = serverUrl(p, o, {}, true); } catch { continue; }
+    try { base = serverUrl(p, o, {}, true).replace(/\/+$/, ""); } catch { continue; }
     const src = o.path.replace(/^\/+/, "").split(/(\{[^}]+\}|:[A-Za-z_]\w*)/)
       .map((s) => (PATH_PART.test(s) ? "[^/]+" : s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("");
     r.push({ o, base, re: new RegExp(`^/${src}/?$`), literal: o.path.replace(/\{[^}]+\}|:[A-Za-z_]\w*/g, "").length });
@@ -588,7 +597,7 @@ function routes(p: Platform, ops: Map<string, Op>) {
 
 // Headers a vendor SDK may not choose: keys, hop-by-hop, and its own telemetry about this machine
 // (Stripe tags its user agent with the AI agent it finds in the environment).
-const SDK_DROP = /^(content-length|connection|keep-alive|transfer-encoding|user-agent|x-stripe-client-user-agent|x-stripe-client-telemetry|x-fern-[a-z-]+)$/i;
+const SDK_DROP = /^(content-length|connection|keep-alive|transfer-encoding|user-agent|x-stripe-client-user-agent|x-stripe-client-telemetry|x-fern-[a-z-]+|x-goog-api-client|accept-charset|accept-encoding|x-goog-request-params)$/i;
 // Headers a vendor SDK may send, besides the endpoint's own mapped header params. Anything else is
 // refused, not dropped: Stripe-Account or Stripe-Context would act on another account, and a
 // method-override header could turn a read into a write.
@@ -613,9 +622,21 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
     try { d = decodeURIComponent(seg); } catch { throw new Error(`${id}: a path value is not allowed`); }
     if (/[\\/]/.test(d) || d === "." || d === "..") throw new Error(`${id}: a path value is not allowed`);
   }
+  // Recover named path values to apply the same client-account pins as plan().
+  const names: string[] = [];
+  const pathPattern = o.path.replace(/\{([^}]+)\}|:([A-Za-z_]\w*)/g, (_, a, b) => { names.push(a ?? b); return "___PARAM___"; })
+    .split("___PARAM___").map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("([^/]+)");
+  const captures = new RegExp(`^${pathPattern}/?$`).exec(at.slice(match.base.length));
+  for (const [name, pin] of Object.entries(p.pinned ?? {})) {
+    const ix = names.indexOf(name);
+    const values = [...(ix >= 0 && captures ? [decodeURIComponent(captures[ix + 1])] : []), ...u.searchParams.getAll(name)];
+    const allowed = new Set([...pin.allow, optional(pin.env), ...(pin.envList ? (optional(pin.envList) ?? "").split(",") : [])].map((x) => String(x ?? "").trim().toLowerCase()).filter(Boolean));
+    if (values.some((value) => !allowed.has(value.toLowerCase()))) throw new Error(`${id}: ${name} must be the client's own (set by ${pin.env})`);
+  }
   const read = opIsRead(p, o);
   if (!read && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
+  if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   const target = { url: req.url };
   const auth = await authHeaders(p, o, {}, target);
   if (target.url !== req.url) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
@@ -629,10 +650,10 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
     headers[k.toLowerCase() === "accept" ? "Accept" : k] = v;
   }
   Object.assign(headers, fixed, auth);
-  const spec = appSpec(p, u, read && method === "POST");
+  const spec = appSpec(p, new URL(target.url), read && method === "POST");
   // xero-node sends "{}" on a GET; real fetch refuses a GET with a body, so it is dropped here.
   const body = method === "GET" ? undefined : req.body;
-  return httpCall<ArrayBuffer>(spec, { method: method as Method, url: req.url, headers, body, binary: true, signal: req.signal });
+  return httpCall<ArrayBuffer>(spec, { method: method as Method, url: target.url, headers, body, binary: true, signal: req.signal });
 }
 
 /** A platform handle: what each generated index.ts uses. */

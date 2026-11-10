@@ -328,7 +328,7 @@ test("a GET is a read unless its own name or the vendor's summary is an action: 
   }
 });
 
-test("bodies go in the encoding the vendor's spec requires: form for Stripe and Twilio (Twilio repeats keys for lists), multipart refused clearly", async () => {
+test("bodies go in the encoding the vendor's spec requires: form for Stripe and Twilio (Twilio repeats keys for lists), multipart requires explicit parts", async () => {
   // The encoder matches the vendors' own SDKs.
   assert.deepEqual(encodeForm({ a: 1, b: { c: true }, l: ["x", "y"], n: null, u: undefined }), [["a", "1"], ["b[c]", "true"], ["l[0]", "x"], ["l[1]", "y"], ["n", ""]]);
   assert.deepEqual(encodeForm({ l: ["x", "y"] }, "repeat"), [["l", "x"], ["l", "y"]]);
@@ -348,10 +348,10 @@ test("bodies go in the encoding the vendor's spec requires: form for Stripe and 
   const h = hits[hits.length - 1];
   assert.match(String(Object.entries(h.headers).find(([k]) => k.toLowerCase() === "content-type")?.[1]), /x-www-form-urlencoded/);
   assert.deepEqual([...new URLSearchParams(String(h.body))].filter(([k]) => k === "StatusCallbackEvent"), [["StatusCallbackEvent", "initiated"], ["StatusCallbackEvent", "ringing"]]);
-  // An upload-only endpoint is refused with a clear reason, never sent as JSON.
+  // An upload-only endpoint without explicit parts is refused, never sent as JSON.
   const up = [...load("zoom").ops.values()].find((o) => o.bodyType === "multipart")!;
   const before = hits.length;
-  await assert.rejects(() => callOperation("zoom", up.id, { params: Object.fromEntries(up.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /multipart upload/);
+  await assert.rejects(() => callOperation("zoom", up.id, { params: Object.fromEntries(up.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /supply multipart parts/);
   assert.equal(hits.length, before);
   delete process.env.KIT_ALLOW_WRITES;
 });
