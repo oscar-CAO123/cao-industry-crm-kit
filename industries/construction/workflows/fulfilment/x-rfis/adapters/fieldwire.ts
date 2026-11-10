@@ -4,6 +4,9 @@ import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type RfiRow, type Settings, UUID, clean, idOr } from "../types.ts";
 
 const P = "fieldwire";
+export const PLATFORM_NAME = "Fieldwire";
+/** Fieldwire's create call takes a name only, so the question text is set by a second update call. */
+export const QUESTION_ON_CREATE = false;
 const OP = (id: string) => `fieldwire-regional-api.${id}`;
 
 /** The version header is required on every regional call. It is a setting, never a guess. */

@@ -12,6 +12,13 @@ export interface Settings {
     designer_user_id?: number;    // default assignee (the designer or builder's project manager) when a question names none
     default_due_days?: number;    // due date counted from the day the RFI is opened
   };
+  /** Set this block or `fieldwire`, not both. Ids are Procore's integers, projects as digit strings. */
+  procore?: {
+    projects: string[];           // project ids to watch
+    rfi_manager_id: number;       // the RFI manager's user id; Procore requires one on every RFI
+    default_assignee_id?: number; // default assignee (the designer's user id) when a question names none
+    default_due_days?: number;    // due date counted from the day the RFI is opened
+  };
 }
 
 /** An RFI as Fieldwire holds it, kept so a later run can see what changed. */
