@@ -1,0 +1,49 @@
+{
+ "id": "health-care:add-dictation",
+ "name": "Session notes from dictation",
+ "industry": "health-care",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a dictated or transcribed clinical visit into a draft treatment note in Cliniko, and queues the lock for a clinician to approve. Crons read and draft; a clinician approves every lock.",
+ "families": {
+  "dictated-session": {
+   "steps": ["consult-captured", "transcribe", "draft-note", "clinician-review", "sign-off", "file-record"],
+   "covered_by": {
+    "consult-captured": "outside the kit (the dictation or scribe tool records the visit)",
+    "transcribe": "outside the kit (Cliniko does not transcribe)",
+    "draft-note": "draft",
+    "clinician-review": "skill (the clinician checks the draft in Cliniko, then a person marks the session reviewed)",
+    "sign-off": "approval (the lock)",
+    "file-record": "draft (Cliniko saves the note against the patient on create)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Write each ready session to Cliniko as a draft treatment note."},
+  {"name": "check", "schedule": "0 * * * *", "entry": "check", "summary": "Read drafts back to see whether a clinician locked them in Cliniko, and follow queued locks to their outcome."},
+  {"name": "sign", "schedule": "*/15 * * * *", "entry": "sign", "summary": "Queue the lock for each session a clinician has marked reviewed. It runs only when a person approves it."}
+ ],
+ "draft_ops": {
+  "cliniko": ["treatment-note.createtreatmentnote", "treatment-note.gettreatmentnote"]
+ },
+ "live_ops": {
+  "cliniko": ["treatment-note.updatetreatmentnote"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the practice: a treatment note saved as draft against a patient, and reads of that note. The lock (saving a note as final in Cliniko) is a live operation and waits for a person's approval.",
+ "capabilities": ["notes.draft", "notes.read", "notes.lock"],
+ "adapters": {
+  "cliniko": {"status": "docs-only", "covers": "draft treatment note from a session, read-back of its draft flag, lock (save as final), filed to the patient record"}
+ },
+ "gaps": [
+  "Dictation, transcription and AI scribe capture are judgment steps outside the kit. Cliniko does not transcribe; the practice's dictation or scribe tool produces the sections.",
+  "Lyrebird Health (Medow) and ZedMed (with Heidi) describe dictation and scribing, but neither has an ops file in core/sdk/platforms, so neither has an adapter. Their pages are vendor marketing, not API docs.",
+  "Letters and referrals: Cliniko describes them, but the ops file maps no letter or referral operations, so nothing is built for them.",
+  "Billing item numbers: the Cliniko docs do not say how item numbers attach from a note, so nothing is built for billing.",
+  "Recalls and follow-up tasks from note actions: the docs describe recall types but not a note creating a recall, so nothing is built for follow-ups.",
+  "Session intake: no command in tools/workflow.ts adds a session. The agent or the CRM shell writes the session record (status transcript-ready, with its sections) into the sessions store. No runtime change was made.",
+  "The reviewed mark: a person sets a session to reviewed in the CRM shell. Confirm the shell offers that status before relying on the sign cron.",
+  "Cliniko has not been run against a live account. The lock (PATCH with draft false), the role limits and the template ids need a live check."
+ ]
+}

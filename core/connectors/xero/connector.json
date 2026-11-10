@@ -1,0 +1,26 @@
+{
+  "id": "xero",
+  "name": "Xero",
+  "docs": "https://developer.xero.com/",
+  "account_to_test": "Demo company on a free login",
+  "cost_to_test": "$0 on the entry tier",
+  "capabilities": [
+    "contacts.list",
+    "contacts.upsert",
+    "invoices.list",
+    "invoices.create",
+    "payments.list",
+    "reports.run"
+  ],
+  "fallback": "composio",
+  "script": "core/connectors/xero/client.ts",
+  "status": "code-built",
+  "terms_checked": false,
+  "keys": [
+    "XERO_CLIENT_ID",
+    "XERO_CLIENT_SECRET",
+    "XERO_TENANT_ID",
+    "XERO_REFRESH_TOKEN"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

@@ -1,0 +1,9 @@
+{
+ "family": "reminders",
+ "business_name": "Example Clinic",
+ "business_id": "",
+ "reminder_hours_ahead": 48,
+ "offer_window_days": 14,
+ "reminder_text": "Hi {first_name}, a reminder of your appointment on {when}. Call us if you need to change it.",
+ "offer_text": "A time has opened on {when}. Call us if you would like it."
+}

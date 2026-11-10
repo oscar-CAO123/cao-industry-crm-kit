@@ -1,0 +1,238 @@
+{
+ "id": "jane-app",
+ "name": "Jane App",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.janeapp\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "clinic": {
+   "env": "JANE_CLINIC",
+   "pattern": "[a-z0-9-]+",
+   "example": "acme"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "JANE_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "JANE_ACCESS_TOKEN",
+  "JANE_CLINIC"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.jane.app/llms.txt",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/docs/getting-started.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getobservation-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updateobservation-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createobservation-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listobservations.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listallergies.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createallergy.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getallergy.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updateallergy.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/deleteallergy.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getcareplan-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updatecareplan-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createcareplan-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getcareplanactivity-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updatecareplanactivity-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createcareplanactivity-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listcareplans.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getmedication.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updatemedication.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listmedications.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createmedication.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getmedicationhistory.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getpatient-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getpatients-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/searchpatients.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getlocation-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getlocations-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getastaffmember-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/liststaffmembersversioned-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getanappointment.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listappointmentsversioned.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getcompany-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getdocumentuploads-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/postdocumentuploads-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getdiscipline-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listdisciplinesversioned-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/listtreatmentsversioned-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/gettreatment-1.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getwebhooks.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/postwebhooks.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getwebhook.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/deletewebhook.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/deleteextension.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/updateextension.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getextension.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getextensions.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/createextension.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getcatalogextensions.md",
+   "official": "vendor-domain: developers.jane.app"
+  },
+  {
+   "url": "https://developers.jane.app/reference/getcatalogextension.md",
+   "official": "vendor-domain: developers.jane.app"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 5,
+  "read": 4,
+  "write": 1
+ }
+}

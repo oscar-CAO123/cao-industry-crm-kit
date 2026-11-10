@@ -1,0 +1,36 @@
+{
+ "id": "klaviyo",
+ "name": "Klaviyo",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "a.klaviyo.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "prefix": "Klaviyo-API-Key ",
+  "env": "KLAVIYO_API_KEY"
+ },
+ "keys": [
+  "KLAVIYO_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/klaviyo/openapi/main/openapi/stable.json",
+   "official": "vendor-link: https://developers.klaviyo.com/en/reference/api_overview links github.com/klaviyo"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 436,
+  "read": 250,
+  "write": 186
+ }
+}

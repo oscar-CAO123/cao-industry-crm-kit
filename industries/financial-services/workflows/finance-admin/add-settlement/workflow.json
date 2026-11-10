@@ -1,0 +1,40 @@
+{
+  "id": "financial-services:add-settlement",
+  "name": "Settlement tracker",
+  "industry": "financial-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Tracks each loan from lender confirmation to settlement and the checks after it, lists what is missing from each file, and flags settlements that are past their date with checks still open. The crons read the settlement records and write internal checklists only; nothing reaches a lender, client, broker or bank.",
+  "families": {
+    "settlement": {
+      "steps": ["lender-confirmation", "post-settlement-checks", "record-keeping", "other"],
+      "covered_by": {
+        "lender-confirmation": "checklist (flags a missing lender confirmation); the lender chase is a skill step until a platform is mapped",
+        "post-settlement-checks": "overdue (flags settlements past their date with checks open); the checks themselves are manual",
+        "record-keeping": "checklist (flags a file with no file note)",
+        "other": "skill (hand-off from sales and credit is judgment work for the admin)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "checklist", "schedule": "*/30 * * * *", "entry": "checklist", "summary": "Write one checklist per settlement record: what is missing, and whether it is past its date."},
+    {"name": "overdue", "schedule": "0 22 * * *", "entry": "overdue", "summary": "List settlements past their date with post-settlement checks still open (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {},
+  "live_ops": {},
+  "draft_ops_note": "No platform operation is mapped for this job, so no cron calls a platform. Both crons write internal checklists to the workflow store.",
+  "capabilities": [],
+  "adapters": {},
+  "gaps": [
+    "No adapter is built. brokerengine, where the lender stages live, has no ops.json in core/sdk/platforms/, and its evidence file maps no API operations for any settlement step.",
+    "Xero is mapped in the kit (485 operations), but no operation covers loan settlement. Its ops file has no settlement, loan or mortgage operation, and its evidence file maps no settlement step. Commission invoicing might fit a later step, but no call or platform evidence supports it.",
+    "Lender confirmation and settlement instructions have no mapped operation, so no cron can request or chase them. The admin does this by hand.",
+    "Client, broker and solicitor reminders before settlement go in live_ops only once a mapped platform exists. None is queued.",
+    "Post-settlement checks (discharge, commission, trust) and file closure have no mapped operation. The checklist flags them; it does not run them.",
+    "Settlement records are not ingested from anywhere. A person or the agent writes them into the workflow store until an intake adapter exists.",
+    "Sales and credit information not reaching post-settlement is an intake problem and is not solved by this workflow.",
+    "Confirm which broker CRM the client uses before building an adapter. The evidence covers brokerengine only, and it is not in the kit."
+  ]
+}

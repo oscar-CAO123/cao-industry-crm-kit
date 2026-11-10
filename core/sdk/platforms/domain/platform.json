@@ -1,0 +1,513 @@
+{
+ "id": "domain",
+ "name": "Domain",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.domain.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-API-Key",
+  "env": "DOMAIN_API_KEY"
+ },
+ "keys": [
+  "DOMAIN_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.domain.com.au/sitemap.xml",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_address_suggestion",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_address_suggestion/references/properties_suggest",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agencies_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agencies_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agencies_getlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agents_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agents_getlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agents_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/listings_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/listinglocations_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/me_profile",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/me_getmyagencies",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/projects_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/projects_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/projects_getchildlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/agencies_head",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/enquiries_post",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/listings_detailedbusinesssearch",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/listings_detailedcommercialsearch",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/listings_detailedresidentialsearch",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_agents_listings/references/statistics_post",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_campaign_api",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_campaign_api/references/campaign_getlistingperformance_report",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_campaign_api/references/campaign_getprojectperformance_report",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_campaign_api/references/campaign_getsocialperformance_report",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_campaign_api_preview",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/upload-listings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/upload-listings-error-handling",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/commercial-forsale-lease",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/offmarket-listings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/project-listings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/manage-enquiries",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/agency-authorisation",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/production-access",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/guides/migrating-from-xml",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/agencies_getlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/agencies_getstatistics",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/agents_getstatistics",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/enquiries_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/enquiries_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_getenquiries",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_getlistingstatistics",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_getlistingreportbyreference",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_getlistingreport",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/me_profile",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/me_getmyagencies",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/me_getmyproviders",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_getenquiries",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_getchildlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_getchildlistingsstatistics",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/projects_getstatistics",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/agencies_createtestagency",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/enquiries_post",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertbusinessoffmarket",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertcommercialoffmarket",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertresidentialoffmarket",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertbusinesslisting",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertresidentiallisting",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_listing_management/references/listings_upsertcommerciallisting",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_price_estimation",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_price_estimation/references/properties_getpriceestimate",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/guides/using-new-location-names",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/addresslocators_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/disclaimers_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/disclaimers_getbyproduct",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/locationprofiles_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/properties_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/salesresults_head",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/salesresults_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/salesresults_listings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/demographics_get_bynamedsuburb",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/suburbperformance_get_bynamedsuburb_withoutpostcode",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_properties_locations/references/suburbperformance_get_bynamedsuburb",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property_enrichment",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property_enrichment/references/propertyenrichment_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/addresslocators_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/locationprofiles_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/projects_search",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/projects_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/projects_getchildlistings",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/properties_suggest",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/properties_get",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/properties_getpriceestimate",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/demographics_get_bynamedsuburb",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/schools_search_bylocation",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/suburbperformance_get_bynamedsuburb_withoutpostcode",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/suburbperformance_get_bynamedsuburb",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_property/references/listings_detailedresidentialsearch",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_deleteportfolio",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_viewportfolio",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_viewportfoliofull",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_viewportfoliofullsingle",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_viewportfoliofullsinglebygnafid",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_listportfolios",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_createportfolio",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_addtoportfolio",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_propertyradar/references/propertyradar_removefromportfolio",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_rental_avm",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_rental_avm/references/properties_getrentalestimate",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_schools_data",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_schools_data/references/schools_get_byid",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_schools_data/references/schools_search_bylocation",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/guides/configuration",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/guides/subscriptions",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/guides/processing",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/guides/troubleshooting",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/references/webhooks_deletesubscription",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/references/webhooks_getsubscription",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/references/webhooks_listsubscriptions",
+   "official": "vendor-domain: developer.domain.com.au"
+  },
+  {
+   "url": "https://developer.domain.com.au/docs/latest/apis/pkg_webhooks/references/webhooks_createsubscription",
+   "official": "vendor-domain: developer.domain.com.au"
+  }
+ ],
+ "gaps": [
+  "domain: removed GET /v, DELETE /v: truncated docs-index entries (GET /v, DELETE /v); the full endpoints are mapped from the reference pages"
+ ],
+ "counts": {
+  "operations": 78,
+  "read": 55,
+  "write": 23
+ }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "agriculture-mining:yield",
+  "name": "Yield and waste",
+  "industry": "agriculture-mining",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Works out yield and waste for each lot from the shed's yield register, flags lots that fall short of target or run over the waste limit, and drafts the weekly yield and waste report. Crons read and draft; the report email waits for a person to approve it.",
+  "families": {
+    "shed-register": {
+      "steps": ["weigh-count", "record-keeping", "report-owner"],
+      "covered_by": {
+        "weigh-count": "intake (rows the shed logs in the yield register workbook; the weighing itself stays at the shed)",
+        "record-keeping": "draft (one exception row per lot in the exceptions table)",
+        "report-owner": "draft and approval (weekly report email to the owner)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Read the yield register and store each lot whose weights add up."},
+    {"name": "yield-check", "schedule": "0 * * * *", "entry": "yield-check", "summary": "Work out yield and waste per lot and draft one exception row for each lot under target or over the waste limit."},
+    {"name": "owner-report", "schedule": "0 22 * * 0", "entry": "owner-report", "summary": "Draft this week's yield and waste report and queue its email to the owner for approval (Sunday 22:00 UTC is Monday morning in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads of the yield register, one exception row in the shed's own exceptions table, and an email draft in the owner's mailbox. Sending the report email is a live operation and is only ever queued for a person to approve.",
+  "capabilities": ["yield.read", "exceptions.write", "reports.draft", "messages.draft", "messages.send"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "yield register read, exception rows, weekly report email (drafted, then sent only on approval)"}
+  },
+  "gaps": [
+    "agworld: in the platforms evidence, but no folder in core/sdk/platforms and no mapped operation, so no adapter. Its docs cover field and crop records, not receival, grading or waste.",
+    "innovint: in the platforms evidence, but no folder in core/sdk/platforms and no mapped operation, so no adapter. It is a winery platform; its docs cover no packhouse step.",
+    "FreshTrack, CropX and [name] Operations Center: named by the call, with no folder in core/sdk/platforms, so no adapter. FreshTrack is where the shed logs bins and weights, so until its operations are mapped the shed copies those weights into the yield register.",
+    "Weigh-at-intake and the grade or pack-out split are not read from any mapped platform. They stay at the shed and reach this workflow only as rows in the yield register.",
+    "Waste by reason, loss root cause, stock transfer and sales reconciliation have no mapped operation in any kit platform. They stay with the business.",
+    "Yield against estimate needs expected_yield_pct in settings. No estimate or plan source is mapped, so the target is a single setting, not a per-variety plan.",
+    "The register and exceptions tables are Excel tables the shed creates in its own workbook. Their drive, item and table ids are set in settings; nothing creates them.",
+    "A row that is later corrected overwrites its lot. A row that is later refused keeps its last good values in the store until someone removes it there.",
+    "Only one platform (Microsoft 365) is built, and it is docs-only until a Microsoft 365 developer tenant proves the workbook and mail calls.",
+    "Confirm the report layout and exception thresholds with the owner."
+  ]
+}

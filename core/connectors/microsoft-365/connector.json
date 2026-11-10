@@ -1,0 +1,20 @@
+{
+  "id": "microsoft-365",
+  "name": "Microsoft 365",
+  "docs": "https://learn.microsoft.com/graph/",
+  "account_to_test": "Free sandbox if we qualify, else a paid seat",
+  "cost_to_test": "Unknown",
+  "capabilities": [
+    "messages.list",
+    "messages.draft",
+    "calendar.list",
+    "calendar.create",
+    "files.list",
+    "files.read",
+    "files.write"
+  ],
+  "fallback": "mcp",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

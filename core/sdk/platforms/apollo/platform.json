@@ -1,0 +1,35 @@
+{
+ "id": "apollo",
+ "name": "Apollo.io",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.apollo.io"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "x-api-key",
+  "env": "APOLLO_API_KEY"
+ },
+ "keys": [
+  "APOLLO_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.apollo.io/openapi/apollo-rest-api.json",
+   "official": "vendor-domain: docs.apollo.io"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 85,
+  "read": 28,
+  "write": 57
+ }
+}

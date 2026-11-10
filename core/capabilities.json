@@ -1,0 +1,122 @@
+{
+  "contacts": [
+    "contacts.list",
+    "contacts.upsert"
+  ],
+  "companies": [
+    "companies.list",
+    "companies.upsert"
+  ],
+  "jobs": [
+    "jobs.list",
+    "jobs.create",
+    "jobs.update"
+  ],
+  "quotes": [
+    "quotes.list",
+    "quotes.create"
+  ],
+  "invoices": [
+    "invoices.list",
+    "invoices.create"
+  ],
+  "payments": [
+    "payments.list"
+  ],
+  "tasks": [
+    "tasks.list",
+    "tasks.create"
+  ],
+  "documents": [
+    "documents.list",
+    "documents.create",
+    "documents.sign"
+  ],
+  "files": [
+    "files.list",
+    "files.read",
+    "files.write"
+  ],
+  "messages": [
+    "messages.list",
+    "messages.draft"
+  ],
+  "calendar": [
+    "calendar.create",
+    "calendar.freebusy",
+    "calendar.list"
+  ],
+  "timesheets": [
+    "timesheets.list"
+  ],
+  "rosters": [
+    "rosters.list"
+  ],
+  "listings": [
+    "listings.list",
+    "listings.update"
+  ],
+  "properties": [
+    "properties.list"
+  ],
+  "tenancies": [
+    "tenancies.list"
+  ],
+  "bookings": [
+    "bookings.list",
+    "bookings.create"
+  ],
+  "products": [
+    "products.list",
+    "products.update"
+  ],
+  "orders": [
+    "orders.list"
+  ],
+  "campaigns": [
+    "campaigns.list",
+    "campaigns.report"
+  ],
+  "leads": [
+    "leads.list",
+    "leads.upsert"
+  ],
+  "matters": [
+    "matters.list"
+  ],
+  "patients": [
+    "patients.list"
+  ],
+  "reports": [
+    "reports.run"
+  ],
+  "calls": [
+    "calls.list",
+    "calls.transcript"
+  ],
+  "sms": [
+    "sms.send"
+  ],
+  "recordings": [
+    "attendance.read",
+    "recordings.list",
+    "recordings.transcript"
+  ],
+  "transcripts": [
+    "transcripts.list",
+    "transcripts.read"
+  ],
+  "conversions": [
+    "conversions.send"
+  ],
+  "ads": [
+    "ads.insights"
+  ],
+  "notify": [
+    "notify.send"
+  ],
+  "sheets": [
+    "sheets.append",
+    "sheets.read"
+  ]
+}

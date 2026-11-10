@@ -1,0 +1,256 @@
+{
+ "id": "richpanel",
+ "name": "Richpanel",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.richpanel.com",
+  "returns-api.richpanel.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "x-richpanel-key",
+  "env": "RICHPANEL_API_KEY"
+ },
+ "keys": [
+  "RICHPANEL_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.richpanel.com/llms.txt",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/authentication.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-conversation-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/use-cases-examples.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/update-a-conversation.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/retrieve-a-conversation-with-conversation-number.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/retrieve-a-conversation-using-users-email-or-phone.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/update.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/delete.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-customer-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/create-a-customer.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/fetch-a-customer-from-email-or-phone.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-order-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/create-an-order.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-subscription-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/create-a-subscription.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-user-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-task-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/create-task.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/list-tasks.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/retrieve-task.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/update-task.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/delete-task.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-task-comments-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/list-task-comments.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/add-task-comment.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/list-ticket-tasks.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-team-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/list-teams.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-tag-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-channel-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/download-file.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/the-reports-object.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/list-metrics.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/retrieve-metrics.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/webhooks-introduction.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/mcp-server.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-api-overview.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-api-auth.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-q-get-return.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-q-list-returns.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-q-status-counts.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-q-customer-count.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-process.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-cancel.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-add-note.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-approve.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-reject.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-inspect.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-fees.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-q-refund-estimate.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-refund.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-shipment-status.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-void-label.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-retry-exchange.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  },
+  {
+   "url": "https://developer.richpanel.com/reference/returns-m-remove-exchange.md",
+   "official": "vendor-domain: developer.richpanel.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 50,
+  "read": 25,
+  "write": 25
+ }
+}

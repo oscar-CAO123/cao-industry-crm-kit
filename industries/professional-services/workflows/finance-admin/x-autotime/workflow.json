@@ -1,0 +1,44 @@
+{
+  "id": "professional-services:x-autotime",
+  "name": "Automatic time capture",
+  "industry": "professional-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Automatic time capture: reads each fee earner's time entries and running timer in Clio, flags entries with no matter or note, and queues each time entry a person records for approval. Crons read, flag and queue; a person approves every entry before it reaches Clio.",
+  "families": {
+    "all": {
+      "steps": ["capture-passive", "classify-matter", "review-entries", "gap-fill", "record-keeping"],
+      "covered_by": {"capture-passive": "capture (reads the day's time entries Clio already holds)", "classify-matter": "capture flags entries with no matter; matters cron offers the open matters", "review-entries": "capture flags entries with no note; a person edits them in Clio", "gap-fill": "entries cron (a person records missed time in the workflow store, which queues it for approval)", "record-keeping": "approval (the approved entry lands in Clio)"}
+    }
+  },
+  "steps": ["timer-start", "capture-passive", "classify-matter", "review-entries", "gap-fill", "billable-decision", "timesheet-submit", "approval", "invoice-handover", "record-keeping", "other"],
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "capture", "schedule": "*/30 * * * *", "entry": "capture", "summary": "Read the fee earner's time entries for today and the running timer, and flag any entry with no matter or no note."},
+    {"name": "matters", "schedule": "0 19 * * *", "entry": "matters", "summary": "Read the open matters once a day, so a time entry can be checked against a real matter."},
+    {"name": "entries", "schedule": "*/15 * * * *", "entry": "entries", "summary": "Check each time entry a person recorded and queue it in Clio for approval. Nothing is written until a person approves it."}
+  ],
+  "draft_ops": {
+    "clio": ["openapi.Activity#index", "openapi.Timer#show", "openapi.BillableMatter#index"]
+  },
+  "live_ops": {
+    "clio": ["openapi.Activity#create"]
+  },
+  "draft_ops_note": "Draft operations are reads only. A time entry is a live operation because it lands in the fee earner's billing record, so the entries cron only queues it and a person approves it.",
+  "capabilities": ["time.entries.read", "time.timer.read", "matters.read", "time.entry.request"],
+  "adapters": {
+    "clio": {"status": "docs-only", "covers": "time entries for a day, the running timer, open matters (reads); time entry creation (queued for approval)"}
+  },
+  "gaps": [
+    "Actionstep: its docs describe Trace (time capture, announced as upcoming, live availability unverified) and timers. No Actionstep ops exist in the kit, so nothing is mapped.",
+    "Harvest: its docs describe timers, per-user approvals and invoices, which fit this job well. No Harvest ops exist in the kit, so nothing is mapped. Adding Harvest is the next step if the owner wants it.",
+    "WorkflowMax: timesheet reads are mapped in the kit, but no vendor field spec was checked in this pass, so no adapter is built.",
+    "Clio is the only mapped platform. Its status is spec, tested offline only, and sign-in is an access token in CLIO_ACCESS_TOKEN (no token exchange yet).",
+    "Clio quantity unit: the vendor spec says seconds on the latest API version and hours on 4.0.3 and earlier. The adapter sends seconds with no version header. A sandbox must confirm this before any approval runs.",
+    "Clio's timer endpoint shows only the running timer. A stopped timer is not read directly, so captured time comes from the day's time entries.",
+    "No intake route yet for missed time: the entries cron reads requests a person records in the workflow store, and the CRM shell does not write them yet.",
+    "Judgment stays with the fee earner in Clio: which matter an entry belongs to, the billable decision, write-offs, period submission, partner approval, and invoice handover. None of these are automated.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+  ]
+}

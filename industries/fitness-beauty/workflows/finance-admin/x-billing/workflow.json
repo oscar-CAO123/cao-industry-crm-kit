@@ -1,0 +1,105 @@
+{
+ "id": "fitness-beauty:x-billing",
+ "name": "Failed payments",
+ "industry": "fitness-beauty",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds failed or overdue member payments in Stripe and Xero, notes each one in Xero, and queues the retry or reminder for a person to approve. Crons read and note; nothing charges or emails a member until approved.",
+ "families": {
+  "membership-direct-debit": {
+   "steps": [
+    "payment-run",
+    "failure-detect",
+    "auto-retry",
+    "member-notify",
+    "access-hold"
+   ],
+   "covered_by": {
+    "payment-run": "draft (invoice read)",
+    "failure-detect": "draft (detect cron)",
+    "auto-retry": "approval (Stripe retry)",
+    "member-notify": "approval (invoice or reminder email)",
+    "access-hold": "not yet (see gaps)"
+   }
+  },
+  "appointment-card-on-file": {
+   "steps": [
+    "card-update",
+    "member-contact"
+   ],
+   "covered_by": {
+    "card-update": "not yet (see gaps)",
+    "member-contact": "skill (staff call or message)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "detect",
+   "schedule": "0 * * * *",
+   "entry": "detect",
+   "summary": "Find failed Stripe charges and overdue Xero invoices; note each new one in Xero."
+  },
+  {
+   "name": "reconcile",
+   "schedule": "30 21 * * *",
+   "entry": "reconcile",
+   "summary": "Close failures that have been paid since; note that in Xero. Runs before the chase (21:30 UTC is 7 or 8 am in eastern Australia)."
+  },
+  {
+   "name": "chase",
+   "schedule": "0 22 * * *",
+   "entry": "chase",
+   "summary": "Queue the next chase step on each open failure that is due (22:00 UTC is 8 or 9 am in eastern Australia)."
+  }
+ ],
+ "draft_ops": {
+  "stripe": [
+   "openapi_spec3.GetInvoices",
+   "openapi_spec3.GetInvoicesInvoice"
+  ],
+  "xero": [
+   "accounting.getInvoices",
+   "accounting.createInvoiceHistory"
+  ]
+ },
+ "live_ops": {
+  "stripe": [
+   "openapi_spec3.PostInvoicesInvoicePay",
+   "openapi_spec3.PostInvoicesInvoiceSend"
+  ],
+  "xero": [
+   "accounting.emailInvoice"
+  ]
+ },
+ "draft_ops_note": "Draft operations are reads, plus one internal history note per failure in Xero. A note reaches nobody outside the business.",
+ "capabilities": [
+  "invoices.list",
+  "invoices.retry",
+  "invoices.remind",
+  "notes.write"
+ ],
+ "adapters": {
+  "stripe": {
+   "status": "docs-only",
+   "covers": "failed charge detection, retry of the invoice, invoice email for manual payment, paid check"
+  },
+  "xero": {
+   "status": "docs-only",
+   "covers": "overdue invoice detection, internal history note, reminder email, paid check"
+  }
+ },
+ "gaps": [
+  "Mindbody: help pages were read, but there is no ops file for it in core/sdk/platforms, so it is not built. Its docs describe automatic card updates only, not failed-charge retries or failed-payment notices.",
+  "Square has mapped operations but no failed-payment evidence yet; add it when a client uses it. Fresha has no mapped platform.",
+  "Member contact by phone or message, and the member's own card update, are people's steps. No adapter here.",
+  "Access hold (pausing bookings or memberships until paid) is not built: it needs the booking platform, and the Stripe subscription update and cancel operations are mapped but not used.",
+  "Disputes and chargebacks have mapped Stripe operations but no cron yet.",
+  "Xero cannot tell a failed card or direct debit from an unpaid invoice, so an overdue Xero invoice stands in for a failed payment.",
+  "Xero is read one page at a time (first 100 authorised invoices). Paging is not built.",
+  "A Stripe invoice that also synced into Xero would count twice. Not de-duplicated.",
+  "No sandbox run yet: Stripe test mode and a Xero demo company are needed before this runs for a client."
+ ]
+}

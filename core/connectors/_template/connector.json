@@ -1,0 +1,12 @@
+{
+  "id": "",
+  "name": "",
+  "docs": null,
+  "account_to_test": "",
+  "cost_to_test": "",
+  "capabilities": [],
+  "fallback": "none",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

@@ -1,0 +1,46 @@
+{
+ "id": "all:reconciliation",
+ "name": "Reconciliation",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reconciles payments, bank and payouts: reads bank lines and processor payouts, matches each payout to its deposit and each receipt to its invoice, notes the matches, and queues every payment for approval. Crons read and draft; a person approves every ledger write.",
+ "families": {
+  "processor-payouts": {
+   "steps": ["pull-bank-feed", "pull-processor-reports", "match-customer-receipts", "record-keeping"],
+   "covered_by": {"pull-bank-feed": "pull (Xero bank lines)", "pull-processor-reports": "pull (Stripe payouts)", "match-customer-receipts": "match (payouts to deposits, receipts to invoices, payment queued for approval)", "record-keeping": "match (internal note on the bank line)"}
+  },
+  "unclear": {
+   "steps": ["match-supplier-payments", "chase-unmatched", "record-keeping"],
+   "covered_by": {"match-supplier-payments": "not yet (see gaps)", "chase-unmatched": "match (worklist for a person)", "record-keeping": "match (internal note on the bank line)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pull", "schedule": "15 * * * *", "entry": "pull", "summary": "Bank lines from each Xero bank account and payouts from Stripe, read into the store."},
+  {"name": "match", "schedule": "30 22 * * *", "entry": "match", "summary": "Match payouts and receipts, note matches in Xero, queue payments for approval, write the worklist (22:30 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getBankTransactions", "accounting.getInvoices", "accounting.createBankTransactionHistoryRecord"],
+  "stripe": ["openapi_spec3.GetBalanceTransactions"]
+ },
+ "live_ops": {
+  "xero": ["accounting.createPayment"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and an internal note on a bank line. A payment that applies money to an invoice is a live operation and waits for a person.",
+ "capabilities": ["bank-lines.list", "payouts.list", "invoices.find", "bank-lines.note", "payments.apply"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "bank lines, invoice lookup, internal note, payment applied to an authorised invoice"},
+  "stripe": {"status": "docs-only", "covers": "payouts (net amount to the bank) from balance transactions"}
+ },
+ "gaps": [
+  "MYOB: bank statements, customer and supplier payments are mapped as operations, but no adapter is built: its field names are only in HTML help pages, not a machine-readable spec.",
+  "Supplier payments (match-supplier-payments): matching bills to bank debits and batch payments needs a bills search operation this build does not map yet. Stays with the bookkeeper.",
+  "Fees and adjustments: splitting a Stripe payout into gross sales, fees and net deposit needs the owner's clearing account and chart of accounts. Not posted; the payout is matched to its deposit only.",
+  "Transfers between owner accounts and the accountant hand-off have no adapter here. The workflow lists them as manual steps.",
+  "Reviewer sign-off is the approval queue itself: a payment runs only when a person approves it in the CRM shell.",
+  "Stripe pagination reads up to 2,000 balance transactions a run. A business with more payouts in the lookback needs a larger window.",
+  "Both adapters are docs-only until a sandbox (a Xero demo company and a Stripe test account) proves the field names and the matching rules on real data."
+ ]
+}

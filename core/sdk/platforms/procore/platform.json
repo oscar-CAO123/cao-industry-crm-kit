@@ -1,0 +1,47 @@
+{
+ "id": "procore",
+ "name": "Procore",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.procore.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {
+  "company_id": {
+   "allow": [],
+   "env": "PROCORE_COMPANY_ID",
+   "fill": "$env"
+  }
+ },
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "PROCORE_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token",
+  "extraHeaders": {
+   "Procore-Company-Id": "PROCORE_COMPANY_ID"
+  }
+ },
+ "keys": [
+  "PROCORE_ACCESS_TOKEN",
+  "PROCORE_COMPANY_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.procore.com/reference/rest/docs/rest-api-overview",
+   "official": "vendor-domain: developers.procore.com"
+  }
+ ],
+ "gaps": [
+  "Sandbox host not read from Procore's pages: only the production host api.procore.com is mapped"
+ ],
+ "counts": {
+  "operations": 676,
+  "read": 336,
+  "write": 340
+ }
+}

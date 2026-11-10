@@ -1,0 +1,43 @@
+{
+ "id": "manufacturing:x-workorders",
+ "name": "Work orders",
+ "industry": "manufacturing",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns the production plan into parked work orders in the business's own system, checks component stock against minimums, and queues completion of finished work orders for a person to approve. Crons read and draft; a person approves every completion.",
+ "families": {
+  "production-plan": {
+   "steps": ["prioritise", "plan-materials"],
+   "covered_by": {"prioritise": "draft (one parked work order per product, sized from units per day over the plan horizon)", "plan-materials": "read (component stock against minimum and maximum; shortfalls listed for the buyer)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "plan", "schedule": "0 20 * * *", "entry": "plan", "summary": "Park one work order per planned product that has none open. 20:00 UTC is 6 or 7 am in eastern Australia."},
+  {"name": "materials", "schedule": "0 */2 * * *", "entry": "materials", "summary": "Read component stock in the production warehouse and list anything below its minimum."},
+  {"name": "complete", "schedule": "30 * * * *", "entry": "complete", "summary": "Queue completion of parked work orders whose due date has passed, for approval."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_Assemblies", "docs.get_StockOnHand", "docs.post_Assemblies"]
+ },
+ "live_ops": {
+  "unleashed": ["docs.post_Assemblies_assemblyGuid_Complete"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a parked work order moves no stock and reads change nothing. Completing a work order moves stock, so it is a live operation and waits for a person.",
+ "capabilities": ["work-orders.list", "work-orders.park", "work-orders.complete", "stock.read"],
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "parked work orders (Assemblies), stock on hand by warehouse, completion queued for approval"}
+ },
+ "gaps": [
+  "MRPeasy: its pages describe manufacturing orders and shop-floor steps, but the kit has no MRPeasy platform, so nothing is mapped.",
+  "MEX Maintenance (mex-cmms): a maintenance CMMS rather than a production work-order tool; no kit platform and no mapped operations.",
+  "Odoo: the kit maps only one read (a version check); manufacturing order and job card operations are not mapped.",
+  "Unleashed: calls are signed by core (HMAC-SHA256 over the query string), but no call has run against a live account yet; the first live read and parked order are unverified.",
+  "Unleashed: a parked work order is created without lines; the bill of materials or the buyer must fill them. Confirm on a live account.",
+  "Unleashed: Complete is sent with no body; whether it needs quantities or lines is not confirmed against a live account.",
+  "Unleashed: list calls read the first page only (200 records); paging is not wired.",
+  "Labour time, downtime windows and quality release are not covered: the evidence does not describe them for this business and no mapped platform records them.",
+  "Supplier orders for shortfalls are not placed: the materials cron lists them for the buyer. Ordering from a supplier is a judgment step."
+ ]
+}

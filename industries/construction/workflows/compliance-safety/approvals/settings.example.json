@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Builders",
+ "bluebeam": {
+  "sessions": [
+   {"session_id": "STUDIO_SESSION_ID", "file_id": "FILE_ID", "label": "DA plan set"}
+  ]
+ }
+}

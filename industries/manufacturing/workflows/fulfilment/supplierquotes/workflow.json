@@ -1,0 +1,47 @@
+{
+  "id": "manufacturing:supplierquotes",
+  "name": "Supplier quote comparison",
+  "industry": "manufacturing",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Collects supplier quote replies for one item list, logs each reply in a register, and drafts a side-by-side comparison for the buyer to check like for like. Crons read and draft; a person approves every chaser send and makes the award.",
+  "families": {
+    "all": {
+      "steps": ["specify-item", "receive-quotes", "compare-quotes"],
+      "covered_by": {
+        "specify-item": "skill (the item list and specs go into the comparison record)",
+        "receive-quotes": "intake (each reply logged to the register)",
+        "compare-quotes": "compare (side-by-side draft in the buyer's Drafts); the estimator reads and checks the prices"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Logs each new supplier quote reply to an open comparison in the register."},
+    {"name": "compare", "schedule": "30 * * * *", "entry": "compare", "summary": "Drafts the side-by-side for the buyer whenever a comparison has quotes no draft covers yet."},
+    {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Drafts chasers to suppliers who have not quoted when a chase is due, and queues each send for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["users.mailFolders.ListMessages", "users.CreateMessages", "drives.items.workbook.tables.CreateRows"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: an email in the buyer's Drafts, a row in the register, a read of the quote folder. Sending a chaser is a live operation and waits for a person.",
+  "capabilities": ["quotes.collect", "quotes.log", "comparison.draft", "rfq.chase", "messages.draft", "messages.send"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "quote replies read from the quote folder, comparison and chaser drafts, chaser sends queued for approval, Excel register rows"}
+  },
+  "gaps": [
+    "Needs core/workflows/runtime.ts: a chaser queued on one day is sent when a person approves it, even if that supplier's quote arrived in the meantime. The send needs a pre-send check on live acts, run inside approve() before the send, that drops the chaser if a quote from that supplier has arrived. Not built here, because the runtime is outside this folder.",
+    "Odoo: the kit folder holds one docs-read operation (the version endpoint). Its purchase-requisition, RFQ and vendor pricing steps have no mapped operations, so no adapter is built for it.",
+    "Acumatica: the evidence names requisitions and RFQs, but the kit has no Acumatica platform folder, so no operations are mapped.",
+    "Like-for-like checks, price ranking, negotiation and the award are judgment steps for the agent skill and the estimator. The crons never parse or rank a price.",
+    "Writing the comparison record (the item list, the suppliers, the request date) into the store has no CLI command yet. The skill or a person writes it until one exists.",
+    "The chase cron follows the same reply rules as the supplier RFQ workflow. Confirm with a buyer before it runs.",
+    "Turning an awarded quote into a purchase order is covered by the supplier RFQ workflow (manufacturing and all industries), not this one.",
+    "Takeoff from drawings is done by hand or by freelancers. The kit has no takeoff adapter.",
+    "The adapter is docs-only until a sandbox mailbox proves it."
+  ]
+}

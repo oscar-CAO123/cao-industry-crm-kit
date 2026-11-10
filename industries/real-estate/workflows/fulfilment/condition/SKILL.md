@@ -1,0 +1,31 @@
+---
+name: real-estate-condition-reports
+description: Condition reports for a property management business, starting from the property and contact lists in AgentBox. Use when setting up condition reports for a client, or when an owner asks why a report is slow or has the wrong property or contact.
+---
+
+# Condition reports
+
+Cuts what a condition report costs in staff time by keeping the property and contact lists it needs current in the business's property system. The crons read only. The person still inspects, photographs, writes, and signs off every report.
+
+## What runs on its own
+Two crons in `index.ts`, scheduled by `workflow.json`: `properties` reads the property list every 30 minutes, and `contacts`
+reads the contact list hourly. Both read only. Nothing is written to AgentBox, and nothing is sent.
+
+## Setting it up for a client
+1. Confirm the business uses AgentBox. Fill `settings.json` from `settings.example.json`.
+2. Set `REAPIT_ACCESS_TOKEN` in the environment the crons run in. Never put it in a tracked file.
+3. Check the first run lists the properties and contacts the owner expects. The crons read the first page only.
+
+## On Rex
+Set `"platform": "rex"` in settings and `REX_ACCESS_TOKEN` in the environment (and `REX_API_HOST` for the UK host, api.uk.rexsoftware.com per the kit's platform file). The same two crons read
+the property and contact lists from Rex. Rex has no condition-report service, so nothing is written.
+
+## What the person still does
+- Inspects the property on site, and takes the photos and notes.
+- Writes the report and checks it against the last one.
+- Signs it off and sends it. Meter and key readings, disputes and repairs are done by the person, outside this workflow.
+
+## Not covered yet
+PropertyMe, Inspection Express, Inspection Manager and Property Tree have no kit adapter here. Creating or uploading
+a report in AgentBox is not built, because its document endpoints do not have confirmed fields in the vendor docs. See the
+`gaps` list in `workflow.json`.

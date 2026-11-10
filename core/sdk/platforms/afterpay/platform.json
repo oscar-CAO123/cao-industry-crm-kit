@@ -1,0 +1,89 @@
+{
+ "id": "afterpay",
+ "name": "Afterpay",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "agencyapi.afterpay.com",
+  "global-api-sandbox.afterpay.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "AFTERPAY_MERCHANT_ID",
+  "pass": "AFTERPAY_SECRET_KEY"
+ },
+ "keys": [
+  "AFTERPAY_MERCHANT_ID",
+  "AFTERPAY_SECRET_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.afterpay.com/openapi/checkouts.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/configuration.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/disputes.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/grants.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/orders.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/payments.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/service-status.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/reference-partner-api.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/orders-3.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/payments-3.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/configuration-3.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/service-status-3.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/grants-2.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  },
+  {
+   "url": "https://developers.afterpay.com/openapi/get-configuration-mappings.json",
+   "official": "vendor-domain: developers.afterpay.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 60,
+  "read": 23,
+  "write": 37
+ }
+}

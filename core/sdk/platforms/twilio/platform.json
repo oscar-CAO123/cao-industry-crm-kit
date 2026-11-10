@@ -1,0 +1,501 @@
+{
+ "id": "twilio",
+ "name": "Twilio (and SendGrid)",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "accounts.twilio.com",
+  "api.sendgrid.com",
+  "api.twilio.com",
+  "bulkexports.twilio.com",
+  "chat.twilio.com",
+  "content.twilio.com",
+  "conversations.twilio.com",
+  "events.twilio.com",
+  "flex-api.twilio.com",
+  "frontline-api.twilio.com",
+  "iam.twilio.com",
+  "insights.twilio.com",
+  "intelligence.twilio.com",
+  "ip-messaging.twilio.com",
+  "knowledge.twilio.com",
+  "lookups.twilio.com",
+  "marketplace.twilio.com",
+  "memory.twilio.com",
+  "messaging.twilio.com",
+  "monitor.twilio.com",
+  "notify.twilio.com",
+  "numbers.twilio.com",
+  "oauth.twilio.com",
+  "preview-iam.twilio.com",
+  "preview.twilio.com",
+  "pricing.twilio.com",
+  "proxy.twilio.com",
+  "routes.twilio.com",
+  "serverless.twilio.com",
+  "studio.twilio.com",
+  "supersim.twilio.com",
+  "sync.twilio.com",
+  "taskrouter.twilio.com",
+  "trunking.twilio.com",
+  "trusthub.twilio.com",
+  "verify.twilio.com",
+  "video.twilio.com",
+  "voice.twilio.com",
+  "webhooks.twilio.com",
+  "wireless.twilio.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "formArrays": "repeat",
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "TWILIO_ACCOUNT_SID",
+  "pass": "TWILIO_AUTH_TOKEN"
+ },
+ "keys": [
+  "TWILIO_ACCOUNT_SID",
+  "TWILIO_AUTH_TOKEN",
+  "SENDGRID_API_KEY (for SendGrid)"
+ ],
+ "sources": [
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/twilio-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  },
+  {
+   "url": "https://codeload.github.com/twilio/sendgrid-oai/tar.gz/refs/heads/main",
+   "official": "github-verified: GitHub states org twilio controls www.twilio.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 1985,
+  "read": 936,
+  "write": 1049
+ }
+}

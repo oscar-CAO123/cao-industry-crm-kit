@@ -1,0 +1,48 @@
+{
+ "id": "webflow",
+ "name": "Webflow",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.webflow.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "WEBFLOW_API_TOKEN"
+ },
+ "keys": [
+  "WEBFLOW_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.webflow.com/openapi/api-reference.json",
+   "official": "vendor-domain: developers.webflow.com"
+  },
+  {
+   "url": "https://developers.webflow.com/openapi/api-reference-2.json",
+   "official": "vendor-domain: developers.webflow.com"
+  },
+  {
+   "url": "https://developers.webflow.com/openapi/webflow-data-api.json",
+   "official": "vendor-domain: developers.webflow.com"
+  },
+  {
+   "url": "https://github.com/webflow/js-webflow-api",
+   "official": "vendor-link: https://developers.webflow.com/data/docs/ links github.com/webflow"
+  }
+ ],
+ "gaps": [
+  "webflow: 1 endpoints added from webflow/js-webflow-api (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 381,
+  "read": 194,
+  "write": 187
+ }
+}

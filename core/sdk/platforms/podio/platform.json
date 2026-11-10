@@ -1,0 +1,215 @@
+{
+ "id": "podio",
+ "name": "Podio",
+ "status": "sdk",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.podio.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "PODIO_ACCESS_TOKEN",
+  "prefix": "OAuth2 ",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "PODIO_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.podio.com/doc",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/actions",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/alerts",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/app-store",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/applications",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/batch",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/calendar",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/comments",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/contacts",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/conversations",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/mobile",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/email",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/embeds",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/files",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/flows",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/forms",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/friends",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/grants",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/hooks",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/importer",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/integrations",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/items",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/layout",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/linked-accounts",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/notifications",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/oauth-authorization",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/organizations",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/questions",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/ratings",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/recurrence",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/reference",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/reminders",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/search",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/space-members",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/spaces",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/status",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/stream",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/subscriptions",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/tags",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/tasks",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/users",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/filters",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/voting",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://developers.podio.com/doc/widgets",
+   "official": "vendor-domain: developers.podio.com"
+  },
+  {
+   "url": "https://github.com/podio/podio-rb",
+   "official": "vendor-link: https://developers.podio.com/clients/ruby links github.com/podio"
+  }
+ ],
+ "gaps": [
+  "podio: 260 endpoints added from podio/podio-rb (its official SDK; no published spec)"
+ ],
+ "counts": {
+  "operations": 260,
+  "read": 141,
+  "write": 119
+ }
+}

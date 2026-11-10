@@ -1,0 +1,70 @@
+{
+ "id": "looker-studio",
+ "name": "Looker Studio",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "datastudio.googleapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "defaultScope": "https://www.googleapis.com/auth/datastudio",
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "google"
+ },
+ "keys": [
+  "GOOGLE_MAILBOX",
+  "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/assets/search",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/permissions/get",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/permissions/patch",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/permissions/addMembers",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/permissions/revokeAllPermissions",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api/reference/types",
+   "official": "vendor-domain: developers.google.com"
+  },
+  {
+   "url": "https://developers.google.com/data-studio/integrate/api",
+   "official": "vendor-domain: developers.google.com"
+  }
+ ],
+ "gaps": [
+  "Changelog page not saved: not in the manifest, so not read.",
+  "Types page (reference-types.html) read for the Asset, Permissions, Role and Member shapes only; it lists no endpoints.",
+  "Request body fields for patch, addMembers and revokeAllPermissions are described in prose and examples, not in a typed body schema; body is recorded as true only.",
+  "No machine-readable spec in raw/looker-studio/: the manifest holds HTML pages only. Discovery notes from an earlier pass record no discovery document or OpenAPI file on Google domains. Not re-checked here: this reader does not fetch.",
+  "Access limit (not a doc gate): the API is only for users in a Google Workspace or Cloud Identity organisation, per the overview page. The docs themselves are public."
+ ],
+ "counts": {
+  "operations": 5,
+  "read": 2,
+  "write": 3
+ }
+}

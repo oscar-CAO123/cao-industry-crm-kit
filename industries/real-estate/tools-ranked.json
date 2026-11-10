@@ -1,0 +1,70 @@
+{
+  "tools": [
+    {
+      "name": "AgentBox"
+    },
+    {
+      "name": "Console Cloud"
+    },
+    {
+      "name": "CoreLogic RP Data"
+    },
+    {
+      "name": "DocuSign"
+    },
+    {
+      "name": "Excel"
+    },
+    {
+      "name": "GoHighLevel"
+    },
+    {
+      "name": "Google Forms"
+    },
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "Inspection Express"
+    },
+    {
+      "name": "Meta Ads"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Monday.com"
+    },
+    {
+      "name": "PropertyMe"
+    },
+    {
+      "name": "realestate.com"
+    },
+    {
+      "name": "Realtair"
+    },
+    {
+      "name": "RealWorks"
+    },
+    {
+      "name": "Rex"
+    },
+    {
+      "name": "Trello"
+    },
+    {
+      "name": "WhatsApp"
+    },
+    {
+      "name": "Xero"
+    },
+    {
+      "name": "Zapier"
+    },
+    {
+      "name": "Zoho"
+    }
+  ]
+}

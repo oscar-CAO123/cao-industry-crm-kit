@@ -1,0 +1,40 @@
+{
+ "id": "hospitality:x-guests",
+ "name": "Guests and waitlist",
+ "industry": "hospitality",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the venue's guest waitlist in its own spreadsheet: puts each waiting party in order and quotes a wait from the minutes per group, logs every seated, no-show or left party once to a guest log, and queues the clearing of those rows for approval. Crons read and draft; a person approves every clear.",
+ "families": {
+   "all": {
+     "steps": ["waitlist-add", "quote-wait", "guest-notified", "seat-guest", "guest-no-show", "record-keeping", "other"],
+     "covered_by": {"waitlist-add": "skill (host adds a row with Status Waiting)", "quote-wait": "queue cron (position and quoted wait)", "guest-notified": "not built (see gaps)", "seat-guest": "skill (host sets Seated)", "guest-no-show": "skill (host sets No show)", "record-keeping": "close cron (guest log tab, once per party), queue cron (position and wait columns)", "other": "skill (VIP handling, repeat guests, table choice, judged by hand)"}
+   }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+   {"name": "queue", "schedule": "*/10 * * * *", "entry": "queue", "summary": "Put each waiting party in order and quote its wait from minutes per group; mark rows it cannot read Check."},
+   {"name": "close", "schedule": "0 22 * * *", "entry": "close", "summary": "Log each seated, no-show or left party once to the guest log; queue clearing those rows for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+   "google-workspace": ["sheets.spreadsheets.values.get", "sheets.spreadsheets.values.update", "sheets.spreadsheets.values.append"]
+ },
+ "live_ops": {
+   "google-workspace": ["sheets.spreadsheets.values.clear"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: rows in the venue's own waitlist and guest log tabs. Clearing a waitlist row removes a record the host can see, so it is only ever queued for a person to approve. No cron messages a guest.",
+ "capabilities": ["waitlist.read", "waitlist.position", "waitlist.log", "waitlist.clear"],
+ "adapters": {
+   "google-workspace": {"status": "docs-only", "covers": "waitlist rows, the guest log, and clearing a row after approval"}
+ },
+ "gaps": [
+   "Lightspeed: the kit has no Lightspeed ops file (core/sdk/platforms/lightspeed is absent), and its 28 pages are customer case studies with no waitlist, quote-wait, no-show or VIP flow. Nothing from it is built.",
+   "Guest notification when a table is ready (email or SMS): no mapped send operation with confirmed vendor fields is built. Gmail drafts are mapped, but this step has no adapter yet.",
+   "Seating and table choice, no-show chasing, VIP or priority handling, repeat-guest lookup and marketing consent: no mapped platform describes them in the docs given. They are judgment steps in SKILL.md.",
+   "Walk-in and phone intake: no intake channel is mapped, so the host adds each row by hand.",
+   "Google Workspace: the customer-service and note-taking pages describe no waitlist, so the sheet is the only record. The adapter's field names come from the Sheets spec in endpoint-map/raw and it has not run against a real Google Workspace account.",
+   "The quoted wait is an estimate (minutes per group ahead in the queue), not a measured wait.",
+   "The clear re-reads the row before it runs, but the sheet drops empty cells at the end of a row, so an empty Note (or Outcome time) cannot be checked. A note typed into such an empty cell after queueing is cleared with the row. Check the row before approving a clear that has waited a long time."
+ ]
+}

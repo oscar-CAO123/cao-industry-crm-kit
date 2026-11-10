@@ -1,0 +1,43 @@
+{
+  "tools": [
+    {
+      "name": "Axify"
+    },
+    {
+      "name": "BigQuery"
+    },
+    {
+      "name": "Canva"
+    },
+    {
+      "name": "Deputy"
+    },
+    {
+      "name": "Employment Hero"
+    },
+    {
+      "name": "Excel"
+    },
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "Meta Ads"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Roller"
+    },
+    {
+      "name": "WordPress"
+    },
+    {
+      "name": "Xero"
+    },
+    {
+      "name": "Zendesk"
+    }
+  ]
+}

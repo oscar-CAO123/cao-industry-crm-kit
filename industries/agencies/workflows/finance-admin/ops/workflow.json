@@ -1,0 +1,42 @@
+{
+ "id": "agencies:ops",
+ "name": "Agency ops board",
+ "industry": "agencies",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a new client brief into a scoping task on the agency's ops board, flags projects whose budget is running out, and queues invoices that are due to go out for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "project-delivery": {
+   "steps": ["brief-intake", "scope-and-estimate", "set-up-job", "track-time", "status-updates", "invoice-and-billing"],
+   "covered_by": {"brief-intake": "intake (new Productive deals become scoping tasks)", "scope-and-estimate": "skill (the agent scopes the brief; no cron prices it)", "set-up-job": "intake", "track-time": "not yet (see gaps)", "status-updates": "board (budget flags); client updates are a skill", "invoice-and-billing": "invoicing (marks due invoices sent, after approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New briefs (deals in the brief status) get a scoping task on the ops board."},
+  {"name": "board", "schedule": "15 * * * *", "entry": "board", "summary": "Budget use per project; a project past the warning level gets one budget task per month."},
+  {"name": "invoicing", "schedule": "0 22 * * *", "entry": "invoicing", "summary": "Unsent invoices whose delivery date has passed are queued to be marked sent, for approval."}
+ ],
+ "draft_ops": {
+  "productive": ["deals-index", "tasks-create", "reports-budget_reports-index", "invoices-index"]
+ },
+ "live_ops": {
+  "productive": ["invoices-update"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and tasks on the internal ops board. Marking an invoice sent is a live operation and waits for a person.",
+ "capabilities": ["deals.list", "tasks.create", "budgets.read", "invoices.list", "invoices.mark_sent"],
+ "adapters": {
+  "productive": {"status": "docs-only", "covers": "brief deals, ops-board tasks, budget reports, invoices (mark sent)"}
+ },
+ "gaps": [
+  "Productive filters and includes: the kit sends a filter as one JSON string, not Productive's filter[field][op] syntax, so every read here is unfiltered (the first page the server returns) and the code filters in memory. Filtered reads and paging need a change in core/sdk/call.ts, which this workflow does not make.",
+  "Productive is a spec-only platform, tested offline. Field names come from its official OpenAPI spec, not a live account. budget_usage is read as a percentage, as the spec describes it; unverified on a real account.",
+  "Monday.com and Slack are mapped in the kit but have no adapter here. Teamwork and Harvest are named in the spec's platform list and are not in the kit at all.",
+  "Reporting dashboards, the tool most, have no platform in the kit.",
+  "Client status updates, scope-and-estimate and resource planning are judgment steps for the agent, not crons.",
+  "Time capture is not built: no cron reads or writes time entries.",
+  "Invoices: the cron marks an unsent invoice sent once its delivery date has passed. It does not build invoice lines from time entries (invoice attributions are not used here). Marking sent in Productive may not email the client; confirm the delivery path on a real account before approving.",
+  "Intake saves its record after the task is created, so a crash between the two can repeat a scoping task on the next run."
+ ]
+}

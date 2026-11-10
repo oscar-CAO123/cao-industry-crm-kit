@@ -1,0 +1,282 @@
+{
+ "id": "onfleet",
+ "name": "Onfleet",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "onfleet.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "ONFLEET_API_KEY",
+  "passEmpty": true
+ },
+ "keys": [
+  "ONFLEET_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.onfleet.com/llms.txt",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/setup-tutorial.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/introduction.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/data-types-and-response-formats.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/querying-by-metadata.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/api-wrappers.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/create-worker.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/delivery-manifest.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/team-auto-dispatch.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/create-destination.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/tasks.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/create-task.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/task-custom-fields.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/task-custom-fields-search.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/creating-tasks-with-custom-task-templates.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/type.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/dependencies.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/list-tasks.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-single-task.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-single-task-by-shortid.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/webhooks.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/secrets.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/update-webhook.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/webhook-payload-examples.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/orders.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/create-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/update-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/cancel-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/clone-orders.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/reject-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/quote-order.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/routeplan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/post-create-route-plan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/update-route-plan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/add-tasks-to-route-plan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-route-plan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-routeplan-by-id.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/delete-routeplan.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/initialize-route-optimization.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/initialize-route-optimization-on-demand.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/additional-configurable-fields-for-rov3.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/ro-clustering.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-cost-parameters.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-capabilities-matching.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-boundary.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-minimize-crossing.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-maxdistancebetweenstops.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/route-optimization-remove-manual-assigned-tasks.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/initialize-vehicle-based-route-optimization.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/start-route-optimization.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/get-optimization-status.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/abort-optimization.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/apply-optimization-results.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/task-template.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/create-custom-task-templates.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/search-for-eligible-custom-field.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/list-templates.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/update-task-templates.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://docs.onfleet.com/reference/delete-task-templates.md",
+   "official": "vendor-domain: docs.onfleet.com"
+  },
+  {
+   "url": "https://github.com/onfleet/node-onfleet",
+   "official": "vendor-link: https://docs.onfleet.com/reference/api-wrappers links github.com/onfleet"
+  }
+ ],
+ "gaps": [
+  "onfleet: 39 endpoints added from onfleet/node-onfleet (in the official SDK, not the published spec)",
+  "onfleet: 0 truncated path-only entries replaced by 1 endpoints the vendor's reference documents in full"
+ ],
+ "counts": {
+  "operations": 74,
+  "read": 23,
+  "write": 51
+ }
+}

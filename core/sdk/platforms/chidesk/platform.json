@@ -1,0 +1,42 @@
+{
+ "id": "chidesk",
+ "name": "ChiDesk",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.chidesk\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "account": {
+   "env": "CHIDESK_ACCOUNT",
+   "pattern": "[a-z0-9-]+",
+   "example": "acme"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "ChiDeskApiKey",
+  "env": "CHIDESK_API_KEY"
+ },
+ "keys": [
+  "CHIDESK_API_KEY",
+  "CHIDESK_ACCOUNT"
+ ],
+ "sources": [
+  {
+   "url": "https://chidesk.com/developers",
+   "official": "vendor-domain: chidesk.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 34,
+  "read": 20,
+  "write": 14
+ }
+}

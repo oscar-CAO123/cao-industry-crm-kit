@@ -1,0 +1,11 @@
+{
+ "family": "all",
+ "business_name": "Example Commercial Property",
+ "re_leased": {
+  "company_id": "00000000-0000-0000-0000-000000000000",
+  "property_id": "00000000-0000-0000-0000-000000000000",
+  "applicant_tag": "tenant applicant",
+  "is_residential": false,
+  "title_prefix": "Lease"
+ }
+}

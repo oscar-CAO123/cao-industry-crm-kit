@@ -1,0 +1,7 @@
+{
+ "warehouse_code": "MAIN",
+ "reorder_levels": [{"productCode": "OAK-19-PREF", "minQty": 20, "orderQty": 60}],
+ "delivery_days": 14,
+ "tax_rate_percent": 10,
+ "bill_account_code": ""
+}

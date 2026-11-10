@@ -1,0 +1,44 @@
+{
+ "id": "agencies:creative",
+ "name": "Creative test reader",
+ "industry": "agencies",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads how live ad creative tests are performing on the ad platform, keeps a snapshot, and queues a pause for any losing ad for a person to approve. Crons read and queue; nothing launches, spends or pauses without approval.",
+ "families": {
+  "creative-test": {
+   "steps": ["test-brief", "gather-assets", "produce-variants", "review-variants", "set-up-test", "launch-test", "monitor-results", "pick-winner", "scale-winner", "iterate", "client-update", "record-keeping"],
+   "covered_by": {"test-brief": "skill", "gather-assets": "skill", "produce-variants": "skill", "review-variants": "skill", "set-up-test": "not yet (see gaps)", "launch-test": "not yet (see gaps)", "monitor-results": "monitor", "pick-winner": "review (pauses losers only)", "scale-winner": "not yet (see gaps)", "iterate": "skill", "client-update": "skill", "record-keeping": "monitor (snapshot)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "monitor", "schedule": "0 */6 * * *", "entry": "monitor", "summary": "Read spend, impressions, clicks and CTR for each ad in the account and keep the snapshot."},
+  {"name": "review", "schedule": "0 23 * * *", "entry": "review", "summary": "Queue a pause for each active ad that has spent past the threshold with a CTR under the floor."}
+ ],
+ "draft_ops": {
+  "meta-ads": ["AdAccount.get.insights", "AdAccount.get.ads"]
+ },
+ "live_ops": {
+  "meta-ads": ["Ad.post.self"]
+ },
+ "draft_ops_note": "Draft operations are reads only: ad insights and the list of active ads. Pausing an ad changes what a customer's ad does, so Ad.post.self is a live operation that is only ever queued for approval.",
+ "capabilities": ["ads.read", "ads.pause"],
+ "adapters": {
+  "meta-ads": {"status": "docs-only", "covers": "read ad insights and active ads; queue an ad pause for approval"}
+ },
+ "gaps": [
+  "TikTok Ads: the kit has no ops file for tiktok-ads, so no operations are mapped. Its test setup, review and reporting steps stay manual until an ops file exists.",
+  "Test brief, asset gathering, variant production, client updates and record keeping have no mapped operations. The agent skill covers them, or the owner does them by hand.",
+  "Set-up test, launch test and scale winner (creating campaigns, ad sets and ads, turning them on, changing budgets) are not built. They need a live approval flow for each write before they can be added.",
+  "Pick winner only pauses losing ads. It does not promote a winner or move budget to it.",
+  "Creating new ad creatives (AdAccount.post.adcreatives) is not built. Iteration needs a person to write the next round until a draft path is designed.",
+  "Meta's ops file tags AdSet.get.insights as a write even though it is a read. This workflow does not use it. The kit owner should correct the tag.",
+  "Active-ad reads cover the first page only. Following paging.next needs core: AdAccount.get.ads in core/sdk/platforms/meta-ads/ops.json maps no limit or after parameter, and the SDK refuses unmapped params. Until then a losing ad past that page is not paused (the safe direction).",
+  "The review cron uses the snapshot from the last monitor run, which can be up to six hours old.",
+  "Thresholds (minimum spend, CTR floor, pause cap) are starting values. The owner sets them per client before the review cron is relied on.",
+  "Every Meta step is partial in the platform evidence and the docs are developer docs, not product help. Each step needs a check in Ads Manager before it is relied on.",
+  "The workflow is docs-only until a sandbox or test ad account proves the read and pause operations."
+ ]
+}

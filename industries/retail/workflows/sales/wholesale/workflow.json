@@ -1,0 +1,55 @@
+{
+  "id": "retail:wholesale",
+  "name": "Win and look after wholesale accounts and stockists",
+  "industry": "retail",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Sets up each wholesale stockist in Xero, drafts an invoice for each order the team records, queues the invoice to be authorised and emailed, and queues chases on overdue invoices. Crons read and draft; a person approves every send.",
+  "families": {
+    "wholesale": {
+      "steps": ["lead-intake", "qualify-account", "pitch-samples", "send-trade-pricing", "account-setup", "order-intake", "stock-allocation", "pack-dispatch", "invoice-terms", "payment-chasing", "reorder-check", "account-review", "issue-resolution", "record-keeping"],
+      "covered_by": {
+        "lead-intake": "skill (the team reads the intro or email and records the account)",
+        "qualify-account": "skill",
+        "pitch-samples": "not yet (see gaps)",
+        "send-trade-pricing": "not yet (see gaps)",
+        "account-setup": "cron account-setup",
+        "order-intake": "skill (the team records each order from its purchase order)",
+        "stock-allocation": "not yet (see gaps)",
+        "pack-dispatch": "not yet (see gaps)",
+        "invoice-terms": "cron invoice",
+        "payment-chasing": "cron chase",
+        "reorder-check": "not yet (see gaps)",
+        "account-review": "skill",
+        "issue-resolution": "skill",
+        "record-keeping": "draft (Xero contacts and invoices hold the record)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "account-setup", "schedule": "*/30 * * * *", "entry": "account-setup", "summary": "Give each new stockist account its Xero contact."},
+    {"name": "invoice", "schedule": "*/15 * * * *", "entry": "invoice", "summary": "Draft a Xero invoice for each ready order, then queue its authorise-and-email for approval."},
+    {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Queue a chase on each overdue invoice at its next step (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.createInvoices", "accounting.getInvoices"]
+  },
+  "live_ops": {
+    "xero": ["accounting.updateOrCreateInvoices", "accounting.emailInvoice"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads, a contact record, and an invoice in DRAFT. Authorising an invoice and emailing it reach a customer, so they are live and wait for a person.",
+  "capabilities": ["accounts.setup", "invoices.draft", "invoices.send", "invoices.read"],
+  "adapters": {
+    "xero": {"status": "docs-only", "covers": "stockist contact, DRAFT invoice per order, authorise and email, overdue chase"}
+  },
+  "gaps": [
+    "Unleashed: most of its wholesale steps are the strongest support in the evidence (sales orders, stock on hand, reorder report, pack and ship), and its 146 operations are mapped, but its calls are not wired: the HMAC sign-in is not built in core/sdk/call.ts, so an adapter would throw before any request. No adapter until the signer exists.",
+    "Shopify: B2B customer, company and draft-order steps are mapped, but its operations take no mapped arguments (index-only, a full GraphQL document is needed) and the vendor schema is not in the endpoint map. No adapter until a development store confirms the field names.",
+    "No intake platform: wholesale enquiries and orders arrive by email, JAW or Shopify. JAW, Indigo 8 and eSuite have no platform in the kit. The team records accounts and orders into the store until an intake adapter exists.",
+    "Not covered: pitch samples and lookbooks (JAW), trade price lists (Shopify catalogue), stock allocation and pack-dispatch (Indigo 8 or Unleashed), reorder checks (Unleashed reorder report, not wired), and wholesale margins in Airtable (mapped in the kit, but no Airtable platform evidence was read for this workflow, so not built).",
+    "Xero is docs-only until a demo company proves the calls, as in the quoting workflow. The chase re-sends the invoice email through Xero, using Xero's own invoice template; Xero's reminder settings are not read.",
+    "Payment-chasing reads only AUTHORISED invoices and pages through at most 1,000 of them per run."
+  ]
+}

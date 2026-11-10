@@ -1,0 +1,18 @@
+# Read by BuildKit next to shell/Dockerfile (the build context is the kit root, so a shell/.dockerignore is never read).
+# Paths are relative to the kit root.
+.git
+**/node_modules
+**/.next
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+**/*token*.json
+**/*credential*
+**/kit.env
+.vscode
+.idea
+shell/playwright-report
+shell/test-results
+shell/.playwright

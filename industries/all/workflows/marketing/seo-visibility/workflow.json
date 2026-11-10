@@ -1,0 +1,66 @@
+{
+ "id": "seo-visibility",
+ "name": "Grow search and AI search visibility: keyword research, site audits, rankings and backlinks",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Grow search and AI search visibility: keyword research, site audits, rankings and backlinks. Four crons read Ahrefs for rankings, keyword research, broken backlinks and AI search share of voice, and save each as a report. The only write, deleting keywords the owner has retired, waits for a person to approve it.",
+ "families": {
+  "all": {
+   "steps": ["goal-setting", "keyword-research", "site-audit", "content-plan", "content-publish", "google-business-profile", "reviews", "local-listings", "backlinks", "rank-tracking", "ai-search-visibility", "traffic-review", "reporting", "record-keeping", "other"],
+   "covered_by": {
+    "goal-setting": "skill (seed keywords, target domain and the retire list live in settings)",
+    "keyword-research": "keywords cron (Ahrefs Keywords Explorer and the tracked list)",
+    "site-audit": "not yet (Ahrefs site-audit operations are mapped, no cron calls them)",
+    "content-plan": "skill",
+    "content-publish": "not covered (neither platform puts page copy live; see gaps)",
+    "google-business-profile": "not covered (Semrush only, no adapter; see gaps)",
+    "reviews": "not covered (Semrush only, no adapter; see gaps)",
+    "local-listings": "not covered (see gaps)",
+    "backlinks": "backlinks cron (Ahrefs broken backlinks)",
+    "rank-tracking": "rankings cron (Ahrefs Rank Tracker)",
+    "ai-search-visibility": "ai-visibility cron (Ahrefs Brand Radar share of voice)",
+    "traffic-review": "rankings cron (Search Console keywords through Ahrefs)",
+    "reporting": "skill (reads the saved reports and writes the owner update)",
+    "record-keeping": "every cron saves a dated report in the store",
+    "other": "skill"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "rankings", "schedule": "0 21 * * *", "entry": "rankings", "summary": "Daily: Rank Tracker positions and Search Console keywords for the target domain, saved as a dated report."},
+  {"name": "keywords", "schedule": "0 22 * * 1", "entry": "keywords", "summary": "Weekly: Keywords Explorer volumes for the seed keywords and the tracked list. Queues removal of any keyword the owner has retired."},
+  {"name": "backlinks", "schedule": "0 22 * * 3", "entry": "backlinks", "summary": "Weekly: broken backlinks pointing at 404 pages, saved as a list to restore or redirect."},
+  {"name": "ai-visibility", "schedule": "0 22 * * 5", "entry": "ai-visibility", "summary": "Weekly: Brand Radar share of voice across the chosen AI assistants."}
+ ],
+ "draft_ops": {
+  "ahrefs": [
+   "rank-tracker.overview",
+   "gsc.keywords",
+   "keywords-explorer.overview",
+   "management.project-keywords",
+   "site-explorer.broken-backlinks",
+   "brand-radar.sov-overview"
+  ]
+ },
+ "live_ops": {
+  "ahrefs": ["management.project-keywords-delete"]
+ },
+ "draft_ops_note": "Draft operations are reads only. The crons save their results in the workflow store and call no write. The one live operation removes tracked keywords from Rank Tracker, and a cron can only queue it for approval.",
+ "capabilities": ["rankings.read", "keywords.research", "keywords.retire", "backlinks.read", "ai-visibility.read", "reports.save"],
+ "adapters": {
+  "ahrefs": {"status": "docs-only", "covers": "Rank Tracker, Search Console keywords, Keywords Explorer, tracked keywords, broken backlinks, Brand Radar share of voice"}
+ },
+ "gaps": [
+  "Google Ads is paid search, not organic visibility. It belongs to the ad-campaigns and ad-reporting workflows.",
+  "Semrush: its operations are mapped, but the kit holds no parameter names for its keyword and backlink endpoints, and the vendor pages in endpoint-map/raw/semrush are HTML without a spec. No adapter until those names can be confirmed.",
+  "Google Business Profile, reviews and local listings: no kit platform for Google Business Profile. Semrush's local operations cover posts, reviews and listings, but there is no adapter for them yet.",
+  "Site audit: Ahrefs site-audit.issues is mapped but no cron calls it yet. Content Helper topics (content-helper.topics) is mapped but not called.",
+  "Publishing page copy and blog posts: neither platform puts website copy live. A person does this in the business's website software.",
+  "Judgment steps stay with the agent skill: choosing target terms, writing pages and posts, deciding what to ask reviewers for, and reading the AI answers.",
+  "Brand Radar prompts and cited pages: the report and its prompts are set up in the Ahrefs app first. Cited pages are not read yet.",
+  "Docs-only until an Ahrefs account proves each read. Column names in the select parameters follow the response schema in endpoint-map/raw/ahrefs; confirm them in a live account before relying on the reports."
+ ]
+}

@@ -1,0 +1,1498 @@
+{
+ "id": "activecampaign",
+ "name": "ActiveCampaign",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.api-us1\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "account": {
+   "env": "ACTIVECAMPAIGN_ACCOUNT",
+   "pattern": "[a-z0-9-]+",
+   "example": "acme"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "Api-Token",
+  "env": "ACTIVECAMPAIGN_API_KEY"
+ },
+ "keys": [
+  "ACTIVECAMPAIGN_API_KEY",
+  "ACTIVECAMPAIGN_ACCOUNT"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.activecampaign.com/llms.txt",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/authentication.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/url.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/pagination.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/contact-custom-fields-api-guide.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-delete-accounts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-customfieldmeta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-custom-field-meta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-custom-fields-meta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-an-addresslist.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-addresslists.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-an-addressgroup.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-addressgroups.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-an-addressgroup-by-address-and-group.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-an-addressgroup.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-an-addressgroup.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-an-addresslist-by-address-and-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-an-addresslist.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-an-addresslist.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contactautomations-for-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-single-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-automation-blocks.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-automation-triggers.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-automation-steps.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-stats-activity-items.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-automation-stats-activity-items.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-goal-lists.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-goal-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-list-contact-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-list-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-goal-tags.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-goal-tag.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-tag-contact-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-tag-tag.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-contact-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-goal-contact-goal-lists.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-goal-contact-goal-tags.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-goal-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-goal-stats.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-goal-showcase.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/edit-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/duplicate-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-campaign-messages-associated-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-campaign-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-campaign-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-campaign-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-message",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/schedule-a-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/pause-a-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/resume-a-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/stop-a-campaign.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-multiple-campaigns.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/preview-a-campaign-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/send-a-campaign-test.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-campaign-message-source.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-editor-markup.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/variables.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-variables.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/edit-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-delete-variables.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/lock-a-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/unlock-a-variable.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-personalization-tags.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/sync-a-contacts-data.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-import-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-import-status-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-import-status-info.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-activities.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-geo-ips.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contacts-geo-ip-address.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-sync-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/merge-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-activity.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-activity-recipients.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-an-activity-recipient.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-activity-recipient-activity.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-activity-recipient-recipient.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-bounce-logs.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-data.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-data-record.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-emails.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-email.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-import-log-rows.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-import-log-row.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-list-subscriptions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-list-subscription.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-contact-list-subscription.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-logs.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-log.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-delete-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-contact-note.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-contact-note.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-contact-note.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/apply-tags-to-a-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-tags.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-geo-addresses.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-geo-address.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-geo-ips.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-geo-ip.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-import-history.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-import-failed-rows.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-plus-appends.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-plus-append.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-automation-logs.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-automation-log.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/remove-a-contact-from-an-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-contactautomation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contactautomation-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contactautomation-automation-logs.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contactautomation-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contactautomation-contact-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contactautomation-end.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-contact-custom-field.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/add-custom-field-to-field-group.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-custom-field-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-all-custom-field-groups.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-custom-field-to-field-group.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-fields.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-field-details.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-field-detail.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-custom-field-options.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-field-options.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-field-option.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-custom-field-option.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-field-option.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-field-option.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/sync-a-fields-list-relationships.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/sync-a-fields-list-relationships-by-exclusion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-custom-field-relationships.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-custom-field-relationship.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-custom-field-relationship.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-custom-field-group.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-fieldvalue.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-custom-field-value-for-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/remove-a-tag-from-a-contact-by-name.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/remove-a-tag-from-a-contact-by-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-tags.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-tag.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-archived-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-archived-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-restore-requests.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/restore-archived-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-contact-restore-request.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-archived-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-archived-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/restore-all-archived-contacts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-conversion-points.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-conversion-point.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-conversion-point-attributions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-conversion-point-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-contact-conversions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-contact-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-conversion-activities.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-contact-conversion-attributions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-conversion-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-conversion-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-contact-conversion-conversion-trigger.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/paging-ordering-sorting-and-filtering.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-deal-new.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-inaccessible-pipelines-by-user.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-custom-deal-field-meta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-custom-deal-field-meta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-all-custom-deal-field-meta.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-connection.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-connection.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-connection.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-connections.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/graphql-overview.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/about-the-graphql-api.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/searches.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/orders-1.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/recurring-payments.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/shared-objects.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/products.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/browse-abandonment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/browse-session-apis.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-form.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/set-opt-in.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-new-form.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-form.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/pause-or-resume-a-form.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-new-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-list-contact-trends.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-list-group-permissions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-list-group-permission.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-list-group-permission.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-list-group-permission.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/exclusions-retrieve-a-list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/exclusions-retrieve-an-exclusion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-an-exclusion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-segment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-segment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-segment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-segment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-segment-historic.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/segment-revert-to-history.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/translate-segment.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-match-one-request.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/segment-match-check-by-external-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-match-all-request.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-match-all-request-with-segment-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-result-set-by-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-segment-match-detail.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-segment-match-detail-by-external-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/find-contact-id-by-ac-playload.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-result-set-by-run-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-saved-segment-summaries.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-saved-segment-summaries-by-id.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-account-information.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-account-settings.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-api-credentials.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/reset-an-api-key.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-tracked-events.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-tracking-log.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-site-tracking-domains.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/add-a-site-tracking-domain.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/remove-a-site-tracking-domain.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-conversions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-conversions-data.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-conversion-labels.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-conversion-label.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-create-conversion-labels.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-delete-conversion-labels.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/set-a-conversion-target.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-conversion-label.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-conversion-label.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-conversion-label.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/disable-a-conversion-labels-target.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-conversion-metrics.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/disable-a-conversion-target.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch-a-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-conversion.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-conversions-data.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-conversions-metrics.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-conversions-trends.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-tasks.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-task-reminder.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-templates.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-template.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-template.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-template.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-single-sign-on-token.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/bulk-delete-groups.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/webhooks.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/search-content-manager-files.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-content-manager-file.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-content-manager-file-folders.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-content-manager-file-keywords.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-content-manager-folders.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-content-manager-folder.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-content-manager-folder-files.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-content-manager-keyword-files.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-whatsapp-templates.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-whatsapp-template.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/channels_whatsapp_template_update.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-whatsapp-template.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/send-a-whatsapp-template-message.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-flow-execution.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-flow-execution-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-flow-execution-contact.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get-flow-execution.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-flow-execution.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-conversations.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-conversation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/partially-update-a-conversation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/listbroadcasts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/createbroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/updatebroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/deletebroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/listbroadcastlists.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/createaibroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/updateaibroadcast.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getaibroadcaststatus.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcastmetrics.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcastsnapshot.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcastsnapshotbyids.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/exportbroadcastmetrics.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getsmscreditdata.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcastfailures.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/getbroadcastrecipients.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/exportbroadcastrecipients.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_profiles_list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/post_ai_customizations_profiles_create.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_profiles_get.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete_ai_customizations_profiles_delete.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch_ai_customizations_profiles_update.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_profiles_get_by_child_account.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch_ai_customizations_profiles_assign_accounts.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_documents_list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/post_ai_customizations_documents_upload.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_documents_get.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete_ai_customizations_documents_delete.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch_ai_customizations_documents_update.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_documents_download.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_instructions_list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/post_ai_customizations_instructions_create.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_ai_customizations_instructions_get.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete_ai_customizations_instructions_delete.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch_ai_customizations_instructions_update.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_child_account_snapshots_get_list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_child_account_snapshots_list_snapshot_by_reseller.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/post_child_account_snapshots_create_snapshot.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete_child_account_snapshots_delete_snapshot.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_child_accounts_get_list.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/post_child_accounts_create.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_child_accounts_get_for_snapshots.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_crm_reporting_list_pipelines.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_crm_reporting_pipelines_summary.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_crm_sync_list_pipelines.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_crm_sync_get_pipeline_sync_config.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/put_crm_sync_put_pipeline_sync_config.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_crm_sync_settings_get.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/put_crm_sync_settings_update.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_files_quota_status.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_insight_cards_get_list_latest.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/patch_insight_cards_update_state.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/get_locales_get_catalogs.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-brand-kits.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-primary-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-a-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-brand-kit-history.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-brand-kit-competitors.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/set-primary-brand-kit.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-brand-kit-tone.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/refresh-brand-kit-tone.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/delete-ai-account-instruction.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-ai-account-instruction.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-ai-account-instruction.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-ai-instructions.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/build-an-automation.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/generate-an-automation-schema.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-ecom-customer-behavior-summary.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-ecom-order-status-summary.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-ecom-product-rankings.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-ecom-revenue-summary.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-business-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-business-goal-data.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/list-all-business-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/create-a-business-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/build-a-business-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/archive-multiple-business-goals.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/retrieve-a-business-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/update-a-business-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  },
+  {
+   "url": "https://developers.activecampaign.com/reference/archive-a-business-goal.md",
+   "official": "vendor-domain: developers.activecampaign.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 342,
+  "read": 194,
+  "write": 148
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "id": "internal-handoffs",
+ "name": "Pass work and information between departments without someone carrying it",
+ "industry": "all",
+ "department": "people",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Passes a piece of work from one person or team to the next through Asana and Slack. Each handover is recorded as an Asana task, assigned with a due date and a note, and sent as a Slack message once a person approves it. Open handovers are chased on a set schedule and a daily status goes to the channel. Crons read and draft; a person approves every assignment and message.",
+ "families": {
+  "all": {
+   "steps": ["trigger-event", "gather-info", "write-handover", "choose-recipient", "pass-on", "acknowledge", "assign-tasks", "status-update", "chase-stalled", "record-keeping"],
+   "covered_by": {
+    "trigger-event": "intake (a request in the Asana intake project or the Slack handover channel)",
+    "gather-info": "skill (the agent reads the request and writes its summary into the proposals namespace)",
+    "write-handover": "draft (the Asana record task and its note)",
+    "choose-recipient": "route (settings match the request's words to a person) or skill (the agent proposes one)",
+    "pass-on": "approval (assign the record task, post the note, and message the person in Slack)",
+    "acknowledge": "follow-up (a reply from anyone other than the record's creator, read from Asana)",
+    "assign-tasks": "approval (assignee and due date on the record task)",
+    "status-update": "follow-up (one daily status post for the open handovers, queued for approval)",
+    "chase-stalled": "follow-up (a numbered chase comment on the record task, up to the set count)",
+    "record-keeping": "draft (the Asana record task is the record of who had what and when)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "New requests from the Asana intake project and the Slack handover channel, each stored once."},
+  {"name": "draft", "schedule": "7,22,37,52 * * * *", "entry": "draft", "summary": "Route each new handover, record it as an unassigned Asana task, and queue its handover (assign, note, Slack message) for approval."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Mark handovers passed on once approved, record replies and completions, queue due chases, and queue the daily status post (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "asana": ["getTasksForProject", "getTask", "getStoriesForTask", "createTask"],
+  "slack": ["conversations_history", "conversations_open"]
+ },
+ "live_ops": {
+  "asana": ["updateTask", "createStoryForTask"],
+  "slack": ["chat_postMessage"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the intake project, the handover channel and the record tasks, an unassigned Asana record task in the record project, and an open direct message. Assigning a task, posting a note or a chase on it, and sending any Slack message notify a person, so they are live operations and wait for approval.",
+ "capabilities": ["tasks.list", "tasks.create", "messages.list", "notify.send"],
+ "adapters": {
+  "asana": {"status": "docs-only", "covers": "intake of open requests; unassigned record task per handover; assignment, due date, note and chase on approval; reply and completion read-back"},
+  "slack": {"status": "docs-only", "covers": "intake from the handover channel; direct message to the assignee and daily status post on approval"}
+ },
+ "gaps": [
+  "Monday.com: the agent pages were the only ones readable (help pages refused the crawl with 403), and no operations are mapped in the kit, so it is not built. Its evidence is one support-agent page, not handover steps.",
+  "Email, the most-named recipient tool: Microsoft 365 is mapped in the kit for the quoting and training workflows, but this workflow builds only Asana and Slack, so email handovers stay with the person.",
+  "GoHighLevel, ServiceM8, Xero, Airtable, Procore, JackApp, Shopify and Canva have no handover adapter here. None is built in this workflow, so handovers through them stay with the business's own process.",
+  "No command writes a proposal into the store yet. The agent's routing judgment for a request no route covers needs the CRM shell or a later core change to write the proposals namespace. Until then such a request stays needs-routing with its reason.",
+  "Acknowledgement is read from Asana replies only. A Slack thread reply is not read, and the Slack message timestamp of each handover is not kept (the approval results keep only id-like keys), so Slack replies cannot be tied back to a handover yet.",
+  "The docs do not describe a formal receipt, an approval or sign-off step for a handover, or escalation after the last chase. The last chase is the end of the chain here, and a person takes it from there.",
+  "Asana intake reads the first 100 open tasks in the intake project, with no paging. A busier intake project needs paging or a second intake project.",
+  "Chases go to the Asana record task only. A chase by Slack direct message is not built.",
+  "The status-update step is one daily text post for the open handovers. It is not a dashboard, and it does not show progress against revenue or the job system.",
+  "Every adapter is docs-only until a sandbox Asana workspace and a Slack workspace with the bot added to the handover channel prove it. The Asana assignee field takes a work email per Asana's official spec, which is confirmed on paper only."
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "jotform",
+ "name": "Jotform",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.jotform.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "APIKEY",
+  "env": "JOTFORM_API_KEY"
+ },
+ "keys": [
+  "JOTFORM_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://api.jotform.com/docs/",
+   "official": "vendor-domain: api.jotform.com"
+  },
+  {
+   "url": "https://www.jotform.com/enterprise/?jtm_medium=referral&jtm_source=api.jotform.com/docs/&jtm_content=unlimited_api_calls&jtm_campaign=enterprise_cta",
+   "official": "vendor-domain: www.jotform.com"
+  },
+  {
+   "url": "https://github.com/jotform/jotform-api-nodejs",
+   "official": "vendor-link: https://api.jotform.com/docs/ links github.com/jotform"
+  }
+ ],
+ "gaps": [
+  "REFUSED https://api.jotform.com/docs/www.jotform.com/developers: HTTP 404",
+  "jotform: 35 endpoints added from jotform/jotform-api-nodejs (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 36,
+  "read": 22,
+  "write": 14
+ }
+}

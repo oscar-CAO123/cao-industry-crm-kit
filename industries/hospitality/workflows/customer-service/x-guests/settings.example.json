@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Restaurant",
+ "timezone": "Australia/Sydney",
+ "minutes_per_group": 15,
+ "google_workspace": {
+   "spreadsheet_id": "SPREADSHEET_ID_FROM_THE_URL",
+   "waitlist_tab": "Waitlist",
+   "log_tab": "Guest log"
+ }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "professional-services:add-narratives",
+  "name": "Billing narratives",
+  "industry": "professional-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a client's chargeable time into client-ready invoice narratives in Xero. Reads the uninvoiced time entries in Xero Projects, takes the narratives a person writes from them, drafts one invoice per client in Xero, and queues its authorisation for approval. Crons read and draft; a person approves every invoice before it is authorised.",
+  "families": {
+    "all": {
+      "steps": ["time-capture", "invoice-build", "approval", "other"],
+      "covered_by": {
+        "time-capture": "capture (reads the chargeable, uninvoiced time entries Xero Projects holds for each client)",
+        "invoice-build": "draft (a narrative proposal written by the agent becomes one draft invoice in Xero)",
+        "approval": "approval (authorising the draft invoice is queued and only runs when a person approves it)",
+        "other": "not covered: trust top-ups and WIP chasing stay with the practice"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "capture", "schedule": "*/30 * * * *", "entry": "capture", "summary": "Read the chargeable, uninvoiced (ACTIVE) time entries for each client project in Xero Projects and store the new ones."},
+    {"name": "draft", "schedule": "15,45 * * * *", "entry": "draft", "summary": "For each client with new time entries and a narrative proposal, create one DRAFT invoice in Xero and queue its authorisation for approval."},
+    {"name": "refresh", "schedule": "0 22 * * *", "entry": "refresh", "summary": "Once a day, read the status of drafted invoices in Xero, so authorised and voided invoices are recorded (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "xero": ["projects.getProject", "projects.getTasks", "projects.getTimeEntries", "accounting.getInvoice", "accounting.createInvoices"]
+  },
+  "live_ops": {
+    "xero": ["accounting.updateInvoice"]
+  },
+  "draft_ops_note": "Draft operations are reads, plus one DRAFT invoice in Xero, which reaches nobody outside the business. Authorising an invoice (accounting.updateInvoice) changes the status the client sees, so the draft cron only queues it and a person approves it.",
+  "capabilities": ["time.entries.read", "projects.read", "invoices.draft", "invoices.authorise"],
+  "adapters": {
+    "xero": {"status": "docs-only", "covers": "chargeable time entries and tasks from Xero Projects (reads); a DRAFT sales invoice with narrative lines (draft); authorising that invoice (queued for approval)"}
+  },
+  "gaps": [
+    "No platform docs were read for this job: the platforms evidence file is missing. The adapter uses Xero only, because Xero Projects holds the time entries and Xero holds the invoices. Xero is the accounting-practice platform in the kit.",
+    "Clio (the law firm call) has mapped billing operations (bill index, show, update, mark as sent) and time activities, but the field names for bill line descriptions were not checked against the Clio spec in this pass, so no Clio adapter is built. Clio is the next adapter to add for law firms.",
+    "Time recorded on paper or Excel worksheets is not read. The worksheet detail must be entered into Xero Projects first, because the capture cron reads only what Xero Projects holds.",
+    "The narrative is a judgment step. The agent writes the narrative proposal into the store for each client (collection proposals, keyed by the Xero project id). tools/workflow.ts has no command for that yet: its propose command only writes quote lines. Adding a narrative command belongs in tools/workflow.ts, which this build does not edit.",
+    "The kit writes array query values as JSON, so the states filter is sent as one value, ACTIVE. Listing several states at once needs a runtime change in core/sdk/call.ts.",
+    "Xero Projects does not mark the time entries as invoiced when this workflow creates an invoice. Entries stay ACTIVE in Xero, so the owner must not also invoice them from Xero Projects, or the same time would be billed twice. The store prevents a repeat only inside this workflow.",
+    "A rejected authorisation leaves the DRAFT invoice in Xero. The entries stay drafted in the store. A person deletes the draft in Xero and clears the record before the entries can be drafted again.",
+    "Idempotency: Xero's Idempotency-Key is assumed to return the same invoice for a repeated create. This is unverified until a Xero demo company is used.",
+    "Every adapter is docs-only until a Xero demo company proves the calls. The adapter is tested offline only, with a fake network.",
+    "Judgment stays with the practice: which entries bill, write-offs, rate exceptions, the wording of each narrative, and the client review. None of these are automated.",
+    "Trust top-ups and WIP chasing are not covered."
+  ]
+}

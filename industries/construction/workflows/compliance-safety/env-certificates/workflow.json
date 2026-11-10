@@ -1,0 +1,41 @@
+{
+ "id": "construction:env-certificates",
+ "name": "Solar and electrical paperwork: network connection applications and environmental certificates (STCs, VEECs, LGCs)",
+ "industry": "construction",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tracks solar and electrical jobs that need network or certificate paperwork, checks each job for the evidence it needs, and queues a chase to the customer when something is missing. Crons read and draft; a person approves every email.",
+ "families": {
+  "solar-install-paperwork": {
+   "steps": ["job-intake", "site-assessment", "network-application-prepare", "network-application-lodge", "network-approval-wait", "install-evidence", "accreditation-check", "stc-calculation", "rec-registry-create", "customer-update", "record-keeping"],
+   "covered_by": {"job-intake": "register", "install-evidence": "evidence", "customer-update": "chase (approval)", "record-keeping": "store checklist", "site-assessment": "skill", "network-application-prepare": "skill (not in kit)", "network-application-lodge": "not covered", "network-approval-wait": "not covered", "accreditation-check": "skill (public register only)", "stc-calculation": "skill (public calculators only)", "rec-registry-create": "not covered"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "register", "schedule": "*/30 * * * *", "entry": "register", "summary": "Track active jobs whose text names solar, battery or certificate paperwork."},
+  {"name": "evidence", "schedule": "0 21 * * *", "entry": "evidence", "summary": "Check each tracked job's attachments for the evidence it needs and record what is missing."},
+  {"name": "chase", "schedule": "0 23 * * *", "entry": "chase", "summary": "Queue one chase email per job still missing evidence, for approval. Nothing is sent by the cron."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listAttachments", "servicem8-api.listCompanyContacts"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations are reads only. The store holds the checklist, which reaches nobody outside the business. The one live operation, a chase email, is only ever queued.",
+ "capabilities": ["jobs.list", "files.read", "contacts.read", "messages.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "job list, job attachments as the evidence check, primary contact, queued chase email"}
+ },
+ "gaps": [
+  "No platform in the evidence has a mapped operation. The REC Registry and Solar Accreditation Australia pages describe certificates and installer accreditation only, and the kit has no adapter for either.",
+  "Network connection applications (prepare and lodge) and distributor approval waits have no mapped platform. They stay manual, with the agent skill helping with the form content.",
+  "The REC Registry certificate creation form, evidence upload and claim lodgement are not in the evidence pages. Confirm on a live account before any adapter is written.",
+  "VEEC claims (Victorian Energy Upgrades) and LGC claims have no platform in the evidence; they are not covered.",
+  "Accreditation checks use the public registered-person search only. Installer accreditation sits with Solar Accreditation Australia, which has no mapped operations.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+  "The ServiceM8 adapter is docs-only until a ServiceM8 trial account proves the job, attachment and contact reads."
+ ]
+}

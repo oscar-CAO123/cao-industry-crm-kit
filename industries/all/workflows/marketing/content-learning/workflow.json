@@ -1,0 +1,55 @@
+{
+ "id": "content-learning",
+ "name": "Score content performance and feed what works back into the content plan",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Scores each Meta ad and recent Instagram post by how it performs, names what is working and what is not, and writes that plan for the next brief. Crons read and draft; a pause on a running ad over the cost-per-lead limit is only queued, and a person approves it.",
+ "families": {
+  "all": {
+   "steps": ["pull-metrics", "score-content", "spot-patterns", "keep-or-drop", "brief-next-content", "content-plan-update", "record-keeping"],
+   "covered_by": {
+    "pull-metrics": "draft (ad results by ad for the window, running ads, and recent Instagram posts with reach and interactions)",
+    "score-content": "cron (each ad by cost per lead, each post by engagement rate, against the owner's limit or the median)",
+    "spot-patterns": "skill (the agent reads the scorecard and names what the winners have in common; captions are not read)",
+    "keep-or-drop": "approval (a pause for a running ad over the limit; nothing else is paused or deleted)",
+    "brief-next-content": "skill (the plan in the scorecard is the starting point for the next brief)",
+    "content-plan-update": "not yet (see gaps)",
+    "record-keeping": "cron (the snapshot and scorecard are kept in the workflow store)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "pull", "schedule": "30 21 * * *", "entry": "pull", "summary": "Ad results, running ads and recent Instagram posts for the window, kept for scoring (21:30 UTC is 7 or 8 am in eastern Australia)."},
+  {"name": "score", "schedule": "0 22 * * *", "entry": "score", "summary": "Scores every ad and post from the last pull, writes the plan, and queues a pause for each running ad over the limit (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "meta-ads": ["AdAccount.get.insights", "AdAccount.get.ads", "IGUser.get.media", "IGMedia.get.insights"]
+ },
+ "live_ops": {
+  "meta-ads": ["Ad.post.self"]
+ },
+ "draft_ops_note": "Draft operations are reads of the ad account and the Instagram account. The only live operation is a pause of one ad (status PAUSED), which a cron can only queue and a person approves in the CRM shell.",
+ "capabilities": ["ads.insights", "ads.running", "instagram.posts", "instagram.insights"],
+ "adapters": {
+  "meta-ads": {"status": "docs-only", "covers": "Ad-level results and running ads for the window, recent Instagram post reach and interactions, and a queued pause for one ad"}
+ },
+ "gaps": [
+  "Metricool was read for this job (planner, post analytics, Posts Library) but has no operations mapped in the kit, so it has no adapter. Several owners run their content review there today.",
+  "Polar Analytics, the data lake and SuperGrow are are not mapped in the kit.",
+  "Google Ads and LinkedIn are mapped in the kit, but the platform evidence for this job does not cover them, so this workflow has no adapter for either.",
+  "Facebook Page post results are not read. PagePost.get.insights is mapped, but its metric names are not confirmed in the spec.",
+  "Instagram metric support varies by media type (reels, carousels, images). The five metrics used must be confirmed on a live account before the first run.",
+  "Linking a post or ad to an enquiry, lead or sale needs the business's own sales or CRM records. The job does not read them, so return is a judgment step for the owner.",
+  "The pattern step (what the winners have in common) is the agent's judgment. Captions and hooks are not read, so the plan names items, not the reasons they work.",
+  "The content plan or calendar is not updated by this job. The plan is written to the workflow store for the agent or owner to brief from.",
+  "Only the ad-level window (last 7 or 30 days) and one snapshot are kept, so period-on-period comparison is not built.",
+  "The score is relative to the owner's cost-per-lead limit or the median of this window. Without a client benchmark, a working ad can still be a weak one.",
+  "Budget and bid changes (AdSet.post.self) and scaling a winner are mapped in the kit but not built here. Scaling stays with the owner.",
+  "Creating new ads or posts is not part of this job. content-posting covers publishing.",
+  "Instagram post reads are capped at 50 per run; a post whose insights fail is left out and the run is marked partial.",
+  "The Meta token needs the ads read and ads management permissions for reads and the pause, and the Instagram insights permission for posts. Checked offline only, not against a real account."
+ ]
+}

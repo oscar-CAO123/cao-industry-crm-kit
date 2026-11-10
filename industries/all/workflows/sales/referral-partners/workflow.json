@@ -1,0 +1,106 @@
+{
+ "id": "all:referral-partners",
+ "name": "Share leads and updates with referral partners",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes leads that partners refer into the business's pipeline, keeps each referring partner in the partner list, and queues a receipt and stage updates for that partner. Crons read and draft; a person approves every tag or contact change that reaches a partner.",
+ "families": {
+  "referral-partners": {
+   "steps": [
+    "referral-received",
+    "qualify-referral",
+    "partner-register",
+    "acknowledge-partner",
+    "share-lead-details",
+    "progress-updates",
+    "outcome-feedback",
+    "track-referrals",
+    "agree-terms",
+    "thank-and-reward",
+    "compliance-consent",
+    "partner-review"
+   ],
+   "covered_by": {
+    "referral-received": "intake (Pipedrive lead with the referral label)",
+    "qualify-referral": "skill (the business qualifies in Pipedrive)",
+    "partner-register": "acknowledge (partner contact synced to ActiveCampaign)",
+    "acknowledge-partner": "acknowledge (receipt queued for approval)",
+    "share-lead-details": "not yet (see gaps)",
+    "progress-updates": "progress (stage tag queued for approval)",
+    "outcome-feedback": "progress (the tag for a won or lost stage)",
+    "track-referrals": "intake and progress (store and Pipedrive deal link)",
+    "agree-terms": "skill (judgment, not automated)",
+    "thank-and-reward": "not covered (paid outside the workflow)",
+    "compliance-consent": "not covered (the business's own process)",
+    "partner-review": "not yet (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "intake",
+   "schedule": "*/15 * * * *",
+   "entry": "intake",
+   "summary": "Referred leads from Pipedrive, each recorded once."
+  },
+  {
+   "name": "acknowledge",
+   "schedule": "*/30 * * * *",
+   "entry": "acknowledge",
+   "summary": "Queue one receipt per new referral for a person to approve."
+  },
+  {
+   "name": "progress",
+   "schedule": "5 * * * *",
+   "entry": "progress",
+   "summary": "Queue a stage tag for the partner when a referred deal reaches a mapped stage."
+  }
+ ],
+ "draft_ops": {
+  "pipedrive": [
+   "docs_api_v1.getLeads",
+   "docs_api_v1.getLead",
+   "openapi-v2.getDeals"
+  ],
+  "activecampaign": [
+   "docs.get_contacts"
+  ]
+ },
+ "live_ops": {
+  "activecampaign": [
+   "docs.post_contact_sync",
+   "docs.post_contacts_contactId_tags"
+  ]
+ },
+ "draft_ops_note": "Draft operations are reads only. Pipedrive is never written by this workflow. Every ActiveCampaign write reaches a partner through the business's automation, so each one is a live operation and waits for a person.",
+ "capabilities": [
+  "leads.list",
+  "contacts.list",
+  "contacts.upsert"
+ ],
+ "adapters": {
+  "pipedrive": {
+   "status": "docs-only",
+   "covers": "referred leads, one lead, deals changed since a time (reads)"
+  },
+  "activecampaign": {
+   "status": "docs-only",
+   "covers": "partner contact lookup, contact sync with tag, tag on an existing contact"
+  }
+ },
+ "gaps": [
+  "Mailchimp was checked and not built: its partner steps are mailing lists and campaigns, not a lead pipeline, and its qualify step is marked no.",
+  "The kit has no adapter for it, so it is not built.",
+  "Sharing lead details with a partner (share-lead-details) is not built. Neither Pipedrive nor ActiveCampaign describes sending lead detail to an outside partner, so this is a person's call for now.",
+  "Partner review per partner is not built. Pipedrive and ActiveCampaign report conversion for pipelines overall, not per referrer.",
+  "The partner emails are not written here. The business builds an ActiveCampaign automation that sends on the acknowledged tag and on each stage tag. This workflow only applies the tags.",
+  "The partner email is read from a lead or deal custom field whose 40-character key goes in settings. Confirm the field name and value in the client's own Pipedrive account before turning the crons on.",
+  "Intake and acknowledge read one page of 100 leads per run, and progress reads one page of 100 deals per run. A busier account needs paging. A referred lead converted to a deal before an intake run is missed.",
+  "Pipedrive's own automations can send email to a partner outside this workflow. This workflow does not check them.",
+  "Referral fees, thank-you rewards, AML checks and consent capture are judgment or business process, not automated. The platform pages do not describe them.",
+  "Both adapters are docs-only until a sandbox account for each proves them. The kit has no runtime change to request."
+ ]
+}

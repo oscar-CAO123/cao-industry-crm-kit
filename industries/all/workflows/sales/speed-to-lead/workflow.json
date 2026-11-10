@@ -1,0 +1,64 @@
+{
+ "id": "all:speed-to-lead",
+ "name": "Alert and chase when a new lead is not contacted fast",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Alerts the owner the moment a new lead lands, queues one first text for approval if nobody has replied in time, and escalates to a senior person when a lead is still uncontacted. Crons read and draft internal tasks; a person approves every text to a lead.",
+ "families": {
+  "all | other-tool": {
+   "steps": ["lead-arrives", "first-contact", "qualify-book"]
+  },
+  "all | by-hand-or-unstated": {
+   "steps": ["lead-arrives", "first-contact", "chase-message"]
+  }
+ },
+ "steps": {
+  "lead-arrives": {"covered_by": "intake (reads new opportunities in the new-lead stage)"},
+  "instant-alert": {"covered_by": "intake (one internal task to the owner per new lead)"},
+  "first-contact": {"covered_by": "chase (queues one SMS for approval once the wait is set)"},
+  "chase-message": {"covered_by": "not yet: a second message is a gap, see gaps"},
+  "escalate-overdue": {"covered_by": "escalate (one internal task to the senior person)"},
+  "response-check": {"covered_by": "not yet: the GoHighLevel docs read do not give a time-to-first-contact report"},
+  "assign-owner": {"covered_by": "not yet: the owner is a fixed setting, not round-robin"},
+  "retry-attempts": {"covered_by": "not yet"},
+  "qualify-book": {"covered_by": "not covered: judgment on the call"},
+  "record-keeping": {"covered_by": "the tasks and the lead store; no CRM note is written"}
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/5 * * * *", "entry": "intake", "summary": "New open leads in the new-lead stage: one internal alert task to the owner each."},
+  {"name": "chase", "schedule": "*/10 * * * *", "entry": "chase", "summary": "Leads still uncontacted after the set wait: queue one first text for approval."},
+  {"name": "escalate", "schedule": "*/15 * * * *", "entry": "escalate", "summary": "Leads still uncontacted after the escalation time: one internal task to the senior person."}
+ ],
+ "draft_ops": {
+  "gohighlevel": [
+   "opportunities.search-opportunity",
+   "opportunities.get-opportunity",
+   "conversations.search-conversation",
+   "conversations.get-messages",
+   "contacts.create-task"
+  ]
+ },
+ "live_ops": {
+  "gohighlevel": ["conversations.send-a-new-message"]
+ },
+ "draft_ops_note": "Draft operations are reads and internal tasks for staff. Nothing a customer receives is a draft operation. The first text to a lead is live and waits for a person.",
+ "adapters": {
+  "gohighlevel": {"status": "docs-only", "covers": "new leads, the owner alert, the first text, the escalation, and checks for a reply or a handled lead"}
+ },
+ "gaps": [
+  "HubSpot: lead, alert and record-keeping steps are marked yes, but no task object is mapped (the pages read do not cover tasks) and the lead operation ids are malformed. No adapter built.",
+  "Pipedrive: new leads can be read (GET /leads), but the note and task write bodies are not in the spec copy read, so no alert can be confirmed. No adapter built.",
+  "GoHighLevel send body: the official spec marks subType and status as required on Send a new message, and the values this build sends (SMS, pending) are not confirmed. The first live send needs a sandbox run before go-live.",
+  "GoHighLevel push alerts to the owner's phone are not a mapped operation. The alert is an internal task, which the owner sees in the app.",
+  "Round-robin routing of a new lead to a free person is not shown in the pages read. The owner is a fixed setting.",
+  "A phone call that leaves no message is not visible to the workflow. A lead the owner calls and moves out of the new-lead stage is handled; a call that does not move the stage is not.",
+  "Time-to-first-contact reporting and retry-until-answered sequences are not shown in the pages read.",
+  "Only the first page of messages is checked for an outbound message (20 messages).",
+  "Only the SMS channel is built. Email first contact is not built.",
+  "A queued first text is rejected by the chase pass once its lead is past the alert window or has been handled. That pass runs every 10 minutes, so a text approved in the gap still goes out. A check at send time in the runtime would close it.",
+  "Qualification and booking on the first call are judgment steps for the team, not automated here."
+ ]
+}

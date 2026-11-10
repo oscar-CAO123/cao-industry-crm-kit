@@ -1,0 +1,6 @@
+{
+  "window_days": 14,
+  "max_deals": 10,
+  "use_apollo": true,
+  "business_name": "Example Advisory"
+}

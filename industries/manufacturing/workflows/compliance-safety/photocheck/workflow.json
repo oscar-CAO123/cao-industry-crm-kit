@@ -1,0 +1,44 @@
+{
+ "id": "manufacturing:photocheck",
+ "name": "Finished part photo check",
+ "industry": "manufacturing",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Logs each finished-part check request from the inbox into the business's own check register, then drafts the result email once a person has recorded a pass, fail or second look. Crons read and draft; a person approves every email before it sends.",
+ "families": {
+  "photo-check": {
+   "steps": ["receive-job", "check-drawing", "set-up-inspection", "photograph-part", "measure-check", "compare-to-spec", "decide-pass-fail", "flag-defect", "rework-or-scrap", "release-or-dispatch", "record-keeping", "other"],
+   "covered_by": {"receive-job": "intake (request in the inbox folder)", "check-drawing": "skill", "set-up-inspection": "skill", "photograph-part": "not covered (the person takes the photos)", "measure-check": "skill", "compare-to-spec": "skill", "decide-pass-fail": "skill (person records the result)", "flag-defect": "not covered", "rework-or-scrap": "not covered", "release-or-dispatch": "not covered", "record-keeping": "register (one row per request)", "other": "not covered"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New finished-part check requests from the inbox folder."},
+  {"name": "register", "schedule": "*/15 * * * *", "entry": "register", "summary": "One row per new request in the check register, status Awaiting photo check."},
+  {"name": "report", "schedule": "*/30 * * * *", "entry": "report", "summary": "Draft the result email for each recorded result and queue its send for approval."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the request folder, a new row in the check register, and an Outlook draft that stays unsent. The only operation that reaches a customer is the send of that draft, and it is queued for approval.",
+ "capabilities": ["checks.list", "checks.register", "messages.draft", "messages.send"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "request folder read, check register rows, result email drafts and their approved send"}
+ },
+ "gaps": [
+  "MRPeasy: no kit folder under core/sdk/platforms, so nothing can be called. Its quality control pages cover receiving, inspection and rework, but no operation is mapped.",
+  "Odoo: the kit folder exists but its ops file is empty, so no operation is callable. Every Odoo step rests on community forum answers.",
+  "Sitemate: no kit folder, so nothing can be called. Its photo tags and defect reports are the closest match to this job once mapped.",
+  "Google Workspace is mapped in the kit (Drive and Sheets) but has no adapter here. Add one if a client keeps its photos or register there.",
+  "Only Microsoft 365 is built, and its adapter is docs-only until a sandbox tenant proves it.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+  "Photographing, measuring and comparing a part to a drawing are judgment steps for the person or the agent. No platform in the kit performs them.",
+  "No command yet records the result (pass, fail or second look) that the report cron reads. Until one exists, the result is written to the check's store record by hand.",
+  "Rework, scrap, release and dispatch are not covered. Those stay in the business's own system.",
+  "The inbox search term defaults to 'photo', which is a guess. Confirm it with the client."
+ ]
+}

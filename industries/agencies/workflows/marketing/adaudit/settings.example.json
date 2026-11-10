@@ -1,0 +1,14 @@
+{
+ "agency": "Example Agency",
+ "timezone": "Australia/Sydney",
+ "meta_accounts": ["act_1234567890"],
+ "result_action_types": ["lead", "purchase"],
+ "thresholds": {
+  "frequency_max": 3.5,
+  "ctr_min_pct": 0.5,
+  "pacing_min_pct": 60,
+  "pacing_max_pct": 110,
+  "pause_spend_without_results_usd": 150
+ },
+ "daily_budget_usd": {"act_1234567890": 300}
+}

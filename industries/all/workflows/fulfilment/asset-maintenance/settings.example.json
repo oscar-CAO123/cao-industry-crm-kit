@@ -1,0 +1,8 @@
+{
+ "family": "plant-and-vehicle-servicing",
+ "business_name": "Example Civil Hire",
+ "depot_address": "1 Depot Road, Example NSW 2000",
+ "reminder_email": "fleet@example.com.au",
+ "service_window_days": 14,
+ "max_assets": 50
+}

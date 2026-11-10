@@ -1,0 +1,34 @@
+{
+ "id": "eventbrite",
+ "name": "Eventbrite",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "www.eventbriteapi.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "EVENTBRITE_TOKEN"
+ },
+ "keys": [
+  "EVENTBRITE_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://www.eventbrite.com/platform/new/docs/eventbrite-api-v3-public.apib",
+   "official": "vendor-domain: www.eventbrite.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 102,
+  "read": 61,
+  "write": 41
+ }
+}

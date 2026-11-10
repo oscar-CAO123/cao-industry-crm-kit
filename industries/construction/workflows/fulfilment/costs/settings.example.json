@@ -1,0 +1,7 @@
+{
+  "family": "job-cost-tracking",
+  "budget_from": "2026-07-01",
+  "budget_to": "2027-06-30",
+  "overrun_tolerance_percent": 0,
+  "business_name": "Example Civil Pty Ltd"
+}

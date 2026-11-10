@@ -1,0 +1,51 @@
+{
+ "id": "agentbox",
+ "name": "AgentBox (Reapit Foundations)",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "platform.reapit.cloud"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "REAPIT_ACCESS_TOKEN",
+  "extraHeaders": {
+   "api-version": "=2020-01-31"
+  }
+ },
+ "keys": [
+  "REAPIT_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://foundations-documentation.reapit.cloud/llms.txt",
+   "official": "vendor-domain: foundations-documentation.reapit.cloud"
+  },
+  {
+   "url": "https://foundations-documentation.reapit.cloud/api/api-documentation.md",
+   "official": "vendor-domain: foundations-documentation.reapit.cloud"
+  },
+  {
+   "url": "https://foundations-documentation.reapit.cloud/api/webhooks.md",
+   "official": "vendor-domain: foundations-documentation.reapit.cloud"
+  },
+  {
+   "url": "https://www.agentbox.com.au/integrator-application",
+   "official": "vendor-domain: www.agentbox.com.au"
+  }
+ ],
+ "gaps": [
+  "Only paths named on public Reapit Foundations pages; the full reference sits in a client-rendered explorer"
+ ],
+ "counts": {
+  "operations": 8,
+  "read": 4,
+  "write": 4
+ }
+}

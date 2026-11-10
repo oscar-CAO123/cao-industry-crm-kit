@@ -1,0 +1,37 @@
+{
+ "id": "idashboard-trust",
+ "name": "iDashboard Trust",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.idashboard.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "IDASHBOARD_ACCESS_TOKEN"
+ },
+ "keys": [
+  "IDASHBOARD_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://app.idashboard.com.au/api-docs",
+   "official": "vendor-domain: app.idashboard.com.au"
+  }
+ ],
+ "gaps": [
+  "idashboard-trust: write fields the reference lists under 'URI Parameters' but sends nested in a JSON body are not mapped; these endpoints take a free-form body: POST /attendances, PUT /attendances/{id}, POST /open_home_answers, PUT /open_home_answers/{id}, PUT /opinions, POST /opinions, POST /app_subscriptions",
+  "idashboard-trust: removed GET /api, POST /api, PUT /api, DELETE /api: the map's bare /api entries are the service base URL, not routes (its reference page)"
+ ],
+ "counts": {
+  "operations": 66,
+  "read": 42,
+  "write": 24
+ }
+}

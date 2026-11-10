@@ -1,0 +1,58 @@
+{
+ "id": "customer-research",
+ "name": "Customer research",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs customer surveys and interviews and summarises them. Sends a survey invite to each customer the owner chooses, collects the answers, and drafts a summary for the owner. Crons read and draft; every email send waits for a person to approve it.",
+ "families": {
+  "all": {
+   "steps": ["decide-to-ask", "write-questions", "pick-audience", "recruit-participants", "send-survey", "run-interview", "capture-responses", "transcribe-notes", "analyse-themes", "summarise-findings", "share-insights", "act-on-findings", "follow-up-customers", "record-keeping"],
+   "covered_by": {
+    "decide-to-ask": "owner decision (not automated)",
+    "write-questions": "skill (owner writes the questions in the form)",
+    "pick-audience": "settings (the owner lists the customers)",
+    "recruit-participants": "invite cron (Gmail drafts, approved send)",
+    "send-survey": "invite cron (approved send)",
+    "run-interview": "not covered (see gaps)",
+    "capture-responses": "responses cron",
+    "transcribe-notes": "not covered (see gaps)",
+    "analyse-themes": "skill (free-text answers)",
+    "summarise-findings": "summarise cron (summary draft to the owner)",
+    "share-insights": "summary draft to the owner",
+    "act-on-findings": "owner decision (not automated)",
+    "follow-up-customers": "not covered (see gaps)",
+    "record-keeping": "responses cron (research log row)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "responses", "schedule": "*/30 * * * *", "entry": "responses", "summary": "New survey responses from the form, each stored once and added to the research log."},
+  {"name": "invite", "schedule": "0 * * * *", "entry": "invite", "summary": "Drafts one survey invite per chosen customer and queues each send for approval."},
+  {"name": "summarise", "schedule": "0 22 * * *", "entry": "summarise", "summary": "One summary draft to the owner each day, with answer counts to date (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["forms.forms.get", "forms.forms.responses.list", "gmail.users.drafts.create", "sheets.spreadsheets.values.append"],
+  "calendly": ["api.routingForms_list-routing-form-submissions"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the form or routing form, a Gmail draft (the invite or the owner's summary), and a row in the internal research log. Sending a draft is a live operation and waits for a person.",
+ "capabilities": ["messages.draft", "sheets.append"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "Google Form responses, research log in Sheets, invite and summary drafts in Gmail, approved invite sends"},
+  "calendly": {"status": "docs-only", "covers": "routing form submissions (read only)"}
+ },
+ "gaps": [
+  "Jotform: its survey and workflow steps are documented, but its API operations come from an unofficial SDK, not the published spec, and their inputs are not mapped. No adapter until the inputs are confirmed on a live account.",
+  "Interviews: no platform in the kit runs a live interview. Calendly and Google Meet can book or record one, but the call itself and its notes (Gemini in Meet) are not mapped. Interview notes must be pasted into the research log by hand.",
+  "Follow-up after a survey (thank-you or incentive messages): not automated. Gmail follow-ups need a live account to confirm approval behaviour.",
+  "Audience: the owner lists the customers in settings. No platform's contact groups are read to choose them, because the kit does not confirm who the owner means to ask.",
+  "Theme coding of free-text answers: the agent skill reads the responses. The summary cron only counts identical answers.",
+  "Google write scopes: the SDK takes the first listed scope for a write, which is broad. Confirm a narrower scope works on a live Workspace account before relying on it.",
+  "Every adapter is docs-only until a sandbox Google Workspace account and a Calendly account prove the reads and the approved send."
+ ]
+}

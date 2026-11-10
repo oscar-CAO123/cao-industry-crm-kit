@@ -1,0 +1,7 @@
+{
+  "family": "wholesale",
+  "business_name": "Example Wholesale Co",
+  "invoice": {"payment_terms_days": 30, "line_amount_types": "Exclusive"},
+  "chase": {"after_days_overdue": [7, 14, 30]},
+  "gst_rate": 0.1
+}

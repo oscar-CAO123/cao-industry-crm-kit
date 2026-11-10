@@ -1,0 +1,23 @@
+{
+  "id": "aircall",
+  "name": "Aircall",
+  "docs": "https://developer.aircall.io/api-references/",
+  "account_to_test": "Paid Aircall account; API keys from the dashboard",
+  "cost_to_test": "Aircall plan, per user",
+  "fallback": "none",
+  "terms_checked": false,
+  "capabilities": [
+    "calls.list",
+    "calls.transcript",
+    "contacts.list",
+    "contacts.upsert",
+    "sms.send"
+  ],
+  "script": "core/connectors/aircall/client.ts",
+  "status": "code-built",
+  "keys": [
+    "AIRCALL_API_ID",
+    "AIRCALL_API_TOKEN"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

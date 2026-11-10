@@ -1,0 +1,60 @@
+{
+  "id": "real-estate:listing-syndication",
+  "name": "Create a rental listing once and syndicate it to every portal",
+  "industry": "real-estate",
+  "department": "marketing",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a vacant rental in VaultRE into one listing draft for a person to check, and drafts the reply to each portal enquiry. Crons read and draft; a person approves every reply and sets every listing live.",
+  "families": {
+    "single-entry-syndication": {
+      "steps": ["vacancy-notice", "property-details", "photos-and-media", "write-description", "create-master-listing", "approve-listing", "syndicate-to-portals", "check-portal-listings", "enquiry-handling", "update-or-withdraw", "record-keeping"],
+      "covered_by": {
+        "vacancy-notice": "prepare (reads available rentals)",
+        "property-details": "prepare (facts drafted into the listing note)",
+        "photos-and-media": "prepare (photo and floor plan counts in the note)",
+        "write-description": "skill (the agent writes the copy)",
+        "create-master-listing": "VaultRE property record, entered by a person",
+        "approve-listing": "person, in VaultRE",
+        "syndicate-to-portals": "not covered (VaultRE publishes from its own portal settings; see gaps)",
+        "check-portal-listings": "prepare (lists the portals the account is connected to)",
+        "enquiry-handling": "enquiries (internal note on the contact, reply queued for approval)",
+        "update-or-withdraw": "not covered",
+        "record-keeping": "prepare and enquiries (internal notes on the property and contact)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "prepare", "schedule": "15 */2 * * *", "entry": "prepare", "summary": "Read the vacant residential rentals in VaultRE and add one internal listing note per new rental: facts, photo and floor plan counts, connected portals. Nothing goes live."},
+    {"name": "enquiries", "schedule": "*/15 * * * *", "entry": "enquiries", "summary": "Read unprocessed portal enquiries, add an internal note on each contact, and queue the approved reply to the enquirer."}
+  ],
+  "draft_ops": {
+    "vaultre": [
+      "getAvailableResidentialLeaseProperties",
+      "getPropertyPhotos",
+      "getAccountPortals",
+      "getEnquiries",
+      "addPropertyNote",
+      "addContactNote"
+    ]
+  },
+  "live_ops": {
+    "vaultre": ["sendContactEmail"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads, plus an internal property note or contact note in VaultRE. Sending an email to an enquirer is a live operation and waits for a person.",
+  "capabilities": ["listings.read", "listings.note", "enquiries.read", "enquiries.note", "enquiries.reply"],
+  "adapters": {
+    "vaultre": {"status": "docs-only", "covers": "vacant residential rentals, photos, connected portals, portal enquiries, internal notes, enquiry replies"}
+  },
+  "gaps": [
+    "Putting a listing live on realestate.com.au or Domain: VaultRE pushes listings from its own portal settings, and no mapped operation sets a listing live on a portal. Approve and syndicate stay manual until a live account confirms the flow.",
+    "AgentBox: the public pages read describe none of the listing steps, and its one mapped read (get:/properties) is unconfirmed. No adapter until a live account is checked.",
+    "PropertyMe: the evidence is partial (vacancies, property sync, inspection photos), but the kit has no PropertyMe platform to build on.",
+    "Domain: the kit holds only documentation-tagged reads with unmapped parameters, and no listing write. No adapter until its listing API is mapped and its field names confirmed.",
+    "Re-Leased is a commercial platform, so it is not used for residential rental listings.",
+    "Writing a reply into the workflow store has no command yet, so the enquiries cron queues only replies already stored there. A reply command is a runtime change for a later session.",
+    "An enquiry links to a property only by its lease life id, so the note does not name the property address.",
+    "Each run reads the first 100 vacancies and the first 50 unprocessed enquiries. Larger lists need paging."
+  ]
+}

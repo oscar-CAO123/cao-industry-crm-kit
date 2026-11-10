@@ -1,0 +1,40 @@
+{
+  "id": "gift-cards-loyalty",
+  "name": "Sell and redeem gift cards, vouchers and loyalty points",
+  "industry": "all",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Issues digital gift cards and enrols members in a loyalty program in Square, activates each card once staff have a paid order for it, and keeps a ledger of gift card sales, loads and redemptions. Crons read, draft and queue; a person approves every card, activation and enrolment.",
+  "families": {},
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "activity", "schedule": "*/30 * * * *", "entry": "activity", "summary": "Reads gift card activity since the last run into the ledger. Reads only."},
+    {"name": "issue", "schedule": "*/15 * * * *", "entry": "issue", "summary": "Records what a person approved, then queues new cards, activations of paid cards and loyalty enrolments for approval. Queues only."},
+    {"name": "balances", "schedule": "0 */6 * * *", "entry": "balances", "summary": "Confirms the loyalty program is in Square and reads each enrolled member's points balance. Reads only."}
+  ],
+  "draft_ops": {
+    "square": ["api.ListGiftCardActivities", "api.ListLoyaltyPrograms", "api.RetrieveLoyaltyAccount"]
+  },
+  "live_ops": {
+    "square": ["api.CreateGiftCard", "api.CreateGiftCardActivity", "api.CreateLoyaltyAccount"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads of gift card activity, loyalty programs and member balances, written to the workflow's own ledger. Creating a card, activating it with money on it, and enrolling a member reach a customer or a liability, so they are only ever queued for approval.",
+  "capabilities": ["payments.list", "orders.list", "contacts.upsert"],
+  "adapters": {
+    "square": {"status": "docs-only", "covers": "gift card activity and ledger (read), loyalty program and member balance (read), digital gift card creation, gift card activation against a paid order, and loyalty enrolment (queued)"}
+  },
+  "gaps": [
+    "Fresha: the kit has no ops file for it, and its pages in the mining run were venue listings with no gift card or loyalty help, so no adapter is built. Fresha's own help centre was not reached.",
+    "Lightspeed: the kit has no ops file for it. Its gift cards and vouchers run through partner apps (VoucherCart, Gift Up, Giftpro, Gift-it, Voucher Connect), and each would need its own adapter once a live account confirms which app a business uses.",
+    "Taking payment for a sale is not built. Square takes it at the till, or through a payment link. CreatePayment moves money, and the runtime does not keep a payment link's URL, so neither is queued here.",
+    "Redeeming a gift card or a reward at checkout is done by staff in Square POS. Looking up a card by its code (RetrieveGiftCardFromGAN) and searching loyalty rewards are POST endpoints that the kit marks as writes, so a cron cannot read them without KIT_ALLOW_WRITES=1 on the deploy. The kit needs a read-only POST flag in core/ before these can be drafts. That change is not made here.",
+    "Earning points is done by Square at the till from a paid order. AccumulateLoyaltyPoints and AdjustLoyaltyPoints are not built, because manual points are a person's decision.",
+    "Gift card refund rules, lost or stolen card handling, and loyalty liability reporting were not in the pages read. They need a live Square account to confirm.",
+    "Physical gift cards are not created here: the card is a digital eGift card (type DIGITAL). Physical card orders are placed in Square Dashboard.",
+    "Requests are not read from a platform. Staff or the CRM shell write each sale or enrolment request into the workflow's store, and the crons act on those. Nothing in Square tells this workflow that a sale was requested.",
+    "The kit has no gift card or loyalty capability names. The capabilities above are the nearest existing names and do not describe this job exactly.",
+    "Square is status docs-only: its request bodies were checked against Square's official spec, but no call has run against a live account. Both the offline test and the live calls are unproven.",
+    "Confirm the steps documented in Square's help pages with the business before use."
+  ]
+}

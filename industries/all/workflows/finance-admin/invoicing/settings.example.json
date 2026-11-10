@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Electrical",
+ "due_days": 14,
+ "sales_account_code": "200",
+ "bank_account_code": "090",
+ "mark_invoice_sent": true,
+ "chase_after_days_past_due": [7, 21]
+}

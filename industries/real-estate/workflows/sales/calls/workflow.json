@@ -1,0 +1,114 @@
+{
+ "id": "real-estate:calls",
+ "name": "Calls",
+ "industry": "real-estate",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works the sales calls of a real estate agency: reads the contact list from Agentbox, drafts the first-call email for each contact the agent has marked to call, and chases it after set days if no one has replied. Crons read and draft; a person approves every email before it is sent.",
+ "families": {
+  "appraisal-led": {
+   "steps": [
+    "enquiry-intake",
+    "first-call",
+    "book-appointment",
+    "appraisal-prep",
+    "appraisal-visit",
+    "agreement-signing",
+    "vendor-follow-up",
+    "marketing-handover",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "enquiry-intake": "call-sync (contacts read from Agentbox into the call list)",
+    "first-call": "call-draft (Outlook draft of the first-call email, queued for approval)",
+    "book-appointment": "skill (the agent books by hand; no mapped booking operation)",
+    "appraisal-prep": "skill (due diligence and comparables by hand; no mapped data source)",
+    "appraisal-visit": "skill (the agent runs the visit and records notes by hand)",
+    "agreement-signing": "not covered (no mapped operation)",
+    "vendor-follow-up": "follow-up (chaser email drafted and queued for approval)",
+    "marketing-handover": "not covered (no mapped operation)",
+    "record-keeping": "skill (the call list in the workflow store is the record)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "call-sync",
+   "schedule": "20 * * * *",
+   "entry": "callSync",
+   "summary": "Read the first page of Agentbox contacts and add any new contact to the call list as new; refresh name and email on the ones that changed."
+  },
+  {
+   "name": "call-draft",
+   "schedule": "*/30 * * * *",
+   "entry": "callDraft",
+   "summary": "For each contact the agent marked to-contact, create the first-call email as an Outlook draft and queue its send for approval."
+  },
+  {
+   "name": "follow-up",
+   "schedule": "0 22 * * *",
+   "entry": "followUp",
+   "summary": "Queue a chaser for each sent first-call email whose set days have passed (22:00 UTC is 8 or 9 am in eastern Australia)."
+  },
+  {
+   "name": "call-notes",
+   "entry": "callNotes",
+   "schedule": "*/30 * * * *",
+   "summary": "Queue operator-recorded phone call notes for approval on Rex contacts."
+  }
+ ],
+ "draft_ops": {
+  "agentbox": [
+   "get:/contacts"
+  ],
+  "microsoft-365": [
+   "users.CreateMessages"
+  ],
+  "rex": [
+   "contacts.search",
+   "contacts.read"
+  ]
+ },
+ "live_ops": {
+  "microsoft-365": [
+   "users.user.messages.message.send"
+  ],
+  "rex": [
+   "notes.create"
+  ]
+ },
+ "draft_ops_note": "Draft operations are a read of the Agentbox contact list and the creation of an Outlook draft in the agency's own mailbox. A draft sits in Outlook and reaches nobody until it is sent. Sending is a live operation and only ever queued for a person to approve.",
+ "capabilities": [
+  "contacts.list",
+  "messages.draft",
+  "messages.send"
+ ],
+ "adapters": {
+  "agentbox": {
+   "status": "docs-only",
+   "covers": "contact list (first page), reused from the real-estate pipeline adapter; fields forename, surname, email and modified from the Reapit Foundations docs example"
+  },
+  "microsoft-365": {
+   "status": "docs-only",
+   "covers": "Outlook draft of the first-call and chaser emails in the agency mailbox, and the approved send; fields subject, body, toRecipients from the Graph v1.0 message schema"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "contact list (paged to an empty page), reused from the Rex pipeline adapter; fields name, email_address and system_modtime from the Rex docs example. The emails stay on Microsoft 365.; operator-recorded phone call notes queued for approval"
+  }
+ },
+ "gaps": [
+  "Rex: a business sets platform to rex in settings, and the contacts come from Rex's contacts.search (all pages, refused whole past 50 pages). Which contacts to call is still set by a person in the workflow store (status to-contact), so no Rex field is needed. Operator-recorded phone call notes can be queued to Rex for approval. Activities remain unavailable because the saved reference has no body fields; automated reminders are not used. The email channel is still Microsoft 365. Not confirmed on a live account: the maximum limit (a list shorter than the reported total is refused) and stable paging without order_by (rows are de-duplicated by id). Offset paging cannot see a row added or archived while a read is under way (one run may miss or repeat a row; the next run corrects it), and a reply with no total skips the short-list check.",
+  "Paging: the kit's get:/contacts operation maps no query parameters, so only the first page (25 contacts by default) is read. Mapping pageSize and pageNumber needs an ops file change, which this workflow does not make.",
+  "Microsoft 365 is not in the platform evidence for this job. It is the mail channel only because Agentbox maps no draft or send operation. The agency's mailbox must be confirmed, and the Graph token (M365_ACCESS_TOKEN) supplied, because the kit's Microsoft 365 token flow is not built yet.",
+  "Appraisal prep (due diligence, comparables, the CMA and the listing pack) is judgment in SKILL.md. CoreLogic RP Data and Pricefinder have no kit platform folder.",
+  "GoHighLevel and VaultRE are mapped in the kit but no platform evidence was read for this job, so neither has an adapter here.",
+  "Agentbox booking appointments, logging a first call, appraisal follow-up tasks and vendor reporting: the Agentbox docs describe them inside the product, with no API operation. They stay judgment steps.",
+  "Reply detection: the follow-up cron does not check whether a contact has replied. The approver checks the inbox before approving a chaser.",
+  "Not covered: agreement signing (DocuSign), marketing handover (Microsoft 365 and EDM tools), Monday.com and Trello.",
+  "Docs-only: both adapters are tested on a fake network only, and neither has been run against a real account.",
+  "Rex phone call notes: operator supplies rex-call-notes entries with contact_id and text; notes.create waits for approval. Contacts are re-read at approval. Activities create has no documented body fields in the saved reference. Reminder creation shows scheduled email fields but no contract link; it is not used for settlement."
+ ]
+}

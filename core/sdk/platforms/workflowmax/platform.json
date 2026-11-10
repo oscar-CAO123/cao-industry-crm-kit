@@ -1,0 +1,785 @@
+{
+ "id": "workflowmax",
+ "name": "WorkflowMax",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.workflowmax.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "WORKFLOWMAX_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token",
+  "extraHeaders": {
+   "account_id": "WORKFLOWMAX_ACCOUNT_ID"
+  }
+ },
+ "keys": [
+  "WORKFLOWMAX_ACCESS_TOKEN",
+  "WORKFLOWMAX_ACCOUNT_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://api-docs.workflowmax.com/llms.txt",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/overview.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/authentication.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/authentication/authorisation-request.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/authentication/obtain-tokens.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/authentication/refresh-tokens.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/base-url.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/rate-limiting.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/response-format.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/error-handling.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/configure-and-activate.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/signature-verification.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/event-delivery.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/retries-and-response-codes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/signing-key.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/webhook-logs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/webhooks/faqs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/basic/support.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/me.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/me/get-v2-me.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/account.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/account/get-v2-accounts.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/role.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/role/get-v2-roles.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-field.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-field/get-v2-custom-fields.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-field/post-v2-custom-fields.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-field/post-custom-fields-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-rates.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-rates/delete-cost-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/custom-rates/delete-custom-rates-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost/post-v2-costs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost/put-v2-costs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost/delete-v2-costs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost/get-v2-costs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/cost/get-v2-costs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/get-v2-businessstructures.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/business-structure/get-v2-clienttypes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/job.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/job/get-v2-job-templates.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/job/get-job-categories.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/job/get-v2-job-status.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff/put-v2-staffs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff/post-v2-staffs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff/get-v2-staff-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff/get-v2-staff.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/staff/get-teams.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/tax.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/tax/get-v2-taxes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/lead.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/lead/get-v2-lead-categories.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/lead/get-lead-status.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task/post-v2-tasks.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task/post-tasks-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task/get-v2-tasks-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task/get-v2-tasks.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/settings/task/delete-v2-tasks-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/get-v2-jobs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/get-v2-jobs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/get-recurring-jobs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/post-v2-jobs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/delete-v2-jobs-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/post-job-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-1/post-v2-jobs-jobuuid-job-templates.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-staff.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-staff/get-job-identifier-copy-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-staff/post-job-identifier-staff-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-staff/get-job-identifier-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-cost.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-cost/get-v2-jobs-uuid-costs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-cost/get-job-costs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-cost/post-v2-jobs-uuid-costs-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-cost/post-job-identifier-cost-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-task.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-task/put-v2-jobs-tasks-jobtaskuuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-task/post-v2-jobs-uuidtasks.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-task/get-v2-jobs-tasks.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-task/delete-v2-jobs-tasks-jobtaskuuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-note.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-note/get-job-notes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-note/post-v2-jobs-jobuuid-notes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/purchase-order.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/purchase-order/get-v2-purchase-orders-purchaseorderuuid-documents.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/purchase-order/post-v2-purchase-orders-purchaseorderuuid-documents.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/job.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/job/get-v2-jobs-jobuuid-documents.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/job/post-purchase-order-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/client.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/client/get-v2-clients-clientuuid-documents.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/client/post-purchase-order-uuid-documents-copy-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/supplier.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/supplier/get-lead-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/supplier/post-job-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/lead.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/lead/get-job-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/lead/post-supplier-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/quote.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/quote/get-lead-uuid-documents-copy-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/job-document/quote/post-lead-uuid-documents-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/put-v2-timesheets-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/delete-v2-timesheets-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/post-timesheet.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/get-v2-timesheets.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/get-timesheet-approvals.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/timesheet/get-v2-timesheets-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/capacity-plan.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/capacity-plan/get-capacity-plan.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/delete-v2-client-groups-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/get-v2-client-groups.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/get-v2-client-groups-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/post-v2-client-groups.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/put-v2-client-groups-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/post-v2-client-groups-uuid-client.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-group/delete-client-group-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client/post-v2-clients.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client/post-clients-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client/put-clients-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client/clients.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client/get-v2-clients-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/delete-v2-clients-contacts-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/delete-client-contacts-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/get-v2-clients-contacts-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/put-v2-clients-contacts-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/post-v2-clients-contacts.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/get-client-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/client-contact/post-client-uuid-contacts-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1/get-v2-leads-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1/get-v2-leads-uuid-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1/post-v2-leads.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1/put-v2-leads-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/lead-1/get-lead-notes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/get-v2-quotes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/get-v2-quotes-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/get-quote-uuid-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/put-quote-identifier.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/post-quote.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/put-quote-identifier-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/post-quote-cost-copy-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/post-quote-task.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/put-quote-task-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/get-invoice-notes-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/delete-quote-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/delete-quote-cost-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote/delete-quote-task-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote-variation/get-quote-variations.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/quote-variation/get-quote-variations-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice/get-v2-payments.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice/get-invoices.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice/get-invoice-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice/get-v2-invoices-invoiceuuid-costs.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/invoice/get-invoice-notes.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-2.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-2/get-v2-purchase-orders-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-2/get-v2-purchase-orders-uuid-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-2/delete-purchase-order-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-bill-2.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-bill-2/post-v2-purchase-orders-uuid-bills.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-bill-2/post-purchase-orders-uuid-bills-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-bill-2/get-v2-purchase-orders-bills-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-stock-receipt-2.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-stock-receipt-2/get-v2-purchase-orders-stock-receipts-1.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/po-stock-receipt-2/post-v2-purchase-orders-uuid-stockreceipts.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier/get-suppliers.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier/get-supplier-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier/post-v2-suppliers.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier/post-suppliers-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier/delete-v2-suppliers-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier-contacts.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier-contacts/get-supplier-contact-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier-contacts/delete-v2-suppliers-contacts-uuid.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier-contacts/post-v2-suppliers-uuid-contacts.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  },
+  {
+   "url": "https://api-docs.workflowmax.com/objects/supplier-contacts/post-supplier-uuid-contacts-copy.md",
+   "official": "vendor-domain: api-docs.workflowmax.com"
+  }
+ ],
+ "gaps": [
+  "workflowmax: mapped from its current /v2 reference pages (api-docs.workflowmax.com); the earlier docs-index entries had missing prefixes and typos"
+ ],
+ "counts": {
+  "operations": 126,
+  "read": 56,
+  "write": 70
+ }
+}

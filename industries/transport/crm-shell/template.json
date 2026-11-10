@@ -1,0 +1,1045 @@
+{
+ "industry": "transport",
+ "name": "Transport",
+ "version": 1,
+ "source": "Reusable industry pages, workflows and platform coverage.",
+ "pages": [
+  {
+   "slug": "quotes",
+   "title": "Quotes and orders",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "quotes",
+     "title": "Quote inbox",
+     "view": "feed",
+     "kind": "quotes",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "removals",
+     "title": "Removals quote",
+     "view": "board",
+     "kind": "removals",
+     "stages": [
+      "New request",
+      "Site visit or measure",
+      "Pricing",
+      "Sent",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "rates",
+     "title": "Rates and margin",
+     "view": "table",
+     "kind": "rates",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "order",
+     "title": "Orders",
+     "view": "table",
+     "kind": "order",
+     "fields": [
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      },
+      {
+       "key": "qty",
+       "label": "Quantity",
+       "type": "number"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pipeline",
+   "title": "Sales pipeline",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "pipeline",
+     "title": "Sales pipeline",
+     "view": "board",
+     "kind": "pipeline",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "marketing",
+   "title": "Marketing",
+   "department": "marketing",
+   "tabs": [
+    {
+     "slug": "content",
+     "title": "Marketing",
+     "view": "board",
+     "kind": "content",
+     "stages": [
+      "Idea",
+      "Drafting",
+      "Approved",
+      "Scheduled",
+      "Posted"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "calls",
+   "title": "Calls",
+   "department": "customer-service",
+   "tabs": [
+    {
+     "slug": "calls",
+     "title": "Calls",
+     "view": "feed",
+     "kind": "calls",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "delivery",
+   "title": "Deliveries",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "delivery",
+     "title": "Where's my delivery",
+     "view": "table",
+     "kind": "delivery",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "pod",
+     "title": "Proof of delivery",
+     "view": "table",
+     "kind": "pod",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "connotes",
+     "title": "Con notes",
+     "view": "table",
+     "kind": "connotes",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "routes",
+     "title": "Route planning",
+     "view": "table",
+     "kind": "routes",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "askdata",
+     "title": "Delivery data",
+     "view": "dashboard",
+     "kind": "askdata",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "portal",
+     "title": "Client portal activity",
+     "view": "feed",
+     "kind": "portal",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "fleet",
+   "title": "Fleet and drivers",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "fleet",
+     "title": "Fleet service",
+     "view": "table",
+     "kind": "fleet",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "prestart",
+     "title": "Pre-starts",
+     "view": "table",
+     "kind": "prestart",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "fatigue",
+     "title": "Fatigue and work diary",
+     "view": "calendar",
+     "kind": "fatigue",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "time",
+       "label": "Time",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "invoices",
+   "title": "Invoices",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "invoices",
+     "title": "Invoices",
+     "view": "table",
+     "kind": "invoices",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "bills",
+   "title": "Bills and expenses",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "bills",
+     "title": "Supplier bills",
+     "view": "table",
+     "kind": "bills",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    },
+    {
+     "slug": "carrier",
+     "title": "Carrier invoice audit",
+     "view": "table",
+     "kind": "carrier",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    },
+    {
+     "slug": "fuel",
+     "title": "Fuel and tolls",
+     "view": "table",
+     "kind": "fuel",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pnl",
+   "title": "Profit and loss",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "pnl",
+     "title": "Profit and loss",
+     "view": "dashboard",
+     "kind": "pnl",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "timesheets",
+   "title": "Staff",
+   "department": "people",
+   "tabs": [
+    {
+     "slug": "timesheets",
+     "title": "Timesheets",
+     "view": "table",
+     "kind": "timesheets",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "hiring",
+     "title": "Hiring",
+     "view": "board",
+     "kind": "hiring",
+     "stages": [
+      "Applied",
+      "Screened",
+      "Interview",
+      "Offer",
+      "Hired"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "driverhelp",
+     "title": "Driver help desk",
+     "view": "table",
+     "kind": "driverhelp",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "workflows": [
+  {
+   "id": "invoicing",
+   "dir": "industries/all/workflows/finance-admin/invoicing",
+   "department": "finance-admin",
+   "name": "Raise invoices from completed work",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:ask-your-data",
+   "dir": "industries/all/workflows/finance-admin/ask-your-data",
+   "department": "finance-admin",
+   "name": "Ask your data",
+   "status": "docs-only"
+  },
+  {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only"
+  },
+  {
+   "id": "booking-reminders",
+   "dir": "industries/all/workflows/sales/booking-reminders",
+   "department": "sales",
+   "name": "Book appointments, send reminders, handle no-shows",
+   "status": "docs-only"
+  },
+  {
+   "id": "ad-campaigns",
+   "dir": "industries/all/workflows/marketing/ad-campaigns",
+   "department": "marketing",
+   "name": "Build and review ad campaigns",
+   "status": "docs-only"
+  },
+  {
+   "id": "content-posting",
+   "dir": "industries/all/workflows/marketing/content-posting",
+   "department": "marketing",
+   "name": "Create and schedule social content",
+   "status": "docs-only"
+  },
+  {
+   "id": "numbers-pack",
+   "dir": "industries/all/workflows/finance-admin/numbers-pack",
+   "department": "finance-admin",
+   "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:lead-capture",
+   "dir": "industries/all/workflows/sales/lead-capture",
+   "department": "sales",
+   "name": "Capture leads from ads, forms and chat into the CRM",
+   "status": "docs-only"
+  },
+  {
+   "id": "missed-call-textback",
+   "dir": "industries/all/workflows/sales/missed-call-textback",
+   "department": "sales",
+   "name": "Text back missed calls and log them",
+   "status": "docs-only"
+  },
+  {
+   "id": "lead-followup",
+   "dir": "industries/all/workflows/sales/lead-followup",
+   "department": "sales",
+   "name": "Follow up leads and quotes on a schedule",
+   "status": "docs-only"
+  },
+  {
+   "id": "crm-hygiene",
+   "dir": "industries/all/workflows/sales/crm-hygiene",
+   "department": "sales",
+   "name": "Clean, dedupe and enrich CRM records",
+   "status": "docs-only"
+  },
+  {
+   "id": "customer-helpdesk",
+   "dir": "industries/all/workflows/customer-service/customer-helpdesk",
+   "department": "customer-service",
+   "name": "Answer customer questions from the business's own knowledge",
+   "status": "docs-only"
+  },
+  {
+   "id": "status-updates",
+   "dir": "industries/all/workflows/customer-service/status-updates",
+   "department": "customer-service",
+   "name": "Tell customers where their job, order or matter is up to",
+   "status": "docs-only"
+  },
+  {
+   "id": "scheduling-dispatch",
+   "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
+   "department": "fulfilment",
+   "name": "Schedule and dispatch jobs, staff or vehicles",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:safety-forms",
+   "dir": "industries/all/workflows/compliance-safety/safety-forms",
+   "department": "compliance-safety",
+   "name": "Safety forms, inspections and incident reports",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:fleet",
+   "dir": "industries/transport/workflows/fulfilment/fleet",
+   "department": "fulfilment",
+   "name": "Fleet service planner",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:x-pod",
+   "dir": "industries/transport/workflows/fulfilment/x-pod",
+   "department": "fulfilment",
+   "name": "Proof of delivery",
+   "status": "docs-only"
+  },
+  {
+   "id": "inbox-triage",
+   "dir": "industries/all/workflows/customer-service/inbox-triage",
+   "department": "customer-service",
+   "name": "Sort the shared inbox and draft replies",
+   "status": "docs-only"
+  },
+  {
+   "id": "documents",
+   "dir": "industries/all/workflows/fulfilment/documents",
+   "department": "fulfilment",
+   "name": "Produce letters, reports and documents from records",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:reconciliation",
+   "dir": "industries/all/workflows/finance-admin/reconciliation",
+   "department": "finance-admin",
+   "name": "Reconciliation",
+   "status": "docs-only"
+  },
+  {
+   "id": "bills-expenses",
+   "dir": "industries/all/workflows/finance-admin/bills-expenses",
+   "department": "finance-admin",
+   "name": "Capture bills, receipts and supplier invoices",
+   "status": "docs-only"
+  },
+  {
+   "id": "payroll-timesheets",
+   "dir": "industries/all/workflows/finance-admin/payroll-timesheets",
+   "department": "finance-admin",
+   "name": "Turn timesheets into payroll",
+   "status": "docs-only"
+  },
+  {
+   "id": "hiring",
+   "dir": "industries/all/workflows/people/hiring",
+   "department": "people",
+   "name": "Advertise, screen and onboard staff",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:compliance-checks",
+   "dir": "industries/all/workflows/compliance-safety/compliance-checks",
+   "department": "compliance-safety",
+   "name": "ID, AML and regulatory checks and audits",
+   "status": "docs-only"
+  },
+  {
+   "id": "call-coaching",
+   "dir": "industries/all/workflows/owner/call-coaching",
+   "department": "owner",
+   "name": "Score and coach sales and service calls",
+   "status": "docs-only"
+  },
+  {
+   "id": "knowledge-base",
+   "dir": "industries/all/workflows/owner/knowledge-base",
+   "department": "owner",
+   "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:invoices",
+   "dir": "industries/transport/workflows/finance-admin/invoices",
+   "department": "finance-admin",
+   "name": "Invoices from rates",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:mass-compliance",
+   "dir": "industries/transport/workflows/compliance-safety/mass-compliance",
+   "department": "compliance-safety",
+   "name": "Heavy vehicle mass compliance and reporting",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:fuel-tax-credits",
+   "dir": "industries/transport/workflows/finance-admin/fuel-tax-credits",
+   "department": "finance-admin",
+   "name": "Claim fuel tax credits from vehicle and road usage data",
+   "status": "docs-only"
+  },
+  {
+   "id": "transport:x-routes",
+   "dir": "industries/transport/workflows/fulfilment/x-routes",
+   "department": "fulfilment",
+   "name": "Route planning",
+   "status": "docs-only"
+  }
+ ],
+ "planned_workflows": [],
+ "connectors": [
+  {
+   "tool": "Google Workspace",
+   "platform": "google-workspace",
+   "status": "spec"
+  },
+  {
+   "tool": "Xero",
+   "platform": "xero",
+   "status": "spec"
+  },
+  {
+   "tool": "HubSpot",
+   "platform": "hubspot",
+   "status": "spec"
+  },
+  {
+   "tool": "Microsoft 365",
+   "platform": "microsoft-365",
+   "status": "spec"
+  }
+ ],
+ "missing_connectors": [
+  {
+   "tool": "Excel"
+  }
+ ]
+}

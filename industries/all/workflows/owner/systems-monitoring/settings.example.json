@@ -1,0 +1,8 @@
+{
+ "family": "all",
+ "business_name": "Example Business",
+ "checks": ["make", "microsoft-365"],
+ "alert_to": "owner@example.com.au",
+ "microsoft_365": {"mailbox": "ops@example.com.au"},
+ "make": {"team_id": "123456", "scenario_ids": [], "expiry_warn_days": 14}
+}

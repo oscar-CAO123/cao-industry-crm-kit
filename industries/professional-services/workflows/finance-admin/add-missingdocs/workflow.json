@@ -1,0 +1,50 @@
+{
+ "id": "professional-services:add-missingdocs",
+ "name": "Missing documents finder",
+ "industry": "professional-services",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds the bank transactions and bills in an accounting practice's Xero file that have no document attached, lists them by client, and drafts one chase email per client for approval. Crons read and draft; a person approves every email before it leaves.",
+ "families": {
+  "all": {
+   "steps": ["check-received", "identify-gaps", "chase-client", "follow-up-chase", "record-keeping"],
+   "covered_by": {
+    "check-received": "cron scan (Xero bank transactions and bills with no attachment in the lookback)",
+    "identify-gaps": "cron scan (one missing-document row per item, with its client)",
+    "chase-client": "cron chase (one email per client, queued for approval)",
+    "follow-up-chase": "cron chase (second and third reminders on the set days)",
+    "record-keeping": "skill (the practice files the document in Xero; the scan list updates on the next run)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "scan", "schedule": "15 */6 * * *", "entry": "scan", "summary": "Read Xero for bank transactions and bills with no attachment in the lookback, and keep the list."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Draft one chase email per client with missing items when a chase is due, and queue it for approval."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getBankTransactions", "accounting.getInvoices", "accounting.getContacts"],
+  "microsoft-365": ["users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations are Xero reads and one Outlook draft per chase. The crons write only the missing list and the chase log in the store. Sending a chase email reaches a client, so it is live and waits for a person.",
+ "capabilities": ["documents.list", "messages.draft"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "authorised bank transactions and bills in the lookback with no attachment, and each client's name and email"}
+ },
+ "gaps": [
+  "Dext: the pages cover receiving documents and the missing paperwork report, but no Dext operation is mapped in the kit, so there is no Dext adapter. The report can be exported by hand until one is mapped. Its report needs a live Practice Advanced account to confirm.",
+  "Dext: its pages show no client chasing, so the chase here is the Outlook email. Dext's missing period alerts (bank statements) are not read.",
+  "Microsoft 365: the evidence pages were Word accessibility articles, not this job, and no Microsoft operation is mapped to a step. Chase emails reuse the quoting workflow's Outlook adapter (a draft, then an approved send). Confirm the practice uses Outlook in a live account first.",
+  "Xero: the bank feed connection status is not checked. A dropped feed shows as no new transactions, so the scan can miss items until the feed is fixed.",
+  "Xero: the Files inbox is not read, so a document sitting in the Xero inbox but not yet attached still counts as missing.",
+  "Xero: the Xero pages in the evidence do not cover document requests or client portals, so email is the only request channel.",
+  "Judgment: whether an item really needs a document (bank fees, transfers, small cash) stays with the accountant. The list includes every unattached item in the lookback.",
+  "Chase emails go to settings.client_email, the client's own address. The Xero contact on each item (a supplier or customer) is never chased, and the chase cron refuses to run without client_email.",
+  "A rejected chase still counts as sent for its stage, so the next reminder follows on schedule. Resending a rejected chase needs a runtime change.",
+  "The Xero adapter is docs-only until a Xero demo organisation proves the reads. Deploy's secretNames reads only intake, quotes, rate_card and messages, so the Xero and Microsoft keys are not listed for this workflow. add-bas has the same gap."
+ ]
+}

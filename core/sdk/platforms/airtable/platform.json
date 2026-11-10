@@ -1,0 +1,615 @@
+{
+ "id": "airtable",
+ "name": "Airtable",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.airtable.com",
+  "content.airtable.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "AIRTABLE_ACCESS_TOKEN"
+ },
+ "keys": [
+  "AIRTABLE_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://airtable.com/developers/web/llms.txt",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/introduction.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/authentication.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/scopes.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/oauth-reference.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/errors.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/rate-limits.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/billing-plans.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/changelog.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-user-id-scopes.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-records.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-multiple-records.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-record.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-record.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-records.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/post-sync-api-endpoint.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-multiple-records.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-record.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/upload-attachment.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/field-model.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-field.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-field.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-comment.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-comment.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-comments.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-comment.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-table.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-table.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-base.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-base-collaborators.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-base-schema.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-bases.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/webhooks-overview.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-a-webhook.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-a-webhook.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/enable-disable-webhook-notifications.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-webhook-payloads.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-webhooks.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/refresh-a-webhook.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-view.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-view-metadata.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-views.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/add-base-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/add-interface-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/add-interface-portal-collaborators.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/add-workspace-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-base-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-base-portal-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-interface-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-interface-portal-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-workspace-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-interface.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-workspace-collaborators.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-base-portal-collaborators.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-collaborator-base-permission.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-interface-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-interface-portal-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-workspace-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-base-invite.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-interface-invite.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-workspace-invite.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-share.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-shares.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/manage-share.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-workspace.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-base.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-workspace.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/move-base.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/move-workspaces.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-workspace-restrictions.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-descendant-enterprise.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-enterprise.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/remove-user-from-enterprise.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/update-workspace-ai-allowlist.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/hyperdb-delete-records-by-primary-keys.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/hyperdb-table-read-records.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/hyperdb-upsert-records-by-primary-keys.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-user-by-id.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-users-by-email.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-user-by-id.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-users-by-id-or-email.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/grant-admin-access.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/logout-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/manage-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/manage-user-batched.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/manage-user-membership.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/revoke-admin-access.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-user-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/move-user-groups.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/audit-logs-overview.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/audit-logs-integration-guide.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/audit-log-event-types.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/audit-log-events.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/change-events.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-ediscovery-export.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-ediscovery-export.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-ediscovery-export.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-block-installation.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-block-installations.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/manage-block-installation.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/scim-overview.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-scim-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/create-scim-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-scim-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/delete-scim-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-scim-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/get-scim-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-scim-groups.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/list-scim-users.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/patch-scim-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/patch-scim-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/put-scim-group.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/put-scim-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/org-management-glossary.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/application-permission-levels.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/audit-log.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/audit-log-actor.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/base-group-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/base-individual-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/base-invite-link.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/change-events-actor.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/change-events-data.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/change-events-table-change.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/change-events-table-create.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/collaborations.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/date-dependency-metadata.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/date-dependency-settings.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/field-type.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/group-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/individual-collaborator.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/invite-link.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/scim-user-schema.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/table-config.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/table-model.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/timezone.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/user-mentioned.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-action.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-changed-record.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-created-record.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-notification.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-payload.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-specification.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-table-changed.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-table-created.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/webhooks-user.md",
+   "official": "vendor-domain: airtable.com"
+  },
+  {
+   "url": "https://airtable.com/developers/web/api/model/workspace-permission-levels.md",
+   "official": "vendor-domain: airtable.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 88,
+  "read": 24,
+  "write": 64
+ }
+}

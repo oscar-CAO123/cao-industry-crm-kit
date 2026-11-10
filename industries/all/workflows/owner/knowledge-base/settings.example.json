@@ -1,0 +1,8 @@
+{
+ "family": "all",
+ "business_name": "Example Business",
+ "know_how": ["confluence", "google-workspace"],
+ "confluence": {"source_space_id": "123456", "kb_space_id": "234567"},
+ "google": {"folder_id": "DRIVE_FOLDER_ID", "max_docs": 25},
+ "stale_after_days": 180
+}

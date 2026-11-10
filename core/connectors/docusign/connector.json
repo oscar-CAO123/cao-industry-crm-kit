@@ -1,0 +1,24 @@
+{
+  "id": "docusign",
+  "name": "DocuSign",
+  "docs": "https://developers.docusign.com/",
+  "account_to_test": "Free developer sandbox",
+  "cost_to_test": "$0",
+  "capabilities": [
+    "documents.list",
+    "documents.create",
+    "documents.sign"
+  ],
+  "fallback": "composio",
+  "script": "core/connectors/docusign/client.ts",
+  "status": "code-built",
+  "terms_checked": false,
+  "keys": [
+    "DOCUSIGN_INTEGRATION_KEY",
+    "DOCUSIGN_USER_ID",
+    "DOCUSIGN_ACCOUNT_ID",
+    "DOCUSIGN_PRIVATE_KEY",
+    "DOCUSIGN_ENV (demo for the sandbox)"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

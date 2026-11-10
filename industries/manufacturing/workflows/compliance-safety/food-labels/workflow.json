@@ -1,0 +1,39 @@
+{
+ "id": "manufacturing:food-labels",
+ "name": "Generate compliant food labels and nutrition panels",
+ "industry": "manufacturing",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a product's recipe into a draft ingredient declaration, a per 100 g nutrition panel and the allergens it contains, written as a draft row in the business's own Airtable. Crons read and draft only; a person checks each draft against the Food Standards Code before any label is used.",
+ "families": {
+  "recipe-to-label": {
+   "steps": ["trigger-new-product", "recipe-capture", "ingredient-list", "nutrition-calc", "allergen-check", "claims-check", "label-artwork", "compliance-review", "proof-approval", "print-and-pack", "supplier-spec-update", "record-keeping", "other"],
+   "covered_by": {"trigger-new-product": "intake (new row in the Products table)", "recipe-capture": "draft (Recipe table)", "ingredient-list": "draft (ingredient declaration by weight)", "nutrition-calc": "draft (per 100 g panel from the Ingredients table)", "allergen-check": "draft (allergens listed on each ingredient)", "claims-check": "skill", "label-artwork": "not covered", "compliance-review": "skill (person checks every draft)", "proof-approval": "not covered", "print-and-pack": "not covered", "supplier-spec-update": "not covered", "record-keeping": "draft (Drafts table row)", "other": "not covered"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New product rows from the Products table."},
+  {"name": "draft", "schedule": "15,45 * * * *", "entry": "draft", "summary": "Work out each new product's declaration, per 100 g panel and allergens, and write one draft row per product."}
+ ],
+ "draft_ops": {
+  "airtable": ["docs.get_baseId_tableIdOrName", "docs.post_baseId_tableIdOrName"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the Products, Recipe and Ingredients tables, and a new row in the Drafts table. No operation sends, publishes or changes a record a customer sees.",
+ "capabilities": ["products.list", "recipes.list", "ingredients.list", "drafts.create"],
+ "adapters": {
+  "airtable": {"status": "docs-only", "covers": "product list, recipe lines, ingredient nutrition, and draft rows in a Drafts table"}
+ },
+ "gaps": [
+  "Unleashed: its Bill of Materials and Products operations are mapped (docs.get_BillOfMaterials, docs.get_Products) but its HMAC signer is not built, so every call throws 'calls are not wired yet'. Recipes can come from Unleashed once the signer exists; that is a core runtime change and was not made here.",
+  "epif, FoodWorks and MRPeasy: not in core/sdk/platforms, so nothing can be called. FoodWorks help centre sections returned HTTP 403 and were not read.",
+  "Airtable list reads take one page (up to 100 rows) because the paging query parameters are not mapped in the kit.",
+  "Nutrition is per 100 g only: no per serving column, no percentage of daily intake, and no rounding rules from the Food Standards Code. The draft values are unrounded to one decimal place.",
+  "Sub-recipes (an ingredient that is itself a recipe) are not expanded; each recipe line must name an ingredient in the Ingredients table.",
+  "Allergens come from a list a person keeps on each ingredient. This is not a legal allergen declaration and does not handle may-contain statements.",
+  "Claims check, label artwork, proof approval, printing, and supplier specification updates are judgment or outside the kit: the agent skill covers the judgment; the rest has no mapped operation.",
+  "No live operation is mapped, so nothing is queued for approval. A label sent to a printer or a customer needs a live operation added once a platform for it is mapped."
+ ]
+}

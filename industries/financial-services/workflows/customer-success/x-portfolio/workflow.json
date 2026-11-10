@@ -1,0 +1,44 @@
+{
+ "id": "financial-services:x-portfolio",
+ "name": "Portfolio reviews",
+ "industry": "financial-services",
+ "department": "customer-success",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Finds the client portfolios whose review date has come, prepares a review pack from the client record, and queues the review meeting invite for an adviser to approve. Crons read and draft; a person approves every invite.",
+ "families": {
+  "scheduled-review": {
+   "steps": ["review-trigger", "client-data-pull", "objectives-check", "performance-analysis", "recommendations-draft", "compliance-check", "meeting-prep", "client-meeting", "review-document", "client-decision", "implement-changes", "follow-up-actions", "record-keeping"],
+   "covered_by": {"review-trigger": "review-due", "client-data-pull": "prepare (client record fields only)", "objectives-check": "skill (adviser)", "performance-analysis": "not yet (see gaps)", "recommendations-draft": "skill (adviser)", "compliance-check": "skill (adviser)", "meeting-prep": "prepare (review pack)", "client-meeting": "invite (queued)", "review-document": "skill (adviser)", "client-decision": "skill (adviser)", "implement-changes": "skill (adviser)", "follow-up-actions": "skill (adviser)", "record-keeping": "skill (adviser)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "review-due", "schedule": "0 22 * * *", "entry": "review-due", "summary": "Read the partner clients and flag each portfolio whose review date has come."},
+  {"name": "prepare", "schedule": "0 * * * *", "entry": "prepare", "summary": "Read each due client and write its review pack into the workflow store."},
+  {"name": "invite", "schedule": "15 * * * *", "entry": "invite", "summary": "Queue the review meeting invite for each prepared client that has an agreed slot."}
+ ],
+ "draft_ops": {
+  "hubspot": ["crm-partner-clients-3.get-/crm/v3/objects/partner_clients", "crm-partner-clients-3.get-/crm/v3/objects/partner_clients/{partnerClientId}"]
+ },
+ "live_ops": {
+  "hubspot": ["scheduler-meetings-3.post-/scheduler/v3/meetings/calendar"]
+ },
+ "draft_ops_note": "Draft operations are reads of the partner client record. The review pack is written to the workflow store, not to a client. The invite is a live operation: it creates a calendar meeting that invites the client, so a cron only queues it.",
+ "capabilities": ["clients.list", "clients.read", "reviews.invite"],
+ "adapters": {
+  "hubspot": {"status": "docs-only", "covers": "partner client read (list and one record); review meeting invite (queued for approval)"}
+ },
+ "gaps": [
+  "Portfolio holdings, values, returns and fees: no mapped source. HubSpot's docs describe no portfolio data, so performance-analysis is not covered.",
+  "Midwinter AdviceOS: the kit maps 132 operations (holdings, cash flow and clients among them), but its sign-in is not wired (auth type unsupported), so no adapter is built. Confirm the sign-in scheme with Midwinter, then add an adapter.",
+  "Xplan: no operations file in the kit, so no adapter. Its public pages describe the review tools but no API.",
+  "The review date, client name and pack property names are the business's own HubSpot property names, set in settings. None is confirmed against a live account.",
+  "Recording the agreed review slot: the invite cron reads a slot from the workflow store, and nothing in core writes one yet. That needs a CRM shell action, which is a runtime change and was not made here.",
+  "Linking the invite to the client record: association type ids are not confirmed, so the invite is created with no associations.",
+  "hs_meeting_outcome SCHEDULED is an unconfirmed value. Check it on a live account before any real invite is approved.",
+  "Approving an invite makes HubSpot send the calendar invitation to the client. Confirm on a live account before the first approval.",
+  "Only the first 20 pages of partner clients are read (2,000 records). A larger book needs the cap raised after checking the run time.",
+  "Client-facing judgment steps (objectives, recommendations, compliance documentation, the statement or record of advice, the client's decision, implementing changes, follow-up) are done by the adviser. No platform step is mapped for them."
+ ]
+}

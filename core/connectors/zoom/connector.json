@@ -1,0 +1,22 @@
+{
+  "id": "zoom",
+  "name": "Zoom",
+  "docs": "https://developers.zoom.us/docs/api/",
+  "account_to_test": "Server-to-Server OAuth app on a paid Zoom account (cloud recording)",
+  "cost_to_test": "Zoom Pro or above",
+  "fallback": "none",
+  "terms_checked": false,
+  "capabilities": [
+    "recordings.list",
+    "recordings.transcript",
+    "attendance.read"
+  ],
+  "script": "core/connectors/zoom/client.ts",
+  "status": "code-built",
+  "keys": [
+    "ZOOM_ACCOUNT_ID",
+    "ZOOM_CLIENT_ID",
+    "ZOOM_CLIENT_SECRET"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

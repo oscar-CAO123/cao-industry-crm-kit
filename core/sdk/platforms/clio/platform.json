@@ -1,0 +1,57 @@
+{
+ "id": "clio",
+ "name": "Clio",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.clio.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:(au\\.|eu\\.|ca\\.)?)app\\.clio\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "region": {
+   "env": "CLIO_REGION",
+   "default": "au.",
+   "pattern": "(au\\.|eu\\.|ca\\.)?",
+   "example": "au."
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "CLIO_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "CLIO_ACCESS_TOKEN",
+  "CLIO_REGION (optional: au. default)"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.developers.clio.com/openapi.json",
+   "official": "vendor-domain: docs.developers.clio.com"
+  },
+  {
+   "url": "https://docs.developers.clio.com/grow.openapi.yaml",
+   "official": "vendor-domain: docs.developers.clio.com"
+  },
+  {
+   "url": "https://docs.developers.clio.com/accounting.openapi.yaml",
+   "official": "vendor-domain: docs.developers.clio.com"
+  },
+  {
+   "url": "https://docs.developers.clio.com/platform.openapi.yaml",
+   "official": "vendor-domain: docs.developers.clio.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 402,
+  "read": 203,
+  "write": 199
+ }
+}

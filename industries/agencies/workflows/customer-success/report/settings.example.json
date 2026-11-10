@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Agency",
+ "clients": [
+  {
+   "name": "Example Dental",
+   "contact_name": "Jo Smith",
+   "contact_email": "jo@example.com",
+   "supermetrics": {
+    "ds_id": "GAWA",
+    "ds_accounts": ["123456789"],
+    "fields": ["date", "sessions", "conversions"]
+   }
+  }
+ ]
+}

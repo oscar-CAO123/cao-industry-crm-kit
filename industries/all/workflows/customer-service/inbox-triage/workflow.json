@@ -1,0 +1,46 @@
+{
+ "id": "inbox-triage",
+ "name": "Sort the shared inbox and draft replies",
+ "industry": "all",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Sorts the shared inbox into work orders, quote requests, complaints, questions, noise and other, drafts template replies, and assigns each thread with a turnaround reminder. Crons read, draft and label; a person approves every reply before it is sent.",
+ "families": {
+  "all": {
+   "steps": ["message-arrives", "scan-and-sort", "assign", "draft-reply", "send-reply", "follow-up", "record-keeping"],
+   "covered_by": {"message-arrives": "intake (polls every 10 minutes; no webhook yet)", "scan-and-sort": "intake (keyword rules, noise skipped)", "assign": "assign", "draft-reply": "draft (approved template replies only)", "send-reply": "approval", "follow-up": "assign (turnaround reminder to the teammate)", "record-keeping": "not built (see gaps)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New mail from the shared inbox and the shared mailbox, sorted by keyword rules."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Queue approved template replies for approval. Mail with no template is left for a person."},
+  {"name": "assign", "schedule": "*/30 * * * *", "entry": "assign", "summary": "Assign each new thread to the teammate in Front, or label it in Gmail, with a turnaround reminder."}
+ ],
+ "draft_ops": {
+  "front": ["core-api_core-api.list-inbox-conversations", "core-api_core-api.update-conversation-assignee", "core-api_core-api.update-conversation-reminders"],
+  "google-workspace": ["gmail.users.threads.list", "gmail.users.threads.get", "gmail.users.labels.list", "gmail.users.labels.create", "gmail.users.threads.modify", "gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "front": ["core-api_core-api.create-message-reply"],
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, an assignee or reminder inside Front, a Gmail label, a Gmail draft. Sending a reply is a live operation and waits for a person.",
+ "capabilities": ["messages.list", "messages.draft", "messages.send"],
+ "adapters": {
+  "front": {"status": "docs-only", "covers": "shared inbox: read open unassigned conversations, assign, reminder, template reply after approval"},
+  "google-workspace": {"status": "docs-only", "covers": "Gmail: read unread inbox threads, label, draft reply, send the draft after approval"}
+ },
+ "gaps": [
+  "Microsoft 365 (Outlook): no adapter here. The kit maps the mailbox calls, but the mining file says no user-mailbox operation is mapped for reading, moving or replying; check that before building one.",
+  "WhatsApp, ConnectWise, OnRent, Sling and Asana: not mapped as triage steps. Follow-up by WhatsApp and the record-keeping copies stay with the owner.",
+  "Front approval sends the template text as a new reply. It does not send a Front draft, so an edit made in Front does not change what is sent. Gmail approval sends the draft itself.",
+  "Front and Google Workspace are docs-only until a live account proves the reads and writes. Front's help pages describe the inbox but not its reply, assign or reminder screens.",
+  "Intake polls every 10 minutes. There is no webhook, so a message can wait up to 10 minutes before it is sorted.",
+  "Mail older than lookback_hours (default 24) is not triaged, assigned or answered. Reply approvals are capped at per_run_limit (default 20) a run. A thread whose reply cannot be queued (for example, a sender with no valid address) is parked with reply_error: a person answers it, and it stays in the assign run. A reply that fails to queue for a temporary reason is parked too, so it needs a person to answer rather than a retry.",
+  "The four-hour target is a wall-clock reminder, not a business-hours calculation.",
+  "Triage calls and calendar booking are judgment work for the agent skill. Nothing here books a call.",
+  "Close-out (resolve or archive) is not built. Both platforms can do it, but a person does it for now."
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Agency",
+ "meta_ads": {"ad_account": "act_0000000000", "date_preset": "last_7d"},
+ "min_spend": 100,
+ "min_ctr_percent": 0.5,
+ "max_pauses_per_run": 5
+}

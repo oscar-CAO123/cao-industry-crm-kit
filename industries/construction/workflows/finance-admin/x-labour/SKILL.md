@@ -1,0 +1,43 @@
+---
+name: construction-labour-by-person
+description: Labour by person for a construction business that records crew hours in ServiceM8 (clock events) or Procore (timecards) and runs payroll in Xero. Use when setting this up for a client, when a person asks why a timesheet is not approved, or when a person is held or a shift is marked needs-check.
+---
+
+# Labour by person
+
+Labour by person: turns each person's ServiceM8 clock-on and clock-off times into hours on a Xero Payroll AU draft timesheet for the pay period, and queues each clean timesheet for approval. Crons read and draft only; no timesheet is approved and nobody is paid without a person's approval.
+
+## Procore instead of ServiceM8
+Set `procore.mirror_status` (the timesheet status whose hours are paid, for example `approved`; there is no default) in settings and
+the `mirror` cron reads Procore timecard entries for the pay period instead of ServiceM8 clock events. Each entry is one block of hours,
+so there is nothing to pair; the `employee_map` keys are Procore user ids. Everything after that (Xero draft timesheets, holds,
+the queued approval) is unchanged. The token is `PROCORE_ACCESS_TOKEN` and the company id `PROCORE_COMPANY_ID`.
+
+## What runs on its own
+Two crons in `index.ts`, scheduled by `workflow.json`:
+- `mirror` (every 30 minutes) reads ServiceM8 clock-on, clock-off and lunch events for the pay period and drafts each complete
+  shift as a line on that person's Xero Payroll AU timesheet. A shift over the daily limit is held. A person still clocked on, or
+  with clock events that do not pair, is held from approval.
+- `approve` (hourly) queues each Draft Xero timesheet with hours for approval, except held people.
+
+Nothing here approves a timesheet or pays anyone. Approvals are queued and wait for a person in the CRM shell.
+
+## Setting it up for a client
+1. Confirm the crew clock in ServiceM8. If hours live somewhere else, this workflow does not apply.
+2. Map each ServiceM8 staff member to their Xero employee id in `employee_map`. Anyone missing is skipped and counted, never guessed by name.
+3. Set `earnings_rate_id` to the Xero earnings rate for ordinary hours, and `payroll_calendar_id` to the Xero calendar.
+4. Set `pay_period` for the cycle being run. Update it each cycle.
+5. Agree the daily limit with the owner (`max_hours_per_shift`, default 12).
+
+## The judgment steps the person does
+- Splitting hours across jobs and checking them against the labour budget. This workflow does not allocate hours to jobs.
+- Applying labour rates, loadings and allowances in Xero and ServiceM8. No cron changes pay rates.
+- Clearing a held person after checking their clock events in ServiceM8. Do not rerun a needs-check shift blindly; it may already exist in Xero.
+- Reviewing the timesheet hours in Xero before approving the queued approval.
+
+## Things to know before the first run
+- Run `approve` only after `mirror` has run for the period. Until it has, `approve` queues nothing.
+- Anyone who clocked on before the pay period starts is held until someone checks, because the start falls outside the read window.
+
+## Not covered yet
+Job costing, client claims, subcontractor hours, paper or photo timesheets, Deputy, Procore and Simpro. See `workflow.json` gaps for the full list.

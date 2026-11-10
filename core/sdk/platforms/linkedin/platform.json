@@ -1,0 +1,165 @@
+{
+ "id": "linkedin",
+ "name": "LinkedIn",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.linkedin.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "LINKEDIN_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "LINKEDIN_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/authentication/getting-access",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/authentication/authentication",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/breaking-change-policy",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/api-guide/best-practices/overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts/error-handling",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/shared/linkedin-api-partner-support-guide",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/verified-on-linkedin/overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/plugins",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/learning/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/learning/overview/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/learning/getting-started/request-access",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/learning/getting-started/terminology",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/learning/getting-started/api-foundations",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/marketing/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/marketing/getting-started",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/marketing-integrations-overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/apply-connect/apply-connect-overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/apply-with-linkedin/apply-with-linkedin",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/job-postings/job-posting-overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/recruiter-system-connect",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/talent/crm-connect/crm-connect-overview",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/sales/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/sales/analytics-services/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/sales/display-services/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/sales/sync-services/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/compliance/",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/linkedin/compliance/release-notes",
+   "official": "vendor-domain: learn.microsoft.com"
+  }
+ ],
+ "gaps": [
+  "linkedin: 0 truncated path-only entries replaced by 7 endpoints the vendor's reference documents in full"
+ ],
+ "counts": {
+  "operations": 35,
+  "read": 17,
+  "write": 18
+ }
+}

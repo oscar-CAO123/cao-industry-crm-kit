@@ -1,0 +1,11 @@
+{
+ "business_name": "Example Plumbing",
+ "hours": {"timezone": "Australia/Sydney", "days": [1, 2, 3, 4, 5], "open": "07:30", "close": "17:00"},
+ "call_platforms": ["aircall", "justcall"],
+ "aircall": {"create_contacts": true},
+ "justcall": {"number": "+61400000000"},
+ "on_call": {"name": "Owner", "phone": "+61400000001"},
+ "urgent_terms": ["burst", "flood", "gas", "no power", "no hot water", "leak", "smoke", "sparking", "emergency"],
+ "confirm_text": true,
+ "lookback_hours": 72
+}

@@ -1,0 +1,13 @@
+{
+ "business_name": "Example Coaching",
+ "send": "gohighlevel",
+ "location_id": "GHL_LOCATION_ID",
+ "lapsed_tag": "past-client",
+ "sent_tag": "reactivation-sent",
+ "campaign_id": "GHL_CAMPAIGN_ID",
+ "klaviyo": {"campaign_id": "KLAVIYO_CAMPAIGN_ID", "revision": "2026-10-15"},
+ "batch": 5,
+ "per_run": 50,
+ "max_pages": 60,
+ "task_after_days": 7
+}

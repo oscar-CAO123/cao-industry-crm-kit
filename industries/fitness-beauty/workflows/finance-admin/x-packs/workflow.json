@@ -1,0 +1,41 @@
+{
+ "id": "fitness-beauty:x-packs",
+ "name": "Packs and gift cards",
+ "industry": "fitness-beauty",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tracks packs and gift cards for a gym, studio or salon: how much value customers still hold, and whether prepaid sales match deferred income in the ledger. Crons read and write only their own snapshots. Selling, drawing down and extending class or session packs is not covered: no platform the kit maps holds them.",
+ "steps": {
+  "balance-check": "gift-card-balances cron (Square gift cards still active, one snapshot a day)",
+  "record-keeping": "gift-card-balances cron (snapshot kept in the workflow store)",
+  "reconcile-deferred": "reconcile-deferred cron (Xero trial balance at month end, for the bookkeeper to match)"
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "gift-card-balances", "schedule": "0 21 * * *", "entry": "gift-card-balances", "summary": "Daily: list active gift cards and their balances, and keep that day's snapshot."},
+  {"name": "reconcile-deferred", "schedule": "0 21 1 * *", "entry": "reconcile-deferred", "summary": "Monthly: keep the trial balance at the last day of last month for the bookkeeper to match against deferred income."}
+ ],
+ "draft_ops": {
+  "square": ["api.ListGiftCards"],
+  "xero": ["accounting.getReportTrialBalance"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Only reads. Each cron writes a snapshot to the workflow's own store and nothing to a platform. No live operation is mapped for this job, so no cron queues an approval.",
+ "capabilities": ["giftcards.list", "ledger.trial-balance"],
+ "adapters": {
+  "square": {"status": "docs-only", "covers": "gift card list and balances (read)"},
+  "xero": {"status": "docs-only", "covers": "trial balance at a date (read)"}
+ },
+ "gaps": [
+  "Class and session packs: no mapped platform records pack balances, drawdown or expiry. The Mindbody docs say the same.",
+  "Fresha: the 28 pages are public marketplace listings with no help article on packs or gift cards, and the kit has no ops file for it, so no adapter.",
+  "Mindbody: the docs cover pricing pages, not pack balances or gift card expiry, and the kit has no ops file for it, so no adapter.",
+  "Vagaro was named in the platform list but is not in the kit at all.",
+  "Expiry reminders and customer messages about packs: no messaging operation is mapped for this job, so nothing is queued for approval.",
+  "Issuing, redeeming, refunding or extending a gift card or pack: these move money or change a customer's balance, so they are live operations and are not built.",
+  "Square: no call or platform-doc evidence for this workflow. The read operations come from the kit's ops file and the response fields from Square's published spec. Unverified against a live account.",
+  "Xero: the trial balance docs do not mention pack or deferred income lines, so the bookkeeper matches it by hand. Unverified against a live Xero demo company.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
+}

@@ -1,0 +1,29 @@
+# Secret scanning for the kit. The default rules stay on; one narrow allowance:
+# generated endpoint maps carry an "api" field holding a vendor spec name (cms-pages-2026-09, deputy-v2-api),
+# which the generic-api-key rule reads as a key. Allowed only for that field, only in those files (both must hold).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated endpoint maps: the api field is a vendor spec name, not a key"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^core/sdk/platforms/[a-z0-9-]+/ops\.json$''']
+regexTarget = "match"
+regexes = ['''^api":"[A-Za-z0-9_.\-]+"?$''']
+
+[[allowlists]]
+description = "Generated endpoint maps: the linkedin-client-id rule reads a docs URL followed by the field name paramsUnmapped as a client id"
+targetRules = ["linkedin-client-id"]
+condition = "AND"
+paths = ['''^core/sdk/platforms/[a-z0-9-]+/ops\.json$''']
+regexTarget = "match"
+regexes = ['''paramsUnmapped"?$''']
+
+[[allowlists]]
+description = "Workflow records: Pipedrive operation ids (docs_api_v1.getLead) are read as a generic key. Allowed only when the flagged value is exactly that id shape, only in workflow.json records (both must hold). Decoy-tested 8 Nov: real-looking keys in the same files are still caught."
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^industries/[a-z0-9-]+/workflows/[a-z0-9-]+/[a-z0-9-]+/workflow\.json$''']
+regexTarget = "secret"
+regexes = ['''^docs_api_v1\.[A-Za-z]+$''']

@@ -1,0 +1,44 @@
+{
+ "id": "agriculture-mining:shipdocs",
+ "name": "Export document check",
+ "industry": "agriculture-mining",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns an export shipment's details into a DRAFT commercial invoice in Xero, checks that invoice against the shipment record, and queues the authorise-and-email step for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "export-document-set": {
+   "steps": ["shipment-booked", "gather-details", "commercial-invoice", "packing-list", "certificates", "buyer-requirements", "cross-check", "internal-approval", "send-documents", "query-and-correction", "record-keeping", "payment-match"],
+   "covered_by": {"shipment-booked": "shell (shipment record created)", "gather-details": "skill (lots, weights, consignee)", "commercial-invoice": "draft", "packing-list": "not yet (see gaps)", "certificates": "not yet (see gaps)", "buyer-requirements": "skill", "cross-check": "draft (reads the Xero invoice against the record)", "internal-approval": "approval (a person sets the record to approved)", "send-documents": "approval (authorise and email in Xero)", "query-and-correction": "skill", "record-keeping": "not yet (see gaps)", "payment-match": "not yet (see gaps)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "New shipment records get a DRAFT commercial invoice in Xero. Records without lines wait for details."},
+  {"name": "cross-check", "schedule": "15 * * * *", "entry": "cross-check", "summary": "Compare each drafted invoice with its shipment record and flag any difference."},
+  {"name": "send", "schedule": "*/30 * * * *", "entry": "send", "summary": "Approved and checked shipments get their authorise-and-email step queued for approval."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.createInvoices", "accounting.getInvoice"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateInvoice", "accounting.emailInvoice"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a buyer contact and a DRAFT sales invoice in Xero, plus reads. Authorising an invoice and emailing it to the buyer are live operations and wait for a person.",
+ "capabilities": ["invoices.create", "invoices.list", "contacts.upsert"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "commercial invoice draft, cross-check read, authorise and email (queued)"}
+ },
+ "gaps": [
+  "Microsoft 365: the evidence says the docs do not cover export shipping steps, and no shipping operation is mapped for it. No adapter built.",
+  "Packing lists and export certificates (phytosanitary, certificate of origin, inspection): no mapped operation. Agent skill steps for now.",
+  "Xero's guide says a commercial invoice is a different document from a sales invoice. This draft uses a sales invoice, so confirm the format with the buyer or forwarder before use.",
+  "GST and export tax type are not set on the draft lines. Confirm the correct tax treatment with the client's accountant before any invoice is authorised.",
+  "Record-keeping: accounting.createInvoiceAttachmentByFileName is mapped, but the shipment document pack needs file bytes from the shell, so it is not wired.",
+  "Payment matching: accounting.createPayment and getPayments are mapped, but recording a payment moves money, so it needs its own approval design. Not wired.",
+  "Shipment records (lots, weights, consignee) come from the CRM shell or the agent. No intake cron because no evidence platform holds them.",
+  "Confirm the workflow steps and default settings with the business before use.",
+  "The Xero adapter is docs-only until a demo company proves it.",
+  "The send cron re-checks the Xero invoice before it queues the authorise-and-email step, but an invoice changed in Xero after it is queued is not re-checked when a person approves it. A check at approval time needs a pre-approval hook in core/workflows/runtime.ts (needs-core)."
+ ]
+}

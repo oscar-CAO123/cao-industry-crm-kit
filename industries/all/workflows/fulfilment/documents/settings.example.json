@@ -1,0 +1,18 @@
+{
+ "business_name": "Example Services",
+ "google": {
+  "spreadsheet_id": "SPREADSHEET_ID",
+  "records": {
+   "range": "Records!A1:Z500",
+   "ready_value": "ready",
+   "columns": {"id": "ID", "kind": "Document", "email": "Client email", "status": "Status"}
+  },
+  "log_range": "Document log!A1",
+  "output_folder_id": "OUTPUT_FOLDER_ID"
+ },
+ "documents": [
+  {"kind": "progress report", "template_id": "PROGRESS_REPORT_TEMPLATE_DOC_ID", "fields": ["Client name", "Total", "Notes"]},
+  {"kind": "letter", "template_id": "LETTER_TEMPLATE_DOC_ID", "fields": ["Client name", "Notes"]}
+ ],
+ "share_role": "reader"
+}

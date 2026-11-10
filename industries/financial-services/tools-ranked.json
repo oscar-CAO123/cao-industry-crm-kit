@@ -1,0 +1,58 @@
+{
+  "tools": [
+    {
+      "name": "Ambition Cloud"
+    },
+    {
+      "name": "Apply Online"
+    },
+    {
+      "name": "Cradle"
+    },
+    {
+      "name": "Excel"
+    },
+    {
+      "name": "GoHighLevel"
+    },
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "HubSpot"
+    },
+    {
+      "name": "Ignition"
+    },
+    {
+      "name": "Mailchimp"
+    },
+    {
+      "name": "Meta Ads"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Power Automate"
+    },
+    {
+      "name": "Power BI"
+    },
+    {
+      "name": "Slack"
+    },
+    {
+      "name": "Sync Hub"
+    },
+    {
+      "name": "WhatsApp"
+    },
+    {
+      "name": "Xero"
+    },
+    {
+      "name": "Zapier"
+    }
+  ]
+}

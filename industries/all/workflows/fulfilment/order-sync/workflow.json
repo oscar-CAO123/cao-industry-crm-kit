@@ -1,0 +1,49 @@
+{
+ "id": "order-sync",
+ "name": "Process sales and purchase orders from every channel into the warehouse, production and accounts",
+ "industry": "all",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Brings sales orders from the stock system into one order book, queues a supplier purchase order when open orders need more stock than is available, drafts a Xero invoice for each shipped order, and matches supplier bills to purchase orders. Crons read and draft; a person approves every purchase order.",
+ "families": {
+  "all": {
+   "steps": ["order-received", "order-check", "stock-allocate", "purchase-order-raise", "supplier-receive", "production-job", "pick-pack", "ship-dispatch", "invoice-accounts", "payment-match", "record-keeping"],
+   "covered_by": {"order-received": "intake (Cin7 sales orders)", "order-check": "skill (a customer, terms or credit check is a judgment step)", "stock-allocate": "stock-check (reads Cin7 availability)", "purchase-order-raise": "stock-check (queues a purchase order for approval)", "supplier-receive": "not yet (see gaps)", "production-job": "not yet (see gaps)", "pick-pack": "not yet (see gaps)", "ship-dispatch": "intake (reads dispatch status)", "invoice-accounts": "invoice (Xero draft)", "payment-match": "bill-match (supplier bills against purchase orders, report only)", "record-keeping": "order book in the store"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Sales orders changed in Cin7 since the last run go into the order book."},
+  {"name": "stock-check", "schedule": "0 * * * *", "entry": "stock-check", "summary": "Queue a purchase order for approval where open orders need more than Cin7 has available."},
+  {"name": "invoice", "schedule": "20 * * * *", "entry": "invoice", "summary": "Draft a Xero invoice for each shipped order, once."},
+  {"name": "bill-match", "schedule": "0 22 * * *", "entry": "bill-match", "summary": "Match authorised supplier bills to Cin7 purchase orders; record the mismatches (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "cin7": ["get /api/v1/SalesOrders", "get /api/v1/Stock", "get /api/v1/PurchaseOrders"],
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.createInvoices", "accounting.getInvoices"]
+ },
+ "live_ops": {
+  "cin7": ["post /api/v1/PurchaseOrders"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, a Xero contact, and a Xero invoice in DRAFT status. Creating a purchase order in Cin7 goes to a supplier, so it is a live operation and waits for a person.",
+ "capabilities": ["orders.list", "invoices.create", "payments.list"],
+ "adapters": {
+  "cin7": {"status": "docs-only", "covers": "sales order intake, stock availability, purchase order raise (queued), purchase order list for matching"},
+  "xero": {"status": "docs-only", "covers": "contact find or create, draft customer invoice, supplier bill list"}
+ },
+ "gaps": [
+  "Unleashed: its endpoints are mapped, but the kit cannot sign its requests yet . No Unleashed adapter until that signer exists in core/.",
+  "Cin7 docs do not describe an order check (customer, pricing, terms, credit), production jobs, the warehouse receiving screen, returns or refunds. These need a live Cin7 account or demo to confirm.",
+  "Cin7 pick-pack and dispatch writes (carton records, tracking numbers back to the channel) are not automated. The docs confirm the endpoints exist but not how a warehouse runs them.",
+  "Cin7 list filters: the where clause for the stock lookup (code='...') follows the usual form, but the spec does not show an example. Confirm on a sandbox before the first live run.",
+  "Cin7 status codes (0, 1, 2) have no meaning in the spec. This workflow reads dispatchedDate and isVoid instead.",
+  "Cin7 supplier mapping: each reorder rule needs the supplier's Cin7 contact id typed into settings. No supplier lookup is built.",
+  "Xero bill matching compares the Xero SubTotal with the Cin7 productTotal. Confirm both are before tax on a live account.",
+  "Xero payment matching and customer receipts are not built. Matching a payment to an invoice is a live action and needs approval.",
+  "One draft invoice per order, made the first time the order is seen as shipped. A partial shipment after that needs a person.",
+  "First run reads up to 500 of the most recent sales orders (10 pages of 50). Older orders are not pulled.",
+  "Open Cin7 purchase orders are not read. A purchase order raised for a product blocks a new one for it while pending and for 14 days after it is decided, so a late delivery is raised again only after that window.",
+  "Both adapters are docs-only until a Cin7 trial account and a Xero demo company prove them."
+ ]
+}

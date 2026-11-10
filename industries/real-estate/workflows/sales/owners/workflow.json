@@ -1,0 +1,41 @@
+{
+ "id": "real-estate:owners",
+ "name": "Owner contacts, built from scratch",
+ "industry": "real-estate",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Builds the agency's owner contact list from VaultRE's current owners, checks each owner's recorded email consent and do-not-call flag, and drafts an outreach email to owners who may be contacted. Crons read and draft; a person approves every email send.",
+ "families": {
+  "all": {
+   "steps": ["verify-details", "consent-check", "campaign-outreach"],
+   "covered_by": {"verify-details": "skill (identity check done by hand; no mapped platform)", "consent-check": "consent-check (VaultRE GDPR record and do-not-call flag)", "campaign-outreach": "outreach (email draft, send queued for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "owner-list", "schedule": "20 * * * *", "entry": "owner-list", "summary": "Add owners from VaultRE's current owners list that the workflow has not seen."},
+  {"name": "consent-check", "schedule": "10 */3 * * *", "entry": "consent-check", "summary": "Read each new owner's VaultRE record and consent flags; mark each eligible, no-consent or blocked."},
+  {"name": "outreach", "schedule": "0 22 * * *", "entry": "outreach", "summary": "Re-check eligible owners, draft an email to each one still eligible, and queue its send for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "vaultre": ["getCurrentOwners", "getContact", "getContactGdprOptins"],
+  "microsoft-365": ["users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of VaultRE owner and consent records, and an Outlook draft. Sending the draft is a live operation and waits for a person.",
+ "capabilities": ["contacts.list", "messages.draft"],
+ "adapters": {
+  "vaultre": {"status": "docs-only", "covers": "current owners, owner contact details, GDPR consent records, do-not-call flag"},
+  "microsoft-365": {"status": "docs-only", "covers": "outreach email draft and its approved send from the agency mailbox"}
+ },
+ "gaps": [
+  "Identity or credit check on an owner (the ID screen in the call): no mapped platform operation. Done by hand before any owner is worked.",
+  "Do-not-call register check: no mapped operation. The workflow never places a call; it only reads VaultRE's onDoNotCallList flag.",
+  "Text (SMS) outreach to owners who were never contacted first: not built. The call said a reply counts as consent, and the kit does not accept that. SMS waits until VaultRE's SMS consent flag is confirmed as the consent record.",
+  "The platform evidence file for this workflow is missing, so platform support comes from the kit's mapped operations only.",
+  "Both adapters are docs-only until a VaultRE sandbox account and a Microsoft 365 developer tenant prove them. The Microsoft 365 token flow is not built; a Graph access token must be supplied."
+ ]
+}

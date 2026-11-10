@@ -1,0 +1,19 @@
+{
+  "tools": [
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "HubSpot"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Salesforce CRM"
+    },
+    {
+      "name": "Xero"
+    }
+  ]
+}

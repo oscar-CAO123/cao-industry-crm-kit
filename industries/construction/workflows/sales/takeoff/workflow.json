@@ -1,0 +1,44 @@
+{
+ "id": "construction:takeoff",
+ "name": "The tender reader behind Tenders",
+ "industry": "construction",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads tender notices from the Outlook folder, logs each one in the bid register, turns the plan's Bluebeam markups into takeoff rows in Excel, and drafts one tender digest for approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "tender-from-plans": {
+   "steps": ["tender-intake", "go-no-go", "scope-read", "plans-download", "takeoff-measure", "takeoff-check", "build-estimate", "submit-tender", "record-keeping"],
+   "covered_by": {"tender-intake": "intake (notices from the Outlook folder)", "go-no-go": "skill (a person decides; the digest shows the list)", "scope-read": "skill", "plans-download": "not yet (see gaps)", "takeoff-measure": "takeoff (Bluebeam markup list into Excel rows)", "takeoff-check": "skill (a person checks the rows before any price)", "build-estimate": "not yet (see gaps)", "submit-tender": "approval (the digest email)", "record-keeping": "intake and digest (bid register in Excel)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Log new tender notices in the bid register."},
+  {"name": "takeoff", "schedule": "15 * * * *", "entry": "takeoff", "summary": "Start the markup list for each tender's plan file, then write its rows to the takeoff sheet once Bluebeam returns them."},
+  {"name": "digest", "schedule": "0 22 * * *", "entry": "digest", "summary": "Draft the daily tender digest and queue its send for approval (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"],
+  "bluebeam": ["ProjectFiles_GetAll", "ProjectFileJobs_Post_MarkupList", "ProjectFileJobs_MarkupListResult"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of the tender folder or plan files, a markup list job on a file in the business's own Bluebeam project, a row in the bid register or takeoff sheet, an email draft to the business's own estimator. Sending the digest is a live operation and waits for a person.",
+ "capabilities": ["messages.list", "messages.draft", "files.list", "files.read", "files.write"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "tender notices from the Outlook folder, bid register and takeoff sheet in Excel, digest draft and send"},
+  "bluebeam": {"status": "docs-only", "covers": "plan files in one project, markup list job per plan file, markup list result"}
+ },
+ "gaps": [
+  "Bluebeam: the markup list result does not say in the spec which status means the job is finished. The cron writes rows only when the result carries a Markups list, and gives up after 8 polls. Confirm on a live account before relying on it.",
+  "Bluebeam: the spec's markup fields give a type, page, subject and comment but no measured quantity. Quantities stay with the estimator until the measured-value field is confirmed.",
+  "Plan files are matched to a tender by the tender number in its subject line. A number that matches two plan files is a guess; the person checks the match.",
+  "PlanSwift, EstimateOne, Buildxact and TenderLata: named by owners, but no operations are mapped in the kit for tender or takeoff work (Buildxact has sign-in only). Owners using them keep their usual route and record the result as a takeoff row by hand.",
+  "Tender downloads from portals (Tenders, government portals, email attachments of addenda) are not automated. The plans-download step is a person's job until a portal adapter exists.",
+  "Build-estimate and submit-tender need a pricing workflow: the rates, the trade quotes and the Word proposal are judgment steps, not crons.",
+  "Microsoft 365 is included because owners name it in 12 to 13 of these calls and its operations are mapped in the kit. It is not one of the platforms in the platform evidence file.",
+  "Every adapter is docs-only until a sandbox account (Microsoft 365 developer tenant and a Bluebeam trial) proves it."
+ ]
+}

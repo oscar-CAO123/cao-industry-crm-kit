@@ -1,0 +1,46 @@
+{
+ "id": "retail:fulfil",
+ "name": "Fulfilment run",
+ "industry": "retail",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs the order fulfilment cycle: takes new orders in from the business's system, checks stock in the warehouse, and queues each shipment for approval. Crons read and queue; a person approves every shipment. Pick, pack and label steps are not mapped yet.",
+ "families": {
+  "online-orders-from-a-warehouse": {
+   "steps": ["order-received", "order-check", "stock-check", "pick", "pack", "dispatch-label", "tracking-notify", "record-keeping"],
+   "covered_by": {"order-received": "intake", "order-check": "skill (admin checks the order by hand)", "stock-check": "stock-check", "pick": "not yet (see gaps)", "pack": "not yet (see gaps)", "dispatch-label": "dispatch (shipment record only, label not made)", "tracking-notify": "not yet (see gaps)", "record-keeping": "dispatch (shipment record in Unleashed)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New sales orders in the business's status, stored once each."},
+  {"name": "stock-check", "schedule": "*/30 * * * *", "entry": "stock-check", "summary": "Marks each new order ready or short, against stock in its warehouse."},
+  {"name": "dispatch", "schedule": "0 * * * *", "entry": "dispatch", "summary": "Queues a shipment for each ready order, for approval; marks approved ones dispatched."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_SalesOrders", "docs.get_StockOnHand"]
+ },
+ "live_ops": {
+  "unleashed": ["docs.post_SalesShipments"]
+ },
+ "draft_ops_note": "Reads only. Creating a sales shipment dispatches stock, which the customer can see, so it is a live operation and waits for a person.",
+ "capabilities": ["orders.list", "stock.read", "shipments.queue"],
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "sales order intake, stock on hand by warehouse, sales shipment for dispatch"}
+ },
+ "gaps": [
+  "Unleashed request signing (HMAC-SHA256) is not built in core/sdk, so every call throws 'calls are not wired yet' until the signer ships. No core change was made here.",
+  "Starshipit is in the evidence for pick, pack, labels, carrier handover and returns, but the kit has no starshipit platform. Those steps stay manual until it is added.",
+  "Pick and pack: the Unleashed docs do not describe them. Warehouse picking is manual.",
+  "Shipping labels and courier handover: Unleashed Advanced Shipping is marketing copy only in the docs read; its scope and add-on status need a live account.",
+  "Customer tracking and delay emails: Unleashed has no messaging operation. Customers are emailed by hand until a mailbox adapter exists.",
+  "Xero: the ops file covers purchase orders and tracking categories only, not sales orders or shipments, so record-keeping in Xero is not automated here.",
+  "Fishbowl and MaxShip have no kit platform. Shopify is mapped in the kit but has no adapter in this workflow.",
+  "Paging: only the first page of 200 sales orders is read. The paged path is not in the ops file.",
+  "The SDK (core/sdk/call.ts, the required-body check near line 375) is skipped whenever a body is passed, so a missing required body field is sent to Unleashed and refused there. The shipment body sets Guid and ShipmentStatus itself, and a test checks every required body field against the ops file. Needs core: the SDK should check required body fields.",
+  "A shipment created by hand in Unleashed is not seen before a queued dispatch is approved. The approval summary asks the approver to check.",
+  "The sales order status for ready orders (settings.unleashed.order_status) is unverified on a live account. The example value is 'Placed'.",
+  "Judgment steps stay with people: the order check, short-stock calls, and purchase orders the owner raises when a SKU runs low."
+ ]
+}

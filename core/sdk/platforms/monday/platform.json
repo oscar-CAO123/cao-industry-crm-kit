@@ -1,0 +1,35 @@
+{
+ "id": "monday",
+ "name": "monday.com",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "graphql",
+ "hosts": [
+  "api.monday.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "MONDAY_API_TOKEN"
+ },
+ "keys": [
+  "MONDAY_API_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://api.monday.com/v2/get_schema?format=sdl&version=stable",
+   "official": "vendor-domain: api.monday.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 335,
+  "read": 106,
+  "write": 229
+ }
+}

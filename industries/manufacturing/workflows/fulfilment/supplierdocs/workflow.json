@@ -1,0 +1,45 @@
+{
+ "id": "manufacturing:supplierdocs",
+ "name": "Supplier documents to SKUs",
+ "industry": "manufacturing",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes supplier bills into the accounting system, matches each bill line to a SKU (an item code in Xero), flags unmatched lines and price changes for a person, and queues each clean bill for authorisation. Crons read and draft; a person authorises every bill.",
+ "families": {
+  "all": {
+   "steps": ["doc-intake", "read-and-extract", "check-and-approve", "publish-to-systems", "other"],
+   "covered_by": {"doc-intake": "intake (supplier bills land in Xero as drafts)", "read-and-extract": "match (bill lines against Xero items; reading the PDF itself is a skill step)", "check-and-approve": "approval (a person reviews the flagged bills and the queued ones)", "publish-to-systems": "approval (authorise the bill in Xero)", "other": "not yet (attaching the supplier PDF needs a raw upload the SDK does not send)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New supplier bills that are drafts in Xero."},
+  {"name": "match", "schedule": "*/15 * * * *", "entry": "match", "summary": "Match each bill line to a Xero item (SKU) and flag unmatched lines and price changes."},
+  {"name": "publish", "schedule": "30 * * * *", "entry": "publish", "summary": "Queue each clean bill for authorisation in Xero, and record what the approver did."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoices", "accounting.getItems"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateInvoice"]
+ },
+ "draft_ops_note": "Draft operations are reads plus the store's own records. Nothing a cron runs here changes a bill or an item in Xero. Authorising a bill (it becomes payable) is a live operation and waits for a person.",
+ "capabilities": ["invoices.list", "products.list"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "draft purchase bills in, item list as the SKU list, authorising a bill"}
+ },
+ "gaps": [
+  "Unleashed: the SKU master and purchase orders most of these businesses run on, but its request signing (HMAC-SHA256) is not built in the kit, so no adapter can call it yet. Its docs read is in the endpoint map (status docs-read).",
+  "Dext: a bill capture tool for bookkeepers. Its intake (email, Dropbox, PayPal) and its line extraction are described in the docs, but it is not in core/sdk/platforms, so no adapter.",
+  "MRPeasy: its docs are in the endpoint map (status docs-read) and it can create products, but it is not in core/sdk/platforms, so no adapter.",
+  "Acumatica and PrintIQ, which the calls name for publishing and for supplier invoices against purchase orders: neither is in core/sdk/platforms.",
+  "Microsoft 365 spreadsheet route (an Excel table as the register and the SKU list): the kit has the platform, but this build adds only the Xero adapter.",
+  "Attaching the supplier PDF to the Xero bill: the attachment endpoint takes raw file bytes, and the SDK sends JSON bodies only. Needs a runtime change in core/, so it is not built.",
+  "A bill changed in Xero after matching is held (needs-review, with the change noted) and is not matched again. No command clears that hold yet: a person must clear the stored change before the bill can be queued. Needs a runtime command in core/.",
+  "Matching a bill to a purchase order before it is accepted: not built.",
+  "Units of measure, pack sizes and conversions: none of the evidence covers them, so a bill line is taken as billed.",
+  "Reading the supplier PDF for lines the bill does not carry (scanned invoices): a skill step, described in SKILL.md.",
+  "The Xero adapter is docs-only until a Xero demo company proves it."
+ ]
+}

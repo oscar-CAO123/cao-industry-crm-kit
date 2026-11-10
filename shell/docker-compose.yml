@@ -1,0 +1,37 @@
+# Local or single-server run: the shell and its own empty Postgres. Never point this at another CRM's database.
+# Every secret comes from 1Password on the way in; none is written to a file. The 1Password token reaches each container
+# as a mounted secret file (/run/secrets/shell_op_token, owned by the node user, mode 0400), never as an environment
+# variable, so `docker inspect` does not show it. Needs Docker Compose 2.23.1 or newer (a secret read from a host variable).
+#   op-scoped run SHELL_OP_TOKEN="op://<vault>/crm-runtime/token" POSTGRES_PASSWORD="op://<vault>/crm-database/password" \
+#     SHELL_VAULT="<vault>" -- docker compose -f shell/docker-compose.yml up
+# DATABASE_URL in 1Password is then postgresql://shell:<that password>@db:5432/shell.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: shell
+      POSTGRES_DB: shell
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?pass it in through op-scoped}
+    volumes: [db:/var/lib/postgresql/data]
+  migrate:
+    build: { context: .., dockerfile: shell/Dockerfile }
+    command: ["node", "shell/scripts/db-apply.mjs"]
+    environment: [SHELL_VAULT]
+    secrets: &op_token [{ source: shell_op_token, uid: "1000", gid: "1000", mode: 0400 }]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on: [db]
+  shell:
+    build: { context: .., dockerfile: shell/Dockerfile }
+    environment: [SHELL_VAULT, KIT_ALLOW_WRITES, NEXT_PUBLIC_APP_NAME, AUTH_SIGNUP_DOMAINS, BETTER_AUTH_URL]
+    secrets: *op_token
+    # Published on this machine only. Put a TLS proxy in front before it is reachable from anywhere else.
+    ports: ["127.0.0.1:3000:3000"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on: [migrate]
+secrets:
+  shell_op_token:
+    environment: SHELL_OP_TOKEN
+volumes:
+  db: {}

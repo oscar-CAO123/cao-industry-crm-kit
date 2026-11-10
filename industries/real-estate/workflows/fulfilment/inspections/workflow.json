@@ -1,0 +1,112 @@
+{
+ "id": "real-estate:inspections",
+ "name": "Inspections need a trip each",
+ "industry": "real-estate",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps property inspections moving from booked visit to report: spots inspections waiting on an inspector, drafts the findings from the staff notes and photos on the job, and queues the owner's report for approval. Crons read and draft; a person approves every email.",
+ "families": {
+  "job-system": {
+   "steps": [
+    "assign-inspector",
+    "attend-inspection",
+    "record-findings",
+    "write-report",
+    "review-report",
+    "send-report",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "assign-inspector": "person (allocate the inspector in ServiceM8; intake flags it)",
+    "attend-inspection": "outside the software (the inspector's visit)",
+    "record-findings": "draft (staff notes and photos on the job are read into a draft note)",
+    "write-report": "draft (the draft note)",
+    "review-report": "person (checks the photos and the note in ServiceM8)",
+    "send-report": "approval (the owner's email waits for approval)",
+    "record-keeping": "ServiceM8 job diary (attachments and the sent email stay on the job)"
+   }
+  },
+  "other-tool": {
+   "steps": [
+    "attend-inspection",
+    "record-findings",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "attend-inspection": "outside the software",
+    "record-findings": "not yet (no kit mapping for these apps)",
+    "record-keeping": "not yet (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "intake",
+   "schedule": "*/15 * * * *",
+   "entry": "intake",
+   "summary": "Inspection jobs booked in ServiceM8 (Work Order status, matching the inspection words), with whether an inspector is allocated and whether the visit is marked done."
+  },
+  {
+   "name": "draft",
+   "schedule": "*/30 * * * *",
+   "entry": "draft",
+   "summary": "For each finished visit, read the staff notes and photo count on the job and write a draft findings note on the job (internal, not sent)."
+  },
+  {
+   "name": "report",
+   "schedule": "15 * * * *",
+   "entry": "report",
+   "summary": "Queue the owner's report email, with the job's photos, for approval. Waits when the job has no owner email or no findings yet."
+  }
+ ],
+ "draft_ops": {
+  "servicem8": [
+   "servicem8-api.listJobs",
+   "servicem8-api.listJobAllocations",
+   "servicem8-api.listCompanyContacts",
+   "servicem8-api.listNotes",
+   "servicem8-api.listAttachments",
+   "servicem8-api.createNotes"
+  ],
+  "rex": [
+   "feedback.search"
+  ]
+ },
+ "live_ops": {
+  "servicem8": [
+   "messaging-api.send_email"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of jobs, allocations, contacts, notes and attachments, and one internal note on the job. The owner's email is a live operation and waits for a person.",
+ "capabilities": [
+  "jobs.list",
+  "jobs.update",
+  "contacts.list",
+  "documents.list",
+  "messages.draft",
+  "messages.list",
+  "files.read"
+ ],
+ "adapters": {
+  "servicem8": {
+   "status": "docs-only",
+   "covers": "job-system family: inspection jobs, allocations, staff notes, photos, the draft note and the owner's email"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "read-only viewing feedback snapshot, not rental condition inspections or owner reports"
+  }
+ },
+ "gaps": [
+  "Inspection Express, Property Tree and 360 cameras: not in the kit's platform set, so nothing reads or writes them here.",
+  "Re-leased (inspection endpoints) and Vaultre (tenancy inspections) are mapped in the kit but no call or platform page in the evidence names them for this job. Not built here.",
+  "Assigning the inspector is a judgment step. The workflow flags the job; a person allocates the inspector in ServiceM8.",
+  "The inspection report PDF: ServiceM8 templated documents only produce Quote, Work Order and Invoice, so the report is a findings note plus photos, not a formatted PDF.",
+  "The cron cannot look at photos or judge condition. The findings are the staff notes; the person checks the photos before approving the email.",
+  "Follow-up on tenant or owner replies, reinspections and the sign-off step are not covered by the mapped operations.",
+  "The adapter is docs-only until a ServiceM8 trial account proves the field names and the email attachment behaviour.",
+  "Rex inspection feedback means a viewing. Set platform to rex to read feedback into rex-viewings/current. No condition reports, inspector allocation, appointment tracking or owner emails are provided. The appointments sample has no row fields; no fields are inferred. PropertyMe remains unmapped."
+ ]
+}

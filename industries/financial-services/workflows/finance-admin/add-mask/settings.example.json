@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Finance Broker",
+ "owner_email": "owner@example.com.au",
+ "raw_folder": "/Client files/To mask",
+ "masked_folder": "/Client files/Masked",
+ "recipients": [
+  {"email": "lender@example.com", "label": "Lender"},
+  {"email": "valuer@example.com", "label": "Valuer"}
+ ]
+}

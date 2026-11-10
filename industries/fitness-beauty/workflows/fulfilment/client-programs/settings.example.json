@@ -1,0 +1,23 @@
+{
+ "business_name": "Example Fitness Studio",
+ "airtable": {
+  "base_id": "appXXXXXXXXXXXXXX",
+  "tables": {"clients": "Clients", "programs": "Programs", "sessions": "Sessions", "progress": "Progress"},
+  "fields": {
+   "clients": {"name": "Name", "email": "Email", "goal": "Goal", "status": "Status", "sessions": "Sessions"},
+   "programs": {"client": "Client", "name": "Name", "plan": "Plan", "status": "Status"},
+   "sessions": {"client": "Client", "date": "Date", "notes": "Notes"},
+   "progress": {"client": "Client", "week": "Week", "summary": "Summary"}
+  }
+ },
+ "statuses": {"intake_done": "Intake complete", "program_drafted": "Program drafted", "active": "Active"},
+ "program_templates": [
+  {"match": "strength", "name": "Strength base, 8 weeks", "plan": "Three full-body sessions a week. Replace this text with the studio's own plan."},
+  {"match": "fat loss", "name": "Fat loss base, 6 weeks", "plan": "Three strength sessions and two conditioning sessions a week. Replace this text with the studio's own plan."}
+ ],
+ "check_in": {
+  "after_days": 7,
+  "subject": "Checking in",
+  "body": "Hi {name},\n\nJust checking in on your week. How are the sessions going, and is anything in the plan not working for you?\n\nThanks,\nExample Fitness Studio"
+ }
+}

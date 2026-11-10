@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Apparel Co",
+ "store": "woocommerce",
+ "max_images": 10,
+ "asset_hosts": ["assets.example.com.au"]
+}

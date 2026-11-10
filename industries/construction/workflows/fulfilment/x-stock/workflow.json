@@ -1,0 +1,51 @@
+{
+ "id": "construction:x-stock",
+ "name": "Stock",
+ "industry": "construction",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the materials a construction business buys in stock: reads stock on hand in Xero, drafts a purchase order for each item at or below its reorder level, queues the award for approval, and checks supplier bills against their purchase orders. Crons read and draft; a person approves every award.",
+ "families": {
+  "job-materials": {
+   "steps": ["stock-count", "allocate-to-job", "check-price-availability", "raise-po", "approve-order", "send-order", "receive-goods", "match-invoice", "update-stock", "record-keeping", "other"],
+   "covered_by": {"stock-count": "stock-levels (reads stock on hand in Xero; counts kept outside Xero are not read)", "allocate-to-job": "not covered (see gaps)", "check-price-availability": "po-draft (unit price from the Xero item)", "raise-po": "po-draft (draft purchase order in Xero)", "approve-order": "approval (award set AUTHORISED in Xero)", "send-order": "not covered (see gaps)", "receive-goods": "not covered (see gaps)", "match-invoice": "bill-match", "update-stock": "stock-levels (the next read shows the new on-hand)", "record-keeping": "bill-match (a log of each bill's match)", "other": "skill"}
+  },
+  "yard-stock": {
+   "steps": ["stock-count", "update-stock", "send-order", "match-invoice"],
+   "covered_by": {"stock-count": "stock-levels", "update-stock": "stock-levels", "send-order": "not covered (see gaps)", "match-invoice": "bill-match"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "stock-levels", "schedule": "0 * * * *", "entry": "stock-levels", "summary": "Reads stock on hand in Xero and raises a request for each reordered item at or below its level."},
+  {"name": "po-draft", "schedule": "*/30 * * * *", "entry": "po-draft", "summary": "Drafts a purchase order in Xero for each new request and queues its award for approval."},
+  {"name": "bill-match", "schedule": "0 22 * * *", "entry": "bill-match", "summary": "Compares supplier bills with open purchase orders from the same supplier and logs matches and differences."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createPurchaseOrders", "accounting.getPurchaseOrders", "accounting.getInvoices"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updatePurchaseOrder"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of stock, contacts, purchase orders or bills, and a purchase order in DRAFT status. Setting a purchase order AUTHORISED is a live operation and waits for a person.",
+ "capabilities": ["products.list", "orders.list", "invoices.list"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "stock on hand, supplier contact lookup, draft purchase order, award (AUTHORISED), and open purchase orders and supplier bills read"}
+ },
+ "gaps": [
+  "Sending a purchase order to the supplier (send-order) is not built: Xero's API returns a purchase order as a PDF but does not email it, and the mailbox adapter is not part of this workflow.",
+  "Allocating materials to a job (allocate-to-job) is not built: the Xero purchase order carries a request reference, not a job, so no job link is written.",
+  "Receiving goods (receive-goods) is not built: no Xero receiving operation is mapped, so deliveries are checked and receipted in Xero by hand.",
+  "Buildxact has no mapped operations in the kit beyond sign-in, so no adapter is built for it.",
+  "MYOB's inventory adjustments (the stock-count step on its docs) are not wired to this workflow; it has no adapter here.",
+  "ServiceM8, JackApp, Simpro, FoxIQ, IP Solution, Buildertrend and Dropbox have no mapped stock operations for this job, so no adapter is built.",
+  "Reorder levels and supplier emails come from settings. An item without a rule is never reordered.",
+  "A skipped request (no unit price, no supplier contact, or a rejected award) stays until someone clears it; the CRM shell has no screen for that yet.",
+  "An award that is still pending when its item comes back above its level is closed by the stock check; reject that award in the shell if the stock is no longer needed.",
+  "Xero purchase orders have no approval step of their own; the approval is the CRM shell's.",
+  "Bill matching uses supplier and total only, because the docs do not describe matching a bill to a purchase order number.",
+  "The kit's capability list has no purchase-order capability, so this workflow lists orders.list and products.list instead.",
+  "The Xero adapter is docs-only until a Xero demo company proves it."
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "id": "booking-reminders",
+ "name": "Book appointments, send reminders, handle no-shows",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works through the appointment book in Calendly: reads each booking into the workflow's book, and queues a yes or no on every finished booking so a person can mark a no-show. Booking a new slot and sending reminders are not covered yet (see gaps). Crons read and queue; a person decides every no-show.",
+ "families": {
+  "clinic-or-salon-appointments": {
+   "steps": ["booking-request", "book-slot", "reminder-send", "no-show-handling", "record-keeping"],
+   "covered_by": {"booking-request": "not built (a new booking needs the client's answers, a judgment step)", "book-slot": "not built", "reminder-send": "the platform's own reminders (the kit sends none)", "no-show-handling": "no-show (each finished booking queued for a yes or no)", "record-keeping": "intake (bookings into the workflow's book)"}
+  },
+  "trade-site-bookings": {
+   "steps": ["availability-check", "book-slot", "confirm-booking", "reschedule-cancel"],
+   "covered_by": {"availability-check": "not built", "book-slot": "not built", "confirm-booking": "the platform's own confirmation", "reschedule-cancel": "not built (see gaps)"}
+  },
+  "unclear": {
+   "steps": ["booking-request", "book-slot", "reschedule-cancel"],
+   "covered_by": {"booking-request": "not built", "book-slot": "not built", "reschedule-cancel": "not built (see gaps)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Read the next booked appointments from Calendly into the workflow's book."},
+  {"name": "no-show", "schedule": "*/30 * * * *", "entry": "no-show", "summary": "Queue a yes or no on each finished booking that has no no-show record yet, oldest first, for a person to decide."}
+ ],
+ "draft_ops": {
+  "calendly": ["api.scheduledEvents_list-scheduled-events", "api.scheduledEvents_list-event-invitees"]
+ },
+ "live_ops": {
+  "calendly": ["api.scheduledEvents_create-invitee-no-show"]
+ },
+ "draft_ops_note": "Draft operations here are reads of scheduled events and their invitees. Nothing the crons read leaves the business. A no-show mark changes a record the client does not see, but it can start the business's own no-show policy, so it is a live operation and waits for a person.",
+ "capabilities": ["bookings.list", "calendar.list"],
+ "adapters": {
+  "calendly": {"status": "docs-only", "covers": "booked appointments and invitees (read), no-show marks (approval only)"}
+ },
+ "gaps": [
+  "Cliniko: its appointments, attendee cancel and reminder flags are mapped, but the captured vendor docs show only the equality filter form (q[]=field:=value). A time window (starts_at from and to) needs a comparison filter that is not confirmed, so no adapter is built. Confirm it on a Cliniko trial account, then build the adapter.",
+  "Acuity: the evidence names it, but the kit has no Acuity platform folder, so no operations are mapped.",
+  "Calendly cannot tell who attended. The no-show cron therefore queues every finished booking for a person to decide, and a rejected one stays rejected. A cron that knows attendance (a clinic system flag such as Cliniko's did_not_arrive) would replace this once that adapter exists.",
+  "Booking a new slot (availability-check, book-slot, confirm-booking): not built. It needs the client's answers and a slot choice a person should make. Calendly's invitee create is in the kit but is not a live or draft op of this workflow.",
+  "Reminders: the kit sends no reminder. Calendly's own invitee reminders carry this step, and Calendly does not expose whether a reminder went out, so the kit cannot confirm it. Text reminders need an SMS adapter (Twilio, MobileMessage or JustCall have mapped operations here); none is built.",
+  "Reschedule and cancel from a client's message: a judgment step. Calendly's cancel is mapped but no cron queues it, so it is not in live_ops yet.",
+  "Pagination: each run reads one page of up to 100 events and up to 100 invitees per event. A busy calendar needs the next page followed.",
+  "Approval summaries and the run log: each queued summary carries the client's or lead's name, and the runtime logs every summary (core/workflows/runtime.ts). Needs a core change so the runtime logs the approval id only, or the names come out of the summary line.",
+  "Stored personal data: invitee names and emails are kept in the workflow's state store. The business needs a retention rule for that store before go-live.",
+  "Calendly is docs-only until a sandbox account proves each call. Its sign-in is the CRM's standard Calendly token (CALENDLY_API_TOKEN), not yet run against a real account."
+ ]
+}

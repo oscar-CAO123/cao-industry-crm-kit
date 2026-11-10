@@ -1,0 +1,57 @@
+{
+ "id": "real-estate:x-rentalcompliance",
+ "name": "Rental compliance",
+ "industry": "real-estate",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps rental compliance on track: reads open maintenance, tasks and current tenants, drafts internal follow-up tasks for jobs that stall, and queues any contractor booking for approval. Crons read and draft; a person approves every booking.",
+ "families": {
+  "all": {
+   "steps": ["lease-start-checklist", "smoke-alarm-checks", "safety-certificates", "expiry-tracking", "entry-condition-report", "routine-inspection", "contractor-booking", "tenant-notice", "breach-follow-up", "owner-reporting", "record-keeping"],
+   "covered_by": {
+     "lease-start-checklist": "gap",
+     "smoke-alarm-checks": "gap",
+     "safety-certificates": "skill (reads the certificate and its date by hand)",
+     "expiry-tracking": "draft (follow-up tasks for stalled jobs); certificate expiry dates are not stored yet",
+     "entry-condition-report": "gap",
+     "routine-inspection": "gap",
+     "contractor-booking": "approval (queued maintenance job, sent only when approved)",
+     "tenant-notice": "gap",
+     "breach-follow-up": "gap",
+     "owner-reporting": "gap",
+     "record-keeping": "draft (follow-up tasks and the snapshot kept in the store)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "watch", "schedule": "*/30 * * * *", "entry": "watch", "summary": "Read open maintenance jobs, open tasks and current tenants, and keep a snapshot. Writes nothing to VaultRE."},
+  {"name": "draft", "schedule": "15 * * * *", "entry": "draft", "summary": "Draft one internal follow-up task for each open maintenance job that has been open for stale_days and has none yet."},
+  {"name": "booking", "schedule": "0 22 * * *", "entry": "booking", "summary": "Queue each new contractor booking request for approval (22:00 UTC is 8 or 9 am in eastern Australia). Nothing is sent until a person approves it."}
+ ],
+ "draft_ops": {
+  "vaultre": ["getAllMaintenance", "getTasks", "getCurrentTenants", "addTask"]
+ },
+ "live_ops": {
+  "vaultre": ["addMaintenance"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and an internal task for one VaultRE user. A maintenance job is live, because it creates a job that VaultRE can notify tenants and contractors about, so it only runs after approval.",
+ "capabilities": ["maintenance.list", "tasks.list", "tenants.list", "tasks.create", "maintenance.create"],
+ "adapters": {
+  "vaultre": {"status": "docs-only", "covers": "open maintenance and tasks, follow-up tasks, contractor booking as a maintenance job"}
+ },
+ "gaps": [
+  "AgentBox is in the kit, but its 8 mapped operations cover contacts, properties and documents only. None covers compliance, maintenance or inspections.",
+  "Re-Leased is in the kit with inspection, maintenance and note operations, but it is built for commercial leases and its token exchange is not built. No adapter yet.",
+  "Console (Reapit PM) and PropertyMe: their vendor docs describe compliance reminders and inspection apps, but neither has a platform folder in the kit, so nothing can be mapped. PropertyMe's compliance reminders are the strongest lead for a later build.",
+  "Lease-start checklist and smoke alarm bookings: VaultRE has no compliance reminder or certificate operation. The agent checks these by hand.",
+  "Safety certificate and expiry dates: no mapped operation stores them, so expiry tracking uses VaultRE tasks only.",
+  "Tenant notices and breach escalation: VaultRE has no formal notice operation, and the docs do not describe legal notice forms.",
+  "Entry condition and routine inspections: the inspection operations need a tenancy path, and no cron reads them yet.",
+  "Owner reporting: no owner compliance report appears in the mapped operations.",
+  "Booking requests: nothing writes to the bookings collection yet, and no command exists to record one (the quoting workflow has a propose command; this one does not). The booking cron stays idle until a request is recorded. This needs a runtime change in core/, which was not made.",
+  "Unconfirmed against a live account: the addTask start format (ISO date-time, sent from the code) and the addMaintenance notifications field (sent empty, so no tenant notice is expected). The spec gives the field names only.",
+  "VaultRE status is spec. The tests run offline against a fake network and have not been run against a real account."
+ ]
+}

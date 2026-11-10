@@ -1,0 +1,157 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+@keyframes dialog-overlay-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-overlay-hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-content-show {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes dialog-content-hide {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.dropBox {
+  @apply flex flex-col overflow-hidden items-start justify-center text-xs p-2 m-2 rounded-md border border-slate-300 shadow-md;
+}
+
+/* The shell's look, taken from the industry demo apps: black ground, white elements, grey lines, one muted red for a
+   real problem, Jost only. This block is the whole theme: a client deploy rebrands by changing these tokens only. */
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 0 0% 4%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 56% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 86%;
+    --input: 0 0% 82%;
+    --ring: 0 0% 4%;
+    --radius: 0.625rem;
+    --radius-card: 18px;
+    --chart-1: 0 0% 9%;
+    --chart-2: 0 0% 35%;
+    --chart-3: 0 0% 55%;
+    --chart-4: 0 0% 72%;
+    --chart-5: 0 56% 50%;
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 0 0% 25%;
+    --sidebar-primary: 0 0% 4%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 4%;
+    --sidebar-border: 0 0% 86%;
+    --sidebar-ring: 0 0% 4%;
+    --bad: 0 56% 50%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7.8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7.8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 3.9%;
+    --secondary: 0 0% 11%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 100% / 0.08;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 56% 62%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 22.7%;
+    --ring: 0 0% 98%;
+    --chart-1: 0 0% 98%;
+    --chart-2: 0 0% 64%;
+    --chart-3: 0 0% 45%;
+    --chart-4: 0 0% 30%;
+    --chart-5: 0 56% 62%;
+    --sidebar-background: 0 0% 5.1%;
+    --sidebar-foreground: 0 0% 83%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 3.9%;
+    --sidebar-accent: 0 0% 100% / 0.08;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 14.9%;
+    --sidebar-ring: 0 0% 98%;
+    --bad: 0 56% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* A sideways two-finger swipe on a Mac trackpad is "go back" in Chrome.
+     The pipeline board and other wide tables scroll sideways, so a swipe that
+     reaches the edge of one leaked out and navigated back a page, which reps
+     saw as the CRM going back by itself (6 Oct 2026). Keep sideways
+     overscroll inside the app. Back still works from the button and Cmd+[. */
+  html,
+  body {
+    overscroll-behavior-x: none;
+  }
+}
+
+/* Shell parts, after the demo apps' frame (os.css): cards, stats, pills and board lanes. */
+body { font-feature-settings: "tnum" 1; -webkit-font-smoothing: antialiased; }
+.sh-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius-card); padding: 18px 20px; min-width: 0; }
+.sh-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.sh-h1 { font-size: 26px; font-weight: 300; line-height: 1.2; }
+.sh-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.sh-stat { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 16px 18px; }
+.sh-stat-v { font-size: 34px; font-weight: 500; line-height: 1.1; letter-spacing: -.01em; }
+.sh-stat-l { font-size: 14px; font-weight: 500; margin-top: 6px; }
+.sh-pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px; border-radius: 7px; font-size: 12px; white-space: nowrap; border: 1px solid hsl(var(--input)); color: hsl(var(--muted-foreground)); }
+.sh-pill-on { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: hsl(var(--primary)); }
+.sh-pill-bad { color: hsl(var(--bad)); border-color: hsl(var(--bad) / .4); background: hsl(var(--bad) / .12); }
+.sh-lanes { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+.sh-lane { background: hsl(var(--muted) / .5); border: 1px solid hsl(var(--border)); border-radius: 16px; padding: 10px; min-height: 160px; display: flex; flex-direction: column; gap: 8px; }
+.sh-tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid hsl(var(--border)); margin-bottom: 18px; }
+.sh-tab { padding: 9px 14px; border-radius: 10px 10px 0 0; color: hsl(var(--muted-foreground)); font-size: 14px; }
+.sh-tab[aria-current="page"] { color: hsl(var(--foreground)); box-shadow: inset 0 -2px 0 hsl(var(--foreground)); }

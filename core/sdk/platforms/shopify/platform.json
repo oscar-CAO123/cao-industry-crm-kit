@@ -1,0 +1,50 @@
+{
+ "id": "shopify",
+ "name": "Shopify Admin (GraphQL)",
+ "status": "index-only",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "graphql",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.myshopify\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "shop": {
+   "env": "SHOPIFY_SHOP",
+   "pattern": "[a-z0-9-]+"
+  },
+  "version": {
+   "env": "SHOPIFY_API_VERSION",
+   "default": "2026-10",
+   "pattern": "[0-9]{4}-[0-9]{2}",
+   "callerMay": true
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "X-Shopify-Access-Token",
+  "env": "SHOPIFY_ACCESS_TOKEN"
+ },
+ "keys": [
+  "SHOPIFY_SHOP",
+  "SHOPIFY_ACCESS_TOKEN",
+  "SHOPIFY_API_VERSION (optional)"
+ ],
+ "sources": [
+  {
+   "url": "https://shopify.dev/sitemap.xml",
+   "official": "vendor-domain: shopify.dev"
+  }
+ ],
+ "gaps": [
+  "Shopify: names and doc pages only from shopify.dev's sitemap; arguments need the schema (a development store gives it)"
+ ],
+ "counts": {
+  "operations": 830,
+  "read": 292,
+  "write": 538
+ }
+}

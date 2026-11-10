@@ -1,0 +1,100 @@
+{
+ "id": "docusign",
+ "name": "DocuSign",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "crm",
+ "style": "rest",
+ "hosts": [
+  "api.docusign.com",
+  "api.docusign.net",
+  "apps.docusign.com",
+  "rooms.docusign.com",
+  "www.docusign.net"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "[a-z0-9-]+\\.docusign\\.(net|com)"
+ ],
+ "pinned": {
+  "accountId": {
+   "allow": [],
+   "env": "DOCUSIGN_ACCOUNT_ID",
+   "fill": "$env"
+  }
+ },
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "docusign"
+ },
+ "keys": [
+  "DOCUSIGN_INTEGRATION_KEY",
+  "DOCUSIGN_USER_ID",
+  "DOCUSIGN_ACCOUNT_ID",
+  "DOCUSIGN_PRIVATE_KEY",
+  "DOCUSIGN_ENV (optional)"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/esignature.rest.swagger-v2.1.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/admin.rest.swagger-v2.1.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/click.rest.swagger-v1.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/rooms.rest.swagger-v2.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/webforms.rest.swagger-v1.1.0.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/maestro.rest.swagger-v1.0.0.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/navigator.rest.swagger.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/monitor.rest.swagger-v2.0.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/workspaces.rest.swagger.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/connected-fields.rest.swagger.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/agreementmanager.rest.swagger-1.0.0.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/workflowbuilder.rest.swagger-1.0.0.json",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  },
+  {
+   "url": "https://github.com/docusign/docusign-esign-node-client",
+   "official": "vendor-link: https://developers.docusign.com/tools/openapi-files.md links github.com/docusign"
+  }
+ ],
+ "gaps": [
+  "docusign: 45 endpoints added from docusign/docusign-esign-node-client (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 708,
+  "read": 296,
+  "write": 412
+ }
+}

@@ -1,0 +1,36 @@
+{
+ "id": "gocanvas-quarries-and-mines-compliance-templates",
+ "name": "GoCanvas",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.gocanvas.com",
+  "www.gocanvas.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "GOCANVAS_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "GOCANVAS_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://api.gocanvas.com/api/v3/docs",
+   "official": "vendor-domain: api.gocanvas.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 94,
+  "read": 47,
+  "write": 47
+ }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "retail:x-batches",
+  "name": "Batches and landed costs",
+  "industry": "retail",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Records which batch or serial number arrived on each purchase order, with the freight and surcharge that make up its landed cost, and queues any stock adjustment for approval. Crons read and record only. Spreading landed costs across lines is not automated yet.",
+  "families": {
+    "receive-and-trace": {
+      "steps": [
+        "receive-shipment",
+        "check-received-lines",
+        "assign-batch",
+        "update-stock",
+        "trace-sales",
+        "supplier-query",
+        "record-keeping"
+      ],
+      "covered_by": {
+        "receive-shipment": "receive",
+        "check-received-lines": "skill (a person checks quantities and condition against the paperwork)",
+        "assign-batch": "batch-trace",
+        "update-stock": "batch-trace (reads stock); adjust (queues any change)",
+        "trace-sales": "not yet (see gaps)",
+        "supplier-query": "skill",
+        "record-keeping": "receive and batch-trace"
+      }
+    },
+    "landed-cost": {
+      "steps": [
+        "allocate-landed-cost",
+        "reconcile-accounting"
+      ],
+      "covered_by": {
+        "allocate-landed-cost": "skill (the owner's basis is needed; the cost pool is recorded by receive)",
+        "reconcile-accounting": "not yet (see gaps)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {
+      "name": "receive",
+      "schedule": "*/30 * * * *",
+      "entry": "receive",
+      "summary": "Record each received purchase-order line, with its PO freight and surcharge."
+    },
+    {
+      "name": "batch-trace",
+      "schedule": "0 * * * *",
+      "entry": "batch-trace",
+      "summary": "Record the serial or batch numbers on received lines and the stock on hand for each one."
+    },
+    {
+      "name": "adjust",
+      "schedule": "15 * * * *",
+      "entry": "adjust",
+      "summary": "Queue each proposed stock adjustment for approval, and note the ones a person has approved."
+    }
+  ],
+  "draft_ops": {
+    "cin7": [
+      "get /api/v1/PurchaseOrders",
+      "get /api/v1/PurchaseOrders/{id}",
+      "get /api/v1/SerialNumbers",
+      "get /api/v1/Stock",
+      "get /api/v1/Stock/{barcode}"
+    ]
+  },
+  "live_ops": {
+    "cin7": [
+      "post /api/v1/Adjustments"
+    ]
+  },
+  "draft_ops_note": "Draft operations are reads only. Nothing in this workflow writes to Cin7 on its own: a stock adjustment is queued and changes Cin7 only after a person approves it in the CRM shell.",
+  "capabilities": [
+    "orders.list",
+    "products.list",
+    "products.update"
+  ],
+  "adapters": {
+    "cin7": {
+      "status": "docs-only",
+      "covers": "purchase-order receipts with freight and surcharge, serial and batch numbers, stock on hand, and queued stock adjustments; blocked live until the base URL gap is fixed"
+    }
+  },
+  "gaps": [
+    "Cin7 base URL (runtime, not fixed here): core/sdk/platforms/cin7/ops.json sets server to https://api.cin7.com/api and each path starts with /api/v1, so a live call goes to /api/api/v1/... The Cin7 swagger has no servers entry, so the server should be https://api.cin7.com. Fix in the generator and regenerate; until then the Cin7 adapter cannot run live. The tests accept both spellings.",
+    "Fishbowl: help pages mapped, but there is no operations file, so no reads or writes can be called. Its batch, lot and landed-cost steps are unmapped.",
+    "Unleashed: operations are mapped (batch numbers, stock adjustments, purchase order costs), but its sign-in needs an HMAC signer that the kit does not have yet. No adapter until that is built.",
+    "Cin7 landed cost: the docs do not describe spreading freight, duty or other charges across received lines. The cron records the cost pool; the allocation basis is for the owner to choose.",
+    "Cin7 batch-to-customer trace and quality hold: not in the supplied docs. The ops file has no batch-number endpoint, so batches are read through serial numbers.",
+    "Cin7 accounting reconciliation of stock value to purchase invoices: not in the supplied docs.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+    "The Cin7 adapter is docs-only: its sign-in (CIN7_USERNAME and CIN7_API_KEY) and field names come from the vendor swagger, but nothing has run against a real account. A live account is needed to confirm the on-screen steps.",
+    "Received quantity: Cin7's qtyShipped means dispatched, not received, so the receive cron records the ordered quantity on purchase orders marked fully received, and does not guess a partial receipt."
+  ]
+}

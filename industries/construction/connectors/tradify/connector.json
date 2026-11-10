@@ -1,0 +1,15 @@
+{
+  "id": "tradify",
+  "name": "Tradify",
+  "docs": null,
+  "account_to_test": "No public API, computer use only",
+  "cost_to_test": "Not applicable",
+  "capabilities": [
+    "jobs.list",
+    "quotes.list"
+  ],
+  "fallback": "computer-use",
+  "script": null,
+  "status": "record-only",
+  "terms_checked": false
+}

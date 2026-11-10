@@ -1,0 +1,54 @@
+{
+ "id": "all:regulator-lodgements",
+ "name": "Lodge reports, notices, permits and disputes with regulators",
+ "industry": "all",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Supports lodging reports, notices, permits and disputes with regulators. Reads regulator correspondence from the compliance mailbox, logs each item in a lodgement register with its due date, and drafts reminders for the owner. Crons read and draft; a person makes every lodgement in the regulator's portal and approves every email.",
+ "families": {
+  "regulator-lodgement": {
+   "steps": ["deadline-check", "gather-information", "prepare-report", "check-content", "internal-approval", "lodge-online", "pay-fee", "receive-confirmation", "respond-to-regulator", "objection-or-dispute", "outcome-and-follow-up", "record-keeping"],
+   "covered_by": {
+    "deadline-check": "reminders (due dates come from the business's notice rules; the regulator docs give none)",
+    "gather-information": "gap (the docs do not list what a lodgement needs; a person gathers it)",
+    "prepare-report": "gap (portal forms are filled in by a person)",
+    "check-content": "gap (a person checks figures and wording)",
+    "internal-approval": "register (an internal note to the owner, approved before it is sent)",
+    "lodge-online": "gap (no regulator portal is mapped; a person lodges)",
+    "pay-fee": "gap (portal payments are a person's job)",
+    "receive-confirmation": "intake (confirmation emails in the mailbox are read and logged)",
+    "respond-to-regulator": "gap (a person answers regulator queries)",
+    "objection-or-dispute": "gap (the docs do not describe objections; a person decides)",
+    "outcome-and-follow-up": "reminders (open items stay on the register until a person marks them Lodged)",
+    "record-keeping": "register (one row per notice, written as a draft)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Read regulator notices that arrived in the compliance mailbox."},
+  {"name": "register", "schedule": "15 * * * *", "entry": "register", "summary": "Log each new notice in the lodgement register and queue an internal note to the owner."},
+  {"name": "reminders", "schedule": "0 22 * * *", "entry": "reminders", "summary": "Queue a reminder to the owner for each open lodgement due within the window (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Reads, a register row and an Outlook draft to the owner. None of them leaves the business. Sending the draft to the owner is the one live operation, and only a person can approve it.",
+ "capabilities": ["messages.list", "messages.draft", "sheets.read", "sheets.append", "notify.send"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "compliance mailbox intake, lodgement register rows, owner drafts and their approved send"}
+ },
+ "gaps": [
+  "ASIC, NHVR and QBCC: lodgement, forms, fees, confirmations and objections happen in each regulator's own portal. None of those portals has operations in the kit, so no adapter exists and a person lodges.",
+  "Regulator deadlines: the ASIC, NHVR and QBCC docs give no lodgement dates. The business sets each due window in notice_rules.",
+  "The kit has no operation that updates a register row. A person marks an item Lodged in Excel, and the reminders stop only then.",
+  "Judgment steps stay with a person: gathering information, preparing and checking the report, responding to a regulator, and any objection or dispute.",
+  "Intake depends on the search word. A regulator notice that does not carry it is not read.",
+  "The Microsoft 365 adapter is docs-only: it has not run against a tenant. Field names come from the Microsoft Graph OpenAPI spec in endpoint-map/raw/microsoft-365.",
+  "Excel may reformat a typed date on write. The reminder reads a text date or a serial number, and a sandbox run should confirm the Due column comes back in either form."
+ ]
+}

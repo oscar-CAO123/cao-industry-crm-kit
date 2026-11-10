@@ -1,0 +1,55 @@
+{
+ "id": "real-estate:add-trust",
+ "name": "Trust reconciliation",
+ "industry": "real-estate",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reads the agency's trust accounts and each configured sale's trust ledger from VaultRE, adds new ledger entries to the trust register, and drafts one email to the principal listing entries that are missing a receipt number, contact or trust account. Bank matching, the three-way check, owner payments, sign-off and lodgement stay with a person.",
+ "families": {
+  "all": {
+   "steps": ["bank-feed-import", "allocate-receipts", "allocate-payments", "match-bank", "three-way-check", "resolve-differences", "owner-disbursement", "sign-off", "lodge-report", "record-keeping"],
+   "covered_by": {
+    "bank-feed-import": "not covered (no mapped VaultRE bank import operation)",
+    "allocate-receipts": "ledger (reads each trust ledger entry and flags missing receipt, contact or trust account)",
+    "allocate-payments": "ledger (reads the entries as VaultRE holds them)",
+    "match-bank": "not covered (no mapped operation)",
+    "three-way-check": "not covered (no mapped operation)",
+    "resolve-differences": "person, using the flagged entries in the exceptions email",
+    "owner-disbursement": "not covered (VaultRE disbursement is not a mapped draft or live operation)",
+    "sign-off": "person (the principal)",
+    "lodge-report": "not covered",
+    "record-keeping": "register rows (ledger and accounts)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "accounts", "schedule": "0 22 * * *", "entry": "accounts", "summary": "Read the trust accounts from VaultRE and add a register row when one is added or dropped (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "ledger", "schedule": "15 22 * * *", "entry": "ledger", "summary": "Read the trust ledger for each configured sale, add new entries to the register, and draft and queue one exceptions email to the principal (15 minutes after accounts)."}
+ ],
+ "draft_ops": {
+  "vaultre": ["getTrustAccounts", "getPropertyLifeTrustLedgerTransactions"],
+  "microsoft-365": ["users.CreateMessages", "drives.items.workbook.tables.CreateRows"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: trust account and ledger reads, a row in the trust register workbook, and an Outlook draft in the finance mailbox. The only send is the exceptions email, and it is queued for the principal to approve.",
+ "capabilities": ["trust.accounts.list", "trust.ledger.read", "messages.draft", "messages.send", "register.append"],
+ "adapters": {
+  "vaultre": {"status": "docs-only", "covers": "trust account list (id and name) and trust ledger transactions per sale life (id, trust account, date, type, amount, receipt number, contact)"},
+  "microsoft-365": {"status": "docs-only", "covers": "finance mailbox drafts and approved exceptions sends, trust register workbook rows"}
+ },
+ "gaps": [
+  "Console: the trust docs found cover integrated direct debit, owner statements and an accounting event, not trust reconciliation. No operations are mapped in the kit, so no adapter.",
+  "MantisProperty: the trust docs cover tracking trust money per sale and tenancy and reconciliation reports. No operations are mapped in the kit, so no adapter.",
+  "PropertyMe: the docs cover bank file import, trust reconciliation and owner statements, but no operations are mapped in the kit, so no adapter. Trustless payment folios may not follow the trust steps.",
+  "Bank feed import, bank-to-ledger matching and the three-way balance check: no mapped operation on VaultRE, so these stay with the business's bank platform and a person.",
+  "Resolving differences, sign-off by the principal and lodgement of the trust account report: judgment steps and regulator filings, not automated.",
+  "Owner disbursements: VaultRE has no mapped disbursement or payment write operation in the kit, so payments out of trust are made by the principal in the bank.",
+  "The ledger reads only the sales listed in settings (sale_lives). The VaultRE sale list operation is mapped, but its response shape is not confirmed here, so the list is entered by hand for now.",
+  "VaultRE transaction type and category are named objects in the spec with no sign or fixed list of values, so totals are the amounts as reported, not debits minus credits.",
+  "Both adapters are docs-only until a VaultRE sandbox and a Microsoft 365 developer tenant prove them."
+ ]
+}

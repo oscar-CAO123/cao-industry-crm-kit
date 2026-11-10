@@ -1,0 +1,52 @@
+{
+ "id": "hospitality:add-waste",
+ "name": "Wastage log from a bin photo",
+ "industry": "hospitality",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a bin photo into a wastage entry on the stock record: matches the photo to a catalogue item, queues the adjustment to waste for approval, and writes a daily waste summary. Crons read and draft; a person approves every stock change.",
+ "families": {},
+ "steps": ["waste-trigger", "bin-photo", "identify-item", "record-quantity", "log-entry", "reason-code", "cost-value", "variance-review", "order-adjust", "staff-feedback", "menu-action", "record-keeping", "other"],
+ "covered_by": {
+   "waste-trigger": "skill (a person logs the waste; no platform trigger is mapped)",
+   "bin-photo": "skill (the agent reads the photo; no photo intake is mapped)",
+   "identify-item": "skill, matched against the catalogue (api.SearchCatalogItems)",
+   "record-quantity": "approval (api.BatchChangeInventory, adjustment to WASTE)",
+   "log-entry": "approval (api.BatchChangeInventory)",
+   "reason-code": "draft (api.ListInventoryAdjustmentReasons checks SPOILAGE_WASTE exists)",
+   "cost-value": "gap (Square's COGS report is in the dashboard; no API operation mapped)",
+   "variance-review": "draft (daily waste summary from api.BatchRetrieveInventoryChanges)",
+   "order-adjust": "gap (purchase orders not mapped)",
+   "staff-feedback": "gap (not mapped)",
+   "menu-action": "gap (86 availability not mapped to an operation here)",
+   "record-keeping": "draft (daily summary record in the workflow store)",
+   "other": "gap"
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "catalogue", "schedule": "0 * * * *", "entry": "catalogue", "summary": "Hourly: read the catalogue items that photos are matched against, and the adjustment reasons available."},
+  {"name": "log-waste", "schedule": "*/10 * * * *", "entry": "log-waste", "summary": "Check each identified waste entry, then queue its adjustment to waste for approval. Parks any entry that does not check out."},
+  {"name": "review", "schedule": "0 22 * * *", "entry": "review", "summary": "Daily (22:00 UTC is 8 or 9 am in eastern Australia): summarise the last day's waste adjustments into the store."}
+ ],
+ "draft_ops": {
+  "square": ["api.SearchCatalogItems", "api.ListInventoryAdjustmentReasons", "api.BatchRetrieveInventoryChanges"]
+ },
+ "live_ops": {
+  "square": ["api.BatchChangeInventory"]
+ },
+ "draft_ops_note": "Draft operations only read Square and write a summary into the workflow store. The one stock change, the adjustment to WASTE, is a live operation: a cron can only queue it and a person approves it.",
+ "capabilities": ["products.list", "reports.run"],
+ "adapters": {
+  "square": {"status": "docs-only", "covers": "catalogue read, adjustment reasons, the day's waste changes, and the waste adjustment queued for approval"}
+ },
+ "gaps": [
+  "Eats365 and Lightspeed: help pages were read, but neither has a platform in the kit, so no adapter, operations or tests exist. Waste logging for those POS systems needs their APIs mapped first.",
+  "Photo intake: no mapped platform receives bin photos. The agent reads a photo handed to it, and a person or the CRM shell writes the waste entry into the store.",
+  "The waste trigger, the reason picked at the POS, and waste photos are not covered in the pages read. A live Square account is needed to confirm whether the POS asks for a reason on a waste entry.",
+  "Three read operations are POST-shaped and marked write in the kit (search, batch retrieve). On a deploy where KIT_ALLOW_WRITES is 0 they are refused. Their read-only status is not changed here because core/ is not edited.",
+  "COGS and profit margin: Square's COGS report is in the dashboard only, so cost-value is not automated.",
+  "Purchase orders, staff feedback and 86 availability are not automated.",
+  "The Square adapter is docs-only until a Square sandbox account proves it. The offline test uses a fake network only."
+ ]
+}

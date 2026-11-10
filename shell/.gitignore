@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# build output
+/.next/
+/out/
+/build
+/generated
+*.tsbuildinfo
+next-env.d.ts
+
+# tests
+/coverage
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Keys never live in this repo. They live in 1Password and reach a process through scripts/with-secrets.sh.
+# These patterns stop a stray key file from ever being committed.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credential*
+*token*.json
+*oauth*.json
+secrets.refs.json
+
+# local state
+/state
+.DS_Store
+*.log

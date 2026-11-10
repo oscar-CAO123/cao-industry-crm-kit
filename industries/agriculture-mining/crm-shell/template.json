@@ -1,0 +1,938 @@
+{
+ "industry": "agriculture-mining",
+ "name": "Agriculture and mining",
+ "version": 1,
+ "source": "Reusable industry pages, workflows and platform coverage.",
+ "pages": [
+  {
+   "slug": "pipeline",
+   "title": "Sales and orders",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "pipeline",
+     "title": "Pipeline",
+     "view": "board",
+     "kind": "pipeline",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "supermarket",
+     "title": "Supermarket orders",
+     "view": "table",
+     "kind": "supermarket",
+     "fields": [
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      },
+      {
+       "key": "qty",
+       "label": "Quantity",
+       "type": "number"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "lots",
+     "title": "Lot descriptions",
+     "view": "table",
+     "kind": "lots",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "portal",
+     "title": "Grower and buyer portal",
+     "view": "table",
+     "kind": "portal",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "paylinks",
+     "title": "Payment links",
+     "view": "table",
+     "kind": "paylinks",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "marketing",
+   "title": "Marketing",
+   "department": "marketing",
+   "tabs": [
+    {
+     "slug": "content",
+     "title": "Marketing",
+     "view": "board",
+     "kind": "content",
+     "stages": [
+      "Idea",
+      "Drafting",
+      "Approved",
+      "Scheduled",
+      "Posted"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "calls",
+   "title": "Calls",
+   "department": "customer-service",
+   "tabs": [
+    {
+     "slug": "calls",
+     "title": "Calls",
+     "view": "feed",
+     "kind": "calls",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "shipdocs",
+   "title": "Export and deliveries",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "shipdocs",
+     "title": "Export document check",
+     "view": "table",
+     "kind": "shipdocs",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "tickets",
+     "title": "Delivery tickets",
+     "view": "table",
+     "kind": "tickets",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "paddocks",
+   "title": "Farm records",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "paddocks",
+     "title": "Paddock records",
+     "view": "table",
+     "kind": "paddocks",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "spray",
+     "title": "Spray records",
+     "view": "table",
+     "kind": "spray",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "yieldtrack",
+   "title": "Packhouse",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "yieldtrack",
+     "title": "Yield and waste",
+     "view": "table",
+     "kind": "yieldtrack",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "handover",
+     "title": "Shift handover",
+     "view": "table",
+     "kind": "handover",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "bills",
+   "title": "Bills and expenses",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "bills",
+     "title": "Supplier bills",
+     "view": "table",
+     "kind": "bills",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    },
+    {
+     "slug": "packout",
+     "title": "Grower statements",
+     "view": "table",
+     "kind": "packout",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pnl",
+   "title": "Numbers",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "pnl",
+     "title": "Profit and loss",
+     "view": "dashboard",
+     "kind": "pnl",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "digest",
+     "title": "Weekly report",
+     "view": "table",
+     "kind": "digest",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "costprod",
+     "title": "Cost of production",
+     "view": "table",
+     "kind": "costprod",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "askdata",
+     "title": "Ask your data",
+     "view": "dashboard",
+     "kind": "askdata",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "roster",
+   "title": "Staff",
+   "department": "people",
+   "tabs": [
+    {
+     "slug": "roster",
+     "title": "Shed roster",
+     "view": "calendar",
+     "kind": "roster",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "time",
+       "label": "Time",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "hiring",
+     "title": "Hiring",
+     "view": "board",
+     "kind": "hiring",
+     "stages": [
+      "Applied",
+      "Screened",
+      "Interview",
+      "Offer",
+      "Hired"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "docs",
+   "title": "Compliance and documents",
+   "department": "compliance-safety",
+   "tabs": [
+    {
+     "slug": "docs",
+     "title": "Ask your documents",
+     "view": "dashboard",
+     "kind": "docs",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "expiry",
+     "title": "Compliance expiry",
+     "view": "table",
+     "kind": "expiry",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "workflows": [
+  {
+   "id": "all:ask-your-data",
+   "dir": "industries/all/workflows/finance-admin/ask-your-data",
+   "department": "finance-admin",
+   "name": "Ask your data",
+   "status": "docs-only"
+  },
+  {
+   "id": "customer-helpdesk",
+   "dir": "industries/all/workflows/customer-service/customer-helpdesk",
+   "department": "customer-service",
+   "name": "Answer customer questions from the business's own knowledge",
+   "status": "docs-only"
+  },
+  {
+   "id": "documents",
+   "dir": "industries/all/workflows/fulfilment/documents",
+   "department": "fulfilment",
+   "name": "Produce letters, reports and documents from records",
+   "status": "docs-only"
+  },
+  {
+   "id": "stock-ordering",
+   "dir": "industries/all/workflows/fulfilment/stock-ordering",
+   "department": "fulfilment",
+   "name": "Track stock and order from suppliers",
+   "status": "docs-only"
+  },
+  {
+   "id": "numbers-pack",
+   "dir": "industries/all/workflows/finance-admin/numbers-pack",
+   "department": "finance-admin",
+   "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only"
+  },
+  {
+   "id": "hiring",
+   "dir": "industries/all/workflows/people/hiring",
+   "department": "people",
+   "name": "Advertise, screen and onboard staff",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:compliance-checks",
+   "dir": "industries/all/workflows/compliance-safety/compliance-checks",
+   "department": "compliance-safety",
+   "name": "ID, AML and regulatory checks and audits",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:yield",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/yield",
+   "department": "fulfilment",
+   "name": "Yield and waste",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:lead-capture",
+   "dir": "industries/all/workflows/sales/lead-capture",
+   "department": "sales",
+   "name": "Capture leads from ads, forms and chat into the CRM",
+   "status": "docs-only"
+  },
+  {
+   "id": "competitor-watch",
+   "dir": "industries/all/workflows/marketing/competitor-watch",
+   "department": "marketing",
+   "name": "Watch competitors' ads, prices and posts",
+   "status": "docs-only"
+  },
+  {
+   "id": "inbox-triage",
+   "dir": "industries/all/workflows/customer-service/inbox-triage",
+   "department": "customer-service",
+   "name": "Sort the shared inbox and draft replies",
+   "status": "docs-only"
+  },
+  {
+   "id": "bills-expenses",
+   "dir": "industries/all/workflows/finance-admin/bills-expenses",
+   "department": "finance-admin",
+   "name": "Capture bills, receipts and supplier invoices",
+   "status": "docs-only"
+  },
+  {
+   "id": "knowledge-base",
+   "dir": "industries/all/workflows/owner/knowledge-base",
+   "department": "owner",
+   "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:shipdocs",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/shipdocs",
+   "department": "finance-admin",
+   "name": "Export document check",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:tickets",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/tickets",
+   "department": "finance-admin",
+   "name": "Delivery tickets to data",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:carbon-credits",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/carbon-credits",
+   "department": "compliance-safety",
+   "name": "Earn carbon credits from field records",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:environmental-monitoring",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/environmental-monitoring",
+   "department": "compliance-safety",
+   "name": "Schedule environmental monitoring, validate results against limits and report",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:livestock-nvds",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/livestock-nvds",
+   "department": "compliance-safety",
+   "name": "Create livestock National Vendor Declarations (NVDs) and movement records",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:spray",
+   "dir": "industries/agriculture-mining/workflows/compliance-safety/spray",
+   "department": "compliance-safety",
+   "name": "Spray and harvest records",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:packout",
+   "dir": "industries/agriculture-mining/workflows/finance-admin/packout",
+   "department": "finance-admin",
+   "name": "Grower statements",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:crop-records",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/crop-records",
+   "department": "fulfilment",
+   "name": "Track crop, vineyard, grain and livestock records through the season",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:x-costprod",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/x-costprod",
+   "department": "fulfilment",
+   "name": "Cost of production",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:x-paddocks",
+   "dir": "industries/agriculture-mining/workflows/fulfilment/x-paddocks",
+   "department": "fulfilment",
+   "name": "Paddock records",
+   "status": "docs-only"
+  },
+  {
+   "id": "agriculture-mining:market-forecasting",
+   "dir": "industries/agriculture-mining/workflows/sales/market-forecasting",
+   "department": "sales",
+   "name": "Forecast market demand and prices for selling and supply decisions",
+   "status": "docs-only"
+  }
+ ],
+ "planned_workflows": [],
+ "connectors": [
+  {
+   "tool": "Microsoft 365",
+   "platform": "microsoft-365",
+   "status": "spec"
+  },
+  {
+   "tool": "Xero",
+   "platform": "xero",
+   "status": "spec"
+  }
+ ],
+ "missing_connectors": []
+}

@@ -1,0 +1,166 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { toast } from "sonner";
+
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
+import LoadingModal from "./modals/loading-modal";
+import { setLanguage } from "@/actions/user/set-language";
+
+const FormSchema = z.object({
+  language: z.string({
+    message: "Please select a language.",
+  }),
+});
+
+type Props = {
+  userId: string;
+};
+
+export function SetLanguage({ userId }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("LanguageSelector");
+
+  const languages = [
+    { label: t("english"), value: "en" },
+    { label: t("czech"), value: "cz" },
+    { label: t("german"), value: "de" },
+    { label: t("ukrainian"), value: "uk" },
+  ] as const;
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: { language: locale },
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsLoading(true);
+    try {
+      const result = await setLanguage({ userId, language: data.language });
+      if (result.error) {
+        toast.error(result.error);
+        setIsLoading(false);
+        return;
+      }
+      toast.success(t("changedTo", { language: data.language }));
+      router.replace(pathname, { locale: data.language });
+    } catch (e) {
+      toast.error(t("error"));
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <LoadingModal
+        isOpen={isLoading}
+        description={t("loadingModal")}
+      />
+    );
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="hidden lg:block space-y-6"
+      >
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? languages.find(
+                            (language) => language.value === field.value
+                          )?.label
+                        : "Select language"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search language ..." />
+                    <CommandList>
+                      <CommandEmpty>No language found.</CommandEmpty>
+                      <CommandGroup>
+                        {languages.map((language) => (
+                          <CommandItem
+                            value={language.value}
+                            key={language.value}
+                            onSelect={(value) => {
+                              form.setValue("language", value);
+                              onSubmit(form.getValues());
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                language.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {language.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+}

@@ -1,0 +1,56 @@
+{
+  "id": "construction:x-selections",
+  "name": "Client selections",
+  "industry": "construction",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a client's selections (tiles, fittings, colours and other options) into a pack the client chooses from, keeps each choice against its allowance, and chases what is still undecided. Crons read and draft; a person approves every send.",
+  "families": {
+    "by-hand": {
+      "steps": ["allowance-set", "selection-pack-issued", "client-browse", "client-chooses", "record-keeping", "check-against-allowance", "variation-note", "client-sign-off", "order-item", "chase-undecided", "lead-time-check", "install-coordinate"],
+      "covered_by": {
+        "allowance-set": "intake (the owner records the allowance in the register; the agent reads it)",
+        "selection-pack-issued": "draft (the pack email with the form link is drafted; approval sends it)",
+        "client-browse": "gap (the client browses the booklet or portal themselves)",
+        "client-chooses": "intake (form answers land in the register and are read back)",
+        "record-keeping": "intake (the register is the record)",
+        "check-against-allowance": "gap (no mapped operation compares a choice with its allowance)",
+        "variation-note": "gap (no mapped variation or change order)",
+        "client-sign-off": "gap (no mapped sign-off for a selection)",
+        "order-item": "gap (no mapped supplier order from a selection)",
+        "chase-undecided": "follow-up (chase email for each undecided choice; approval sends it)",
+        "lead-time-check": "gap (no lead-time field in the register or any mapped platform)",
+        "install-coordinate": "gap (no mapped delivery or install scheduling for selections)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Read the selections register, which the client's form answers feed, and keep each row's latest status."},
+    {"name": "draft", "schedule": "0 * * * *", "entry": "draft", "summary": "Draft the selection pack email for each row marked Pack ready, then queue its send for approval."},
+    {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue chase emails for undecided choices once the pack has gone and the chase is due (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "google-workspace": ["sheets.spreadsheets.values.get", "gmail.users.drafts.create"]
+  },
+  "live_ops": {
+    "google-workspace": ["gmail.users.drafts.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reading the register, and creating an email draft in Gmail. Sending a draft reaches the client, so it is a live operation and waits for a person.",
+  "capabilities": ["selections.read", "messages.draft", "messages.send"],
+  "adapters": {
+    "google-workspace": {"status": "docs-only", "covers": "selections register in Sheets, selection pack and chase email drafts in Gmail, queued send"}
+  },
+  "gaps": [
+    "Buildxact: the help centre covers every selection step (allowance items, the client portal, options, client requests, variations, sign-off, record keeping), but its kit folder maps only sign-in. No selection, variation or portal operation exists, so no adapter. Its public REST reference is gated behind a subscription key.",
+    "Procore: its help pages do not describe client selections, and the kit has no Procore platform folder, so no adapter.",
+    "ProCalc (allowances in the estimate) and Constructive (client portal): no platform folder in the kit, so the allowance and portal steps are the owner's own tools for now. The register holds the allowance values the owner types in.",
+    "Google Form: the form itself is not mapped. Its answers are read from the linked sheet through the register, so the form must keep writing to the register's columns.",
+    "Client browsing and choosing happen in the client's own booklet or portal. The agent cannot see what the client looked at, only what they chose.",
+    "Allowance comparison, variation or change order, sign-off, supplier ordering, lead times and installation scheduling have no mapped operation on any platform in the evidence. Each is a person's step.",
+    "Judgment steps (answering a client's question from the booklet, deciding whether a request is an extra that needs a variation, choosing the chase tone) belong to the agent skill, not the crons.",
+    "Every adapter is docs-only until a sandbox Google Workspace account proves it. Its platform status is spec, tested offline only.",
+    "A rejected pack is not queued again: a person redoes it by hand."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+ "id": "slack",
+ "name": "Slack",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "slack.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "SLACK_BOT_TOKEN"
+ },
+ "keys": [
+  "SLACK_BOT_TOKEN",
+  "SLACK_USER_TOKEN (for methods that take only a user token)"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.slack.dev/reference/methods.json",
+   "official": "vendor-domain: docs.slack.dev"
+  }
+ ],
+ "gaps": [
+  "Slack: 0 methods added from slackapi/node-slack-sdk by name only (spec repo archived 2024)"
+ ],
+ "counts": {
+  "operations": 355,
+  "read": 40,
+  "write": 315
+ }
+}

@@ -1,0 +1,64 @@
+{
+  "tools": [
+    {
+      "name": "Asana"
+    },
+    {
+      "name": "Bluebeam"
+    },
+    {
+      "name": "Buildertrend"
+    },
+    {
+      "name": "Buildxact"
+    },
+    {
+      "name": "Dropbox"
+    },
+    {
+      "name": "Evolve"
+    },
+    {
+      "name": "Excel"
+    },
+    {
+      "name": "GoHighLevel"
+    },
+    {
+      "name": "Google Ads"
+    },
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "Groundplan"
+    },
+    {
+      "name": "HubSpot"
+    },
+    {
+      "name": "Meta Ads"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Monday.com"
+    },
+    {
+      "name": "Procore"
+    },
+    {
+      "name": "ServiceM8"
+    },
+    {
+      "name": "Simpro"
+    },
+    {
+      "name": "WhatsApp"
+    },
+    {
+      "name": "Xero"
+    }
+  ]
+}

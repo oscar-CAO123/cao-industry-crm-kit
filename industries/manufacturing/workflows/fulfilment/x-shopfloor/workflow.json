@@ -1,0 +1,49 @@
+{
+  "id": "manufacturing:x-shopfloor",
+  "name": "Shop floor",
+  "industry": "manufacturing",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Puts the open builds and the low components on the shop-floor board, and queues the completion of each build the floor marks ready. Crons read and draft; a person approves every completion.",
+  "families": {
+    "all": {
+      "steps": ["order-release", "schedule-jobs", "production-run", "record-keeping", "job-close-and-invoice"],
+      "covered_by": {
+        "order-release": "not yet (see gaps)",
+        "schedule-jobs": "draft (open builds on the board)",
+        "production-run": "approval (completion queued once the floor marks the build ready)",
+        "record-keeping": "draft (board and stock list in the store)",
+        "job-close-and-invoice": "not yet (see gaps)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "schedule", "schedule": "*/30 * * * *", "entry": "schedule", "summary": "Open builds from the platform onto the shop-floor board."},
+    {"name": "stock", "schedule": "15 */6 * * *", "entry": "stock", "summary": "Components below their minimum level, from stock on hand."},
+    {"name": "complete-builds", "schedule": "20 * * * *", "entry": "complete-builds", "summary": "Queue completion of each build the floor has marked ready, for approval."}
+  ],
+  "draft_ops": {
+    "unleashed": ["docs.get_Assemblies", "docs.get_StockOnHand"]
+  },
+  "live_ops": {
+    "unleashed": ["docs.post_Assemblies_assemblyGuid_Complete"]
+  },
+  "draft_ops_note": "Draft operations here are reads only: the board and the stock list are kept in the workflow store and reach nobody outside the business. Completing a build changes stock and the build record, so it is a live operation and waits for a person.",
+  "capabilities": ["jobs.list", "stock.list", "jobs.complete"],
+  "adapters": {
+    "unleashed": {"status": "docs-only", "covers": "open builds, stock on hand, build completion (approval only)"}
+  },
+  "gaps": [
+    "Unleashed is signed in core/sdk (HMAC-SHA256 on each request), so the crons and approvals call it through the gate. It needs UNLEASHED_API_ID, UNLEASHED_API_KEY and UNLEASHED_CLIENT_TYPE in the deploy's secret store. Nothing has run against a live Unleashed account yet.",
+    "Acumatica, Fishbowl and Odoo: docs read, but the kit maps no operations for this job (Odoo's ops file holds one docs page). Setup, in-process checks, final inspection, rework or scrap, time logging and dispatch are not covered by any mapped platform.",
+    "Unleashed list calls send no filters, so each cron reads the first page only (200 records by default). Paging is not built: the mapped operation has no page number. When the platform holds more pages, the store's coverage record says so and the board is marked partial, so a build on a later page is never silently missed.",
+    "POST /Assemblies/{assemblyGuid}/Complete: the kit maps this operation with no body, so none is sent. Confirm on a sandbox account before approving a live completion.",
+    "The client ERP needs to be identified and mapped before it can be connected.",
+    "Order release from a sales order, job costing and invoicing, and sales shipments (dispatch) are not built as crons.",
+    "Judgment steps stay with the floor: setting up a machine, checking a part against a drawing, and deciding on rework or scrap. The agent may summarise the board but does not decide these.",
+    "Minimum stock levels are not in the stock endpoint, so they come from settings.reorder_levels, typed in by the business.",
+    "Docs-only until a sandbox Unleashed account proves the reads and the completion."
+  ]
+}

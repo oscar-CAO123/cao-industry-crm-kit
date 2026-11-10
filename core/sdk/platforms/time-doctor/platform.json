@@ -1,0 +1,46 @@
+{
+ "id": "time-doctor",
+ "name": "Time Doctor",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api2.timedoctor.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "TIMEDOCTOR_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "TIMEDOCTOR_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://webapi.timedoctor.com/doc",
+   "official": "vendor-domain: webapi.timedoctor.com"
+  },
+  {
+   "url": "https://webapi.timedoctor.com/doc/",
+   "official": "vendor-domain: webapi.timedoctor.com"
+  }
+ ],
+ "gaps": [
+  "Rendered only through the guard's headless browser; each operation page was read via its hash route (#/Tag/operationId) so its parameters expand.",
+  "Body field names come from the request example. Each body field's required flag and type are not shown in the example, so they are not recorded.",
+  "Response schemas are not extracted (only status and example shapes exist on the page).",
+  "Plan or account tier needed for API access is not stated on the pages read; access left unverified.",
+  "Pages link to a separate redoc site (timedoctor.redoc.ly), which is not an official domain in this task and was not read.",
+  "Groups read: 21 of 21. All 21 navigation groups appear in the index; 0 operations failed the grounding check and were dropped."
+ ],
+ "counts": {
+  "operations": 177,
+  "read": 77,
+  "write": 100
+ }
+}

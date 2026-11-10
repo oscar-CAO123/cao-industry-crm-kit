@@ -1,0 +1,85 @@
+{
+ "id": "booking-com",
+ "name": "Booking.com",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "demandapi.booking.com",
+  "payments-api.booking.com",
+  "supply-xml.booking.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "BOOKING_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "BOOKING_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/charges-api/charges-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/connections-api/connections-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/contacts-api/contacts-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/facilities-api/facilities-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/historical-reservations-api/historical-reservations-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/market-insights-api/market-insights-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/payments-api/payments-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/property-details-api/property-details-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/property-health-api/property-health-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/reconciliation-api/reconciliation-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/rooms-api/rooms-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/connectivity/docs/openapispecs/valueadds-api/valueadds-api-specification.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  },
+  {
+   "url": "https://developers.booking.com/_bundle/demand/docs/open-api/3.3/demand-api.yaml",
+   "official": "vendor-domain: developers.booking.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 102,
+  "read": 38,
+  "write": 64
+ }
+}

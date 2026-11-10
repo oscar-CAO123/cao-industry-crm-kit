@@ -1,0 +1,53 @@
+{
+ "id": "bullhorn",
+ "name": "Bullhorn",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "rest.bullhornstaffing.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "rest[a-z0-9-]*\\.bullhornstaffing\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "bullhorn"
+ },
+ "keys": [
+  "BULLHORN_CLIENT_ID",
+  "BULLHORN_CLIENT_SECRET",
+  "BULLHORN_USERNAME",
+  "BULLHORN_REFRESH_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/entityref.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/datahubref.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  },
+  {
+   "url": "https://bullhorn.github.io/rest-api-docs/changelog.html",
+   "official": "vendor-domain: bullhorn.github.io"
+  }
+ ],
+ "gaps": [
+  "bullhorn: 32 truncated path-only entries replaced by 58 endpoints the vendor's reference documents in full"
+ ],
+ "counts": {
+  "operations": 116,
+  "read": 36,
+  "write": 80
+ }
+}

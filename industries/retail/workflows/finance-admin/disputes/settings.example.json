@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Store",
+ "square": {"location_id": ""},
+ "stripe": {"enabled": false},
+ "lookback_days": 30,
+ "flag_within_days": 3
+}

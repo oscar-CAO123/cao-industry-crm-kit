@@ -1,0 +1,36 @@
+{
+ "id": "discord",
+ "name": "Discord",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "discord.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "DISCORD_BOT_TOKEN",
+  "prefix": "Bot "
+ },
+ "keys": [
+  "DISCORD_BOT_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json",
+   "official": "vendor-link: https://docs.discord.com/developers/intro links github.com/discord"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 250,
+  "read": 100,
+  "write": 150
+ }
+}

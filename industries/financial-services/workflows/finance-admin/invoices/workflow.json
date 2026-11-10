@@ -1,0 +1,49 @@
+{
+ "id": "financial-services:invoices",
+ "name": "Invoices checked by hand",
+ "industry": "financial-services",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Checks bills and sales invoices in Xero for the basics that catch errors (supplier, due date, total, account codes, source document, possible duplicates), notes the result on each invoice, and queues bill payments and overdue reminders for approval. Crons read and note; a person approves every payment and every email to a customer.",
+ "families": {
+  "service-bills": {
+   "steps": ["check-amounts", "coding", "query-supplier", "approval", "payment-run", "chase-collections", "record-keeping"],
+   "covered_by": {"check-amounts": "check (flags lines that do not add to the subtotal)", "coding": "check (flags lines with no account code)", "query-supplier": "not covered (judgment and phone calls)", "approval": "approval (every payment and reminder waits for a person)", "payment-run": "payments (one queued payment per bill, approved one at a time)", "chase-collections": "chase (next reminder queued for approval)", "record-keeping": "check (a note on each invoice and a source document check)"}
+  },
+  "unclear": {
+   "steps": ["coding", "reconcile"],
+   "covered_by": {"coding": "not covered (bank transaction classing)", "reconcile": "not covered"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "check", "schedule": "*/30 * * * *", "entry": "check", "summary": "Open bills and draft sales invoices are checked and noted in Xero; the results are kept for the other crons."},
+  {"name": "payments", "schedule": "15 * * * *", "entry": "payments", "summary": "Passed bills that fall due within the set number of days are queued for payment, one approval each."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Overdue sales invoices get the next reminder queued, at most one a day (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getInvoices", "accounting.getInvoice", "accounting.getInvoiceAttachments", "accounting.createInvoiceHistory"]
+ },
+ "live_ops": {
+  "xero": ["accounting.createPayment", "accounting.emailInvoice"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of invoices and attachments, and a history note on an invoice inside Xero. A bill payment and an email to a customer are live operations and wait for a person.",
+ "capabilities": ["invoices.list", "payments.list", "documents.list"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "bill and sales invoice reads, attachment check, history notes, bill payments and reminder emails (queued only)"}
+ },
+ "gaps": [
+  "Dext: no operations are mapped in the kit, so bill intake from Dext eInvoices is not covered. Its help pages describe the intake for the business to set up.",
+  "MYOB: two operations are mapped (purchase bill read, supplier payment) but their field names are not confirmed against the official spec, so there is no MYOB adapter.",
+  "Ignition, XPM and Class software are not in the kit's platform list. The job and invoice data those tools hold stays with the bookkeeper.",
+  "Purchase order matching: the mapped Xero invoice schema has no purchase order number field, so matching a bill to its order is a judgment step.",
+  "Supplier queries: a bill has no mapped email operation, so asking a supplier for a statement or document is done by hand or by phone.",
+  "Reminders: Xero's API has no reminder send mapped, so a reminder is the invoice email again, with Xero's own wording.",
+  "Payments are one bill at a time. Xero's batch payment operation is mapped but not used, so each bill keeps its own approval.",
+  "SMSF bank transaction classing and reconciliation (the unclear family) need a bank feed adapter. Not built.",
+  "A reminder a person rejects still counts as sent, so the next reminder is measured from the day it was queued. A reminder the invoice check rejects is queued again for the amount then owed.",
+  "Tax types and GST are not set by this workflow. Confirm the account tax settings with the business before the first payment is approved.",
+  "The payment and reminder calls are unverified against a live Xero demo company. The workflow stays docs-only until one proves them."
+ ]
+}

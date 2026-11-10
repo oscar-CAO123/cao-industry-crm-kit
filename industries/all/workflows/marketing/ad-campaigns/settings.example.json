@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Business",
+ "meta": {
+  "ad_account_id": "act_AD_ACCOUNT_ID",
+  "page_id": "PAGE_ID"
+ },
+ "countries": [
+  "AU"
+ ],
+ "max_daily_budget_minor": 50000,
+ "plan_limit_per_run": 5
+}

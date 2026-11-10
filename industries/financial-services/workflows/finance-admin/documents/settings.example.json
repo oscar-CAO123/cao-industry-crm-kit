@@ -1,0 +1,16 @@
+{
+ "family": "matter-intake",
+ "business_name": "Example Finance",
+ "forms": [
+  {
+   "form_id": "FORM_ID",
+   "label": "Loan application",
+   "fields": [
+    {"question_id": "QUESTION_ID_NAME", "label": "Full name", "required": true},
+    {"question_id": "QUESTION_ID_AMOUNT", "label": "Loan amount", "required": true},
+    {"question_id": "QUESTION_ID_NOTES", "label": "Notes", "required": false}
+   ]
+  }
+ ],
+ "chase": {"after_days": [3, 7]}
+}

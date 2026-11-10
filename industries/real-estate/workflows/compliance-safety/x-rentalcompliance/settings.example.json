@@ -1,0 +1,6 @@
+{
+  "business_name": "Example Property Management",
+  "user_id": 1,
+  "stale_days": 3,
+  "task_start_days": 1
+}

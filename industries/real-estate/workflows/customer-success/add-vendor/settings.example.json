@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Realty",
+ "vendors": [
+  {"property_id": 101, "name": "Pat Example", "email": "pat@example.com.au"}
+ ],
+ "vaultre": {"open_home_days": 7},
+ "microsoft_365": {"mailbox": "listings@example.com.au"}
+}

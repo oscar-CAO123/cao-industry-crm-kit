@@ -1,0 +1,78 @@
+{
+ "id": "real-estate:pipeline",
+ "name": "Prospects found, nothing tracked",
+ "industry": "real-estate",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps every prospect from the agency's Agentbox contact list in one tracked pipeline, and lists the untracked prospects due for follow-up. Crons read and keep the record in the workflow's store; nothing is sent, booked or written back to Agentbox.",
+ "families": {
+  "pipeline": {
+   "steps": [
+    "lead-capture",
+    "record-keeping",
+    "stage-update",
+    "follow-up-contact",
+    "reminders-tasks"
+   ],
+   "covered_by": {
+    "lead-capture": "pipeline-sync (reads the Agentbox contact list)",
+    "record-keeping": "pipeline-sync and prospect-review (prospect record kept in the store)",
+    "stage-update": "skill (the agent sets each prospect's stage in the store)",
+    "follow-up-contact": "skill (follow-up is worked by hand; no mapped send)",
+    "reminders-tasks": "prospect-review (lists prospects due for follow-up; no task is created)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "pipeline-sync",
+   "schedule": "15 * * * *",
+   "entry": "pipelineSync",
+   "summary": "Read the first page of Agentbox contacts and add any new contact to the pipeline store as untracked."
+  },
+  {
+   "name": "prospect-review",
+   "schedule": "0 21 * * *",
+   "entry": "prospectReview",
+   "summary": "Read the detail of up to 25 untracked prospects not yet read, and list the untracked prospects due for follow-up (21:00 UTC is 7 or 8 am in eastern Australia)."
+  }
+ ],
+ "draft_ops": {
+  "agentbox": [
+   "get:/contacts",
+   "get:/contact/{id}"
+  ],
+  "rex": [
+   "contacts.search",
+   "contacts.read"
+  ]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Draft operations are reads of the Agentbox contact list and of one contact. The pipeline record lives in the workflow store, which reaches nobody outside the business. Nothing here emails, texts, creates a task, or changes a contact in Agentbox.",
+ "capabilities": [
+  "contacts.list",
+  "contacts.read"
+ ],
+ "adapters": {
+  "agentbox": {
+   "status": "docs-only",
+   "covers": "contact list (first page) and one contact read; fields forename, surname, email, mobilePhone and modified from the Reapit Foundations docs example"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "contact list (paged to an empty page) and one contact read; fields name, email_address, phone_number and system_modtime from the Rex docs example"
+  }
+ },
+ "gaps": [
+  "Rex: a business sets platform to rex in settings. Contacts come from contacts.search (paged by offset to an empty page, refused whole past 50 pages) and contacts.read, both reads. Rex's leads service is not used: its search example on the docs page is an empty list, so its row fields are not known. Not confirmed on a live account: the maximum limit (a list shorter than the reported total is refused), stable paging without order_by (rows are de-duplicated by id), and that phone_number is a mobile (Rex has one phone_number field in the example, so the prospect's mobile may be a landline). Nothing is written to Rex; a stage still lives in the workflow store. Offset paging cannot see a row added or archived while a read is under way (one run may miss or repeat a row; the next run corrects it), and a reply with no total skips the short-list check.",
+  "Paging: the kit's get:/contacts operation maps no query parameters, so only the first page (25 contacts by default) is read. Mapping pageSize and pageNumber needs an ops file change, which this workflow does not make.",
+  "Stages, tasks and follow-ups: the Agentbox docs describe appraisal follow-up tasks inside the product but expose no API operation for stages, tasks or sending. The stage lives in the workflow store, and follow-up is judgment in SKILL.md.",
+  "Live operations: none. No Agentbox operation with confirmed fields sends, books or changes a contact, so nothing is queued for approval.",
+  "Field names: taken from the Reapit Foundations docs example for GET /contact/{id}. The OpenAPI schema is not in endpoint-map/raw/agentbox, so the contact list fields are confirmed only as the _embedded list.",
+  "Tools owners use: GoHighLevel, WhatsApp and Trello are the most-named tools in the wider mining file. None is mapped as an adapter for this job, since the platform evidence did not check them. GoHighLevel is the strongest next adapter.",
+  "Store visibility: the pipeline record lives in the workflow store. No view of it is built in the CRM shell here.",
+  "Live verification: every read is unverified against a live Agentbox account (the platform is docs-read)."
+ ]
+}

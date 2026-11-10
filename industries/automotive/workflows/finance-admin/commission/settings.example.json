@@ -1,0 +1,13 @@
+{
+ "business_name": "Example Motors",
+ "payroll_calendar_id": "00000000-0000-4000-8000-000000000001",
+ "commission_earnings_rate_id": "00000000-0000-4000-8000-000000000002",
+ "tiers": [
+  {"from": 0, "rate": 0.03},
+  {"from": 50000, "rate": 0.05}
+ ],
+ "reps": [
+  {"name": "Sam Lee", "employee_id": "00000000-0000-4000-8000-000000000003", "match": "SL-"},
+  {"name": "Priya Nair", "employee_id": "00000000-0000-4000-8000-000000000004", "match": "PN-"}
+ ]
+}

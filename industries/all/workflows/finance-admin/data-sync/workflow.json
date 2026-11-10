@@ -1,0 +1,53 @@
+{
+ "id": "data-sync",
+ "name": "Keep the business's systems in sync so data is entered once",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the business's systems in sync so data is entered once: Xero contacts are mirrored into HubSpot companies, a HubSpot company with no Xero contact gets one, and each supplier bill that arrives as a draft in Xero is queued for a person to authorise. Crons read and draft only; nothing is paid, sent or changed for a customer without approval.",
+ "families": {
+  "all": {
+   "steps": ["entry-first-system", "re-enter-elsewhere", "validation-check", "approval-hand-off", "reconcile", "reporting-pull", "automation-setup", "copy-export-import", "other"],
+   "covered_by": {
+    "entry-first-system": "gap (where data is first typed: email, forms, spreadsheets, paper dockets; no intake adapter here)",
+    "re-enter-elsewhere": "draft (Xero contacts mirrored into HubSpot; HubSpot companies matched or created in Xero)",
+    "validation-check": "skill (the owner checks names, numbers and amounts; no mapped check)",
+    "approval-hand-off": "approval (a person authorises each supplier bill queued from Xero drafts)",
+    "reconcile": "gap (Xero batch payments are mapped as reads, not read in this version)",
+    "reporting-pull": "gap (HubSpot exports are mapped; not built here)",
+    "automation-setup": "skill (the owner connects the apps; this workflow does not build connections)",
+    "copy-export-import": "gap (no CSV or spreadsheet import adapter)",
+    "other": "gap"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "contacts", "schedule": "*/30 * * * *", "entry": "contacts", "summary": "Mirror Xero contacts changed since the last run into HubSpot companies. Internal draft."},
+  {"name": "new-companies", "schedule": "15 * * * *", "entry": "new-companies", "summary": "Give each HubSpot company with no Xero contact one in Xero, reusing an exact name match, then link it back. Internal draft."},
+  {"name": "bills", "schedule": "35 * * * *", "entry": "bills", "summary": "Queue each supplier bill still in DRAFT in Xero for a person to authorise. Nothing is paid here."}
+ ],
+ "draft_ops": {
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.getInvoices"],
+  "hubspot": ["crm-companies-3.post-/crm/v3/objects/companies/search_doSearch", "crm-companies-3.post-/crm/v3/objects/companies/batch/upsert_upsert"]
+ },
+ "live_ops": {
+  "xero": ["accounting.updateInvoice"]
+ },
+ "draft_ops_note": "Reads, plus contacts and companies written into the two systems the business uses internally. Authorising a supplier bill moves it toward payment, so it is live: a cron only queues it, and it runs when a person approves it.",
+ "capabilities": ["contacts.read", "companies.write", "bills.read", "bills.authorise"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "contacts read and create, supplier bill read, bill authorise queued for approval"},
+  "hubspot": {"status": "docs-only", "covers": "company search and batch upsert, matched on a Xero ContactID property"}
+ },
+ "gaps": [
+  "Make: 11 operations are mapped, 8 of them SDK-only with inputs unmapped and not in the published spec, so no adapter is built. Make scenarios are the usual bridge to the other apps; they are not built here.",
+  "Microsoft 365, ServiceM8, Simpro, Deputy, Procore, Podio, MYOB, FlowLogic and the other systems the calls name have no platform evidence for this workflow in the pages read, so no adapter is built for them.",
+  "Intake: supplier bills must already be drafts in Xero (through Xero Connect partners or the Xero API) before the bills cron can queue them. The workflow does not read PDFs, email or paper dockets.",
+  "HubSpot needs a unique company property named by settings.hubspot.idProperty (the example uses xero_contact_id). This workflow does not create it; the owner creates it in HubSpot before the first run.",
+  "One direction only: Xero is the source for contact names. An edit made in HubSpot does not change Xero.",
+  "Duplicate checks beyond an exact name match, validation rules, error queues and payment reconciliation are not covered.",
+  "Every adapter is docs-only until a Xero demo company and a HubSpot test portal prove the request shapes on a live account."
+ ]
+}

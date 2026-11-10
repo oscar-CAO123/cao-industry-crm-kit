@@ -1,0 +1,45 @@
+{
+ "id": "agriculture-mining:carbon-credits",
+ "name": "Earn carbon credits from field records",
+ "industry": "agriculture-mining",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Earns carbon credits from field records: it reads a farm's fields and records in AgriWebb, keeps them as evidence, and drafts a checklist of what a carbon project still needs. Crons read and draft only. Registering, claiming, selling and payment are not mapped to any platform in the kit, so they stay with the person.",
+ "steps": {
+  "record-capture": {"covered_by": "snapshot", "note": "farm fields and records read from AgriWebb"},
+  "record-keeping": {"covered_by": "snapshot", "note": "farm records kept in AgriWebb"},
+  "evidence-gather": {"covered_by": "checklist", "note": "drafts what is on file, nothing is collected from outside"},
+  "eligibility-check": {"covered_by": "checklist", "note": "drafts what is on file; the eligibility decision is the person's"},
+  "baseline-measure": {"covered_by": "gap", "note": "AgriWebb's Measurement Tool is not confirmed to set a carbon baseline"},
+  "verification": {"covered_by": "gap", "note": "no mapped operation"},
+  "project-register": {"covered_by": "gap", "note": "no mapped operation"},
+  "submit-claim": {"covered_by": "gap", "note": "no mapped operation"},
+  "credits-issued": {"covered_by": "gap", "note": "no mapped operation"},
+  "credit-sale": {"covered_by": "gap", "note": "no mapped operation"},
+  "payment-received": {"covered_by": "gap", "note": "no mapped operation"}
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "snapshot", "schedule": "0 5 * * *", "entry": "snapshot", "summary": "Reads each configured farm's fields and records from AgriWebb and keeps them as evidence."},
+  {"name": "checklist", "schedule": "0 6 * * 1", "entry": "checklist", "summary": "Drafts the carbon checklist from the latest snapshot: what is on file and what is missing. Reads the store only."}
+ ],
+ "draft_ops": {
+  "agriwebb": ["query.farms", "query.fields", "query.records"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Every operation here is a read. AgriWebb's writes (adding records, fields, level readings) stay out of the workflow until a use for them is confirmed.",
+ "capabilities": ["farms.list", "fields.list", "records.list"],
+ "adapters": {
+  "agriwebb": {"status": "docs-only", "covers": "farms, fields and farm records (read only)"}
+ },
+ "gaps": [
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+  "Agworld and CropX are in the platform evidence but have no kit platform folder, so no operations exist for them. Their soil sampling and lab results need mapping before they can be used.",
+  "Verification, project registration, claims, credits issued, credit sale and payment have no mapped operation on AgriWebb or any other kit platform. They stay with the person.",
+  "AgriWebb sign-in is a bearer token only (AGRIWEBB_ACCESS_TOKEN); the token exchange is not built. The platform is spec status and has not run against a live account.",
+  "The fields read filters the first 500 fields on the server side and then by farm in the adapter. A farm with more fields than that needs paging, which the kit does not provide for this operation.",
+  "Records are counted up to 500 per farm. The checklist shows that cap in its detail text.",
+  "No live operation exists, so an approval can never be queued from this workflow. Any carbon submission would need a runtime change or a new platform mapping first."
+ ]
+}

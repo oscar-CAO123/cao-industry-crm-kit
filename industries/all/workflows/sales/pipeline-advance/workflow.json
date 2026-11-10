@@ -1,0 +1,98 @@
+{
+  "id": "pipeline-advance",
+  "name": "Move deals along the pipeline from what actually happened",
+  "industry": "all",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Moves open deals along the pipeline from what actually happened, not from what someone meant to do. A daily scan reads the open deals and drafts a register of deals with no recorded change for the set number of days. Each stage move, recorded from the deal's notes and activity, is queued for approval, and a person approves it before the CRM changes. Nothing moves in the CRM until a person approves it.",
+  "families": {
+    "pipeline-advance": {
+      "steps": [
+        "signal-received",
+        "decide-move",
+        "stage-gate-check",
+        "update-stage",
+        "set-next-action",
+        "stale-deal-review",
+        "close-won-or-lost",
+        "hand-to-delivery",
+        "record-keeping",
+        "other"
+      ],
+      "covered_by": {
+        "signal-received": "agent judgment on the deal's notes and activity (see SKILL.md); the scan records each deal's last change",
+        "decide-move": "agent judgment, recorded as a move; queue turns it into an approval",
+        "stage-gate-check": "not built (see gaps)",
+        "update-stage": "queued stage change, approved by a person",
+        "set-next-action": "not built (task creation is not a mapped draft operation)",
+        "stale-deal-review": "scan (register of open deals with no change for the set number of days)",
+        "close-won-or-lost": "person (won or lost stays with the owner)",
+        "hand-to-delivery": "not built (see gaps)",
+        "record-keeping": "register and moves in the workflow store; approval history in the CRM shell",
+        "other": "person"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {
+      "name": "scan",
+      "schedule": "0 20 * * *",
+      "entry": "scan",
+      "summary": "Daily (20:00 UTC, 6 or 7 am in eastern Australia): reads the open deals in the pipeline and drafts a register of deals with no recorded change for the set number of days. Changes nothing in the CRM."
+    },
+    {
+      "name": "queue",
+      "schedule": "0 21 * * *",
+      "entry": "queue",
+      "summary": "Daily (21:00 UTC): re-reads each pending stage move, checks it still goes forward along the pipeline, and queues it for approval. A stage change runs only when a person approves it."
+    }
+  ],
+  "draft_ops": {
+    "gohighlevel": [
+      "opportunities.search-opportunity",
+      "opportunities.get-opportunity"
+    ],
+    "pipedrive": [
+      "openapi-v2.getDeals",
+      "openapi-v2.getDeal"
+    ]
+  },
+  "live_ops": {
+    "gohighlevel": [
+      "opportunities.update-opportunity"
+    ],
+    "pipedrive": [
+      "openapi-v2.updateDeal"
+    ]
+  },
+  "draft_ops_note": "Draft operations here are reads only. The register and the moves live in the workflow store, so a scan writes nothing to the CRM. A stage change moves a live deal, so it is a live operation that waits for a person.",
+  "capabilities": [
+    "deals.list",
+    "deals.get",
+    "deals.move-stage"
+  ],
+  "adapters": {
+    "gohighlevel": {
+      "status": "docs-only",
+      "covers": "open opportunities in one pipeline: the stalled register, and stage moves queued for approval"
+    },
+    "pipedrive": {
+      "status": "docs-only",
+      "covers": "open deals in one pipeline: the stalled register, and stage moves queued for approval"
+    }
+  },
+  "gaps": [
+    "Nothing records a stage-move decision yet. The workflow CLI's propose command only takes quote lines, and core/ is not changed by this build. Until a decide command or a CRM shell form writes the moves store, the queue cron has nothing to queue.",
+    "The judgment that moves a deal is an agent step in SKILL.md. No mapped operation reads call transcripts or emails tied to a deal on either platform, so the agent reads them by hand or through the CRM.",
+    "Zoho CRM: its deal endpoints are not mapped (only link-email operations are), so there is no adapter.",
+    "Stage gates (for example a deposit paid before the job starts) are not built. The platforms' If/Else steps cannot express a required field that blocks a stage change.",
+    "Set next action (creating a task or activity) is not built: task creation is not a mapped draft operation on GoHighLevel, and Pipedrive activity creation is not wired here.",
+    "Hand-to-delivery (turning a won deal into a job or roster) is not built; it belongs to the fulfilment platform.",
+    "Pipedrive's last change is the deal's update or stage-change time. An unrelated field edit counts as a change, so a stalled deal can look fresh.",
+    "GoHighLevel's last action date is the platform's own field. Whether it moves on every call or email needs a check on a real account.",
+    "The stage order is typed in settings. Pipedrive's stage list (order_nr) is mapped but not read, so a reorder in the CRM is not picked up.",
+    "Both adapters are offline-tested only, with a fake network. Neither is proven against a real account."
+  ]
+}

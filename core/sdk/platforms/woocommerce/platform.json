@@ -1,0 +1,64 @@
+{
+ "id": "woocommerce",
+ "name": "WooCommerce",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": true,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "site": {
+   "env": "WOOCOMMERCE_SITE",
+   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "envOnly": true,
+   "example": "shop.example.org"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "WOOCOMMERCE_CONSUMER_KEY",
+  "pass": "WOOCOMMERCE_CONSUMER_SECRET"
+ },
+ "keys": [
+  "WOOCOMMERCE_CONSUMER_KEY",
+  "WOOCOMMERCE_CONSUMER_SECRET",
+  "WOOCOMMERCE_SITE"
+ ],
+ "sources": [
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/",
+   "official": "vendor-domain: woocommerce.github.io"
+  },
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/wp-api-v2.html",
+   "official": "vendor-domain: woocommerce.github.io"
+  },
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/wp-api-v1.html",
+   "official": "vendor-domain: woocommerce.github.io"
+  },
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/v3.html",
+   "official": "vendor-domain: woocommerce.github.io"
+  },
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/v2.html",
+   "official": "vendor-domain: woocommerce.github.io"
+  },
+  {
+   "url": "https://woocommerce.github.io/woocommerce-rest-api-docs/v1.html",
+   "official": "vendor-domain: woocommerce.github.io"
+  }
+ ],
+ "gaps": [
+  "woocommerce: mapped from the current REST API reference (wc/v3) only; the legacy references (wc/v1, wc/v2, legacy wc-api v1 to v3) are not mapped"
+ ],
+ "counts": {
+  "operations": 140,
+  "read": 67,
+  "write": 73
+ }
+}

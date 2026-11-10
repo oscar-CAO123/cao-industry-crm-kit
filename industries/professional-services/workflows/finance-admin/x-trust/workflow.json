@@ -1,0 +1,39 @@
+{
+  "id": "professional-services:x-trust",
+  "name": "Trust accounting",
+  "industry": "professional-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Trust accounting: reads trust balances and receipts, and queues disbursement requisitions for approval. Crons read and flag; a person approves every payment out of trust.",
+  "families": {},
+  "steps": ["money-received", "allocate-to-matter", "trust-ledger-entry", "bank-matching", "disbursement-request", "disbursement-payment", "transfer-to-office", "monthly-reconciliation", "principal-sign-off", "client-statement", "audit-and-reporting", "record-keeping", "other"],
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "balances", "schedule": "30 21 * * *", "entry": "balances", "summary": "Read matter balances on each trust account and flag any matter below the floor (21:30 UTC is 7 or 8 am in eastern Australia)."},
+    {"name": "receipts", "schedule": "*/30 * * * *", "entry": "receipts", "summary": "Read trust transactions and flag any new one with no matter allocated."},
+    {"name": "disbursements", "schedule": "*/15 * * * *", "entry": "disbursements", "summary": "Check each recorded disbursement request against the matter's trust balance, then queue a requisition for approval."}
+  ],
+  "draft_ops": {
+    "smokeball": ["GetBankAccountMatterBalances", "GetTransactions"]
+  },
+  "live_ops": {
+    "smokeball": ["CreateRequisitionAsync"]
+  },
+  "draft_ops_note": "Draft operations are reads only. A requisition moves trust money, so it is a live operation and only ever queued for a person to approve. Nothing in this workflow posts a trust transaction.",
+  "capabilities": ["trust.balances.read", "trust.transactions.read", "trust.disbursement.request"],
+  "adapters": {
+    "smokeball": {"status": "docs-only", "covers": "matter balances, trust transactions, disbursement requisitions (queued for approval)"}
+  },
+  "gaps": [
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+    "Xero and MYOB: the docs read describe no trust account, matter allocation or sign-off, so no adapter is built. Their help centres need a browser read before any mapping.",
+    "Leap, Actionstep: no platform docs were read for this workflow, so they are not mapped.",
+    "Smokeball: the spec types the transactions list response as a single item. The adapter accepts an array or a value collection, and a live account must confirm the shape.",
+    "Smokeball: the matter balance read takes one page of 200. A trust account with more matters needs paging, which is not built.",
+    "Smokeball: the requisition approver defaults to the firm's default approver unless settings set one. Confirm the approval routing in a live account.",
+    "Disbursement requests have no intake route yet. The disbursements cron reads requests a person records in the workflow store, and the CRM shell does not write them yet.",
+    "Money in, allocation, trust ledger entries, bank matching, transfers to office, principal sign-off and client statements are not automated. They stay with the practice's own process.",
+    "Every adapter is docs-only until a Smokeball sandbox or trial account proves it."
+  ]
+}

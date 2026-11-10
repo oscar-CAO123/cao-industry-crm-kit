@@ -1,0 +1,8 @@
+{
+ "family": "class-timetable",
+ "business_name": "Example Studio",
+ "booking": "bookeo",
+ "lookahead_days": 14,
+ "fill_target_percent": 50,
+ "product_ids": ["PRODUCT_ID_EXAMPLE"]
+}

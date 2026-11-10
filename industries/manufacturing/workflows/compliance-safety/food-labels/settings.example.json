@@ -1,0 +1,10 @@
+{
+  "business_name": "Example Foods",
+  "airtable": {
+    "base_id": "appYOUR_BASE_ID",
+    "products_table": "tblPRODUCTS_TABLE",
+    "recipe_table": "tblRECIPE_TABLE",
+    "ingredients_table": "tblINGREDIENTS_TABLE",
+    "drafts_table": "tblDRAFTS_TABLE"
+  }
+}

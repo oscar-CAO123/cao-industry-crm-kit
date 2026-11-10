@@ -1,0 +1,380 @@
+{
+ "id": "gohighlevel",
+ "name": "GoHighLevel",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "services.leadconnectorhq.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "GHL_ACCESS_TOKEN",
+  "extraHeaders": {
+   "Version": "=2021-07-28"
+  }
+ },
+ "keys": [
+  "GHL_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://codeload.github.com/GoHighLevel/highlevel-api-docs/tar.gz/refs/heads/main",
+   "official": "github-verified: org GoHighLevel is_verified, website gohighlevel.com"
+  },
+  {
+   "url": "https://marketplace.gohighlevel.com/docs/llms/v3/llms.txt",
+   "official": "vendor-domain: marketplace.gohighlevel.com"
+  },
+  {
+   "url": "https://marketplace.gohighlevel.com/docs/llms/2021-07-28/llms.txt",
+   "official": "vendor-domain: marketplace.gohighlevel.com"
+  }
+ ],
+ "gaps": [
+  "spec/v3__common__common-schemas.json: format not recognised",
+  "gohighlevel: added from the official docs index, inputs not mapped: {'v3': 217, '2021-07-28': 194}"
+ ],
+ "counts": {
+  "operations": 1614,
+  "read": 636,
+  "write": 978
+ }
+}

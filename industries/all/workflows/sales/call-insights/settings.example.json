@@ -1,0 +1,4 @@
+{
+ "match_crm": "hubspot",
+ "max_calls_per_run": 20
+}

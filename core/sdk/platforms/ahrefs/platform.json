@@ -1,0 +1,34 @@
+{
+ "id": "ahrefs",
+ "name": "Ahrefs",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.ahrefs.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "AHREFS_API_KEY"
+ },
+ "keys": [
+  "AHREFS_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.ahrefs.com/openapi.json",
+   "official": "vendor-domain: docs.ahrefs.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 160,
+  "read": 121,
+  "write": 39
+ }
+}

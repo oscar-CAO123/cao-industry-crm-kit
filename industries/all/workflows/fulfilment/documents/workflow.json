@@ -1,0 +1,46 @@
+{
+ "id": "documents",
+ "name": "Produce letters, reports and documents from records",
+ "industry": "all",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Produces letters, reports and documents from records: each record marked ready is copied from its Google Doc template, filled from the record, checked for unfilled fields and logged. The client gets the document only after a person approves the share. Crons read and draft; a person approves every share.",
+ "families": {
+  "all": {
+   "steps": ["request-arrives", "pick-template", "pull-data", "write-or-fill", "check", "approve", "send-or-print", "file", "record-keeping"],
+   "covered_by": {"request-arrives": "intake (a record marked ready in the records tab)", "pick-template": "draft (one template per kind of document)", "pull-data": "intake (the record's columns become the fields)", "write-or-fill": "draft (copy of the template with the fields filled in)", "check": "queue (open comments hold the share; unfilled fields go to a person)", "approve": "approval in the CRM shell", "send-or-print": "approval (shares the Doc; Google emails the client a link)", "file": "draft (the copy is made in the output folder)", "record-keeping": "draft (one row per document in the log tab)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New records marked ready in the records tab."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Copy the template for each new record, fill it, check for unfilled fields, log the row."},
+  {"name": "queue", "schedule": "*/30 * * * *", "entry": "queue", "summary": "Hold drafts with open comments or no client email; queue the share to the client for approval."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["sheets.spreadsheets.values.get", "sheets.spreadsheets.values.append", "drive.files.copy", "docs.documents.batchUpdate", "docs.documents.get", "drive.comments.list"]
+ },
+ "live_ops": {
+  "google-workspace": ["drive.permissions.create"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the records tab and the draft, a copy of a template in the output folder, text filled into that copy, a row in the document log. Sharing a Doc with a client is a live operation and waits for a person.",
+ "capabilities": ["records.list", "documents.draft", "documents.share"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "records tab (read), Doc copy from a template, plain-text fill, comment check, document log row, share to the client after approval"}
+ },
+ "gaps": [
+  "Microsoft 365 (Word, Excel, OneDrive, Outlook): no adapter. The platform evidence maps no operations for it, so templates and shares do not run there yet.",
+  "Record sources other than a Google Sheet (Simpro, Xero, Monday.com, Style Arcade, ShiftCare and similar): not mapped here. Ready rows must be put into the records tab first.",
+  "PandaDoc: its document operations are mapped in the kit, but the platform evidence has no support rows for this job, so no adapter is built. Worth a go-ahead before building.",
+  "Canva (named for template picking): not mapped as a document platform here.",
+  "Reports that need judgment (progress reports from quoting ratios, financial commentary, letters that answer a specific question) are agent-skill work. The cron only fills named fields from the record.",
+  "Templates are plain Google Docs with {{Header}} placeholders. Tables, images and headers or footers are not filled; a placeholder left in them is not caught.",
+  "Drive approvals (drive.approvals.start and related) exist in the ops file but starting one emails the approvers, so it would be a live operation. Not built.",
+  "Sharing sends a link, not a PDF attachment. Export to PDF and emailing it with the document are not built.",
+  "The status of each document is kept in the workflow store and the log tab, not written back to the records tab.",
+  "Comments are checked when the share is queued. A comment added after the approval is queued is not seen before the person approves it.",
+  "Signatures (eSignature on a Doc or PDF) are not built.",
+  "The google-workspace adapter is tested offline only, against a fake network. It has not been run against a live account."
+ ]
+}

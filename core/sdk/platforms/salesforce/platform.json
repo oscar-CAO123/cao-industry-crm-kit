@@ -1,0 +1,42 @@
+{
+ "id": "salesforce",
+ "name": "Salesforce (REST API)",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(--[a-z0-9]+)?)\\.my\\.salesforce\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "mydomain": {
+   "env": "SALESFORCE_MY_DOMAIN",
+   "pattern": "[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(--[a-z0-9]+)?",
+   "envOnly": true
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "SALESFORCE_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "SALESFORCE_ACCESS_TOKEN",
+  "SALESFORCE_MY_DOMAIN"
+ ],
+ "sources": [],
+ "gaps": [
+  "Core REST API resources only (the REST API Developer Guide's resource pages); Connect, Analytics, Tooling, Bulk and Metadata APIs are separate guides, not read",
+  "Request bodies are free-form sObject JSON and are not itemised",
+  "Pages with no URI line are overview pages for the per-method pages and add no operations: resources-actions-invocable-get, resources-actions-invocable-head, resources-actions-invocable, resources-appmenu-mobile-web, resources-appmenu, resources-composite-composite, resources-composite-graph-composite-subrequest, resources-composite-graph-introduction, resources-composite-sobjects-collections, resources-consent, resources-embeddedserviceconfigdescribe, resources-knowledge-support-artdetails, resources-knowledge-support-artlist, resources-knowledge-support-dcdetail, resources-knowledge-support-dcgroups, resources-ls-intro, resources-process-approvals, resources-process-rule-object, resources-process-rules-object, resources-process-rules, resources-quickactions, resources-search-parameterized, resources-sobject-approvallayouts, resources-sobject-basic-info, resources-sobject-compactlayouts, resources-sobject-layouts, resources-sobject-quickactions, resources-sobject-relationships, resources-sobject-retrieve, resources-sobject-self-service-user-password, resources-sobject-upsert, resources-sobject-user-password, resources-survey-translation, resources-tabs",
+  "Core REST API resources only; Connect, Analytics, Tooling, Bulk and Metadata APIs not mapped"
+ ],
+ "counts": {
+  "operations": 88,
+  "read": 54,
+  "write": 34
+ }
+}

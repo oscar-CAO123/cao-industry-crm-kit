@@ -1,0 +1,34 @@
+{
+ "id": "canva",
+ "name": "Canva Connect",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.canva.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "CANVA_ACCESS_TOKEN"
+ },
+ "keys": [
+  "CANVA_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://www.canva.dev/sources/connect/api/latest/api.yml",
+   "official": "vendor-domain: www.canva.dev"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 67,
+  "read": 36,
+  "write": 31
+ }
+}

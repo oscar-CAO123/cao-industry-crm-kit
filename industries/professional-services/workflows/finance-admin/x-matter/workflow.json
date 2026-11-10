@@ -1,0 +1,53 @@
+{
+  "id": "professional-services:x-matter",
+  "name": "Email to matter",
+  "industry": "professional-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Takes a client email to the right matter in Smokeball: matches the sender to an open matter (or opens a lead for an unknown sender when the firm allows it), records a note and a follow-up task, and queues any reply to the client's portal for approval. Crons read and draft; a person approves every message that reaches a client.",
+  "families": {
+    "ai-assistant": {
+      "steps": ["email-received", "triage", "reply-client"],
+      "covered_by": {"email-received": "intake (sender matched to a matter)", "triage": "intake (one open matter) or a person", "reply-client": "reply (queued portal message after a person writes it)"}
+    },
+    "other-tool": {
+      "steps": ["other", "new-matter-open"],
+      "covered_by": {"new-matter-open": "intake (lead matter for an unknown sender, when lead_matter_type_id is set)", "other": "person"}
+    }
+  },
+  "steps": ["email-received", "triage", "new-matter-open", "reply-client", "other"],
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Match each new email's sender to an open matter, or open a lead matter when the firm allows it. Unclear senders wait for a person."},
+    {"name": "file", "schedule": "*/15 * * * *", "entry": "file", "summary": "Read the matter's recent notes for context, then record a note of the email and a follow-up task on the matter."},
+    {"name": "reply", "schedule": "*/30 * * * *", "entry": "reply", "summary": "Queue each written reply as a Smokeball portal message to the client, for a person to approve."}
+  ],
+  "draft_ops": {
+    "smokeball": ["GetContacts", "GetMatters", "GetMemos", "CreateMatter", "CreateMemo", "CreateTask"]
+  },
+  "live_ops": {
+    "smokeball": ["SendPortalMessageAsync"]
+  },
+  "draft_ops_note": "Draft operations are reads, and writes that reach nobody outside the firm: a lead matter that a person has not yet opened, a note on a matter, a follow-up task. The one message to a client, a portal message, is a live operation and is only ever queued for a person to approve.",
+  "capabilities": ["contacts.list", "matters.list", "tasks.create", "messages.draft"],
+  "adapters": {
+    "smokeball": {"status": "docs-only", "covers": "sender lookup, open matters, lead matter, matter notes and recent notes, follow-up task, portal reply (queued for approval)"}
+  },
+  "gaps": [
+    "No inbox reader: Smokeball's API does not read Outlook. Emails arrive through the Smokeball Outlook add-in or a person, who records them in the workflow store (collection emails). A Microsoft 365 mail reader is needed before intake runs by itself.",
+    "The email itself (body and attachments) is not filed into the matter's documents. The Outlook add-in does that. AddFile is mapped but creates a file record without the content, so it is not used.",
+    "Replies go to the client's Smokeball portal only. Smokeball's API has no email send, so a client without portal access gets no reply from this workflow.",
+    "Writing the reply is judgment. The agent skill writes it after reading the stored notes for the matter, and never sends it.",
+    "Triage is partial: the add-in suggests matters, but its suggestions are not in the API. This workflow matches only by sender address and only when there is exactly one open matter.",
+    "Sender matching relies on GetContacts with the email address as Search. A live account must confirm that Search matches email addresses and that the contact response returns them. A contact is matched only when its own email field equals the sender, and the spec does not type that field: until a live account shows its name, no contact matches and every sender is treated as unknown (fails closed).",
+    "Cron logs: the runtime writes each queued approval's summary, which names the sender address, to the cron log. Keeping the address out of logs needs a change in core/workflows/runtime.ts (log the approval id only). The draft-side summaries already carry email and matter ids only.",
+    "Creating a lead for a new sender needs lead_matter_type_id. A lead saved with no client attached is not confirmed. New contacts are not created here.",
+    "A crash between creating a lead matter and saving its id can repeat the lead. Check the matter list after such a crash.",
+    "Conflict checks: the Smokeball pages describe none, and no operation is mapped. This stays with the firm.",
+    "Deadlines and court dates: no calendar event is created here. The follow-up task is the only diary entry.",
+    "Actionstep: its docs were read but the kit has no Actionstep operations, so it is not mapped. LEAP has no kit platform and no docs were read for it.",
+    "Smokeball is spec-only: the operations come from the vendor OpenAPI file and are tested offline. Every adapter stays docs-only until a Smokeball sandbox or trial account proves it.",
+    "Capability keys: core/capabilities.json has no key for creating a matter or a memo, so those writes are described here only."
+  ]
+}

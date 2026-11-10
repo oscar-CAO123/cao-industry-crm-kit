@@ -1,0 +1,36 @@
+{
+ "id": "transport:fleet",
+ "name": "Fleet service planner",
+ "industry": "transport",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Works out which fleet vehicles are due for a service, reads their open device issues for the workshop, and queues a workshop booking for each due service. Crons read and draft; a person approves every booking.",
+ "families": {},
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "status", "schedule": "0 */2 * * *", "entry": "status", "summary": "Read each vehicle's planned services and open device issues into the fleet snapshot."},
+  {"name": "plan", "schedule": "15 * * * *", "entry": "plan", "summary": "Re-read due services, draft the workshop plan, and queue one booking per due service for approval."}
+ ],
+ "draft_ops": {
+  "trackunit": ["service-management.GetPlannedServiceStatuses", "device-health-issues.getIssuesByAsset"]
+ },
+ "live_ops": {
+  "trackunit": ["service-management.MakeBooking"]
+ },
+ "draft_ops_note": "Draft operations are reads only. Nothing a cron does reaches the workshop: a booking is a live operation and waits for a person to approve it.",
+ "capabilities": ["vehicles.list", "services.due", "issues.open", "bookings.queue"],
+ "adapters": {
+  "trackunit": {"status": "docs-only", "covers": "planned services per vehicle, open device issues per vehicle, workshop bookings (queued only)"}
+ },
+ "gaps": [
+  "Approval runs the booking without re-reading the service: approve() only runs live operations, so a read cannot sit in the approval. The plan cron withdraws a pending booking once its service is no longer due, but a service that completes between a plan run and an approval can still be booked. An approval-time recheck needs a core change.",
+  "Trackunit: CAN fault reads need a machine id, not the asset id this workflow holds, so active faults are not read yet. Device health issues stand in for defects.",
+  "Trackunit: bookings need the planned service id, so a fault with no planned service cannot be booked automatically. The workshop books those by hand.",
+  "Trackunit: parts ordering, cost approval, return-to-service and follow-up are not in the vendor docs, so they are not covered.",
+  "Trackunit: the access token must be supplied by hand (no token exchange is built). The operations are spec-level and have not run against a live account.",
+  "MTData (Talon, Workshop Software): help pages only, with no operation file. Its service triggers, job cards and work orders need a live account and a mapped adapter.",
+  "WEBFLEET: marketing and support pages only, with no operation file. Workshop, service and cost steps are not covered.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
+}

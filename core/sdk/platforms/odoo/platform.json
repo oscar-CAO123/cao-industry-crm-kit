@@ -1,0 +1,148 @@
+{
+ "id": "odoo",
+ "name": "Odoo",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": true,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {
+  "instance": {
+   "env": "ODOO_HOST",
+   "pattern": "[a-z0-9-]+(\\.[a-z0-9-]+)+",
+   "envOnly": true,
+   "example": "acme.odoo.com"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "ODOO_API_KEY",
+  "optionalHeaders": {
+   "X-Odoo-Database": "ODOO_DATABASE"
+  }
+ },
+ "keys": [
+  "ODOO_API_KEY",
+  "ODOO_DATABASE",
+  "ODOO_HOST"
+ ],
+ "sources": [
+  {
+   "url": "https://www.odoo.com/documentation/latest/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/ar/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/de/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/es/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/es_419/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/fr/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/id/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/it/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/ja/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/ko/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/nl/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/pl/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/pt_BR/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/ro/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/sv/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/th/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/vi/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/zh_CN/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/zh_TW/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/20.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/master/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/19.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/18.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/17.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/16.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/15.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  },
+  {
+   "url": "https://www.odoo.com/documentation/14.0/developer/reference/external_api.html",
+   "official": "vendor-domain: www.odoo.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 1,
+  "read": 1,
+  "write": 0
+ }
+}

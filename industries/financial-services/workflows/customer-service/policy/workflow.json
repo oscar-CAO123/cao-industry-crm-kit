@@ -1,0 +1,46 @@
+{
+ "id": "financial-services:policy",
+ "name": "Policy answers take ages",
+ "industry": "financial-services",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a customer's policy question on a Zendesk ticket into a reply drawn from the help centre, queues it for a person to approve, and chases it when the ticket goes unanswered. Crons read and draft; a person approves every reply.",
+ "families": {
+  "help-centre-answer": {
+   "steps": ["question-received", "find-policy-wording", "search-internal-knowledge", "draft-reply", "approval", "send-reply", "chase-follow-up", "record-keeping"],
+   "covered_by": {"question-received": "intake", "find-policy-wording": "draft (help centre search)", "search-internal-knowledge": "draft (help centre search)", "draft-reply": "draft", "approval": "approval (queued reply)", "send-reply": "approval (queued reply)", "chase-follow-up": "follow-up", "record-keeping": "draft (answers record in the store)"}
+  },
+  "system-and-insurer-answer": {
+   "steps": ["check-system-record", "ask-insurer", "confirm-with-colleague", "escalate"],
+   "covered_by": {"check-system-record": "skill (no policy system mapped)", "ask-insurer": "skill (no insurer platform mapped)", "confirm-with-colleague": "skill", "escalate": "skill (routing not wired)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New open tickets from Zendesk, optionally limited to one group."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Match each new question to a help centre article and queue the reply for approval, or park it for a person."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Close sent answers whose tickets are solved, queue chasers that are due (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "zendesk": ["core.ListTickets", "core.ShowTicket", "help_center.ListArticles"]
+ },
+ "live_ops": {
+  "zendesk": ["core.UpdateTicket"]
+ },
+ "draft_ops_note": "Reads only. A reply or chaser is a public ticket comment, which the customer receives, so it is a live operation and waits for a person.",
+ "capabilities": ["messages.list", "messages.draft", "documents.list"],
+ "adapters": {
+  "zendesk": {"status": "docs-only", "covers": "ticket intake, help centre search, the queued reply and the chaser"}
+ },
+ "gaps": [
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+  "No policy administration or insurer platform is mapped in the kit. Checking the policy system, asking the insurer for a ruling and chasing a broker are skill steps.",
+  "Zendesk's docs do not cover insurer rulings, approval, chasing, or linking a policy record to a ticket. Confirm these on a live account.",
+  "Escalation (routing attributes) is a skill step. core.SetTicketAttributeValues is mapped but not wired, since it changes live routing.",
+  "Only the first page of help centre articles (100) is searched. Pagination is not built.",
+  "Contact name and email are not read from the requester, so replies go on the ticket and not by email.",
+  "core/capabilities.json has no tickets entry, so this record uses messages and documents. Add a tickets capability in core/ to record it properly.",
+  "No other platform had docs for this workflow, so Zendesk is the only adapter. Docs-only until a sandbox account proves it."
+ ]
+}

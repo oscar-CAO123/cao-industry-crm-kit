@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Slack"
+    },
+    {
+      "name": "Xero"
+    }
+  ]
+}

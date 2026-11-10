@@ -1,0 +1,111 @@
+{
+ "id": "construction:x-labour",
+ "name": "Labour by person",
+ "industry": "construction",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Labour by person: turns each person's ServiceM8 clock-on and clock-off times into hours on a Xero Payroll AU draft timesheet for the pay period, and queues each clean timesheet for approval. Crons read and draft only; no timesheet is approved and nobody is paid without a person's approval.",
+ "families": {
+  "all": {
+   "steps": [
+    "clock-in-out",
+    "record-hours",
+    "collect-timesheets",
+    "check-hours",
+    "approve-timesheet",
+    "allocate-to-job",
+    "cost-labour-rate",
+    "job-costing",
+    "invoice-labour",
+    "enter-payroll",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "clock-in-out": "draft (ServiceM8 clock-on, clock-off and lunch events are read for the pay period; the clocks stay in ServiceM8)",
+    "record-hours": "draft (each complete shift becomes a line on that person's Xero draft timesheet)",
+    "collect-timesheets": "gap (paper sheets, photos and yard call-ins have no intake here)",
+    "check-hours": "cron (a shift over the daily limit, or clock events that do not pair, hold the person)",
+    "approve-timesheet": "approval (each clean Draft Xero timesheet is queued for approval)",
+    "allocate-to-job": "gap (hours are per person, not split across jobs)",
+    "cost-labour-rate": "skill (labour rates and allowances stay in Xero and ServiceM8, set by the owner)",
+    "job-costing": "gap (labour cost is not written to job costs)",
+    "invoice-labour": "gap (labour is not put onto client claims)",
+    "enter-payroll": "skill (the owner or bookkeeper runs the pay run in Xero after approval)",
+    "record-keeping": "draft (each mirrored shift is recorded in the store against its Xero timesheet)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "mirror",
+   "schedule": "*/30 * * * *",
+   "entry": "mirror",
+   "summary": "ServiceM8 clock events for the pay period become draft lines on each person's Xero timesheet. A shift is written once. Shifts over the daily limit are held. Anyone still clocked on or with unpaired events is held from approval."
+  },
+  {
+   "name": "approve",
+   "schedule": "15 * * * *",
+   "entry": "approve",
+   "summary": "Queue each Draft Xero timesheet with hours for approval, except held people. Approval runs only when a person approves it in the CRM shell."
+  }
+ ],
+ "draft_ops": {
+  "servicem8": [
+   "servicem8-api.listStaffTimeEvents"
+  ],
+  "procore": [
+   "timesheets.list-timecard-data"
+  ],
+  "xero": [
+   "payroll-au-v2.getTimesheets",
+   "payroll-au-v2.createTimesheet",
+   "payroll-au-v2.createTimesheetLine",
+   "payroll-au-v2.getTimesheet"
+  ]
+ },
+ "live_ops": {
+  "xero": [
+   "payroll-au-v2.approveTimesheet"
+  ]
+ },
+ "draft_ops_note": "Reads of ServiceM8 staff clock events (or Procore timecards) and of Xero timesheets, plus draft Xero timesheets and lines. Nothing here is approved or paid, so no cron moves pay. Approving a timesheet changes what gets paid, so it is live: a cron only queues it, and a person approves it in the CRM shell.",
+ "capabilities": [
+  "timesheets.list",
+  "timesheets.create",
+  "timesheets.approve"
+ ],
+ "adapters": {
+  "servicem8": {
+   "status": "docs-only",
+   "covers": "staff clock-on, clock-off and lunch events read for a pay period (StaffTimeEvent)"
+  },
+  "procore": {
+   "status": "docs-only",
+   "covers": "company timecard entries read for a pay period as the source of hours, instead of ServiceM8 clock events"
+  },
+  "xero": {
+   "status": "docs-only",
+   "covers": "timesheets read by period and status, draft timesheets and lines, timesheet approval queued"
+  }
+ },
+ "gaps": [
+  "Deputy records hours, but no Deputy read is built here. The platform evidence has no Deputy support read. The payroll-timesheets workflow already mirrors Deputy shifts.",
+  "Procore: the hours source is built from Procore's own timesheets reference page (read 11 Nov 2026) and tested on a fake network only. Set procore.mirror_status (there is no default; one of pending, reviewed, approved, completed, rejected, the words Procore documents for a timecard entry's approval_status) to the status whose hours are paid; only entries in that status are mirrored, and the employee_map keys are then Procore user ids. The status is read from approval_status, or from the deprecated timesheet_status.status when the entry has no approval_status; the statuses seen are logged each run. An entry mirrored and later reverted, deleted, moved to another date or edited in Procore is recorded as needs-check and holds that person from approval on every run until a person looks (the Xero draft line is not removed or changed). Each timecard entry is one block of hours, so it is one shift here; a person with entries on several projects the same day has several shifts. A row that does not check out (no usable id, no date, hours missing or not between 0 and 24) holds every mapped person for the period, as a bad ServiceM8 clock row does; entries dated outside the period are left out. Not confirmed on a live account: whether the list returns approval_status on each entry, that start_date and end_date return only entries in the range, whether the company list covers every project, and Procore's maximum per_page. Paging runs until an empty page; a period past 20 pages is refused whole. Procore site diary checks and Simpro labour stay manual.",
+  "Hours are per person, not split across jobs. Allocating hours to jobs, job costing and client claims are not written by any cron. Xero projects.createTimeEntry needs project and task ids that the business has not given.",
+  "Labour rates, loadings and allowances are not applied. cost-labour-rate stays manual.",
+  "Subcontractor and labour hire hours are not covered.",
+  "Collecting paper sheets, photos and yard call-ins has no intake.",
+  "A person who clocks on before the pay period starts is held until someone checks, because the start falls outside the read window.",
+  "ServiceM8 timestamps are in the account time zone and are read as local times. Confirm on a live account.",
+  "A shift edited in ServiceM8 after it was mirrored is not updated in Xero. A shift with an unclear write is marked needs-check and waits for a person.",
+  "The ServiceM8 staff time event list is read without paging. Confirm a full pay period is not cut short on a live account.",
+  "Xero's API can approve a timesheet, but its docs do not describe the approval screen. Confirm on a live Xero Payroll AU account.",
+  "The platform evidence file says the ServiceM8 ops file is empty. The kit's ServiceM8 ops file now lists the staff time event operations used here, so that part of the evidence is out of date.",
+  "Both adapters are docs-only until a ServiceM8 trial account and a Xero demo organisation prove the calls.",
+  "Approval is one per timesheet, so a large crew means many approvals in the queue.",
+  "Needs core: a clock-on that lands after a timesheet is queued can still be approved before the next mirror run (every 30 minutes) withdraws it. The approval now re-reads the Xero hours, so a shift that has become a line is caught, but a clock-on with no line yet is not visible to a check. The runtime needs a pre-run hold check for approve acts.",
+  "Needs core: the ServiceM8 staff time event read has no paging or count check, and no paging parameter is mapped for it. A truncated read would undercount hours. The op needs its paging mapped, or the platform's page limit confirmed, before a live run."
+ ]
+}

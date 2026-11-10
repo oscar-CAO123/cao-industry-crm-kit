@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Property Management",
+ "platform": "servicem8",
+ "dispatch_staff_uuid": "00000000-0000-0000-0000-000000000000",
+ "owner_email": "owner@example.com.au",
+ "follow_up": {"after_days": [2, 5], "channel": "email"}
+}

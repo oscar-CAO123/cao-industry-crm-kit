@@ -1,0 +1,52 @@
+// Cliniko: an agreement is a patient form made from the business's agreement template. The cron queues its creation for
+// approval, and it is created unsent in the patient's record: Cliniko's API maps no send, so a person sends it from the record.
+// Field names come from Cliniko's official OpenAPI pages for patient-case, patient-form and signature (mapped in ops.json).
+import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
+import { ID, id, type Settings } from "../types.ts";
+
+const P = "cliniko";
+// A list reply is the resource under its plural key, or a bare array. Nothing else is assumed.
+const rows = (d: any, key: string): any[] => (Array.isArray(d) ? d : Array.isArray(d?.[key]) ? d[key] : []);
+
+/** Active patient cases: a patient with an ongoing service may need an agreement. Closed or malformed cases are skipped. */
+export async function activeCases(ctx: Ctx<Settings>): Promise<{ patient_id: string }[]> {
+  const per_page = Math.min(Math.max(Number(ctx.settings.cases_per_run) || 100, 1), 100);
+  const r = await ctx.draft<any>({ platform: P, op: "patient-case.listactivepatientcases", summary: "read active patient cases", input: { params: { per_page } } });
+  const out: { patient_id: string }[] = [];
+  for (const c of rows(r.data, "patient_cases")) {
+    if (c?.closed === true || !ID.test(String(c?.patient_id ?? ""))) continue;
+    out.push({ patient_id: String(c.patient_id) });
+  }
+  return out;
+}
+
+/** Queued for a person's approval: creating a form may email the patient (the careplan workflow treats this op as live too).
+ *  Once approved, the agreement is created unsent in the patient's record. Returns the approval id. */
+export function queueAgreement(ctx: Ctx<Settings>, patientId: string, templateId: string): Promise<string> {
+  const pid = id(patientId, "patient"), tid = id(templateId, "agreement template");
+  return ctx.queue({ platform: P, op: "patient-form.createpatientform", key: `agreement-${pid}-${tid}`, summary: `create unsent agreement form for patient ${pid}`,
+    input: { params: { patient_id: pid, patient_form_template_id: tid, email_to_patient_on_completion: false } } });
+}
+
+/** One patient form, read fresh. */
+export async function getForm(ctx: Ctx<Settings>, formId: string): Promise<any> {
+  const r = await ctx.draft<any>({ platform: P, op: "patient-form.getpatientform", summary: `read patient form ${formId}`, input: { params: { id: id(formId, "patient form") } } });
+  return r.data;
+}
+
+/** Queued for a person's approval only: expiring a form changes what the patient sees. The send re-reads the form and goes
+ *  only if it is still unsigned and unexpired as the cron saw it (`seen`, the form read just before queueing). */
+export function queueExpiry(ctx: Ctx<Settings>, formId: string, seen: any): Promise<string> {
+  const fid = id(formId, "patient form");
+  return ctx.queue({ platform: P, op: "patient-form.updatepatientform", key: `expire:${fid}`, summary: `expire unsigned agreement form ${fid}`,
+    input: { params: { id: fid, expired: true } },
+    check: { platform: P, op: "patient-form.getpatientform", input: { params: { id: fid } },
+      expect: [{ path: "completed", equals: seen?.completed ?? false }, { path: "expired", equals: seen?.expired ?? false }] } });
+}
+
+/** The signature on a completed form, read for the register. */
+export async function getSignature(ctx: Ctx<Settings>, formId: string, signatureId: string): Promise<any> {
+  const r = await ctx.draft<any>({ platform: P, op: "signature.getsignature", summary: `read signature ${signatureId}`,
+    input: { params: { patient_form_id: id(formId, "patient form"), id: id(signatureId, "signature") } } });
+  return r.data;
+}

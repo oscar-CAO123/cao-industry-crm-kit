@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Realty",
+ "microsoft_365": {"mailbox": "finance@example.com.au"},
+ "principal_email": "principal@example.com.au",
+ "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "TrustRegister"},
+ "sale_lives": [{"property_id": 123456, "life_id": 654321}],
+ "max_pages": 5
+}

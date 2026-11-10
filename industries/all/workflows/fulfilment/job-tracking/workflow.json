@@ -1,0 +1,54 @@
+{
+ "id": "job-tracking",
+ "name": "Track jobs or projects from start to finish",
+ "industry": "all",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tracks each job or project from creation to close-out in the business's own system: ServiceM8 jobs and Asana projects. Crons read status and last activity, draft internal notes, and queue any client message for a person to approve. Nothing reaches a client without approval.",
+ "families": {
+  "dispatched-field-jobs": {
+   "steps": ["job-created", "scheduling", "job-setup", "progress-updates", "time-and-costs", "invoicing", "client-communication", "record-keeping"],
+   "covered_by": {"job-created": "intake (ServiceM8 jobs in Quote or Work Order; Asana projects in the workspace)", "scheduling": "gap (see gaps)", "job-setup": "gap (see gaps)", "progress-updates": "progress (stall check, draft note, queued client message)", "time-and-costs": "gap (see gaps)", "invoicing": "gap (see gaps)", "client-communication": "progress and close-out queue client messages for approval", "record-keeping": "intake and progress keep the tracking record"}
+  },
+  "project-milestone-jobs": {
+   "steps": ["progress-updates", "time-and-costs", "invoicing", "variations", "record-keeping", "client-communication"],
+   "covered_by": {"progress-updates": "progress (Asana task counts and last change)", "time-and-costs": "gap (see gaps)", "invoicing": "gap (see gaps)", "variations": "gap (see gaps)", "record-keeping": "intake and progress keep the tracking record", "client-communication": "progress and close-out queue project statuses for approval"}
+  },
+  "unclear": {
+   "steps": ["job-setup", "record-keeping"],
+   "covered_by": {"job-setup": "gap (see gaps)", "record-keeping": "intake and progress keep the tracking record"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Open ServiceM8 jobs and Asana projects, added to the tracking record once each."},
+  {"name": "progress", "schedule": "0 22 * * *", "entry": "progress", "summary": "Flag jobs with no change for the stall window (one draft note each), and queue a client progress message when there is new progress and the message window has passed."},
+  {"name": "close-out", "schedule": "5 * * * *", "entry": "close-out", "summary": "A finished job gets a draft close-out note and a queued completion message; an unsuccessful job is closed quietly."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.getJobs", "servicem8-api.listCompanyContacts", "servicem8-api.createNotes"],
+  "asana": ["getProjectsForWorkspace", "getTaskCountsForProject", "getTasksForProject", "createTask"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email", "messaging-api.send_sms"],
+  "asana": ["createProjectStatusForProject"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and an internal note on a ServiceM8 job or a task in an Asana project that only the team reads. A client message is a live operation: an email or SMS to the customer, or a project status that notifies every follower. Those are only queued, and run when a person approves them.",
+ "capabilities": ["jobs.list", "tasks.list", "tasks.create", "notify.send", "sms.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "jobs in Quote and Work Order, status and last edit, internal job notes, client email and SMS about the job"},
+  "asana": {"status": "docs-only", "covers": "projects in one workspace, task counts and last change, internal task notes, project status updates"}
+ },
+ "gaps": [
+  "Monday.com: mapped in the kit but only two of its ten steps are fully supported, so no adapter this pass. Its ops are in the kit for a later adapter.",
+  "Simpro, Buildertrend, Vericon, Procore, Groundplan and Telegram job groups: their APIs are not mapped in the kit, so nothing reads or writes them here.",
+  "Scheduling and crew allocation: ServiceM8 allocations are mapped, but this build does not book crews or move jobs on a calendar.",
+  "Job setup (project plan, Gantt, job codes, cost centres): not built. Asana sections and Monday status columns would cover it once a person picks the structure.",
+  "Time and cost matching, materials ordering, variations and RFIs, and progress claims or invoices: not built. Owners keep these in Xero, spreadsheets or the job system by hand.",
+  "Stall detection uses the last change to the ServiceM8 job or the Asana tasks. A quiet job is a prompt to check it, not proof it is stuck.",
+  "Asana last activity is read from the first 100 tasks of a project, so a very large project can understate its last change.",
+  "Asana internal notes are tasks in the project, and a project status notifies every follower. Whether a client is a follower in the business's own workspace is not known, so Asana client messages are queued for a person to approve.",
+  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Asana test workspace) proves it. Field names come from each vendor's official spec, checked in the endpoint map."
+ ]
+}

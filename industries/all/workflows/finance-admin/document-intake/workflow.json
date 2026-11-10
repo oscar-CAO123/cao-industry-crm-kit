@@ -1,0 +1,56 @@
+{
+ "id": "document-intake",
+ "name": "Collect, name and file incoming client documents",
+ "industry": "all",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Collects incoming client and supplier documents from the intake folder, renames each to a standard name and files it by its rule in the business's own Dropbox, parks unmatched files for a person, and queues a file request for each missing document on the checklist. Crons read and file inside the business; every request that reaches a client or supplier waits for a person to approve it.",
+ "families": {
+  "by-hand-or-unstated": {
+   "calls": 28,
+   "steps": ["document-arrives", "identify-document", "name-document", "file-document", "extract-data", "check-complete", "chase-missing", "share-with-team", "record-keeping", "archive-or-dispose", "scan-paper"],
+   "covered_by": {
+    "document-arrives": "intake (the Dropbox intake folder; email and WhatsApp are not read yet, see gaps)",
+    "identify-document": "file (matched by the rules in settings; unmatched goes to review)",
+    "name-document": "file (standard name: date, label, original name)",
+    "file-document": "file (moved into the rule's folder, never overwrites)",
+    "extract-data": "not covered (see gaps)",
+    "check-complete": "skill (a person checks certificates and figures)",
+    "chase-missing": "chase (file request, approval)",
+    "share-with-team": "not covered (see gaps)",
+    "record-keeping": "not covered (see gaps)",
+    "archive-or-dispose": "not covered (see gaps)",
+    "scan-paper": "not covered (phone scanning happens in the owner's own app)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Record each new file in the intake folder."},
+  {"name": "file", "schedule": "5,35 * * * *", "entry": "file", "summary": "Rename each new file to the standard name and file it by its rule; unmatched files go to review."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Queue a file request for each checklist item with nothing recent; a person approves each one."}
+ ],
+ "draft_ops": {
+  "dropbox": ["files.list_folder", "files.get_metadata", "files.create_folder_v2", "files.move_v2"]
+ },
+ "live_ops": {
+  "dropbox": ["file_requests.create"]
+ },
+ "draft_ops_note": "Draft operations stay inside the business's Dropbox: listing the intake folder, checking a folder exists, creating a folder, moving or renaming a file. Anything that gives a client or supplier an upload link is a live operation and waits for a person.",
+ "capabilities": ["files.list", "files.read", "files.write"],
+ "adapters": {
+  "dropbox": {"status": "docs-only", "covers": "intake folder listing, folder create, move and rename, file requests"}
+ },
+ "gaps": [
+  "Dext: the kit has no Dext platform, so its email, WhatsApp and camera intake, and its receipt capture, are not built. Its help centre describes that intake clearly, so it is the first candidate once an adapter exists.",
+  "Email intake: mailbox attachments are not read. the Microsoft 365 adapter is not built in this pass.",
+  "Microsoft 365 and OneDrive or SharePoint filing: not built. Dropbox has the stronger support and mapped operations, so it is the one adapter here.",
+  "Sharing a folder with a team member is not a cron. It reaches people outside the business, so it stays with the owner in Dropbox for now.",
+  "Data extraction (amounts, supplier, dates into accounts or a register) and record keeping are not built. The calls name Xero, Attache and spreadsheets for this, and none is mapped as a step here.",
+  "Archive and disposal: no retention rule is set and none is built.",
+  "Only the first page of the intake folder is read per run. The continuation route (files.list_folder/continue) is not mapped in the kit.",
+  "Undo is not built: each move records its from and to paths in the store, so a person can move a file back by hand.",
+  "Checking a certificate is still valid, and checking figures against a contract, are judgment steps for a person (see SKILL.md)."
+ ]
+}

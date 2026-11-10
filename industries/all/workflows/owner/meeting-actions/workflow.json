@@ -1,0 +1,58 @@
+{
+ "id": "meeting-actions",
+ "name": "Turn meetings and calls into notes and actions",
+ "industry": "all",
+ "department": "owner",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns meetings and calls into notes and actions: it reads the recordings and summaries Fireflies and Granola already make, drafts the action list for each meeting, flags overdue actions, and queues any recap share for approval. Crons read and draft; a person approves every share.",
+ "families": {
+  "all": {
+   "steps": ["record-call", "transcribe-summarise", "take-notes", "extract-actions", "assign-owner", "send-recap", "log-in-crm", "chase-actions", "review"],
+   "covered_by": {
+    "record-call": "platform: Fireflies and Granola record the meeting; capture reads what they recorded",
+    "transcribe-summarise": "platform: Fireflies summary, and Granola transcript and AI notes, read by capture",
+    "take-notes": "platform summary; typed notes are a person's step",
+    "extract-actions": "draft (Fireflies action items) or skill (Granola: the agent writes the actions into a proposal)",
+    "assign-owner": "skill: an owner named in the proposal is kept; no mapped platform operation sets an owner",
+    "send-recap": "approval (Fireflies share by email to the addresses in settings)",
+    "log-in-crm": "not yet (see gaps): the workflow store holds each meeting's record",
+    "chase-actions": "draft flags overdue actions; the chase itself is a person's step",
+    "review": "not yet (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "capture", "schedule": "*/15 * * * *", "entry": "capture", "summary": "New and changed meetings from each notetaker, stored once each."},
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Each meeting's actions from the platform's summary or a valid proposal, overdue flags, and a recap share queued for approval."}
+ ],
+ "draft_ops": {
+  "fireflies": ["query.transcripts"],
+  "granola": ["get /v1/notes", "get /v1/notes/{note_id}", "get /v1/notes/{note_id}/transcript"]
+ },
+ "live_ops": {
+  "fireflies": ["mutation.shareMeeting"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of meetings, summaries and transcripts. Meeting records and actions are kept in the workflow store, not sent anywhere. Sharing a meeting by email reaches people outside the business and waits for a person.",
+ "capabilities": ["meetings.list", "transcripts.read", "meetings.share"],
+ "adapters": {
+  "fireflies": {"status": "docs-only", "covers": "meetings read from the transcript list with the platform's summary and action items; recap share by email on approval"},
+  "granola": {"status": "docs-only", "covers": "notes read with their AI summary and transcript; no send or share"}
+ },
+ "gaps": [
+  "Otter (named in the platform file): the kit has no Otter operations file, so no Otter adapter exists and its notes are not read.",
+  "Granola: the kit maps no operation that shares or sends a note, so a recap for a Granola meeting is a person's step.",
+  "Granola sign-in: the key and the request shape come from the vendor's OpenAPI spec only (kit status spec). Unproven on a live account.",
+  "Fireflies share limit: the ShareMeetingInput page says at most 50 addresses per request, and the mutation description says 100. The build caps each share at 50 until a live account settles it.",
+  "Fireflies share write and its permission scope: the ops file lists no scopes, so the share needs a live account to confirm it works for a non-admin user.",
+  "Fireflies action items are the platform's own summary output. Their quality needs a live check. The kit maps no owner or due date inside Fireflies, so those come only from a proposal.",
+  "Chasing actions: no mapped operation messages a staff member or a client. Overdue actions are flagged in the store and the chase is a person's step.",
+  "Meeting booked and prepare: the calendar booking and any pre-meeting brief are outside this workflow. Fireflies AskFred answers questions about past meetings and is not a brief.",
+  "Logging to a CRM and task tools: the calls name Ignition, Podio, ServiceM8, Simpro, Deputy, Microsoft 365, WhatsApp, Telegram and others. None is an adapter here. Fireflies' own CRM sync is set in Fireflies, not run from this workflow.",
+  "Proposals: tools/workflow.ts has a propose command for quoting only. An agent's action list for a meeting goes into the proposals namespace through the CRM shell until a meeting command exists.",
+  "Review and other steps: not covered.",
+  "Granola transcripts are read up to settings.granola.max_transcript_pages pages of 100 items and capped at 30,000 characters. Longer meetings are cut.",
+  "Every adapter is docs-only until a Fireflies account and a Granola account prove it."
+ ]
+}

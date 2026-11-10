@@ -1,0 +1,49 @@
+{
+ "id": "all:onboarding",
+ "name": "Onboard a new customer or client",
+ "industry": "all",
+ "department": "customer-success",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Onboards a new client: a HubSpot contact record, a checklist of onboarding steps in Google Tasks, team invitations in HubSpot, and a welcome email. Crons read and draft; a person approves every invitation and every email.",
+ "families": {
+  "all": {
+   "steps": ["deal-won-handover", "collect-details", "contract-sign", "payment-setup", "account-setup", "data-import", "integrations-setup", "training-session", "welcome-comms", "record-keeping", "other"],
+   "covered_by": {"deal-won-handover": "gap (no deal endpoints mapped; the client is listed in settings)", "collect-details": "gap (Typeform steps have no mapped operations)", "contract-sign": "gap (HubSpot quotes and contracts are not mapped)", "payment-setup": "read (payment account status)", "account-setup": "checklist (Google Tasks) and invite (HubSpot team, queued)", "data-import": "draft (one HubSpot contact record)", "integrations-setup": "gap (channel connections are set up in the platform)", "training-session": "gap (no scheduling operation mapped)", "welcome-comms": "welcome (Gmail draft, send queued)", "record-keeping": "draft (HubSpot contact record)", "other": "skill (judgment, not automated)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "setup", "schedule": "*/30 * * * *", "entry": "setup", "summary": "For each new client: a HubSpot contact record, the onboarding checklist, a payments read, and team invitations queued for approval."},
+  {"name": "welcome", "schedule": "15 * * * *", "entry": "welcome", "summary": "For each client that is set up: a welcome email drafted in Gmail, its send queued for approval."},
+  {"name": "progress", "schedule": "0 22 * * *", "entry": "progress", "summary": "Read each checklist, record progress, and draft an internal note to the owner when the open count changes (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "hubspot": ["crm-contacts-2026-09.post-/crm/objects/2026-09/contacts_/crm/objects/2026-09-beta/{objectType}", "commerce-paymentsaccounts-2026-09.get-/commerce/payment-accounts/2026-09/status"],
+  "google-workspace": ["tasks.tasklists.insert", "tasks.tasks.insert", "tasks.tasks.list", "gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "hubspot": ["settings-user-provisioning-2026-09.post-/settings/users/2026-09"],
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a contact record, a checklist and its steps, a read of a checklist or of payment setup, and an email draft. Sending an email, or inviting someone to HubSpot (which emails them), is a live operation and waits for a person.",
+ "capabilities": ["clients.setup", "checklists.track", "contacts.create", "messages.draft", "messages.send", "invitations.send"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "onboarding checklist as a Google Tasks list, welcome email as a Gmail draft, send after approval, owner progress note as a draft"},
+  "hubspot": {"status": "docs-only", "covers": "client contact record, payment setup read, team invitations after approval"}
+ },
+ "gaps": [
+  "New clients come from the settings list. A signed deal does not start onboarding yet: the HubSpot deal and quote endpoints are not in the platform evidence for this job, so they are not mapped here.",
+  "The calls name Microsoft 365, GoHighLevel, Xero, Slack, Deputy, Monday.com, ELMO, Procore, AgentBox and Fill Out. The platform evidence maps no onboarding steps for them, so none has an adapter in this build.",
+  "Typeform: it supports the collect-details and record-keeping steps, but the evidence maps no operation to them. Its forms-response read exists in the kit, but it is not wired to any step until a sandbox confirms the form-to-client link.",
+  "Contract signing and quotes: the HubSpot quote and contract endpoints are not mapped, so the agreement is still signed in the platform or outside it.",
+  "Payment setup: only a read of payment account status. Creating invoices or taking payment is not built.",
+  "Training sessions: no scheduling operation is mapped in the evidence, so the training step is a checklist item for a person.",
+  "Integrations: connecting a client's email, calendar, phone or chat is done inside HubSpot. The channel-account read is mapped but not used, because its response fields are not confirmed.",
+  "Data import: only one contact record per client is created. The HubSpot batch create is not used, so bulk imports stay manual.",
+  "HubSpot contact property names (company, firstname, email) follow HubSpot's standard names. The mapped operation takes a free set of properties, so a sandbox portal must confirm them before a live run.",
+  "The payment status read: the response is not read, so the workflow records only that the read ran.",
+  "The checklist count reads the first 100 steps of each list. Lists longer than that are counted as far as they go.",
+  "Every adapter is docs-only until a sandbox Google Workspace account and a HubSpot test portal prove the calls, the checklist, the Gmail draft and an approved invitation."
+ ]
+}

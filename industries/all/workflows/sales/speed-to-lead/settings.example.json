@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Plumbing",
+ "location_id": "GHL_LOCATION_ID",
+ "pipeline_id": "GHL_PIPELINE_ID",
+ "new_lead_stage_id": "GHL_NEW_LEAD_STAGE_ID",
+ "owner_user_id": "GHL_OWNER_USER_ID",
+ "senior_user_id": "GHL_SENIOR_USER_ID",
+ "first_touch": {
+  "channel": "SMS",
+  "after_minutes": 15,
+  "message": "Hi {first}, this is {business}. Thanks for getting in touch. Can I call you in the next few minutes?"
+ },
+ "escalate_after_minutes": 30,
+ "alert_window_hours": 24
+}

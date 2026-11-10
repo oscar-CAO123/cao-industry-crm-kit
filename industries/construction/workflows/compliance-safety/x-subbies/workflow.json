@@ -1,0 +1,57 @@
+{
+ "id": "construction:x-subbies",
+ "name": "Subcontractors",
+ "industry": "construction",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps subcontractor compliance in order: a subcontractor's reply becomes a register row to complete, a licence or insurance certificate that is expiring gets a chase email, and each live job folder is checked. Crons read and draft; a person approves every email that goes to a subcontractor.",
+ "families": {
+  "by-hand-or-unstated": {
+   "steps": ["safety-plan"],
+   "covered_by": {"safety-plan": "not yet (see gaps)"}
+  },
+  "other-tool": {
+   "steps": ["record-keeping", "safety-plan"],
+   "covered_by": {"record-keeping": "draft (job-folder check to the owner)", "safety-plan": "not yet (see gaps)"}
+  },
+  "spreadsheet": {
+   "steps": ["engage-subcontractor", "record-keeping"],
+   "covered_by": {"engage-subcontractor": "intake (replies become register rows) and chase (expiring documents); tender outreach not yet", "record-keeping": "draft (register rows and the job-folder check)"}
+  },
+  "job-system": {
+   "steps": ["record-keeping", "site-inspection"],
+   "covered_by": {"record-keeping": "draft (job-folder check to the owner)", "site-inspection": "not yet (Procore has no platform in the kit)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "Every 30 minutes: a reply from a subcontractor becomes a register row to complete, once per message."},
+  {"name": "chase", "schedule": "0 21 * * 0-4", "entry": "chase", "summary": "Weekday mornings in Australia: a document that has expired or expires within 30 days gets a chase email drafted and queued for approval."},
+  {"name": "records", "schedule": "15 21 * * 0-4", "entry": "records", "summary": "Weekday mornings in Australia: one draft per live job folder listing its files, sent to the owner's own mailbox only."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"],
+  "dropbox": ["files.list_folder"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of Outlook, the register and Dropbox; a register row; an Outlook draft to a subcontractor that stays unsent until approved; and a job-folder draft to the owner's own mailbox. Sending a chase email is a live operation and waits for a person.",
+ "capabilities": ["replies.read", "register.read", "register.add", "messages.draft", "messages.send", "files.list"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "reply intake, the Subcontractors register table, chase drafts and approved sends, the job-check draft to the owner"},
+  "dropbox": {"status": "docs-only", "covers": "one job folder listing, read only"}
+ },
+ "gaps": [
+  "Hammertech, Procore and WHS Monitor, the three platforms the evidence checked for subcontractor compliance: none has a platform file in the kit, so nothing is mapped and no adapter exists. Their help pages do cover prequalification, induction, inspection, incident and document tracking, so they are the next platforms to map.",
+  "Telegram: the Telegram platform is mapped, and one call used it to book subcontractors, but this workflow has no Telegram adapter. Its bot and chat ids need confirming on a real bot before one is written.",
+  "Subcontractor tender outreach and job packs: not built. Writing the tender and reading the answers is judgment work, so it stays with the owner for now.",
+  "Safety plans, SWMS and pre-start forms: the calls use a paid template subscription and print the forms by hand. No mapped platform covers them, so they stay with the business and the agent skill.",
+  "Site inductions and site inspections: done on site or in Procore, Hammertech or WHS Monitor. No adapter here.",
+  "Suspending a subcontractor and holding a payment for compliance: the docs for the mapped platforms do not say how, and both are live actions. Not built.",
+  "Xero bills and subcontractor claims: Xero is mapped, but this workflow does not read bills, so claim checks against agreements stay manual.",
+  "The register is an Excel table the business sets up with the columns in types.ts. Certificates are not read by the workflow: an expiry date must be typed into the register.",
+  "Microsoft Graph sign-in is a supplied access token (M365_ACCESS_TOKEN), not a token flow. Every adapter is docs-only until a Microsoft 365 test tenant and a Dropbox test account prove the calls."
+ ]
+}

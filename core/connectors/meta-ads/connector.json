@@ -1,0 +1,22 @@
+{
+  "id": "meta-ads",
+  "name": "Meta Ads",
+  "docs": "https://developers.facebook.com/docs/marketing-apis",
+  "account_to_test": "Business account",
+  "cost_to_test": "Not checked",
+  "capabilities": [
+    "ads.insights",
+    "leads.list",
+    "conversions.send"
+  ],
+  "fallback": "mcp",
+  "script": "core/connectors/meta-ads/client.ts",
+  "status": "code-built",
+  "terms_checked": false,
+  "keys": [
+    "META_ADS_TOKEN",
+    "META_PAGE_TOKEN",
+    "META_PIXEL_ID"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

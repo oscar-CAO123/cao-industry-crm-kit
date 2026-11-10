@@ -1,0 +1,50 @@
+{
+  "id": "financial-services:x-loans",
+  "name": "Loans",
+  "industry": "financial-services",
+  "department": "finance-admin",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a loan enquiry into a document request, a register row and a chase in the business's own mailbox and spreadsheet. Crons read and draft; a person approves every email that leaves the business.",
+  "families": {
+    "all": {
+      "steps": ["enquiry-intake", "collect-documents", "serviceability", "lender-selection", "lender-submission", "compliance-record-keeping"],
+      "covered_by": {
+        "enquiry-intake": "intake (enquiries read from the Outlook folder)",
+        "collect-documents": "draft (document request email drafted, queued for approval)",
+        "serviceability": "skill (judgment, not automated)",
+        "lender-selection": "skill (judgment, not automated)",
+        "lender-submission": "not covered (lodgement is done in each lender's portal)",
+        "compliance-record-keeping": "draft (register row in the loan register)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New loan enquiries from the enquiries mailbox folder."},
+    {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Add each new enquiry to the loan register, draft the document request, queue its send for approval."}
+  ],
+  "draft_ops": {
+    "microsoft-365": [
+      "users.mailFolders.ListMessages",
+      "users.CreateMessages",
+      "drives.items.workbook.tables.ListRows",
+      "drives.items.workbook.tables.CreateRows"
+    ]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: a read of the enquiries folder, an Outlook draft, a row in the loan register. Sending a draft to a client is a live operation and waits for a person.",
+  "capabilities": ["messages.list", "messages.draft", "sheets.read", "sheets.append"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "enquiries from an Outlook folder, document request as an Outlook draft, loan register as an Excel table"}
+  },
+  "gaps": [
+    "BrokerEngine, Mercury Nexus and SalesTrekker have docs but no mapped operations in the kit, so none is built. Their steps stay manual or skill-driven.",
+    "Serviceability, credit checks, lender selection and lender lodgement have no mapped operation. The agent does these as judgment, or the broker does them in the lender portal.",
+    "Approval and decline letters, settlement tasks and the chase of outstanding documents need the platform's status, which is not built. Only the first document request is drafted.",
+    "HubSpot and Zoho are in the kit but are not mapped for loan steps, so they are not built. Add them when a client names the CRM they use.",
+    "The adapter is docs-only until a Microsoft 365 developer tenant proves it. Field names were checked against the Microsoft Graph spec in endpoint-map/raw/microsoft-365."
+  ]
+}

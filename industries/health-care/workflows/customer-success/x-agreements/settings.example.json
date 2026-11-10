@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Physio",
+ "cliniko": {"agreement_template_id": "TEMPLATE_ID"},
+ "expire_after_days": 21,
+ "cases_per_run": 100
+}

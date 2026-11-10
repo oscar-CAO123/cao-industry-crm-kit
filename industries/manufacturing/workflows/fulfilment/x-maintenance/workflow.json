@@ -1,0 +1,46 @@
+{
+ "id": "manufacturing:x-maintenance",
+ "name": "Maintenance",
+ "industry": "manufacturing",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Logs machine breakdown and service requests as work orders in the business's own system, adds the lockout and isolation checklist to each new work order, and queues the booking note to the requester for approval. Crons read and draft; a person approves every message.",
+ "families": {
+  "all": {
+   "steps": ["schedule-work", "record-keeping", "close-work-order"],
+   "covered_by": {"schedule-work": "draft (lockout checklist on the work order) and queue (booking note to the requester); the planner still books the technician", "record-keeping": "read (completed jobs and their parts into the store)", "close-work-order": "read (completed jobs)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Read open work orders (ServiceM8 jobs in Work Order status) and match each to the machine it names."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Add the lockout and isolation checklist to each new work order, once."},
+  {"name": "notify", "schedule": "30 * * * *", "entry": "notify", "summary": "Queue a booking note to the requester for approval."},
+  {"name": "close-out", "schedule": "0 20 * * *", "entry": "close-out", "summary": "Read completed jobs and the parts used on them into the store. 20:00 UTC is 6 or 7 am in eastern Australia."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listAssets", "servicem8-api.listCompanyContacts", "servicem8-api.listJobChecklists", "servicem8-api.createJobChecklists", "servicem8-api.listJobMaterials"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and a checklist on a work order that only staff see. Sending the booking note reaches the requester, so it is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "contacts.list", "tasks.create", "notify.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "work orders (jobs in Work Order status), machine lookup by asset name, the lockout checklist, the booking email for approval, completed jobs and their parts"}
+ },
+ "gaps": [
+  "MEX Maintenance (mex-cmms): the closest fit to this job (work orders, preventive triggers from meter readings, inspections), but the kit has no mex-cmms platform and no mapped operations.",
+  "MRPeasy: maintenance cycles by operating hours and service orders, but the kit has no MRPeasy platform and nothing is mapped.",
+  "Odoo: the kit maps one read (a version check), so its maintenance module is not mapped.",
+  "Sitebook and AroFlo: the kit has asset-maintenance and task operations, but their endpoint-map folders hold pages, not a schema, so no field name can be confirmed and no adapter is written.",
+  "Meter readings and service-due checks (check-service-due): no mapped platform operation holds meter values or service intervals for this job, so the check stays a skill step.",
+  "Lockout and isolation: the checklist holds the steps the owner enters in settings; no platform supplies the procedure.",
+  "Technician booking (schedule-work): the job allocation operations are not mapped into a cron, so the planner still books the technician by hand.",
+  "Parts ordering from suppliers (source-parts): not automated. Close-out lists the parts used on each completed job only.",
+  "Labour hours from ServiceM8 staff time events are not read yet.",
+  "Machine matching is by asset name appearing in the job description. ServiceM8 holds no job-to-asset field in the mapped operations, so a request that names no asset stays unmatched.",
+  "ServiceM8 is spec status and tested offline only; no live account has run these operations."
+ ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "financial-services:policy-renewals",
+  "name": "Process policy renewals and endorsements with underwriters",
+  "industry": "financial-services",
+  "department": "customer-success",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Processes policy renewals and endorsements with underwriters and clients. The crons read the policy register and the broker's renewals folder, draft every email in Outlook and queue each send for the broker to approve.",
+  "families": {
+    "motor-vehicle": {
+      "steps": ["renewal-trigger", "client-contact", "collect-info", "submit-to-underwriter", "underwriter-terms", "endorsement-request", "endorsement-processing", "other", "issue-documents", "record-keeping"],
+      "covered_by": {"renewal-trigger": "draft", "client-contact": "draft", "collect-info": "intake and skill", "submit-to-underwriter": "draft", "underwriter-terms": "intake and skill", "endorsement-request": "intake", "endorsement-processing": "skill", "other": "skill", "issue-documents": "skill", "record-keeping": "not yet (see gaps)"}
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Reads the renewals folder for endorsement requests, underwriter replies and client replies."},
+    {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Drafts pre-renewal emails for policies inside the lead window and endorsement emails to the underwriter, and queues each send for approval."},
+    {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queues follow-ups on sent emails with no reply (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "users.CreateMessages"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reading the folder and the register, and an Outlook draft. Sending a draft is a live operation and waits for the broker.",
+  "capabilities": ["messages.draft", "messages.send", "files.read"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "renewals folder, policy register read, Outlook drafts and approved sends"}
+  },
+  "gaps": [
+    "HubSpot is not wired: the vendor spec does not list the note property names, so the note write cannot be confirmed. Its contact lookup is a POST the kit marks as a write, so it needs KIT_ALLOW_WRITES on the deploy.",
+    "Midwinter AdviceOS is mapped in the kit with a policy lookup, but its sign-in is multi-field. Not wired.",
+    "Insurer and underwriter portals are not mapped. Underwriter terms come in by email and the broker works from them.",
+    "No register write-back: draft_ops reads the policy register only. Recording each renewal's status in the register needs a row update operation, which is not wired, so the status lives in the workflow store for now.",
+    "Judgment stays with the broker: what the client changed, the premium and terms, what to tell the client, issuing documents, and any money between underwriter and insured.",
+    "Only the Microsoft 365 adapter is built, and it stays docs-only until a Microsoft 365 developer tenant proves it."
+  ]
+}

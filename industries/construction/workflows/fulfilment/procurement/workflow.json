@@ -1,0 +1,49 @@
+{
+ "id": "construction:procurement",
+ "name": "Trade quotes miss scope",
+ "industry": "construction",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Logs trade and supplier quote replies, checks each one against the scope the business needs for that package, drafts the purchase order in Xero once the agreed amount is in the register, and checks supplier bills against that order. Crons read and draft; a person approves every email to a supplier and every purchase order award.",
+ "families": {
+  "all": {
+   "steps": ["scope-breakdown", "request-quotes", "receive-quotes", "compare-quotes", "scope-check", "clarify-with-supplier", "approve-award", "purchase-order", "confirm-delivery", "receive-goods", "invoice-match", "record-keeping", "other"],
+   "covered_by": {"scope-breakdown": "not yet (plans and specs are judgment, see gaps)", "request-quotes": "not yet (requests still go out by hand)", "receive-quotes": "intake", "compare-quotes": "skill (owner compares the register rows)", "scope-check": "scope-check", "clarify-with-supplier": "scope-check (clarification email queued for approval)", "approve-award": "approval of order-draft's award", "purchase-order": "order-draft (draft PO in Xero)", "confirm-delivery": "not covered", "receive-goods": "not covered", "invoice-match": "bill-match", "record-keeping": "intake, scope-check, order-draft and bill-match write the register and the checks log", "other": "skill (variations)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "quote-intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "New trade and supplier quote replies from the buying mailbox, logged to the quote register."},
+  {"name": "scope-check", "schedule": "*/30 * * * *", "entry": "scope-check", "summary": "Checks each new quote against the scope list for its package; a gap queues a clarification email for approval."},
+  {"name": "order-draft", "schedule": "0 * * * *", "entry": "order-draft", "summary": "Drafts a purchase order in Xero for each complete quote with an amount in the register, and queues its award for approval."},
+  {"name": "bill-match", "schedule": "0 22 * * *", "entry": "bill-match", "summary": "Compares supplier bills with their purchase orders and logs matches and differences."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "users.CreateMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows"],
+  "xero": ["accounting.getContacts", "accounting.createPurchaseOrders", "accounting.getInvoices"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"],
+  "xero": ["accounting.updatePurchaseOrder"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a row in the quote register or the checks log, an email draft in the buying mailbox, a Xero contact lookup, a purchase order in DRAFT status, a read of bills. Sending a clarification and setting a purchase order to AUTHORISED are live operations and wait for a person.",
+ "capabilities": ["messages.list", "messages.draft", "sheets.read", "sheets.append", "invoices.list"],
+ "adapters": {
+  "xero": {"status": "docs-only", "covers": "contact lookup, draft purchase order, award (AUTHORISED) and supplier bills read"},
+  "microsoft-365": {"status": "docs-only", "covers": "quote replies from the buying mailbox, email drafts and the send, quote register and checks log as Excel tables"}
+ },
+ "gaps": [
+  "Buildxact: sends RFQs and holds returned quotes in product, but its ops file is empty, so no adapter is built. Its RFQ is the natural home for request-quotes once it is mapped.",
+  "Simpro, JackApp, Buildertrend and SprintSuite: the kit has no platform for them. Dropbox and Google Workspace are named for filing quotes; the kit has those platforms but this workflow has no adapter for them, so quotes are logged in the Microsoft 365 workbook instead.",
+  "MYOB: its docs describe customer quotes and bill payments only, not supplier RFQs, PO approval or goods receipt, so no adapter is built.",
+  "Scope breakdown from plans and specs, and the trade list for request-quotes, are judgment work for the agent skill. Requests to trades still go out by hand.",
+  "Scope check is a keyword check against the scope list in settings. Judging whether an exclusion or allowance really changes the price is the owner's call.",
+  "Clarification replies come back as new quote replies. The workflow does not link a reply to the clarification it answers, so a reply that only covers the missing items is checked on its own.",
+  "A rejected clarification or award stays in the register as it is. The owner handles it in the CRM shell.",
+  "Xero purchase orders are created as DRAFT and set to AUTHORISED on approval. The docs do not describe a PO approval step inside Xero, so the approval here is the CRM shell's.",
+  "Receiving goods and confirming delivery dates or site access have no mapped operation in this workflow and are not covered.",
+  "Bill matching uses supplier contact and total only. The docs do not describe matching a bill to a PO, and trades rarely quote the PO number on their bill. Reads the first 100 bills per run.",
+  "Every adapter is docs-only until a Xero demo company and a Microsoft 365 developer tenant prove it."
+ ]
+}

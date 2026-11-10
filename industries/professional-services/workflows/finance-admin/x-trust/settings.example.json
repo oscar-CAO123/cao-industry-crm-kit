@@ -1,0 +1,7 @@
+{
+  "business_name": "Example Legal",
+  "trust": "smokeball",
+  "trust_accounts": [{"id": "BANK_ACCOUNT_ID", "name": "General trust"}],
+  "min_matter_balance": 0,
+  "approver_user_id": ""
+}

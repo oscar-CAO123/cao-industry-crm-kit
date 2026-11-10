@@ -1,0 +1,42 @@
+{
+ "id": "agriculture-mining:tickets",
+ "name": "Delivery tickets to data",
+ "industry": "agriculture-mining",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns paper delivery tickets into rows in the business's own ticket register, checks each grade against the contract, and queues a QC email for approval when a grade is wrong. Crons read and draft; a person approves every send.",
+ "families": {
+  "log-and-timber-export-receival": {
+   "steps": ["ticket-capture", "ticket-entry", "ticket-check", "grade-and-quality", "record-keeping"],
+   "covered_by": {"ticket-capture": "intake (dockets emailed in); the paper docket itself is read by a person", "ticket-entry": "skill (docket fields entered in the shell), then record", "ticket-check": "not yet (see gaps)", "grade-and-quality": "check (grade against the contract) and approval (QC email)", "record-keeping": "record (register row in the business's workbook)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Docket emails in the ticket mailbox become new tickets. Reads only."},
+  {"name": "record", "schedule": "7,22,37,52 * * * *", "entry": "record", "summary": "Complete new tickets get a row in the ticket register. Incomplete ones are held with the reason."},
+  {"name": "grade-check", "schedule": "35 * * * *", "entry": "grade-check", "summary": "Recorded tickets whose grade differs from the contract get a QC row and a QC email queued for approval."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the ticket mailbox, rows in the business's own ticket and QC tables, and an email draft. Sending the QC email is a live operation and waits for a person.",
+ "capabilities": ["tickets.read", "tickets.record", "qc.flag", "messages.draft", "messages.send"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "docket emails in, ticket register row, QC row, QC email draft and approved send"}
+ },
+ "gaps": [
+  "Agworld and John Deere Operations Center: the fetched docs describe field records and machine data only. No delivery ticket, weighbridge, grade, contract or invoicing step is described, and neither platform has a mapped operation for this job. No adapter built; a live account is needed to confirm.",
+  "Dock list check (driver checked against the inducted list before unloading): no mapped platform in the evidence. Agent skill step for now.",
+  "WhatsApp QC group (named on the call): WhatsApp operations are mapped in the kit, but this build sends the QC alert by email. Add a WhatsApp adapter only after the group send is confirmed.",
+  "Reading the paper docket (photo to fields): a person or the agent reads it and enters the fields in the shell. The kit has no OCR step.",
+  "Weighbridge weights: no mapped platform. Net tonnes come only from what the docket says.",
+  "Carrier payment and grower or supplier statements: not in the evidence and not built.",
+  "Microsoft 365 adapter is docs-only until a developer tenant and a real workbook prove the Excel table and mailbox calls.",
+  "The evidence file for platforms lists two platforms with no mapped operations, so the only adapter is Microsoft 365, the platform the call names."
+ ]
+}

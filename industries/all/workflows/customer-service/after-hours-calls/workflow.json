@@ -1,0 +1,47 @@
+{
+ "id": "after-hours-calls",
+ "name": "Answer or triage calls out of hours",
+ "industry": "all",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Triages calls that come in outside opening hours: reads the call log, flags urgent calls, drafts a caller record, and queues a text back to each caller and an urgent alert to the on-call person. The phone system answers the call; the crons read and draft, and a person approves every text.",
+ "families": {
+  "all": {
+   "steps": ["greeting-and-routing", "lead-capture", "send-confirmation", "other"],
+   "covered_by": {"greeting-and-routing": "phone system set-up (gap); intake reads what arrived", "lead-capture": "draft (caller record in Aircall)", "send-confirmation": "approval (text from JustCall)", "other": "approval (urgent alert to the on-call person)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "Calls from each platform's log that came in outside opening hours."},
+  {"name": "triage", "schedule": "*/15 * * * *", "entry": "triage", "summary": "Flag urgent calls, draft a caller record in Aircall, and queue the confirmation and urgent-alert texts for approval."},
+  {"name": "morning-handover", "schedule": "0 20 * * *", "entry": "morning-handover", "summary": "A plain-text list of the out-of-hours calls not yet handed over (20:00 UTC is 6 or 7 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "aircall": ["list-all-calls", "create-a-contact"],
+  "justcall": ["docs.get_v2_1_calls"]
+ },
+ "live_ops": {
+  "justcall": ["docs.post_v2_1_texts_new"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the call log, and a caller contact record inside Aircall. Any text to a caller or the on-call person is a live operation and waits for a person.",
+ "capabilities": ["calls.list", "contacts.upsert", "sms.send"],
+ "adapters": {
+  "aircall": {"status": "docs-only", "covers": "call log reads and a caller contact record per after-hours caller"},
+  "justcall": {"status": "docs-only", "covers": "call log reads and approval-gated texts to callers and the on-call person"}
+ },
+ "gaps": [
+  "Answering the call itself (Aircall's AI Voice Agent, a JustCall workflow, or 3CX's IVR, or a live answering service) is set up in each phone system. The kit has no operation for it, so this workflow reads what arrived and queues the follow-up.",
+  "3CX: no operations are mapped, and its help pages are thin, so there is no adapter. Confirm on a live account.",
+  "Aircall texts: the send-message operation maps its number id as both a query and a path part, so it is left out until the operation map is corrected. An Aircall-only business gets no automatic text back.",
+  "Aircall call transfer for emergency escalation is left out: it acts on a live call, and an approval arrives after the caller has hung up.",
+  "JustCall's list response wrapper is not confirmed in the docs (only the per-call fields are). The adapter reads an array or its data array. Confirm on a sandbox account.",
+  "JustCall's call list pages 100 at a time and the adapter reads up to 10 pages per run , stopping at the first short page. The from_datetime format and the sort order are not confirmed, so the lookback is applied after the read. A run that hits the 10-page cap logs that older calls may be unread.",
+  "Urgency is a keyword check on the call notes and voicemail transcript. Aircall's log is read without notes because its notes field is not confirmed in the docs, so urgent calls are only flagged for JustCall.",
+  "Callbacks, booking a job or appointment into a diary, and taking job details on the call are not mapped for either platform, so they are not built here.",
+  "Opening hours cover the weekly pattern only; a public holiday closure is not built.",
+  "A caller contact that is created but whose result is lost can be created twice. Each contact carries its call key in its information field so a person can spot a repeat.",
+  "Both adapters are docs-only until a trial Aircall account and a JustCall sandbox number prove the reads and the texts."
+ ]
+}

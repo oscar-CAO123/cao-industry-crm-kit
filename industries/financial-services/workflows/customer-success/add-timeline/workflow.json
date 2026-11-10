@@ -1,0 +1,41 @@
+{
+ "id": "financial-services:add-timeline",
+ "name": "Client timeline",
+ "industry": "financial-services",
+ "department": "customer-success",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps one timeline per client across the team: the notes and tasks on each client's record in the CRM, and a hand-off each time a file moves to another person. Crons read and draft; a status change waits for a person.",
+ "families": {
+  "all": {
+   "steps": ["contact-logged", "note-written", "client-request", "hand-off", "status-update", "record-keeping", "file-review", "other"],
+   "covered_by": {"contact-logged": "gap (no mapped activity read in GoHighLevel)", "note-written": "draft (hand-off note on the contact)", "client-request": "skill", "hand-off": "draft (note, follow-up task, follower)", "status-update": "approval", "record-keeping": "timeline (store) and draft (hand-off note)", "file-review": "check-in (draft task when a client goes quiet)", "other": "skill"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "timeline", "schedule": "*/30 * * * *", "entry": "timeline", "summary": "Read the notes and tasks on every watched client and keep one timeline per client."},
+  {"name": "hand-off", "schedule": "*/15 * * * *", "entry": "hand-off", "summary": "A hand-off recorded in the CRM shell becomes a note, a follow-up task and a follower. A status change is only queued."},
+  {"name": "check-in", "schedule": "0 22 * * *", "entry": "check-in", "summary": "Create one follow-up task for the owner on each client with no note for the set number of days (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "gohighlevel": ["contacts.get-all-notes", "contacts.get-all-tasks", "contacts.create-note", "contacts.create-task", "opportunities.add-followers-opportunity"]
+ },
+ "live_ops": {
+  "gohighlevel": ["opportunities.update-opportunity-status"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read, a note on a client record, a task for a team member, a follower on an opportunity. Moving an opportunity to won, lost or abandoned waits for a person in the CRM shell.",
+ "capabilities": ["contacts.list", "tasks.list", "tasks.create"],
+ "adapters": {
+  "gohighlevel": {"status": "docs-only", "covers": "notes and tasks read, notes and tasks written, followers, opportunity status (queued only)"}
+ },
+ "gaps": [
+  "HubSpot: notes and timeline events are mapped, but no adapter is built. Field names were not confirmed against the vendor spec in this build.",
+  "Salestrekker: no kit platform folder and its help page has no operations file, so nothing can be mapped yet.",
+  "Fireflies: Not in this build.",
+  "Client activity has no mapped read in GoHighLevel, so the timeline shows notes and tasks only.",
+  "The hand-off form that writes a record to the store is part of the CRM shell, not this folder.",
+  "Notes and tasks are read on the first page only. The API returns hasMore but this build does not follow it.",
+  "The adapter is docs-only until a GoHighLevel sandbox sub-account proves it. Nothing here sends a message to a client."
+ ]
+}

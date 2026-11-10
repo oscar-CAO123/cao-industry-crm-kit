@@ -1,0 +1,20 @@
+{
+  "crm": "pipedrive",
+  "business_name": "Example Co",
+  "pipeline_id": "PIPELINE_ID",
+  "watch": [
+    {"stage_id": "NEW_LEAD_STAGE_ID", "role": "lead"},
+    {"stage_id": "QUOTE_SENT_STAGE_ID", "role": "quote"}
+  ],
+  "follow_up": {"after_days": [3, 7]},
+  "lost_after_days": 14,
+  "lost_reason": "No reply after follow-ups",
+  "templates": {
+    "first_touch": "Hi, thanks for getting in touch with {business_name} about {title}. Are you still after help with this? Reply here and we will pick it up.",
+    "quote_first": "Hi, we sent a quote through from {business_name} for {title}. Did you get a chance to look at it? Happy to answer any questions.",
+    "follow_up": [
+      "Hi, just checking in from {business_name} on {title}. Happy to answer any questions.",
+      "Hi, last check in from {business_name} on {title}. If the timing is not right, just let us know and we will close the file."
+    ]
+  }
+}

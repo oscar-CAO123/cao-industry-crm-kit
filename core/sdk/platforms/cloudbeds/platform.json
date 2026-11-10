@@ -1,0 +1,101 @@
+{
+ "id": "cloudbeds",
+ "name": "Cloudbeds",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.cloudbeds.com",
+  "api.payments.cloudbeds.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "api\\.(?:cloudbeds)\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "environment": {
+   "env": "CLOUDBEDS_ENVIRONMENT",
+   "default": "cloudbeds",
+   "pattern": "cloudbeds",
+   "example": "cloudbeds"
+  },
+  "ota": {
+   "env": "CLOUDBEDS_OTA",
+   "pattern": "[a-z0-9-]+",
+   "envOnly": true,
+   "example": "acme"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "x-api-key",
+  "env": "CLOUDBEDS_API_KEY"
+ },
+ "keys": [
+  "CLOUDBEDS_API_KEY",
+  "CLOUDBEDS_ENVIRONMENT (optional: cloudbeds default)",
+  "CLOUDBEDS_OTA"
+ ],
+ "sources": [
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  },
+  {
+   "url": "https://codeload.github.com/cloudbeds/openapi-specs/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://developers.cloudbeds.com/docs/postman-api-collection links github.com/cloudbeds"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 673,
+  "read": 287,
+  "write": 386
+ }
+}

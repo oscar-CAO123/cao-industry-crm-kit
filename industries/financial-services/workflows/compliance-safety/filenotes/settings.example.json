@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Advice Group",
+ "adviser": "Adviser name",
+ "lookback_days": 2,
+ "max_per_run": 20
+}

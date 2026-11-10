@@ -1,0 +1,110 @@
+{
+  "id": "crm-hygiene",
+  "name": "Clean, dedupe and enrich CRM records",
+  "industry": "all",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Cleans and dedupes the business's own CRM records on a schedule. A weekly scan reads the contacts, finds records that share an email address and records whose email needs trimming or lowercasing, and drafts a register of those fixes. Each merge and each email change is queued for a person to approve, so nothing in the CRM is merged or changed until a person approves it.",
+  "families": {
+    "crm-hygiene": {
+      "steps": [
+        "spot-the-mess",
+        "export-records",
+        "find-duplicates",
+        "merge-duplicates",
+        "standardise-fields",
+        "enrich-missing-data",
+        "verify-contacts",
+        "fix-owners-and-stages",
+        "archive-stale",
+        "tag-and-segment",
+        "import-sync-fix",
+        "check-after-clean",
+        "schedule-recurring-clean",
+        "record-keeping",
+        "other"
+      ],
+      "covered_by": {
+        "spot-the-mess": "scan (the register lists duplicates and email tidies)",
+        "export-records": "scan (reads the records through the CRM API; no file export)",
+        "find-duplicates": "scan (records that share an email address)",
+        "merge-duplicates": "queued merge, approved by a person",
+        "standardise-fields": "queued email tidy, approved by a person (email addresses only)",
+        "enrich-missing-data": "not built (see gaps)",
+        "verify-contacts": "not built (see gaps)",
+        "fix-owners-and-stages": "person (no owner or stage change is built)",
+        "archive-stale": "not built (see gaps)",
+        "tag-and-segment": "person (no tag or segment write is built)",
+        "import-sync-fix": "person (imports and syncs stay in the CRM)",
+        "check-after-clean": "scan (a merged or tidied record leaves the register on the next full read)",
+        "schedule-recurring-clean": "crons (weekly scan, daily queue)",
+        "record-keeping": "register in the workflow store; approval history in the CRM shell",
+        "other": "person (judgment on records that only look alike)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {
+      "name": "scan",
+      "schedule": "0 19 * * 0",
+      "entry": "scan",
+      "summary": "Weekly (Sunday 19:00 UTC, Monday morning in eastern Australia): reads the records, groups them by email address and drafts the register. Changes nothing in the CRM."
+    },
+    {
+      "name": "queue",
+      "schedule": "0 22 * * *",
+      "entry": "queue",
+      "summary": "Daily (22:00 UTC): queues each open register item for approval. A merge or an email change runs only when a person approves it."
+    }
+  ],
+  "draft_ops": {
+    "hubspot": [
+      "crm-contacts-3.post-/crm/v3/objects/contacts/search_doSearch",
+      "crm-contacts-3.get-/crm/v3/objects/contacts/{contactId}_getById"
+    ],
+    "pipedrive": [
+      "openapi-v2.getPersons",
+      "openapi-v2.getPerson"
+    ]
+  },
+  "live_ops": {
+    "hubspot": [
+      "crm-contacts-3.post-/crm/v3/objects/contacts/merge_merge",
+      "crm-contacts-3.post-/crm/v3/objects/contacts/batch/update_update"
+    ],
+    "pipedrive": [
+      "docs_api_v1.mergePersons",
+      "openapi-v2.updatePerson"
+    ]
+  },
+  "draft_ops_note": "Draft operations here are reads only. The register lives in the workflow store, so a scan writes nothing to the CRM. A merge deletes a record and an email change alters one, so both are live operations that wait for a person.",
+  "capabilities": [
+    "contacts.list",
+    "contacts.upsert",
+    "contacts.merge"
+  ],
+  "adapters": {
+    "hubspot": {
+      "status": "docs-only",
+      "covers": "contacts that hold an email: duplicate merge and email tidy, both queued for approval"
+    },
+    "pipedrive": {
+      "status": "docs-only",
+      "covers": "persons that hold an email: duplicate merge and email tidy, both queued for approval"
+    }
+  },
+  "gaps": [
+    "Zoho: its CRM API is mapped (merge, mass update, owner change, tags, duplicate check), but the help pages fetched were Zoho Books pages, not Zoho CRM. The steps are unconfirmed and no adapter is built. A Zoho CRM sandbox is needed.",
+    "Enrichment (enrich-missing-data) and verification (verify-contacts) have no mapped route on HubSpot or Pipedrive. Pipedrive's data enrichment runs inside the app on credits, with no API route in the spec.",
+    "Owners, stages, tags, segments, archiving and import or sync fixes have no adapter here. They are person steps for now.",
+    "Only contacts (HubSpot) and persons (Pipedrive) are scanned. Companies and organisations are not.",
+    "Duplicates are found by an exact email address after trimming and lowercasing. Matches by name or phone need a person's judgment and are not built.",
+    "HubSpot treats the contact email as its unique key, so the scan may find few duplicates there. Confirm on a live account.",
+    "Pipedrive merge direction is read from the spec wording (the path id is merged away, merge_with_id is kept). It is not yet proven on a sandbox.",
+    "A merge cannot be reversed by this workflow. The approval records which records were merged.",
+    "Nothing in the kit shows the register yet. A person reads it from the workflow store until a view exists.",
+    "Neither adapter is proven against a real account. Both are offline-tested only, with a fake network."
+  ]
+}

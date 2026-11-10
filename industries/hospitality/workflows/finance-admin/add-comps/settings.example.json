@@ -1,0 +1,10 @@
+{
+  "business_name": "Example Hospitality Group",
+  "utc_offset_hours": 11,
+  "review_over_pct": 10,
+  "allowed_discounts": ["Staff meal", "Happy hour"],
+  "venues": [
+    {"name": "Example Bar", "square_location_id": "LOCATION_ID"},
+    {"name": "Example Function Room", "square_location_id": "LOCATION_ID_2"}
+  ]
+}

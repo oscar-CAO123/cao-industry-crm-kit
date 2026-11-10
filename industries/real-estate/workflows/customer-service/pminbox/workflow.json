@@ -1,0 +1,44 @@
+{
+ "id": "real-estate:pminbox",
+ "name": "Mornings lost to manager email",
+ "industry": "real-estate",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Sorts the property manager's unread email into urgent, maintenance, owner, tenant, other and noise, drafts approved template replies for a person to approve, and leaves one morning summary as a Gmail draft. Crons read and draft; a person approves every reply before it is sent.",
+ "families": {
+  "all": {
+   "steps": ["email-intake", "triage", "reply-tenant-or-owner", "log-request", "record-keeping"],
+   "covered_by": {"email-intake": "intake (polls every 15 minutes; no webhook)", "triage": "intake (keyword rules flag urgent mail)", "reply-tenant-or-owner": "draft (approved templates) and approval", "log-request": "not built (see gaps)", "record-keeping": "digest (summary draft); the property record is not built"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "New unread mail from the manager's Gmail inbox, sorted by keyword rules. Noise is skipped."},
+  {"name": "draft", "schedule": "7,22,37,52 * * * *", "entry": "draft", "summary": "Queue approved template replies for approval. Urgent mail and mail with no template are left for a person."},
+  {"name": "digest", "schedule": "30 20 * * *", "entry": "digest", "summary": "One summary draft of the mail not yet summarised, urgent first (20:30 UTC is 6:30 am in standard time and 7:30 am in daylight saving). Drafted only when there is new mail."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["gmail.users.threads.list", "gmail.users.threads.get", "gmail.users.drafts.create"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of unread inbox threads, a Gmail draft reply on the thread, a Gmail draft summary in the manager's mailbox. The only send is a reply, and it is queued for a person to approve.",
+ "capabilities": ["messages.list", "messages.draft", "messages.send"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "Gmail: read unread inbox threads, draft a reply on the thread, draft the morning summary, send a reply draft after approval"}
+ },
+ "gaps": [
+  "Console (now Reapit): help pages cover maintenance and the owner and tenant portals, but no operations are mapped in the kit, so no adapter.",
+  "PropertyMe: its help pages cover Messages, Reply with AiMe and Arrears Automation, but the kit lists no operations for it (gated: nothing public to map), so no adapter.",
+  "Outlook (Microsoft 365): the kit maps the Graph mail calls, but this job's evidence does not name the mailbox. Build an Outlook adapter once the business says it uses Outlook.",
+  "Maintenance requests: VaultRE and Re-Leased are mapped and hold maintenance and contact records, but no adapter writes a request to either. The maintenance step stays with the person who logs it today.",
+  "Property and tenancy lookup before a reply: VaultRE and Re-Leased are mapped for contacts and tenancies, but no lookup is built here.",
+  "Urgent mail: the keyword rules flag it and the digest puts it first. A person decides whether it is an emergency and who attends. Nothing here dispatches a tradesperson.",
+  "Trade chasing, owner approval of spend, escalation to a manager or after-hours on-call: judgment or unmapped steps, not automated.",
+  "Reply wording: the owner approves each template. Templates must not promise a date or a price.",
+  "The workflow has no alert when a cron stops. The call that described a morning bot stopping for days after it was moved is the reason to check the run log each morning.",
+  "Google Workspace is docs-only until a Gmail account proves the reads and drafts."
+ ]
+}

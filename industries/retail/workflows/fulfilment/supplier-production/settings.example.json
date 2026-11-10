@@ -1,0 +1,14 @@
+{
+ "family": "all",
+ "business_name": "Example Apparel Co",
+ "production": "monday",
+ "suppliers": "xero",
+ "rate_card": "xero",
+ "monday": {
+  "board_id": "BOARD_ID",
+  "columns": {"status": "status", "factory": "factory", "delivery": "delivery_date"},
+  "labels": {"new": "New order", "po_drafted": "PO drafted", "at_risk": "At risk", "shipped": "Shipped"}
+ },
+ "xero": {"deposit_percent": 30, "bank_account_code": "BANK_CODE", "purchase_account_code": "PURCHASE_ACCOUNT_CODE"},
+ "delivery_warn_days": 21
+}

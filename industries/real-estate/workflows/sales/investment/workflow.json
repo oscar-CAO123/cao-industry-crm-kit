@@ -1,0 +1,45 @@
+{
+ "id": "real-estate:investment",
+ "name": "Investment maths by hand",
+ "industry": "real-estate",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Checks each watched investment property's record and price estimate, works out gross yield and cash flow from the buyer's assumptions, and records the result as a note on the property. Crons read and draft; nothing reaches the investor without a person.",
+ "families": {
+  "buyers-agent-shortlist": {
+   "steps": ["property-facts", "comparable-sales", "cash-flow", "scenario-compare", "present-to-client"],
+   "covered_by": {
+    "property-facts": "draft (VaultRE property read, Domain price estimate read)",
+    "comparable-sales": "gap (no mapped comparables lookup; see gaps)",
+    "cash-flow": "draft (gross yield and cash flow from settings assumptions, noted on the property)",
+    "scenario-compare": "skill (the agent compares scenarios by hand and updates the assumptions)",
+    "present-to-client": "gap (no mapped sending platform; see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "property-facts", "schedule": "0 21 * * *", "entry": "propertyFacts", "summary": "Read each watched property's record and its Domain price estimate (21:00 UTC is 7 or 8 am in eastern Australia)."},
+  {"name": "cash-flow-note", "schedule": "*/30 * * * *", "entry": "cashFlowNote", "summary": "Work out gross yield and cash flow from the assumptions, and draft a note on the property record when they change."}
+ ],
+ "draft_ops": {
+  "vaultre": ["getProperty", "addPropertyNote"],
+  "domain": ["docs.get_v1_properties_propertyId_priceEstimate"]
+ },
+ "live_ops": {},
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read, or a note on a property record inside VaultRE. Nothing here emails, enquires, or changes a status a customer or agent can see.",
+ "adapters": {
+  "vaultre": {"status": "docs-only", "covers": "property read and property note (addPropertyNote: body, readOnly, type confirmed in the vendor spec)"},
+  "domain": {"status": "docs-only", "covers": "price estimate read by propertyId; the response is stored as returned because its fields are not confirmed in the vendor page"}
+ },
+ "gaps": [
+  "Comparable sales: no mapped per-property comparables lookup. Domain's listings search is a POST that the kit classes as a write, so it is not a draft operation here. The price estimate is the only valuation read.",
+  "Domain price estimate response: the vendor page in endpoint-map/raw does not show the response fields (the OpenAPI spec was not downloaded), so the adapter stores the reply as returned and nothing reads named fields from it.",
+  "Present to investor: no mapped platform sends email or messages for this job. google-workspace and microsoft-365 have no mail or Sheets operations in the kit's ops files. Four-property shortlists go out by hand until a sending adapter is mapped.",
+  "Live operations: none. The only outward step (sending properties to the investor) has no mapped operation, so nothing is queued for approval.",
+  "CoreLogic RP Data: the pages supplied are market insight articles with no product or API docs, so it is not mapped.",
+  "Tax impact, yield and growth outlook, and scenario comparisons are judgment steps for the agent in SKILL.md, not crons.",
+  "Every adapter is docs-only until a sandbox or trial account proves it. The VaultRE adapter needs a real account to confirm the property note type ID."
+ ]
+}

@@ -1,0 +1,36 @@
+{
+ "id": "mobile-message",
+ "name": "Mobile Message",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.mobilemessage.com.au"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "MOBILE_MESSAGE_USERNAME",
+  "pass": "MOBILE_MESSAGE_PASSWORD"
+ },
+ "keys": [
+  "MOBILE_MESSAGE_USERNAME",
+  "MOBILE_MESSAGE_PASSWORD"
+ ],
+ "sources": [
+  {
+   "url": "https://mobilemessage.com.au/assets/openapi.json",
+   "official": "vendor-domain: mobilemessage.com.au"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 33,
+  "read": 13,
+  "write": 20
+ }
+}

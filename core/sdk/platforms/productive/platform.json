@@ -1,0 +1,41 @@
+{
+ "id": "productive",
+ "name": "Productive",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.productive.io"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "queryArrays": "comma",
+ "queryObjects": "deepObject",
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-Auth-Token",
+  "env": "PRODUCTIVE_API_TOKEN",
+  "extraHeaders": {
+   "X-Organization-Id": "PRODUCTIVE_ORGANIZATION_ID"
+  }
+ },
+ "keys": [
+  "PRODUCTIVE_API_TOKEN",
+  "PRODUCTIVE_ORGANIZATION_ID"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.productive.io/openapi.json",
+   "official": "vendor-domain: developer.productive.io"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 837,
+  "read": 288,
+  "write": 549
+ }
+}

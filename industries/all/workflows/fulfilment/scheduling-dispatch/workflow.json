@@ -1,0 +1,52 @@
+{
+ "id": "scheduling-dispatch",
+ "name": "Schedule and dispatch jobs, staff or vehicles",
+ "industry": "all",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Schedules and dispatches jobs to field crews: gives each open job the earliest day a crew member has room, drafts the allocation and the crew note in the business's own system, and queues the client's visit text for approval. Crons read and draft; a person approves every client message.",
+ "families": {
+  "dispatched-field-crews": {
+   "steps": ["booking-request", "job-booking", "crew-allocation", "dispatch-notify", "on-the-day-changes", "client-reschedule", "record-keeping"],
+   "covered_by": {"booking-request": "intake (Work Order jobs only; client self-booking not built)", "job-booking": "allocate", "crew-allocation": "allocate (earliest day with room, least loaded crew member)", "dispatch-notify": "allocate (crew note) and notify (client text, approval first)", "on-the-day-changes": "not built (see gaps)", "client-reschedule": "not built (see gaps)", "record-keeping": "ServiceM8 holds the allocation; the CRM shell shows status"}
+  },
+  "rostered-shift-staff": {
+   "steps": ["roster-build", "record-keeping"],
+   "covered_by": {"roster-build": "not built (Deputy adapter left out, see gaps)", "record-keeping": "not built"}
+  },
+  "unclear": {
+   "steps": ["crew-allocation"],
+   "covered_by": {"crew-allocation": "not built until the way of working is clear"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Open Work Order jobs that have no crew yet."},
+  {"name": "allocate", "schedule": "15,45 * * * *", "entry": "allocate", "summary": "Draft a crew allocation for each waiting job on the earliest day with room, and a note to the crew member."},
+  {"name": "notify", "schedule": "20,50 * * * *", "entry": "notify", "summary": "Queue the client's visit text for each upcoming allocation, for approval."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobAllocations", "servicem8-api.listStaffMembers", "servicem8-api.listCompanyContacts",
+                "servicem8-api.createJobAllocations", "servicem8-api.createStaffMessages"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_sms"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, a job allocation (a crew member's day in ServiceM8, which the office can move), and a staff note to a crew member. Anything that texts or emails a client waits for a person.",
+ "capabilities": ["jobs.list", "jobs.update", "contacts.list", "messages.draft", "sms.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "field-crew schedule: open Work Order jobs, crew allocations, staff notes, client visit texts for approval"}
+ },
+ "gaps": [
+  "Deputy: the rostered-shift family needs Deputy, and no adapter is built. The vendor spec gives no response shape for the roster list, staff status, unavailability or suggestion endpoints, so their fields cannot be confirmed. The copy, publish and discard requests are confirmed, but the roster ids they need come from the unconfirmed list. The non-deprecated create-roster route is not mapped.",
+  "Tradify: no ops file, so no API operations are mapped for it. Several of its help pages returned HTTP 403 and were not read.",
+  "Route planning and vehicle or equipment allocation: no mapped platform covers ordering a day's jobs by travel. The crons do not group jobs by suburb or assign vehicles; the office does this as a judgment step.",
+  "Staff leave and unavailability: the allocate cron counts only the crew's existing allocations. It does not read leave or availability windows (ServiceM8 Availability is in the spec, but its availability_type values are not).",
+  "allocation_date format: the field is a string in the spec. The day filter and the day check assume YYYY-MM-DD. Prove both on a ServiceM8 trial account before any live run.",
+  "On-the-day changes, overruns, same-day swaps and client reschedules: not built. The office handles them in ServiceM8.",
+  "Client self-booking (the booking-request step where the customer picks a slot): not built. intake reads jobs already in Work Order status.",
+  "Timesheet check (clock on and off against allocations): not built.",
+  "ServiceM8 is docs-only until a sandbox account proves each call, the same as the quoting workflow."
+ ]
+}

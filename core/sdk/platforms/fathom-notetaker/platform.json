@@ -1,0 +1,35 @@
+{
+ "id": "fathom-notetaker",
+ "name": "Fathom",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.fathom.ai"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-Api-Key",
+  "env": "FATHOM_API_KEY"
+ },
+ "keys": [
+  "FATHOM_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.fathom.ai/api-reference/openapi.yaml",
+   "official": "vendor-domain: developers.fathom.ai"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 11,
+  "read": 8,
+  "write": 3
+ }
+}

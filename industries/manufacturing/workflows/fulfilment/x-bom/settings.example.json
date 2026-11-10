@@ -1,0 +1,6 @@
+{
+  "business_name": "Example Manufacturing",
+  "boms": [
+    {"parent": "BOOKSHELF", "lines": [{"code": "SIDE", "qty": 2}, {"code": "SHELF", "qty": 4}]}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+ "id": "granola",
+ "name": "Granola",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "public-api.granola.ai"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "GRANOLA_API_KEY"
+ },
+ "keys": [
+  "GRANOLA_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.granola.ai/api-reference/openapi.json",
+   "official": "vendor-domain: docs.granola.ai"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 19,
+  "read": 10,
+  "write": 9
+ }
+}

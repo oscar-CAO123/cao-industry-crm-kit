@@ -1,0 +1,448 @@
+{
+ "id": "justcall",
+ "name": "JustCall",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.justcall.io"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "template",
+  "header": "Authorization",
+  "template": "{JUSTCALL_API_KEY}:{JUSTCALL_API_SECRET}"
+ },
+ "keys": [
+  "JUSTCALL_API_KEY",
+  "JUSTCALL_API_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.justcall.io/llms.txt",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/authentication.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_update_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_get_journey_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_get_voice_agent_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_recording_download_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/contacts_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/contact_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/create_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/update_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/update_contact_status_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/delete_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/bulk_add_contacts_to_blacklist_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/list_blacklist_contacts_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/phone_number_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/phone_number_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/phone_number_detect_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_messages_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_send_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_templates_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_templates_create_card_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_templates_create_carousel_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_templates_create_media_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_message_templates_create_text_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/rcs_phones_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/special_dates_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/special_dates_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/special_dates_delete_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/special_dates_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/special_dates_update_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_checkreply_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_new_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_tags_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_tags_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_tags_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_tags_delete_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_threads_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_threads_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/add_tag_to_thread_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/remove_tag_from_thread_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_delete_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_messages_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_messages_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_messages_send_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_members_add_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/texts_groups_members_remove_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_account_analytics_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_agent_analytics_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_number_analytics_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_groups_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_update_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_add_members_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_remove_members_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_group_delete_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/users_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/update_user_availability_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/list_voice_agents_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/initiate_outbound_call_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/whatsapp_messages_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/whatsapp_message_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/whatsapp_message_send_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/whatsapp_message_templates_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/whatsapp_check_reply_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_call_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_call_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_campaign_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_campaign_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_create_campaign_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_campaign_update_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_campaign_contacts_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_add_contact_to_campaign_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_remove_contact_from_campaign_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_list_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_get_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_create_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_update_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_delete_contact_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/bulk_import_contacts_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/bulk_import_contacts_status_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_bulk_add_dnca_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sd_list_contact_custom_fields.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/sales_dialer_agent_analytics_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_ai_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/call_ai_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/meeting_ai_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/meeting_ai_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/appointment_available_slots_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/appointment_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/appointment_get_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/webhook_list_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/webhook_create_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/webhook_delete_url_v21.md",
+   "official": "vendor-domain: developer.justcall.io"
+  },
+  {
+   "url": "https://developer.justcall.io/reference/contacts.md",
+   "official": "vendor-domain: developer.justcall.io"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 101,
+  "read": 55,
+  "write": 46
+ }
+}

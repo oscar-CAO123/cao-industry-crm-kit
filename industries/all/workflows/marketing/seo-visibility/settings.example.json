@@ -1,0 +1,16 @@
+{
+ "business_name": "Example Plumbing",
+ "ahrefs": {
+   "target": "example.com.au",
+   "project_id": 0,
+   "country": "au",
+   "device": "desktop"
+ },
+ "seed_keywords": ["emergency plumber sydney", "blocked drain sydney"],
+ "retire_keywords": [],
+ "brand_radar": {
+   "report_id": "",
+   "brand": "Example Plumbing",
+   "models": "chatgpt,perplexity"
+ }
+}

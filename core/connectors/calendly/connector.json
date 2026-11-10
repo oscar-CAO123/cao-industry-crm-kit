@@ -1,0 +1,18 @@
+{
+  "id": "calendly",
+  "name": "Calendly",
+  "docs": "https://developer.calendly.com/api-docs",
+  "account_to_test": "Calendly account; personal access token",
+  "cost_to_test": "Not checked",
+  "fallback": "none",
+  "terms_checked": false,
+  "capabilities": [
+    "bookings.list"
+  ],
+  "script": "core/connectors/calendly/client.ts",
+  "status": "code-built",
+  "keys": [
+    "CALENDLY_API_TOKEN"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

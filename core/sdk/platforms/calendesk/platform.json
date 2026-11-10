@@ -1,0 +1,43 @@
+{
+ "id": "calendesk",
+ "name": "Calendesk",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.calendesk.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-Api-Key",
+  "env": "CALENDESK_API_KEY",
+  "extraHeaders": {
+   "X-Tenant": "CALENDESK_TENANT"
+  }
+ },
+ "keys": [
+  "CALENDESK_API_KEY",
+  "CALENDESK_TENANT"
+ ],
+ "sources": [
+  {
+   "url": "https://api.calendesk.com/docs/spec/admin.yaml",
+   "official": "vendor-domain: api.calendesk.com"
+  },
+  {
+   "url": "https://api.calendesk.com/docs/spec/customer.yaml",
+   "official": "vendor-domain: api.calendesk.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 301,
+  "read": 117,
+  "write": 184
+ }
+}

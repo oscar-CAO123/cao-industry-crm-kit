@@ -1,0 +1,14 @@
+{
+  "name": "industry-kit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.test.ts\" \"tests/*.test.mjs\"",
+    "check": "node tools/check.mjs",
+    "sdk:generate": "node tools/sdk-generate.mjs",
+    "sdk": "node tools/sdk.mjs"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

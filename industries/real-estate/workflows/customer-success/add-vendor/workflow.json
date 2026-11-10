@@ -1,0 +1,98 @@
+{
+ "id": "real-estate:add-vendor",
+ "name": "Vendor report in one tap",
+ "industry": "real-estate",
+ "department": "customer-success",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Vendor report in one tap: reads each listing's record and open homes from VaultRE, drafts the report to the vendor in Outlook once the agent has written the commentary, and queues the send for one approval. Crons read and draft; a person approves every send.",
+ "families": {
+  "listing-report": {
+   "steps": [
+    "stats-export",
+    "weekly-figures",
+    "check-figures",
+    "write-commentary",
+    "manager-review",
+    "send-report",
+    "vendor-questions",
+    "price-review-call",
+    "record-keeping"
+   ],
+   "covered_by": {
+    "stats-export": "cron pull (VaultRE listing record and open homes; portal views and enquiries are a gap)",
+    "weekly-figures": "cron pull (open homes in the window)",
+    "check-figures": "skill (the agent checks the figures before commentary is written)",
+    "write-commentary": "skill (the agent writes commentary into the store)",
+    "manager-review": "approval (principal reviews the Outlook draft before the one-tap send)",
+    "send-report": "approval (one tap sends the Outlook draft)",
+    "vendor-questions": "not covered",
+    "price-review-call": "not covered",
+    "record-keeping": "draft (VaultRE activity note on the property)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "pull",
+   "schedule": "0 21 * * 0-4",
+   "entry": "pull",
+   "summary": "Read each listing's record and open homes from VaultRE (7am Monday to Friday in Sydney)."
+  },
+  {
+   "name": "draft",
+   "schedule": "30 21 * * 0-4",
+   "entry": "draft",
+   "summary": "Draft each listing's vendor report in Outlook and queue its send for approval, once commentary is written."
+  }
+ ],
+ "draft_ops": {
+  "vaultre": [
+   "getProperty",
+   "getPropertyOpenHomes",
+   "addPropertyActivityNote"
+  ],
+  "microsoft-365": [
+   "users.CreateMessages"
+  ],
+  "rex": [
+   "listings.read"
+  ]
+ },
+ "live_ops": {
+  "microsoft-365": [
+   "users.user.messages.message.send"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a read of a property or its open homes, an Outlook draft that a person still has to send, and an activity note on the property record. Sending the Outlook draft is a live operation and waits for a person.",
+ "capabilities": [
+  "properties.list",
+  "listings.list",
+  "reports.run",
+  "messages.draft"
+ ],
+ "adapters": {
+  "vaultre": {
+   "status": "docs-only",
+   "covers": "listing record and open homes read; activity note as the internal record"
+  },
+  "microsoft-365": {
+   "status": "docs-only",
+   "covers": "Outlook draft to the vendor and the one-tap send"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "listing record read (heading, address, price, open homes from the listing's events); no note written"
+  }
+ },
+ "gaps": [
+  "Rex: a business sets platform to rex in settings, and each vendor's property_id is the Rex listing id. The report's heading (the internet advert heading), address and price come from listings.read, and the open homes come from the listing's events with event_type open_home within the report window (the day and time carry no zone in the docs sample, so they are shown as Rex gives them). If the reply carries no events list, open homes are left out of the report and it says nothing about them. No note is written to the listing (none in the pages read), and Rex's vendor feedback is not used. Not confirmed on a live account: that listings.read returns the related block by default (the docs sample does, with no fields asked), and the zone of the event times.",
+  "Portal figures (views, enquiries, inspections) are not mapped: realestate.com.au's Campaign API and Console Cloud have no operations in the kit. Their platform maps are needed before the report carries portal numbers.",
+  "The VaultRE owner list and feedback summary have no typed response schema in the vendor spec, so the vendor's email is set in settings instead of read from the owner record.",
+  "PropertyMe, the tool named on the outside call, has no platform in the kit.",
+  "No command or shell form yet writes commentary into the store under commentary. tools/workflow.ts only has propose, which is quoting's. Until one exists, the draft cron waits at needs-commentary.",
+  "Commentary, the manager review, vendor questions and price review calls are judgment steps. Vendor questions and price review calls are not covered by any cron or skill.",
+  "Both adapters are docs-only: VaultRE is status spec with offline tests only, and the Microsoft 365 token flow is not built (a Graph access token is supplied by hand)."
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "id": "real-estate:settlement",
+ "name": "Settlement dates typed by hand",
+ "industry": "real-estate",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps each matter's settlement date in one place: the date the solicitors agree goes onto the Smokeball matter calendar, a typed date that disagrees is queued for a person to approve, and the team gets a reminder before settlement. Crons read and draft; nothing moves a settlement date without approval. On Rex it reads the sale contract's expected settlement date, flags a different agreed date for a person, and lists upcoming settlements; it writes nothing to Rex.",
+ "families": {
+  "all": {
+   "steps": [
+    "settlement-date-agreed",
+    "settlement-date-typed",
+    "date-change",
+    "reminders-and-chasing"
+   ],
+   "covered_by": {
+    "settlement-date-agreed": "agreed record (judgment: read the signed contract or the solicitor's confirmation, see SKILL.md)",
+    "settlement-date-typed": "register and check (Smokeball calendar event on the matter)",
+    "date-change": "check queues the change for approval",
+    "reminders-and-chasing": "reminders cron (one reminder per settlement event)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "register",
+   "schedule": "*/30 * * * *",
+   "entry": "register",
+   "summary": "Read the open matters and their settlement events into the register. Reads only."
+  },
+  {
+   "name": "check",
+   "schedule": "10,40 * * * *",
+   "entry": "check",
+   "summary": "Compare each agreed date with the register: draft a missing settlement event, queue a changed date for approval."
+  },
+  {
+   "name": "reminders",
+   "schedule": "0 22 * * *",
+   "entry": "reminders",
+   "summary": "Draft one reminder per upcoming settlement event (22:00 UTC is 8 or 9 am in eastern Australia). Does nothing until the reminder settings are set."
+  }
+ ],
+ "draft_ops": {
+  "smokeball": [
+   "GetMatters",
+   "GetEvents",
+   "GetEventById",
+   "CreateEvent",
+   "CreateReminder"
+  ],
+  "rex": [
+   "contracts.search"
+  ]
+ },
+ "live_ops": {
+  "smokeball": [
+   "UpdateEvent"
+  ]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of matters and events, a new settlement event on the matter's calendar, and a reminder on that event. Moving an existing settlement date is a live operation: it changes a date the solicitors, the vendor and the buyer rely on, so it waits for a person.",
+ "capabilities": [
+  "matters.list",
+  "events.read",
+  "events.create",
+  "reminders.create",
+  "events.update"
+ ],
+ "adapters": {
+  "smokeball": {
+   "status": "docs-only",
+   "covers": "open matters, settlement calendar events on each matter, reminders; date change queued for approval"
+  },
+  "rex": {
+   "status": "docs-only",
+   "covers": "contracts read (expected and actual settlement dates); a difference from the agreed date is flagged, nothing is written to Rex"
+  }
+ },
+ "gaps": [
+  "Rex: a business sets platform to rex and settings.rex.contract_statuses (Rex's own contract status words; only 'offer' is shown on the docs page, so the business lists the ones it uses). The settlement date is the sale contract's date_expec_settlement; a contract with date_actual_settlement set is settled and left out. The crons read contracts.search only (rows received set the next offset, a list shorter than Rex's total is refused, 50 pages at most). An agreed date that differs from Rex is flagged once and logged, and a person changes it in Rex, because the contracts.update page does not show where the contract id goes in the body, so no write is built. The reminders cron lists contracts settling within remind_days in the store (settlement-due) and writes no Rex reminder, because the documented create example concerns scheduled contact/property email and does not document a contract association. Cooling-off, finance and deposit dates are also on the contract but are not tracked.",
+  "Smokeball's official spec has no settlement field. The settlement date is a calendar event on the matter whose subject contains the settlement word. The firm must confirm that convention in its own account before any live use.",
+  "Smokeball is spec-only: the sign-in comes from vendor docs and is unproven, and nothing has run against a real account. It needs a sandbox or live test.",
+  "Reminders need the firm's Smokeball offset type, offset type id and staff ids (settings.reminder). Until they are set, the reminders cron drafts nothing.",
+  "The solicitor's confirmed date is read by the agent or a person (judgment step in SKILL.md). No mailbox or conveyancer platform is mapped in this workflow.",
+  "The offshore team's trust portal deposit requests and the 'agency settlements' tool named in one call have no platform in the kit.",
+  "Cooling-off, finance and title dates are not tracked: only the settlement date.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
+}

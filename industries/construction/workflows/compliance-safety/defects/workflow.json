@@ -1,0 +1,46 @@
+{
+ "id": "construction:defects",
+ "name": "Capture defects and quality inspections and close them out with trades",
+ "industry": "construction",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Captures each defect as it is found on a job, keeps the trade chased until it is fixed, and asks the client to sign off once every defect on the job is closed. Crons read and draft; every reminder and client email waits for a person to approve it.",
+ "families": {
+  "defects-on-jobs": {
+   "steps": ["log-defect", "chase-trade", "rectify", "close-out", "record-keeping"],
+   "covered_by": {"log-defect": "log-defects (a defect checklist section becomes a register entry and a task on the job)", "chase-trade": "chase (reminder to the trade, approval before it sends)", "rectify": "chase (fixed status read back from the job checklist)", "close-out": "close-out (sign-off task and client email, approval before it sends)", "record-keeping": "register in the workflow store, plus a task per defect in ServiceM8"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "log-defects", "schedule": "*/30 * * * *", "entry": "log-defects", "summary": "Record new defect items from each open job's defect checklist, one task per defect on the job."},
+  {"name": "chase", "schedule": "0 22 * * *", "entry": "chase", "summary": "Read which defects are fixed, and queue a reminder to the trade for each open defect that is due (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "close-out", "schedule": "30 22 * * *", "entry": "close-out", "summary": "When every defect on a job is fixed, draft an internal sign-off task and queue the client's sign-off email."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobChecklists", "servicem8-api.listCompanyContacts", "servicem8-api.createTasks"],
+  "procore": ["punch-items.list-punch-items"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email"],
+  "procore": ["punch-items.create-punch-item-comment"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, a task on a job for staff, and the register in the workflow store. Anything that emails a trade or a client waits for a person. In Procore the only write is a comment on a punch item, which the people on the item can see and may be notified of, so it is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "tasks.create", "contacts.list", "messages.draft"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "defect checklist section read, one task per defect, trade reminders and client sign-off emails through the approval queue"},
+  "procore": {"status": "docs-only", "covers": "the project punch list read into the defect register, reminders as approved comments on open punch items, close-out recorded when every item is closed"}
+ },
+ "gaps": [
+  "Procore: the adapter is built from Procore's own punch item reference page (read 11 Nov 2026) and tested on a fake network only. A punch item is the defect and the task, so no task is created; the trade is the item's assignee, so there are no trade emails; sign-off is the item's own final approver in Procore, so there is no client email. A reminder is a comment on the punch item (POST comments), visible to the people on it, so it waits for a person. Not confirmed on a live account: that the list without a status filter returns open, closed, overdue and pending items, the exact words of the status (read as Open, Closed, Overdue, Pending, closed means fixed), whether a comment notifies the assignee, and Procore's maximum per_page. The list is sorted by id so paging is stable; paging runs until an empty page; a project past 20 pages is refused whole; an item missing from a list read is left as it was, never withdrawn, and only an item Procore marks deleted is withdrawn. Close-out re-reads the live list and waits while any item is still open. Set procore, not defect_section, in settings; both together are refused.",
+  "ServiceM8 has no defect, snag or inspection object. Defects are read from a job checklist section named in settings (defect_section). A business that keeps defects in a spreadsheet, Dashpivot or a defect sheet needs its own adapter.",
+  "Backcharging a trade for rework or delay, pass or fail re-inspection, and booking a trade to attend or quote a fix are not covered. The ServiceM8 docs describe none of them.",
+  "Defect quotes and the pricing of small defects (the pain that quotes are not followed up) are a judgment step. Nothing here prices a defect.",
+  "A client walkthrough of a defects list is not covered.",
+  "Fieldwire is mapped in the kit, but no call or platform evidence named it for this job, so it is not built here.",
+  "Trade replies are not read. The chase sends reminders only; it does not parse what the trade says back.",
+  "The defect register lives in the workflow store, not in a spreadsheet the owner already uses. Export it if the owner wants it in Excel.",
+  "The adapter is docs-only until a ServiceM8 trial account proves the checklist read, the task write and the approved send."
+ ]
+}

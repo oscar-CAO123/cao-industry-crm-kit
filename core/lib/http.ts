@@ -1,0 +1,259 @@
+// The one way a helper talks to an outside app. Ported from the reference CRM's read-only fetch gate
+// (scripts/lib-read-only-fetch.ts) and its write rule (KIT_ALLOW_WRITES above every network write).
+//
+// Rules, enforced here so no helper can forget them:
+// - https only, and only to the hosts the app declares.
+// - A token in the query string is refused. Keys go in headers.
+// - Redirects are not followed, so a header carrying a key is never replayed to another host.
+// - Anything that changes data needs KIT_ALLOW_WRITES=1. Without it the call is refused before a
+//   socket opens and a WriteBlocked error describes what would have been sent.
+// - POST-shaped reads (GraphQL queries, token exchanges, free/busy) are allowed only on the exact
+//   paths the app lists in readPosts.
+// - Errors carry the status and path, never the response body: bodies can hold client data.
+// - Logs never print query values, bodies or keys.
+
+import { scanData } from "./sanitise.mjs";
+
+export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface AppSpec {
+  app: string;
+  hosts: string[];
+  /** For apps that serve from regional subdomains (Zoom downloads, DocuSign accounts). */
+  hostPattern?: RegExp;
+  /** host + path prefixes where a POST only reads, such as a token exchange or a GraphQL query. */
+  readPosts?: string[];
+  /** The API puts the key in the URL path (Telegram). Paths are redacted in logs. */
+  keyInPath?: RegExp;
+  /** First wait before a retry when the app gives no Retry-After. Doubles each time, capped at 60s. */
+  retryBaseMs?: number;
+  /**
+   * The one host and path where the vendor's only supported login carries a short-lived access token in the query
+   * (Bullhorn's REST /login, a 10-minute token used once). Everywhere else a key in the query string is refused.
+   */
+  keyInQueryAt?: RegExp;
+}
+
+export interface CallOptions {
+  method?: Method;
+  url: string;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined | null>;
+  json?: unknown;
+  /** Form fields; ordered pairs allow a repeated key (Twilio lists). */
+  form?: Record<string, string> | [string, string][];
+  /** A body already encoded by a vendor SDK, sent as is with the caller's Content-Type. */
+  body?: string | Uint8Array;
+  /** Return the body as bytes, for documents and recordings. */
+  binary?: boolean;
+  /**
+   * File downloads only (GET): follow up to 3 redirects to the file's storage. The key stays on
+   * when the redirect lands on one of the app's hosts and is dropped when it leaves them, as a
+   * browser does. Every other call refuses redirects.
+   */
+  followDownloadRedirects?: boolean;
+  /** Cancels the request, as the CRM's helpers allow (an AbortSignal). */
+  signal?: AbortSignal;
+  retries?: number;
+}
+
+export interface Reply<T> {
+  /** Set when text in the answer looks like instructions aimed at an AI agent (see core/lib/sanitise.mjs). The data is unchanged. */
+  untrusted?: { flag: string; strings: number }[];
+  status: number;
+  headers: Headers;
+  data: T;
+}
+
+export class WriteBlocked extends Error {
+  planned: string;
+  constructor(planned: string) {
+    super(`write blocked (set KIT_ALLOW_WRITES=1 to allow): ${planned}`);
+    this.name = "WriteBlocked";
+    this.planned = planned;
+  }
+}
+
+export class ApiError extends Error {
+  status: number;
+  app: string;
+  constructor(app: string, status: number, where: string) {
+    super(`${app} ${where} failed with status ${status}`);
+    this.name = "ApiError";
+    this.status = status;
+    this.app = app;
+  }
+}
+
+export interface Transport {
+  fetch: typeof fetch;
+  sleep: (ms: number) => Promise<void>;
+  log: (line: string) => void;
+}
+
+const realTransport: Transport = {
+  fetch: (...a) => fetch(...a),
+  sleep: (ms) => new Promise((r) => setTimeout(r, ms)),
+  log: (line) => { if (process.env.KIT_LOG !== "0") console.error(line); },
+};
+let transport: Transport = realTransport;
+
+/** Tests swap the network for a fake. */
+export function setTransport(t: Partial<Transport> | null): void {
+  transport = t ? { ...realTransport, ...t } : realTransport;
+}
+
+export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1";
+
+const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
+/** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
+const KEY_NAMES = new Set(["secretkey", "accesskey", "privatekey", "apisecret", "xaccesstoken", "xapikey", "authkey", "accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer", "signature", "sig", "auth", "authorization", "credential", "credentials", "jwt"]);
+const RETRY_STATUS = new Set([429, 502, 503, 504]);
+
+function buildUrl(o: CallOptions): URL {
+  const u = new URL(o.url);
+  for (const [k, v] of Object.entries(o.query ?? {})) if (v !== undefined && v !== null) u.searchParams.set(k, String(v));
+  return u;
+}
+
+/** Email addresses in a path (Zoom users, calendar ids) are client data, so logs and errors show [email]. */
+function redactPath(p: string): string {
+  let d = p;
+  try { d = decodeURIComponent(p); } catch { /* keep as is */ }
+  if (d.length > 2000) d = d.slice(0, 2000);   // caller path values have no length cap, and the pattern below must stay fast
+  return d.replace(/[^\s/@]{1,128}@[^\s/@]{1,255}\.[^\s/@]{1,24}/g, "[email]");
+}
+
+function where(spec: AppSpec, method: Method, u: URL): string {
+  const path = spec.keyInPath ? u.pathname.replace(spec.keyInPath, "/***") : u.pathname;
+  return `${method} ${u.hostname}${redactPath(path)}`;
+}
+
+/** Throws unless the URL is one this app may reach. Exported for tests and for links an API hands back. */
+export function checkUrl(spec: AppSpec, u: URL): void {
+  if (u.protocol !== "https:") throw new Error(`${spec.app}: ${u.protocol} refused, https only`);
+  if (u.port !== "") throw new Error(`${spec.app}: port ${u.port} refused, standard https only`);
+  if (u.username || u.password) throw new Error(`${spec.app}: credentials in a URL are refused`);
+  if (!spec.hosts.includes(u.hostname) && !spec.hostPattern?.test(u.hostname)) throw new Error(`${spec.app}: host ${u.hostname} is not one of this app's hosts`);
+  const keyish = [...u.searchParams.keys()].some((k) => KEY_NAMES.has(k.toLowerCase().replace(/[^a-z]/g, "")));
+  if ((TOKEN_IN_QUERY.test(u.search) || keyish) && !spec.keyInQueryAt?.test(`${u.hostname}${u.pathname}`)) throw new Error(`${spec.app}: a key in the query string is refused, use a header`);
+}
+
+export function isRead(spec: AppSpec, method: Method, u: URL): boolean {
+  if (method === "GET") return true;
+  if (method !== "POST") return false;
+  const target = `${u.hostname}${u.pathname}`;
+  return (spec.readPosts ?? []).some((p) => target === p || target.startsWith(p.endsWith("/") ? p : `${p}/`));
+}
+
+/** Longest wait for a vendor, and the most bytes read from one answer, unless the caller sets its own. */
+const TIMEOUT_MS = 30_000;
+const DOWNLOAD_TIMEOUT_MS = 300_000;   // a file up to the byte cap may take longer than a JSON answer
+const MAX_BYTES = 50 * 1024 * 1024;
+
+/** A download redirect may leave the app's hosts, but never to a machine name that is not a public host. */
+function publicHostname(h: string): boolean {
+  if (!h || h === "localhost" || /\.(local|localhost|internal|lan|home|corp)$/i.test(h)) return false;
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(h) || h.includes(":") || /^\[/.test(h)) return false;   // IP addresses, v4 and v6
+  return h.includes(".");
+}
+
+/** Reads an answer up to a byte limit, so a vendor cannot stream the process out of memory. */
+async function readBody(res: Response, binary: boolean, max: number): Promise<string | ArrayBuffer> {
+  const declared = Number(res.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > max) throw new Error(`response larger than ${max} bytes refused`);
+  const reader = (res as any).body?.getReader?.();
+  if (!reader) {   // a test transport without a stream
+    const v = binary ? await res.arrayBuffer() : await res.text();
+    if ((binary ? (v as ArrayBuffer).byteLength : (v as string).length) > max) throw new Error(`response larger than ${max} bytes refused`);
+    return v;
+  }
+  const chunks: Uint8Array[] = []; let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > max) { try { await reader.cancel(); } catch { /* already closed */ } throw new Error(`response larger than ${max} bytes refused`); }
+    chunks.push(value);
+  }
+  const all = new Uint8Array(total); let at = 0;
+  for (const c of chunks) { all.set(c, at); at += c.byteLength; }
+  return binary ? all.buffer : new TextDecoder().decode(all);
+}
+
+export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<Reply<T>> {
+  const method = o.method ?? "GET";
+  const u = buildUrl(o);
+  checkUrl(spec, u);
+  const w = where(spec, method, u);
+  if (!isRead(spec, method, u) && !writesAllowed()) throw new WriteBlocked(w);
+
+  const headers: Record<string, string> = { Accept: o.binary ? "*/*" : "application/json", ...(o.headers ?? {}) };
+  let body: string | Uint8Array | undefined;
+  if (o.json !== undefined) { body = JSON.stringify(o.json); headers["Content-Type"] = "application/json"; }
+  else if (o.form) { body = new URLSearchParams(o.form).toString(); headers["Content-Type"] = "application/x-www-form-urlencoded"; }
+  else if (o.body !== undefined) body = o.body;
+
+  // A header value with a line break cannot be sent, and the error the runtime raises for it prints the value (a key).
+  // Name the header and nothing else.
+  for (const [name, v] of Object.entries(headers)) if (/[\r\n\u0000]/.test(String(v))) throw new Error(`${spec.app}: the ${name} header holds a line break; re-save that key as one line in the secret store`);
+  const write = !isRead(spec, method, u);
+  const max = o.retries ?? 3;
+  for (let attempt = 0; ; attempt++) {
+    const t0 = Date.now();
+    const clock = AbortSignal.timeout(o.binary ? DOWNLOAD_TIMEOUT_MS : TIMEOUT_MS);
+    const signal = o.signal ? AbortSignal.any([o.signal, clock]) : clock; // each try gets its own clock
+    let res = await transport.fetch(u.toString(), { method, headers, body, redirect: "manual", signal });
+    transport.log(`[${spec.app}] ${w} ${res.status} ${Date.now() - t0}ms`);
+    if (o.followDownloadRedirects && method === "GET") {
+      let at = u;
+      for (let hop = 0; hop < 3 && res.status >= 300 && res.status < 400; hop++) {
+        const loc = res.headers.get("location");
+        if (!loc) break;
+        const next = new URL(loc, at);
+        if (next.protocol !== "https:") throw new Error(`${spec.app}: redirect to ${next.protocol} refused`);
+        if (next.port !== "" || next.username || next.password) throw new Error(`${spec.app}: redirect to a non-standard port or a URL with credentials refused`);
+        const own = spec.hosts.includes(next.hostname) || !!spec.hostPattern?.test(next.hostname);
+        if (!own && !publicHostname(next.hostname)) throw new Error(`${spec.app}: redirect to a non-public host refused`);
+        if (own) checkUrl(spec, next);  // an own-host hop gets the key, so it passes every check the first request did
+        // Another host gets only harmless headers: every sign-in header (Authorization, X-Api-Key, any vendor key header) stays behind.
+        const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => /^(accept|accept-encoding|accept-language|user-agent|range|if-none-match|if-modified-since)$/i.test(k)));
+        res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal });
+        transport.log(`[${spec.app}] redirect to ${own ? next.hostname : "storage host"} ${res.status}`);
+        at = next;
+      }
+    }
+    // A write is retried only when the app said it did not process it (429). Retrying a write on a
+    // 5xx could do it twice.
+    const retryable = write ? res.status === 429 : RETRY_STATUS.has(res.status);
+    if (retryable && attempt < max) {
+      const after = Number(res.headers.get("retry-after"));
+      await transport.sleep(Number.isFinite(after) && after > 0 ? Math.min(after, 60) * 1000 : Math.min((spec.retryBaseMs ?? 1000) * 2 ** attempt, 60_000));
+      continue;
+    }
+    if (res.status >= 300) throw new ApiError(spec.app, res.status, w);
+    let data: unknown;
+    if (o.binary) data = await readBody(res, true, MAX_BYTES);
+    else if (res.status === 204) data = null;
+    else {
+      const text = (await readBody(res, false, MAX_BYTES)) as string;
+      const type = res.headers.get("content-type") ?? "";
+      data = type.includes("json") || /^\s*[[{]/.test(text) ? safeJson(text) : text;
+    }
+    const untrusted = o.binary ? [] : scanData(data);
+    if (untrusted.length) transport.log(`[${spec.app}] ${w} answer carries text marked untrusted: ${untrusted.map((u) => `${u.flag} x${u.strings}`).join(", ")}`);
+    return { status: res.status, headers: res.headers, data: data as T, ...(untrusted.length ? { untrusted } : {}) };
+  }
+}
+
+function safeJson(text: string): unknown {
+  try { return JSON.parse(text); } catch { return text; }
+}
+
+/** Describe a write without sending it, for dry runs and plans. */
+export function plan(spec: AppSpec, o: CallOptions): string {
+  const method = o.method ?? "GET";
+  const u = buildUrl(o);
+  checkUrl(spec, u);
+  return where(spec, method, u);
+}

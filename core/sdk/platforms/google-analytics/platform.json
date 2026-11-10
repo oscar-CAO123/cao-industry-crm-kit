@@ -1,0 +1,45 @@
+{
+ "id": "google-analytics",
+ "name": "Google Analytics",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "analyticsadmin.googleapis.com",
+  "analyticsdata.googleapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "defaultScope": "https://www.googleapis.com/auth/analytics.readonly",
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "google"
+ },
+ "keys": [
+  "GOOGLE_MAILBOX",
+  "GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET"
+ ],
+ "sources": [
+  {
+   "url": "https://analyticsdata.googleapis.com/$discovery/rest?version=v1beta",
+   "official": "vendor-domain: analyticsdata.googleapis.com"
+  },
+  {
+   "url": "https://analyticsadmin.googleapis.com/$discovery/rest?version=v1beta",
+   "official": "vendor-domain: analyticsadmin.googleapis.com"
+  },
+  {
+   "url": "https://analyticsadmin.googleapis.com/$discovery/rest?version=v1alpha",
+   "official": "vendor-domain: analyticsadmin.googleapis.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 232,
+  "read": 86,
+  "write": 146
+ }
+}

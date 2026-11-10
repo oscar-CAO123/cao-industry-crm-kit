@@ -1,0 +1,8 @@
+{
+  "platform": "gohighlevel",
+  "location_id": "LOCATION_ID",
+  "pipeline_id": "PIPELINE_ID",
+  "stage_order": ["STAGE_ID_ENQUIRY", "STAGE_ID_QUOTED", "STAGE_ID_BOOKED"],
+  "stale_after_days": 14,
+  "read_limit": 500
+}

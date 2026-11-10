@@ -1,0 +1,18 @@
+{
+ "family": "takeoff-from-drawings",
+ "business_name": "Example Fabrication",
+ "intake": ["microsoft-365"],
+ "takeoff": "microsoft-365",
+ "rate_card": "microsoft-365",
+ "quotes": "microsoft-365",
+ "microsoft_365": {
+  "mailbox": "estimating@example.com.au",
+  "folder": "inbox",
+  "search": "takeoff",
+  "takeoff": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Takeoff"},
+  "rate_card": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "SupplierPrices"},
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Takeoffs"}
+ },
+ "quote_valid_days": 30,
+ "gst_rate": 0.1
+}

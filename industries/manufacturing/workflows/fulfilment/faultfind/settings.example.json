@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Manufacturing",
+ "breakdown_status": "Work Order",
+ "escalate_after_hours": 4,
+ "escalation_email": "maintenance@example.com.au"
+}

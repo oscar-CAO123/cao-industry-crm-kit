@@ -1,0 +1,42 @@
+{
+ "id": "retail:artwork",
+ "name": "Product mockups and artwork",
+ "industry": "retail",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns finished artwork into product mockups on the store listing. The agent makes the mockups; the crons read the store's products and queue the listing update for a person to approve. Crons read and queue only.",
+ "families": {
+  "store-listing-mockups": {
+   "steps": ["artwork-received", "mockup-build", "owner-approval", "listing-upload", "confirm-live"],
+   "covered_by": {"artwork-received": "skill (agent reads the files)", "mockup-build": "skill (agent builds the mockups in Figma, outside the kit)", "owner-approval": "approval", "listing-upload": "approval (queued batch update)", "confirm-live": "catalogue"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "catalogue", "schedule": "15 * * * *", "entry": "catalogue", "summary": "Read the store's products, record which have no images, and report which approved mockups are now live."},
+  {"name": "listing", "schedule": "*/30 * * * *", "entry": "listing", "summary": "Queue the listing update for each mockup set the agent has written, for a person to approve."}
+ ],
+ "draft_ops": {
+  "woocommerce": ["docs.get_products"]
+ },
+ "live_ops": {
+  "woocommerce": ["docs.post_products_batch"]
+ },
+ "draft_ops_note": "The only draft operation is a read of the store's products. Adding images to a product changes what customers see on the store, so it is a live operation and a cron can only queue it.",
+ "capabilities": ["products.list", "products.update", "files.read"],
+ "adapters": {
+  "woocommerce": {"status": "docs-only", "covers": "read the store's products page by page; batch-update product images (queued for approval only)"}
+ },
+ "gaps": [
+  "Figma: no kit platform. The mockups are built and exported outside the kit, to an https location the business controls, then written to the mockups record.",
+  "Needs core: an approved listing update replays the images array built when it was queued. An image added or removed on the live product between queue and approval is dropped on approval. Fix: the runtime re-plans a live act from current product data at approval, or refuses to run when the product changed since it was queued.",
+  "Shopify: product media operations are mapped (productCreateMedia, productUpdateMedia, productReorderMedia, productVariantAppendMedia) but index-only: no argument mapping, and the endpoint map holds only doc URLs, so no field names can be confirmed. No Shopify adapter yet.",
+  "WooCommerce reads: docs.get_products is read page by page (page and per_page, 100 a page, at most 20 pages, so 2,000 products). A store with more products than that is read only up to the cap.",
+  "WooCommerce batch update replaces the images array it is given. The adapter keeps existing images by id and appends the new ones, so nothing already live is dropped.",
+  "No command writes a mockups record yet. The CRM shell or a CLI must add one; core/ is not edited here.",
+  "Mockup design, artwork checks and print prep (bleed, dielines, colour profile) are judgment steps for the agent and the owner. The platform docs do not cover print prep.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
+  "Figma's proof-sent, approval and revise steps are not covered by the mapped docs; the owner's sign-off happens in the CRM shell approval."
+ ]
+}

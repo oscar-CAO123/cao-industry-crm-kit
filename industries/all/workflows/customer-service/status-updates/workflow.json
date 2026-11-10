@@ -1,0 +1,48 @@
+{
+ "id": "status-updates",
+ "name": "Tell customers where their job, order or matter is up to",
+ "industry": "all",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Tells customers where their job, order or matter is up to. Crons read job statuses in the business's job system, draft each customer message and queue it for approval; a person approves every message before it is sent. Unsuccessful jobs and clients with no usable contact go to a person.",
+ "families": {
+  "all": {
+   "steps": ["status-check", "crew-or-supplier-check", "completion-notice", "record-keeping", "other"],
+   "covered_by": {
+    "status-check": "check-status (reads active job statuses)",
+    "completion-notice": "draft-updates (Completed message, queued for approval)",
+    "record-keeping": "check-status and daily-digest (store only, nothing written to the job)",
+    "crew-or-supplier-check": "gap (no crew or supplier progress in the mapped operations)",
+    "other": "skill (hand-written replies and delay wording)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "check-status", "schedule": "*/30 * * * *", "entry": "check-status", "summary": "Reads active jobs and records each change to Work Order or Completed. The first run only records a baseline."},
+  {"name": "draft-updates", "schedule": "15 * * * *", "entry": "draft-updates", "summary": "Drafts the customer message for each new change and queues the text or email for approval."},
+  {"name": "daily-digest", "schedule": "0 21 * * *", "entry": "daily-digest", "summary": "Store only: counts by status, stale work orders and jobs a person must write (21:00 UTC is 7 or 8 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listCompanyContacts"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_sms", "messaging-api.send_email"]
+ },
+ "draft_ops_note": "Draft operations are reads only. Every customer message is a live operation and waits in the approval queue for a person.",
+ "capabilities": ["jobs.list", "contacts.list", "messages.send"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "active job statuses, primary client contact, status text and email for Work Order and Completed"}
+ },
+ "gaps": [
+  "Tradify: help-centre pages returned HTTP 403, so the map rests on marketing pages, and the kit has no Tradify platform or operations. Its status sequence and any customer tracking page need a live account.",
+  "Crew and supplier progress: ServiceM8 shows staff status, navigation and arrival estimates in its app. The captured pages describe no API for live arrival time, and supplier progress is not covered. A person answers these.",
+  "Delay and arrival-time messages: the docs describe no delay template. The agent drafts the wording and it goes through approval. No automatic delay detection is built, because the scheduled-until field is not yet confirmed.",
+  "Quote acceptance: the captured pages do not say how a client approves a quote, so this workflow messages only on Work Order and Completed.",
+  "Freight, commercial leasing and legal process-serving matters need their own platform adapters, which the kit does not have.",
+  "Overlap check: the business may already run ServiceM8 templates or automations that message clients. Check them before go-live so a client does not get two messages for one change.",
+  "Judgment steps: replies to where-is-my-job emails and calls, every Unsuccessful job, and any wording the owner has not approved. A person writes these.",
+  "Read limit: the cron reads what listJobs returns for active jobs and caps the list at 500."
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "id": "agriwebb",
+ "name": "AgriWebb",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "graphql",
+ "hosts": [
+  "api.agriwebb.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "AGRIWEBB_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "AGRIWEBB_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.agriwebb.com/graphql/schema.graphql",
+   "official": "vendor-domain: docs.agriwebb.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 24,
+  "read": 14,
+  "write": 10
+ }
+}

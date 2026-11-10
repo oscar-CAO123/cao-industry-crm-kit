@@ -1,0 +1,12 @@
+{
+ "business_name": "Example Solar",
+ "intake": "servicem8",
+ "keywords": ["solar", "battery", "inverter", "export limit", "network connection", "stc", "veec", "lgc"],
+ "evidence": {
+  "installation photos": ["jpg", "jpeg", "png", "heic"],
+  "electrical safety certificate": ["certificate", "cert"],
+  "serial numbers": ["serial"],
+  "commissioning record": ["commission"]
+ },
+ "chase_every_days": 3
+}

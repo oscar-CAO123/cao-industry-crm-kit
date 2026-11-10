@@ -1,0 +1,18 @@
+{
+  "id": "telegram",
+  "name": "Telegram",
+  "docs": "https://core.telegram.org/bots/api",
+  "account_to_test": "A bot from BotFather",
+  "cost_to_test": "$0",
+  "fallback": "none",
+  "terms_checked": false,
+  "capabilities": [
+    "notify.send"
+  ],
+  "script": "core/connectors/telegram/client.ts",
+  "status": "code-built",
+  "keys": [
+    "TELEGRAM_BOT_TOKEN"
+  ],
+  "source": "Ported from the reference CRM at commit 28aa5d91; each function names its source file or is marked NEW in the code."
+}

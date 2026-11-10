@@ -1,0 +1,1141 @@
+{
+ "id": "yotpo",
+ "name": "Yotpo",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api-cdn.yotpo.com",
+  "api.yotpo.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "X-Yotpo-Token",
+  "env": "YOTPO_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "YOTPO_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://docs.yotpo.com/llms.txt",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/welcome.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/authentication.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-authentication.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/orders.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-order.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-order.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-orders.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-order-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/order-fulfillments.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-order-fulfillment.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-order-fulfillment.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-order-fulfillments.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-fulfillment-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/aggregated-order-info.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/send-aggregated-order-info.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-product.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-product.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-product-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-variants.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-product-variant.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-product-variant.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-product-variants.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-product-variant-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/collections.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-collections.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/add-product-to-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-products-in-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/remove-product-from-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-list-of-collections-for-product.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/customers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-customer.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-customers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-reviews-search.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-filters.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-reviews-media.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-top-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-store-top-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-store-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-store-reviews-search.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-all-bottomlines.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-ratings.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-star-distribution.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-store-promoted-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-product-promoted-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-gallery-media.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/storefront-gallery-media-item.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-ai-summary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-product-potential-points.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-customer-product-potential-points.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-referral-programs.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-vip-tiers-program.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-vip-tiers-program-status.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/push-customer-to-tier.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-reward-instances.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-privacy-api.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/data-exists.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/fetch-user-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/gdpr-delete.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-data-exists.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-user-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-anonymize-user.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-targets.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-target-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-filters.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-filter-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-subscriptions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-subscription-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/review-create.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/review-updated.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/review-request-eligible-on-fulfillment.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/review-request-eligible-on-delivery.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-redemption-created.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-custom-reward-created.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-customer-birthday.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-birthday-captured.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-customer-anniversary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-anniversary-captured.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-donation-created.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-account-created.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-opt-in.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-opt-out.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-points-changed.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-points-earned.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-points-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-expiration-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-redemption-code-below-threshold.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-point-redemption-cancellation-request.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-redemption-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-referral-share.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-referral-shared.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-referral-share-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-referral-product-share.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-referral-product-share-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-referral-completed.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-referral-completed.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-tier-earned.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-tier-lost.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/swell-tier-status-changed.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-tier-expiration-reminder.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-integrations-integration-disabled.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-welcome.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/what-you-can-build.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-authentication.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-guidelines-and-conventions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/errors.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/testing-your-integration.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-update-customer-records.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/set-customer-birthday.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-update-customer-anniversary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-customer-anniversary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/remove-customer-anniversary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/fetch-customer-details.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/fetch-all-recently-updated-customers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-customer-tags.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/add-customer-tags.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/remove-customer-tags.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/record-a-customer-action.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/adjust-a-customers-point-balance.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/removing-a-customer-from-an-action-based-vip-tier.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/loyalty-create-order.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-refund.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-active-campaigns.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/add-coupon-codes.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/fetch-active-redemption-options.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-redemption-code-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-redemption.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/approve-redemption-cancellation.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/identify-referrer.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/send-referral-emails.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/fetch-vip-tiers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-welcome.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-merchant-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-review.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-review-synchronous.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/upload-images-with-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-all-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-a-review-by-review-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-reviews-for-a-specific-user.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-incentive-by-review-id-1.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-seo.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/find-if-the-xxxxyotpome-subdomain-is-valid.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-your-reviewsme-url.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-storefront-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/recent-5-star-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-the-reviews-payload-in-html.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/vote-on-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/top-mentioned-topics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-llm-schema.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-reviews-metadata.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/add-metadata-to-an-existing-review.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-review-metadata-by-review-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-filters-and-values.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-existing-review-metadata.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-qa.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-retrieve-questions-and-answers-for-a-product.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-retrieve-the-bottom-line-for-questions-and-answers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-product-questions-storefront.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-all-questions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-question.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-question.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/archive-questions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-answer-for-question.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-answer-for-question.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-answer-for-question.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/draft-create-question-without-sending-confirmation-email.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/send-question-confirmation-mail.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/vote-on-answers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-visual-ugc.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/import-images.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/import-videos.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-media.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-custom-albums.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/photos-by-album.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-images.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/video-upload-errors.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-coupons.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-a-coupon-action.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-all-unique-coupon-codes.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-unique-code-statistics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/upload-unique-coupon-codes.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-analytics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/email-analytics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/summary.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/raw-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/export-email-analytics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-unsubscribers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/remove-a-set-of-email-addresses-from-email-distrib.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/re-add-email-addresses-to-email-distribution-lists.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-a-list-of-unsubscribers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/about-insights-api.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/topics.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-collections.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-table-of-contents.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-guidelines-and-conventions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-changelog.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/generate-a-token.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-token-info.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/remove-application.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-postman-collection.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/introduction-to-orders-and-fulfillments.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-orders.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-introduction-to-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/all-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-data.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/promoted-products.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/introduction-to-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/all-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/product-review.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/bottomline.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/reviews-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/top-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/best-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/best-sentences.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/publishunpublish-reviews.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/introduction-to-customers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-or-update-customer.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-loyalty-customer-details-by-email.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-earning-rules.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/adjust-loyalty-customer-points.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/record-loyalty-customer-action.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/comment-on-a-review.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/get-comment-by-review-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-a-comment-on-a-review-1.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-a-comment-on-a-review.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-questions-and-answers-for-a-product.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-the-bottom-line-for-questions-and-answers.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-an-answer.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-qa-by-question-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-an-answer.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/yotpo-events.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-create-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-targets.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-target-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-update-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-delete-target.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-create-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-filters.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-filter-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-update-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-delete-filter.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/store-level-webhooks.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-create-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-subscriptions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-retrieve-subscription-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/partners-update-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-subscription-1.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/app-level-webhooks.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/create-app-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-app-subscriptions.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/retrieve-app-subscription-by-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/update-app-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/delete-app-subscription.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/app-disconnected.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/core-v1-welcome.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/core-v1-table-of-contents.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/guidelines.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/core-v1-changelog.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  },
+  {
+   "url": "https://docs.yotpo.com/reference/app-key-vs-store-id.md",
+   "official": "vendor-domain: docs.yotpo.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 199,
+  "read": 97,
+  "write": 102
+ }
+}

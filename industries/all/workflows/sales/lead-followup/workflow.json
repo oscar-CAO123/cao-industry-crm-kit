@@ -1,0 +1,110 @@
+{
+  "id": "lead-followup",
+  "name": "Follow up leads and quotes on a schedule",
+  "industry": "all",
+  "department": "sales",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Follows up open leads and quotes in the business's own CRM on a schedule. Picks up the open leads and quotes in the watched stages, drafts the first contact and each follow-up that is due into the CRM, and queues every message and every move to lost for a person to approve. Crons read and draft; a person approves every send.",
+  "families": {
+    "lead-followup": {
+      "steps": [
+        "lead-capture",
+        "first-contact",
+        "schedule-followup",
+        "follow-up-call",
+        "follow-up-message",
+        "nurture-sequence",
+        "book-meeting",
+        "chase-decision",
+        "close-or-lost",
+        "record-keeping"
+      ],
+      "covered_by": {
+        "lead-capture": "intake (open records in the watched stages)",
+        "first-contact": "draft (task and note in the CRM, message queued where the CRM can send)",
+        "schedule-followup": "draft (follow-up due dates are set from the settings)",
+        "follow-up-call": "draft (a call task in the CRM)",
+        "follow-up-message": "draft and approval (the message is queued; Pipedrive touches are drafted only)",
+        "nurture-sequence": "not built (see gaps)",
+        "book-meeting": "person (a booking needs the person's calendar)",
+        "chase-decision": "chase (queues the move to lost after the follow-ups run out)",
+        "close-or-lost": "chase and approval",
+        "record-keeping": "draft (note in the CRM with the message text)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {
+      "name": "intake",
+      "schedule": "*/15 * * * *",
+      "entry": "intake",
+      "summary": "Open leads and quotes in the watched stages; marks any that have left them."
+    },
+    {
+      "name": "draft",
+      "schedule": "*/30 * * * *",
+      "entry": "draft",
+      "summary": "Drafts the first contact or the next due follow-up in the CRM and queues each send for approval."
+    },
+    {
+      "name": "chase",
+      "schedule": "0 22 * * *",
+      "entry": "chase",
+      "summary": "Queues a move to lost for leads that went quiet after the last follow-up (22:00 UTC is 8 or 9 am in eastern Australia)."
+    }
+  ],
+  "draft_ops": {
+    "pipedrive": [
+      "docs_api_v1.getPipelineDeals",
+      "openapi-v2.addActivity",
+      "docs_api_v1.addNote"
+    ],
+    "gohighlevel": [
+      "v3__opportunities-v3.search-opportunity",
+      "contacts.create-task",
+      "contacts.create-note"
+    ]
+  },
+  "live_ops": {
+    "pipedrive": [
+      "openapi-v2.updateDeal"
+    ],
+    "gohighlevel": [
+      "conversations.send-a-new-message",
+      "opportunities.update-opportunity-status"
+    ]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: reads, a call task, a note and a contact task inside the CRM. Anything that sends a message or changes a stage waits for a person.",
+  "capabilities": [
+    "leads.list",
+    "tasks.create",
+    "notes.create",
+    "messages.send",
+    "stages.move"
+  ],
+  "adapters": {
+    "pipedrive": {
+      "status": "docs-only",
+      "covers": "deals in the watched stages; call task and note per touch; move to lost (no send operation mapped)"
+    },
+    "gohighlevel": {
+      "status": "docs-only",
+      "covers": "opportunities in the watched stages; contact task and note per touch; SMS or email send; move to lost"
+    }
+  },
+  "gaps": [
+    "ActiveCampaign: its job steps are mapped (14 operations, including tasks, campaigns and automation runs) but no adapter is built for this job yet.",
+    "Pipedrive has no mapped send operation for this job, so its touches are drafted as a call task and a note, and the person sends the message from Pipedrive mail.",
+    "Pipedrive deals hold only a person ID, not the person's name or number, so Pipedrive messages name the deal title, not the person.",
+    "GoHighLevel send: the spec lists subType as an object with a string example, and requires status. The send body follows the example, so it is unverified until a sandbox account proves it.",
+    "GoHighLevel contact fields (name, email, phone) are not readable from the vendor spec in this kit, so sends go by contact ID and the message names the opportunity, not the person.",
+    "Nurture campaigns (GoHighLevel campaigns and workflows, ActiveCampaign automations) are mapped but not built: enrolling a contact starts messages on its own, so it needs its own approval design.",
+    "Reply detection is not built. A customer who replies is handled by a person; the crons keep sending until a stage moves or the lead is marked lost.",
+    "Book-meeting, revise-quote and hand-to-job have no mapped operations for this job on Pipedrive or GoHighLevel. They are person steps.",
+    "Reads take at most 100 records per stage per run. A longer list skips the stage-exit check for that run, and the next run checks again.",
+    "Neither adapter is proven against a real account. Both are offline-tested only, with a fake network.",
+    "Kit mapping: the GoHighLevel op opportunities.search-opportunity takes snake_case names (location_id, pipeline_id) that do not match the vendor spec, so this build uses v3__opportunities-v3.search-opportunity. The old op should be fixed in the kit's map."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+ "id": "customer-helpdesk",
+ "name": "Answer customer questions from the business's own knowledge",
+ "industry": "all",
+ "department": "customer-service",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Answers customer questions from the business's own help content: a published Front knowledge base article or a Gorgias macro. Crons read, match and queue each reply; a person approves every reply before it is sent. Sensitive questions and anything the business's own answers do not cover go to a person.",
+ "families": {
+  "all": {
+   "steps": ["question-received", "look-up-answer", "answer-from-template", "escalate", "customer-follow-up", "record-keeping"],
+   "covered_by": {"question-received": "intake (polls every 10 minutes; no webhook yet)", "look-up-answer": "draft (published article or macro only); judgment answers are the agent skill", "answer-from-template": "draft, then approval", "escalate": "draft (assign in Front, tag in Gorgias)", "customer-follow-up": "chase (Front reminder only)", "record-keeping": "not built (see gaps)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New open questions from Front's shared inbox and Gorgias tickets, within the lookback window."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Escalate sensitive questions, queue answers from the business's own articles and macros for approval, park the rest."},
+  {"name": "chase", "schedule": "5 * * * *", "entry": "chase", "summary": "Remind the teammate in Front about a question still waiting after the chase window."}
+ ],
+ "draft_ops": {
+  "front": ["core-api_core-api.list-inbox-conversations", "core-api_core-api.list-conversation-messages", "core-api_core-api.get-a-knowledge-base-article", "core-api_core-api.update-conversation-assignee", "core-api_core-api.update-conversation-reminders"],
+  "gorgias": ["docs.get_tickets", "docs.get_messages", "docs.get_macros_id", "docs.post_tickets_ticket_id_tags"]
+ },
+ "live_ops": {
+  "front": ["core-api_core-api.create-message-reply"],
+  "gorgias": ["docs.post_tickets_ticket_id_messages"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, an assignee or reminder inside Front, a tag inside Gorgias. Sending a reply is a live operation and waits for a person.",
+ "capabilities": ["messages.list", "messages.draft", "messages.send"],
+ "adapters": {
+  "front": {"status": "docs-only", "covers": "shared inbox: read open unassigned conversations and the latest customer message, answer from a published knowledge base article after approval, assign to the teammate, reminder on a waiting question"},
+  "gorgias": {"status": "docs-only", "covers": "helpdesk tickets: read open tickets and the latest customer message, answer from a macro's response text after approval, tag a ticket for a person"}
+ },
+ "gaps": [
+  "Intercom: named in the platform evidence, but no operations are mapped for it in the kit, so there is no adapter. Its help-centre pages do not show the API steps.",
+  "Zendesk: mapped in the kit, but no platform help evidence was read for this job, so no adapter.",
+  "Chat widgets and the overflow service: a chat widget answers FAQs on the website and is not a platform the kit reads; the overflow service is a person, so it stays out of the automatic path.",
+  "Judgment answers: a question no answer rule covers is parked, and the agent skill writes the reply. The kit has no proposal step for helpdesk replies yet, so a reply the agent writes goes through the platform's own draft, then a person sends it.",
+  "Gorgias: the ops file has no draft-reply or close operation, so every Gorgias reply waits in the approval queue, and the ticket is not closed by this workflow.",
+  "Gorgias macros with template variables such as {{ticket.customer.firstname}} are not sent, because the API does not fill those variables in. Such a macro needs a plain-text copy, or the answer rule should point to a Front article.",
+  "Front: closing or archiving a conversation after an answer is not built. Front can do it, but the status change reaches the customer's thread and needs a person for now.",
+  "Record-keeping: each enquiry is kept in the workflow's own store with its status and approval. No note is written back to the customer record in either platform yet.",
+  "Follow-up after a sent answer (for example, asking whether it helped) is not built. Only waiting questions get a reminder.",
+  "Intake polls every 10 minutes and reads only the first page of each platform's list. There is no webhook, so a message can wait up to 10 minutes. A busy inbox over 25 conversations needs paging added.",
+  "Both adapters are docs-only until a sandbox account (a Front trial inbox, a Gorgias trial account) proves the reads and writes. Front's help pages describe its inbox at a high level only, so its reply screens are unverified.",
+  "Gorgias reply receiver and channel values are taken from the ticket and the vendor's create-message schema, and have not been run against a live account."
+ ]
+}

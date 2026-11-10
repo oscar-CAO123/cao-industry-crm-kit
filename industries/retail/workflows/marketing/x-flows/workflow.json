@@ -1,0 +1,39 @@
+{
+ "id": "retail:x-flows",
+ "name": "Email flows",
+ "industry": "retail",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Runs a retailer's email flows in Klaviyo: reads how each flow performs, opens a sprint on the weakest live flow under target, and queues the switch to live for each replacement the owner has marked ready. Crons read and record; a person approves every switch to live.",
+ "families": {
+  "all": {
+   "steps": ["trigger-define", "copy-write", "design-template", "flow-build", "segment-set", "test-send", "approve", "go-live", "monitor-performance", "optimise"],
+   "covered_by": {"trigger-define": "skill (set triggers and conditions)", "copy-write": "skill (judgment, with the brand voice)", "design-template": "skill", "flow-build": "skill (built as a draft in Klaviyo)", "segment-set": "not yet (see gaps)", "test-send": "not yet (see gaps)", "approve": "approval (go-live)", "go-live": "go-live (queued)", "monitor-performance": "performance", "optimise": "review (sprint on the weakest live flow)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "performance", "schedule": "0 21 * * *", "entry": "performance", "summary": "Read every flow and its results over the timeframe into the scorecard. Reads only (21:00 UTC is 7 or 8 am in eastern Australia)."},
+  {"name": "review", "schedule": "0 21 * * 0", "entry": "review", "summary": "Open one sprint on the weakest live flow under target that has none. Records only."},
+  {"name": "go-live", "schedule": "30 21 * * *", "entry": "go-live", "summary": "Queue the switch to live for each draft flow the owner has marked ready. Queues only."}
+ ],
+ "draft_ops": {
+  "klaviyo": ["get_flows", "query_flow_values", "get_actions_for_flow"]
+ },
+ "draft_ops_note": "Reads only, and a report query. query_flow_values is a POST that the spec marks as a write, so the deploy needs KIT_ALLOW_WRITES=1 for it; it changes nothing in Klaviyo.",
+ "live_ops": {
+  "klaviyo": ["update_flow"]
+ },
+ "capabilities": ["campaigns.list", "campaigns.report"],
+ "adapters": {
+  "klaviyo": {"status": "docs-only", "covers": "flow list, 30 day flow results, actions inside a flow (reads), and the switch to live (queued for approval)"}
+ },
+ "gaps": [
+  "Mailchimp (automations, campaign reports, send and schedule) and Shopify (marketing events, Flow features) are mapped but have no adapter yet. A client on either needs its adapter before these crons read it.",
+  "Writing message copy and templates into a flow (create_template, update_flow_action) is not built. It changes what customers receive, so it needs its own review before it becomes a cron.",
+  "Nothing records a replacement as ready yet. The go-live cron reads the store's ready entries, and a runtime helper in core (not this folder) is needed to mark one from the CRM shell.",
+  "Segment building, test sends and list hygiene are not built. The required vendor documentation for these steps has not been confirmed.",
+  "The Klaviyo adapter is spec-only: its platform status is spec and it has never run against a real account. Confirm the read and the live switch in a live account before go-live."
+ ]
+}

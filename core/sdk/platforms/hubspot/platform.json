@@ -1,0 +1,1408 @@
+{
+ "id": "hubspot",
+ "name": "HubSpot",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.hubapi.com",
+  "private.hubapi.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "HUBSPOT_ACCESS_TOKEN"
+ },
+ "keys": [
+  "HUBSPOT_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165140/version/2026-09-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22149/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75244/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227887/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165146/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75364/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22124/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211237/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22188/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75294/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227911/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165171/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75325/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22203/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/122230/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165157/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22165/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227898/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75224/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211265/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22195/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22194/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75372/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227903/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165162/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22174/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75290/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/179638/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75360/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22213/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/172259/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/113349/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211278/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/184405/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/25196/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75246/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165150/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22177/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75321/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165192/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22196/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75320/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/256389/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22176/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75309/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227905/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165164/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/193153/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/187255/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22202/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75340/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/143236/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75367/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211260/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22183/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/183672/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/145621/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211242/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75337/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22130/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165161/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227902/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75313/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22171/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165163/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75282/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22175/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227904/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227907/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165166/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22179/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75228/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22161/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75242/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165154/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227895/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211231/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75280/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75281/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/25174/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165152/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227893/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75305/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22158/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/102300/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75222/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75223/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/43061/version/1",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75341/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22191/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211263/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22117/version/1",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75328/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211233/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/67363/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/254609/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22151/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227889/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75292/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165148/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22135/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75342/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211247/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227883/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75288/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165141/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22144/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22170/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75236/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165160/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227901/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211240/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75374/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22127/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/191199/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22122/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75363/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211236/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/178981/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/26239/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211250/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75317/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165147/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22150/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227888/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75232/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22190/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75345/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211262/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22198/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211267/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75351/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/119657/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165169/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22186/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227909/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75230/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/195740/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211244/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22132/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75375/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165314/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/35045/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211277/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75322/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227897/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22164/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165156/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75254/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211243/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22131/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75356/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75258/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165139/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75259/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/25199/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/25198/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/178509/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75278/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227891/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165137/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22154/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165155/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227896/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22162/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75268/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22134/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75319/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211246/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211251/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22141/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22142/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75238/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/245091/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/26235/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75349/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211273/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75348/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22209/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75270/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22152/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165149/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227890/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211272/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22208/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75373/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165153/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75276/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227894/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22160/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75366/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211269/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22200/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75324/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211253/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22155/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211252/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22153/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75347/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75248/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22178/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165165/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227906/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75329/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22133/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211245/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22163/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211255/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75332/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/181934/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75361/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22201/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211270/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75551/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75552/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/138942/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/25201/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22136/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75326/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211248/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/160733/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22143/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75362/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/216498/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/164586/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75353/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211234/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22118/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75307/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165167/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/33116/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22159/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75339/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211254/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22185/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211261/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75370/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/87765/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211271/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22207/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75335/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/191042/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165172/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75274/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22189/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227912/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22217/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75333/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211276/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22212/version/1",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211275/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75334/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22184/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165168/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227908/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75286/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22193/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75350/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211264/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/216499/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22210/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75352/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22172/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211257/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75336/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165142/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227884/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22145/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75250/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75359/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22197/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211266/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22126/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211239/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75331/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165144/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211258/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22181/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75323/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75272/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211232/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22116/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227900/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165159/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22168/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75252/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22137/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211249/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75343/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227886/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75303/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165145/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22148/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75315/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22167/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165158/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227899/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22121/version/4",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75344/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/160272/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211256/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22166/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75369/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75226/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22138/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165138/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227882/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/174097/version/2026-09-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75355/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22182/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211259/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227885/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165143/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75284/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22146/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22192/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165173/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227913/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75240/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22187/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75262/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165170/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227910/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22157/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75266/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/227892/version/2025-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/165151/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/191020/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22211/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211274/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75365/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22125/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75327/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211238/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211268/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75357/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22199/version/3",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/22129/version/1",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/211241/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/75338/version/2026-03",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/203462/version/2027-03-beta",
+   "official": "vendor-domain: api.hubspot.com"
+  },
+  {
+   "url": "https://api.hubspot.com/public/api/spec/v2/specs/release/181933/version/2026-09",
+   "official": "vendor-domain: api.hubspot.com"
+  }
+ ],
+ "gaps": [
+  "skipped CRM/Forecasts: developer preview only",
+  "skipped CRM/Forecast Types: developer preview only",
+  "skipped Marketing/Lead Scoring: developer preview only",
+  "skipped CRM/Subscription Lifecycle: developer preview only",
+  "skipped Marketing/Forms: developer preview only",
+  "skipped Marketing/Aeo: developer preview only",
+  "skipped Commerce/Contracts: developer preview only",
+  "skipped Automation/Automation V4: developer preview only"
+ ],
+ "counts": {
+  "operations": 3996,
+  "read": 1229,
+  "write": 2767
+ }
+}

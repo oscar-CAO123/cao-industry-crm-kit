@@ -1,0 +1,50 @@
+{
+ "id": "agriculture-mining:spray",
+ "name": "Spray and harvest records",
+ "industry": "agriculture-mining",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the spray and harvest register in the business's own workbook from the records the owner enters, and lists any record missing a required field for a quality check. Crons read and draft; a person approves the one email that goes out.",
+ "families": {
+  "grain-receival-and-spray-register": {
+   "steps": ["record-spray-diary", "weather-check", "withholding-check", "grain-receival", "record-keeping", "compliance-check", "other"],
+   "covered_by": {
+    "record-spray-diary": "draft (the owner's record becomes a register row)",
+    "weather-check": "skill (the owner gives the conditions; the workflow does not pull weather)",
+    "withholding-check": "draft (the date is a required field; the workflow does not calculate it)",
+    "grain-receival": "draft (the docket becomes a register row)",
+    "record-keeping": "draft (register rows in the owner's workbook, no repeats)",
+    "compliance-check": "draft and approval (missing fields are listed to a QC mailbox)",
+    "other": "skill (driver induction, quality photos and downgrade talks with the supplier stay with the people)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "register", "schedule": "*/30 * * * *", "entry": "register", "summary": "Copy each new spray, harvest or receival record into the register workbook, unless its row is already there."},
+  {"name": "review", "schedule": "0 21 * * *", "entry": "review", "summary": "Draft one list of records that need a check and queue its send for approval (21:00 UTC is 8 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a row in the owner's own register workbook, and a QC email created as a draft in the business mailbox. The only send is the QC email, and it is queued for a person to approve.",
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "register rows in the owner's workbook, the QC email draft and its queued send"}
+ },
+ "gaps": [
+  "AgWorld: its pages describe spray records, weather and compliance reports, but the kit maps no operations for it, so nothing is read from it.",
+  "Spraybook: its pages describe a digital spray record app, but the kit maps no operations for it, so nothing is read from it.",
+  "GoCanvas: forms and submissions are mapped, but their parameters are unmapped and no raw spec is on file, so no adapter is built. Submissions are the likely intake once the parameters are confirmed.",
+  "AgriWebb: its schema covers livestock records only (no spray, crop or grain record types), so it is not used here.",
+  "Records enter only through the local store. No spray or grain platform is mapped as an intake source, so the owner's paper dockets and spray diary are entered by the agent skill.",
+  "Weather at application, withholding-period calculation, label-rate validation and harvest yield, bin and tonnage fields are not documented by any platform in the evidence. The owner enters them.",
+  "The register read takes the first 1,000 rows. A longer register needs paging before this ships.",
+  "Driver induction checks, quality photos to the group and downgrade or price talks with suppliers are judgment steps for people, not workflow steps.",
+  "WhatsApp, where quality photos go, has no adapter in the kit.",
+  "The Microsoft 365 adapter is docs-only until a developer tenant proves it against a real workbook and mailbox."
+ ]
+}

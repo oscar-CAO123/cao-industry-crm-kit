@@ -1,0 +1,13 @@
+{
+ "business_name": "Example Packing",
+ "summary_to": "owner@example.com.au",
+ "microsoft_365": {
+  "mailbox": "owner@example.com.au",
+  "folder": "inbox",
+  "search": "order",
+  "price_table": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "PriceList"},
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "Forecasts"}
+ },
+ "forecast_months": 3,
+ "price_alert_percent": 5
+}

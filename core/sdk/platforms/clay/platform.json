@@ -1,0 +1,35 @@
+{
+ "id": "clay",
+ "name": "Clay",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.clay.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "header",
+  "header": "clay-api-key",
+  "env": "CLAY_API_KEY"
+ },
+ "keys": [
+  "CLAY_API_KEY"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.clay.com/openapi.json",
+   "official": "vendor-domain: developers.clay.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 18,
+  "read": 8,
+  "write": 10
+ }
+}

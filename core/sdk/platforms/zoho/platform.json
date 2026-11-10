@@ -1,0 +1,493 @@
+{
+ "id": "zoho",
+ "name": "Zoho CRM",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "www.zohoapis.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "upload\\.zoho\\.(?:com|com\\.au|eu|in|jp|ca|sa)",
+  "www\\.zohoapis\\.(?:com|com\\.au|eu|in|jp|ca|sa)",
+  "zohoapis\\.(?:com|com\\.au|eu|in|jp|ca|sa)"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "dc": {
+   "env": "ZOHO_DC",
+   "default": "com.au",
+   "pattern": "com|com\\.au|eu|in|jp|ca|sa",
+   "example": "com.au"
+  },
+  "version": {
+   "env": "ZOHO_API_VERSION",
+   "default": "v8",
+   "pattern": "v[0-9]+",
+   "callerMay": true,
+   "example": "v8"
+  }
+ },
+ "auth": {
+  "type": "header",
+  "header": "Authorization",
+  "env": "ZOHO_ACCESS_TOKEN",
+  "prefix": "Zoho-oauthtoken ",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "ZOHO_ACCESS_TOKEN",
+  "ZOHO_DC (optional: com.au default)",
+  "ZOHO_API_VERSION (optional: v8 default)"
+ ],
+ "sources": [
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  },
+  {
+   "url": "https://codeload.github.com/zoho/crm-oas/tar.gz/refs/heads/main",
+   "official": "vendor-link: https://www.zoho.com/crm/developer/docs/sdk/server-side/typescript-sdk.html links github.com/zoho"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 506,
+  "read": 194,
+  "write": 312
+ }
+}

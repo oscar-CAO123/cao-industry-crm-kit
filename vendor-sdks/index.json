@@ -1,0 +1,540 @@
+{
+  "audited": "2026-11-08",
+  "rule": "two independent vendor-side sources, agreed across two passes; every package in the tree hash-checked and scanned (SkillSpector plus code patterns), every high or critical flag read at source",
+  "sdks": [
+    {
+      "app": "gohighlevel",
+      "folder": "gohighlevel",
+      "package": "@gohighlevel/api-client",
+      "version": "3.1.1",
+      "repo": "GoHighLevel/highlevel-api-sdk",
+      "provenance": false,
+      "packages_in_tree": 40,
+      "vendor_proof": [
+        "github-verified: org GoHighLevel is_verified, website gohighlevel.com",
+        "npm maintainer email on gohighlevel.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "google-analytics",
+      "folder": "google-analytics",
+      "package": "@google-analytics/data",
+      "version": "7.3.0",
+      "repo": "googleapis/google-cloud-node",
+      "provenance": false,
+      "packages_in_tree": 71,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.google.com/analytics/devguides/reporting/data/v1/client-libraries, https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart",
+        "npm maintainer email on google.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "bigquery",
+      "folder": "bigquery",
+      "package": "@google-cloud/bigquery",
+      "version": "9.6.0",
+      "repo": "googleapis/google-cloud-node",
+      "provenance": false,
+      "packages_in_tree": 53,
+      "vendor_proof": [
+        "vendor docs name it: https://docs.cloud.google.com/bigquery/docs/reference/libraries, https://docs.cloud.google.com/nodejs/docs/reference/bigquery/latest",
+        "npm maintainer email on google.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-admin",
+      "package": "@googleapis/admin",
+      "version": "37.0.2",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-calendar",
+      "package": "@googleapis/calendar",
+      "version": "20.1.0",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-docs",
+      "package": "@googleapis/docs",
+      "version": "14.1.1",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-drive",
+      "package": "@googleapis/drive",
+      "version": "27.0.0",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-gmail",
+      "package": "@googleapis/gmail",
+      "version": "22.0.2",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "google-workspace",
+      "folder": "googleapis-sheets",
+      "package": "@googleapis/sheets",
+      "version": "18.1.2",
+      "repo": "googleapis/google-api-nodejs-client",
+      "provenance": false,
+      "packages_in_tree": 45,
+      "vendor_proof": [
+        "npm maintainer email on google.com",
+        "GitHub API 19:35: google/google-api-nodejs-client is googleapis/google-api-nodejs-client, which Google's quickstart pages link"
+      ],
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-workspace.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
+    },
+    {
+      "app": "hubspot",
+      "folder": "hubspot-api-client",
+      "package": "@hubspot/api-client",
+      "version": "14.1.3",
+      "repo": "HubSpot/hubspot-api-nodejs",
+      "provenance": false,
+      "packages_in_tree": 26,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.hubspot.com/blog/introducing-hubspot-go-a-community-go-sdk-for-hubspot-developers",
+        "npm maintainer email on hubspot.com"
+      ],
+      "status": "blocked: no transport seam: always uses the process-wide fetch"
+    },
+    {
+      "app": "hubspot",
+      "folder": "hubspot-sdk",
+      "package": "@hubspot/sdk",
+      "version": "0.1.0-alpha.11",
+      "repo": "HubSpot/hubspot-sdk-typescript",
+      "provenance": true,
+      "packages_in_tree": 1,
+      "vendor_proof": [
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on hubspot.com"
+      ],
+      "status": "blocked: alpha; no wrapper yet"
+    },
+    {
+      "app": "mailchimp",
+      "folder": "mailchimp",
+      "package": "@mailchimp/mailchimp_marketing",
+      "version": "3.0.80",
+      "repo": "mailchimp/mailchimp-marketing-node",
+      "provenance": false,
+      "packages_in_tree": 48,
+      "vendor_proof": [
+        "GitHub API 19:35: org mailchimp is_verified on mailchimp.com",
+        "npm maintainer email on mailchimp.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "make",
+      "folder": "make",
+      "package": "@makehq/sdk",
+      "version": "1.10.0",
+      "repo": "integromat/make-typescript-sdk",
+      "provenance": true,
+      "packages_in_tree": 1,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.make.com/llms-full.txt",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on make.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "microsoft-365",
+      "folder": "microsoft-365",
+      "package": "@microsoft/microsoft-graph-client",
+      "version": "3.0.7",
+      "repo": "microsoftgraph/msgraph-sdk-javascript",
+      "provenance": false,
+      "packages_in_tree": 3,
+      "vendor_proof": [
+        "vendor docs name it: https://learn.microsoft.com/en-us/graph/sdks/sdks-overview, https://learn.microsoft.com/en-us/graph/sdks/sdk-installation",
+        "npm maintainer email on microsoft.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "onfleet",
+      "folder": "onfleet",
+      "package": "@onfleet/node-onfleet",
+      "version": "1.4.0",
+      "repo": "onfleet/node-onfleet",
+      "provenance": false,
+      "packages_in_tree": 8,
+      "vendor_proof": [
+        "GitHub API 19:35: org onfleet is_verified on onfleet.com",
+        "npm maintainer email on onfleet.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "shopify",
+      "folder": "shopify",
+      "package": "@shopify/admin-api-client",
+      "version": "2.0.1",
+      "repo": "Shopify/shopify-app-js",
+      "provenance": true,
+      "packages_in_tree": 2,
+      "vendor_proof": [
+        "vendor docs name it: https://shopify.dev/docs/api/admin-graphql/latest, https://shopify.dev/docs/api/libraries-and-templates",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on shopify.com"
+      ],
+      "status": "blocked: GraphQL: the SDK route does not handle GraphQL yet"
+    },
+    {
+      "app": "slack",
+      "folder": "slack",
+      "package": "@slack/web-api",
+      "version": "8.3.0",
+      "repo": "slackapi/node-slack-sdk",
+      "provenance": true,
+      "packages_in_tree": 14,
+      "vendor_proof": [
+        "vendor docs name it: https://docs.slack.dev/tools/node-slack-sdk/, https://docs.slack.dev/tools/node-slack-sdk/web-api/",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "github-verified: org slackapi is_verified, website slack.com",
+        "npm maintainer email on slack.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "pylon",
+      "folder": "pylon",
+      "package": "@usepylon/sdk",
+      "version": "0.1.0-beta.1",
+      "repo": "pylon-labs/pylon-typescript",
+      "provenance": true,
+      "packages_in_tree": 1,
+      "vendor_proof": [
+        "vendor docs name it: https://docs.usepylon.com/pylon-docs/developer/api/sdks",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on usepylon.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "woocommerce",
+      "folder": "woocommerce",
+      "package": "@woocommerce/woocommerce-rest-api",
+      "version": "1.0.2",
+      "repo": "woocommerce/woocommerce-rest-api-js-lib",
+      "provenance": false,
+      "packages_in_tree": 63,
+      "vendor_proof": [
+        "vendor docs name it: https://developer.woocommerce.com/docs/apis/rest-api/, https://developer.woocommerce.com/llms-full.txt",
+        "npm maintainer email on automattic.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "zapier",
+      "folder": "zapier",
+      "package": "@zapier/zapier-sdk",
+      "version": "0.122.0",
+      "repo": "zapier/sdk",
+      "provenance": false,
+      "packages_in_tree": 6,
+      "vendor_proof": [
+        "vendor docs name it: https://docs.zapier.com/sdk, https://docs.zapier.com/llms.txt",
+        "github-verified: org zapier is_verified, website zapier.com",
+        "npm maintainer email on zapier.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "zoom",
+      "folder": "zoom",
+      "package": "@zoom/rivet",
+      "version": "0.4.0",
+      "repo": "zoom/rivet-javascript",
+      "provenance": false,
+      "packages_in_tree": 30,
+      "vendor_proof": [
+        "github-verified: org zoom is_verified, website developers.zoom.us",
+        "npm maintainer email on zoom.us"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "airtable",
+      "folder": "airtable",
+      "package": "airtable",
+      "version": "0.12.2",
+      "repo": "Airtable/airtable.js",
+      "provenance": false,
+      "packages_in_tree": 10,
+      "vendor_proof": [
+        "github-verified: org Airtable is_verified, website airtable.com",
+        "npm maintainer email on airtable.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "asana",
+      "folder": "asana",
+      "package": "asana",
+      "version": "3.4.0",
+      "repo": "Asana/node-asana",
+      "provenance": true,
+      "packages_in_tree": 113,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.asana.com/docs/quick-start, https://developers.asana.com/docs/javascript",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "github-verified: org Asana is_verified, website asana.com",
+        "npm maintainer email on asana.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "docusign",
+      "folder": "docusign",
+      "package": "docusign-esign",
+      "version": "10.1.0",
+      "repo": "docusign/docusign-node-client",
+      "provenance": false,
+      "packages_in_tree": 51,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.docusign.com/docs/esign-rest-api/sdks/node/, https://developers.docusign.com/docs/esign-rest-api/sdks/node",
+        "github-verified: org docusign is_verified, website developers.docusign.com",
+        "npm maintainer email on docusign.com"
+      ],
+      "status": "blocked: moves requests to each account's own host; the SDK route refuses that yet"
+    },
+    {
+      "app": "dropbox",
+      "folder": "dropbox",
+      "package": "dropbox",
+      "version": "10.66.0",
+      "repo": "dropbox/dropbox-sdk-js",
+      "provenance": true,
+      "packages_in_tree": 1,
+      "vendor_proof": [
+        "github-verified: org dropbox is_verified, website dropbox.com",
+        "npm maintainer email on dropbox.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "meta-ads",
+      "folder": "meta-ads",
+      "package": "facebook-nodejs-business-sdk",
+      "version": "26.0.3",
+      "repo": "facebook/facebook-nodejs-business-sdk",
+      "provenance": false,
+      "packages_in_tree": 36,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.facebook.com/documentation/business-sdk/getting-started, https://developers.facebook.com/documentation/business-sdk/getting-started.md",
+        "npm maintainer email on fb.com, meta.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "jotform",
+      "folder": "jotform",
+      "package": "jotform",
+      "version": "1.0.1",
+      "repo": "jotform/jotform-api-nodejs",
+      "provenance": false,
+      "packages_in_tree": 29,
+      "vendor_proof": [
+        "vendor docs name it: https://api.jotform.com/docs/",
+        "npm maintainer email on jotform.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "klaviyo",
+      "folder": "klaviyo",
+      "package": "klaviyo-api",
+      "version": "24.0.0",
+      "repo": "klaviyo/klaviyo-api-node",
+      "provenance": false,
+      "packages_in_tree": 28,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.klaviyo.com/en/docs/sdk_overview, https://developers.klaviyo.com/en/docs/install_a_library",
+        "github-verified: org klaviyo is_verified, website www.klaviyo.com",
+        "npm maintainer email on klaviyo.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "monday",
+      "folder": "monday-sdk-js",
+      "package": "monday-sdk-js",
+      "version": "1.0.0-beta",
+      "repo": "mondaycom/monday-sdk-js",
+      "provenance": false,
+      "packages_in_tree": 5,
+      "vendor_proof": [
+        "vendor docs name it: https://developer.monday.com/apps/docs/introduction-to-the-sdk",
+        "github-verified: org mondaycom is_verified, website monday.com",
+        "npm maintainer email on monday.com"
+      ],
+      "status": "blocked: GraphQL, and built for monday apps"
+    },
+    {
+      "app": "pandadoc",
+      "folder": "pandadoc",
+      "package": "pandadoc-node-client",
+      "version": "6.2.0",
+      "repo": "PandaDoc/pandadoc-api-node-client",
+      "provenance": false,
+      "packages_in_tree": 35,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.pandadoc.com/reference/sdk",
+        "npm maintainer email on pandadoc.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "pipedrive",
+      "folder": "pipedrive",
+      "package": "pipedrive",
+      "version": "36.3.1",
+      "repo": "pipedrive/client-nodejs",
+      "provenance": true,
+      "packages_in_tree": 35,
+      "vendor_proof": [
+        "vendor docs name it: https://developers.pipedrive.com/docs/api/v1",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on pipedrive.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "plaid",
+      "folder": "plaid",
+      "package": "plaid",
+      "version": "51.0.0",
+      "repo": "plaid/plaid-node",
+      "provenance": true,
+      "packages_in_tree": 28,
+      "vendor_proof": [
+        "vendor docs name it: https://plaid.com/docs/api/libraries/, https://plaid.com/blog/open-api-client-libraries/",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "github-verified: org plaid is_verified, website plaid.com",
+        "npm maintainer email on plaid.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "square",
+      "folder": "square",
+      "package": "square",
+      "version": "46.0.0",
+      "repo": "square/square-nodejs-sdk",
+      "provenance": true,
+      "packages_in_tree": 69,
+      "vendor_proof": [
+        "vendor docs name it: https://developer.squareup.com/docs/sdks/nodejs, https://developer.squareup.com/docs/sdks",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on squareup.com"
+      ],
+      "status": "wired"
+    },
+    {
+      "app": "stripe",
+      "folder": "stripe",
+      "package": "stripe",
+      "version": "23.1.0",
+      "repo": "stripe/stripe-node",
+      "provenance": true,
+      "packages_in_tree": 1,
+      "vendor_proof": [
+        "vendor docs name it: https://docs.stripe.com/sdks, https://docs.stripe.com/sdks/server-side",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on stripe.com"
+      ],
+      "status": "wired"
+    },
+    {
+      "app": "twilio",
+      "folder": "twilio",
+      "package": "twilio",
+      "version": "6.3.0",
+      "repo": "twilio/twilio-node",
+      "provenance": true,
+      "packages_in_tree": 51,
+      "vendor_proof": [
+        "vendor docs name it: https://www.twilio.com/docs/libraries, https://www.twilio.com/en-us/blog/developers/tutorials/product/voice-javascript-promises-node",
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "github-verified: org twilio is_verified, website www.twilio.com",
+        "npm maintainer email on twilio.com"
+      ],
+      "status": "pinned, not wired yet"
+    },
+    {
+      "app": "xero",
+      "folder": "xero",
+      "package": "xero-node",
+      "version": "20.1.0",
+      "repo": "XeroAPI/xero-node",
+      "provenance": true,
+      "packages_in_tree": 34,
+      "vendor_proof": [
+        "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
+        "npm maintainer email on xero.com"
+      ],
+      "status": "wired"
+    }
+  ]
+}

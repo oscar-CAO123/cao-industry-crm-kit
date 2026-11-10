@@ -1,0 +1,1258 @@
+{
+ "industry": "real-estate",
+ "name": "Real Estate",
+ "version": 1,
+ "source": "Reusable industry pages, workflows and platform coverage.",
+ "pages": [
+  {
+   "slug": "enquiries",
+   "title": "Sales",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "enquiries",
+     "title": "Enquiries",
+     "view": "board",
+     "kind": "enquiries",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "pipeline",
+     "title": "Pipeline",
+     "view": "board",
+     "kind": "pipeline",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "owners",
+     "title": "Owner database",
+     "view": "table",
+     "kind": "owners",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "research",
+     "title": "Research a lead",
+     "view": "board",
+     "kind": "research",
+     "stages": [
+      "New",
+      "Contacted",
+      "Qualified",
+      "Proposal",
+      "Won",
+      "Lost"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "settlement",
+   "title": "Deals",
+   "department": "sales",
+   "tabs": [
+    {
+     "slug": "settlement",
+     "title": "Settlement",
+     "view": "board",
+     "kind": "settlement",
+     "stages": [
+      "Agreed",
+      "Finance and checks",
+      "Ready",
+      "Settled"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "kyc",
+     "title": "ID and AML checks",
+     "view": "table",
+     "kind": "kyc",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "reports",
+     "title": "Property reports",
+     "view": "table",
+     "kind": "reports",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "investment",
+     "title": "Investment",
+     "view": "table",
+     "kind": "investment",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "marketing",
+   "title": "Marketing",
+   "department": "marketing",
+   "tabs": [
+    {
+     "slug": "content",
+     "title": "Marketing",
+     "view": "board",
+     "kind": "content",
+     "stages": [
+      "Idea",
+      "Drafting",
+      "Approved",
+      "Scheduled",
+      "Posted"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "calls",
+   "title": "Calls",
+   "department": "customer-service",
+   "tabs": [
+    {
+     "slug": "calls",
+     "title": "Calls",
+     "view": "feed",
+     "kind": "calls",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pminbox",
+   "title": "Inbox",
+   "department": "customer-service",
+   "tabs": [
+    {
+     "slug": "pminbox",
+     "title": "Inbox",
+     "view": "feed",
+     "kind": "pminbox",
+     "fields": [
+      {
+       "key": "from",
+       "label": "From",
+       "type": "text"
+      },
+      {
+       "key": "channel",
+       "label": "Channel",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "inspections",
+   "title": "Properties",
+   "department": "fulfilment",
+   "tabs": [
+    {
+     "slug": "inspections",
+     "title": "Inspections",
+     "view": "calendar",
+     "kind": "inspections",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "time",
+       "label": "Time",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "condition",
+     "title": "Condition reports",
+     "view": "table",
+     "kind": "condition",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "maint",
+     "title": "Maintenance",
+     "view": "board",
+     "kind": "maint",
+     "stages": [
+      "Logged",
+      "Assigned",
+      "In progress",
+      "Waiting",
+      "Closed"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "value",
+       "label": "Value",
+       "type": "money"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "rentalcompliance",
+     "title": "Rental compliance",
+     "view": "table",
+     "kind": "rentalcompliance",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "portal",
+     "title": "Owner and tenant portal",
+     "view": "table",
+     "kind": "portal",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "trust",
+   "title": "Rent and trust",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "trust",
+     "title": "Trust account",
+     "view": "table",
+     "kind": "trust",
+     "fields": [
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      },
+      {
+       "key": "qty",
+       "label": "Quantity",
+       "type": "number"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "arrears",
+     "title": "Arrears",
+     "view": "table",
+     "kind": "arrears",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    },
+    {
+     "slug": "paylinks",
+     "title": "Payment links",
+     "view": "table",
+     "kind": "paylinks",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pnl",
+   "title": "Numbers and bills",
+   "department": "finance-admin",
+   "tabs": [
+    {
+     "slug": "pnl",
+     "title": "Weekly numbers",
+     "view": "dashboard",
+     "kind": "pnl",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "askdata",
+     "title": "Ask your data",
+     "view": "dashboard",
+     "kind": "askdata",
+     "fields": [
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "bills",
+     "title": "Supplier bills",
+     "view": "table",
+     "kind": "bills",
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "amount",
+       "label": "Amount",
+       "type": "money"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "ref",
+       "label": "Reference",
+       "type": "text"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "hiring",
+   "title": "Staff",
+   "department": "people",
+   "tabs": [
+    {
+     "slug": "hiring",
+     "title": "Hiring",
+     "view": "board",
+     "kind": "hiring",
+     "stages": [
+      "Applied",
+      "Screened",
+      "Interview",
+      "Offer",
+      "Hired"
+     ],
+     "fields": [
+      {
+       "key": "contact",
+       "label": "Contact",
+       "type": "text"
+      },
+      {
+       "key": "date",
+       "label": "Date",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    },
+    {
+     "slug": "sops",
+     "title": "SOPs and training",
+     "view": "table",
+     "kind": "sops",
+     "fields": [
+      {
+       "key": "owner",
+       "label": "Owner",
+       "type": "text"
+      },
+      {
+       "key": "status",
+       "label": "Status",
+       "type": "text"
+      },
+      {
+       "key": "due",
+       "label": "Due",
+       "type": "date"
+      },
+      {
+       "key": "notes",
+       "label": "Notes",
+       "type": "textarea"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "workflows": [
+  {
+   "id": "documents",
+   "dir": "industries/all/workflows/fulfilment/documents",
+   "department": "fulfilment",
+   "name": "Produce letters, reports and documents from records",
+   "status": "docs-only"
+  },
+  {
+   "id": "content-posting",
+   "dir": "industries/all/workflows/marketing/content-posting",
+   "department": "marketing",
+   "name": "Create and schedule social content",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:ask-your-data",
+   "dir": "industries/all/workflows/finance-admin/ask-your-data",
+   "department": "finance-admin",
+   "name": "Ask your data",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:lead-capture",
+   "dir": "industries/all/workflows/sales/lead-capture",
+   "department": "sales",
+   "name": "Capture leads from ads, forms and chat into the CRM",
+   "status": "docs-only"
+  },
+  {
+   "id": "ad-campaigns",
+   "dir": "industries/all/workflows/marketing/ad-campaigns",
+   "department": "marketing",
+   "name": "Build and review ad campaigns",
+   "status": "docs-only"
+  },
+  {
+   "id": "lead-followup",
+   "dir": "industries/all/workflows/sales/lead-followup",
+   "department": "sales",
+   "name": "Follow up leads and quotes on a schedule",
+   "status": "docs-only"
+  },
+  {
+   "id": "inbox-triage",
+   "dir": "industries/all/workflows/customer-service/inbox-triage",
+   "department": "customer-service",
+   "name": "Sort the shared inbox and draft replies",
+   "status": "docs-only"
+  },
+  {
+   "id": "email-marketing",
+   "dir": "industries/all/workflows/marketing/email-marketing",
+   "department": "marketing",
+   "name": "Send newsletters and automated email flows",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:compliance-checks",
+   "dir": "industries/all/workflows/compliance-safety/compliance-checks",
+   "department": "compliance-safety",
+   "name": "ID, AML and regulatory checks and audits",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:speed-to-lead",
+   "dir": "industries/all/workflows/sales/speed-to-lead",
+   "department": "sales",
+   "name": "Alert and chase when a new lead is not contacted fast",
+   "status": "docs-only"
+  },
+  {
+   "id": "precall-research",
+   "dir": "industries/all/workflows/sales/precall-research",
+   "department": "sales",
+   "name": "Research a lead before a call",
+   "status": "docs-only"
+  },
+  {
+   "id": "crm-hygiene",
+   "dir": "industries/all/workflows/sales/crm-hygiene",
+   "department": "sales",
+   "name": "Clean, dedupe and enrich CRM records",
+   "status": "docs-only"
+  },
+  {
+   "id": "sops-training",
+   "dir": "industries/all/workflows/people/sops-training",
+   "department": "people",
+   "name": "Turn know-how and videos into SOPs and training",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:investment",
+   "dir": "industries/real-estate/workflows/sales/investment",
+   "department": "sales",
+   "name": "Investment maths by hand",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:onboarding",
+   "dir": "industries/all/workflows/customer-success/onboarding",
+   "department": "customer-success",
+   "name": "Onboard a new customer or client",
+   "status": "docs-only"
+  },
+  {
+   "id": "job-tracking",
+   "dir": "industries/all/workflows/fulfilment/job-tracking",
+   "department": "fulfilment",
+   "name": "Track jobs or projects from start to finish",
+   "status": "docs-only"
+  },
+  {
+   "id": "competitor-watch",
+   "dir": "industries/all/workflows/marketing/competitor-watch",
+   "department": "marketing",
+   "name": "Watch competitors' ads, prices and posts",
+   "status": "docs-only"
+  },
+  {
+   "id": "scheduling-dispatch",
+   "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
+   "department": "fulfilment",
+   "name": "Schedule and dispatch jobs, staff or vehicles",
+   "status": "docs-only"
+  },
+  {
+   "id": "numbers-pack",
+   "dir": "industries/all/workflows/finance-admin/numbers-pack",
+   "department": "finance-admin",
+   "name": "Weekly or monthly numbers and profit pack for the owner",
+   "status": "docs-only"
+  },
+  {
+   "id": "hiring",
+   "dir": "industries/all/workflows/people/hiring",
+   "department": "people",
+   "name": "Advertise, screen and onboard staff",
+   "status": "docs-only"
+  },
+  {
+   "id": "meeting-actions",
+   "dir": "industries/all/workflows/owner/meeting-actions",
+   "department": "owner",
+   "name": "Turn meetings and calls into notes and actions",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:add-maint",
+   "dir": "industries/real-estate/workflows/fulfilment/add-maint",
+   "department": "fulfilment",
+   "name": "Maintenance dispatch",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:pipeline",
+   "dir": "industries/real-estate/workflows/sales/pipeline",
+   "department": "sales",
+   "name": "Prospects found, nothing tracked",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:settlement",
+   "dir": "industries/real-estate/workflows/fulfilment/settlement",
+   "department": "fulfilment",
+   "name": "Settlement dates typed by hand",
+   "status": "docs-only"
+  },
+  {
+   "id": "lead-reactivation",
+   "dir": "industries/all/workflows/sales/lead-reactivation",
+   "department": "sales",
+   "name": "Reactivate old leads and past customers",
+   "status": "docs-only"
+  },
+  {
+   "id": "booking-reminders",
+   "dir": "industries/all/workflows/sales/booking-reminders",
+   "department": "sales",
+   "name": "Book appointments, send reminders, handle no-shows",
+   "status": "docs-only"
+  },
+  {
+   "id": "landing-pages",
+   "dir": "industries/all/workflows/marketing/landing-pages",
+   "department": "marketing",
+   "name": "Build and update landing pages",
+   "status": "docs-only"
+  },
+  {
+   "id": "customer-helpdesk",
+   "dir": "industries/all/workflows/customer-service/customer-helpdesk",
+   "department": "customer-service",
+   "name": "Answer customer questions from the business's own knowledge",
+   "status": "docs-only"
+  },
+  {
+   "id": "after-hours-calls",
+   "dir": "industries/all/workflows/customer-service/after-hours-calls",
+   "department": "customer-service",
+   "name": "Answer or triage calls out of hours",
+   "status": "docs-only"
+  },
+  {
+   "id": "call-coaching",
+   "dir": "industries/all/workflows/owner/call-coaching",
+   "department": "owner",
+   "name": "Score and coach sales and service calls",
+   "status": "docs-only"
+  },
+  {
+   "id": "knowledge-base",
+   "dir": "industries/all/workflows/owner/knowledge-base",
+   "department": "owner",
+   "name": "Keep a searchable knowledge base of the business",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:condition",
+   "dir": "industries/real-estate/workflows/fulfilment/condition",
+   "department": "fulfilment",
+   "name": "Condition reports cost too much",
+   "status": "docs-only"
+  },
+  {
+   "id": "quote-build",
+   "dir": "industries/all/workflows/sales/quote-build",
+   "department": "sales",
+   "name": "Build a quote or proposal from notes, photos or plans",
+   "status": "docs-only"
+  },
+  {
+   "id": "ad-reporting",
+   "dir": "industries/all/workflows/marketing/ad-reporting",
+   "department": "marketing",
+   "name": "Report ad spend, cost per lead and return",
+   "status": "docs-only"
+  },
+  {
+   "id": "status-updates",
+   "dir": "industries/all/workflows/customer-service/status-updates",
+   "department": "customer-service",
+   "name": "Tell customers where their job, order or matter is up to",
+   "status": "docs-only"
+  },
+  {
+   "id": "stock-ordering",
+   "dir": "industries/all/workflows/fulfilment/stock-ordering",
+   "department": "fulfilment",
+   "name": "Track stock and order from suppliers",
+   "status": "docs-only"
+  },
+  {
+   "id": "rostering",
+   "dir": "industries/all/workflows/people/rostering",
+   "department": "people",
+   "name": "Build rosters from demand and availability",
+   "status": "docs-only"
+  },
+  {
+   "id": "all:expiry-alerts",
+   "dir": "industries/all/workflows/compliance-safety/expiry-alerts",
+   "department": "compliance-safety",
+   "name": "Track licences, certificates and document expiry",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:add-arrears",
+   "dir": "industries/real-estate/workflows/finance-admin/add-arrears",
+   "department": "finance-admin",
+   "name": "Arrears ladder",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:owners",
+   "dir": "industries/real-estate/workflows/sales/owners",
+   "department": "sales",
+   "name": "Owner contacts, built from scratch",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:pminbox",
+   "dir": "industries/real-estate/workflows/customer-service/pminbox",
+   "department": "customer-service",
+   "name": "Mornings lost to manager email",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:x-rentalcompliance",
+   "dir": "industries/real-estate/workflows/compliance-safety/x-rentalcompliance",
+   "department": "compliance-safety",
+   "name": "Rental compliance",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:add-vendor",
+   "dir": "industries/real-estate/workflows/customer-success/add-vendor",
+   "department": "customer-success",
+   "name": "Vendor report in one tap",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:add-trust",
+   "dir": "industries/real-estate/workflows/finance-admin/add-trust",
+   "department": "finance-admin",
+   "name": "Trust reconciliation",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:bond-lodgement",
+   "dir": "industries/real-estate/workflows/finance-admin/bond-lodgement",
+   "department": "finance-admin",
+   "name": "Lodge and claim rental bonds",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:inspections",
+   "dir": "industries/real-estate/workflows/fulfilment/inspections",
+   "department": "fulfilment",
+   "name": "Inspections need a trip each",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:listing-syndication",
+   "dir": "industries/real-estate/workflows/marketing/listing-syndication",
+   "department": "marketing",
+   "name": "Create a rental listing once and syndicate it to every portal",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:calls",
+   "dir": "industries/real-estate/workflows/sales/calls",
+   "department": "sales",
+   "name": "Calls",
+   "status": "docs-only"
+  },
+  {
+   "id": "real-estate:tenant-screening",
+   "dir": "industries/real-estate/workflows/sales/tenant-screening",
+   "department": "sales",
+   "name": "Screen tenants and sign leases",
+   "status": "docs-only"
+  }
+ ],
+ "planned_workflows": [],
+ "connectors": [
+  {
+   "tool": "Microsoft 365",
+   "platform": "microsoft-365",
+   "status": "spec"
+  },
+  {
+   "tool": "WhatsApp",
+   "platform": "whatsapp",
+   "status": "spec"
+  },
+  {
+   "tool": "Google Workspace",
+   "platform": "google-workspace",
+   "status": "spec"
+  },
+  {
+   "tool": "GoHighLevel",
+   "platform": "gohighlevel",
+   "status": "spec"
+  },
+  {
+   "tool": "DocuSign",
+   "platform": "docusign",
+   "status": "spec"
+  },
+  {
+   "tool": "Meta Ads",
+   "platform": "meta-ads",
+   "status": "spec"
+  },
+  {
+   "tool": "Zoho",
+   "platform": "zoho",
+   "status": "spec"
+  },
+  {
+   "tool": "AgentBox",
+   "platform": "agentbox",
+   "status": "docs-read"
+  },
+  {
+   "tool": "Xero",
+   "platform": "xero",
+   "status": "spec"
+  },
+  {
+   "tool": "Monday.com",
+   "platform": "monday",
+   "status": "spec"
+  }
+ ],
+ "missing_connectors": [
+  {
+   "tool": "CoreLogic RP Data"
+  },
+  {
+   "tool": "Rex"
+  },
+  {
+   "tool": "Excel"
+  },
+  {
+   "tool": "RealWorks"
+  },
+  {
+   "tool": "realestate.com"
+  },
+  {
+   "tool": "Console Cloud"
+  },
+  {
+   "tool": "Inspection Express"
+  },
+  {
+   "tool": "Realtair"
+  }
+ ]
+}

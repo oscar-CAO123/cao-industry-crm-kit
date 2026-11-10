@@ -1,0 +1,41 @@
+{
+ "id": "professional-services:contracts",
+ "name": "Contracts read by hand",
+ "industry": "professional-services",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Contracts read by hand: contract emails are logged from the inbox, the owner gets a drafted review note with a register row, and unsigned signers on envelopes out for signature get reminders queued for approval. Crons read and draft; a person approves every email.",
+ "families": {
+  "all": {
+   "steps": ["contract-received", "other"],
+   "covered_by": {"contract-received": "intake (contract emails logged from the folder)", "other": "review (note to the owner); the clause reading itself is skill work"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "Contract emails from the folder, each logged once as new."},
+  {"name": "review", "schedule": "*/30 * * * *", "entry": "review", "summary": "A register row and a review note for each new contract; the note's send waits for approval."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Reminders to unsigned signers on envelopes out for signature, queued for approval on the set schedule (22:00 UTC is 8 or 9 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "users.mailFolders.messages.ListAttachments", "users.CreateMessages", "drives.items.workbook.tables.CreateRows"],
+  "docusign": ["esignature.Envelopes_GetEnvelopes"]
+ },
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, an email draft in the client's mailbox, a register row. Sending an email is a live operation and waits for a person.",
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "contract emails in, review note to the owner, register row, reminder drafts"},
+  "docusign": {"status": "docs-only", "covers": "envelopes out for signature and each signer's status (read only)"}
+ },
+ "gaps": [
+  "Clause reading, redlines, specialist advice, negotiation and approval require human judgment. Confirm the workflow steps with the business before use.",
+  "No platform had help-centre docs in the mining evidence, so the two adapters were chosen by job fit from the kit, not by support.",
+  "No cron reads contract text. The intake logs attachment names and sizes only; reading the document is the owner's or the agent's step.",
+  "PandaDoc and Clio have mapped operations in the kit but no adapter here: no evidence this owner uses them, and Clio is a legal matter system. Leap is not in the kit.",
+  "Storing the signed copy, tracking renewal and notice dates, and sending for signature are not built.",
+  "Both adapters are docs-only. DocuSign is marked spec in the kit, and the Microsoft 365 sign-in is a supplied Graph access token. Prove both against a sandbox before any client."
+ ]
+}

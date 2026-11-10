@@ -1,0 +1,35 @@
+{
+ "id": "microsoft-365",
+ "name": "Microsoft 365 (Graph)",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "graph.microsoft.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "M365_ACCESS_TOKEN",
+  "note": "token flow not built yet: supply a Graph access token"
+ },
+ "keys": [
+  "M365_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://aka.ms/graph/v1.0/openapi.yaml",
+   "official": "vendor-redirect: https://aka.ms/graph/v1.0/openapi.yaml -> https://raw.githubusercontent.com/microsoftgraph/msgraph-metadata/master/openapi/v1.0/openapi.yaml"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 18004,
+  "read": 9379,
+  "write": 8625
+ }
+}

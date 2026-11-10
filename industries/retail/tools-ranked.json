@@ -1,0 +1,58 @@
+{
+  "tools": [
+    {
+      "name": "Airtable"
+    },
+    {
+      "name": "Asana"
+    },
+    {
+      "name": "Canva"
+    },
+    {
+      "name": "Fishbowl"
+    },
+    {
+      "name": "Google Ads"
+    },
+    {
+      "name": "Google Analytics"
+    },
+    {
+      "name": "Google Workspace"
+    },
+    {
+      "name": "HubSpot"
+    },
+    {
+      "name": "Klaviyo"
+    },
+    {
+      "name": "Meta Ads"
+    },
+    {
+      "name": "Microsoft 365"
+    },
+    {
+      "name": "Monday.com"
+    },
+    {
+      "name": "Shopify"
+    },
+    {
+      "name": "Slack"
+    },
+    {
+      "name": "Starship"
+    },
+    {
+      "name": "WooCommerce"
+    },
+    {
+      "name": "WordPress"
+    },
+    {
+      "name": "Xero"
+    }
+  ]
+}

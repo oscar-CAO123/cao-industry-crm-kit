@@ -1,0 +1,43 @@
+{
+  "id": "agriculture-mining:x-paddocks",
+  "name": "Paddock records",
+  "industry": "agriculture-mining",
+  "department": "fulfilment",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Keeps the paddock job record: what was done on each paddock, when, by whom, with which product and rate, and when the withholding period ends. Rows go into the owner's own workbook, paddocks and their crop or land use are read from AgriWebb, and one QC email lists what needs a check. Crons read and draft; a person approves the one email that goes out.",
+  "families": {},
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "register", "schedule": "*/30 * * * *", "entry": "register", "summary": "Copy each new paddock job record into the owner's register workbook, unless its row is already there."},
+    {"name": "paddock-read", "schedule": "0 */6 * * *", "entry": "paddockRead", "summary": "Read each watched farm's paddocks and their crop type and land use from AgriWebb into the store."},
+    {"name": "review", "schedule": "0 21 * * *", "entry": "review", "summary": "Draft one QC email listing job records that need a check and paddocks with no crop or land use, and queue its send for approval (21:00 UTC is 8 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "microsoft-365": ["drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"],
+    "agriwebb": ["query.fields"]
+  },
+  "live_ops": {
+    "microsoft-365": ["users.user.messages.message.send"]
+  },
+  "draft_ops_note": "Draft operations reach nobody outside the business: a row in the owner's own register workbook, a QC email created as a draft in the business mailbox, and reads of paddocks from AgriWebb. The only send is the QC email, and it is queued for a person to approve. AgriWebb has no write for crop or spray records, so nothing is written there.",
+  "capabilities": ["sheets.read", "sheets.append", "messages.draft"],
+  "adapters": {
+    "microsoft-365": {"status": "docs-only", "covers": "job register rows in the owner's workbook, the QC email draft and its queued send"},
+    "agriwebb": {"status": "docs-only", "covers": "paddock reads (name, area, crop type, land use) per watched farm"}
+  },
+  "gaps": [
+    "Confirm the workflow steps and default settings with the business before use.",
+    "AgWorld, the platform the evidence names most, has no kit folder, so its paddock, spray and compliance records are not read or written. The platform file rates most steps yes or partial.",
+    "AgriWebb's record write takes animal records only (purchase, management group change, weigh, observation). It cannot record a spray, fertiliser, sowing or harvest job, so job records go to the owner's workbook instead.",
+    "Aglytica (CashPeek) is a budgeting and cash flow product, and its docs describe no paddock steps, so it is not used.",
+    "Agrimaster's help centre returned HTTP 403 for every article, so its steps are unknown and no adapter is built.",
+    "Farm Manager Pro has no platform evidence and no kit folder.",
+    "GoCanvas is mapped in the kit under a quarries and mines compliance folder. It could take paddock job forms filled in the field, but no adapter is built for it here.",
+    "Conditions check (wind, temperature, humidity before a spray), label rate and withholding period checks: no platform in the evidence documents them for this job. The owner or agent enters them, and the review flags a spray missing its withholding date or weather.",
+    "Plan task, field execution, next task and sharing with the team are people's work, not steps this workflow performs.",
+    "The register read takes the first 1,000 rows. A longer register needs paging before this ships.",
+    "The Microsoft 365 and AgriWebb adapters are docs-only until a developer tenant and a real AgriWebb account prove them. AgriWebb sign-in is a bearer token from AGRIWEBB_ACCESS_TOKEN only.",
+    "Judgment stays with the owner and the agent: reading the owner's words, choosing the paddock and product, and deciding what a flagged record needs."
+  ]
+}

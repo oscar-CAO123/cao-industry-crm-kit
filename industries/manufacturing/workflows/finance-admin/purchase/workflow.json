@@ -1,0 +1,58 @@
+{
+ "id": "manufacturing:purchase",
+ "name": "Purchase request to ERP",
+ "industry": "manufacturing",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a purchase request into an ERP purchase order. Stock under its minimum is raised as a parked order in Unleashed, a person approves it before it is placed with the supplier, and a receipted order becomes a draft supplier bill in Xero for the owner to match and approve. Crons read and draft; nothing reaches a supplier without approval.",
+ "settings": "settings.example.json",
+ "families": {
+  "by-hand-or-unstated": {
+   "steps": ["request-raised", "budget-check", "approval", "raise-po", "send-po", "invoice-match", "pay-supplier", "record-keeping", "other"],
+   "covered_by": {
+    "request-raised": "reorder (stock under minimum only; other requests by hand)",
+    "budget-check": "not covered (no budget data mapped)",
+    "approval": "place (queued; a person approves each order before it goes to the supplier)",
+    "raise-po": "reorder (parked order)",
+    "send-po": "place (queued; whether Unleashed emails the supplier is unverified)",
+    "invoice-match": "bill (draft bill from the receipted lines; matching is by hand)",
+    "pay-supplier": "not covered (the owner approves the draft bill in Xero)",
+    "record-keeping": "bill (draft bill, so nothing is re-keyed)",
+    "other": "by hand"
+   }
+  }
+ },
+ "crons": [
+  {"name": "reorder", "schedule": "0 * * * *", "entry": "reorder", "summary": "Raise a parked purchase order in Unleashed for each product under its minimum with no open order."},
+  {"name": "place", "schedule": "20 * * * *", "entry": "place", "summary": "Queue each parked purchase order for a person to place with the supplier."},
+  {"name": "bill", "schedule": "40 */2 * * *", "entry": "bill", "summary": "Sync order status from Unleashed and draft the supplier bill in Xero for each receipted order."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_StockOnHand", "docs.get_Products", "docs.get_PurchaseOrders", "docs.post_PurchaseOrders"],
+  "xero": ["accounting.getContacts", "accounting.createContacts", "accounting.createInvoices"]
+ },
+ "live_ops": {
+  "unleashed": ["docs.put_PurchaseOrders_orderGuid"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a parked purchase order in Unleashed, a supplier contact and a DRAFT bill in Xero, and reads. Moving an order to Placed sends it to the supplier, so it is a live operation and waits for a person.",
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "stock on hand, products, purchase orders: draft a parked order, and queue placing it (calls not wired until request signing is built)"},
+  "xero": {"status": "docs-only", "covers": "supplier contacts and draft supplier bills"}
+ },
+ "gaps": [
+  "Unleashed request signing (HMAC-SHA256) is not built. core/sdk/platforms/unleashed/platform.json has auth type unsupported, so every Unleashed call fails closed until core adds the signer. That is a core change and was not made here.",
+  "The Unleashed docs mapped in the kit hold no reorder or minimum stock field. Minimum and order quantities come from settings.reorder_levels, which the business sets.",
+  "Reads take the first page only (stock on hand, products, purchase orders). A larger account needs paging added to the adapter.",
+  "Budget check: no budget data is mapped for Unleashed or Xero bills, so this step is not covered.",
+  "Requests raised by hand are not covered. The reorder cron only sees stock under its minimum.",
+  "Send PO: whether Unleashed emails the order to the supplier when it moves to Placed is not confirmed in the mapped docs.",
+  "Totals: the draft order carries SubTotal, TaxTotal and Total, which Unleashed marks required. They are worked out from the line and tax_rate_percent, which the business sets (no default); whether Unleashed accepts them as sent is unverified on a live account.",
+  "A draft that throws is kept as a failed row that blocks that product from reorder until a person checks Unleashed and clears it. Nothing retries it automatically, so a second order cannot go out if the first one was created.",
+  "Invoice match: the draft bill carries the purchase order lines, not the supplier's invoice. The owner matches the two by hand.",
+  "Pay supplier: no live operation is mapped for approving or paying a bill. The owner approves the draft bill in Xero by hand.",
+  "MYOB: its purchase order ops are read only in the kit, and its auth needs a token exchange that is not built. Not adapted.",
+  "PrintIQ, Acumatica and Odoo: no mapped API operations in the kit (Odoo maps a version call only; Acumatica has marketing pages and no ops file). Not adapted.",
+  "Tested offline only: Unleashed calls are stubbed at the draft boundary, Xero runs through a fake network. Neither is run against a real account."
+ ]
+}

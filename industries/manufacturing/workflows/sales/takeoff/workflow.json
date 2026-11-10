@@ -1,0 +1,41 @@
+{
+ "id": "manufacturing:takeoff",
+ "name": "Takeoff from drawings",
+ "industry": "manufacturing",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a takeoff request into a priced quote, using the quantities the estimator measured from the drawings and the business's own rate card. Crons read and draft; a person approves every send. Measuring the drawings stays with the estimator.",
+ "families": {
+  "takeoff-from-drawings": {
+   "steps": ["measure-quantities", "supplier-prices", "price-build", "write-quote", "send-quote"],
+   "covered_by": {"measure-quantities": "skill (the estimator measures the drawings and enters quantities in the takeoff table)", "supplier-prices": "draft (rate card table kept by the business)", "price-build": "draft", "write-quote": "draft", "send-quote": "approval"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New takeoff requests from the estimating mailbox."},
+  {"name": "draft", "schedule": "15 * * * *", "entry": "draft", "summary": "Price each request from the takeoff table and rate card, draft the quote, and queue its send for approval."}
+ ],
+ "draft_ops": {
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads of the request folder and the workbook, a row in the takeoff register, and a quote email left in Outlook drafts. Sending the draft is a live operation and waits for a person.",
+ "live_ops": {
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "capabilities": ["files.read", "messages.draft", "messages.send", "quotes.create", "quotes.send"],
+ "adapters": {
+  "microsoft-365": {"status": "docs-only", "covers": "takeoff requests from an Outlook folder, measured quantities and rate card from Excel tables, the register row, and the quote as an Outlook draft"}
+ },
+ "gaps": [
+  "Measuring the drawings is not in the kit. Bluebeam Revu and PlanSwift take off on screen with no mapped operation that returns quantities, so the estimator measures and enters the quantities in the takeoff table.",
+  "Bluebeam: its only mapped operation is Studio ProjectFolders_GetItems, which lists project files and carries no quantities, so no adapter. The Quantity Link feed to Excel is a desktop feature. Confirm on a live account before mapping it.",
+  "Buildxact: only oauth.authorize is mapped, so no takeoff, estimate or quote operation exists. Its estimate and quote endpoints need mapping first.",
+  "PlanSwift: no platform folder and no ops file in the kit. Its pages are marketing pages, not a user manual.",
+  "Reading the drawing files attached to a request needs users.mailFolders.messages.ListAttachments added to draft_ops with a fetch step. Not in this build, so the drawings are read by the estimator.",
+  "Supplier price requests (emailing suppliers for prices) have no adapter. The rate card table is the supplier price list until one exists.",
+  "Cut lists, sheet and bar sizing, labour hours, margin review, internal sign-off of the takeoff and production hand-off are not covered by any platform in the evidence.",
+  "The adapter is docs-only until a Microsoft 365 developer tenant proves the Excel table and Outlook draft calls."
+ ]
+}

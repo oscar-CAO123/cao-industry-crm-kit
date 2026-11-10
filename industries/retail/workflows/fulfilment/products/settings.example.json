@@ -1,0 +1,7 @@
+{
+ "family": "all",
+ "business_name": "Example Retailer",
+ "low_stock_qty": 5,
+ "retire_codes": [],
+ "woocommerce": false
+}

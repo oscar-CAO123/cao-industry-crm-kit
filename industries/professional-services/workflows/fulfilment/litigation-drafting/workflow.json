@@ -1,0 +1,51 @@
+{
+ "id": "professional-services:litigation-drafting",
+ "name": "Draft pleadings and defences and research case law for litigation",
+ "industry": "professional-services",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Draft pleadings and defences and research case law for litigation: picks up new matters from the case-management system, inventories each file, and files the agent's pleading matrix and defence drafts as internal memos for the solicitor. Crons read and draft; a person approves every message that reaches a client.",
+ "families": {
+  "commercial-litigation": {
+   "steps": ["instruction-received", "review-file", "case-law-research", "issues-analysis", "draft-pleading", "client-approval", "record-keeping"],
+   "covered_by": {
+    "instruction-received": "intake",
+    "review-file": "file-review",
+    "case-law-research": "skill (no legal research source is mapped)",
+    "issues-analysis": "skill (chronology and evidence gaps, written into the draft)",
+    "draft-pleading": "draft (the agent writes the pleading matrix and defence; the cron files it)",
+    "client-approval": "approval (a portal message to the client, queued and never sent by a cron)",
+    "record-keeping": "draft (internal memos and tasks on the matter)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/30 * * * *", "entry": "intake", "summary": "New lead matters from the case-management system."},
+  {"name": "file-review", "schedule": "5 * * * *", "entry": "file-review", "summary": "When a matter's file changes, an internal inventory memo and a review task for the solicitor."},
+  {"name": "draft", "schedule": "20 */2 * * *", "entry": "draft", "summary": "File each pending draft as a memo; queue its client message for approval."}
+ ],
+ "draft_ops": {
+  "smokeball": ["GetMatters", "GetMatterById", "GetFiles", "CreateMemo", "CreateTask"]
+ },
+ "live_ops": {
+  "smokeball": ["SendPortalMessageAsync"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the practice: reads of matters and file names, an internal memo on the matter, an internal task for the solicitor. A portal message to a client is a live operation and waits for a person.",
+ "capabilities": ["matters.list", "files.read", "memos.write", "tasks.create", "client.message"],
+ "adapters": {
+  "smokeball": {"status": "docs-only", "covers": "lead matters, file inventory, matter memos, solicitor tasks, client portal messages (approval only)"}
+ },
+ "gaps": [
+  "Case law research and issues analysis: no legal research source is mapped in the kit, so the agent does these by hand from the matter and nothing is searched automatically.",
+  "Actionstep (named for intake, document automation and eBrief Ready): it has no ops file in core/sdk/platforms, so no operations are mapped.",
+  "LEAP: not in the kit's platform list.",
+  "eBrief Ready, Zylpha, InfoTrack Court Sync and Word pleading templates: not mapped, so no brief, bundle, court filing or template step runs.",
+  "Document content: the kit classes Smokeball's DownloadFile as a write, so the crons see file names and dates only and the agent cannot read the claim documents through the mapped operations yet.",
+  "Client answers: no mapped operation reads portal tasks or messages back, so a client's admit, deny or comment is not picked up automatically.",
+  "File inventory reads the first 100 documents per matter (no paging).",
+  "Writing drafts into the store: tools/workflow.ts has only a quote-specific propose command, so no command yet files a pleading matrix or defence as a Draft. A runtime entry point is needed outside this build.",
+  "Smokeball's platform status is spec (offline tests only); it has not run against a real account."
+ ]
+}

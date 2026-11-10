@@ -1,0 +1,6 @@
+{
+ "business_name": "Example Store",
+ "intake": ["google-workspace", "gorgias"],
+ "search": "subject:(return OR returns OR exchange OR refund) newer_than:14d",
+ "return_form_url": "https://example.com.au/returns"
+}

@@ -1,0 +1,8 @@
+{
+ "business_name": "Example Grain Co",
+ "microsoft_365": {
+  "mailbox": "records@example.com.au",
+  "register": {"drive": "DRIVE_ID", "item": "WORKBOOK_ITEM_ID", "table": "SprayHarvest"},
+  "qc_email": "qc@example.com.au"
+ }
+}

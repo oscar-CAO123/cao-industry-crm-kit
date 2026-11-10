@@ -1,0 +1,23 @@
+{
+ "business_name": "Example Civil Pty Ltd",
+ "prestart": {
+  "template_checklist_id": "",
+  "swms_id": "",
+  "job_title_prefix": "Pre-start: ",
+  "asset_id": "",
+  "asset_group_id": ""
+ },
+ "swms_review_days": 90,
+ "swms_review_assignee": "",
+ "reminder_days": 2,
+ "reminder_template_id": "",
+ "procore": {
+  "projects": [
+   {
+    "id": "",
+    "name": ""
+   }
+  ],
+  "reminder_distribution_ids": []
+ }
+}

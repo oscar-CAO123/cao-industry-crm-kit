@@ -1,0 +1,50 @@
+{
+ "id": "construction:quoting",
+ "name": "Quoting",
+ "industry": "construction",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a quote request into a priced quote in the business's own system, queues it to send, chases it, and hands a won quote over. Crons read and draft; a person approves every send.",
+ "families": {
+  "service-minor-works": {
+   "steps": ["enquiry-intake", "qualify", "site-visit", "price-build", "write-proposal", "record-keeping", "send-quote", "follow-up", "win-handover"],
+   "covered_by": {"enquiry-intake": "intake", "price-build": "draft (job template or agent proposal)", "write-proposal": "draft", "record-keeping": "draft", "send-quote": "approval", "follow-up": "follow-up", "win-handover": "handover", "qualify": "skill", "site-visit": "skill (photos and notes into a proposal)"}
+  },
+  "tender-from-plans": {
+   "steps": ["enquiry-intake", "receive-plans", "takeoff", "qualify", "subcontractor-quotes", "price-build", "supplier-prices", "write-proposal", "record-keeping", "send-quote", "internal-approval", "follow-up"],
+   "covered_by": {"enquiry-intake": "intake (tender notices arrive by email)", "receive-plans": "skill", "takeoff": "skill (quantities into a proposal)", "qualify": "skill", "subcontractor-quotes": "not yet (see gaps)", "price-build": "draft", "write-proposal": "draft", "record-keeping": "draft", "send-quote": "approval", "internal-approval": "approval", "follow-up": "follow-up"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New quote requests from each intake source."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Price from the rate card, draft the quote, queue its send for approval."},
+  {"name": "follow-up", "schedule": "0 22 * * *", "entry": "follow-up", "summary": "Queue follow-ups on sent quotes that are due (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "handover", "schedule": "5 * * * *", "entry": "handover", "summary": "An accepted quote becomes a draft invoice, or nothing when the platform sets up the job."}
+ ],
+ "draft_ops": {
+  "servicem8": ["servicem8-api.listJobs", "servicem8-api.listJobMaterials", "servicem8-api.listMaterials", "servicem8-api.listCompanyContacts", "servicem8-api.listAttachments",
+                "servicem8-api.createJobs", "servicem8-api.createJobMaterials", "document-templates-api.produce_templated_document"],
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createContacts", "accounting.createQuotes", "accounting.getQuote", "accounting.getQuoteAsPdf", "accounting.createInvoices"],
+  "microsoft-365": ["users.mailFolders.ListMessages", "drives.items.workbook.tables.ListRows", "drives.items.workbook.tables.CreateRows", "users.CreateMessages"]
+ },
+ "live_ops": {
+  "servicem8": ["messaging-api.send_email", "messaging-api.send_sms"],
+  "xero": ["accounting.updateQuote"],
+  "microsoft-365": ["users.user.messages.message.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: a job in Quote status, its lines, a quote PDF filed to the job diary, a Xero quote, contact or invoice in DRAFT, an email draft, a register row. Anything that sends or changes a quote's status is a live operation and waits for a person.",
+ "capabilities": ["quotes.list", "quotes.create", "quotes.send", "contacts.upsert", "messages.draft", "messages.send", "invoices.create", "files.read"],
+ "adapters": {
+  "servicem8": {"status": "docs-only", "covers": "service-minor-works end to end"},
+  "xero": {"status": "docs-only", "covers": "quote, PDF, status, draft invoice; sending through the mailbox"},
+  "microsoft-365": {"status": "docs-only", "covers": "Outlook intake, Excel rate card, Outlook drafts and sends, Excel quote register"}
+ },
+ "gaps": [
+  "Buildxact: runs the whole tender quote in product, but only its sign-in is mapped; its estimate and quote endpoints are needed.",
+  "Simpro and Buildertrend: help guides render only in a browser and the APIs are unmapped; free accounts needed.",
+  "Takeoff (Bluebeam markups export, Groundplan pushes) and subcontractor quote requests are agent-skill steps until their adapters exist.",
+  "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it."
+ ]
+}

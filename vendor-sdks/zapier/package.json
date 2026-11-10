@@ -1,0 +1,9 @@
+{
+  "name": "kit-sdk-zapier",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned pointer to @zapier/zapier-sdk@0.122.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",
+  "dependencies": {
+    "@zapier/zapier-sdk": "0.122.0"
+  }
+}

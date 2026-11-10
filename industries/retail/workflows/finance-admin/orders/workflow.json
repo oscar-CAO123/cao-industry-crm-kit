@@ -1,0 +1,42 @@
+{
+ "id": "retail:orders",
+ "name": "Orders by email",
+ "industry": "retail",
+ "department": "finance-admin",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Takes orders that arrive by email, enters each one as a draft invoice in Xero, and drafts the customer confirmation in Gmail. Crons read and draft; a person approves every send.",
+ "families": {
+  "all": {
+   "steps": ["email-received", "stock-check", "enter-order", "confirm-customer", "pick-dispatch"],
+   "covered_by": {"email-received": "intake", "enter-order": "draft (DRAFT Xero invoice)", "confirm-customer": "draft (Gmail confirmation, approval to send)", "stock-check": "not yet (see gaps)", "pick-dispatch": "not yet (see gaps)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/10 * * * *", "entry": "intake", "summary": "New order emails from Gmail that match the search in settings."},
+  {"name": "draft", "schedule": "*/15 * * * *", "entry": "draft", "summary": "Enter each order with its proposed lines as a DRAFT Xero invoice, draft the Gmail confirmation, and queue its send for approval."}
+ ],
+ "draft_ops": {
+  "google-workspace": ["gmail.users.messages.list", "gmail.users.messages.get", "gmail.users.drafts.create"],
+  "xero": ["accounting.getItems", "accounting.getContacts", "accounting.createContacts", "accounting.createInvoices"]
+ },
+ "live_ops": {
+  "google-workspace": ["gmail.users.drafts.send"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: an email draft, a DRAFT invoice in Xero, a customer record. Sending the confirmation is a live operation and waits for a person.",
+ "capabilities": ["orders.list", "orders.draft", "messages.read", "messages.draft", "messages.send", "invoices.create"],
+ "adapters": {
+  "google-workspace": {"status": "docs-only", "covers": "order email intake, confirmation draft, approved send"},
+  "xero": {"status": "docs-only", "covers": "item list, customer contact, DRAFT invoice for the order"}
+ },
+ "gaps": [
+  "Unleashed (sales orders, the usual order record for B2B retail): the enter-order and stock-check operations are mapped (docs.post_SalesOrders, docs.get_StockOnHand) but the kit has no HMAC-SHA256 signer for it yet, and its parameter fields are not mapped, so there is no adapter.",
+  "Fishbowl (stock levels): no platform in core/sdk/platforms, so the stock check stays with the owner. Orders are confirmed without a stock check.",
+  "MaxShip (booking the parcel and printing the label): no platform in core/sdk/platforms, so pick and dispatch stay with the owner.",
+  "Order lines are a judgment step: the agent reads the email and proposes codes and quantities from the Xero item list. Orders with no proposal wait as needs-lines.",
+  "The Xero invoice stays a DRAFT. Authorising it and emailing it to the customer are left to the owner in Xero.",
+  "The Gmail helper creates drafts without an idempotency key: a crash between creating a draft and queueing its send can leave an unsent orphan draft in the mailbox.",
+  "Every adapter is docs-only until a sandbox mailbox and a Xero demo company prove the calls end to end."
+ ]
+}

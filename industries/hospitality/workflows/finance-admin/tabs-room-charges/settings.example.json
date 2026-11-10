@@ -1,0 +1,6 @@
+{
+ "property_id": 0,
+ "business_name": "Example Hotel",
+ "timezone": "Australia/Sydney",
+ "cloudbeds_note": "Set property_id to the Cloudbeds property number. CLOUDBEDS_API_KEY is read from the environment, never from this file."
+}

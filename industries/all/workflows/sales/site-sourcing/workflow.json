@@ -1,0 +1,47 @@
+{
+ "id": "site-sourcing",
+ "name": "Scan listings for sites or land that match set criteria",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Scans property listings for sites or land that match the criteria the business sets, reads the suburb statistics and nearby schools for each new one, and queues an enquiry to the listing agent for each site the owner shortlists. Crons read and draft; a person approves every enquiry.",
+ "families": {
+  "site-sourcing": {
+   "steps": ["criteria-set", "listing-scan", "desk-check", "enquire-agent", "record-keeping"],
+   "covered_by": {"criteria-set": "settings (locations, listing type, land filter)", "listing-scan": "scan (Domain residential search, first page)", "desk-check": "desk-check (suburb statistics and nearby schools only)", "enquire-agent": "enquire (queued for approval)", "record-keeping": "draft (candidates held in the workflow store)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "scan", "schedule": "0 21 * * *", "entry": "scan", "summary": "Each night: search the set locations on Domain and store the new listings that match the criteria."},
+  {"name": "desk-check", "schedule": "30 21 * * *", "entry": "desk-check", "summary": "Read suburb statistics and nearby schools for each new candidate."},
+  {"name": "enquire", "schedule": "0 22 * * *", "entry": "enquire", "summary": "Queue an enquiry to the agent for each shortlisted site, and record the enquiries a person has approved."}
+ ],
+ "draft_ops": {
+  "domain": ["docs.post_v1_listings_residential_search", "docs.get_v2_suburbPerformanceStatistics_state_suburb_postcode", "docs.get_v2_schools_latitude_longitude"]
+ },
+ "live_ops": {
+  "domain": ["docs.post_v1_enquiries"]
+ },
+ "draft_ops_note": "Every draft operation is a read. The residential search is a POST in Domain's spec, so the kit marks it as a write: the deploy needs KIT_ALLOW_WRITES=1 for the scan to run. It reaches nobody outside the business.",
+ "capabilities": ["listings.search", "suburb.statistics", "schools.nearby", "enquiries.send"],
+ "adapters": {
+  "domain": {"status": "docs-only", "covers": "residential listing search, suburb statistics, nearby schools, enquiry to the listing agent"}
+ },
+ "gaps": [
+  "realestate.com.au: Its partner docs cover agency listing exports and transfers, not buyer searches, and no operations are mapped.",
+  "realcommercial.com.au: the pages found are news and market articles. No operations are mapped.",
+  "Commercial and business listing search (development and franchise sites): the spec documents the bodies, but the listing id field in their responses is not confirmed, so they are not built.",
+  "Land type values: the property types for land are not in the Domain spec held here. The filter matches the propertyType the listing returns; fill property_types from a live result.",
+  "Pagination: a search returns up to 1000 results. The page parameter is not in the spec held here, so only the first page is read.",
+  "Apartment project groupings in search results are skipped; only single PropertyListing results are kept.",
+  "Zoning, planning overlays, flood maps and title: not in Domain's docs. The owner's zoning map check stays a person step.",
+  "Shortlist as a PropertyRadar portfolio: the body field names for adding properties are not in the spec held here, so the store holds the shortlist for now.",
+  "Shortlisting control: the owner marks a candidate shortlisted in the store. The CRM shell has no screen for this yet.",
+  "Valuation and rental estimates (Domain price and rental endpoints are mapped): not built.",
+  "Offers, expressions of interest, due diligence, internal approval and handover: no platform coverage. These stay with the person.",
+  "Deal tracking in Zoho: the owner's pipeline is not wired. Candidates and enquiries are recorded in the workflow store.",
+  "Domain access needs an approved developer account with the listing and enquiry scopes. The sandbox resets weekly. Live behaviour is unverified until an account runs the crons."
+ ]
+}

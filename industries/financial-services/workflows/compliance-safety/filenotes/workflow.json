@@ -1,0 +1,44 @@
+{
+ "id": "financial-services:filenotes",
+ "name": "File notes take days",
+ "industry": "financial-services",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Turns a finished Fireflies meeting summary into a draft file note that the adviser checks and files. Crons read and draft only; nothing is filed on a client record, shared or sent without a person.",
+ "families": {
+  "all": {
+   "steps": ["capture-notes", "draft-file-note", "record-keeping"],
+   "covered_by": {
+     "capture-notes": "partial: Fireflies records and summarises recorded meetings; phone calls, texts and emails are not captured",
+     "draft-file-note": "draft: the draft cron reads the Fireflies summary and writes a draft note",
+     "record-keeping": "not yet: the HubSpot note write is not confirmed in the vendor spec (see gaps)"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "New Fireflies meetings from the last few days."},
+  {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Draft a file note from each new meeting's Fireflies summary, for the adviser to check. Nothing is filed or shared."}
+ ],
+ "draft_ops": {
+  "fireflies": ["query.transcripts", "query.transcript"]
+ },
+ "live_ops": {
+  "fireflies": ["mutation.shareMeeting", "mutation.revokeSharedMeetingAccess"]
+ },
+ "draft_ops_note": "Draft operations here are reads only. The notes the crons write stay in the workflow store until an adviser files them by hand. Sharing a transcript with anyone outside the business is a live operation and waits for approval.",
+ "capabilities": ["transcripts.list", "transcripts.read"],
+ "adapters": {
+  "fireflies": {"status": "docs-only", "covers": "meeting list and summary read; transcript share and revoke are queued for approval only, and no cron uses them"}
+ },
+ "gaps": [
+  "HubSpot: the note body property (hs_note_body) is not declared in the mapped vendor spec (endpoint-map/raw/hubspot), and the notes create body takes free-form properties. No HubSpot adapter is built until the property name is confirmed on a live account. Drafts stay in the workflow store.",
+  "Microsoft 365 and OneNote: no OneNote operation is mapped in the kit, and Outlook mail is not read for file notes in this build. Notes from emails are not covered.",
+  "Phone calls and texts: no platform in the evidence records them automatically. A dialer integration (Aircall, CloudTalk or JustCall are mapped in the kit) would be the next source; not built.",
+  "Adviser review and sign-off: no mapped operation on any platform records an adviser sign-off. The adviser checks and files each draft by hand.",
+  "Chasing missing details, sending a client copy of a note, and filing notes into a client file: the vendor docs do not describe these steps, so they are not built.",
+  "Runtime (core, not changed here): an approved GraphQL write that returns HTTP 200 with an errors array is recorded as done, because core/sdk/call.ts and core/lib/http.ts do not read the errors array. A share that Fireflies refuses this way would show as done. Needs a core change before any live Fireflies write is approved: callOperation (core/lib/http.ts or the approval runner) must throw when a 200 body carries a non-empty errors array, and a test must cover a 200 with errors.",
+  "Fireflies is mapped from its vendor docs and tested offline only. Nothing has run against a live account."
+ ]
+}

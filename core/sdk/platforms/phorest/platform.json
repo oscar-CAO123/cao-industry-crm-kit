@@ -1,0 +1,360 @@
+{
+ "id": "phorest",
+ "name": "Phorest",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api-gateway-eu.phorest.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "basic",
+  "user": "PHOREST_USERNAME",
+  "pass": "PHOREST_PASSWORD"
+ },
+ "keys": [
+  "PHOREST_USERNAME",
+  "PHOREST_PASSWORD"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.phorest.com/llms.txt",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getreviewlist.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getreview.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createtransaction.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclient.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updateclient.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclients.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createclient.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientservicehistories.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getwalkinclient.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientbatch.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientproducthistories.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientcategories.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientcategory.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/checkin.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createlead.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getleads.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getleadsstats.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updatelead.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettaxrates.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettaxrate.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/performstockadjustment.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getservices_1.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createdepositpaymentlink.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getbranches.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getconsultationlink.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettillsessions.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getstaffbreak.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updatebreak.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/deletebreak.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getbreaks.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createbreak.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getservices.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getservice.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/linkaddon.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/unlinkaddon.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getstaffworktimetables.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getcourses.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettimeoffpolicies.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettimeoffpolicy.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createcsvexportjob.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getcsvexportjob.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getservicecategories.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createpurchase.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getsalefeelist.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getsalefee.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getsalefeebatch.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getvoucher.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updatevoucherbalance.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getvouchers.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createvoucher.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getservicepackages.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/createbooking.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/cancelbooking.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/appendnotetobooking.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/activatebooking.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getsupplementalpaymenttypes.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getsupplementalpaymenttype.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/changeloyaltypoints.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getbranchworktimetable.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getmachines.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getmachine.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getproducts.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getstafflist.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getstaff.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getstaffbatch.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updateappointment.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/notes.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/checkin_1.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/confirmappointments.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/cancelappointments.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getappointments.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getappointment.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getrooms.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getroom.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getinventorytransactions.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/checkappointmentavailability.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientcourse.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/updateclientcourse.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/getclientcourses.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettillbalance.md",
+   "official": "vendor-domain: developer.phorest.com"
+  },
+  {
+   "url": "https://developer.phorest.com/reference/gettills.md",
+   "official": "vendor-domain: developer.phorest.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 81,
+  "read": 52,
+  "write": 29
+ }
+}

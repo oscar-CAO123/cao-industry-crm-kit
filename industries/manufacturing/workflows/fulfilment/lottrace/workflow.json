@@ -1,0 +1,45 @@
+{
+ "id": "manufacturing:lottrace",
+ "name": "Lot trace and recall",
+ "industry": "manufacturing",
+ "department": "fulfilment",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Traces each batch and serial from receipt through production to dispatch, keeps the stock and audit records current, and queues a quarantine move for any lot put on hold. Crons read and record internally; a person approves every stock movement.",
+ "families": {
+  "all": {
+   "steps": ["raw-material-receipt", "production-run", "finished-goods-labelling", "stock-storage", "dispatch-record", "complaint-intake", "trace-lookup", "quarantine-hold", "customer-notify", "recall-action", "corrective-action", "audit-records", "supplier-follow-up"],
+   "covered_by": {"raw-material-receipt": "not yet (no receipt adapter)", "production-run": "not yet", "finished-goods-labelling": "not yet", "stock-storage": "stock-position cron", "dispatch-record": "not yet", "complaint-intake": "skill", "trace-lookup": "lot-sync cron and skill", "quarantine-hold": "quarantine cron (approval)", "customer-notify": "skill (a person sends)", "recall-action": "skill", "corrective-action": "skill", "audit-records": "audit-register cron", "supplier-follow-up": "skill"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "lot-sync", "schedule": "*/30 * * * *", "entry": "lot-sync", "summary": "Batch and serial records into the lot index."},
+  {"name": "stock-position", "schedule": "15 * * * *", "entry": "stock-position", "summary": "Stock on hand by product and warehouse."},
+  {"name": "audit-register", "schedule": "0 22 * * *", "entry": "audit-register", "summary": "Stock counts and adjustments into the audit register (22:00 UTC is 8 or 9 am in eastern Australia)."},
+  {"name": "quarantine", "schedule": "*/15 * * * *", "entry": "quarantine", "summary": "Queue a quarantine transfer for each new hold, for approval."}
+ ],
+ "draft_ops": {
+  "unleashed": ["docs.get_BatchNumbers", "docs.get_SerialNumbers", "docs.get_StockOnHand", "docs.get_StockCounts", "docs.get_StockAdjustments"]
+ },
+ "draft_ops_note": "Every draft operation is a read. The crons write their own internal records (lots, positions, audit, holds) to the workflow store; nothing is written to Unleashed.",
+ "live_ops": {
+  "unleashed": ["docs.post_WarehouseStockTransfers"]
+ },
+ "live_ops_note": "Creating a warehouse transfer moves stock between warehouses, so it is a live record change. The quarantine cron only queues it.",
+ "capabilities": ["lots.read", "serials.read", "stock.read", "audit.read", "stock.hold"],
+ "adapters": {
+  "unleashed": {"status": "docs-only", "covers": "batch and serial records, stock on hand, stock counts and adjustments (reads); a quarantine warehouse transfer (queued only)"}
+ },
+ "gaps": [
+  "Unleashed calls are signed by the SDK (core/sdk/call.ts, provider unleashed) with UNLEASHED_API_ID, UNLEASHED_API_KEY and UNLEASHED_CLIENT_TYPE from the environment. The adapter is proved on a fake network only; no call has reached a real Unleashed account, and the platform is marked tested offline only.",
+  "Unleashed reads take the first page of 200 rows; there is no page loop yet. The filters (available, pageSize) are mapped from the vendor docs and sent by name.",
+  "The Unleashed transfer lines in the docs name a product and a quantity, not a batch. A quarantine transfer may move stock without moving the named lot. No hold is queued until settings.lot_selection_confirmed is set true, which needs a sandbox transfer that proves the named batch moves.",
+  "No runtime command records a hold for the quarantine cron. tools/workflow.ts has run, approvals, approve, reject and propose only, and propose writes quoting proposals. Adding a hold command is a runtime change for core/, listed here, not made here.",
+  "Fishbowl: not in the kit, so no adapter. Its help centre returned no pages, so only marketing and glossary pages were read; lot and quarantine steps are unknown.",
+  "MRPeasy: not in the kit, so no adapter. It shows the most lot support in its docs (lot numbers at receipt, batch records, recall through RMA), so it is the strongest candidate for a new platform build. Its API operation ids are not mapped.",
+  "Receipt, production run, finished-goods labelling and dispatch lot capture: no mapped Unleashed operations, so these steps stay manual.",
+  "Customer notification, recall (rework, return, destruction), complaint intake and corrective action: judgment steps for the agent in SKILL.md. No platform in the kit records them.",
+  "Confirm the workflow steps and default settings with the business before use."
+ ]
+}

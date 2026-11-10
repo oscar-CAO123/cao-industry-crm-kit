@@ -1,0 +1,6 @@
+{
+ "family": "hand-count",
+ "business_name": "Example Bar",
+ "locations": ["SQUARE_LOCATION_ID"],
+ "max_variations": 400
+}

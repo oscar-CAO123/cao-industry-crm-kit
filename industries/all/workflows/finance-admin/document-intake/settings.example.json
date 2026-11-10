@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Builders",
+ "intake_folder": "/Intake",
+ "review_folder": "/Intake/To review",
+ "request_folder": "/Client uploads",
+ "rules": [
+  {"match": "invoice", "label": "Invoice", "folder": "/Finance/Supplier invoices"},
+  {"match": "statement", "label": "Statement", "folder": "/Finance/Statements"},
+  {"match": "certificate", "label": "Certificate", "folder": "/Compliance/Certificates"},
+  {"match": "claim", "label": "Claim", "folder": "/Contracts/Claims"}
+ ],
+ "checklist": [
+  {"code": "liability", "label": "Public liability certificate", "match": "liability", "within_days": 365, "folder": "/Compliance/Certificates"}
+ ]
+}

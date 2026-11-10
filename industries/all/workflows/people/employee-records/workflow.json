@@ -1,0 +1,66 @@
+{
+  "id": "employee-records",
+  "name": "Keep employee records, contracts, qualifications and performance reviews",
+  "industry": "all",
+  "department": "people",
+  "version": 1,
+  "status": "docs-only",
+  "summary": "Turns a confirmed hire into an employee record and a contract to sign, queues pay rises and employment changes, and opens the owner's review cycles. Crons read and queue; a person approves every write, and nothing is sent or changed on its own.",
+  "families": {
+    "all": {
+      "steps": ["hire-trigger", "create-record", "contract-prepare", "contract-sign", "qualification-capture", "expiry-tracking", "training-log", "policy-acknowledge", "review-schedule", "performance-review", "review-sign-off", "change-update", "offboarding", "retention-access", "record-keeping", "other"],
+      "covered_by": {
+        "hire-trigger": "owner confirms the hire into the store",
+        "create-record": "employee record (Employment Hero quick add, approval)",
+        "contract-prepare": "existing DocuSign template (not built here)",
+        "contract-sign": "envelope to the employee (DocuSign, approval)",
+        "qualification-capture": "not built (see gaps)",
+        "expiry-tracking": "not built (see gaps)",
+        "training-log": "not built (see gaps)",
+        "policy-acknowledge": "not built (see gaps)",
+        "review-schedule": "review period dates (cron, approval)",
+        "performance-review": "review period (Employment Hero, approval)",
+        "review-sign-off": "not built (see gaps)",
+        "change-update": "pay rise or employment change (Employment Hero, approval)",
+        "offboarding": "not built (see gaps)",
+        "retention-access": "not built (see gaps)",
+        "record-keeping": "not built (see gaps)",
+        "other": "not built (disciplinary records are left out on purpose)"
+      }
+    }
+  },
+  "settings": "settings.example.json",
+  "crons": [
+    {"name": "hires", "schedule": "*/30 * * * *", "entry": "hires", "summary": "Queue the employee record for each confirmed hire, then the contract once the record exists."},
+    {"name": "changes", "schedule": "0 * * * *", "entry": "changes", "summary": "Queue each open pay rise or employment change after reading the employee record."},
+    {"name": "reviews", "schedule": "0 22 * * *", "entry": "reviews", "summary": "Read the review periods in Employment Hero and queue each open review cycle (22:00 UTC is 8 or 9 am in eastern Australia)."}
+  ],
+  "draft_ops": {
+    "employment-hero": ["Get Employee Config", "Get Performance Reviews Config"],
+    "docusign": ["esignature.Templates_GetTemplate"]
+  },
+  "live_ops": {
+    "employment-hero": ["Quick Add Employee Config", "Update Employment Details Config", "Create Salary Version Config", "Create Performance Review Config"],
+    "docusign": ["esignature.Envelopes_PostEnvelopes"]
+  },
+  "draft_ops_note": "Draft operations here are reads only. No internal-only write is mapped for these platforms, so every write (a new employee, a contract envelope, a pay change, a review period) is a live operation and waits for a person to approve it.",
+  "capabilities": ["employees.read", "employees.create", "employees.update", "pay.update", "reviews.create", "contracts.send"],
+  "adapters": {
+    "employment-hero": {"status": "docs-only", "covers": "employee quick add, employment details, salary versions, review periods and their reads"},
+    "docusign": {"status": "docs-only", "covers": "contract template read and the envelope sent to the employee for signature"}
+  },
+  "gaps": [
+    "BrightHR: only record-keeping is partly supported, and its mapped operations (employee query, external reference) do not cover a useful step. Not built.",
+    "Microsoft 365 spreadsheets and folders hold the register in 2 calls, but no platform evidence was mined for this workflow, so no adapter is built here.",
+    "ELMO has no platform in the kit. Procore covers timesheets and site diaries, not employee records.",
+    "Qualifications and expiry: Employment Hero's certification reads are mapped, but the vendor examples do not show their response fields, so no expiry check is built until a sandbox confirms them.",
+    "Filing a document into the employee file (Create Document Config) is a multipart upload with access permissions. Not built, because who can see an uploaded file is not confirmed.",
+    "Offboarding: the vendor help page exists, but no matching Employment Hero operation is in the ops list.",
+    "Training log, policy acknowledgement, review sign-off, retention and access: no mapped operation fits the step cleanly, or its response fields are unconfirmed.",
+    "Contract preparation: the workflow uses a template that already exists in DocuSign. Writing the template is a person's job.",
+    "Runtime: approval references keep only keys named id, uuid, or ending in ID or _id. DocuSign's envelopeId is therefore not stored, so the contract is marked sent when the approval succeeds, without the envelope id. A change to core/workflows/runtime.ts would fix this; it was not edited here.",
+    "The employee id for the contract step comes from the quick add reply's id field, read from the approval result. If the reply carries no id, the hire is stopped with a reason; a sandbox run must confirm the reply shape.",
+    "Both adapters stay docs-only until a sandbox Employment Hero organisation and a DocuSign developer account prove them.",
+    "Judgment steps not automated: scoring performance in real time, and deciding what a review says."
+  ]
+}

@@ -1,0 +1,237 @@
+{
+ "id": "typeform",
+ "name": "Typeform",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.typeform.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "TYPEFORM_TOKEN"
+ },
+ "keys": [
+  "TYPEFORM_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://www.typeform.com/developers/sitemap-0.xml",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-account-workspaces/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/create-account-workspace/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-workspaces/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/create-workspace/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/delete-workspace/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-workspace/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-workspace/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-forms/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/create-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/delete-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-form-patch/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-custom-form-messages/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-custom-messages/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-translation-payload/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-translation-statuses/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/delete-form-translation/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-form-translation/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-form-translation/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/auto-translate-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-images-collection/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/create-image/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/delete-image/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-image/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-background-by-size/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-choice-image-by-size/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-image-by-size/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/upload-a-video-file/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/batch-fetch-videos-with-clip-configurations/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-themes/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/create-theme/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/delete-theme/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/retrieve-theme/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-theme-partial-update/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/create/reference/update-theme-whole-definition/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/delete-responses/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/retrieve-responses/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/search-responses-using-advanced-filters/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/download-all-files-uploaded-by-respondents-for-a-form/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/get-a-file-from-a-response/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/get-audio-master-file-download/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/request-audio-master-file-generation/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/get-video-master-file-download/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/responses/reference/request-video-master-file-generation/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/webhooks/reference/retrieve-webhooks/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/webhooks/reference/delete-webhook/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/webhooks/reference/retrieve-single-webhook/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://www.typeform.com/developers/webhooks/reference/create-or-update-webhook/",
+   "official": "vendor-domain: www.typeform.com"
+  },
+  {
+   "url": "https://github.com/typeform/js-api-client",
+   "official": "vendor-link: https://www.typeform.com/developers/community/ links github.com/typeform"
+  }
+ ],
+ "gaps": [
+  "typeform: 27 endpoints added from typeform/js-api-client (in the official SDK, not the published spec)",
+  "typeform: 1 truncated path-only entries replaced by 1 endpoints the vendor's reference documents in full"
+ ],
+ "counts": {
+  "operations": 29,
+  "read": 11,
+  "write": 18
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "business_name": "Example Builders",
+ "gst_rate": 0.1,
+ "due_days": 14,
+ "chase": {"after_days": [7, 21]},
+ "jobs": [
+  {
+   "id": "J-101",
+   "name": "Kitchen extension, 12 Example St",
+   "contact_id": "00000000-0000-4000-8000-000000000000",
+   "contract_value": 180000,
+   "percent_complete": 40,
+   "claim_every_days": 30,
+   "retention_percent": 5
+  }
+ ]
+}

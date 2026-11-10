@@ -1,0 +1,40 @@
+{
+ "id": "square",
+ "name": "Square",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "connect.squareup.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "serverVars": {},
+ "auth": {
+  "type": "bearer",
+  "env": "SQUARE_ACCESS_TOKEN"
+ },
+ "keys": [
+  "SQUARE_ACCESS_TOKEN"
+ ],
+ "sources": [
+  {
+   "url": "https://raw.githubusercontent.com/square/connect-api-specification/master/api.json",
+   "official": "vendor-link: https://developer.squareup.com/docs/sdks links github.com/square"
+  },
+  {
+   "url": "https://github.com/square/square-nodejs-sdk",
+   "official": "vendor-link: https://developer.squareup.com/docs/sdks links github.com/square"
+  }
+ ],
+ "gaps": [
+  "square: 3 endpoints added from square/square-nodejs-sdk (in the official SDK, not the published spec)"
+ ],
+ "counts": {
+  "operations": 335,
+  "read": 150,
+  "write": 185
+ }
+}

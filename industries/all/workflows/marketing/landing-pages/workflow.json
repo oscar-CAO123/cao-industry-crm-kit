@@ -1,0 +1,96 @@
+{
+ "id": "landing-pages",
+ "name": "Build and update landing pages",
+ "industry": "all",
+ "department": "marketing",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps the business's existing landing pages current in Webflow and GoHighLevel. Crons read each site's pages and form results for the owner and queue every page content change for a person's approval. Crons read and queue; a person approves each change and publishes the page in Webflow.",
+ "families": {
+  "all": {
+   "steps": [
+    "page-request",
+    "brief-and-offer",
+    "copy-write",
+    "design-or-template",
+    "build-page",
+    "forms-and-tracking",
+    "review-and-test",
+    "publish",
+    "traffic-link",
+    "measure-results",
+    "update-edit",
+    "approval",
+    "record-keeping",
+    "other"
+   ],
+   "covered_by": {
+    "page-request": "not covered (request intake is outside this workflow)",
+    "brief-and-offer": "not covered (the owner or agent decides the offer and the audience)",
+    "copy-write": "change (the agent writes the content as DOM nodes; the owner approves the queued change)",
+    "design-or-template": "not covered (templates and AI Studio are built by hand in the platform)",
+    "build-page": "change (existing Webflow pages only; the mapped API creates no new page)",
+    "forms-and-tracking": "results (form submissions per form, last N days)",
+    "review-and-test": "not covered (a person tests the page in the platform)",
+    "publish": "not covered by the crons: a person publishes the page in Webflow (no page-level publish is mapped)",
+    "traffic-link": "not covered (ad and link set-up is in the ad workflows)",
+    "measure-results": "results (form submissions per form; Webflow analytics not read)",
+    "update-edit": "change (queued and approved; the page is published by a person in Webflow)",
+    "approval": "approval (every content update and publish waits for a person)",
+    "record-keeping": "inventory and results (each run keeps the figures in the store)",
+    "other": "not covered"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {
+   "name": "inventory",
+   "schedule": "15 */6 * * *",
+   "entry": "inventory",
+   "summary": "Lists each platform's pages and forms for the owner's view. Reads only."
+  },
+  {
+   "name": "results",
+   "schedule": "0 22 * * *",
+   "entry": "results",
+   "summary": "Counts each form's submissions over the last N days. Reads only (22:00 UTC is 8 or 9 am in eastern Australia)."
+  },
+  {
+   "name": "queue",
+   "schedule": "*/30 * * * *",
+   "entry": "queue",
+   "summary": "Turns each requested page content change into one approval. Queues only."
+  }
+ ],
+ "draft_ops": {
+  "webflow": ["2.pages_list", "2.forms_list", "2.forms_list-submissions"],
+  "gohighlevel": ["funnels.getFunnels", "funnels.getPagesByFunnelId", "forms.get-forms", "forms.get-forms-submissions"]
+ },
+ "live_ops": {
+  "webflow": ["2.pages_update-static-content"]
+ },
+ "draft_ops_note": "Draft operations are reads only. A Webflow content update changes what a visitor sees once the page is published, so it is a live operation: the queue cron only queues it, and a person approves it. Webflow publish is not mapped to any act, because it publishes the whole site. GoHighLevel has no live operation here.",
+ "adapters": {
+  "webflow": {
+   "status": "docs-only",
+   "covers": "site pages and forms (read), form submissions (read), and a page content change as one approval (the page is published by a person in Webflow)"
+  },
+  "gohighlevel": {
+   "status": "docs-only",
+   "covers": "funnels, funnel pages, forms and form submissions (read only)"
+  }
+ },
+ "gaps": [
+  "Webflow publish is not queued: its endpoint publishes every staged change on the site and takes no page id, so a page-only publish cannot be approved safely. Add a page-level publish or a list of staged changes before it can be queued.",
+  "HubSpot: the landing page CMS endpoints (create, update draft, push live) are mapped in the kit, but no adapter is built. Its build and publish support is partial in the mining run, so it ranks third.",
+  "New pages are not created. The Webflow operations mapped here include no create-page operation, and GoHighLevel's AI Studio and Funnel AI build operations are not mapped. An owner builds a new page in the platform, and the next inventory run lists it.",
+  "Copy, offer, brief and audience decisions, page request intake and template choice are judgment steps. The agent writes the content as DOM nodes into a change record; nothing in the workflow decides the offer.",
+  "Adding a change record needs a writer. The CRM shell adds each change to the store collection changes. core/ is not edited, so there is no command for it yet.",
+  "Webflow analytics (top pages, time on page, goal performance) are mapped but not read: their response fields were not confirmed in the spec here.",
+  "Pixel, conversion and tracking set-up is manual and outside this workflow. Ad traffic links are not tracked here; the ad workflows cover the ads side.",
+  "Both lists read one page of 100 (Webflow pages and forms, GoHighLevel funnels and forms). A larger account needs paging added.",
+  "GoHighLevel's funnel list shape is read as an array. The spec types it as an object, so confirm it on a live sub-account.",
+  "Both adapters are docs-only until a sandbox Webflow site and a GoHighLevel sub-account prove each read and the content update."
+ ]
+}

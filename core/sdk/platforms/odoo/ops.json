@@ -1,0 +1,1 @@
+[{"id":"docs.get_web_version","api":"","method":"GET","path":"/web/version","server":"https://{instance}","summary":"External JSON-2 API, Odoo 20.0 documentation","tags":["docs"],"params":[],"body":false,"scopes":[],"deprecated":false,"doc_url":"https://www.odoo.com/documentation/latest/developer/reference/external_api.html","kind":"read"}]

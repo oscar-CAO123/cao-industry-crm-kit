@@ -1,0 +1,39 @@
+{
+ "id": "aroflo",
+ "name": "AroFlo",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [
+  "api.aroflo.com"
+ ],
+ "hostFromEnv": false,
+ "hostPatterns": [],
+ "pinned": {},
+ "queryArrays": "repeat",
+ "serverVars": {},
+ "auth": {
+  "type": "custom",
+  "provider": "aroflo"
+ },
+ "keys": [
+  "AROFLO_SECRET_KEY",
+  "AROFLO_UENCODED",
+  "AROFLO_PENCODED",
+  "AROFLO_ORGENCODED",
+  "AROFLO_HOST_IP (optional)"
+ ],
+ "sources": [
+  {
+   "url": "https://apidocs.aroflo.com/api/collections/625909/RWgqUe1k?segregateAuth=true&versionTag=latest",
+   "official": "vendor-domain: apidocs.aroflo.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 183,
+  "read": 133,
+  "write": 50
+ }
+}

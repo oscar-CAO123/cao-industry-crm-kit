@@ -1,0 +1,10 @@
+{
+ "business_name": "Example Business",
+ "meeting_sources": ["fireflies", "granola"],
+ "recap_to": [],
+ "recap_expiry_days": 14,
+ "lookback_days": 14,
+ "max_actions": 20,
+ "fireflies": {"limit": 50},
+ "granola": {"page_size": 30, "max_transcript_pages": 5}
+}

@@ -1,0 +1,42 @@
+{
+ "id": "lost-deal-review",
+ "name": "Review every lost deal and roll up what to change",
+ "industry": "all",
+ "department": "sales",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Reviews every lost deal, records why it was lost, and rolls up the reasons into what to change. Crons read the pipeline and draft; a person decides every change and every re-open.",
+ "families": {
+  "all": {
+   "steps": ["ask-the-client", "root-cause-review", "rollup-report"],
+   "covered_by": {"ask-the-client": "skill (the owner calls the client; the workflow lists the deal and its recorded reason, and drafts nothing to the client)", "root-cause-review": "draft (a review record per lost deal) plus skill (the owner decides the cause)", "rollup-report": "draft (weekly roll-up of lost and won counts and top lost reasons)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "intake", "schedule": "15 */6 * * *", "entry": "intake", "summary": "Read the lost deals and their lost reasons into the workflow store. Marks deals that are no longer lost."},
+  {"name": "review", "schedule": "45 */6 * * *", "entry": "review", "summary": "Draft a review record for each new lost deal. Queue a re-open for deals lost to a nurture reason inside the window, for approval."},
+  {"name": "rollup", "schedule": "0 22 * * 0", "entry": "rollup", "summary": "Weekly roll-up of lost and won counts and the top lost reasons (22:00 UTC Sunday is 8 or 9 am Monday in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "gohighlevel": ["opportunities.get-lost-reason", "opportunities.search-opportunity", "opportunities.get-opportunity"]
+ },
+ "live_ops": {
+  "gohighlevel": ["opportunities.update-opportunity-status"]
+ },
+ "draft_ops_note": "Draft operations are reads and internal records only. The crons read lost and won opportunities and their lost reasons, and write review records and roll-ups to the workflow store. The one live operation, re-opening a lost deal, is only queued for approval.",
+ "capabilities": ["deals.list", "deals.lost-reasons", "deals.reopen", "reviews.draft", "rollups.draft"],
+ "adapters": {
+  "gohighlevel": {"status": "docs-only", "covers": "lost and won opportunities, lost reasons, re-open of a lost deal (on approval)"}
+ },
+ "gaps": [
+  "HubSpot: the reads are mapped (deal search, pipelines), but the closed-lost stage differs per pipeline and the lost-reason property is not confirmed in the supplied pages. No adapter yet; needs a live account to confirm the stage and property.",
+  "Zoho: the supplied docs are Zoho Books help pages, not Zoho CRM deal pages. No lost-deal step is documented, so no adapter.",
+  "Ask the client why they went elsewhere: this is a person's call. No approved reply template exists, so the kit drafts nothing to the client.",
+  "Root-cause review and the decision on each change: the owner makes them. The kit has no write path for the owner's notes or decisions yet; they are recorded by hand until a review tool exists.",
+  "Price comparison against a winning offer or competitor: no platform in the evidence documents it.",
+  "Pipeline and stage changes (process-change): not built. Changing a pipeline touches the whole team, so it stays a person's job until a live operation is mapped and approved.",
+  "Coaching the rep and sharing lessons with the team: no platform in the evidence documents it.",
+  "The adapter is docs-only until a sandbox GoHighLevel sub-account proves the reads and the re-open."
+ ]
+}

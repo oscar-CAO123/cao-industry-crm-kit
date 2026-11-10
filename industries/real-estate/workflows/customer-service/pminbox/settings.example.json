@@ -1,0 +1,15 @@
+{
+ "business_name": "Example Property",
+ "digest_to": "manager@example.com.au",
+ "triage": [
+  {"category": "noise", "match": ["unsubscribe", "newsletter", "no-reply"]},
+  {"category": "urgent", "match": ["burst", "flood", "gas", "no power", "fire", "emergency", "locked out"]},
+  {"category": "maintenance", "match": ["repair", "leak", "broken", "maintenance", "blocked", "not working"]},
+  {"category": "owner", "match": ["owner", "statement", "approve", "bond"]},
+  {"category": "tenant", "match": ["lease", "inspection", "keys", "rent"]}
+ ],
+ "auto_reply": [
+  {"category": "maintenance", "body": "Thanks for your message. We have logged your maintenance request and the team will review it shortly."}
+ ],
+ "signature": "Example Property team"
+}

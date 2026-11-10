@@ -1,0 +1,615 @@
+{
+ "id": "gorgias",
+ "name": "Gorgias",
+ "status": "docs-read",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9-]+)\\.gorgias\\.com"
+ ],
+ "pinned": {},
+ "serverVars": {
+  "domain": {
+   "env": "GORGIAS_DOMAIN",
+   "pattern": "[a-z0-9-]+",
+   "example": "acme"
+  }
+ },
+ "auth": {
+  "type": "basic",
+  "user": "GORGIAS_EMAIL",
+  "pass": "GORGIAS_API_KEY"
+ },
+ "keys": [
+  "GORGIAS_EMAIL",
+  "GORGIAS_API_KEY",
+  "GORGIAS_DOMAIN"
+ ],
+ "sources": [
+  {
+   "url": "https://developers.gorgias.com/llms.txt",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/errors.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/pagination.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/limitations.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-account-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-account.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-account-settings.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-account-setting.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-account-setting.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-customer-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-customers.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-customers.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-customer.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/merge-customers.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-customer-custom-fields-values.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-customer-custom-field-values.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-customer-custom-field-value.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-customer-custom-field-value.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-customer-data.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-customer.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-customer.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-customer.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-customfield-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-custom-fields.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-custom-field.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-custom-fields.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-custom-field.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-custom-field.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-event-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-events.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-event.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-file-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/post_api-upload.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/download-file.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-integration-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-tickethttpintegration-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-integrations.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-integration.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-integration.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-integration.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-integration.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-job-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-jobs.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-job.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/cancel-job.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-job.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-job.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-macro-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-macros.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-macro.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/bulk-archive-macros.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/bulk-unarchive-macros.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-macro.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-macro.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-macro.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-metric-card.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/search-metric-cards.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-metric-card-feedback.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-rule-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-rules.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-rule.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-rules-priorities.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-rule.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-rule.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-rule.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-satisfactionsurvey-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-satisfaction-surveys.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-satisfaction-survey.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-satisfaction-survey.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-satisfaction-survey.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/search-1.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-statistic-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-legacy-statistic.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/download-legacy-statistic.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-tag-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-tag.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/merge-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-tag.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-tag.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-tag.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-team-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-teams.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-team.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-team.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-team.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-team.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-ticket-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-tickets.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-ticket.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-ticket.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-ticket.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-ticket.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-ticket-custom-fields.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-ticket-custom-fields.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-ticket-custom-field.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-ticket-custom-field.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-ticket-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-ticket-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-ticket-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-ticket-tags.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-ticketmessage-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-messages.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-ticket-messages.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-ticket-message.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-ticket-message.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-ticket-message.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-ticket-message.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-user-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-users.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-user.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-user.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-user.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-user.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-view-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-views.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-view.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-view.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-view.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-view.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-view-items.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-view-items.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-voicecall-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-voice-calls.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-voice-call.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-voicecallrecording-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-voice-call-recordings.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-voice-call-recording.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-voice-call-recording.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-voicecallevent-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-voice-call-events.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-voice-call-event.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-widget-object.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/list-widgets.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/create-widget.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/delete-widget.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-widget.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/update-widget.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-macro-object-1.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-integration-object-1.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-integration-object-2.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/the-job-object-1.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  },
+  {
+   "url": "https://developers.gorgias.com/reference/get-statistic.md",
+   "official": "vendor-domain: developers.gorgias.com"
+  }
+ ],
+ "gaps": [],
+ "counts": {
+  "operations": 111,
+  "read": 45,
+  "write": 66
+ }
+}

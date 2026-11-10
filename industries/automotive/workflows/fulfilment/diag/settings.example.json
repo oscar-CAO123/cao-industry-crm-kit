@@ -1,0 +1,7 @@
+{
+ "business_name": "Example Auto",
+ "intake_status": "Quote",
+ "min_note_chars": 40,
+ "email_subject": "Your vehicle diagnostic write-up",
+ "servicem8": {"photo_types": [".jpg", ".jpeg", ".png", ".heic"]}
+}

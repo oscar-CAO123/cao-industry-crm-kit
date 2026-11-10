@@ -1,0 +1,53 @@
+{
+ "id": "all:safety-forms",
+ "name": "Safety forms, inspections and incident reports",
+ "industry": "all",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps safety checklists, incident reports and corrective actions in SiteBook: generates the incident and checklist reports for the register once each, and queues a chase email for each overdue corrective action. Crons read and draft; a person approves every email.",
+ "families": {
+  "by-hand-or-unstated": {
+   "steps": ["pre-start-check"],
+   "covered_by": {"pre-start-check": "read only (checklist templates); creating the form waits for a confirmed SiteBook request schema"}
+  },
+  "other-tool": {
+   "steps": ["site-inspection", "other", "record-keeping", "photo-evidence"],
+   "covered_by": {"site-inspection": "cron checklists (generates the checklist report once it is completed)", "other": "skill (SWMS are read from SiteBook; no cron)", "record-keeping": "crons checklists and incidents (reports generated into SiteBook)", "photo-evidence": "skill (photos are taken in the SiteBook app)"}
+  },
+  "spreadsheet": {
+   "steps": ["other", "incident-report", "record-keeping", "follow-up"],
+   "covered_by": {"other": "skill (SWMS are read from SiteBook; no cron)", "incident-report": "cron incidents (generates the incident report once)", "record-keeping": "crons incidents and checklists", "follow-up": "cron actions (queues a chase email for approval)"}
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "incidents", "schedule": "*/30 * * * *", "entry": "incidents", "summary": "Open incidents in SiteBook: generate each one's incident report once, for the register."},
+  {"name": "checklists", "schedule": "15 * * * *", "entry": "checklists", "summary": "Checklists completed in the lookback window: generate each one's report once, for the register."},
+  {"name": "actions", "schedule": "0 21 * * *", "entry": "actions", "summary": "Overdue corrective actions: queue a chase email to each action's recipient, at most once a week, for approval (21:00 UTC is 7 or 8 am in eastern Australia)."}
+ ],
+ "draft_ops": {
+  "sitebook": ["docs.get_v2_incidents", "docs.post_v1_incidents_incidentId_report", "docs.get_v1_checklists", "docs.post_v1_checklists_checkListId_report", "docs.get_v2_actions"]
+ },
+ "live_ops": {
+  "sitebook": ["docs.post_v1_actions_actionId_email"]
+ },
+ "draft_ops_note": "Draft operations reach nobody outside the business: reads, and a report generated into SiteBook's own register. The chase email goes to a worker or subcontractor, so it is a live operation and waits for a person.",
+ "capabilities": ["jobs.list", "documents.create", "tasks.list"],
+ "adapters": {
+  "sitebook": {"status": "docs-only", "covers": "incident reports, checklist reports, overdue corrective actions and their chase emails"}
+ },
+ "gaps": [
+  "Procore and Sitemate: their help pages are mapped in the evidence, but the kit has no Procore or Sitemate platform, so no operations can run. Procore's docs do not name a pre-start form; Sitemate's docs conflict on attachments.",
+  "SiteBook creates: the Reporting API docs name the request models (PostIncidentCmd and the others) but do not list their fields. Creating incidents, checklists, SWMS, sign-offs and toolbox talks is not built until the request schema is confirmed on a live account.",
+  "Pre-start checks: SiteBook builds them from checklist templates in the app. Starting one from this workflow waits for the create schema above.",
+  "Toolbox talk sign-in and supervisor sign-off: the sign-off endpoints need a confirmed request body, so they are not built.",
+  "Regulator submission, near-miss reports and incident investigation: no mapped SiteBook endpoint, and the pages do not describe them. Judgment and manual for now.",
+  "Checklist report email to a recipient: the email endpoint needs a recipient field the docs do not list, so it is not built.",
+  "SWMS three-monthly review: the SWMS template list is mapped, but the docs do not confirm a review-date field, so no cron checks it.",
+  "Dropbox and Microsoft 365 filing: the evidence names them for records and registers, but no platform step evidence was given for them, so no adapter.",
+  "SiteBook is docs-read and unproven: every call is offline-tested only, not run against a real account.",
+  "Deploy: tools/deploy.ts lists secret names only from intake, quotes, rate_card and messages settings, so SITEBOOK_API_KEY will not appear in the rendered deploy files, and deployed SiteBook calls run with no key and fail until that helper reads the keys of every platform the operations use (or sitebook is added to the settings list for this deploy). Needs a change in tools/deploy.ts, which is outside this workflow folder.",
+  "Photos and site notes stay in the SiteBook app; the workflow does not move them."
+ ]
+}

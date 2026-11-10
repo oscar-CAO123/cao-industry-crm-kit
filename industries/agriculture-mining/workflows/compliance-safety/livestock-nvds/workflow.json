@@ -1,0 +1,57 @@
+{
+ "id": "agriculture-mining:livestock-nvds",
+ "name": "Create livestock National Vendor Declarations (NVDs) and movement records",
+ "industry": "agriculture-mining",
+ "department": "compliance-safety",
+ "version": 1,
+ "status": "docs-only",
+ "summary": "Keeps a livestock stock register from the farm's AgriWebb records and drafts each NVD's stock lines from it, flagging any tag it cannot match. Crons read and draft only; the vendor signs each NVD and records each NLIS movement.",
+ "families": {
+  "vendor-declaration-and-movement": {
+   "steps": ["sale-or-transfer-agreed", "gather-animal-ids", "property-and-pic-check", "treatment-and-withholding-check", "draft-nvd", "sign-declaration", "nlis-movement-record", "transport-booking", "hand-over-at-yards", "buyer-receipt", "record-keeping", "correction-or-reissue", "other"],
+   "covered_by": {
+    "sale-or-transfer-agreed": "skill (the owner agrees the sale)",
+    "gather-animal-ids": "draft (stock-register reads AgriWebb; nvd-draft matches the tags)",
+    "property-and-pic-check": "skill",
+    "treatment-and-withholding-check": "skill",
+    "draft-nvd": "draft (nvd-draft lists the stock lines; the NVD itself is completed by the vendor)",
+    "sign-declaration": "not covered (the vendor signs)",
+    "nlis-movement-record": "not covered (no NLIS platform or operation is mapped)",
+    "transport-booking": "not covered (AgriWebb's docs do not describe it)",
+    "hand-over-at-yards": "not covered (AgriWebb's docs do not describe it)",
+    "buyer-receipt": "not covered (AgriWebb's docs do not describe it)",
+    "record-keeping": "draft (stock register and NVD drafts kept in the workflow store)",
+    "correction-or-reissue": "skill",
+    "other": "skill"
+   }
+  }
+ },
+ "settings": "settings.example.json",
+ "crons": [
+  {"name": "stock-register", "schedule": "0 */6 * * *", "entry": "stockRegister", "summary": "Copy the farm's animals and management groups from AgriWebb into the local stock register."},
+  {"name": "nvd-draft", "schedule": "*/30 * * * *", "entry": "nvdDraft", "summary": "Match each new NVD request's tags to the stock register and draft its stock lines; flag any tag it cannot match."}
+ ],
+ "draft_ops": {
+  "agriwebb": ["query.animals", "query.managementGroups"]
+ },
+ "live_ops": {
+  "agriwebb": ["mutation.addRecords"]
+ },
+ "draft_ops_note": "Draft operations are reads only. Nothing here writes to AgriWebb on a cron. mutation.addRecords is a live operation: it is listed for a future movement-record step and is never run without an approval.",
+ "capabilities": ["animals.list", "management-groups.list", "stock-register.build", "nvd.match-tags"],
+ "adapters": {
+  "agriwebb": {"status": "docs-only", "covers": "stock register read (animals and management groups); no write adapter yet"}
+ },
+ "gaps": [
+  "Confirm the workflow steps and default settings with the business before use.",
+  "NLIS (nlis.com.au): no platform folder in core/sdk/platforms and no mapped operations. NLIS movement lodging is not automated.",
+  "eNVD (integritysystems.com.au): no platform folder and no mapped operations. All 10 captured pages held navigation text only, with no step text.",
+  "Agrinous (agrinous.com): no platform folder and no mapped operations.",
+  "AgriWebb has no NVD or NLIS lodging in its operations. Its movement record is an internal ManagementGroupChanged record, not an NLIS movement, so no write adapter is built.",
+  "AgriWebb tag match: the NLIS tag is assumed to be identity.eid. Confirm which identity field holds the NLIS number on a live account before relying on the match.",
+  "AgriWebb sign-in: bearer token from AGRIWEBB_ACCESS_TOKEN only; the token exchange is not built (platform.json). No live account has been tested.",
+  "mutation.addRecords is listed as a live op but no cron queues it. A movement-record adapter needs the AnimalIdentityInput shape confirmed first.",
+  "No CLI command yet adds an NVD request to the store. The agent writes each request to the nvd-requests namespace until one exists.",
+  "Transport booking, saleyard or buyer handover, and buyer receipt have no mapped source in AgriWebb, eNVD or NLIS."
+ ]
+}
