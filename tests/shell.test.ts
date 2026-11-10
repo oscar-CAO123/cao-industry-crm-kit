@@ -49,7 +49,7 @@ test("every environment name the shell reads is declared: a key in the refs exam
   const keys = new Set(Object.keys(JSON.parse(read(path.join(SHELL, "secrets.refs.example.json")))));
   const settings = new Set(["NODE_ENV", "NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_APP_NAME", "BETTER_AUTH_URL", "AUTH_SIGNUP_DOMAINS", "KIT_ROOT",
     "KIT_SETTINGS", "KIT_SETTINGS_JSON", "KIT_ALLOW_WRITES", "FILES_PUBLIC_ORIGIN", "SHELL_VAULT", "SHELL_SECRET_REFS", "MINIO_ENDPOINT",
-    "MINIO_BUCKET", "NEXT_PUBLIC_MINIO_ENDPOINT", "EMAIL_FROM", "ENABLE_TEST_OTP", "TEST_USER_EMAIL", "PORT", "HOSTNAME", "CI"]);
+    "MINIO_BUCKET", "NEXT_PUBLIC_MINIO_ENDPOINT", "EMAIL_FROM", "ENABLE_TEST_OTP", "TEST_USER_EMAIL", "PORT", "HOSTNAME", "CI", "NEXT_PHASE"]);
   const launcher = new Set(["OP_SERVICE_ACCOUNT_TOKEN", "SHELL_OP_TOKEN", "CRON_SECRET", "DATABASE_CA_CERT"]);
   const unknown = new Set<string>();
   for (const f of code) for (const m of read(f).matchAll(/process\.env\.([A-Z][A-Z0-9_]*)/g)) if (!keys.has(m[1]) && !settings.has(m[1]) && !launcher.has(m[1])) unknown.add(`${m[1]} (${rel(f)})`);
