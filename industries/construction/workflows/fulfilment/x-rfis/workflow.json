@@ -15,7 +15,7 @@
   },
   "settings": "settings.example.json",
   "crons": [
-    {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "RFIs changed in each watched Fieldwire project since the last run."},
+    {"name": "intake", "schedule": "*/15 * * * *", "entry": "intake", "summary": "RFIs changed in each watched Fieldwire or Procore project since the last run."},
     {"name": "draft", "schedule": "*/30 * * * *", "entry": "draft", "summary": "Create each new question as an RFI draft with its question text, then queue the open to the designer for approval."}
   ],
   "draft_ops": {
@@ -23,15 +23,21 @@
       "fieldwire-regional-api.get_rfis_in_project",
       "fieldwire-regional-api.create_rfi_in_project",
       "fieldwire-regional-api.update_rfi_by_id"
+    ],
+    "procore": [
+      "rfis.list-rfis",
+      "rfis.create-rfi"
     ]
   },
   "live_ops": {
-    "fieldwire": ["fieldwire-regional-api.transition_rfi_in_project"]
+    "fieldwire": ["fieldwire-regional-api.transition_rfi_in_project"],
+    "procore": ["rfis.update-rfi"]
   },
-  "draft_ops_note": "Draft operations reach nobody outside the business: reading RFIs, creating an RFI in draft, and setting its question text. Opening an RFI moves it to open and makes Fieldwire email the assignee, so it is a live operation and waits for a person.",
+  "draft_ops_note": "Draft operations reach nobody outside the business: reading RFIs, creating an RFI in draft, and setting its question text. Opening an RFI moves it to open and makes Fieldwire or Procore notify the assignee, so it is a live operation and waits for a person. In Procore the draft is created with draft set to true and only the queued update (draft false, assignee, due date) opens it.",
   "capabilities": ["tasks.list", "files.read", "messages.draft"],
   "adapters": {
-    "fieldwire": {"status": "docs-only", "covers": "RFI list and changes, RFI draft with question, queued open to the designer"}
+    "fieldwire": {"status": "docs-only", "covers": "RFI list and changes, RFI draft with question, queued open to the designer"},
+    "procore": {"status": "docs-only", "covers": "RFI list and changes, RFI draft created with its question, queued open to the assignee"}
   },
   "gaps": [
     "Fieldwire: the Fieldwire-Version header is a date the kit cannot read from the spec; it is a required setting. Sign-in is a bearer token supplied directly, since the short-lived JWT exchange is not built.",
@@ -39,10 +45,11 @@
     "Fieldwire: the mapped create call takes a name only, so the question text is set by a second update call. The RFI status word for open (mapped_status) is not confirmed on a live account.",
     "Chasing an RFI that is past due is not built: the reminder and the status word for open are not confirmed on a live account, so there is no chase cron yet.",
     "Bluebeam: markups and revisions are mapped as partial support and it has no RFI register. No adapter. Drawing revision checks stay a skill step until its field names are confirmed against the vendor spec.",
-    "Procore: its help pages support RFIs end to end, but the kit has no Procore platform folder, so no adapter. Its RFI steps are the next candidate once the platform is mapped.",
+    "Procore: the adapter is built from Procore's own RFI reference page (read 11 Nov 2026) and tested on a fake network only. Not confirmed on a live account: that an RFI created with draft true notifies nobody, that the update with draft false is what opens it and notifies the assignee, the date-range separator in the filters[updated_at] value (sent as start...end), and paging (the pagination page did not load, so the list is paged by page and per_page and a page shorter than per_page ends it). Sign-in is a bearer token supplied directly (PROCORE_ACCESS_TOKEN) with the company id in PROCORE_COMPANY_ID. Set procore, not fieldwire, in settings; setting both is refused.",
+    "Procore: every RFI needs an RFI manager (rfi_manager_id) and a question; a question row on a business with no manager set is parked with that reason. Assignee ids are Procore user ids. Procore's RFI has no free-text message on open, so the row's message is not sent.",
     "Cost or time impact and the variation docket have no mapped operation. The paper day docket is a manual step.",
     "Judgment steps (reading drawings and specs, deciding which question goes to which designer) belong to the agent skill, not to the crons.",
-    "Every adapter is docs-only until a sandbox Fieldwire project proves it."
+    "Every adapter is docs-only until a sandbox Fieldwire or Procore project proves it."
   ],
   "evidence": {
     "calls": "4 construction calls in the RFI worklist name these steps; the variants pass read 9 calls in total",
