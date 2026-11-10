@@ -16,11 +16,13 @@ interface RfiPlatform {
   setQuestion(ctx: Ctx<Settings>, project: string, rfiId: string, question: string): Promise<void>;
   queueRfiOpen(ctx: Ctx<Settings>, rfi: { project: string; id: string; name: string }, assignee: number, due: string, message: string): Promise<string>;
 }
+const FIELDWIRE: RfiPlatform = fw;  // checked against the interface by the compiler, not cast
+const PROCORE: RfiPlatform = pc;
 function platform(ctx: Ctx<Settings>): { api: RfiPlatform; projects: string[]; assignee?: number; dueDays?: number } {
   const { fieldwire: f, procore: p } = ctx.settings;
   if (f && p) throw new Error("rfis: set either fieldwire or procore in settings, not both");
-  if (p) return { api: pc as RfiPlatform, projects: p.projects ?? [], assignee: p.default_assignee_id, dueDays: p.default_due_days };
-  return { api: fw as RfiPlatform, projects: f?.projects ?? [], assignee: f?.designer_user_id, dueDays: f?.default_due_days };
+  if (p) return { api: PROCORE, projects: p.projects ?? [], assignee: p.default_assignee_id, dueDays: p.default_due_days };
+  return { api: FIELDWIRE, projects: f?.projects ?? [], assignee: f?.designer_user_id, dueDays: f?.default_due_days };
 }
 
 /** Every 15 minutes: RFIs changed in each watched project since the last run, kept as rows. Reads only. */

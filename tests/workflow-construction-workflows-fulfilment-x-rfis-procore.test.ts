@@ -70,22 +70,43 @@ test("intake keeps each changed RFI once, reads only, sends the company header, 
   assert.equal(hits[0].headers.get("procore-company-id"), "777");
   assert.equal(hits[0].headers.get("authorization"), "Bearer pc-token");
   assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T12:00:00Z" });
+  const firstRun = hits.length;
   assert.deepEqual(await intake(ctx), { seen: 1, added: 0 }, "the same RFI on a second run is not new");
-  assert.equal(hits[1].query.get("filters[updated_at]"), "2026-11-07T12:00:00Z...2026-11-08T00:00:00Z", "the second run asks only for changes");
+  assert.equal(hits[firstRun].query.get("filters[updated_at]"), "2026-11-07T12:00:00Z...2026-11-08T00:00:00Z", "the second run asks only for changes");
   assert.equal(writes().length, 0, "intake reads only");
 });
 
 test("intake follows a full page into the next and keeps the RFIs from both", async () => {
-  pages = [Array.from({ length: 100 }, (_, i) => row(1000 + i, "2026-11-07T12:00:00Z")), [row(2000, "2026-11-07T13:00:00Z")]];
+  pages = [Array.from({ length: 100 }, (_, i) => row(1000 + i, "2026-11-07T12:00:00Z")), [row(2000, "2026-11-07T13:00:00Z")], []];
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   assert.deepEqual(await intake(ctx), { seen: 101, added: 101 });
-  assert.deepEqual(hits.filter((h) => h.method === "GET").map((h) => h.query.get("page")), ["1", "2"]);
+  assert.deepEqual(hits.filter((h) => h.method === "GET").map((h) => h.query.get("page")), ["1", "2", "3"]);
   assert.ok(await store.get("rfis", "2000"), "the second page's RFI is kept");
   assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T13:00:00Z" });
 });
 
+test("intake does not assume a page size: a server that caps pages at 50 still has every RFI read", async () => {
+  pages = [
+    Array.from({ length: 50 }, (_, i) => row(5000 + i, "2026-11-07T12:00:00Z")),
+    Array.from({ length: 50 }, (_, i) => row(5050 + i, "2026-11-07T12:30:00Z")),
+    Array.from({ length: 7 }, (_, i) => row(5100 + i, "2026-11-07T13:00:00Z")),
+    [],
+  ];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { seen: 107, added: 107 }, "a short page is not taken as the last");
+  assert.deepEqual(hits.filter((h) => h.method === "GET").map((h) => h.query.get("page")), ["1", "2", "3", "4"]);
+  assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), { at: "2026-11-07T13:00:00Z" });
+});
+
+test("intake: a server that ignores the page number stops at the repeat, with each RFI kept once", async () => {
+  pages = [[row(6000, "2026-11-07T12:00:00Z"), row(6001, "2026-11-07T12:00:00Z")]];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  assert.deepEqual(await intake(ctx), { seen: 2, added: 2 });
+  assert.equal(hits.filter((h) => h.method === "GET").length, 2, "page two brought nothing new, so paging stopped");
+});
+
 test("intake: a window past the page cap is refused whole and the watermark is held", async () => {
-  pages = [Array.from({ length: 100 }, (_, i) => row(3000 + i, "2026-11-07T12:00:00Z"))];
+  pages = Array.from({ length: 30 }, (_, n) => Array.from({ length: 100 }, (_, i) => row(100000 + n * 100 + i, "2026-11-07T12:00:00Z")));
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
   assert.deepEqual(await intake(ctx), { seen: 0, added: 0 });
   assert.equal(hits.filter((h) => h.method === "GET").length, 20, "stops at the page cap");
