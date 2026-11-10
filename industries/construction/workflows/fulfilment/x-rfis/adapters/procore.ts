@@ -37,7 +37,9 @@ export async function rfisUpdatedSince(ctx: Ctx<Settings>, project: string, sinc
   for (let page = 1; page <= MAX_RFI_PAGES; page++) {
     const r = await ctx.draft<any[]>({ platform: P, op: OP.list, summary: `RFIs changed since ${since}, page ${page}`,
       input: { params: { project_id: pid, page, per_page: PER_PAGE, "filters[updated_at]": window } } });
-    const list = Array.isArray(r.data) ? r.data : [];
+    // A 200 whose body is not a list (an error object, an HTML page) is a failed read, never an empty page: an empty page would end the window and move the watermark past RFIs never read.
+    if (!Array.isArray(r.data)) throw new Error("procore: the RFI list did not come back as a list");
+    const list = r.data;
     for (const x of list) {
       if (!Number.isInteger(x?.id) || x.id <= 0) continue;
       rows.set(String(x.id), { id: String(x.id), project: String(pid), name: clean(x.subject, 160), status: clean(x.status, 40),

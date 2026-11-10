@@ -123,6 +123,16 @@ test("intake: a window past the page cap is refused whole and the watermark is h
   assert.deepEqual(Object.keys(await store.list("rfis")), [], "nothing is kept from a refused window");
 });
 
+test("intake: a 200 that is not a list fails the run and moves nothing", async () => {
+  pages = [[row(8000, "2026-11-07T12:00:00Z")]];
+  const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
+  await intake(ctx); // a normal first run, so a watermark exists
+  const mark = await store.get("watermarks", `rfis:${PROJ}`);
+  setTransport({ sleep: async () => {}, log: () => {}, fetch: (async () => new Response(JSON.stringify({ errors: "rate limited" }), { status: 200, headers: { "content-type": "application/json" } })) as any });
+  await assert.rejects(intake(ctx), /did not come back as a list/);
+  assert.deepEqual(await store.get("watermarks", `rfis:${PROJ}`), mark, "the watermark did not move");
+});
+
 test("rows with a missing or non-integer id are skipped", async () => {
   listOut = [{ id: "abc", subject: "x", updated_at: "2026-11-07T12:00:00Z" }, { subject: "y" }, row(RFI, "2026-11-07T12:00:00Z")];
   const store = new MemoryStore(), ctx = context(WF, S, store, NOW, () => {});
