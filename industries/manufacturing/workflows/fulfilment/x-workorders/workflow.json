@@ -8,7 +8,6 @@
  "summary": "Turns the production plan into parked work orders in the business's own system, checks component stock against minimums, and queues completion of finished work orders for a person to approve. Crons read and draft; a person approves every completion.",
  "families": {
   "production-plan": {
-   "evidence": "1 discovery call (food processing, Unleashed) describes this way of working",
    "steps": ["prioritise", "plan-materials"],
    "covered_by": {"prioritise": "draft (one parked work order per product, sized from units per day over the plan horizon)", "plan-materials": "read (component stock against minimum and maximum; shortfalls listed for the buyer)"}
   }
@@ -40,9 +39,5 @@
   "Unleashed: list calls read the first page only (200 records); paging is not wired.",
   "Labour time, downtime windows and quality release are not covered: the evidence does not describe them for this business and no mapped platform records them.",
   "Supplier orders for shortfalls are not placed: the materials cron lists them for the buyer. Ordering from a supplier is a judgment step."
- ],
- "evidence": {
-  "calls": "1 discovery call (food processing) names Unleashed for production planning and purchasing; plan-materials is fully manual in it, prioritise is not",
-  "platforms": "the platforms file covers MEX Maintenance, MRPeasy and Odoo; none has a mapped operation, so the Unleashed adapter rests on the kit's own Unleashed spec"
- }
+ ]
 }

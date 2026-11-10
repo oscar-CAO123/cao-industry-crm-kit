@@ -5,8 +5,7 @@ description: Move open deals along a pipeline (GoHighLevel or Pipedrive) from wh
 
 # Pipeline advance
 
-Built from how businesses described moving deals through their pipeline on discovery calls. Most of it is manual today: the owner or
-the estimator reads the enquiry, decides where the deal sits, moves the stage by hand, and nobody is sure what the stage means any more.
+Moves open deals along the pipeline from what actually happened, not from what someone meant to do. A daily scan reads the open deals and drafts a register of deals with no recorded change for the set number of days. Each stage move, recorded from the deal's notes and activity, is queued for approval, and a person approves it before the CRM changes. Nothing moves in the CRM until a person approves it.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `scan` reads the open deals in the pipeline and drafts a register of deals

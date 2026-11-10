@@ -5,8 +5,7 @@ description: Turns a quote request, with its notes, photos or plans, into a pric
 
 # Quote build
 
-Built from how 116 discovery calls describe quoting in any industry. Two ways of quoting: a **priced job from a site visit**
-(request, visit or photos, price, proposal, send, chase, win) and a **proposal from scope** (request, qualify, write the proposal, record).
+Builds a quote or proposal from the request and its notes, photos or plans. The agent reads the material and sets the lines; the crons price them from the rate card, draft the quote in the business's own system and queue its send for approval, chase sent quotes, and hand a won quote over. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`: `intake` collects requests, `draft` prices them from the rate card and

@@ -5,8 +5,7 @@ description: Finished-part photo checks for a manufacturing business, logged in 
 
 # Finished part photo check
 
-Built from 3 discovery calls. None of them describes how the owner checks finished parts from photos, so the steps
-follow the workflow spec, not owner evidence. Check the first client's process before trusting the step order.
+Logs each finished-part check request from the inbox into the business's own check register, then drafts the result email once a person has recorded a pass, fail or second look. Crons read and draft; a person approves every email before it sends.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads new requests from the request folder, `register`

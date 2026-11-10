@@ -8,7 +8,6 @@
   "summary": "Turns a site question about the drawings into an RFI in the project's own system, opens it to the designer, and tracks the answer. Crons read and draft; a person approves every open.",
   "families": {
     "by-hand": {
-      "evidence": "4 construction calls describe raising RFIs by hand, from site to designer and back",
       "steps": ["question-raised", "drawing-check", "send-to-designer", "receive-response", "variation"],
       "covered_by": {"question-raised": "draft (the skill writes the question, the draft cron creates the RFI)", "drawing-check": "skill (reads drawings and specs against the question)", "send-to-designer": "approval (the open to the designer waits for a person)", "receive-response": "intake (the answer status is read back)", "variation": "gap (cost and time impact and the variation docket are not mapped)"}
     }
@@ -50,9 +49,5 @@
     "Cost or time impact and the variation docket have no mapped operation. The paper day docket is a manual step.",
     "Judgment steps (reading drawings and specs, deciding which question goes to which designer) belong to the agent skill, not to the crons.",
     "Every adapter is docs-only until a sandbox Fieldwire or Procore project proves it."
-  ],
-  "evidence": {
-    "calls": "4 construction calls in the RFI worklist name these steps; the variants pass read 9 calls in total",
-    "platforms": "Fieldwire, Bluebeam and Procore help and product pages mapped step by step (construction-x-rfis-platforms.json)"
-  }
+  ]
 }

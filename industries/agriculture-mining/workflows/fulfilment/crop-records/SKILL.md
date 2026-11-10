@@ -5,9 +5,7 @@ description: Season records for crop, vineyard, grain and livestock farms, kept 
 
 # Crop, vineyard, grain and livestock records
 
-Built from how owners describe recording on discovery calls (one call so far: potato and garlic growing and packing) and
-from AgriWebb's official schema. Crop operations are not writable in AgriWebb's API, so this workflow reads the season record
-and flags its gaps. It queues rainfall readings for approval.
+Keeps the season record for crop, vineyard, grain and livestock farms: reads fields, sessions, recent records, animal counts and rainfall from AgriWebb, flags what the record is missing, and queues each rainfall reading for approval. Crons read and draft; a person approves every write to the farm record.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

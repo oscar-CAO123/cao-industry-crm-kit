@@ -5,8 +5,7 @@ description: Conflict check for a law or professional services practice on Smoke
 
 # Conflict check
 
-Built from the workflow spec and the platform evidence. No discovery call variants were produced for this workflow, so the
-steps are not yet weighted by how owners describe their own checks.
+Checks the parties on a new client or matter against the practice's existing contacts before it opens, and queues opening a clear lead as a matter for approval. Crons read and queue; a person approves every change to a live record.
 
 ## What runs on its own
 Three crons in `index.ts`: `intake` collects new leads from Smokeball, `check` reads the parties on each lead and searches

@@ -8,7 +8,6 @@
   "summary": "Works out yield and waste for each lot from the shed's yield register, flags lots that fall short of target or run over the waste limit, and drafts the weekly yield and waste report. Crons read and draft; the report email waits for a person to approve it.",
   "families": {
     "shed-register": {
-      "evidence": "1 discovery call (potato and garlic packing) describes this way: bins weighed in at the shed, shed data logged, reports half generated and few read them",
       "steps": ["weigh-count", "record-keeping", "report-owner"],
       "covered_by": {
         "weigh-count": "intake (rows the shed logs in the yield register workbook; the weighing itself stays at the shed)",
@@ -44,10 +43,6 @@
     "The register and exceptions tables are Excel tables the shed creates in its own workbook. Their drive, item and table ids are set in settings; nothing creates them.",
     "A row that is later corrected overwrites its lot. A row that is later refused keeps its last good values in the store until someone removes it there.",
     "Only one platform (Microsoft 365) is built, and it is docs-only until a Microsoft 365 developer tenant proves the workbook and mail calls.",
-    "The evidence is one call. The report layout and the exception thresholds are a starting point to confirm with the owner."
-  ],
-  "evidence": {
-    "calls": "1 discovery call read (agriculture-mining-yield variants file: 1 call, 3 steps, 1 family)",
-    "platforms": "2 platforms in the platforms file (agworld, innovint): 0 mapped operations between them, and neither has a folder in the kit. Built on Microsoft 365, the only kit platform that can hold a register and send a report."
-  }
+    "Confirm the report layout and exception thresholds with the owner."
+  ]
 }

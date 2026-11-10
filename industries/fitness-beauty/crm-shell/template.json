@@ -2,7 +2,7 @@
  "industry": "fitness-beauty",
  "name": "Fitness and beauty",
  "version": 1,
- "source": "Pages and tabs follow the fitness-beauty demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "timetable",
@@ -663,242 +663,154 @@
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
    "name": "Book appointments, send reminders, handle no-shows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "checkins-winback",
    "dir": "industries/all/workflows/customer-success/checkins-winback",
    "department": "customer-success",
    "name": "Check in, renew or win back customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "call-coaching",
    "dir": "industries/all/workflows/owner/call-coaching",
    "department": "owner",
    "name": "Score and coach sales and service calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "fitness-beauty:x-billing",
    "dir": "industries/fitness-beauty/workflows/finance-admin/x-billing",
    "department": "finance-admin",
    "name": "Failed payments",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "fitness-beauty:x-packs",
    "dir": "industries/fitness-beauty/workflows/finance-admin/x-packs",
    "department": "finance-admin",
    "name": "Packs and gift cards",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "fitness-beauty:client-programs",
    "dir": "industries/fitness-beauty/workflows/fulfilment/client-programs",
    "department": "fulfilment",
    "name": "Client programs",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "fitness-beauty:x-timetable",
    "dir": "industries/fitness-beauty/workflows/fulfilment/x-timetable",
    "department": "fulfilment",
    "name": "Class timetable",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -906,26 +818,22 @@
   {
    "tool": "GoHighLevel",
    "platform": "gohighlevel",
-   "status": "spec",
-   "calls": 5
+   "status": "spec"
   },
   {
    "tool": "Meta Ads",
    "platform": "meta-ads",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": []

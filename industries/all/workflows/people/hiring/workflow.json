@@ -8,7 +8,6 @@
  "summary": "Takes applications for a role into the business's own mailbox and candidate register, drafts the acknowledgement and any interview invitation or decline the owner decides on, and queues each email for approval. Crons read and draft; a person approves every email. Advertising the role and onboarding the hire are not automated here.",
  "families": {
   "owner-led-hire": {
-   "evidence": "31 of 39 describing calls hire by hand or do not say how; 5 use another tool; 1 uses a spreadsheet",
    "steps": [
     "need-identified",
     "write-job-ad",
@@ -39,7 +38,6 @@
    }
   },
   "ai-assisted-hire": {
-   "evidence": "2 calls use an AI assistant for the job ad or for screening",
    "steps": [
     "write-job-ad",
     "receive-applications",
@@ -95,10 +93,10 @@
   }
  },
  "gaps": [
-  "Seek (named in 5 calls, the most named job board): not a platform in the kit. Posting the ad and pulling its applications both need its own adapter.",
+  "Seek: not a platform in the kit. Posting the ad and pulling its applications both need its own adapter.",
   "JobAdder (job board with SEEK posting, the only platform with hiring docs): docs only, no operations file. Nothing is mapped.",
-  "Bullhorn (2 calls): its operations are mapped, but its sign-in (a login call returning a REST session and token) is not wired, so it cannot run yet.",
-  "Meta Ads (3 calls, used for seasonal hiring): paid spend. Left out until the owner approves a job-ad campaign on its own.",
+  "Bullhorn: its operations are mapped, but its sign-in (a login call returning a REST session and token) is not wired, so it cannot run yet.",
+  "Meta Ads: paid spend. Left out until the owner approves a job-ad campaign on its own.",
   "ApplyEasy (onboarding, 1 call) and onboarding systems: not in the kit. Employment Hero and BrightHR are mapped, but creating an employee is a live change, so onboarding is not automated here.",
   "CV attachments are not read: the attachment list operation is not mapped. The crons use the email's opening text only, so shortlisting from a full CV is a person's judgment.",
   "Shortlisting, phone screens, reference checks, offers and contracts are people's judgment (the 'shortlist' step is a decision the owner records, not a score the kit makes).",
@@ -106,9 +104,5 @@
   "Register rows are written on arrival only. Later stages are not written back to the workbook because the range update operation is not used here.",
   "The owner's decision (interview or decline) is set on the stored applicant by the CRM shell or by a person; no control for it is built in this kit yet.",
   "Every adapter is docs-only until a sandbox mailbox and workbook prove it."
- ],
- "evidence": {
-  "calls": "40 discovery calls read, 39 describe their hiring process (the worklist lists 52 candidate calls)",
-  "platforms": "all-hiring-platforms.json maps one platform (JobAdder), with no operations file. The adapter is built on Microsoft 365, the one platform with mapped mail and Excel operations this job uses"
- }
+ ]
 }

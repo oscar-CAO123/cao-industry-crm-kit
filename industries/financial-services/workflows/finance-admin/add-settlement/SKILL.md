@@ -5,9 +5,7 @@ description: Tracks loan settlements for a broker or lending business: which fil
 
 # Settlement tracker
 
-Built from 5 discovery calls with Australian finance businesses. Every call ran settlements by hand or did not say how.
-The pains: brokers write too few file notes, admin chases lodgements and banks by hand, and information from sales and
-credit does not reach the post-settlement team.
+Tracks each loan from lender confirmation to settlement and the checks after it, lists what is missing from each file, and flags settlements that are past their date with checks still open. The crons read the settlement records and write internal checklists only; nothing reaches a lender, client, broker or bank.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `checklist` writes one checklist per settlement record every 30 minutes.

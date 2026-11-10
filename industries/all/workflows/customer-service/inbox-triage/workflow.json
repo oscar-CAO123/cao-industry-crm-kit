@@ -8,7 +8,6 @@
  "summary": "Sorts the shared inbox into work orders, quote requests, complaints, questions, noise and other, drafts template replies, and assigns each thread with a turnaround reminder. Crons read, draft and label; a person approves every reply before it is sent.",
  "families": {
   "all": {
-   "evidence": "10 discovery calls describe this way of triaging the inbox",
    "steps": ["message-arrives", "scan-and-sort", "assign", "draft-reply", "send-reply", "follow-up", "record-keeping"],
    "covered_by": {"message-arrives": "intake (polls every 10 minutes; no webhook yet)", "scan-and-sort": "intake (keyword rules, noise skipped)", "assign": "assign", "draft-reply": "draft (approved template replies only)", "send-reply": "approval", "follow-up": "assign (turnaround reminder to the teammate)", "record-keeping": "not built (see gaps)"}
   }
@@ -35,7 +34,7 @@
  },
  "gaps": [
   "Microsoft 365 (Outlook): no adapter here. The kit maps the mailbox calls, but the mining file says no user-mailbox operation is mapped for reading, moving or replying; check that before building one.",
-  "WhatsApp, ConnectWise, OnRent, Sling and Asana: named in the calls, not mapped as triage steps. Follow-up by WhatsApp and the record-keeping copies stay with the owner.",
+  "WhatsApp, ConnectWise, OnRent, Sling and Asana: not mapped as triage steps. Follow-up by WhatsApp and the record-keeping copies stay with the owner.",
   "Front approval sends the template text as a new reply. It does not send a Front draft, so an edit made in Front does not change what is sent. Gmail approval sends the draft itself.",
   "Front and Google Workspace are docs-only until a live account proves the reads and writes. Front's help pages describe the inbox but not its reply, assign or reminder screens.",
   "Intake polls every 10 minutes. There is no webhook, so a message can wait up to 10 minutes before it is sorted.",
@@ -43,9 +42,5 @@
   "The four-hour target is a wall-clock reminder, not a business-hours calculation.",
   "Triage calls and calendar booking are judgment work for the agent skill. Nothing here books a call.",
   "Close-out (resolve or archive) is not built. Both platforms can do it, but a person does it for now."
- ],
- "evidence": {
-  "calls": "77 calls in the worklist; 19 read in detail, 10 of them describe the process step by step",
-  "platforms": "Front, Google Workspace and Microsoft 365 help pages, mapped by step; Front and Google Workspace have the most steps with support"
- }
+ ]
 }

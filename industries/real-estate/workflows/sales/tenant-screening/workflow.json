@@ -8,7 +8,6 @@
  "summary": "Takes a tenant applicant from enquiry through screening checks to a tenancy queued in Re-Leased, ready to sign. Crons read, check the record and queue; a person approves every tenancy before it is created.",
  "families": {
   "all": {
-   "evidence": "1 of 6 tenant screening calls describes the process step by step: lease preparation, lease signing and record keeping are all done by hand",
    "steps": ["enquiry-intake", "application-form", "id-check", "income-verification", "reference-checks", "credit-check", "guarantor-check", "shortlist-decision", "applicant-notice", "lease-preparation", "lease-signing", "record-keeping"],
    "covered_by": {
      "enquiry-intake": "intake (applicant contacts tagged in Re-Leased)",
@@ -54,9 +53,5 @@
   "Recording a screening decision: no command sets an applicant to approved with lease dates yet. The CRM shell must do it before the lease cron can queue anything.",
   "Contacts: the intake cron reads the first page of tagged contacts only. Later pages are not followed.",
   "Re-Leased is status spec and has not been run against a real account. The test uses a fake network only."
- ],
- "evidence": {
-  "calls": "6 tenant screening calls were read; 1 describes the process step by step, and it is manual at every step it covers",
-  "platforms": "Console Cloud (Reapit PM) and PropertyMe help centres were read; neither has mapped operations in the kit, so the kit's Re-Leased mapping is the only adapter built"
- }
+ ]
 }

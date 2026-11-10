@@ -2,7 +2,7 @@
  "industry": "professional-services",
  "name": "Professional Services",
  "version": 1,
- "source": "Pages and tabs follow the professional-services demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -1031,484 +1031,308 @@
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 10
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 6
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "scheduling-dispatch",
    "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
    "department": "fulfilment",
    "name": "Schedule and dispatch jobs, staff or vehicles",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "job-tracking",
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
    "name": "Track jobs or projects from start to finish",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "invoicing",
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:add-proposal",
    "dir": "industries/professional-services/workflows/sales/add-proposal",
    "department": "sales",
    "name": "Proposal and engagement letter",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "staff-helpdesk",
    "dir": "industries/all/workflows/people/staff-helpdesk",
    "department": "people",
    "name": "Answer staff questions from SOPs and policies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:add-narratives",
    "dir": "industries/professional-services/workflows/finance-admin/add-narratives",
    "department": "finance-admin",
    "name": "Billing narratives",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "reviews",
    "dir": "industries/all/workflows/marketing/reviews",
    "department": "marketing",
    "name": "Ask for reviews and reply to them",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:add-bas",
    "dir": "industries/professional-services/workflows/finance-admin/add-bas",
    "department": "finance-admin",
    "name": "BAS first pass",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:x-autotime",
    "dir": "industries/professional-services/workflows/finance-admin/x-autotime",
    "department": "finance-admin",
    "name": "Automatic time capture",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:speed-to-lead",
    "dir": "industries/all/workflows/sales/speed-to-lead",
    "department": "sales",
    "name": "Alert and chase when a new lead is not contacted fast",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "competitor-watch",
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "after-hours-calls",
    "dir": "industries/all/workflows/customer-service/after-hours-calls",
    "department": "customer-service",
    "name": "Answer or triage calls out of hours",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "field-forms",
    "dir": "industries/all/workflows/fulfilment/field-forms",
    "department": "fulfilment",
    "name": "Field forms, checklists and photos into records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "payment-chasing",
    "dir": "industries/all/workflows/finance-admin/payment-chasing",
    "department": "finance-admin",
    "name": "Chase unpaid invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:safety-forms",
    "dir": "industries/all/workflows/compliance-safety/safety-forms",
    "department": "compliance-safety",
    "name": "Safety forms, inspections and incident reports",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "meeting-actions",
    "dir": "industries/all/workflows/owner/meeting-actions",
    "department": "owner",
    "name": "Turn meetings and calls into notes and actions",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:contracts",
    "dir": "industries/professional-services/workflows/compliance-safety/contracts",
    "department": "compliance-safety",
    "name": "Contracts read by hand",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:marketing",
    "dir": "industries/professional-services/workflows/marketing/marketing",
    "department": "marketing",
    "name": "Marketing data in five places",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:x-matter",
    "dir": "industries/professional-services/workflows/finance-admin/x-matter",
    "department": "finance-admin",
    "name": "Email to matter",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:add-conflict",
    "dir": "industries/professional-services/workflows/compliance-safety/add-conflict",
    "department": "compliance-safety",
    "name": "Conflict check",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:add-missingdocs",
    "dir": "industries/professional-services/workflows/finance-admin/add-missingdocs",
    "department": "finance-admin",
    "name": "Missing documents finder",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:x-duedates",
    "dir": "industries/professional-services/workflows/finance-admin/x-duedates",
    "department": "finance-admin",
    "name": "Due dates",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:x-trust",
    "dir": "industries/professional-services/workflows/finance-admin/x-trust",
    "department": "finance-admin",
    "name": "Trust accounting",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "professional-services:litigation-drafting",
    "dir": "industries/professional-services/workflows/fulfilment/litigation-drafting",
    "department": "fulfilment",
    "name": "Draft pleadings and defences and research case law for litigation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1516,58 +1340,48 @@
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "GoHighLevel",
    "platform": "gohighlevel",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Meta Ads",
    "platform": "meta-ads",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Asana",
    "platform": "asana",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Smokeball",
    "platform": "smokeball",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": [
   {
-   "tool": "Ignition",
-   "calls": 2
+   "tool": "Ignition"
   },
   {
-   "tool": "ATO Mate",
-   "calls": 2
+   "tool": "ATO Mate"
   },
   {
-   "tool": "Excel",
-   "calls": 2
+   "tool": "Excel"
   }
  ]
 }

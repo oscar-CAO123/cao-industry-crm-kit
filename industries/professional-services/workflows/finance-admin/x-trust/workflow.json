@@ -26,7 +26,7 @@
     "smokeball": {"status": "docs-only", "covers": "matter balances, trust transactions, disbursement requisitions (queued for approval)"}
   },
   "gaps": [
-    "No call evidence: the calls file for this workflow is missing and the workflow has 0 calls, so the steps come from the trust-accounting spec and the platform docs, not from how owners describe it.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
     "Xero and MYOB: the docs read describe no trust account, matter allocation or sign-off, so no adapter is built. Their help centres need a browser read before any mapping.",
     "Leap, Actionstep: no platform docs were read for this workflow, so they are not mapped.",
     "Smokeball: the spec types the transactions list response as a single item. The adapter accepts an array or a value collection, and a live account must confirm the shape.",
@@ -35,9 +35,5 @@
     "Disbursement requests have no intake route yet. The disbursements cron reads requests a person records in the workflow store, and the CRM shell does not write them yet.",
     "Money in, allocation, trust ledger entries, bank matching, transfers to office, principal sign-off and client statements are not automated. They stay with the practice's own process.",
     "Every adapter is docs-only until a Smokeball sandbox or trial account proves it."
-  ],
-  "evidence": {
-    "calls": "0 discovery calls describe trust accounting for this workflow (the variants file is missing)",
-    "platforms": "Smokeball docs (trust accounting feature, matter balances, bank accounts, requisitions) mapped to kit operations; MYOB and Xero docs describe no trust account"
-  }
+  ]
 }

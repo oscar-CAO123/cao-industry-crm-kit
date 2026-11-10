@@ -8,7 +8,6 @@
  "summary": "Keeps rental compliance on track: reads open maintenance, tasks and current tenants, drafts internal follow-up tasks for jobs that stall, and queues any contractor booking for approval. Crons read and draft; a person approves every booking.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes this way of handling rental compliance (residential sales and property management)",
    "steps": ["lease-start-checklist", "smoke-alarm-checks", "safety-certificates", "expiry-tracking", "entry-condition-report", "routine-inspection", "contractor-booking", "tenant-notice", "breach-follow-up", "owner-reporting", "record-keeping"],
    "covered_by": {
      "lease-start-checklist": "gap",
@@ -54,9 +53,5 @@
   "Booking requests: nothing writes to the bookings collection yet, and no command exists to record one (the quoting workflow has a propose command; this one does not). The booking cron stays idle until a request is recorded. This needs a runtime change in core/, which was not made.",
   "Unconfirmed against a live account: the addTask start format (ISO date-time, sent from the code) and the addMaintenance notifications field (sent empty, so no tenant notice is expected). The spec gives the field names only.",
   "VaultRE status is spec. The tests run offline against a fake network and have not been run against a real account."
- ],
- "evidence": {
-  "calls": "1 discovery call on rental compliance. Both steps it describes (safety certificates, expiry tracking) are done by hand, with no tool named.",
-  "platforms": "Vendor docs for AgentBox, Console (Reapit PM) and PropertyMe were mapped step by step. None of their steps has an operation mapped in the kit, so the adapter is VaultRE, the only kit platform with maintenance, task and tenant operations for residential leases."
- }
+ ]
 }

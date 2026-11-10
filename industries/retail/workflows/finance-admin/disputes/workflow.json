@@ -8,7 +8,6 @@
  "summary": "Watches refund requests and card chargebacks in the business's payment platform, records each one, stages the evidence a person has written up, and queues every refund and dispute response for a person to approve. Crons read and draft; nothing refunds, submits evidence or accepts a dispute without an approval.",
  "families": {
   "card-refunds-and-chargebacks": {
-   "evidence": "1 of 2 discovery calls describes a refund flow with steps (the other gave no steps)",
    "steps": ["refund-request", "issue-refund", "chargeback-received", "gather-evidence", "submit-response", "record-keeping"],
    "covered_by": {"refund-request": "decision (a person or the agent records it; the refunds cron queues it)", "issue-refund": "approval", "chargeback-received": "watch", "gather-evidence": "watch (stages an evidence note the agent wrote)", "submit-response": "approval", "record-keeping": "watch"}
   }
@@ -39,16 +38,12 @@
   "Stripe refunds: the SDK sends no Idempotency-Key header (no mapped header for it), so a refund whose outcome is unknown waits in the runtime's needs-check state. Nothing repeats on its own, but a person must confirm in Stripe before it runs again.",
   "Stripe refund reasons: the decision's text goes to refund metadata, not Stripe's fixed reason list (duplicate, fraudulent, requested_by_customer).",
   "Xero: a refund shows as a credit note (partial). Not built: a credit note refund needs a GST and allocation choice a person makes.",
-  "Refund requests arrive by email (Google Workspace in the calls). No intake adapter; the agent or a person records each decision in refund_decisions.",
+  "Refund requests arrive by email . No intake adapter; the agent or a person records each decision in refund_decisions.",
   "Refund and dispute capabilities are not in core/capabilities.json. Adding them is a runtime change, so it is listed here and not made in core/.",
   "Square evidence files (photos, PDFs, signed invoices) are not built. The adapter stages text evidence only.",
   "Square's pages do not describe logging a request, checking a case against the refund policy, or the search steps for an order. Those are judgment steps for the agent.",
   "Payout reconciliation and matching refunds to sales are not covered by the pages read. No reconcile cron.",
   "Square's dispute states and the refund cancellation rules come from the API spec, not a live account. Confirm both on a sandbox before any live run.",
   "Docs-only until a Square sandbox account and a Stripe test account prove the adapters."
- ],
- "evidence": {
-  "calls": "2 discovery calls read; 1 describes a refund flow with steps, and both name Google Workspace for inbox intake",
-  "platforms": "Square help pages (refunds, disputes, dispute reports) and the Square API spec; Stripe's OpenAPI spec for the dispute, refund and evidence fields; Xero pages read but not built (see gaps)"
- }
+ ]
 }

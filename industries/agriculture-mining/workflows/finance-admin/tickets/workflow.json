@@ -8,7 +8,6 @@
  "summary": "Turns paper delivery tickets into rows in the business's own ticket register, checks each grade against the contract, and queues a QC email for approval when a grade is wrong. Crons read and draft; a person approves every send.",
  "families": {
   "log-and-timber-export-receival": {
-   "evidence": "1 discovery call describes this way of receiving delivery tickets (about 500,000 tons a year across 9 to 10 sites)",
    "steps": ["ticket-capture", "ticket-entry", "ticket-check", "grade-and-quality", "record-keeping"],
    "covered_by": {"ticket-capture": "intake (dockets emailed in); the paper docket itself is read by a person", "ticket-entry": "skill (docket fields entered in the shell), then record", "ticket-check": "not yet (see gaps)", "grade-and-quality": "check (grade against the contract) and approval (QC email)", "record-keeping": "record (register row in the business's workbook)"}
   }
@@ -39,9 +38,5 @@
   "Carrier payment and grower or supplier statements: not in the evidence and not built.",
   "Microsoft 365 adapter is docs-only until a developer tenant and a real workbook prove the Excel table and mailbox calls.",
   "The evidence file for platforms lists two platforms with no mapped operations, so the only adapter is Microsoft 365, the platform the call names."
- ],
- "evidence": {
-  "calls": "1 discovery call (log and timber export receival, 500,000 tons a year across about 9 to 10 sites; manual docket keying by one or two office staff)",
-  "platforms": "Agworld and John Deere Operations Center help pages: no ticket, weighbridge or grade steps. Microsoft 365: Graph mail and workbook table operations are mapped and checked against the vendor spec."
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Reads how live ad creative tests are performing on the ad platform, keeps a snapshot, and queues a pause for any losing ad for a person to approve. Crons read and queue; nothing launches, spends or pauses without approval.",
  "families": {
   "creative-test": {
-   "evidence": "1 discovery call read so far; the steps come from the Meta and TikTok docs",
    "steps": ["test-brief", "gather-assets", "produce-variants", "review-variants", "set-up-test", "launch-test", "monitor-results", "pick-winner", "scale-winner", "iterate", "client-update", "record-keeping"],
    "covered_by": {"test-brief": "skill", "gather-assets": "skill", "produce-variants": "skill", "review-variants": "skill", "set-up-test": "not yet (see gaps)", "launch-test": "not yet (see gaps)", "monitor-results": "monitor", "pick-winner": "review (pauses losers only)", "scale-winner": "not yet (see gaps)", "iterate": "skill", "client-update": "skill", "record-keeping": "monitor (snapshot)"}
   }
@@ -41,9 +40,5 @@
   "Thresholds (minimum spend, CTR floor, pause cap) are starting values. The owner sets them per client before the review cron is relied on.",
   "Every Meta step is partial in the platform evidence and the docs are developer docs, not product help. Each step needs a check in Ads Manager before it is relied on.",
   "The workflow is docs-only until a sandbox or test ad account proves the read and pause operations."
- ],
- "evidence": {
-  "calls": "1 discovery call read, 0 variants, 0 steps described by the call",
-  "platforms": "meta-ads: ops mapped for ad, ad set and insights objects, support partial. tiktok-ads: docs only, no ops file in the kit."
- }
+ ]
 }

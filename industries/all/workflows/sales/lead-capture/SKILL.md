@@ -5,8 +5,7 @@ description: Web form and live chat leads into the CRM for any business, with an
 
 # Lead capture
 
-Built from how 40 Australian businesses described capturing leads on discovery calls (21 described the process). The
-mapped path is GoHighLevel: form submissions and live chat become contacts with tags and an opportunity in the new-lead stage.
+Takes each new web form submission and live chat lead into the CRM, tags it, opens it in the new-lead stage, queues a short acknowledgement, and queues follow-ups for leads who have not replied or booked. Crons read and draft; a person approves every message.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

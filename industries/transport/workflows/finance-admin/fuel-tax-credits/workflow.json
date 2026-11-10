@@ -8,7 +8,6 @@
  "summary": "Works out the fuel tax credit a transport business can claim for a BAS period from its fuel purchases and its off-road use. Crons read the fuel bills and the fuel tax credit account and draft a claim worksheet; a person records off-road litres and the ATO rate, and the claim is lodged by hand in the BAS.",
  "families": {
   "usage-from-telematics": {
-    "evidence": "0 discovery calls in the variants file (file not present); platform docs only",
     "steps": ["usage-capture", "telematics-pull", "split-on-off-road", "fuel-purchases", "reconcile-fuel", "apply-rates", "review-claim", "lodge-claim", "record-keeping", "year-end-check"],
     "covered_by": {
       "usage-capture": "not yet (telematics platform not mapped for this job, see gaps)",
@@ -50,11 +49,7 @@
   "Reconcile fuel, record keeping and year-end checks: not described in the docs read for MYOB or Xero.",
   "Xero bills: only the first page (100 bills) is read. Paging is not built, so a busy period can total short. The purchases cron logs a warning when the page is full.",
   "MYOB account list: the account lookup reads one request and does not page.",
-  "No evidence calls exist for this workflow. The variants file named in the brief is missing, so the family above is built from the platform docs alone.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Every adapter is docs-only until a sandbox account (Xero demo company, MYOB sandbox company file) proves it."
- ],
- "evidence": {
-  "calls": "0 (transport-fuel-tax-credits-variants.json not present)",
-  "platforms": "MYOB, Xero and WEBFLEET help and docs read in transport-fuel-tax-credits-platforms.json; MYOB and Xero mapped in the kit, WEBFLEET not mapped"
- }
+ ]
 }

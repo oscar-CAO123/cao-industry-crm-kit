@@ -5,8 +5,7 @@ description: PPSR checks and registrations for a dealership. Use when setting up
 
 # Run PPSR checks and manage registrations
 
-Built from the PPSR register's own pages and the NSW Service NSW pages for vehicle registration. Only one discovery call
-describes this job, so the steps are thin. Confirm them with the dealer before go-live.
+Run PPSR checks and manage registrations for a dealership: each stock vehicle is added to the dealer's own PPSR check register as a search to run, and a daily digest of searches and discharges due is drafted and queued for a person to approve. The PPSR searches and registrations themselves are run by a person on the PPSR site; no platform in the kit runs them yet.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

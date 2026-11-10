@@ -8,7 +8,6 @@
  "summary": "Keeps one timeline per client across the team: the notes and tasks on each client's record in the CRM, and a hand-off each time a file moves to another person. Crons read and draft; a status change waits for a person.",
  "families": {
   "all": {
-   "evidence": "7 discovery calls describe how they keep client context; none names a family",
    "steps": ["contact-logged", "note-written", "client-request", "hand-off", "status-update", "record-keeping", "file-review", "other"],
    "covered_by": {"contact-logged": "gap (no mapped activity read in GoHighLevel)", "note-written": "draft (hand-off note on the contact)", "client-request": "skill", "hand-off": "draft (note, follow-up task, follower)", "status-update": "approval", "record-keeping": "timeline (store) and draft (hand-off note)", "file-review": "check-in (draft task when a client goes quiet)", "other": "skill"}
   }
@@ -33,14 +32,10 @@
  "gaps": [
   "HubSpot: notes and timeline events are mapped, but no adapter is built. Field names were not confirmed against the vendor spec in this build.",
   "Salestrekker: no kit platform folder and its help page has no operations file, so nothing can be mapped yet.",
-  "Fireflies: named by two calls for meeting notes. Not in this build.",
-  "Client activity (calls, emails, texts) has no mapped read in GoHighLevel, so the timeline shows notes and tasks only.",
+  "Fireflies: Not in this build.",
+  "Client activity has no mapped read in GoHighLevel, so the timeline shows notes and tasks only.",
   "The hand-off form that writes a record to the store is part of the CRM shell, not this folder.",
   "Notes and tasks are read on the first page only. The API returns hasMore but this build does not follow it.",
   "The adapter is docs-only until a GoHighLevel sandbox sub-account proves it. Nothing here sends a message to a client."
- ],
- "evidence": {
-  "calls": "7 financial-services discovery calls describe how client context is kept; 2 name HubSpot, 2 name Fireflies, 1 names email",
-  "platforms": "GoHighLevel's own API spec (notes, tasks, followers, opportunity status); HubSpot and Salestrekker help pages, partial only"
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Authors and maintains the safety data sheet for each chemical the business uses. Keeps a chemical register in the business's own Airtable, drafts an SDS row for each new chemical from the data the register holds, and flags any SDS whose review date is near or past. Crons read and draft only; a person classifies the hazards, writes the sections, reviews and approves each SDS before it is used.",
  "families": {
   "chemical-register": {
-   "evidence": "1 of 4 calls read describes a step (supplier data sheets arrive monthly); 3 platform briefs, none with an SDS operation mapped in the kit",
    "steps": ["chemical-intake", "obtain-supplier-sds", "check-currency", "classify-hazards", "author-sds", "technical-review", "approval-sign-off", "publish-distribute", "update-on-change", "retire-superseded", "register-and-inventory", "training-and-induction", "audit-and-inspection", "record-keeping", "other"],
    "covered_by": {"chemical-intake": "intake (new row in the Chemicals table)", "obtain-supplier-sds": "skill (person enters the supplier SDS details; the PDF is not filed)", "check-currency": "currency (review date within the window or passed)", "classify-hazards": "skill (person classifies; the register holds the statements)", "author-sds": "draft (one row per chemical from the register)", "technical-review": "skill", "approval-sign-off": "not covered", "publish-distribute": "not covered", "update-on-change": "not covered", "retire-superseded": "not covered", "register-and-inventory": "partial (one storage field per chemical, no stock)", "training-and-induction": "not covered", "audit-and-inspection": "not covered", "record-keeping": "draft (Drafts table rows)", "other": "not covered"}
   }
@@ -39,9 +38,5 @@
   "This workflow does not check what an SDS must contain, how long it is kept, or when it must be reissued under the law.",
   "Currency reads the review date only. It does not check the supplier's site for a newer SDS.",
   "Publishing to staff, withdrawing superseded SDS, training records, stock and storage inventory, and audits are not covered. No live operation is mapped, so nothing is queued or sent."
- ],
- "evidence": {
-  "calls": "4 calls read for this workflow; 1 describes a step (supplier data sheets arrive monthly, all manual)",
-  "platforms": "3 platform briefs (logiqc, whs-monitor, microsoft-365); none maps an SDS operation in the kit. Airtable is the register because the kit maps its table operations."
- }
+ ]
 }

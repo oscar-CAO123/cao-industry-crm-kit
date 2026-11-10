@@ -8,7 +8,6 @@
  "summary": "Works out each salesperson's commission from paid sales for the month, enters it on their payslip in a draft Xero pay run, and queues that pay run for a person to approve and post. Crons read and draft; a person approves every post.",
  "families": {
   "commission-from-paid-sales": {
-   "evidence": "1 discovery call. No variants file was supplied, so the steps come from the platform map.",
    "steps": ["deal-closed", "gather-figures", "apply-plan", "check-deductions", "split-commission", "manager-review", "payroll-entry", "staff-statement", "queries-and-corrections", "month-end-reconcile", "record-keeping"],
    "covered_by": {
     "deal-closed": "figures (paid invoices in Xero are the sale record)",
@@ -55,11 +54,7 @@
   "Assumes a monthly payroll calendar with one pay run per calendar month, and a commission earnings rate that takes an entered amount (ENTEREARNINGSRATE). Confirm both in a live account.",
   "Invoices paid after the pay run posts are not in that month's commission.",
   "Existing earnings lines on a payslip are sent back as read when the commission line is set. Confirm in a live account that Xero accepts that.",
-  "The variants file for this workflow is missing, so the call evidence could not be checked. Re-run the mining to confirm the families.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "The Xero adapter is docs-only until a Xero demo company proves the calls."
- ],
- "evidence": {
-  "calls": "1 discovery call (variants file missing)",
-  "platforms": "Xero, MYOB and Google Workspace help pages mapped step by step (automotive-commission-platforms.json)"
- }
+ ]
 }

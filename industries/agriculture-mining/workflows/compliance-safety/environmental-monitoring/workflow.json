@@ -31,12 +31,8 @@
   "Exceedance response (retest, isolate the source, escalate, stop discharge) is a person's decision. The workflow lists the exceedance and nothing more.",
   "Lodging the monitoring report, an annual return or a notification with the regulator is never automated. The workflow lists results for a person to lodge.",
   "Limits come from the licence or site standard entered in settings. A result with no limit on file is listed for a check and is never passed.",
-  "The three calls read do not describe how they run environmental monitoring, so no family was built from call evidence. Steps come from the catalogue's step list.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "The register read takes the first 1,000 rows. A longer register needs paging before this ships.",
   "The Microsoft 365 adapter is docs-only until a developer tenant proves it against a real workbook and mailbox. The token flow is not built, so M365_ACCESS_TOKEN is supplied by hand."
- ],
- "evidence": {
-  "calls": "3 discovery calls read; none describes how they run environmental monitoring",
-  "platforms": "ESdat and GoCanvas guidance pages (neither with an adapter); Microsoft 365 is the kit's mapped workbook and mail platform, used for the register and the review email"
- }
+ ]
 }

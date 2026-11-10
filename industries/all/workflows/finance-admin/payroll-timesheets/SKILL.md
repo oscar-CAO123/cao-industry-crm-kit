@@ -5,8 +5,7 @@ description: Timesheets to a Xero Payroll run for a business that captures hours
 
 # Payroll from timesheets
 
-Built from how Australian businesses described running payroll from timesheets on 33 discovery calls. Hours are captured in a
-time app (often Deputy), checked, approved, rated against awards, entered into payroll, reviewed, and posted. Most of it is manual.
+Turns timesheets into a payroll run: approved Deputy shifts become draft Xero Payroll timesheets, each person's timesheet is queued for approval once its shifts are clean, and a draft pay run is created in Xero with its posting queued for the owner. Crons read and draft only; no timesheet is approved, no pay run is posted and nobody is paid without a person's approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

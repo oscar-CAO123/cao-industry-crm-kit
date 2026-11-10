@@ -5,8 +5,7 @@ description: Tenant applicants to a tenancy queued in Re-Leased, for a commercia
 
 # Tenant screening and leasing
 
-Built from 6 tenant screening calls, where 1 describes the process step by step. Every step that call describes is done by hand.
-Re-Leased is the only platform in the kit mapped for this job, so the crons run there and nowhere else.
+Takes a tenant applicant from enquiry through screening checks to a tenancy queued in Re-Leased, ready to sign. Crons read, check the record and queue; a person approves every tenancy before it is created.
 
 ## What runs on its own
 Three crons in `index.ts`: `intake` reads applicant contacts tagged in Re-Leased, `check-record` reads each new applicant

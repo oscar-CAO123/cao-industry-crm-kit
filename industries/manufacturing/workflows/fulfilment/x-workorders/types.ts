@@ -1,5 +1,5 @@
-// Shared shapes for the work-orders workflow. One platform: Unleashed, the only platform in the call evidence with
-// mapped operations in the kit. A work order is an Unleashed Assembly.
+// Shared shapes for the work-orders workflow. This adapter uses mapped Unleashed operations.
+// A work order is an Unleashed Assembly.
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 
 export type Platform = "unleashed";

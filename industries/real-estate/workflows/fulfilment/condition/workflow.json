@@ -8,7 +8,6 @@
  "summary": "Cuts what a condition report costs in staff time by keeping the property and contact lists it needs current in the business's property system. The crons read only. The person still inspects, photographs, writes, and signs off every report.",
  "families": {
   "all": {
-   "evidence": "2 discovery calls describe this way of doing condition reports",
    "steps": [
     "on-site-inspection",
     "photos-and-notes",
@@ -69,15 +68,11 @@
   "Rex: a business sets platform to rex in settings. Rex has no condition-report service, so the two crons read the property and contact lists only (properties.search and contacts.search, paged by offset to an empty page, refused whole past 50 pages). Not confirmed on a live account: the maximum limit (the next offset is the number of rows already received, and a list shorter than the total Rex reports is refused), whether a search without order_by pages in a stable order (rows are de-duplicated by id), and the id field on every row. Offset paging cannot see a row added or archived while a read is under way (one run may miss or repeat a row; the next run corrects it), and a reply with no total skips the short-list check.",
   "PropertyMe: its docs say it supports on-site inspections, photos, report sign-off and sending, but it has no kit platform folder, so nothing is built against it. Its Inspections help section returned HTTP 403.",
   "Inspection Express and Inspection Manager, both used on the calls: integrator products with no kit platform folder.",
-  "Property Tree and 360 cameras, both named on the calls: no kit platform folder.",
+  "Property Tree and 360 cameras: no kit platform folder.",
   "AgentBox: the docs pulled do not describe condition reports. The document upload endpoints (post:/documents, post:/documents/signedUrl) are mapped in the kit, but their body fields are not in the vendor docs, so no upload or report write is built. A live account is needed.",
   "AgentBox paging: the docs name pageSize and pageNumber, but the kit maps no params for get:/properties or get:/contacts, so the crons read the first page only. Changing the kit is out of scope for this workflow.",
   "Meter and key readings, disputes, repairs and report sending: no confirmed AgentBox support. The person does these.",
   "No draft or queue cron: no write has confirmed fields, so drafting and approval wait for a live account.",
   "Judgment steps stay with the person: choosing photos, writing the report and signing it off."
- ],
- "evidence": {
-  "calls": "3 calls read, 2 describe their process; the remaining call gave no process detail",
-  "platforms": "the platform map for this job: PropertyMe partial, AgentBox unknown except its document endpoints, Rex mapped for properties and contacts only (no condition-report service). AgentBox and Rex have kit folders."
- }
+ ]
 }

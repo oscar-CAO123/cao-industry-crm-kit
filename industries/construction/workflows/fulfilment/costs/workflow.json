@@ -8,7 +8,6 @@
  "summary": "Catches cost overruns on a job before the margin is gone: reads the budget and the committed and actual spend from Xero, records every account code running past its budget, and queues each draft timesheet for approval. Crons read and record; a person approves every timesheet.",
  "families": {
   "job-cost-tracking": {
-   "evidence": "10 construction calls on job costs in the worklist; the mining pass read 18 and 12 describe the process",
    "steps": [
     "budget-set",
     "purchase-orders",
@@ -84,9 +83,5 @@
   "Judgment steps stay with a person: what an overrun means for a job, whether to raise a variation, and whether to hold a supplier bill.",
   "Every adapter is docs-only until a Xero demo company proves the reads and the timesheet approval.",
   "Done: timesheet-approval reads the shared timesheet-holds record that x-labour writes, so a person held there is not queued here, and an approval already queued here for a person who becomes held is withdrawn. A withdrawn approval stays rejected, so a person cleared later is not queued again until that approval is dealt with. Needs core: an approval that is already running is not re-checked against the hold before it runs, the same gap x-labour records."
- ],
- "evidence": {
-  "calls": "10 construction calls on costs in the worklist; 18 calls read and 12 describe the process in the mining pass",
-  "platforms": "Xero help pages (generic, with the API mapped), MYOB help pages (generic), Buildxact help centre (no mapped operations)"
- }
+ ]
 }

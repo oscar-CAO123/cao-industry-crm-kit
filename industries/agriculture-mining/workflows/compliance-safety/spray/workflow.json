@@ -8,7 +8,6 @@
  "summary": "Keeps the spray and harvest register in the business's own workbook from the records the owner enters, and lists any record missing a required field for a quality check. Crons read and draft; a person approves the one email that goes out.",
  "families": {
   "grain-receival-and-spray-register": {
-   "evidence": "1 discovery call describes this way of keeping records: grain receival dockets on paper, re-keyed into a spreadsheet, with a daily driver check and quality photos to a group",
    "steps": ["record-spray-diary", "weather-check", "withholding-check", "grain-receival", "record-keeping", "compliance-check", "other"],
    "covered_by": {
     "record-spray-diary": "draft (the owner's record becomes a register row)",
@@ -47,9 +46,5 @@
   "Driver induction checks, quality photos to the group and downgrade or price talks with suppliers are judgment steps for people, not workflow steps.",
   "WhatsApp, where quality photos go, has no adapter in the kit.",
   "The Microsoft 365 adapter is docs-only until a developer tenant proves it against a real workbook and mailbox."
- ],
- "evidence": {
-  "calls": "1 discovery call (log and grain commodity trading, 9 to 10 sites, about 500,000 tons a year)",
-  "platforms": "AgWorld and Spraybook guidance pages, neither with mapped operations in the kit; no platform evidence for harvest or receival"
- }
+ ]
 }

@@ -5,9 +5,7 @@ description: Client forms (loan applications, matter intake) read straight from 
 
 # Forms typed by hand
 
-Built from how financial services businesses described document intake on discovery calls: clients fill in a form or send
-details, and the adviser retypes them into their own system and chases what is missing. This workflow reads the form
-answers directly. It does not enter anything into the business's system.
+Reads what clients type into their forms so the adviser never retypes it. Checks each submission for the fields the business needs, drafts a chase email for anything missing and queues it for approval, and marks complete submissions ready for entry. Crons read and draft; a person approves every send and enters every record.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads new and edited form responses, `draft` marks complete

@@ -8,7 +8,6 @@
  "summary": "Turns timesheets into a payroll run: approved Deputy shifts become draft Xero Payroll timesheets, each person's timesheet is queued for approval once its shifts are clean, and a draft pay run is created in Xero with its posting queued for the owner. Crons read and draft only; no timesheet is approved, no pay run is posted and nobody is paid without a person's approval.",
  "families": {
   "all": {
-   "evidence": "24 of 33 calls describe how they run payroll from timesheets; 58 to 100 percent of each measured step is manual",
    "steps": ["hours-captured", "collect-timesheets", "check-hours", "approve-timesheets", "apply-rates", "enter-payroll", "pay-run-review", "approve-pay-run", "job-costing"],
    "covered_by": {
     "hours-captured": "draft (approved Deputy shifts mirrored into Xero draft timesheets; capture stays in the time app)",
@@ -56,9 +55,5 @@
   "Collecting timesheets from photos, paper and email has no intake adapter here.",
   "Xero Payroll NZ and UK are not covered. Only the AU Payroll endpoints are mapped for this workflow.",
   "Every adapter is docs-only until a Xero demo organisation and a Deputy trial account prove the request shapes on a live account."
- ],
- "evidence": {
-  "calls": "33 calls for this workflow, 24 of them describe a process; the most named tools are Xero, Salesforce and Deputy",
-  "platforms": "Deputy, MYOB and Xero platform pages read; Deputy and Xero have the mapped operations used here, MYOB has three and no adapter"
- }
+ ]
 }

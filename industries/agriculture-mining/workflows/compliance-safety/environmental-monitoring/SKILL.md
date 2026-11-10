@@ -5,10 +5,7 @@ description: Environmental monitoring register for an agriculture or mining busi
 
 # Environmental monitoring
 
-Built from three discovery calls, none of which describes how they run monitoring, and the guidance pages of two monitoring
-platforms. The kit maps no operations for either platform's monitoring work, so the workflow keeps the owner's own register
-workbook current and lists every result that needs a person's check. It does not schedule sampling and it does not lodge
-anything with a regulator.
+Keeps the monitoring register in the business's own workbook from the field readings and lab results the team enters, checks each result against its licence or site limit, and lists every result that needs a person's check. Scheduling the sampling rounds and lodging the report with the regulator stay with the people. Crons read and draft; a person approves the one email that goes out.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

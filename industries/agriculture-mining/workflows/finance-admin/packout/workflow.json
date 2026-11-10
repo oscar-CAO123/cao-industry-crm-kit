@@ -24,7 +24,7 @@
   "xero": {"status": "docs-only", "covers": "read the grower's bill, queue the payment against it"}
  },
  "gaps": [
-  "No call evidence: the variants file for this workflow is not in the mining evidence folder, so there are no families and no call counts.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Xero is the only platform with any mapping, and its guides cover none of packhouse intake, grading, rejects, pack-out totals, pool pricing, grower charges or statement approval. Those steps stay with the business.",
   "ABC Pack, PackManager and FarmSoft are in the spec but produced no platform evidence and have no mapped operations in the kit, so no adapter was built for them.",
   "Sending the statement to the grower is not wired. This job has no mailbox adapter, so the statement is drafted in the store and the email stays with the business.",
@@ -32,9 +32,5 @@
   "One payment per statement against one bill. A grower owed across several bills is held until the bill is split by hand.",
   "The grower's questions, disputes and the pack-out figures themselves are judgment steps that stay with the business.",
   "The tests run on a fake network only. Nothing has been run against a Xero demo company."
- ],
- "evidence": {
-  "calls": "0 packout call transcripts (variants file missing)",
-  "platforms": "1 platform (Xero): 5 steps partly covered, 10 steps not covered by its docs, 15 steps in the spec"
- }
+ ]
 }

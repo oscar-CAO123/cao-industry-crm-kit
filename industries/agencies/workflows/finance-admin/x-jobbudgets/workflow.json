@@ -8,7 +8,6 @@
   "summary": "Keeps each agency job's budget in view against what has been spent on it, and flags jobs heading over. Crons read and draft internal records only; nothing goes to a client.",
   "families": {
     "job-budgets": {
-      "evidence": "1 discovery call describes this way of running job budgets",
       "steps": ["job-brief-received", "scope-definition", "budget-build", "rate-application", "budget-approval", "job-setup", "time-tracking", "cost-capture", "burn-monitoring", "overrun-flag", "change-request", "budget-reforecast", "client-reporting", "close-out-review", "record-keeping"],
       "covered_by": {
         "burn-monitoring": "draft (burn cron reads Xero project totals)",
@@ -48,11 +47,7 @@
     "Xero accounting budgets (accounting.getBudgets) are not read: a budget set in Xero's accounting module is not compared yet.",
     "Only the first page of Xero projects is read; paging is not added.",
     "Job setup (creating the project and assigning people) is not mapped as a live op: it needs an approval design first.",
-    "The mining variants file for this workflow (agencies-x-jobbudgets-variants.json) is missing from the mining folder, so the family and step counts rest on the spec and one discovery call.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
     "Change requests, budget reforecasts and client reports are judgment steps for a person; no cron drafts them."
-  ],
-  "evidence": {
-    "calls": "1 discovery call for job budgets (variants file missing from the mining folder)",
-    "platforms": "Harvest and Teamwork pages mined (neither is in the kit); Xero mapped from the kit ops and the vendor spec"
-  }
+  ]
 }

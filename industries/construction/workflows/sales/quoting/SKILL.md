@@ -5,9 +5,7 @@ description: Quote requests to priced, approved quotes for a construction or tra
 
 # Quoting
 
-Built from how 181 Australian construction businesses described quoting on discovery calls. Two ways of quoting:
-**service and minor works** (request, site visit or photos, price from rates, send, chase, win) and
-**tender from plans** (tender in, plans, takeoff, trade and supplier prices, price, proposal, sign-off, send, chase).
+Turns a quote request into a priced quote in the business's own system, queues it to send, chases it, and hands a won quote over. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`: `intake` collects requests, `draft` prices them from the rate card and

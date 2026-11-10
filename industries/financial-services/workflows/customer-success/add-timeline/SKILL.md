@@ -5,9 +5,7 @@ description: One timeline per client for a financial services team, kept in the 
 
 # Client timeline
 
-Built from how 7 Australian financial services businesses described keeping client context on discovery calls: mortgage and
-loan broking, insurance broking, financial advice, and tax or SMSF accounting. Their complaint was the same. Phone notes,
-emails and documents eat admin time, context is lost as a client moves between teams, and the owner checks every file by hand.
+Keeps one timeline per client across the team: the notes and tasks on each client's record in the CRM, and a hand-off each time a file moves to another person. Crons read and draft; a status change waits for a person.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

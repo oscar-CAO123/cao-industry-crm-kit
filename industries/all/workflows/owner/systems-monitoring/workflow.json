@@ -8,7 +8,6 @@
  "summary": "Checks every connection, key, data feed and platform service status once a day, and queues an alert email to the owner for each new failure. Crons read and draft; a person approves every alert send. No mapped platform checks a public website, so website checks are a gap.",
  "families": {
   "all": {
-   "evidence": "34 calls read; 3 describe a process (a booking system outage, a six-monthly outside health check, and a manual re-check of payroll and claim data)",
    "steps": ["failure-noticed", "routine-check", "connection-check", "key-expiry-check", "data-feed-check", "website-check", "alert-received", "triage", "fix", "escalate", "confirm-fixed", "record-keeping"],
    "covered_by": {
     "failure-noticed": "check (each run records what is failing); alert (the owner is told by email)",
@@ -55,9 +54,5 @@
   "Alerts go by Microsoft 365 email only. A business without a Microsoft 365 mailbox needs another alert route, which is not built.",
   "Other data feeds (ServiceM8, Xero, Aircall and the rest) are not in this workflow's evidence. Add one only when a client names it.",
   "Every adapter is docs-only until a Make trial account and a Microsoft 365 developer tenant with service health read permission prove them."
- ],
- "evidence": {
-  "calls": "34 calls read; 3 describe a process, so the step evidence is thin",
-  "platforms": "all-systems-monitoring-platforms.json lists Google Workspace, Make and Microsoft 365. Make and Microsoft 365 have mapped operations for this job with partial support on alerts or connection checks. Google Workspace has operations but no supported step."
- }
+ ]
 }

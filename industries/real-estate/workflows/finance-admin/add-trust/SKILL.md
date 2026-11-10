@@ -5,9 +5,7 @@ description: Trust account reconciliation support for a real estate agency, read
 
 # Trust reconciliation
 
-Built from how real estate agencies described reconciling their trust account on discovery calls: the offshore team makes the
-deposit requests, an accountant splits settlement money, and the principal pays owners out of trust. The kit reads VaultRE
-and keeps a register. A person does the bank matching, the three-way check, the owner payments, sign-off and lodgement.
+Reads the agency's trust accounts and each configured sale's trust ledger from VaultRE, adds new ledger entries to the trust register, and drafts one email to the principal listing entries that are missing a receipt number, contact or trust account. Bank matching, the three-way check, owner payments, sign-off and lodgement stay with a person.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `accounts` reads the trust accounts and adds a register row when one is

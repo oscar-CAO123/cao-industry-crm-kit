@@ -5,8 +5,7 @@ description: Builds and reviews paid ad campaigns in the business's own Meta ad 
 
 # Ad campaigns
 
-Built from how 40 businesses described running ads on discovery calls. Almost every step was manual: an agency or the
-owner set up the campaign, checked it, and switched it on by hand.
+Builds and reviews paid ad campaigns in the business's own Meta ad account. A plan is checked, each campaign object is queued for approval and created PAUSED, and results are read back each week. Crons check, queue and read; nothing is switched on by the workflow.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

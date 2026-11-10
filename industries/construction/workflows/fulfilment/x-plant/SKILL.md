@@ -5,9 +5,7 @@ description: Plant and equipment register and workshop parts cost for a construc
 
 # Plant and equipment
 
-Built from how construction businesses described plant on discovery calls: plant requests, allocation to jobs, hire out to other
-builders, usage logging, servicing in an internal workshop, and cost allocation to jobs. The mapped platforms here are Trackunit
-(the register) and ServiceM8 (the asset list and workshop jobs). Most steps are not covered yet. See `workflow.json` gaps.
+Keeps a register of plant and equipment and totals the parts on each workshop job: reads Trackunit and ServiceM8, records the register, and queues the owner's summary of the largest workshop part costs for approval. Crons read and record; nothing is sent, booked or hired out without a person.
 
 ## What runs on its own
 

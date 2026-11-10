@@ -5,9 +5,7 @@ description: Forecasts demand and prices for a primary producer or packer (logs,
 
 # Market forecasting
 
-Built from two discovery calls with agriculture and mining businesses that sell and pack produce. Both forecast by hand: they
-watch what buyers order, phone key customers about next month's price, and decide how much to pack into stock ahead of big
-days.
+Forecasts how much of each product the business will sell and what it can charge, from its own invoice history, its price list and buyer enquiries, so the owner can decide what to sell, pack and store. Crons read and draft; the monthly summary is sent only when a person approves it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `demand-signal` reads sales invoices from Xero and buyer enquiries

@@ -8,7 +8,6 @@
  "summary": "Turns supplier bills and receipts into entered bills in the business's accounting software, checks each against its purchase order and chart of accounts, queues each authorisation for a person, and lists the bills that are overdue to pay. Crons read and draft; a person approves every authorisation.",
  "families": {
   "all": {
-   "evidence": "34 of 39 calls describe how they capture and pay bills, all by hand or unstated",
    "steps": ["bill-arrives", "capture-receipt", "code-to-account", "enter-bill", "match-to-job", "approve-bill", "pay-supplier", "chase-missing-receipt", "handover-to-accountant", "reconcile-card-bank"],
    "covered_by": {
     "bill-arrives": "not covered (no intake adapter: the agent skill writes the bill into the bills store)",
@@ -50,9 +49,5 @@
   "Xero's pages here are marketing guides plus the API list, with no bill help articles. Approval stages and status names need a live Xero demo company to confirm.",
   "The purchase order check reads the first 5 pages of Xero purchase orders (500 at most). An older order past that is reported as not found.",
   "Judgment steps stay with the agent skill: reading the document, choosing the account code for each line, choosing the job, and deciding whether a mismatch is acceptable."
- ],
- "evidence": {
-  "calls": "34 of 39 bill and expense calls describe how they do it; 65 percent of enter-bill steps and 100 percent of reconcile and chase steps are manual",
-  "platforms": "Xero API operations and its help pages were mapped; Dext and MYOB pages were checked and are listed in gaps"
- }
+ ]
 }

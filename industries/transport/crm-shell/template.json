@@ -2,7 +2,7 @@
  "industry": "transport",
  "name": "Transport",
  "version": 1,
- "source": "Pages and tabs follow the transport demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "quotes",
@@ -808,330 +808,210 @@
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
    "name": "Book appointments, send reminders, handle no-shows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "missed-call-textback",
    "dir": "industries/all/workflows/sales/missed-call-textback",
    "department": "sales",
    "name": "Text back missed calls and log them",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "status-updates",
    "dir": "industries/all/workflows/customer-service/status-updates",
    "department": "customer-service",
    "name": "Tell customers where their job, order or matter is up to",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "scheduling-dispatch",
    "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
    "department": "fulfilment",
    "name": "Schedule and dispatch jobs, staff or vehicles",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:safety-forms",
    "dir": "industries/all/workflows/compliance-safety/safety-forms",
    "department": "compliance-safety",
    "name": "Safety forms, inspections and incident reports",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:fleet",
    "dir": "industries/transport/workflows/fulfilment/fleet",
    "department": "fulfilment",
    "name": "Fleet service planner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:x-pod",
    "dir": "industries/transport/workflows/fulfilment/x-pod",
    "department": "fulfilment",
    "name": "Proof of delivery",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "documents",
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:reconciliation",
    "dir": "industries/all/workflows/finance-admin/reconciliation",
    "department": "finance-admin",
    "name": "Reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "payroll-timesheets",
    "dir": "industries/all/workflows/finance-admin/payroll-timesheets",
    "department": "finance-admin",
    "name": "Turn timesheets into payroll",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "call-coaching",
    "dir": "industries/all/workflows/owner/call-coaching",
    "department": "owner",
    "name": "Score and coach sales and service calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:invoices",
    "dir": "industries/transport/workflows/finance-admin/invoices",
    "department": "finance-admin",
    "name": "Invoices from rates",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:mass-compliance",
    "dir": "industries/transport/workflows/compliance-safety/mass-compliance",
    "department": "compliance-safety",
    "name": "Heavy vehicle mass compliance and reporting",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:fuel-tax-credits",
    "dir": "industries/transport/workflows/finance-admin/fuel-tax-credits",
    "department": "finance-admin",
    "name": "Claim fuel tax credits from vehicle and road usage data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "transport:x-routes",
    "dir": "industries/transport/workflows/fulfilment/x-routes",
    "department": "fulfilment",
    "name": "Route planning",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1139,32 +1019,27 @@
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 6
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "HubSpot",
    "platform": "hubspot",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": [
   {
-   "tool": "Excel",
-   "calls": 2
+   "tool": "Excel"
   }
  ]
 }

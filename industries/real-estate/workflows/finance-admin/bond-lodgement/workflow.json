@@ -48,11 +48,7 @@
   "Rental Bonds Online (NSW) and RTBA (VIC): government portals with no API in the kit. Only the NSW landlord release page was read.",
   "Not covered: bond top-ups, transfers and amendments, exit inspections, disputes, reconciliation against authority statements, and trust deposit allocation.",
   "The register writes one row per tenancy. A later bond receipt does not update that row, because no workbook update operation is in the draft list.",
-  "No call evidence: the variants file (real-estate-bond-lodgement-variants.json) does not exist, so the steps were not confirmed by any owner.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Both adapters are docs-only until a VaultRE sandbox and a Microsoft 365 developer tenant prove them."
- ],
- "evidence": {
-  "calls": "0 discovery calls: no variants file exists for this workflow",
-  "platforms": "3 bond platform files checked (console-cloud, propertyme, rental-bonds-online-nsw): 0 operations, no bond lodgement described; 2 mapped property platforms used (VaultRE, Re-Leased), with VaultRE holding the bond fields"
- }
+ ]
 }

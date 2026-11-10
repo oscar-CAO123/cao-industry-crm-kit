@@ -5,7 +5,7 @@ description: Paid sales from Square, every discount on each sale checked against
 
 # Comp and discount watch
 
-Built from how 2 hospitality owners described checking comps and discounts on discovery calls. Both find them by accident, after the fact.
+Reads each venue's paid sales from Square, checks every discount on them, and flags comps and discounts outside the agreed terms, with a daily count per venue. The crons only read and record; nothing in Square is changed.
 
 ## What runs on its own
 Two crons in `index.ts`. `watch` reads each venue's new paid sales from Square every 30 minutes and checks each sale's discounts: a discount not on the allowed list, a percentage over the threshold, or a 100 percent comp is flagged. `report` counts yesterday's sales, discounted sales, flags and discount dollars per venue, once a day. Both read and record only. Nothing in Square is changed and nothing is sent.
@@ -22,4 +22,4 @@ Read the flag: its reasons, its discounts, its dollars and the team member on th
 A venue with no sales in the store for the day has either no paid sales in Square or a location id that is wrong. Check the location id first. The first run looks back 24 hours only.
 
 ## Not covered yet
-Roller (named in both calls, not in the kit), Lightspeed and BePoz, comp approval before a discount is given, Square's discount passcode, staff meals, stock and waste, and shift review. See `workflow.json` gaps.
+Roller (not in the kit), Lightspeed and BePoz, comp approval before a discount is given, Square's discount passcode, staff meals, stock and waste, and shift review. See `workflow.json` gaps.

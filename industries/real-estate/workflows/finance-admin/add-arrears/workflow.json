@@ -8,7 +8,6 @@
  "summary": "Finds overdue rent in Re-Leased, adds each new arrears invoice to the arrears register, and drafts a reminder at each step of the ladder. Every reminder waits for a person to approve the send from the arrears mailbox.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes this way of chasing arrears (residential rentals, reminder emails sent by hand by a VA within 1 day)",
    "steps": ["missed-payment", "check-ledger", "reminder-message", "rent-recovered", "record-keeping"],
    "covered_by": {"missed-payment": "scan", "check-ledger": "scan (amount and due date from the invoice)", "reminder-message": "remind (draft, approval)", "rent-recovered": "remind re-reads the invoice before any send", "record-keeping": "register row (scan)"}
   }
@@ -41,9 +40,5 @@
   "Re-Leased notes cannot be written (only read), so each reminder is recorded in the register workbook, not on the Re-Leased account.",
   "The Re-Leased spec's list example and its schema disagree on whether Data is one invoice or an array. The adapter accepts both; confirm on a sandbox.",
   "Both adapters are docs-only until a Re-Leased sandbox and a Microsoft 365 developer tenant prove them."
- ],
- "evidence": {
-  "calls": "1 of 1 real estate arrears call describes the ladder, with reminder emails sent by a VA; no call describes payment plans or escalation",
-  "platforms": "Console and PropertyMe arrears pages checked: no operations mapped, so no adapter; Re-Leased and Microsoft 365 mapped and used"
- }
+ ]
 }

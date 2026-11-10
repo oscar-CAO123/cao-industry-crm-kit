@@ -5,9 +5,7 @@ description: Maintenance requests to an allocated maintenance person for a prope
 
 # Maintenance dispatch
 
-Built from how property managers described dispatching maintenance on discovery calls, and from ServiceM8's own help
-and API. The workflow covers the request, the owner's go-ahead, dispatch, the progress messages and the completion
-update. Triage, tenant access and invoices stay with a person for now (see gaps in `workflow.json`).
+Takes a maintenance request logged in the property manager's job system, gets it approved and allocated to a maintenance person, keeps the tenant and owner informed, and tells the owner when the work is done. Crons read and draft; every allocation and every message to a person waits for approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` records new requests (jobs logged as Quote).

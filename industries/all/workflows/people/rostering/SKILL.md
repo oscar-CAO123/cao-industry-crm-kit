@@ -5,8 +5,7 @@ description: Builds rosters from demand and availability for a shift-based busin
 
 # Rostering
 
-Built from how 29 Australian businesses described rostering on discovery calls. Most roster by hand, a week ahead, remembering
-who is away. The kit does the checking and the drafting. A person still decides who works and what gets published.
+Works out who is free for each block of demand, drafts their shifts in Deputy as private drafts, and queues each publish for approval. Crons read and draft; a person approves every publish, because publishing tells staff.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `sync` reads rosters, timesheets and swap requests and flags late

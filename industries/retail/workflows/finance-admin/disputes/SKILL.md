@@ -5,7 +5,7 @@ description: Refund requests and card chargebacks for a retail business that tak
 
 # Refund and chargeback watch
 
-Built from how retail businesses described refunds and chargebacks on discovery calls (2 calls read, both name Google Workspace for inbox intake), and from Square's help pages and API spec and Stripe's API spec. Status: docs-only. Square and Stripe are built; Stripe runs only when the client switches it on.
+Watches refund requests and card chargebacks in the business's payment platform, records each one, stages the evidence a person has written up, and queues every refund and dispute response for a person to approve. Crons read and draft; nothing refunds, submits evidence or accepts a dispute without an approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

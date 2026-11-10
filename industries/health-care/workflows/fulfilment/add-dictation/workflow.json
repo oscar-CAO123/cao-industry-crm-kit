@@ -8,7 +8,6 @@
  "summary": "Turns a dictated or transcribed clinical visit into a draft treatment note in Cliniko, and queues the lock for a clinician to approve. Crons read and draft; a clinician approves every lock.",
  "families": {
   "dictated-session": {
-   "evidence": "2 discovery calls read; neither describes a variant, so the steps come from the platform docs",
    "steps": ["consult-captured", "transcribe", "draft-note", "clinician-review", "sign-off", "file-record"],
    "covered_by": {
     "consult-captured": "outside the kit (the dictation or scribe tool records the visit)",
@@ -46,9 +45,5 @@
   "Session intake: no command in tools/workflow.ts adds a session. The agent or the CRM shell writes the session record (status transcript-ready, with its sections) into the sessions store. No runtime change was made.",
   "The reviewed mark: a person sets a session to reviewed in the CRM shell. Confirm the shell offers that status before relying on the sign cron.",
   "Cliniko has not been run against a live account. The lock (PATCH with draft false), the role limits and the template ids need a live check."
- ],
- "evidence": {
-  "calls": "2 calls read; 0 variants described (variants file has no steps)",
-  "platforms": "3 platform pages read: Cliniko help centre (29 pages, mapped to 223 ops in the kit), Lyrebird Health and ZedMed vendor pages (no ops in the kit). Only Cliniko has mapped operations."
- }
+ ]
 }

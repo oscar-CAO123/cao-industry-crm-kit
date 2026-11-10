@@ -8,7 +8,6 @@
  "summary": "Keeps property inspections moving from booked visit to report: spots inspections waiting on an inspector, drafts the findings from the staff notes and photos on the job, and queues the owner's report for approval. Crons read and draft; a person approves every email.",
  "families": {
   "job-system": {
-   "evidence": "2 discovery calls run inspections as jobs in ServiceM8, with office staff allocating inspectors by hand",
    "steps": [
     "assign-inspector",
     "attend-inspection",
@@ -29,7 +28,6 @@
    }
   },
   "other-tool": {
-   "evidence": "2 discovery calls use a separate inspection app, 360 cameras or Property Tree, then re-key or upload the results",
    "steps": [
     "attend-inspection",
     "record-findings",
@@ -102,7 +100,7 @@
   }
  },
  "gaps": [
-  "Inspection Express, Property Tree and 360 cameras: named on calls, but not in the kit's platform set, so nothing reads or writes them here.",
+  "Inspection Express, Property Tree and 360 cameras: not in the kit's platform set, so nothing reads or writes them here.",
   "Re-leased (inspection endpoints) and Vaultre (tenancy inspections) are mapped in the kit but no call or platform page in the evidence names them for this job. Not built here.",
   "Assigning the inspector is a judgment step. The workflow flags the job; a person allocates the inspector in ServiceM8.",
   "The inspection report PDF: ServiceM8 templated documents only produce Quote, Work Order and Invoice, so the report is a findings note plus photos, not a formatted PDF.",
@@ -110,9 +108,5 @@
   "Follow-up on tenant or owner replies, reinspections and the sign-off step are not covered by the mapped operations.",
   "The adapter is docs-only until a ServiceM8 trial account proves the field names and the email attachment behaviour.",
   "Rex inspection feedback means a viewing. Set platform to rex to read feedback into rex-viewings/current. No condition reports, inspector allocation, appointment tracking or owner emails are provided. The appointments sample has no row fields; no fields are inferred. PropertyMe remains unmapped."
- ],
- "evidence": {
-  "calls": "6 real-estate inspection discovery calls read; 4 describe their process",
-  "platforms": "PropertyMe and Rex help pages mined. PropertyMe has no kit mapping; Rex is mapped in the kit but has no service named for inspections. ServiceM8 mapped in the kit from its vendor spec and named on 2 calls; Rex Feedback reference search sample establishes viewing feedback fields"
- }
+ ]
 }

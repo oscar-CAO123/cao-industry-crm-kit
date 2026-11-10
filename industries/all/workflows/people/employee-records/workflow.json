@@ -8,7 +8,6 @@
   "summary": "Turns a confirmed hire into an employee record and a contract to sign, queues pay rises and employment changes, and opens the owner's review cycles. Crons read and queue; a person approves every write, and nothing is sent or changed on its own.",
   "families": {
     "all": {
-      "evidence": "11 of 20 calls describe how they keep records or run reviews; performance reviews are the most common step (5 calls)",
       "steps": ["hire-trigger", "create-record", "contract-prepare", "contract-sign", "qualification-capture", "expiry-tracking", "training-log", "policy-acknowledge", "review-schedule", "performance-review", "review-sign-off", "change-update", "offboarding", "retention-access", "record-keeping", "other"],
       "covered_by": {
         "hire-trigger": "owner confirms the hire into the store",
@@ -53,7 +52,7 @@
   "gaps": [
     "BrightHR: only record-keeping is partly supported, and its mapped operations (employee query, external reference) do not cover a useful step. Not built.",
     "Microsoft 365 spreadsheets and folders hold the register in 2 calls, but no platform evidence was mined for this workflow, so no adapter is built here.",
-    "ELMO (1 call) has no platform in the kit. Procore (2 calls) covers timesheets and site diaries, not employee records.",
+    "ELMO has no platform in the kit. Procore covers timesheets and site diaries, not employee records.",
     "Qualifications and expiry: Employment Hero's certification reads are mapped, but the vendor examples do not show their response fields, so no expiry check is built until a sandbox confirms them.",
     "Filing a document into the employee file (Create Document Config) is a multipart upload with access permissions. Not built, because who can see an uploaded file is not confirmed.",
     "Offboarding: the vendor help page exists, but no matching Employment Hero operation is in the ops list.",
@@ -63,9 +62,5 @@
     "The employee id for the contract step comes from the quick add reply's id field, read from the approval result. If the reply carries no id, the hire is stopped with a reason; a sandbox run must confirm the reply shape.",
     "Both adapters stay docs-only until a sandbox Employment Hero organisation and a DocuSign developer account prove them.",
     "Judgment steps not automated: scoring performance in real time, and deciding what a review says."
-  ],
-  "evidence": {
-    "calls": "20 discovery calls read; 11 describe how they keep employee records, contracts, qualifications or reviews; 6 job types",
-    "platforms": "Employment Hero (12 steps partly supported, 40 or more mapped operations), DocuSign (6 steps supported or partly supported, mapped operations for the contract steps), BrightHR (1 step partly supported, 2 operations), taken from the vendors' own help and API pages"
-  }
+  ]
 }

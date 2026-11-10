@@ -5,9 +5,7 @@ description: Ticketed events in Eventbrite, from setup to wrap-up: publishing wa
 
 # Event ticketing
 
-Built from six discovery calls with event and catering businesses, and the public help pages of Eventbrite, Humanitix and Moshtix.
-Only Eventbrite has operations mapped in the kit, so this workflow runs on Eventbrite. Venue hire, suppliers and catering are not
-automated here.
+Runs ticketed events on Eventbrite. Queues publishing for events that are ready (a person approves each one), keeps the registration list current, and drafts each event's run sheet and wrap-up counts. Venue hire, suppliers and catering stay with the business and are not automated here.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

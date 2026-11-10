@@ -8,7 +8,6 @@
  "summary": "Turns finished artwork into product mockups on the store listing. The agent makes the mockups; the crons read the store's products and queue the listing update for a person to approve. Crons read and queue only.",
  "families": {
   "store-listing-mockups": {
-   "evidence": "2 discovery calls read for this workflow; neither described the steps, so the steps below are the job's own, not call-backed",
    "steps": ["artwork-received", "mockup-build", "owner-approval", "listing-upload", "confirm-live"],
    "covered_by": {"artwork-received": "skill (agent reads the files)", "mockup-build": "skill (agent builds the mockups in Figma, outside the kit)", "owner-approval": "approval", "listing-upload": "approval (queued batch update)", "confirm-live": "catalogue"}
   }
@@ -37,11 +36,7 @@
   "WooCommerce batch update replaces the images array it is given. The adapter keeps existing images by id and appends the new ones, so nothing already live is dropped.",
   "No command writes a mockups record yet. The CRM shell or a CLI must add one; core/ is not edited here.",
   "Mockup design, artwork checks and print prep (bleed, dielines, colour profile) are judgment steps for the agent and the owner. The platform docs do not cover print prep.",
-  "The steps are not call-backed: the two calls read for this job described no process. Confirm the steps with the business before relying on them.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Figma's proof-sent, approval and revise steps are not covered by the mapped docs; the owner's sign-off happens in the CRM shell approval."
- ],
- "evidence": {
-  "calls": "2 calls read for retail artwork; 0 steps, 0 variants and 0 pains extracted (mining/retail-artwork-variants.json)",
-  "platforms": "figma: help-centre pages mapped for 5 steps, no kit platform; shopify: product media operations mapped, index-only; woocommerce: products read and batch update mapped against its REST v3 reference (mining/retail-artwork-platforms.json)"
- }
+ ]
 }

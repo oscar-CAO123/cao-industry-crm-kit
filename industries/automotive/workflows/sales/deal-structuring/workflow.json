@@ -8,7 +8,6 @@
   "summary": "Structures vehicle deals and finance with lenders inside the CRM: reads new deals, drafts one finance pack per chosen lender, queues each submission for approval, and chases lenders that have not decided. Crons read and draft; a person approves every send.",
   "families": {
     "all": {
-      "evidence": "1 discovery call describes this way of structuring vehicle finance (car brokerage and vehicle finance)",
       "steps": ["enquiry-intake", "credit-application", "structure-deal", "lender-selection", "lender-submission", "lender-decision", "compliance-disclosure", "follow-up-declines", "record-keeping"],
       "covered_by": {
         "enquiry-intake": "intake (deals in the CRM intake stage)",
@@ -54,9 +53,5 @@
     "Customer presentation, settlement and funding, delivery and handover have no evidence and no mapped platform.",
     "Accounting (QuickBooks transactions) is not mapped in the kit for this job.",
     "Both adapters are docs-only until a sandbox account (Pipedrive trial, Microsoft 365 developer tenant) proves them."
-  ],
-  "evidence": {
-    "calls": "1 discovery call (car brokerage and vehicle finance): enquiry intake and follow-ups are fully manual, the credit application was an AI chatbot that was since removed",
-    "platforms": "3 platform sources read (AutoManager, Autosoft, Mercury). None has a mapped operation in the kit, so the workflow uses the kit's CRM (Pipedrive) and mailbox and workbook (Microsoft 365) for the job"
-  }
+  ]
 }

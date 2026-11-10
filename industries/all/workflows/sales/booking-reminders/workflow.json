@@ -8,17 +8,14 @@
  "summary": "Works through the appointment book in Calendly: reads each booking into the workflow's book, and queues a yes or no on every finished booking so a person can mark a no-show. Booking a new slot and sending reminders are not covered yet (see gaps). Crons read and queue; a person decides every no-show.",
  "families": {
   "clinic-or-salon-appointments": {
-   "evidence": "11 calls describe clinic and salon appointments run by hand",
    "steps": ["booking-request", "book-slot", "reminder-send", "no-show-handling", "record-keeping"],
    "covered_by": {"booking-request": "not built (a new booking needs the client's answers, a judgment step)", "book-slot": "not built", "reminder-send": "the platform's own reminders (the kit sends none)", "no-show-handling": "no-show (each finished booking queued for a yes or no)", "record-keeping": "intake (bookings into the workflow's book)"}
   },
   "trade-site-bookings": {
-   "evidence": "3 calls describe site visits booked through an online booking system",
    "steps": ["availability-check", "book-slot", "confirm-booking", "reschedule-cancel"],
    "covered_by": {"availability-check": "not built", "book-slot": "not built", "confirm-booking": "the platform's own confirmation", "reschedule-cancel": "not built (see gaps)"}
   },
   "unclear": {
-   "evidence": "12 calls describe bookings with no clear way of working",
    "steps": ["booking-request", "book-slot", "reschedule-cancel"],
    "covered_by": {"booking-request": "not built", "book-slot": "not built", "reschedule-cancel": "not built (see gaps)"}
   }
@@ -50,9 +47,5 @@
   "Approval summaries and the run log: each queued summary carries the client's or lead's name, and the runtime logs every summary (core/workflows/runtime.ts). Needs a core change so the runtime logs the approval id only, or the names come out of the summary line.",
   "Stored personal data: invitee names and emails are kept in the workflow's state store. The business needs a retention rule for that store before go-live.",
   "Calendly is docs-only until a sandbox account proves each call. Its sign-in is the CRM's standard Calendly token (CALENDLY_API_TOKEN), not yet run against a real account."
- ],
- "evidence": {
-  "calls": "40 booking calls read, 26 describe the process: 11 clinic or salon, 3 trade-site, 12 unclear",
-  "platforms": "Calendly (72 ops, official spec), Cliniko (223 ops, vendor docs), Acuity (evidence only, no kit folder)"
- }
+ ]
 }

@@ -5,8 +5,7 @@ description: Keeps existing landing pages current in Webflow and GoHighLevel. Us
 
 # Landing pages
 
-Built from 32 discovery calls where owners describe building and updating landing pages with an AI tool, by duplicating an
-existing page, or from a website clone. Most of the work is still done by hand, one page at a time.
+Keeps the business's existing landing pages current in Webflow and GoHighLevel. Crons read each site's pages and form results for the owner and queue every page content change for a person's approval. Crons read and queue; a person approves each change and publishes the page in Webflow.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `inventory` lists each platform's pages and forms, `results` counts

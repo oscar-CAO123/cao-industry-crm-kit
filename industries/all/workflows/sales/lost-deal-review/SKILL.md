@@ -5,8 +5,7 @@ description: Lost deals to a recorded reason and a roll-up of what to change, fo
 
 # Lost-deal review
 
-Built from how six discovery calls described reviewing lost deals. Every one did it by hand, with no tool named.
-The job: find every lost deal, record why it was lost, and roll the reasons up into what to change.
+Reviews every lost deal, records why it was lost, and rolls up the reasons into what to change. Crons read the pipeline and draft; a person decides every change and every re-open.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

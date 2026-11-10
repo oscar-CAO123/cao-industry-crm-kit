@@ -8,7 +8,6 @@
   "summary": "Sets up each wholesale stockist in Xero, drafts an invoice for each order the team records, queues the invoice to be authorised and emailed, and queues chases on overdue invoices. Crons read and draft; a person approves every send.",
   "families": {
     "wholesale": {
-      "evidence": "4 discovery calls describe this workflow; 13 wholesale calls were read in the mining pass",
       "steps": ["lead-intake", "qualify-account", "pitch-samples", "send-trade-pricing", "account-setup", "order-intake", "stock-allocation", "pack-dispatch", "invoice-terms", "payment-chasing", "reorder-check", "account-review", "issue-resolution", "record-keeping"],
       "covered_by": {
         "lead-intake": "skill (the team reads the intro or email and records the account)",
@@ -52,9 +51,5 @@
     "Not covered: pitch samples and lookbooks (JAW), trade price lists (Shopify catalogue), stock allocation and pack-dispatch (Indigo 8 or Unleashed), reorder checks (Unleashed reorder report, not wired), and wholesale margins in Airtable (mapped in the kit, but no Airtable platform evidence was read for this workflow, so not built).",
     "Xero is docs-only until a demo company proves the calls, as in the quoting workflow. The chase re-sends the invoice email through Xero, using Xero's own invoice template; Xero's reminder settings are not read.",
     "Payment-chasing reads only AUTHORISED invoices and pages through at most 1,000 of them per run."
-  ],
-  "evidence": {
-    "calls": "4 discovery calls on this workflow; 13 wholesale calls read in the mining pass",
-    "platforms": "vendor docs for Shopify, Unleashed and Xero, mapped step by step; only Xero has a wired adapter"
-  }
+  ]
 }

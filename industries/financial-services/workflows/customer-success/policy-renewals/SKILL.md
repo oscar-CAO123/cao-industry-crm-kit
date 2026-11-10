@@ -5,9 +5,7 @@ description: Policy renewals and endorsements with underwriters and clients for 
 
 # Policy renewals and endorsements
 
-Built from two Australian discovery calls about motor vehicle renewals. The pattern: a renewal date comes up, a pre-renewal
-email goes to the client, the client's changes go to the underwriter, the underwriter's terms come back, and endorsements
-(a vehicle or driver added or removed mid-term) follow the same back-and-forth.
+Processes policy renewals and endorsements with underwriters and clients. The crons read the policy register and the broker's renewals folder, draft every email in Outlook and queue each send for the broker to approve.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads the renewals folder and sorts what arrives.

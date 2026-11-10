@@ -5,8 +5,7 @@ description: Appointment reminders and waitlist for a clinic or pharmacy that ru
 
 # Appointment reminders and waitlist
 
-Built from three Australian health-care discovery calls (a pharmacy and a wellness clinic) and Cliniko's help pages.
-Only Cliniko has mapped operations here. HotDoc and Jane App are gaps (see below).
+Finds upcoming appointments that Cliniko sent no reminder for and drafts the text to send by hand, turns cancelled appointments into waitlist offers, and queues a booking for a waitlisted patient once a person has marked them accepted. Crons read and draft; a person approves every booking.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

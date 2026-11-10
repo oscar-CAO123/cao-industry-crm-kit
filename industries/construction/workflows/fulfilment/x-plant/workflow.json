@@ -8,7 +8,6 @@
  "summary": "Keeps a register of plant and equipment and totals the parts on each workshop job: reads Trackunit and ServiceM8, records the register, and queues the owner's summary of the largest workshop part costs for approval. Crons read and record; nothing is sent, booked or hired out without a person.",
  "families": {
   "plant-register": {
-   "evidence": "9 construction calls read for this job in the mining pass; 4 describe the process and 2 name a tool",
    "steps": ["request-in", "allocate", "hire-out", "usage-log", "servicing", "cost-allocation"],
    "covered_by": {
     "request-in": "not covered (see gaps)",
@@ -50,9 +49,5 @@
   "Request intake: a plant request is not raised through any mapped platform. Judgment step for the agent.",
   "Every adapter is docs-only until a Trackunit access token and a ServiceM8 trial account prove the reads and the summary email.",
   "Judgment steps stay with a person: what a machine's cost means, whether to service, hire out or dispose of a machine, and what to say to a hirer."
- ],
- "evidence": {
-  "calls": "9 construction calls read for plant and equipment in the mining pass; 4 describe the process; steps named were request, allocation, hire-out, usage logging, servicing and cost allocation",
-  "platforms": "MEX CMMS, Procore and Webfleet help pages (no mapped operations in the kit); Trackunit and ServiceM8 mapped in the kit, with operations used here"
- }
+ ]
 }

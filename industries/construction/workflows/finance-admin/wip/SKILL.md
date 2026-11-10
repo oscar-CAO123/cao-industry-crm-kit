@@ -5,8 +5,7 @@ description: Work in progress, progress claims and retention for a construction 
 
 # WIP and retention
 
-Built from how 17 Australian construction businesses described WIP, progress claims and retention on discovery calls.
-Most keep this by hand or in a spreadsheet, and invoicing and cost tracking take 20 or more hours a week.
+Keeps the work-in-progress position for each construction job (billed against earned) and drafts progress claims in Xero. Crons read and draft: a progress claim is a DRAFT invoice until a person approves its authorisation and email, and reminders for overdue invoices wait for approval too. Xero is the only platform with mapped invoice operations for this job, so it is the only adapter.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

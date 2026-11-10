@@ -5,8 +5,7 @@ description: Employee records, employment contracts and performance reviews for 
 
 # Employee records
 
-Built from how 11 Australian businesses described keeping employee records, contracts and reviews on discovery calls.
-The most common step is the performance review, which most owners write by hand.
+Turns a confirmed hire into an employee record and a contract to sign, queues pay rises and employment changes, and opens the owner's review cycles. Crons read and queue; a person approves every write, and nothing is sent or changed on its own.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

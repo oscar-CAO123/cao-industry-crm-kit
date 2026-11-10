@@ -5,8 +5,7 @@ description: Monthly client reports for an agency, from Supermetrics numbers to 
 
 # Client report pack
 
-Built from two agency discovery calls about monthly client reporting. Today the numbers come from Supermetrics and the
-report goes out as a Gmail draft. Agency Analytics and Reportz clients are not covered yet (see gaps in `workflow.json`).
+Pulls each client's numbers for the last full month, drafts the client report in Gmail once the account manager has written the commentary, and queues the send for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `pull` reads last month's numbers for each client from Supermetrics.

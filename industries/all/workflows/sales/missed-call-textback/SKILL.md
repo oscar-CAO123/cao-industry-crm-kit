@@ -5,9 +5,7 @@ description: Text back missed calls and log them, for any business that takes ca
 
 # Missed-call text back
 
-Built from the JustCall and GoHighLevel docs in the platform map. Two of the five calls in the worklist were read for this job,
-and neither described the steps, so the workflow shape is not yet confirmed by an owner. This workflow covers a business that
-takes calls on JustCall, with GoHighLevel as the CRM. Twilio is not built.
+Reads the missed calls on the business's JustCall number, queues one text back to each caller for approval, and logs each missed call as an internal note on the caller's GoHighLevel contact. The crons read, draft and queue; a person approves every text.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

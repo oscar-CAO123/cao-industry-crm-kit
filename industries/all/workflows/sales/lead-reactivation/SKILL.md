@@ -5,8 +5,7 @@ description: Reactivate old leads and past customers through GoHighLevel (enrol 
 
 # Lead reactivation
 
-Built from how 6 businesses described reactivating lapsed leads and past clients on discovery calls. Today it is manual: lists are pulled
-by hand, follow-ups depend on someone remembering, and nobody checks back on people who went quiet.
+Reactivates old leads and past customers. Reads the contacts the business has marked as lapsed in GoHighLevel, enrols them in a reactivation campaign or sends one Klaviyo campaign to its lapsed segment, and tasks a person to check on each enrolled contact after a set number of days. Crons read, draft and queue; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `list-build` reads the contacts the business has tagged as lapsed in GoHighLevel.

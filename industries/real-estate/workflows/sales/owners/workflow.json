@@ -8,7 +8,6 @@
  "summary": "Builds the agency's owner contact list from VaultRE's current owners, checks each owner's recorded email consent and do-not-call flag, and drafts an outreach email to owners who may be contacted. Crons read and draft; a person approves every email send.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes building owner contacts from scratch: an ID or credit check, a do-not-call check, then outreach",
    "steps": ["verify-details", "consent-check", "campaign-outreach"],
    "covered_by": {"verify-details": "skill (identity check done by hand; no mapped platform)", "consent-check": "consent-check (VaultRE GDPR record and do-not-call flag)", "campaign-outreach": "outreach (email draft, send queued for approval)"}
   }
@@ -38,9 +37,5 @@
   "Text (SMS) outreach to owners who were never contacted first: not built. The call said a reply counts as consent, and the kit does not accept that. SMS waits until VaultRE's SMS consent flag is confirmed as the consent record.",
   "The platform evidence file for this workflow is missing, so platform support comes from the kit's mapped operations only.",
   "Both adapters are docs-only until a VaultRE sandbox account and a Microsoft 365 developer tenant prove them. The Microsoft 365 token flow is not built; a Graph access token must be supplied."
- ],
- "evidence": {
-  "calls": "1 real-estate sales discovery call describes building owner contacts from scratch",
-  "platforms": "VaultRE and Microsoft 365 operations mapped in the kit; no platform evidence file was available for this workflow"
- }
+ ]
 }

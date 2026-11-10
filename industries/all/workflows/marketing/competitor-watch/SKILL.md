@@ -5,7 +5,7 @@ description: Watches a client's named competitors for new public Facebook posts 
 
 # Competitor watch
 
-Built from 2 competitor-watch calls and the platform evidence for Semrush and LinkedIn. The calls do not describe a process, so the steps come from the platform evidence. Most steps are still done by hand: a marketer checks each competitor's ads, prices and posts and writes down what changed.
+Watches competitors' ads, prices and posts. This build covers their public Facebook posts and their search authority (Semrush backlink scores), and reports what changed. Competitor ads and prices have no mapped operation in the kit yet, so they stay with the owner. Crons read and draft; the one live act, creating the Semrush tracking project, waits for a person to approve it.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

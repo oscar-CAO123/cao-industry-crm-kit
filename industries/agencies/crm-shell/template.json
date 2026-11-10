@@ -2,7 +2,7 @@
  "industry": "agencies",
  "name": "Agencies",
  "version": 1,
- "source": "Pages and tabs follow the agencies demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -686,253 +686,161 @@
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 18
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "agencies:report",
    "dir": "industries/agencies/workflows/customer-success/report",
    "department": "customer-success",
    "name": "Client report pack",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "agencies:creative",
    "dir": "industries/agencies/workflows/marketing/creative",
    "department": "marketing",
    "name": "Creative test reader",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "payment-chasing",
    "dir": "industries/all/workflows/finance-admin/payment-chasing",
    "department": "finance-admin",
    "name": "Chase unpaid invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "agencies:adaudit",
    "dir": "industries/agencies/workflows/marketing/adaudit",
    "department": "marketing",
    "name": "Daily ad audit",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "agencies:ops",
    "dir": "industries/agencies/workflows/finance-admin/ops",
    "department": "finance-admin",
    "name": "Agency ops board",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "email-marketing",
    "dir": "industries/all/workflows/marketing/email-marketing",
    "department": "marketing",
    "name": "Send newsletters and automated email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "complaints",
    "dir": "industries/all/workflows/customer-service/complaints",
    "department": "customer-service",
    "name": "Triage complaints and refunds",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "invoicing",
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:reconciliation",
    "dir": "industries/all/workflows/finance-admin/reconciliation",
    "department": "finance-admin",
    "name": "Reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "agencies:x-jobbudgets",
    "dir": "industries/agencies/workflows/finance-admin/x-jobbudgets",
    "department": "finance-admin",
    "name": "Job budgets",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -940,26 +848,22 @@
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Slack",
    "platform": "slack",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": []

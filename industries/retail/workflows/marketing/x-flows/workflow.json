@@ -8,7 +8,6 @@
  "summary": "Runs a retailer's email flows in Klaviyo: reads how each flow performs, opens a sprint on the weakest live flow under target, and queues the switch to live for each replacement the owner has marked ready. Crons read and record; a person approves every switch to live.",
  "families": {
   "all": {
-   "evidence": "2 of 5 retail discovery calls describe how they run email flows; every step they name is done by hand",
    "steps": ["trigger-define", "copy-write", "design-template", "flow-build", "segment-set", "test-send", "approve", "go-live", "monitor-performance", "optimise"],
    "covered_by": {"trigger-define": "skill (set triggers and conditions)", "copy-write": "skill (judgment, with the brand voice)", "design-template": "skill", "flow-build": "skill (built as a draft in Klaviyo)", "segment-set": "not yet (see gaps)", "test-send": "not yet (see gaps)", "approve": "approval (go-live)", "go-live": "go-live (queued)", "monitor-performance": "performance", "optimise": "review (sprint on the weakest live flow)"}
   }
@@ -34,11 +33,7 @@
   "Mailchimp (automations, campaign reports, send and schedule) and Shopify (marketing events, Flow features) are mapped but have no adapter yet. A client on either needs its adapter before these crons read it.",
   "Writing message copy and templates into a flow (create_template, update_flow_action) is not built. It changes what customers receive, so it needs its own review before it becomes a cron.",
   "Nothing records a replacement as ready yet. The go-live cron reads the store's ready entries, and a runtime helper in core (not this folder) is needed to mark one from the CRM shell.",
-  "Segment building, test sends and list hygiene are not built. The retail calls do not describe test sends or an approval step inside Klaviyo, and the fetched Klaviyo help pages do not cover them either.",
+  "Segment building, test sends and list hygiene are not built. The required vendor documentation for these steps has not been confirmed.",
   "The Klaviyo adapter is spec-only: its platform status is spec and it has never run against a real account. Confirm the read and the live switch in a live account before go-live."
- ],
- "evidence": {
-  "calls": "2 of 5 retail discovery calls describe how they run email flows (a biohacking and sleep products D2C business): about 90 days to rewrite all flows at two emails a week, with the owner exporting the numbers and checking them against benchmarks each day",
-  "platforms": "Klaviyo, Mailchimp and Shopify help pages mapped step by step; Klaviyo is the only one with an adapter in this build"
- }
+ ]
 }

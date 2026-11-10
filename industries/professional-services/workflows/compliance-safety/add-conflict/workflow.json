@@ -30,10 +30,6 @@
     "Smokeball is spec status and tested offline only. It needs a sandbox account before any cron runs against a real practice.",
     "No partner sign-off or decline is recorded by this workflow. The runtime has no decision entry point, so a partner reviews name matches in Smokeball and approves the open-matter queue item. Recording a decline needs a core addition.",
     "Ethical walls, client notice for managed conflicts and periodic rechecks are judgment steps and are not automated.",
-    "No call evidence: the variants file for this workflow was not produced, so the steps come from the workflow spec and the platform evidence only."
-  ],
-  "evidence": {
-    "calls": "0: no variants file was produced for this workflow",
-    "platforms": "Smokeball (help pages and the kit's mapped operations) and Actionstep (help pages, not mapped in the kit)"
-  }
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+  ]
 }

@@ -8,7 +8,6 @@
  "summary": "Each morning reads yesterday's results from the client's ad accounts, checks them against the agreed thresholds, and queues any campaign pause for a person to approve. Crons read and queue; nothing changes in an ad account until a person approves it.",
  "families": {
   "daily-account-check": {
-   "evidence": "2 discovery calls describe a daily audit of client ad accounts; platform pages support the reads",
    "steps": ["audit-trigger", "pull-performance", "check-tracking", "check-pacing", "check-creative", "check-targeting", "flag-issues", "prioritise-actions", "make-changes", "client-note"],
    "covered_by": {"audit-trigger": "pull (schedule)", "pull-performance": "pull", "check-pacing": "audit", "check-creative": "audit (frequency, CTR)", "check-targeting": "skill", "flag-issues": "audit", "prioritise-actions": "skill", "make-changes": "approval (pause only)", "client-note": "skill", "check-tracking": "skill (no mapped read for pixel events)"}
   }
@@ -37,9 +36,5 @@
   "Paging: the insights read returns only the first page of campaign rows. Following paging.next needs core: AdAccount.get.insights in core/sdk/platforms/meta-ads/ops.json maps limit but no after parameter, and the SDK refuses unmapped params. Until then, campaigns past that page are not audited and pacing can be understated.",
   "Creative and targeting review, priorities and client notes are judgment steps for the skill. No mapped platform write exists for a note, so none is drafted.",
   "Every adapter is docs-only until a test ad account proves the reads and the approved pause against real data."
- ],
- "evidence": {
-  "calls": "2 agency discovery calls name a daily ad audit; no call maps a platform operation step by step",
-  "platforms": "TikTok Ads pages read (30 pages); mapped kit platforms used for this job: Meta Marketing API and Google Ads"
- }
+ ]
 }

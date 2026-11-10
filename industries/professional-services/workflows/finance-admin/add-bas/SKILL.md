@@ -5,8 +5,7 @@ description: BAS first pass for an accounting practice's client in Xero. Use whe
 
 # BAS first pass
 
-Built from two accounting practices describing how they prepare a BAS. About 30 of their 50 minutes is document
-scanning that AI could do. The crons below do the Xero reads and the agreed coding; the accountant does the rest.
+Prepares the BAS first pass for an accounting practice's client in Xero: reads the period's bank transactions, queues the agreed coding for approval, and lists what the accountant must check by hand before the return. Crons read and queue; an accountant approves every change and lodges the BAS.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

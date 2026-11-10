@@ -8,7 +8,6 @@
  "summary": "Chases unpaid invoices: reads what is overdue in Xero, drafts each reminder at the right step of the ladder in the business's mailbox, and queues the send for approval. Crons read and draft; a person approves every send.",
  "families": {
   "xero-ladder": {
-   "evidence": "14 of 30 payment-chasing calls describe how they chase; the rest are unstated or by hand",
    "steps": ["aging-review", "payment-receive", "phone-call", "collections-or-write-off", "reconcile-record", "invoice-issue"],
    "covered_by": {
      "aging-review": "refresh and summary (overdue list read from Xero, weekday digest drafted)",
@@ -41,18 +40,14 @@
   "microsoft-365": {"status": "docs-only", "covers": "reminder drafts and the owner digest in Outlook, the send of an approved reminder"}
  },
  "gaps": [
-  "Ignition (direct debit, two calls): not in the kit, so direct debit is not read. Ignition's own failed-payment list is the place to look until it is mapped.",
-  "CRM (two calls): not a kit platform, so the CRM is not read or written by this workflow.",
+  "Ignition: not in the kit, so direct debit is not read. Ignition's own failed-payment list is the place to look until it is mapped.",
+  "CRM: not a kit platform, so the CRM is not read or written by this workflow.",
   "Telegram and OpenClaw (owners' own alerts and morning reports): the kit's Telegram sendMessage is a live send and no alert is wired. The digest draft replaces the morning report until that is decided.",
   "Reply detection: the crons do not read the mailbox for replies or disputes. Until that is built, a person adds the client's Xero ContactID to pause_contacts when a reply needs handling.",
   "Approval time check: an approved reminder is sent as drafted. The approval does not re-check Xero, so an invoice paid after the draft but before approval can still be chased. The approver checks Xero first (the approval text says so).",
   "Xero's own invoice reminders: if they are switched on for the same invoices, the client gets two chasers. Check and switch off one before go live.",
   "Phone chasing, payment plans, disputes and write-offs stay with a person. The workflow only lists who is past the last reminder.",
-  "Reconciliation is manual in the calls and is not integrated with Xero here, so it is not covered.",
+  "Reconciliation is manual and is not integrated with Xero here, so it is not covered.",
   "Both adapters are docs-only until a Xero demo company and a Microsoft 365 developer tenant prove them. The platform evidence file (all-payment-chasing-platforms.json) was not present, so platform support was taken from the kit's ops.json and the vendor specs only."
- ],
- "evidence": {
-  "calls": "30 payment-chasing calls read, 14 describe how they chase; manual share is 100 percent for invoice issue, phone chasing and reconciliation, and 25 percent for aging review. The stated turnaround is 7 days overdue.",
-  "platforms": "not available: all-payment-chasing-platforms.json was not present. Xero and Microsoft 365 operations were checked against core/sdk/platforms/xero/ops.json and microsoft-365/ops.json and the Xero accounting spec."
- }
+ ]
 }

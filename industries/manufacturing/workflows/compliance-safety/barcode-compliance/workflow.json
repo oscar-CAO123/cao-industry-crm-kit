@@ -54,10 +54,6 @@
   "Fishbowl and Odoo have no mapped operations in the kit that cover barcodes (Odoo has one, GET /web/version). Their barcode checks are not built; Fishbowl's help centre returned no pages and Odoo's evidence is community forum threads.",
   "GTIN allocation from GS1 (new numbers, company prefix), barcode symbol generation, print quality verification, retailer and EDI sync (EANCOM) and renewals are judgment or non-platform steps. Nothing automates them here.",
   "Batch and lot number checks (length, expiry dates on BatchNumbers) are left out: they are traceability, not the barcode check this workflow names.",
-  "Evidence is thin: 1 discovery call was read and it describes no steps, so the steps and families are not derived from calls."
- ],
- "evidence": {
-  "calls": "1 discovery call read; it describes no barcode steps",
-  "platforms": "Fishbowl, Odoo and Unleashed pages read; only Unleashed has mapped operations for products and barcodes"
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

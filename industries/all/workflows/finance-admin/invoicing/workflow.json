@@ -8,17 +8,14 @@
  "summary": "Turns completed jobs into invoices in the business's own system, queues each one to be authorised and emailed for approval, records the payments the trade takes on site, and queues reminders for overdue invoices. Crons read and draft; a person approves every authorisation, email, payment and reminder.",
  "families": {
   "job-sheet-billing": {
-   "evidence": "18 calls describe this way of invoicing: field paperwork or job sheets, then invoices typed up later",
    "steps": ["job-complete", "collect-job-data", "check-against-quote", "internal-review", "build-invoice", "send-invoice", "chase-payment", "record-keeping"],
    "covered_by": {"job-complete": "draft (a completed ServiceM8 job is the trigger)", "build-invoice": "draft", "send-invoice": "approval", "chase-payment": "follow-up", "collect-job-data": "not covered (paperwork stays with the trade)", "check-against-quote": "not covered (judgment)", "internal-review": "approval", "record-keeping": "not covered"}
   },
   "stage-billing": {
-   "evidence": "8 calls describe billing against stages or a contract, checked against a quote",
    "steps": ["collect-job-data", "check-against-quote", "internal-review", "build-invoice", "record-payment", "record-keeping"],
    "covered_by": {"collect-job-data": "not covered", "check-against-quote": "not covered (judgment)", "internal-review": "approval", "build-invoice": "draft", "record-payment": "payments", "record-keeping": "not covered"}
   },
   "unclear": {
-   "evidence": "6 calls describe invoicing with no job system named",
    "steps": ["build-invoice", "send-invoice", "record-payment"],
    "covered_by": {"build-invoice": "draft (only where ServiceM8 holds the job)", "send-invoice": "approval", "record-payment": "payments"}
   }
@@ -52,9 +49,5 @@
   "Quoting overlap: the construction quoting workflow's handover also drafts a Xero invoice for an accepted quote. Running both on one business would draft two invoices for one job. No cross-workflow dedupe is built.",
   "Xero GST: each line is posted with the account's default tax. Confirm the sales account's tax setting with the owner before the first invoice is authorised.",
   "The workflow is docs-only until a sandbox ServiceM8 account and a Xero demo company prove it against real data."
- ],
- "evidence": {
-  "calls": "44 invoicing calls in the worklist; 40 read, 32 describe how they invoice, 8 variants by billing style",
-  "platforms": "ServiceM8, Xero and MYOB mapped step by step from their official specs and help pages; Xero and ServiceM8 have adapters"
- }
+ ]
 }

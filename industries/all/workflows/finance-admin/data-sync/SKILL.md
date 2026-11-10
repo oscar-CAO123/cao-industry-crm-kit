@@ -5,8 +5,7 @@ description: Keeps Xero and HubSpot in step so a business types each contact and
 
 # Data sync
 
-Built from how 36 Australian businesses described keeping their systems in step on discovery calls. Most re-type the same
-contact, order or bill into a second system, and the owner checks it by hand.
+Keeps the business's systems in sync so data is entered once: Xero contacts are mirrored into HubSpot companies, a HubSpot company with no Xero contact gets one, and each supplier bill that arrives as a draft in Xero is queued for a person to authorise. Crons read and draft only; nothing is paid, sent or changed for a customer without approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

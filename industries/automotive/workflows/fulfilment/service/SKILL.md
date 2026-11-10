@@ -5,8 +5,7 @@ description: Service and recall reminders for an automotive workshop or dealer, 
 
 # Service and recall reminders
 
-Built from one automotive dealer service call, which described reminders and customer replies sent through a messaging tool
-and bookings kept in a diary. ServiceM8 is the only platform in the kit with mapped operations for this job.
+Service and recall reminders: works out when each completed job's next service falls due, queues a reminder to the customer for approval, and records any text they send back. Crons read and queue; a person approves every message. Recall checks and bookings are not covered yet (see gaps).
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `due-list` reads completed jobs and works out when each next service

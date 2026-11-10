@@ -5,9 +5,7 @@ description: Sort a shared inbox (Front, Gmail) into work orders, quote requests
 
 # Inbox triage
 
-Built from how owners described sorting their shared inbox on discovery calls: most mail is noise or repeat questions,
-and the team wants a four-hour first response. The workflow does the sorting and the first draft. A person approves
-every reply.
+Sorts the shared inbox into work orders, quote requests, complaints, questions, noise and other, drafts template replies, and assigns each thread with a turnaround reminder. Crons read, draft and label; a person approves every reply before it is sent.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads new mail from Front and Gmail and sorts it by

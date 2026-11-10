@@ -5,8 +5,7 @@ description: Route planning for a transport or delivery business on Onfleet. Use
 
 # Route planning
 
-Built from the Onfleet docs. The 3 discovery calls read for this workflow did not describe how their owners route stops,
-so the steps here are the platform's, not the owners'. Confirm the process with the owner before relying on it.
+Takes the day's stops from the business's dispatch platform, finds the stops not yet in a route, and queues a dispatch of each team's routes for approval. Crons read and draft; a person approves every dispatch that sends a driver out.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

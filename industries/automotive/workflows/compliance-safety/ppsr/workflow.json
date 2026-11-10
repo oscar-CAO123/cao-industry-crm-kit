@@ -8,7 +8,6 @@
  "summary": "Run PPSR checks and manage registrations for a dealership: each stock vehicle is added to the dealer's own PPSR check register as a search to run, and a daily digest of searches and discharges due is drafted and queued for a person to approve. The PPSR searches and registrations themselves are run by a person on the PPSR site; no platform in the kit runs them yet.",
  "families": {
   "dealer-stock-check": {
-   "evidence": "1 discovery call names this job; the platform pages for PPSR and NSW describe the steps",
    "steps": ["trigger-request", "vin-rego-capture", "ppsr-search", "review-results", "finance-clearance", "register-interest", "amend-discharge", "record-keeping", "exception-escalation"],
    "covered_by": {"trigger-request": "cron (register)", "vin-rego-capture": "cron (register, from the stock list)", "ppsr-search": "person (PPSR site, see gaps)", "review-results": "person", "finance-clearance": "person", "register-interest": "person (PPSR account, see gaps)", "amend-discharge": "person, with a digest reminder", "record-keeping": "cron (register)", "exception-escalation": "cron (digest) and person"}
   }
@@ -38,10 +37,6 @@
   "Lender payout figures and finance clearance: not documented by the PPSR pages; a person reads the search certificate.",
   "Reading search results into a buy or hold decision: a judgment step for the owner. The skill never makes it.",
   "Workbook reads page through each table to its last row, up to 50,000 rows. A longer table stops the run with an error rather than being read in part.",
-  "Evidence is thin: one discovery call and the two platform pages. Confirm the steps with the dealer before the crons go live."
- ],
- "evidence": {
-  "calls": "1 discovery call read for automotive PPSR; 0 calls with steps or variants",
-  "platforms": "the PPSR register's own pages (Christmas campaign, grantor search, registering, managing accounts, B2G hub) and the NSW Service NSW pages for vehicle registration, mapped step by step; neither has an operation in the kit"
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

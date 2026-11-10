@@ -2,7 +2,7 @@
  "industry": "agriculture-mining",
  "name": "Agriculture and mining",
  "version": 1,
- "source": "Pages and tabs follow the agriculture-mining demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -757,264 +757,168 @@
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "documents",
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "stock-ordering",
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:yield",
    "dir": "industries/agriculture-mining/workflows/fulfilment/yield",
    "department": "fulfilment",
    "name": "Yield and waste",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "competitor-watch",
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:shipdocs",
    "dir": "industries/agriculture-mining/workflows/finance-admin/shipdocs",
    "department": "finance-admin",
    "name": "Export document check",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:tickets",
    "dir": "industries/agriculture-mining/workflows/finance-admin/tickets",
    "department": "finance-admin",
    "name": "Delivery tickets to data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:carbon-credits",
    "dir": "industries/agriculture-mining/workflows/compliance-safety/carbon-credits",
    "department": "compliance-safety",
    "name": "Earn carbon credits from field records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:environmental-monitoring",
    "dir": "industries/agriculture-mining/workflows/compliance-safety/environmental-monitoring",
    "department": "compliance-safety",
    "name": "Schedule environmental monitoring, validate results against limits and report",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:livestock-nvds",
    "dir": "industries/agriculture-mining/workflows/compliance-safety/livestock-nvds",
    "department": "compliance-safety",
    "name": "Create livestock National Vendor Declarations (NVDs) and movement records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:spray",
    "dir": "industries/agriculture-mining/workflows/compliance-safety/spray",
    "department": "compliance-safety",
    "name": "Spray and harvest records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:packout",
    "dir": "industries/agriculture-mining/workflows/finance-admin/packout",
    "department": "finance-admin",
    "name": "Grower statements",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:crop-records",
    "dir": "industries/agriculture-mining/workflows/fulfilment/crop-records",
    "department": "fulfilment",
    "name": "Track crop, vineyard, grain and livestock records through the season",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:x-costprod",
    "dir": "industries/agriculture-mining/workflows/fulfilment/x-costprod",
    "department": "fulfilment",
    "name": "Cost of production",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:x-paddocks",
    "dir": "industries/agriculture-mining/workflows/fulfilment/x-paddocks",
    "department": "fulfilment",
    "name": "Paddock records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "agriculture-mining:market-forecasting",
    "dir": "industries/agriculture-mining/workflows/sales/market-forecasting",
    "department": "sales",
    "name": "Forecast market demand and prices for selling and supply decisions",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1022,14 +926,12 @@
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": []

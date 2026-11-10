@@ -5,7 +5,7 @@ description: Fuel tax credit claim worksheet for a transport business, from Xero
 
 # Fuel tax credits
 
-Built from the platform docs for MYOB, Xero and WEBFLEET. No discovery calls exist for this job yet, so treat the steps as a draft.
+Works out the fuel tax credit a transport business can claim for a BAS period from its fuel purchases and its off-road use. Crons read the fuel bills and the fuel tax credit account and draft a claim worksheet; a person records off-road litres and the ATO rate, and the claim is lodged by hand in the BAS.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `purchases` keeps the fuel bills in the BAS period from Xero,

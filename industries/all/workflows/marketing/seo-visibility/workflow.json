@@ -8,7 +8,6 @@
  "summary": "Grow search and AI search visibility: keyword research, site audits, rankings and backlinks. Four crons read Ahrefs for rankings, keyword research, broken backlinks and AI search share of voice, and save each as a report. The only write, deleting keywords the owner has retired, waits for a person to approve it.",
  "families": {
   "all": {
-   "evidence": "19 of 40 discovery calls describe how they work on search visibility, mostly by hand",
    "steps": ["goal-setting", "keyword-research", "site-audit", "content-plan", "content-publish", "google-business-profile", "reviews", "local-listings", "backlinks", "rank-tracking", "ai-search-visibility", "traffic-review", "reporting", "record-keeping", "other"],
    "covered_by": {
     "goal-setting": "skill (seed keywords, target domain and the retire list live in settings)",
@@ -55,7 +54,7 @@
   "ahrefs": {"status": "docs-only", "covers": "Rank Tracker, Search Console keywords, Keywords Explorer, tracked keywords, broken backlinks, Brand Radar share of voice"}
  },
  "gaps": [
-  "Google Ads is the tool named most often in these calls, but it is paid search, not organic visibility. It belongs to the ad-campaigns and ad-reporting workflows.",
+  "Google Ads is paid search, not organic visibility. It belongs to the ad-campaigns and ad-reporting workflows.",
   "Semrush: its operations are mapped, but the kit holds no parameter names for its keyword and backlink endpoints, and the vendor pages in endpoint-map/raw/semrush are HTML without a spec. No adapter until those names can be confirmed.",
   "Google Business Profile, reviews and local listings: no kit platform for Google Business Profile. Semrush's local operations cover posts, reviews and listings, but there is no adapter for them yet.",
   "Site audit: Ahrefs site-audit.issues is mapped but no cron calls it yet. Content Helper topics (content-helper.topics) is mapped but not called.",
@@ -63,9 +62,5 @@
   "Judgment steps stay with the agent skill: choosing target terms, writing pages and posts, deciding what to ask reviewers for, and reading the AI answers.",
   "Brand Radar prompts and cited pages: the report and its prompts are set up in the Ahrefs app first. Cited pages are not read yet.",
   "Docs-only until an Ahrefs account proves each read. Column names in the select parameters follow the response schema in endpoint-map/raw/ahrefs; confirm them in a live account before relying on the reports."
- ],
- "evidence": {
-  "calls": "19 of 40 search-visibility discovery calls describe how they do it; most steps are done by hand",
-  "platforms": "Ahrefs and Semrush, mapped from their own docs and operation lists; the Ahrefs adapter's fields are checked against its OpenAPI spec"
- }
+ ]
 }

@@ -5,8 +5,7 @@ description: Schedules and dispatches jobs to field crews in the business's own 
 
 # Scheduling and dispatch
 
-Built from how 60 Australian businesses described scheduling and dispatch on discovery calls. This build covers
-the field-crew way of working: open jobs, a crew member on each job, a note to that person, and a visit text to the client.
+Schedules and dispatches jobs to field crews: gives each open job the earliest day a crew member has room, drafts the allocation and the crew note in the business's own system, and queues the client's visit text for approval. Crons read and draft; a person approves every client message.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

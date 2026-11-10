@@ -5,8 +5,7 @@ description: Finished artwork to product mockups on a retail store's listing, fo
 
 # Product mockups and artwork
 
-Built from one discovery call and two calls read for this job, with thin evidence. The steps are the job's own, not
-call-backed. Confirm them with the business before relying on them. Figma, where the mockups are made, is not a kit platform.
+Turns finished artwork into product mockups on the store listing. The agent makes the mockups; the crons read the store's products and queue the listing update for a person to approve. Crons read and queue only.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

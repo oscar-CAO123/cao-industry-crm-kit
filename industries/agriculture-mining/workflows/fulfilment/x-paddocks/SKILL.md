@@ -5,8 +5,7 @@ description: Paddock job records (sprays, fertiliser, sowing, irrigation, harves
 
 # Paddock records
 
-Built from the one call read for this workflow, which described no steps, plus the platform evidence and the kit's
-mapped operations. The step list comes from the spec. Nothing here is proven against a live account yet.
+Keeps the paddock job record: what was done on each paddock, when, by whom, with which product and rate, and when the withholding period ends. Rows go into the owner's own workbook, paddocks and their crop or land use are read from AgriWebb, and one QC email lists what needs a check. Crons read and draft; a person approves the one email that goes out.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

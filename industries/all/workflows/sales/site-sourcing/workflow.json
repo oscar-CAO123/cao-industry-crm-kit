@@ -8,7 +8,6 @@
  "summary": "Scans property listings for sites or land that match the criteria the business sets, reads the suburb statistics and nearby schools for each new one, and queues an enquiry to the listing agent for each site the owner shortlists. Crons read and draft; a person approves every enquiry.",
  "families": {
   "site-sourcing": {
-   "evidence": "8 of the 12 calls describe a site sourcing process (property development, franchise sites, residential and investor land); listing scans were manual in all 3 calls that describe them",
    "steps": ["criteria-set", "listing-scan", "desk-check", "enquire-agent", "record-keeping"],
    "covered_by": {"criteria-set": "settings (locations, listing type, land filter)", "listing-scan": "scan (Domain residential search, first page)", "desk-check": "desk-check (suburb statistics and nearby schools only)", "enquire-agent": "enquire (queued for approval)", "record-keeping": "draft (candidates held in the workflow store)"}
   }
@@ -31,7 +30,7 @@
   "domain": {"status": "docs-only", "covers": "residential listing search, suburb statistics, nearby schools, enquiry to the listing agent"}
  },
  "gaps": [
-  "realestate.com.au: the most named portal in the calls. Its partner docs cover agency listing exports and transfers, not buyer searches, and no operations are mapped.",
+  "realestate.com.au: Its partner docs cover agency listing exports and transfers, not buyer searches, and no operations are mapped.",
   "realcommercial.com.au: the pages found are news and market articles. No operations are mapped.",
   "Commercial and business listing search (development and franchise sites): the spec documents the bodies, but the listing id field in their responses is not confirmed, so they are not built.",
   "Land type values: the property types for land are not in the Domain spec held here. The filter matches the propertyType the listing returns; fill property_types from a live result.",
@@ -44,9 +43,5 @@
   "Offers, expressions of interest, due diligence, internal approval and handover: no platform coverage. These stay with the person.",
   "Deal tracking in Zoho: the owner's pipeline is not wired. Candidates and enquiries are recorded in the workflow store.",
   "Domain access needs an approved developer account with the listing and enquiry scopes. The sandbox resets weekly. Live behaviour is unverified until an account runs the crons."
- ],
- "evidence": {
-  "calls": "12 discovery calls read; 8 describe a site sourcing process; 3 describe listing scans, all manual",
-  "platforms": "Domain's developer docs mapped step by step (search, listing, suburb statistics, schools, enquiries); realestate.com.au and realcommercial.com.au have no mapped operations for this job"
- }
+ ]
 }

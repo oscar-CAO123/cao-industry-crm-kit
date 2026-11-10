@@ -5,9 +5,7 @@ description: Complaints and refund or return requests from a helpdesk (Gorgias) 
 
 # Complaints and refunds
 
-Built from 28 calls that describe how complaints and refunds are handled: complaints arrive by email or in the helpdesk, the
-owner or a staff member checks the order, decides who pays, replies, and records the outcome. Eight of those calls describe
-the steps in order.
+Triages complaints and refund or return requests from the helpdesk: tags the ones that need a person, records the category, and queues a plain acknowledgement for approval. Crons read, categorise and queue; a person approves every reply, and nothing refunds or closes a case by itself.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` picks up new open tickets. `draft` tags escalations for a

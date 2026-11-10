@@ -5,8 +5,7 @@ description: Turns meetings and calls into notes and actions from Fireflies and 
 
 # Meeting actions
 
-Built from how 26 Australian businesses described their meetings, calls and follow-ups on discovery calls. Most record or take notes,
-write the minutes up by hand, then chase the actions by phone or email, and the actions often go unfollowed.
+Turns meetings and calls into notes and actions: it reads the recordings and summaries Fireflies and Granola already make, drafts the action list for each meeting, flags overdue actions, and queues any recap share for approval. Crons read and draft; a person approves every share.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `capture` reads new and changed meetings from Fireflies and Granola into one stored

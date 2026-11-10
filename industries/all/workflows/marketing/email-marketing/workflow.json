@@ -8,7 +8,6 @@
  "summary": "Writes and schedules newsletters, and starts or pauses automated email flows, in the business's own email platform. Crons read, draft and queue; a person approves every scheduled send and every flow change.",
  "families": {
   "all": {
-   "evidence": "31 of the 40 email marketing calls describe how they run it",
    "steps": ["list-building", "write-copy", "approve", "schedule-send", "automation-build", "track-results", "follow-up-replies", "record-keeping"],
    "covered_by": {
     "list-building": "gap (lists come from property and lead platforms that are not mapped)",
@@ -53,9 +52,5 @@
   "core/capabilities.json has no campaign create or schedule capability; the capabilities above are the nearest existing names.",
   "tools/deploy.ts reads only the quoting keys from settings (intake, quotes, rate_card, messages), so a deploy of this workflow would render no secret names until secretNames covers platforms; that is a core change.",
   "There is no CLI command to write a newsletter or flow proposal into the store; the agent (or the CRM shell) must write them to the newsletters and flow-changes namespaces until a propose command exists."
- ],
- "evidence": {
-  "calls": "40 email marketing calls read, 31 describe the process; schedule-send, automation-build, approval, tracking and follow-up are 88 to 100 percent manual, write-copy 33 percent",
-  "platforms": "Mailchimp and Klaviyo mapped step by step from their official specs in the endpoint map; ActiveCampaign from its help articles only"
- }
+ ]
 }

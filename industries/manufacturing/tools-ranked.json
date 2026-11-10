@@ -1,25 +1,19 @@
 {
-  "source": "Discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
   "tools": [
     {
-      "name": "Xero",
-      "calls": 9
+      "name": "Google Workspace"
     },
     {
-      "name": "Google Workspace",
-      "calls": 5
+      "name": "HubSpot"
     },
     {
-      "name": "Microsoft 365",
-      "calls": 4
+      "name": "Microsoft 365"
     },
     {
-      "name": "HubSpot",
-      "calls": 3
+      "name": "Salesforce CRM"
     },
     {
-      "name": "Salesforce CRM",
-      "calls": 2
+      "name": "Xero"
     }
   ]
 }

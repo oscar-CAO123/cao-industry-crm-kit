@@ -8,7 +8,6 @@
   "summary": "Turns a vacant rental in VaultRE into one listing draft for a person to check, and drafts the reply to each portal enquiry. Crons read and draft; a person approves every reply and sets every listing live.",
   "families": {
     "single-entry-syndication": {
-      "evidence": "2 discovery calls read; neither describes a listing step, so the steps below come from the platform evidence",
       "steps": ["vacancy-notice", "property-details", "photos-and-media", "write-description", "create-master-listing", "approve-listing", "syndicate-to-portals", "check-portal-listings", "enquiry-handling", "update-or-withdraw", "record-keeping"],
       "covered_by": {
         "vacancy-notice": "prepare (reads available rentals)",
@@ -57,9 +56,5 @@
     "Writing a reply into the workflow store has no command yet, so the enquiries cron queues only replies already stored there. A reply command is a runtime change for a later session.",
     "An enquiry links to a property only by its lease life id, so the note does not name the property address.",
     "Each run reads the first 100 vacancies and the first 50 unprocessed enquiries. Larger lists need paging."
-  ],
-  "evidence": {
-    "calls": "2 discovery calls read for real estate listing syndication; 0 describe a listing step",
-    "platforms": "AgentBox and PropertyMe public pages read (14 steps each, mostly unknown for AgentBox; partial for PropertyMe); VaultRE operations and field names from its official OpenAPI spec"
-  }
+  ]
 }

@@ -53,10 +53,6 @@
   "Cliniko: rates-check, plan manager or funder sending, renewal dates and end-of-agreement handling are not covered by the docs read.",
   "Halaxy: only one general marketing page was read. It describes no agreements, forms or signatures, and no ops file is mapped, so no Halaxy adapter was built. Its help-centre pages on forms, consent and invoicing need reading first.",
   "DocuSign and PandaDoc are mapped in the kit, but no call or platform evidence for this workflow names them, so no adapter was built for them.",
-  "No discovery calls describe this workflow yet (0 calls on agreements). The steps rest on Cliniko's docs, not on how clinics describe their agreements."
- ],
- "evidence": {
-  "calls": "0 calls on this workflow (the variants file read 1 call and it describes no agreement step)",
-  "platforms": "Cliniko's official API and help-centre pages, mapped step by step; Halaxy's one general page, with nothing usable"
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

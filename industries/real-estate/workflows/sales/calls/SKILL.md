@@ -5,8 +5,7 @@ description: Works the sales calls of a real estate agency. Reads the Agentbox c
 
 # Calls
 
-Built from 15 real-estate sales calls, 14 of which describe the same process: enquiry in, first call, appraisal and its prep,
-vendor follow-up, then record keeping. Only the contact list and the email draft run here. The rest is judgment.
+Works the sales calls of a real estate agency: reads the contact list from Agentbox, drafts the first-call email for each contact the agent has marked to call, and chases it after set days if no one has replied. Crons read and draft; a person approves every email before it is sent.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `call-sync` reads the first page of Agentbox contacts each hour and adds

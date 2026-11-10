@@ -36,10 +36,6 @@
   "Issuing, redeeming, refunding or extending a gift card or pack: these move money or change a customer's balance, so they are live operations and are not built.",
   "Square: no call or platform-doc evidence for this workflow. The read operations come from the kit's ops file and the response fields from Square's published spec. Unverified against a live account.",
   "Xero: the trial balance docs do not mention pack or deferred income lines, so the bookkeeper matches it by hand. Unverified against a live Xero demo company.",
-  "No call evidence: 0 of the discovery calls describe packs or gift cards in this workflow, so the steps above come from the spec's list, not from what owners said."
- ],
- "evidence": {
-  "calls": "0 of the calls for this workflow describe the process (1 call read, 0 relevant)",
-  "platforms": "Fresha and Mindbody: no mapped operations. Xero: 2 read operations mapped. Square: gift card read operations mapped in the kit."
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

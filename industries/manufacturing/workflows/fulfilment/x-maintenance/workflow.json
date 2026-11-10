@@ -8,7 +8,6 @@
  "summary": "Logs machine breakdown and service requests as work orders in the business's own system, adds the lockout and isolation checklist to each new work order, and queues the booking note to the requester for approval. Crons read and draft; a person approves every message.",
  "families": {
   "all": {
-   "evidence": "2 discovery calls read in the variants file (the worklist counts 3); both describe a planner or admin scheduling, recording and closing work orders by hand",
    "steps": ["schedule-work", "record-keeping", "close-work-order"],
    "covered_by": {"schedule-work": "draft (lockout checklist on the work order) and queue (booking note to the requester); the planner still books the technician", "record-keeping": "read (completed jobs and their parts into the store)", "close-work-order": "read (completed jobs)"}
   }
@@ -43,9 +42,5 @@
   "Labour hours from ServiceM8 staff time events are not read yet.",
   "Machine matching is by asset name appearing in the job description. ServiceM8 holds no job-to-asset field in the mapped operations, so a request that names no asset stays unmatched.",
   "ServiceM8 is spec status and tested offline only; no live account has run these operations."
- ],
- "evidence": {
-  "calls": "2 calls read in mining/manufacturing-x-maintenance-variants.json (the worklist lists 3)",
-  "platforms": "mining/manufacturing-x-maintenance-platforms.json describes mex-cmms, mrpeasy and odoo. None has api_operations in that file, and only odoo has a kit folder (one read). ServiceM8 is built because its field names are confirmed in the vendor spec and it covers jobs, assets, checklists and email."
- }
+ ]
 }

@@ -5,8 +5,7 @@ description: Client emails to the right Smokeball matter, with a note, a follow-
 
 # Email to matter
 
-Built from five calls with law firms describing how an inbound client email becomes work on a matter: the owner pastes
-each inquiry into ChatGPT to judge it, opens a matter by hand in Smokeball, then drafts replies one at a time.
+Takes a client email to the right matter in Smokeball: matches the sender to an open matter (or opens a lead for an unknown sender when the firm allows it), records a note and a follow-up task, and queues any reply to the client's portal for approval. Crons read and draft; a person approves every message that reaches a client.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` matches each new email's sender to an open matter, or opens

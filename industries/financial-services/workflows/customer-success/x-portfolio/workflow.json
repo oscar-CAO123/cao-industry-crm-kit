@@ -8,7 +8,6 @@
  "summary": "Finds the client portfolios whose review date has come, prepares a review pack from the client record, and queues the review meeting invite for an adviser to approve. Crons read and draft; a person approves every invite.",
  "families": {
   "scheduled-review": {
-   "evidence": "no variants file was produced by mining (the call evidence is missing), so these steps come from the platform mining file only",
    "steps": ["review-trigger", "client-data-pull", "objectives-check", "performance-analysis", "recommendations-draft", "compliance-check", "meeting-prep", "client-meeting", "review-document", "client-decision", "implement-changes", "follow-up-actions", "record-keeping"],
    "covered_by": {"review-trigger": "review-due", "client-data-pull": "prepare (client record fields only)", "objectives-check": "skill (adviser)", "performance-analysis": "not yet (see gaps)", "recommendations-draft": "skill (adviser)", "compliance-check": "skill (adviser)", "meeting-prep": "prepare (review pack)", "client-meeting": "invite (queued)", "review-document": "skill (adviser)", "client-decision": "skill (adviser)", "implement-changes": "skill (adviser)", "follow-up-actions": "skill (adviser)", "record-keeping": "skill (adviser)"}
   }
@@ -41,9 +40,5 @@
   "Approving an invite makes HubSpot send the calendar invitation to the client. Confirm on a live account before the first approval.",
   "Only the first 20 pages of partner clients are read (2,000 records). A larger book needs the cap raised after checking the run time.",
   "Client-facing judgment steps (objectives, recommendations, compliance documentation, the statement or record of advice, the client's decision, implementing changes, follow-up) are done by the adviser. No platform step is mapped for them."
- ],
- "evidence": {
-  "calls": "1 call; the variants mining file is missing, so no call-level steps or families are confirmed",
-  "platforms": "hubspot and xplan platform mining (hubspot: partial steps with mapped partner client and meeting operations; xplan: partial steps, no operations file). midwinter-adviceos is in the kit with mapped operations but no wired sign-in."
- }
+ ]
 }

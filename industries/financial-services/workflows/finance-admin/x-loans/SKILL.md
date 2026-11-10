@@ -5,7 +5,7 @@ description: Loan enquiries to a document request, a loan register row and a cha
 
 # Loans
 
-Built from 21 loan calls, 18 of which describe how the work runs. Most of it is manual: enquiry, documents, serviceability, lender choice, lodgement and compliance records.
+Turns a loan enquiry into a document request, a register row and a chase in the business's own mailbox and spreadsheet. Crons read and draft; a person approves every email that leaves the business.
 
 ## What runs on its own
 Two crons in `index.ts`. `intake` reads new enquiries from the enquiries folder. `draft` logs each enquiry in the loan register, drafts the document request in Outlook and queues its send for approval. They read and draft only. Every email to a client waits for a person to approve it in the CRM shell.

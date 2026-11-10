@@ -5,8 +5,7 @@ description: Carbon project evidence from a farm's AgriWebb records. Use when se
 
 # Earn carbon credits from field records
 
-Built from the platform docs for AgriWebb, Agworld and CropX (no call evidence yet). Only AgriWebb has kit operations, and this
-workflow uses its reads only.
+Earns carbon credits from field records: it reads a farm's fields and records in AgriWebb, keeps them as evidence, and drafts a checklist of what a carbon project still needs. Crons read and draft only. Registering, claiming, selling and payment are not mapped to any platform in the kit, so they stay with the person.
 
 ## What runs on its own
 Two crons in `index.ts`. `snapshot` reads each configured farm's fields and records from AgriWebb and keeps them as evidence.

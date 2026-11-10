@@ -5,9 +5,7 @@ description: Yield and waste for a packing shed or grower, from the shed's yield
 
 # Yield and waste
 
-Built from one discovery call with a potato and garlic packing shed: bins are weighed in and logged, the shed's own system holds the
-records, and reports are half generated and rarely read. This workflow turns the shed's yield register into lot-level yield and waste,
-flags lots that fall short, and drafts the weekly report for the owner.
+Works out yield and waste for each lot from the shed's yield register, flags lots that fall short of target or run over the waste limit, and drafts the weekly yield and waste report. Crons read and draft; the report email waits for a person to approve it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads the yield register every 30 minutes, `yield-check` works out

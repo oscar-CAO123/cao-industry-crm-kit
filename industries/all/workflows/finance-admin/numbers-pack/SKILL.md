@@ -5,8 +5,7 @@ description: Weekly or monthly numbers and profit pack for a business owner, bui
 
 # Numbers pack
 
-Built from how Australian business owners described their monthly or weekly numbers on discovery calls. Owners pull figures from several systems
-by hand, then build a profit and loss and a commentary. This workflow does the pulling and the drafting. The owner does the reading and the commentary.
+Weekly or monthly numbers and profit pack for the owner: reads the profit and loss and the bank position from the ledger, stores them, and drafts the pack for the owner to read and comment on. Crons read and draft only; nothing is sent.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `data-pull` reads the profit and loss for the period on the due day,
@@ -27,4 +26,4 @@ run for that day. A snapshot that is not there means the read failed or the day 
 - Check costs against budget and review job or product profit. No ledger operation for either is mapped yet.
 
 ## Not covered yet
-MYOB, forecast and cash flow, budget against actual, the owner's sends and any other system the calls named (Shopify, Meta Ads, Deputy, Roller and the rest). Do these the business's usual way.
+MYOB, forecast and cash flow, budget against actual, the owner's sends and other systems (Shopify, Meta Ads, Deputy, Roller and the rest). Do these the business's usual way.

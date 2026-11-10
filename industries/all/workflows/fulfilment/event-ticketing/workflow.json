@@ -8,12 +8,10 @@
  "summary": "Runs ticketed events on Eventbrite. Queues publishing for events that are ready (a person approves each one), keeps the registration list current, and drafts each event's run sheet and wrap-up counts. Venue hire, suppliers and catering stay with the business and are not automated here.",
  "families": {
   "private-invite-functions": {
-   "evidence": "1 discovery call describes this way of running events (events and weddings catering)",
    "steps": ["registration-capture", "record-keeping", "other", "catering-order", "run-sheet", "supplier-booking"],
    "covered_by": {"registration-capture": "registrations cron", "record-keeping": "registrations and wrap-up crons", "other": "not covered", "catering-order": "not covered", "run-sheet": "run-day cron (from Eventbrite times and teams only)", "supplier-booking": "not covered"}
   },
   "unclear": {
-   "evidence": "1 discovery call describes this way of running events (event production and staging)",
    "steps": ["other", "run-sheet"],
    "covered_by": {"other": "not covered", "run-sheet": "run-day cron (from Eventbrite times and teams only)"}
   }
@@ -58,12 +56,8 @@
   "Paging: attendee lists are followed through Eventbrite's continuation token, up to 20 pages (about 1,000 attendees at the default page size). A longer list is refused whole: its register is not updated and its wrap-up is not drafted, and the crons log it. last_item_seen is an ID cutoff used with changed_since, not the page token, so it is not used.",
   "Refunds: the refund operation is mapped in the kit, but no cron queues one. A refund needs a person's request first, which is not wired.",
   "Humanitix and Moshtix: no operations are mapped in the kit, so there is no adapter. Typeform, named on one call for registration forms, has mapped operations but no platform evidence here, so it is not built.",
-  "Evidence is thin: 6 calls, 2 job types, no volumes or turnaround stated. The cron times are defaults to confirm with the client.",
+  "Confirm the default cron times with the client.",
   "Eventbrite field names come from the vendor spec in endpoint-map/raw. Not yet run against a live account. Needs EVENTBRITE_TOKEN.",
   "Only setup queues anything. The other three crons read and draft, because no other mapped step needs a person to approve a platform change."
- ],
- "evidence": {
-  "calls": "6 discovery calls read, 2 job types (events and weddings catering; event production and staging). None stated volume or turnaround.",
-  "platforms": "Eventbrite, Humanitix and Moshtix were read. Only Eventbrite has operations mapped in the kit, so it is the only adapter."
- }
+ ]
 }

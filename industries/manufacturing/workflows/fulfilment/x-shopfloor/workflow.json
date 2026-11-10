@@ -8,7 +8,6 @@
   "summary": "Puts the open builds and the low components on the shop-floor board, and queues the completion of each build the floor marks ready. Crons read and draft; a person approves every completion.",
   "families": {
     "all": {
-      "evidence": "2 discovery calls describe how work moves through their shop floor",
       "steps": ["order-release", "schedule-jobs", "production-run", "record-keeping", "job-close-and-invoice"],
       "covered_by": {
         "order-release": "not yet (see gaps)",
@@ -41,14 +40,10 @@
     "Acumatica, Fishbowl and Odoo: docs read, but the kit maps no operations for this job (Odoo's ops file holds one docs page). Setup, in-process checks, final inspection, rework or scrap, time logging and dispatch are not covered by any mapped platform.",
     "Unleashed list calls send no filters, so each cron reads the first page only (200 records by default). Paging is not built: the mapped operation has no page number. When the platform holds more pages, the store's coverage record says so and the board is marked partial, so a build on a later page is never silently missed.",
     "POST /Assemblies/{assemblyGuid}/Complete: the kit maps this operation with no body, so none is sent. Confirm on a sandbox account before approving a live completion.",
-    "The ERP named on the calls is not identified, so it is not mapped.",
+    "The client ERP needs to be identified and mapped before it can be connected.",
     "Order release from a sales order, job costing and invoicing, and sales shipments (dispatch) are not built as crons.",
     "Judgment steps stay with the floor: setting up a machine, checking a part against a drawing, and deciding on rework or scrap. The agent may summarise the board but does not decide these.",
     "Minimum stock levels are not in the stock endpoint, so they come from settings.reorder_levels, typed in by the business.",
     "Docs-only until a sandbox Unleashed account proves the reads and the completion."
-  ],
-  "evidence": {
-    "calls": "2 of 3 shop-floor discovery calls describe how work moves through the floor",
-    "platforms": "Acumatica, Fishbowl and Odoo docs read: no mapped operations for this job. Unleashed is mapped in the kit (146 operations) and its requests are signed in core/sdk; no live run yet."
-  }
+  ]
 }

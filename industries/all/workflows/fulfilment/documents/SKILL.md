@@ -5,9 +5,7 @@ description: Produce letters, reports and documents from records. Copies the Goo
 
 # Documents from records
 
-Built from how owners described making documents on discovery calls: progress reports and letters are rebuilt by hand
-from the same figures, and every template and record is re-keyed. The workflow makes the copy and fills the fields. A
-person approves every share.
+Produces letters, reports and documents from records: each record marked ready is copied from its Google Doc template, filled from the record, checked for unfilled fields and logged. The client gets the document only after a person approves the share. Crons read and draft; a person approves every share.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads the records tab and takes each row marked ready.

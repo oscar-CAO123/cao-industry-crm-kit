@@ -5,9 +5,7 @@ description: Letters and reports for a construction business (extension of time 
 
 # Letters and reports by hand
 
-Built from how 11 construction businesses described their paperwork on discovery calls: extension of time claims,
-delay notices, progress reports, plant pre-starts, site diaries and tender responses, mostly built by hand from
-figures in other systems.
+Letters and reports by hand: each record marked ready in the requests tab (an extension of time claim, a delay notice, a progress report) is copied from its Google Doc template, filled from the record, checked for unfilled fields and open comments, drafted as an email and logged. The client gets the email only after a person approves the send. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads the requests tab for records marked ready.

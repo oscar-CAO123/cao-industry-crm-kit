@@ -1,77 +1,58 @@
 {
-  "source": "Discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
   "tools": [
     {
-      "name": "Shopify",
-      "calls": 26
+      "name": "Airtable"
     },
     {
-      "name": "Klaviyo",
-      "calls": 12
+      "name": "Asana"
     },
     {
-      "name": "Xero",
-      "calls": 8
+      "name": "Canva"
     },
     {
-      "name": "HubSpot",
-      "calls": 8
+      "name": "Fishbowl"
     },
     {
-      "name": "Google Ads",
-      "calls": 8
+      "name": "Google Ads"
     },
     {
-      "name": "Meta Ads",
-      "calls": 7
+      "name": "Google Analytics"
     },
     {
-      "name": "Google Workspace",
-      "calls": 6
+      "name": "Google Workspace"
     },
     {
-      "name": "Canva",
-      "calls": 6
+      "name": "HubSpot"
     },
     {
-      "name": "Slack",
-      "calls": 4
+      "name": "Klaviyo"
     },
     {
-      "name": "Asana",
-      "calls": 3
+      "name": "Meta Ads"
     },
     {
-      "name": "Monday.com",
-      "calls": 3
+      "name": "Microsoft 365"
     },
     {
-      "name": "WooCommerce",
-      "calls": 3
+      "name": "Monday.com"
     },
     {
-      "name": "WordPress",
-      "calls": 3
+      "name": "Shopify"
     },
     {
-      "name": "Microsoft 365",
-      "calls": 2
+      "name": "Slack"
     },
     {
-      "name": "Google Analytics",
-      "calls": 2
+      "name": "Starship"
     },
     {
-      "name": "Fishbowl",
-      "calls": 2
+      "name": "WooCommerce"
     },
     {
-      "name": "Starship",
-      "calls": 2
+      "name": "WordPress"
     },
     {
-      "name": "Airtable",
-      "calls": 2
+      "name": "Xero"
     }
   ]
 }

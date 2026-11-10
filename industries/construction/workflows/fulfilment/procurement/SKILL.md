@@ -5,8 +5,7 @@ description: Trade and supplier quote replies to a checked scope, a draft Xero p
 
 # Trade quotes miss scope
 
-Built from how 40 Australian construction businesses described buying from trades and suppliers on discovery calls.
-Most of the work is manual: quotes come back in mixed formats, and the exclusions and allowances get missed until the bill arrives.
+Logs trade and supplier quote replies, checks each one against the scope the business needs for that package, drafts the purchase order in Xero once the agreed amount is in the register, and checks supplier bills against that order. Crons read and draft; a person approves every email to a supplier and every purchase order award.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

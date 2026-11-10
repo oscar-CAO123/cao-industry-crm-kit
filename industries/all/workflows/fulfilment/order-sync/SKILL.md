@@ -5,10 +5,7 @@ description: Sales and purchase orders from every channel into the stock system,
 
 # Order sync
 
-Built from how 37 Australian businesses described order handling on discovery calls. Orders come in from a web shop, a
-marketplace, email, phone or a trade account, and move to the warehouse, production and the accounts. Most of it is typed
-by hand today, and the owners named the same pain: re-keyed orders, missed supplier double charges, and stock that is wrong
-until someone counts it.
+Brings sales orders from the stock system into one order book, queues a supplier purchase order when open orders need more stock than is available, drafts a Xero invoice for each shipped order, and matches supplier bills to purchase orders. Crons read and draft; a person approves every purchase order.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

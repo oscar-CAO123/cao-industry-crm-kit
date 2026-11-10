@@ -8,7 +8,6 @@
  "summary": "Keeps every prospect from the agency's Agentbox contact list in one tracked pipeline, and lists the untracked prospects due for follow-up. Crons read and keep the record in the workflow's store; nothing is sent, booked or written back to Agentbox.",
  "families": {
   "pipeline": {
-   "evidence": "3 real-estate sales calls describe prospects found but not tracked in one place",
    "steps": [
     "lead-capture",
     "record-keeping",
@@ -75,9 +74,5 @@
   "Tools owners use: GoHighLevel, WhatsApp and Trello are the most-named tools in the wider mining file. None is mapped as an adapter for this job, since the platform evidence did not check them. GoHighLevel is the strongest next adapter.",
   "Store visibility: the pipeline record lives in the workflow store. No view of it is built in the CRM shell here.",
   "Live verification: every read is unverified against a live Agentbox account (the platform is docs-read)."
- ],
- "evidence": {
-  "calls": "3 real-estate pipeline sales calls",
-  "platforms": "3 platforms named in the platform evidence (agentbox, reapit, rex). Agentbox and Rex have mapped kit operations for the contact list and one contact read. Reapit has no separate kit folder (its Foundations paths sit under Agentbox)."
- }
+ ]
 }

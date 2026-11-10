@@ -8,7 +8,6 @@
  "summary": "Keeps client personal details out of documents before they are shared. It finds new documents in the raw folder, records who can see each masked copy, and queues a view share to each approved recipient for a person to approve. A person masks each copy in the business's own tool and places it in the masked folder. Crons read and queue only: no cron changes a file's contents or sends anything.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes this way of working: mortgage applications and settlements, about 30 applications a month, by hand or unstated",
    "steps": ["request-received", "identify-sensitive", "decide-scope", "apply-mask", "check-mask", "share-masked", "record-keeping"],
    "covered_by": {
     "request-received": "intake (the Dropbox raw folder)",
@@ -47,9 +46,5 @@
   "Only the first page is read: files.list_folder/continue and sharing.list_file_members/continue are not wired here, so a folder of more than one page, or a file with more than 300 people, is only partly read.",
   "Email attachments are not read, and MYOB and Xero have no masking operation in the pages reviewed, so no adapter is built for them.",
   "Every Dropbox call is docs-read and offline-tested only. Confirm on a sandbox Dropbox account before a client uses it."
- ],
- "evidence": {
-  "calls": "1 of 1 discovery call for this workflow describes how it is done today (by hand or unstated); the call is about mortgage applications and settlements",
-  "platforms": "Dropbox sharing and file-listing operations are mapped (partial: no masking or redaction operation exists); MYOB and Xero pages reviewed carry no masking step"
- }
+ ]
 }

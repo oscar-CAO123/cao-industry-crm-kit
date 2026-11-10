@@ -8,7 +8,6 @@
  "summary": "Keeps the work-in-progress position for each construction job (billed against earned) and drafts progress claims in Xero. Crons read and draft: a progress claim is a DRAFT invoice until a person approves its authorisation and email, and reminders for overdue invoices wait for approval too. Xero is the only platform with mapped invoice operations for this job, so it is the only adapter.",
  "families": {
   "by-hand-or-unstated": {
-   "evidence": "6 calls keep WIP, progress claims and variations by hand or name no tool",
    "steps": [
     "job-set-up",
     "cost-capture",
@@ -25,7 +24,6 @@
    }
   },
   "spreadsheet": {
-   "evidence": "2 calls keep WIP in a spreadsheet beside Xero",
    "steps": [
     "cost-capture",
     "progress-claim",
@@ -38,7 +36,6 @@
    }
   },
   "job-system": {
-   "evidence": "2 calls use a job system (SimPro) alongside Xero",
    "steps": [
     "record-keeping"
    ],
@@ -107,9 +104,5 @@
   "Cross-workflow: the invoicing workflow in finance-admin also drafts Xero invoices. Running both on one business could draft two invoices for the same job. No cross-workflow dedupe is built.",
   "The workflow is docs-only until a Xero demo company proves it against real data.",
   "A rejected progress claim is not billed, so its progress is claimed again on the next claim. Its DRAFT invoice stays in Xero and has to be voided or deleted by hand."
- ],
- "evidence": {
-  "calls": "17 discovery calls read; 12 describe how they track WIP, progress claims or retention",
-  "platforms": "Buildxact, MYOB and Xero help pages mapped step by step. Xero has mapped invoice operations; Buildxact and MYOB have none for WIP."
- }
+ ]
 }

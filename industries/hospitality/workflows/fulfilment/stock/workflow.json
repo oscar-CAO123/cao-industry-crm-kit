@@ -8,7 +8,6 @@
  "summary": "Takes the drinks count a bar or cellar does by hand, checks each line against the system count in the venue's POS, and posts the counts to the POS once a person approves them. Crons read and record; a person approves every change to stock.",
  "families": {
   "hand-count": {
-   "evidence": "2 discovery calls read; neither described a step, a variant or a tool (mining/hospitality-stock-variants.json)",
    "steps": ["count-schedule", "physical-count", "enter-counts", "variance-check", "record-keeping"],
    "covered_by": {"count-schedule": "snapshot cron (system levels every 6 hours); the owner sets the count day", "physical-count": "skill (the owner's count sheet becomes a count record)", "enter-counts": "post-counts (queued for approval)", "variance-check": "reconcile (difference per line)", "record-keeping": "reconcile (variances store)"}
   }
@@ -39,9 +38,5 @@
   "Transfers and waste: Square transfer order endpoints are mapped in the kit but this workflow does not use them; waste shows up only as a lower count.",
   "Cost reporting: not built.",
   "Square endpoints are offline-tested only (platform status spec in core/sdk/platforms/square/platform.json); no sandbox account has run them yet."
- ],
- "evidence": {
-  "calls": "2 of 2 hospitality drinks-stock discovery calls read; no step, variant or tool was described",
-  "platforms": "Eats365 and Lightspeed docs read (no API operation mapped); Square docs read, with its inventory and location endpoints mapped in the kit from Square's official spec"
- }
+ ]
 }

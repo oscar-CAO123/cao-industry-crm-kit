@@ -5,9 +5,7 @@ description: Speed to lead for any business that takes enquiries. Alerts the own
 
 # Speed to lead
 
-Built from how Australian businesses described their first contact with new leads on discovery calls. Most told us the
-first reply depends on who is free, and that weekend and after-hours leads wait until someone looks. This workflow covers
-the alert, the first text and the escalation for a business on GoHighLevel.
+Alerts the owner the moment a new lead lands, queues one first text for approval if nobody has replied in time, and escalates to a senior person when a lead is still uncontacted. Crons read and draft internal tasks; a person approves every text to a lead.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

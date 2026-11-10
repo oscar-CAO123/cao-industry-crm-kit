@@ -8,7 +8,6 @@
  "summary": "Turns the safety paperwork a construction business does by hand (pre-starts, SWMS, sign-off, incident and close-out records) into SiteBook records, and reminds the crew when reviews and actions fall due. Crons read and draft; every reminder email waits for a person to approve it.",
  "families": {
   "paper-safety": {
-   "evidence": "13 discovery calls describe this way of doing safety paperwork",
    "steps": [
     "pre-start",
     "swms-prepare",
@@ -119,9 +118,5 @@
   "Procore not confirmed on a live account: the maximum per_page for inspections (incidents document 1000), and the id kind send_email wants in distribution_ids (the page shows integers but does not itemise distribution members), so the business sets reminder_distribution_ids by hand. The incident list can be filtered by status and updated_at, which the cron does not use yet.",
   "Procore incident create, update and any record types (injury, near miss) are not used: the incidents cron reads only, and a person raises or edits incidents in Procore.",
   "An inspection reminder re-reads the inspection when approved and closes itself if the status changed since it was queued."
- ],
- "evidence": {
-  "calls": "13 of 31 read safety discovery calls describe how they do it; SWMS preparation is 90 percent manual in those calls",
-  "platforms": "SiteBook's developer docs for pre-start, SWMS, action and reminder endpoints; Procore and Sitemate help pages were checked and have no mapped operations in the kit"
- }
+ ]
 }

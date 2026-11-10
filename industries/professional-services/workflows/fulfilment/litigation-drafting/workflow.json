@@ -8,7 +8,6 @@
  "summary": "Draft pleadings and defences and research case law for litigation: picks up new matters from the case-management system, inventories each file, and files the agent's pleading matrix and defence drafts as internal memos for the solicitor. Crons read and draft; a person approves every message that reaches a client.",
  "families": {
   "commercial-litigation": {
-   "evidence": "2 discovery calls describe this way of drafting litigation",
    "steps": ["instruction-received", "review-file", "case-law-research", "issues-analysis", "draft-pleading", "client-approval", "record-keeping"],
    "covered_by": {
     "instruction-received": "intake",
@@ -41,16 +40,12 @@
  "gaps": [
   "Case law research and issues analysis: no legal research source is mapped in the kit, so the agent does these by hand from the matter and nothing is searched automatically.",
   "Actionstep (named for intake, document automation and eBrief Ready): it has no ops file in core/sdk/platforms, so no operations are mapped.",
-  "LEAP (named by both calls for documents, time and trust records): not in the kit's platform list.",
+  "LEAP: not in the kit's platform list.",
   "eBrief Ready, Zylpha, InfoTrack Court Sync and Word pleading templates: not mapped, so no brief, bundle, court filing or template step runs.",
   "Document content: the kit classes Smokeball's DownloadFile as a write, so the crons see file names and dates only and the agent cannot read the claim documents through the mapped operations yet.",
   "Client answers: no mapped operation reads portal tasks or messages back, so a client's admit, deny or comment is not picked up automatically.",
   "File inventory reads the first 100 documents per matter (no paging).",
   "Writing drafts into the store: tools/workflow.ts has only a quote-specific propose command, so no command yet files a pleading matrix or defence as a Draft. A runtime entry point is needed outside this build.",
   "Smokeball's platform status is spec (offline tests only); it has not run against a real account."
- ],
- "evidence": {
-  "calls": "2 of 2 professional services discovery calls on litigation drafting describe how they do it; every step is manual or unstated in both",
-  "platforms": "Actionstep and Smokeball vendor pages read (2 platforms); Smokeball maps to kit operations, Actionstep does not"
- }
+ ]
 }

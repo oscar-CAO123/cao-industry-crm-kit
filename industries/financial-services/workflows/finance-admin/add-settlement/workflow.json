@@ -8,7 +8,6 @@
   "summary": "Tracks each loan from lender confirmation to settlement and the checks after it, lists what is missing from each file, and flags settlements that are past their date with checks still open. The crons read the settlement records and write internal checklists only; nothing reaches a lender, client, broker or bank.",
   "families": {
     "settlement": {
-      "evidence": "5 discovery calls describe how settlements are run, all by hand or unstated",
       "steps": ["lender-confirmation", "post-settlement-checks", "record-keeping", "other"],
       "covered_by": {
         "lender-confirmation": "checklist (flags a missing lender confirmation); the lender chase is a skill step until a platform is mapped",
@@ -37,9 +36,5 @@
     "Settlement records are not ingested from anywhere. A person or the agent writes them into the workflow store until an intake adapter exists.",
     "Sales and credit information not reaching post-settlement is an intake problem and is not solved by this workflow.",
     "Confirm which broker CRM the client uses before building an adapter. The evidence covers brokerengine only, and it is not in the kit."
-  ],
-  "evidence": {
-    "calls": "5 calls read in the variants file (the worklist counted 4); 3 describe the all-by-hand pattern, 2 describe the home-loan and money-management pattern",
-    "platforms": "2 platforms checked: brokerengine (no mapped operations) and xero (485 operations in the kit, none for settlement)"
-  }
+  ]
 }

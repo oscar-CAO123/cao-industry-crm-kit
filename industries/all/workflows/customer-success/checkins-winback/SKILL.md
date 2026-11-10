@@ -5,9 +5,7 @@ description: Check-ins, renewals and win-backs for any business that has repeat 
 
 # Check in, renew or win back customers
 
-Built from 21 discovery calls, 6 of which describe how the owner checks in on, renews or wins back customers. Most of the work
-is still by hand: lists kept in spreadsheets, sends done one at a time, replies answered whenever someone looks. This workflow
-finds who is due, drafts the message for each group, and queues the send for a person to approve.
+Works out which customers are due a check-in, renewal or win-back, drafts the campaign for each group in the business's email tool, and queues every send for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

@@ -5,7 +5,7 @@ description: Commission for an automotive dealership or workshop, worked out fro
 
 # Commission calculator
 
-Built from one discovery call and the Xero payroll API. The steps the call did not cover are in `gaps` in `workflow.json`.
+Works out each salesperson's commission from paid sales for the month, enters it on their payslip in a draft Xero pay run, and queues that pay run for a person to approve and post. Crons read and draft; a person approves every post.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

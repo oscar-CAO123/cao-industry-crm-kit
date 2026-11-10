@@ -5,9 +5,7 @@ description: Calls that come in outside opening hours, for a business on Aircall
 
 # After-hours calls
 
-Built from 23 Australian business discovery calls, 7 of which describe this job step by step. The phone system answers
-the call (an AI phone agent, a JustCall workflow, an IVR, or a live answering service). These crons read what came in
-while the office was shut, flag urgent calls, record the caller, and queue a text back.
+Triages calls that come in outside opening hours: reads the call log, flags urgent calls, drafts a caller record, and queues a text back to each caller and an urgent alert to the on-call person. The phone system answers the call; the crons read and draft, and a person approves every text.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads the call log every ten minutes, `triage` flags

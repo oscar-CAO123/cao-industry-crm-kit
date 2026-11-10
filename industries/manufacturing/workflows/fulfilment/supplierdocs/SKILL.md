@@ -5,8 +5,7 @@ description: Supplier bills to SKUs for a manufacturer, in Xero. Use when settin
 
 # Supplier documents to SKUs
 
-Built from how manufacturers described handling supplier documents on discovery calls: the supplier invoice is keyed twice,
-the PDF is attached by hand, and prices are not visible until the invoice arrives. Status: docs-only, not yet proven on a live account.
+Takes supplier bills into the accounting system, matches each bill line to a SKU (an item code in Xero), flags unmatched lines and price changes for a person, and queues each clean bill for authorisation. Crons read and draft; a person authorises every bill.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads draft supplier bills from Xero. `match` checks each

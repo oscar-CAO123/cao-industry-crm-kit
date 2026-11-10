@@ -8,7 +8,6 @@
  "summary": "Takes orders that arrive by email, enters each one as a draft invoice in Xero, and drafts the customer confirmation in Gmail. Crons read and draft; a person approves every send.",
  "families": {
   "all": {
-   "evidence": "3 of the 8 retail calls read describe this order flow (health and wellness, food and grocery)",
    "steps": ["email-received", "stock-check", "enter-order", "confirm-customer", "pick-dispatch"],
    "covered_by": {"email-received": "intake", "enter-order": "draft (DRAFT Xero invoice)", "confirm-customer": "draft (Gmail confirmation, approval to send)", "stock-check": "not yet (see gaps)", "pick-dispatch": "not yet (see gaps)"}
   }
@@ -39,9 +38,5 @@
   "The Xero invoice stays a DRAFT. Authorising it and emailing it to the customer are left to the owner in Xero.",
   "The Gmail helper creates drafts without an idempotency key: a crash between creating a draft and queueing its send can leave an unsent orphan draft in the mailbox.",
   "Every adapter is docs-only until a sandbox mailbox and a Xero demo company prove the calls end to end."
- ],
- "evidence": {
-  "calls": "3 retail order calls describe this flow; 8 retail calls were read for the orders family",
-  "platforms": "retail-orders-platforms.json: Gmail, Unleashed and Xero mapped step by step from their own pages and the kit's operation lists"
- }
+ ]
 }

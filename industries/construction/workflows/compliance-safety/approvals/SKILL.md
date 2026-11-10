@@ -5,9 +5,7 @@ description: Council approvals and permits for a construction business: tracks t
 
 # Approvals
 
-Built from how construction businesses described council approvals on discovery calls. The owner prepares plans with an
-architect, drafter or certifier, lodges through the council portal or counter, answers council's requests, and chases the
-assessor. Most of it is done by hand and most of it is slow.
+Prepares, lodges and chases council approvals and permits. Every hour it reads the open markups and RFI-style requests on each approval document in Bluebeam Studio and records where each stands. Every day it keeps a dated snapshot of each document for the record. The crons only read and draft; lodging with council, answering council and any status change that someone outside the business sees stay with a person.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `track-status` reads the open markups and RFI-style requests on each

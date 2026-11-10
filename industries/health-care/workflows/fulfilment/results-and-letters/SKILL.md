@@ -5,9 +5,7 @@ description: Clinic results to a GP reply letter and a results-review recall, in
 
 # Action results, send referrals and reply letters to GPs
 
-Built from how two health-care businesses described results and GP letters on discovery calls, and from Cliniko's API.
-The kit can save a GP letter as a draft note on the patient and queue a results-review recall. It cannot send the letter
-or a referral. The practice sends those from its own secure messaging.
+Takes a result the clinic has sent back, drafts the reply letter to the GP as a draft treatment note in Cliniko, and queues a results-review recall for a person to approve. Crons read and draft; a person approves every recall, and sends every letter from the practice's own system.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `draft` writes each ready GP letter to Cliniko as a draft treatment

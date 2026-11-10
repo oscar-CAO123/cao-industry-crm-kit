@@ -5,9 +5,7 @@ description: Event enquiries from email to a held calendar date and a reply draf
 
 # Events planned in three places
 
-Built from how hospitality businesses described planning functions on 12 discovery calls (6 of them describe the process).
-Enquiries arrive by email, the date is checked against the venue calendar, and the team then works out the menu and the
-quote by hand.
+Brings event enquiries from the inbox onto one list, checks the venue calendar for each requested date, holds a free date with no guests invited, and drafts the reply in the enquiry's thread, so the inbox, the calendar and the event record agree. Crons read and draft; a person approves every reply before it is sent.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `intake` puts new enquiry emails from the enquiries label onto one list,

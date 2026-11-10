@@ -8,7 +8,6 @@
   "summary": "Reads the shift notes that support workers and carers write after a visit, checks each one for the points it must cover, and leaves a review comment for the supervisor on any note that misses one. Crons read and draft only; nothing reaches a worker or a client.",
   "families": {
     "shift-note": {
-      "evidence": "2 discovery calls describe this way of writing shift notes (worklist count)",
       "steps": ["roster-shift", "shift-start", "in-shift-observations", "incident-record", "medication-log", "write-shift-note", "submit-note", "supervisor-review", "correct-note", "handover", "client-or-family-update", "timesheet-billing", "compliance-check", "record-keeping"],
       "covered_by": {
         "roster-shift": "gap (roster is read by the platform, not by this workflow)",
@@ -55,12 +54,8 @@
     "Only two crons. No cron queues an approval because no live operation is safe yet.",
     "Incident recording, medication logs, in-shift observations, shift start, handover and client or family updates are not in the mined pages or not mapped. Workers and coordinators keep them.",
     "The compliance check is keyword matching for the points in settings. It is not a regulator or funder check, and a person still reads every note.",
-    "The variants file for this workflow (health-care-shiftnotes-variants.json) is not in the mining folder. The build used the spec file and the platform file.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
     "The timesheet search reads the first page of results only. Paging is not built, so a busy day can miss notes until it is added.",
     "The Deputy adapter is docs-only until a sandbox account proves it."
-  ],
-  "evidence": {
-    "calls": "2 discovery calls named in the worklist; the variants file was not present",
-    "platforms": "ShiftCare help pages (23 mined, no API operations); Deputy vendor spec for the timesheet, comment and search fields"
-  }
+  ]
 }

@@ -8,7 +8,6 @@
  "summary": "Keeps the vehicle register complete enough for mass-limit checks, and queues a note for a person's approval on each vehicle missing a field a vehicle chart needs. The crons read and queue; weighing, mass calculation, permits and regulator lodgement stay with people.",
  "families": {
   "general": {
-   "evidence": "No discovery calls describe this job yet. Steps come from the NHVR platform map.",
    "steps": ["load-planning", "config-check", "permit-check", "weigh-load", "mass-calculation", "adjust-load", "driver-briefing", "roadside-response", "record-keeping", "internal-review", "regulator-reporting", "corrective-action"],
    "covered_by": {"load-planning": "skill", "config-check": "draft (vehicle register read)", "permit-check": "skill", "weigh-load": "not covered (see gaps)", "mass-calculation": "not covered (see gaps)", "adjust-load": "not covered (see gaps)", "driver-briefing": "skill", "roadside-response": "not covered (see gaps)", "record-keeping": "draft (vehicle register)", "internal-review": "approval (note queued for a person)", "regulator-reporting": "not covered (see gaps)", "corrective-action": "not covered (see gaps)"}
   }
@@ -29,7 +28,7 @@
   "trackunit": {"status": "docs-only", "covers": "vehicle register read; asset note queued for approval"}
  },
  "gaps": [
-  "No discovery calls for this job (the variants file is missing), so the steps come from the NHVR platform map alone.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "NHVR Go (nhvr-go): no operations file and no mapped operations. Route Planner, access permit applications and Portal lodgement are not callable and stay manual.",
   "GoCanvas (gocanvas-quarries-and-mines-compliance-templates): read operations are mapped but there is no adapter, because the submission field names are not confirmed in the vendor docs page.",
   "Weighing, GVM, GCM and axle group calculation, and load adjustment: no platform in the kit does these. They stay with the driver or the scale operator.",
@@ -38,9 +37,5 @@
   "assets.updateAssetNote_v2 replaces the whole note, and the kit has no safe read of existing notes (assets.queryAssetNotes_v2 is marked as a write), so the approval cannot show the current note. The approval summary states the overwrite and shows the new text; the approver must read the note in Trackunit before approving.",
   "No 'assets' capability exists in core/capabilities.json, so the workflow declares no capabilities list. A runtime change would be needed to add one.",
   "The Trackunit adapter is docs-only: it needs TRACKUNIT_ACCESS_TOKEN and no sandbox has run it. The page number is taken as zero-based, to confirm on the sandbox."
- ],
- "evidence": {
-  "calls": "0 discovery calls for this job (the variants file is missing)",
-  "platforms": "NHVR Go help pages mapped by hand (partial steps, no operations). Trackunit operations and their spec fields are confirmed in the kit and the vendor spec."
- }
+ ]
 }

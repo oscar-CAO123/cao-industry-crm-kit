@@ -5,7 +5,7 @@ description: Lot trace and recall for a metal fabrication or small manufacturing
 
 # Lot trace and recall
 
-Built from one discovery call about lot traceability and the platforms' own docs. Thin evidence: confirm the steps with the client before building further.
+Traces each batch and serial from receipt through production to dispatch, keeps the stock and audit records current, and queues a quarantine move for any lot put on hold. Crons read and record internally; a person approves every stock movement.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`. `lot-sync` indexes batches and serials, `stock-position` records stock on hand, `audit-register` records counts and adjustments, and `quarantine` queues a stock transfer for each new hold. The crons only read Unleashed or write their own internal records. The transfer waits in the approval queue until a person approves it. Nothing here contacts a customer.

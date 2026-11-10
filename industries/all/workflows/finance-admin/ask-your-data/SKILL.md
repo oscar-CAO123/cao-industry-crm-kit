@@ -5,8 +5,7 @@ description: Answers an owner's questions about the business's own numbers (cash
 
 # Ask your data
 
-Built from how 20 owners described getting answers from their numbers on discovery calls. Most pull the figures by hand,
-build the report by hand, then check it before they trust it.
+Answers the owner's questions about the business's own data (cash, profit, who owes what) from Xero, a fixed Power BI query and the numbers pack. Crons read and draft; the owner gets each answer only after a person approves the send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `pull-figures` reads the configured sources into one snapshot each
@@ -33,5 +32,5 @@ Read the snapshot with `ctx.store` (`figures/latest`) and answer in plain words.
 - Nothing is sent from a cron. A send is queued and a person presses approve.
 
 ## Not covered yet
-Shopify and the other platforms named in the calls, aged debtors by customer, job-level profit, and cash flow forecasting.
+Shopify and other platforms, aged debtors by customer, job-level profit, and cash flow forecasting.
 Those stay with the owner's own process until their adapters exist.

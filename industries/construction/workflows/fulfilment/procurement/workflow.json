@@ -8,7 +8,6 @@
  "summary": "Logs trade and supplier quote replies, checks each one against the scope the business needs for that package, drafts the purchase order in Xero once the agreed amount is in the register, and checks supplier bills against that order. Crons read and draft; a person approves every email to a supplier and every purchase order award.",
  "families": {
   "all": {
-   "evidence": "40 procurement calls read, 32 describe how they gather and buy quotes",
    "steps": ["scope-breakdown", "request-quotes", "receive-quotes", "compare-quotes", "scope-check", "clarify-with-supplier", "approve-award", "purchase-order", "confirm-delivery", "receive-goods", "invoice-match", "record-keeping", "other"],
    "covered_by": {"scope-breakdown": "not yet (plans and specs are judgment, see gaps)", "request-quotes": "not yet (requests still go out by hand)", "receive-quotes": "intake", "compare-quotes": "skill (owner compares the register rows)", "scope-check": "scope-check", "clarify-with-supplier": "scope-check (clarification email queued for approval)", "approve-award": "approval of order-draft's award", "purchase-order": "order-draft (draft PO in Xero)", "confirm-delivery": "not covered", "receive-goods": "not covered", "invoice-match": "bill-match", "record-keeping": "intake, scope-check, order-draft and bill-match write the register and the checks log", "other": "skill (variations)"}
   }
@@ -36,7 +35,7 @@
  },
  "gaps": [
   "Buildxact: sends RFQs and holds returned quotes in product, but its ops file is empty, so no adapter is built. Its RFQ is the natural home for request-quotes once it is mapped.",
-  "Simpro, JackApp, Buildertrend and SprintSuite: named on calls for quotes and POs, but the kit has no platform for them. Dropbox and Google Workspace are named for filing quotes; the kit has those platforms but this workflow has no adapter for them, so quotes are logged in the Microsoft 365 workbook instead.",
+  "Simpro, JackApp, Buildertrend and SprintSuite: the kit has no platform for them. Dropbox and Google Workspace are named for filing quotes; the kit has those platforms but this workflow has no adapter for them, so quotes are logged in the Microsoft 365 workbook instead.",
   "MYOB: its docs describe customer quotes and bill payments only, not supplier RFQs, PO approval or goods receipt, so no adapter is built.",
   "Scope breakdown from plans and specs, and the trade list for request-quotes, are judgment work for the agent skill. Requests to trades still go out by hand.",
   "Scope check is a keyword check against the scope list in settings. Judging whether an exclusion or allowance really changes the price is the owner's call.",
@@ -46,9 +45,5 @@
   "Receiving goods and confirming delivery dates or site access have no mapped operation in this workflow and are not covered.",
   "Bill matching uses supplier contact and total only. The docs do not describe matching a bill to a PO, and trades rarely quote the PO number on their bill. Reads the first 100 bills per run.",
   "Every adapter is docs-only until a Xero demo company and a Microsoft 365 developer tenant prove it."
- ],
- "evidence": {
-  "calls": "40 construction procurement calls read, 32 describe how they gather and buy quotes; 78 to 100 percent of each step is manual",
-  "platforms": "the Buildxact, MYOB and Xero docs mapped step by step (construction-procurement-platforms.json); Buildxact has no mapped operations and MYOB has none for supplier quotes; Xero has the purchase order and bill operations used here"
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Takes leads that partners refer into the business's pipeline, keeps each referring partner in the partner list, and queues a receipt and stage updates for that partner. Crons read and draft; a person approves every tag or contact change that reaches a partner.",
  "families": {
   "referral-partners": {
-   "evidence": "12 discovery calls read; 5 describe how referrals are handled (mortgage, finance, accountant and car dealer referrals)",
    "steps": [
     "referral-received",
     "qualify-referral",
@@ -94,7 +93,7 @@
  },
  "gaps": [
   "Mailchimp was checked and not built: its partner steps are mailing lists and campaigns, not a lead pipeline, and its qualify step is marked no.",
-  "The referral portal is named in two calls, and referrers do not use it. The kit has no adapter for it, so it is not built.",
+  "The kit has no adapter for it, so it is not built.",
   "Sharing lead details with a partner (share-lead-details) is not built. Neither Pipedrive nor ActiveCampaign describes sending lead detail to an outside partner, so this is a person's call for now.",
   "Partner review per partner is not built. Pipedrive and ActiveCampaign report conversion for pipelines overall, not per referrer.",
   "The partner emails are not written here. The business builds an ActiveCampaign automation that sends on the acknowledged tag and on each stage tag. This workflow only applies the tags.",
@@ -103,9 +102,5 @@
   "Pipedrive's own automations can send email to a partner outside this workflow. This workflow does not check them.",
   "Referral fees, thank-you rewards, AML checks and consent capture are judgment or business process, not automated. The platform pages do not describe them.",
   "Both adapters are docs-only until a sandbox account for each proves them. The kit has no runtime change to request."
- ],
- "evidence": {
-  "calls": "12 discovery calls read; 5 describe the referral process, 3 of those name a referral portal or manual handover",
-  "platforms": "the Pipedrive, ActiveCampaign and Mailchimp help pages and API docs, mapped step by step; Pipedrive and ActiveCampaign carry the referral-lead and contact steps"
- }
+ ]
 }

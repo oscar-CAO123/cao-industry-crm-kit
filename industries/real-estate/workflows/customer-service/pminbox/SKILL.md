@@ -5,9 +5,7 @@ description: Sort a property manager's unread Gmail into urgent, maintenance, ow
 
 # Manager email in the morning
 
-Built from how property businesses described their morning email on discovery calls: the first hours of the day go on
-maintenance and owner mail, and one bot that sorted the mail stopped for days after it was moved. The workflow sorts
-and drafts. A person approves every reply.
+Sorts the property manager's unread email into urgent, maintenance, owner, tenant, other and noise, drafts approved template replies for a person to approve, and leaves one morning summary as a Gmail draft. Crons read and draft; a person approves every reply before it is sent.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads unread Gmail threads and sorts them by keyword

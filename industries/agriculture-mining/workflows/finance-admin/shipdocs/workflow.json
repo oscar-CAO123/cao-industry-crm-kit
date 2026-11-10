@@ -8,7 +8,6 @@
  "summary": "Turns an export shipment's details into a DRAFT commercial invoice in Xero, checks that invoice against the shipment record, and queues the authorise-and-email step for approval. Crons read and draft; a person approves every send.",
  "families": {
   "export-document-set": {
-   "evidence": "1 discovery call describes this way of preparing export documents",
    "steps": ["shipment-booked", "gather-details", "commercial-invoice", "packing-list", "certificates", "buyer-requirements", "cross-check", "internal-approval", "send-documents", "query-and-correction", "record-keeping", "payment-match"],
    "covered_by": {"shipment-booked": "shell (shipment record created)", "gather-details": "skill (lots, weights, consignee)", "commercial-invoice": "draft", "packing-list": "not yet (see gaps)", "certificates": "not yet (see gaps)", "buyer-requirements": "skill", "cross-check": "draft (reads the Xero invoice against the record)", "internal-approval": "approval (a person sets the record to approved)", "send-documents": "approval (authorise and email in Xero)", "query-and-correction": "skill", "record-keeping": "not yet (see gaps)", "payment-match": "not yet (see gaps)"}
   }
@@ -38,12 +37,8 @@
   "Record-keeping: accounting.createInvoiceAttachmentByFileName is mapped, but the shipment document pack needs file bytes from the shell, so it is not wired.",
   "Payment matching: accounting.createPayment and getPayments are mapped, but recording a payment moves money, so it needs its own approval design. Not wired.",
   "Shipment records (lots, weights, consignee) come from the CRM shell or the agent. No intake cron because no evidence platform holds them.",
-  "The evidence file agriculture-mining-shipdocs-variants.json is missing from the evidence folder. Steps and families come from the spec and one call only.",
+  "Confirm the workflow steps and default settings with the business before use.",
   "The Xero adapter is docs-only until a demo company proves it.",
   "The send cron re-checks the Xero invoice before it queues the authorise-and-email step, but an invoice changed in Xero after it is queued is not re-checked when a person approves it. A check at approval time needs a pre-approval hook in core/workflows/runtime.ts (needs-core)."
- ],
- "evidence": {
-  "calls": "1 discovery call",
-  "platforms": "Xero help guides: partial support for the commercial invoice, sending and payment steps. Microsoft 365: docs do not cover shipping documents."
- }
+ ]
 }

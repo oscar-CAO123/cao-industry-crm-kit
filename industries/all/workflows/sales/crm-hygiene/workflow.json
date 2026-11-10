@@ -8,7 +8,6 @@
   "summary": "Cleans and dedupes the business's own CRM records on a schedule. A weekly scan reads the contacts, finds records that share an email address and records whose email needs trimming or lowercasing, and drafts a register of those fixes. Each merge and each email change is queued for a person to approve, so nothing in the CRM is merged or changed until a person approves it.",
   "families": {
     "crm-hygiene": {
-      "evidence": "16 of the 36 calls tagged to this workflow describe how they clean CRM records; 5 describe it in full",
       "steps": [
         "spot-the-mess",
         "export-records",
@@ -107,9 +106,5 @@
     "A merge cannot be reversed by this workflow. The approval records which records were merged.",
     "Nothing in the kit shows the register yet. A person reads it from the workflow store until a view exists.",
     "Neither adapter is proven against a real account. Both are offline-tested only, with a fake network."
-  ],
-  "evidence": {
-    "calls": "16 read calls describe how they clean CRM records, 5 in full; 36 calls are tagged to this workflow in the catalogue",
-    "platforms": "vendor OpenAPI specs for HubSpot (CRM contacts) and Pipedrive (v1 and v2), mapped step by step; Zoho's CRM spec is mapped but its help pages were Zoho Books, so it has no adapter"
-  }
+  ]
 }

@@ -1,57 +1,43 @@
 {
-  "source": "Discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
   "tools": [
     {
-      "name": "Xero",
-      "calls": 4
+      "name": "Axify"
     },
     {
-      "name": "Meta Ads",
-      "calls": 4
+      "name": "BigQuery"
     },
     {
-      "name": "Roller",
-      "calls": 3
+      "name": "Canva"
     },
     {
-      "name": "Google Workspace",
-      "calls": 3
+      "name": "Deputy"
     },
     {
-      "name": "Microsoft 365",
-      "calls": 3
+      "name": "Employment Hero"
     },
     {
-      "name": "BigQuery",
-      "calls": 2
+      "name": "Excel"
     },
     {
-      "name": "Employment Hero",
-      "calls": 2
+      "name": "Google Workspace"
     },
     {
-      "name": "Zendesk",
-      "calls": 2
+      "name": "Meta Ads"
     },
     {
-      "name": "WordPress",
-      "calls": 2
+      "name": "Microsoft 365"
     },
     {
-      "name": "Excel",
-      "calls": 2
+      "name": "Roller"
     },
     {
-      "name": "Canva",
-      "calls": 2
+      "name": "WordPress"
     },
     {
-      "name": "Axify",
-      "calls": 2
+      "name": "Xero"
     },
     {
-      "name": "Deputy",
-      "calls": 2
+      "name": "Zendesk"
     }
   ]
 }

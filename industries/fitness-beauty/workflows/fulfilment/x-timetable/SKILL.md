@@ -5,8 +5,7 @@ description: Keeps a gym or studio class timetable current in its booking system
 
 # Class timetable
 
-Built from the timetable pages of Gymdesk, GymMaster and Mindbody. None of those three is in this kit yet, so this build runs on Bookeo,
-the nearest class-booking platform that is mapped. No discovery-call variants exist for this job yet.
+Keeps the class timetable in the business's booking system. Crons read the next weeks of classes and seats, flag classes that are under-filled, and queue any class cancellation or room block the owner or agent has proposed. A person approves every change that reaches a member.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

@@ -5,7 +5,7 @@ description: Fireflies meeting summaries to draft file notes for an adviser to c
 
 # File notes
 
-Built from how two Australian insurance brokerages described file notes on discovery calls. Both write phone, email and text notes by hand, and both want them logged from each call without the adviser retyping.
+Turns a finished Fireflies meeting summary into a draft file note that the adviser checks and files. Crons read and draft only; nothing is filed on a client record, shared or sent without a person.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `intake` lists new Fireflies meetings from the last few days. `draft` reads each new meeting's Fireflies summary and writes a draft file note into the workflow store. Both only read. Nothing is filed on a client record, shared with anyone or sent.

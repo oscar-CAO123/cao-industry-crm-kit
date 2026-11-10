@@ -8,7 +8,6 @@
  "summary": "Prepares the BAS first pass for an accounting practice's client in Xero: reads the period's bank transactions, queues the agreed coding for approval, and lists what the accountant must check by hand before the return. Crons read and queue; an accountant approves every change and lodges the BAS.",
  "families": {
   "accounting-practice": {
-   "evidence": "2 discovery calls from accounting practices describe preparing a BAS; about 30 of the 50 minutes is document scanning that AI could do",
    "steps": ["trigger-quarter-end", "document-scan", "bank-feed-pull", "categorise-lines", "gst-coding", "reconcile", "exception-review", "draft-bas", "partner-signoff", "lodge-bas"],
    "covered_by": {
     "trigger-quarter-end": "not covered: period_start is set in settings for each quarter",
@@ -49,9 +48,5 @@
   "Coding rules are per client and must be agreed with the accountant before code-lines queues anything. With no rules, nothing is queued.",
   "Needs core: an approved coding change is sent exactly as it was queued, with no re-read, so a line the accountant coded by hand after queueing is overwritten. The runtime's approve step must re-read the transaction and refuse unless it is still a single uncoded, unreconciled line. The cron cannot close this window: it runs once a day and approval can come sooner.",
   "The Xero adapter is docs-only until a Xero demo organisation proves the reads and the coding update."
- ],
- "evidence": {
-  "calls": "2 discovery calls from accounting practices describe BAS preparation",
-  "platforms": "the vendors' own help pages for MYOB and Xero, mapped step by step"
- }
+ ]
 }

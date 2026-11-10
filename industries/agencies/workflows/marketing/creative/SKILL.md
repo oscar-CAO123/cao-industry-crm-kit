@@ -5,8 +5,7 @@ description: Reads how live ad creative tests are performing on Meta and queues 
 
 # Creative test reader
 
-Built from how agencies described creative testing on discovery calls, plus the Meta docs. The one platform with
-mapped operations is Meta. TikTok Ads has no ops file yet, so its steps stay manual.
+Reads how live ad creative tests are performing on the ad platform, keeps a snapshot, and queues a pause for any losing ad for a person to approve. Crons read and queue; nothing launches, spends or pauses without approval.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `monitor` reads spend, impressions, clicks and CTR for each ad

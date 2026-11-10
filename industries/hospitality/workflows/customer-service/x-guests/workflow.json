@@ -8,7 +8,6 @@
  "summary": "Keeps the venue's guest waitlist in its own spreadsheet: puts each waiting party in order and quotes a wait from the minutes per group, logs every seated, no-show or left party once to a guest log, and queues the clearing of those rows for approval. Crons read and draft; a person approves every clear.",
  "families": {
    "all": {
-     "evidence": "1 hospitality discovery call names guests and waitlists; it describes no steps, so the steps below come from the kit's mapped operations and the walk-in pattern of the bookings workflow",
      "steps": ["waitlist-add", "quote-wait", "guest-notified", "seat-guest", "guest-no-show", "record-keeping", "other"],
      "covered_by": {"waitlist-add": "skill (host adds a row with Status Waiting)", "quote-wait": "queue cron (position and quoted wait)", "guest-notified": "not built (see gaps)", "seat-guest": "skill (host sets Seated)", "guest-no-show": "skill (host sets No show)", "record-keeping": "close cron (guest log tab, once per party), queue cron (position and wait columns)", "other": "skill (VIP handling, repeat guests, table choice, judged by hand)"}
    }
@@ -31,15 +30,11 @@
  },
  "gaps": [
    "Lightspeed: the kit has no Lightspeed ops file (core/sdk/platforms/lightspeed is absent), and its 28 pages are customer case studies with no waitlist, quote-wait, no-show or VIP flow. Nothing from it is built.",
-   "Guest notification when a table is ready (email or SMS): no mapped send operation with field names confirmed from the vendor spec is built. Gmail drafts are mapped in the kit, but no call describes this step, so it stays a later build.",
+   "Guest notification when a table is ready (email or SMS): no mapped send operation with confirmed vendor fields is built. Gmail drafts are mapped, but this step has no adapter yet.",
    "Seating and table choice, no-show chasing, VIP or priority handling, repeat-guest lookup and marketing consent: no mapped platform describes them in the docs given. They are judgment steps in SKILL.md.",
    "Walk-in and phone intake: no intake channel is mapped, so the host adds each row by hand.",
    "Google Workspace: the customer-service and note-taking pages describe no waitlist, so the sheet is the only record. The adapter's field names come from the Sheets spec in endpoint-map/raw and it has not run against a real Google Workspace account.",
    "The quoted wait is an estimate (minutes per group ahead in the queue), not a measured wait.",
    "The clear re-reads the row before it runs, but the sheet drops empty cells at the end of a row, so an empty Note (or Outcome time) cannot be checked. A note typed into such an empty cell after queueing is cleared with the row. Check the row before approving a clear that has waited a long time."
- ],
- "evidence": {
-   "calls": "1 hospitality discovery call mentions guests and waitlists (calls_read 1); it describes no steps, job types or volumes",
-   "platforms": "google-workspace: partial for record-keeping (Sheets append, Google Docs notes); lightspeed: partial case-study mentions only, no mapped operations"
- }
+ ]
 }

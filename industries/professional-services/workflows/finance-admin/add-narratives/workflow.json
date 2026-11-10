@@ -8,7 +8,6 @@
   "summary": "Turns a client's chargeable time into client-ready invoice narratives in Xero. Reads the uninvoiced time entries in Xero Projects, takes the narratives a person writes from them, drafts one invoice per client in Xero, and queues its authorisation for approval. Crons read and draft; a person approves every invoice before it is authorised.",
   "families": {
     "all": {
-      "evidence": "3 discovery calls describe how billing narratives are written (variants file: 7 calls read, 3 describe the process; worklist: 3)",
       "steps": ["time-capture", "invoice-build", "approval", "other"],
       "covered_by": {
         "time-capture": "capture (reads the chargeable, uninvoiced time entries Xero Projects holds for each client)",
@@ -46,10 +45,6 @@
     "Idempotency: Xero's Idempotency-Key is assumed to return the same invoice for a repeated create. This is unverified until a Xero demo company is used.",
     "Every adapter is docs-only until a Xero demo company proves the calls. The adapter is tested offline only, with a fake network.",
     "Judgment stays with the practice: which entries bill, write-offs, rate exceptions, the wording of each narrative, and the client review. None of these are automated.",
-    "Trust top-ups and WIP chasing (the other step in the calls) are not covered."
-  ],
-  "evidence": {
-    "calls": "variants file: 7 calls read, 3 describe the process (accounting practice 2, law firm 1); worklist: 3",
-    "platforms": "no platform file for this job; Xero mapped operations used (Xero Projects time entries, tasks and projects; Xero sales invoices in DRAFT and AUTHORISED)"
-  }
+    "Trust top-ups and WIP chasing are not covered."
+  ]
 }

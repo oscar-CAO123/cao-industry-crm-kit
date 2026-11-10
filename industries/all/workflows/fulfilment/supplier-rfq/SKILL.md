@@ -5,8 +5,7 @@ description: Requests for quote (RFQs) to suppliers for an item list, the replie
 
 # Supplier RFQs
 
-Built from how 21 Australian businesses described requesting supplier quotes on discovery calls. Ten described their process
-in enough detail to map. Most send the RFQ by hand or by email, and most reply comparison happens by hand.
+Sends a request for quote to each supplier for an item list, logs every reply in a register, and raises a purchase order once a person has awarded the job. Crons read and draft; a person approves every send and every authorised purchase order.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`. `issue` drafts one RFQ email per supplier and queues each send.

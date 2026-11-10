@@ -5,8 +5,7 @@ description: Client selections for a construction business: the register of each
 
 # Client selections
 
-Built from how three construction businesses described client selections on discovery calls: the owner sets the allowance,
-emails a form and a reference booklet, the client chooses, and the answers go into a sheet. The owner chases the rest by hand.
+Turns a client's selections (tiles, fittings, colours and other options) into a pack the client chooses from, keeps each choice against its allowance, and chases what is still undecided. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads the register, `draft` drafts the pack email for each

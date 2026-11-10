@@ -5,8 +5,7 @@ description: Subcontractor compliance for a construction or trade business: repl
 
 # Subcontractors
 
-Built from how 12 construction businesses described subcontractor work on discovery calls. Most of it was by hand: availability
-emails, safety templates printed and signed, job folders compiled for every job.
+Keeps subcontractor compliance in order: a subcontractor's reply becomes a register row to complete, a licence or insurance certificate that is expiring gets a chase email, and each live job folder is checked. Crons read and draft; a person approves every email that goes to a subcontractor.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` turns a subcontractor's reply into a register row to complete,

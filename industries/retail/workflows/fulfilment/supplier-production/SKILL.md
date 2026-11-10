@@ -5,10 +5,7 @@ description: Production with overseas factories for a retail or apparel business
 
 # Supplier production
 
-Built from how four Australian retail and apparel businesses described running production on discovery calls: a new
-order, a factory, a delivery date, a purchase order, a deposit and a chase on the factory and the freight forwarder.
-This build covers the order to purchase order part, the board and the deposit. Tech packs, samples, licensor approval
-and freight are still done the business's usual way.
+Runs production with overseas factories: takes each new order from the production board, drafts the factory purchase order in Xero, flags orders whose delivery date is close, and queues the deposit payment for approval. Crons read and draft; a person approves every purchase order, bill and payment. Tech packs, samples, licensor approval and freight are not covered by this build yet.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`: `intake` reads new orders from the production board, `draft`

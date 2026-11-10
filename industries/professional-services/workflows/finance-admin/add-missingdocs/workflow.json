@@ -8,7 +8,6 @@
  "summary": "Finds the bank transactions and bills in an accounting practice's Xero file that have no document attached, lists them by client, and drafts one chase email per client for approval. Crons read and draft; a person approves every email before it leaves.",
  "families": {
   "all": {
-   "evidence": "1 discovery call read for this workflow (the variants file); Xero's API spec and help pages for the mapped reads",
    "steps": ["check-received", "identify-gaps", "chase-client", "follow-up-chase", "record-keeping"],
    "covered_by": {
     "check-received": "cron scan (Xero bank transactions and bills with no attachment in the lookback)",
@@ -47,9 +46,5 @@
   "Chase emails go to settings.client_email, the client's own address. The Xero contact on each item (a supplier or customer) is never chased, and the chase cron refuses to run without client_email.",
   "A rejected chase still counts as sent for its stage, so the next reminder follows on schedule. Resending a rejected chase needs a runtime change.",
   "The Xero adapter is docs-only until a Xero demo organisation proves the reads. Deploy's secretNames reads only intake, quotes, rate_card and messages, so the Xero and Microsoft keys are not listed for this workflow. add-bas has the same gap."
- ],
- "evidence": {
-  "calls": "1 discovery call read for this workflow",
-  "platforms": "Xero's OpenAPI spec for the mapped reads; Dext and Microsoft 365 help pages, with no mapped operations"
- }
+ ]
 }

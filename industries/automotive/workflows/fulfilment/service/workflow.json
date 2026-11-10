@@ -8,7 +8,6 @@
  "summary": "Service and recall reminders: works out when each completed job's next service falls due, queues a reminder to the customer for approval, and records any text they send back. Crons read and queue; a person approves every message. Recall checks and bookings are not covered yet (see gaps).",
  "families": {
   "fleet-account-reminders": {
-   "evidence": "1 dealer service discovery call describes reminders and customer replies sent through a messaging tool, with bookings in the diary",
    "steps": ["due-list-build", "reminder-send", "customer-reply", "booking-diary", "record-keeping"],
    "covered_by": {"due-list-build": "due-list (completed jobs past the service interval)", "reminder-send": "remind (queued for approval)", "customer-reply": "replies (records inbound texts; the answer is a skill step)", "booking-diary": "not built (a person books the visit in ServiceM8's diary)", "record-keeping": "due records and replies in the workflow's store"}
   }
@@ -41,9 +40,5 @@
   "Marketing rule: ServiceM8's messaging docs say marketing and promotional SMS is not permitted. A service reminder is a service message, but confirm the customer consent wording with the client before the first live send.",
   "Send window: ServiceM8's own booking reminders send SMS only between 7am and 7pm. The window for API sends is not confirmed, so approve reminders in business hours.",
   "Docs-only until a ServiceM8 trial account proves the reminder sends, the job contact fields and the inbound SMS records."
- ],
- "evidence": {
-  "calls": "1 automotive service discovery call, which described reminders and replies sent by a messaging tool and bookings in a diary",
-  "platforms": "ServiceM8, MechanicDesk and WorkshopMate help pages on service reminders; only ServiceM8 has mapped operations in the kit"
- }
+ ]
 }

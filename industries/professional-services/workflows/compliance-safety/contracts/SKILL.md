@@ -5,7 +5,7 @@ description: Contracts read by hand for a professional services business. Use wh
 
 # Contracts read by hand
 
-Built from one discovery call (health advisory consulting) that describes reading contracts by hand. The evidence is thin, so see the gaps in `workflow.json` before relying on it.
+Contracts read by hand: contract emails are logged from the inbox, the owner gets a drafted review note with a register row, and unsigned signers on envelopes out for signature get reminders queued for approval. Crons read and draft; a person approves every email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` logs contract emails from the client's folder. `review` adds a register row and drafts a review note to the owner. `follow-up` queues reminders to unsigned signers on DocuSign envelopes that are out for signature. They read and draft only. Every email waits for a person to approve it in the CRM shell.

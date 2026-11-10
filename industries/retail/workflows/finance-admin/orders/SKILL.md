@@ -5,8 +5,7 @@ description: Orders that arrive by email for a retail business, entered as draft
 
 # Orders by email
 
-Built from 8 retail discovery calls, 3 of which describe this order flow: an emailed order is typed again into the accounting
-system, stock is checked by hand, and the customer is emailed about delays.
+Takes orders that arrive by email, enters each one as a draft invoice in Xero, and drafts the customer confirmation in Gmail. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `intake` reads new order emails from Gmail that match the search in

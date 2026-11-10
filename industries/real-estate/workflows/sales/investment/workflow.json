@@ -8,7 +8,6 @@
  "summary": "Checks each watched investment property's record and price estimate, works out gross yield and cash flow from the buyer's assumptions, and records the result as a note on the property. Crons read and draft; nothing reaches the investor without a person.",
  "families": {
   "buyers-agent-shortlist": {
-   "evidence": "5 discovery calls (2 buyers agents, 1 investment advisory) describe working out investment maths by hand",
    "steps": ["property-facts", "comparable-sales", "cash-flow", "scenario-compare", "present-to-client"],
    "covered_by": {
     "property-facts": "draft (VaultRE property read, Domain price estimate read)",
@@ -42,9 +41,5 @@
   "CoreLogic RP Data: the pages supplied are market insight articles with no product or API docs, so it is not mapped.",
   "Tax impact, yield and growth outlook, and scenario comparisons are judgment steps for the agent in SKILL.md, not crons.",
   "Every adapter is docs-only until a sandbox or trial account proves it. The VaultRE adapter needs a real account to confirm the property note type ID."
- ],
- "evidence": {
-  "calls": "5 real-estate discovery calls describe investment maths; 4 of 5 steps are done by hand, property facts use a one-click constraint check (one buyers agent)",
-  "platforms": "real-estate-investment-platforms.json: no platform had a mapped operation for any step (corelogic-rp-data, google-workspace, microsoft-365 partial or unknown). Mapped kit platforms used here: vaultre and domain."
- }
+ ]
 }

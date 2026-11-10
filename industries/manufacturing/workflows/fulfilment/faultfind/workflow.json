@@ -8,7 +8,6 @@
  "summary": "Takes a machine breakdown from the business's job system to a fix: it logs each open breakdown, drafts a fault-finding note from the same customer's earlier jobs and the parts on hand, escalates a breakdown that stays open past the window, and writes the repair record when the job completes. Crons read and draft; an escalation email waits for a person to approve it.",
  "families": {
   "breakdown-repair": {
-   "evidence": "2 discovery calls mention breakdown fault-finding; the steps below come from platform help pages (mex-cmms, mrpeasy, odoo), not from the calls",
    "steps": ["report-breakdown", "make-safe", "check-history", "diagnose-cause", "source-parts", "repair", "test-return", "escalate-vendor", "record-keeping"],
    "covered_by": {"report-breakdown": "intake", "make-safe": "skill (safety procedure stays with the site)", "check-history": "diagnose", "diagnose-cause": "skill (judgment at the machine)", "source-parts": "diagnose (parts on hand listed in the note)", "repair": "skill", "test-return": "skill", "escalate-vendor": "escalate (approval)", "record-keeping": "record"}
   }
@@ -42,9 +41,5 @@
   "Job-to-asset link: the mapped ServiceM8 operations hold no job-to-asset field, so the note matches history by customer, not by machine.",
   "Parts ordering from suppliers is not automated. The repair record lists the parts used on the job only.",
   "ServiceM8 is spec status and tested offline only; no live account has run these operations."
- ],
- "evidence": {
-  "calls": "2 of the manufacturing discovery calls read; neither yielded a step, a platform or a family, so the workflow record rests on platform help pages",
-  "platforms": "mex-cmms and mrpeasy help pages (no mapped kit operations for this job); odoo forum threads (one mapped operation, a version check); ServiceM8 is the only mapped platform with working auth for this job"
- }
+ ]
 }

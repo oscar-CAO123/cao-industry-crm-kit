@@ -8,7 +8,6 @@
   "summary": "Builds a pre-call brief for each deal that closes soon: the deal, its contact and company from the CRM, plus the company's profile, news and hiring from Apollo. The brief is written once as an internal note on the deal, with discovery questions. A person approves any change to the deal's next step.",
   "families": {
     "precall-research": {
-      "evidence": "2 calls read; neither describes a pre-call routine. The family is built from the Apollo, Clay and HubSpot help pages, mapped step by step",
       "steps": [
         "trigger-booked",
         "pull-crm-history",
@@ -109,11 +108,7 @@
     "Lead scoring: no route is built. Neither HubSpot nor Apollo scoring is read here.",
     "HubSpot pipelines: the closed-stage filter uses the standard names closedwon and closedlost. A custom pipeline needs its own list before the deal window is right.",
     "HubSpot property names (dealname, dealstage, closedate, amount, hs_next_step, hs_note_body, hs_timestamp, jobtitle, numberofemployees) are read from HubSpot's standard property set, not from the spec. Confirm each on the live account.",
-    "Notes on a deal (past calls, emails) are not read: the note search is mapped but not used, so the brief does not show the call history yet.",
+    "Notes on a deal are not read: the note search is mapped but not used, so the brief does not show the call history yet.",
     "Both adapters are docs-only and offline-tested. Neither is proven against a real account: a HubSpot and an Apollo sandbox are needed."
-  ],
-  "evidence": {
-    "calls": "2 calls read for this workflow; no call describes a pre-call routine step by step, so the steps come from the platform pages",
-    "platforms": "Apollo, Clay and HubSpot help pages, mapped step by step. Mapped operations in the kit: Apollo 85, Clay 18, HubSpot 3,996. Clay has no pre-call route (see gaps)"
-  }
+  ]
 }

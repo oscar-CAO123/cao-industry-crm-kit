@@ -8,7 +8,6 @@
  "summary": "Finds failed or overdue member payments in Stripe and Xero, notes each one in Xero, and queues the retry or reminder for a person to approve. Crons read and note; nothing charges or emails a member until approved.",
  "families": {
   "membership-direct-debit": {
-   "evidence": "0 discovery calls describe this way of handling failed payments; steps come from the platform docs only",
    "steps": [
     "payment-run",
     "failure-detect",
@@ -25,7 +24,6 @@
    }
   },
   "appointment-card-on-file": {
-   "evidence": "0 discovery calls describe this way of handling failed payments; steps come from the platform docs only",
    "steps": [
     "card-update",
     "member-contact"
@@ -102,10 +100,6 @@
   "Xero cannot tell a failed card or direct debit from an unpaid invoice, so an overdue Xero invoice stands in for a failed payment.",
   "Xero is read one page at a time (first 100 authorised invoices). Paging is not built.",
   "A Stripe invoice that also synced into Xero would count twice. Not de-duplicated.",
-  "No call evidence and no sandbox run yet: the Stripe test mode and a Xero demo company are needed before this runs for a client."
- ],
- "evidence": {
-  "calls": "0 of 1 discovery call describes failed-payment handling (1 call read, 0 rejected)",
-  "platforms": "Mindbody (docs read, no ops), Stripe and Xero (docs read, ops mapped)"
- }
+  "No sandbox run yet: Stripe test mode and a Xero demo company are needed before this runs for a client."
+ ]
 }

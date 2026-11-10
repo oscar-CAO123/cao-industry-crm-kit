@@ -5,8 +5,7 @@ description: Finds tenders, grants and advertised work that fit the business, fr
 
 # Opportunity finding
 
-Built from how businesses described finding work on discovery calls: 40 calls read, 39 describing the process. Most named
-tenders. Source scans were manual in every call that described one.
+Finds tenders, grants and advertised work that fit the business. Reads the alert emails that tender and grant portals send to the business's mailbox, logs each new opportunity to a register, and drafts a digest of the ones a person judges a fit for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `scan` reads the alert emails in the mailbox folder each hour and stores

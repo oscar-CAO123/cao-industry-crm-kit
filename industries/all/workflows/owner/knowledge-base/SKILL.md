@@ -5,8 +5,7 @@ description: Keeps a searchable knowledge base of a business from the SOPs, page
 
 # Knowledge base
 
-Built from how 33 Australian businesses described keeping their know-how on discovery calls. Most write each entry by hand or with an AI
-assistant, publish it to a wiki or shared drive, and gather the SOPs they already have.
+Keeps a searchable knowledge base of the business: it gathers the SOPs, pages and docs the business already has into one indexed store, writes new entries from them as draft pages in Confluence, and publishes each entry once a person approves it. Crons read and draft; a person approves every publish.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `gather` reads the existing Confluence pages and Google Docs into one stored, searchable

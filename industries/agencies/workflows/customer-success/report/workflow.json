@@ -8,7 +8,6 @@
  "summary": "Pulls each client's numbers for the last full month, drafts the client report in Gmail once the account manager has written the commentary, and queues the send for approval. Crons read and draft; a person approves every send.",
  "families": {
   "all": {
-   "evidence": "2 discovery calls describe how they produce client reports",
    "steps": ["report-trigger", "pull-data", "check-data", "build-report", "add-commentary", "internal-review", "send-report", "client-questions", "action-items", "record-keeping"],
    "covered_by": {
     "report-trigger": "pull (runs daily and takes the last full month)",
@@ -50,9 +49,5 @@
   "Client questions and action-item tracking are not built. Agency Analytics describes a client login and goal alerts, not a task tracker.",
   "The trend view the owner asked for has no fitting solution yet. A trend read would be a skill, not a cron.",
   "Every adapter is docs-only until a sandbox Supermetrics account and a Google Workspace test mailbox prove it."
- ],
- "evidence": {
-  "calls": "2 of the agencies discovery calls about client reporting, both describing a monthly report built by hand or in a dashboard",
-  "platforms": "vendor docs for Agency Analytics and Reportz (no kit mapping), and the Supermetrics spec for its query operation"
- }
+ ]
 }

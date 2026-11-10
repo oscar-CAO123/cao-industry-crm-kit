@@ -5,9 +5,7 @@ description: Drinks counted by hand in a bar, cellar or venue, checked against t
 
 # Drinks counted by hand
 
-Built from 2 discovery calls with hospitality businesses. Those calls did not describe the steps or the tools in
-enough detail, so the steps here follow the platform evidence: Square's inventory API, plus the Eats365 and
-Lightspeed docs, which have no mapped API yet.
+Takes the drinks count a bar or cellar does by hand, checks each line against the system count in the venue's POS, and posts the counts to the POS once a person approves them. Crons read and record; a person approves every change to stock.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `snapshot` reads the system stock of each tracked drink at each

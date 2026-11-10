@@ -5,9 +5,7 @@ description: Stock on hand checked against each item's minimum, with a draft sup
 
 # Stock ordering
 
-Built from how 40 Australian businesses described stock ordering on discovery calls. Most owners count stock, spot a low item
-and raise the purchase order by hand, often in a spreadsheet or a stock system, and chase the delivery themselves. This workflow
-does the checking and the drafting. The owner still decides what to buy and sends it.
+Tracks stock on hand against each item's minimum and drafts the supplier purchase order when an item runs low, so the owner does not have to check stock and raise orders by hand. Crons read and draft only; a purchase order reaches a supplier only after a person approves it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `stock-check` reads stock on hand for each item the owner reorders,

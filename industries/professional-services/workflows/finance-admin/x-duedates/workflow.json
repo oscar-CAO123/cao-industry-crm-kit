@@ -33,9 +33,5 @@
     "Xero's date format (/Date(ms)/ or ISO text) is handled in code but not yet confirmed against a live or demo organisation. Confirm before a live run.",
     "Docs-only until a Xero demo organisation proves the reads, the task draft and the invoice email. A contact with no email address fails at approval, so check contacts first.",
     "Judgment steps stay with the practice: confirming work is done, asking a client for an extension, escalating a missed deadline, and assigning work to a person."
-  ],
-  "evidence": {
-    "calls": "variants file: 9 calls read, 0 describe the process in enough detail to build steps; worklist: 0",
-    "platforms": "Ignition, Karbon and Xero docs read (mining run). Xero is the only platform with mapped operations for this job: invoice reminder settings, projects and tasks."
-  }
+  ]
 }

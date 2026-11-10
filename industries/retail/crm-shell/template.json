@@ -2,7 +2,7 @@
  "industry": "retail",
  "name": "Retail",
  "version": 1,
- "source": "Pages and tabs follow the retail demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -686,440 +686,280 @@
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 23
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 18
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 18
-   }
+   "status": "docs-only"
   },
   {
    "id": "stock-ordering",
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 18
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 16
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 15
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:products",
    "dir": "industries/retail/workflows/fulfilment/products",
    "department": "fulfilment",
    "name": "Product data pipeline",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:reconciliation",
    "dir": "industries/all/workflows/finance-admin/reconciliation",
    "department": "finance-admin",
    "name": "Reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "job-tracking",
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
    "name": "Track jobs or projects from start to finish",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "email-marketing",
    "dir": "industries/all/workflows/marketing/email-marketing",
    "department": "marketing",
    "name": "Send newsletters and automated email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "competitor-watch",
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "status-updates",
    "dir": "industries/all/workflows/customer-service/status-updates",
    "department": "customer-service",
    "name": "Tell customers where their job, order or matter is up to",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:x-returns",
    "dir": "industries/retail/workflows/customer-service/x-returns",
    "department": "customer-service",
    "name": "Returns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:fulfil",
    "dir": "industries/retail/workflows/fulfilment/fulfil",
    "department": "fulfilment",
    "name": "Fulfilment run",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:orders",
    "dir": "industries/retail/workflows/finance-admin/orders",
    "department": "finance-admin",
    "name": "Orders by email",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "scheduling-dispatch",
    "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
    "department": "fulfilment",
    "name": "Schedule and dispatch jobs, staff or vehicles",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "complaints",
    "dir": "industries/all/workflows/customer-service/complaints",
    "department": "customer-service",
    "name": "Triage complaints and refunds",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "checkins-winback",
    "dir": "industries/all/workflows/customer-success/checkins-winback",
    "department": "customer-success",
    "name": "Check in, renew or win back customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "invoicing",
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "payroll-timesheets",
    "dir": "industries/all/workflows/finance-admin/payroll-timesheets",
    "department": "finance-admin",
    "name": "Turn timesheets into payroll",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:artwork",
    "dir": "industries/retail/workflows/fulfilment/artwork",
    "department": "fulfilment",
    "name": "Product mockups and artwork",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:disputes",
    "dir": "industries/retail/workflows/finance-admin/disputes",
    "department": "finance-admin",
    "name": "Refund and chargeback watch",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:x-batches",
    "dir": "industries/retail/workflows/finance-admin/x-batches",
    "department": "finance-admin",
    "name": "Batches and landed costs",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:supplier-production",
    "dir": "industries/retail/workflows/fulfilment/supplier-production",
    "department": "fulfilment",
    "name": "Run production with overseas factories, freight forwarders and licensors (tech packs, samples, shipping)",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:x-flows",
    "dir": "industries/retail/workflows/marketing/x-flows",
    "department": "marketing",
    "name": "Email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "retail:wholesale",
    "dir": "industries/retail/workflows/sales/wholesale",
    "department": "sales",
    "name": "Win and look after wholesale accounts and stockists",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1127,84 +967,70 @@
   {
    "tool": "Shopify",
    "platform": "shopify",
-   "status": "index-only",
-   "calls": 26
+   "status": "index-only"
   },
   {
    "tool": "Klaviyo",
    "platform": "klaviyo",
-   "status": "spec",
-   "calls": 12
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 8
+   "status": "spec"
   },
   {
    "tool": "HubSpot",
    "platform": "hubspot",
-   "status": "spec",
-   "calls": 8
+   "status": "spec"
   },
   {
    "tool": "Google Ads",
    "platform": "google-ads",
-   "status": "spec",
-   "calls": 8
+   "status": "spec"
   },
   {
    "tool": "Meta Ads",
    "platform": "meta-ads",
-   "status": "spec",
-   "calls": 7
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 6
+   "status": "spec"
   },
   {
    "tool": "Canva",
    "platform": "canva",
-   "status": "spec",
-   "calls": 6
+   "status": "spec"
   },
   {
    "tool": "Slack",
    "platform": "slack",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "Asana",
    "platform": "asana",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Monday.com",
    "platform": "monday",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "WooCommerce",
    "platform": "woocommerce",
-   "status": "docs-read",
-   "calls": 3
+   "status": "docs-read"
   }
  ],
  "missing_connectors": [
   {
-   "tool": "Fishbowl",
-   "calls": 2
+   "tool": "Fishbowl"
   },
   {
-   "tool": "Starship",
-   "calls": 2
+   "tool": "Starship"
   }
  ]
 }

@@ -9,7 +9,6 @@
  "settings": "settings.example.json",
  "families": {
   "by-hand-or-unstated": {
-   "evidence": "6 of the 8 calls read describe this way of buying; the variant has no stated turnaround or volume",
    "steps": ["request-raised", "budget-check", "approval", "raise-po", "send-po", "invoice-match", "pay-supplier", "record-keeping", "other"],
    "covered_by": {
     "request-raised": "reorder (stock under minimum only; other requests by hand)",
@@ -55,9 +54,5 @@
   "MYOB: its purchase order ops are read only in the kit, and its auth needs a token exchange that is not built. Not adapted.",
   "PrintIQ, Acumatica and Odoo: no mapped API operations in the kit (Odoo maps a version call only; Acumatica has marketing pages and no ops file). Not adapted.",
   "Tested offline only: Unleashed calls are stubbed at the draft boundary, Xero runs through a fake network. Neither is run against a real account."
- ],
- "evidence": {
-  "calls": "The worklist counts 1 call. The variant mining read 8 calls, and 6 describe the process.",
-  "platforms": "The platform evidence lists Acumatica and Odoo, with no mapped API operations for either. The adapters use the kit's Unleashed and Xero operations."
- }
+ ]
 }

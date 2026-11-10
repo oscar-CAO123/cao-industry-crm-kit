@@ -5,8 +5,7 @@ description: Supplier bills and receipts into Xero as DRAFT bills, checked again
 
 # Bills and expenses
 
-Built from 39 discovery calls about bills and receipts (34 described the process, 24 of them construction businesses).
-Typical pain: invoices keyed by hand, purchase orders guessed, mismatched bills chased by a person, receipts reconciled each day.
+Turns supplier bills and receipts into entered bills in the business's accounting software, checks each against its purchase order and chart of accounts, queues each authorisation for a person, and lists the bills that are overdue to pay. Crons read and draft; a person approves every authorisation.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

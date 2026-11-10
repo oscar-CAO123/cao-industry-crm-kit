@@ -5,9 +5,7 @@ description: Staff questions answered from the business's own SOPs and policies,
 
 # Staff helpdesk
 
-Built from how 25 Australian businesses described answering staff questions on discovery calls. Staff ask where a process is,
-what a policy says, or how to do a task. The answer lives in an SOP, a policy or a training video, and today the owner or a
-senior person writes it out by hand.
+Turns a staff question into a reply grounded in the business's own SOPs and policies, in the thread it came from. Crons read, search and draft; a person approves every reply before it goes out.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` collects questions from Gmail, a Chat space and a Slack

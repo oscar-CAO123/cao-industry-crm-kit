@@ -5,9 +5,7 @@ description: Tracks jobs and projects from start to finish in ServiceM8 and Asan
 
 # Job tracking
 
-Built from how 39 Australian businesses described tracking jobs or projects on discovery calls. Two ways of working:
-**dispatched field jobs** (a job is created, scheduled to a crew, progressed, invoiced and closed in a field-service system) and
-**project milestones** (a project is planned, tracked against milestones, costed and claimed). Every step runs mostly by hand today.
+Tracks each job or project from creation to close-out in the business's own system: ServiceM8 jobs and Asana projects. Crons read status and last activity, draft internal notes, and queue any client message for a person to approve. Nothing reaches a client without approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` adds open ServiceM8 jobs and Asana projects to the tracking record,

@@ -5,8 +5,7 @@ description: Ad spend, cost per lead and leads from the business's own Meta ad a
 
 # Ad reporting
 
-Built from how 49 calls described ad reporting for businesses of all kinds. Most of the work was done by hand: a media buyer or the owner
-copied spend and lead numbers into a sheet, then judged which ads to keep or scale.
+Reports each day what the business spends on Meta ads, what each ad costs per lead and how many leads it brings in, and queues a pause for any running ad over the owner's cost-per-lead limit. Return on ad spend needs the business's sales records, so that step stays with the owner. Crons read and draft; a person approves every pause.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

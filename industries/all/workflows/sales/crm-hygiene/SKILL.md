@@ -5,8 +5,7 @@ description: Clean and dedupe a business's CRM records (HubSpot or Pipedrive) on
 
 # CRM hygiene
 
-Built from how businesses described cleaning their CRM records on discovery calls. Most of it is manual today: records are exported,
-checked by hand, merged or fixed one at a time, and nobody records what changed.
+Cleans and dedupes the business's own CRM records on a schedule. A weekly scan reads the contacts, finds records that share an email address and records whose email needs trimming or lowercasing, and drafts a register of those fixes. Each merge and each email change is queued for a person to approve, so nothing in the CRM is merged or changed until a person approves it.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `scan` reads the contacts (HubSpot) or persons (Pipedrive), groups them by email

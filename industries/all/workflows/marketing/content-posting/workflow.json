@@ -8,7 +8,6 @@
   "summary": "Creates and schedules social posts: each planned post becomes an unpublished Instagram draft and its publish is queued for approval, and recent posts are read back. Crons read and draft; a person approves every publish.",
   "families": {
     "all": {
-      "evidence": "31 of 40 discovery calls describe how they make and post social content, and every step is manual",
       "steps": ["idea-capture", "content-plan", "create-visual", "write-caption", "approve", "schedule", "publish", "respond", "track-results"],
       "covered_by": {"idea-capture": "skill (the owner or agent gives the idea)", "content-plan": "skill (planned posts are written to the posts store)", "create-visual": "skill (the picture is made by hand or in Canva, and needs an https link)", "write-caption": "skill (caption written by the agent, checked before it is planned)", "approve": "approval (a person approves each live publish in the CRM shell)", "schedule": "not yet (see gaps)", "publish": "draft (Instagram container) and approval (live publish)", "respond": "skill (replies to comments are judgment, not a cron)", "track-results": "read (recent posts on Instagram and the Facebook Page)"}
     }
@@ -39,9 +38,5 @@
     "Per-post insights are not read: the metric names need confirming against Meta's docs first. track reads recent posts only.",
     "No command or CRM screen adds a planned post yet. The agent or owner writes it to the posts namespace until a form exists (tools/workflow.ts has propose, which is quoting-only).",
     "The Meta token needs the Instagram publishing and Page posting permissions. Checked offline only, not against a real account."
-  ],
-  "evidence": {
-    "calls": "40 content-posting calls were read: 31 describe the process, with manual share at 100 percent on most steps",
-    "platforms": "the Hootsuite, Metricool and Vista Social help pages were read: none has a mapped API operation, so the kit adapter covers Meta only"
-  }
+  ]
 }

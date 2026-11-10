@@ -37,13 +37,9 @@
  "adapters": {},
  "gaps": [
   "No tab or POS source is mapped. Lightspeed (Tableside, Foratable) and Mews are not in the kit's platform list, and the mining pages for them are restaurant POS, blog or press text. Oracle Opera was fetched with the wrong pages entirely.",
-  "The mining file for this workflow (hospitality-tabs-room-charges-variants.json) does not exist, so there is no call evidence behind the steps.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Cloudbeds is the only mapped property system here, and its ops are spec status, not proven against a real account. No adapter file is written: a live Cloudbeds account and the request body for moveTransactions and routeTransactions are needed first.",
   "The folio-post cron is not wired. It needs the tab feed, the charge body fields confirmed from the vendor spec, and a sandbox property.",
   "Judgment steps stay with the agent: opening tabs, authorising room charges, disputes, end-of-shift close and payment."
- ],
- "evidence": {
-  "calls": "0 (the variants file is missing)",
-  "platforms": "3 platforms in the mining file (Lightspeed, Mews, Oracle Opera); 1 is mapped in the kit (Cloudbeds)"
- }
+ ]
 }

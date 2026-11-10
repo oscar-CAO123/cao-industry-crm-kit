@@ -21,6 +21,6 @@ Neither cron sends anything to a worker, client, GP or plan manager. No live ope
 - Any incident, medication or client-update step: these stay with the worker and the coordinator. See `gaps` in `workflow.json`.
 
 ## Not covered
-- ShiftCare, the platform most calls named: no adapter, no mapped operations.
+- ShiftCare: no adapter, no mapped operations.
 - Sending a note back to the worker, incident records, medication logs, handover, client or family updates, and timesheet billing.
 - Regulator or funder compliance. The check is keyword matching for the points in settings.

@@ -5,10 +5,7 @@ description: Tracks equipment, vehicles and machinery from Trackunit and turns p
 
 # Asset maintenance
 
-Built from 15 discovery calls that describe how the caller services equipment, vehicles and machinery.
-The calls mostly describe manual servicing: spreadsheets, WhatsApp photos and phone bookings. This build covers the parts a
-telematics platform and a job board can do: the register, the planned services that are due, failed inspection checks,
-and a reminder for an overdue service.
+Keeps the asset register from Trackunit, turns each planned service that is due into a Work Order job in ServiceM8, turns each failed inspection into a defect job, and queues an overdue reminder for approval. Crons read and draft; a person approves every email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

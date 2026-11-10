@@ -5,9 +5,7 @@ description: Safety paperwork for a construction business that keeps SWMS, pre-s
 
 # Safety paperwork
 
-Built from how construction businesses described safety paperwork on discovery calls: pre-starts for plant and machines,
-SWMS and JSA forms filled in before high-risk work, sign-off on paper, job documents in folders, and handover packs collated
-by hand after each job.
+Turns the safety paperwork a construction business does by hand (pre-starts, SWMS, sign-off, incident and close-out records) into SiteBook records, and reminds the crew when reviews and actions fall due. Crons read and draft; every reminder email waits for a person to approve it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `prestart` creates a pre-start checklist for each job from the

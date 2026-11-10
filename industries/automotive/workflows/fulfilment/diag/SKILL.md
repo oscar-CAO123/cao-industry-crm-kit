@@ -5,7 +5,7 @@ description: Turns a workshop technician's diagnostic notes and photos into a pl
 
 # Diagnostic write-up
 
-Built from 2 automotive diagnostic calls and the platform pages for three workshop systems. Only ServiceM8 is mapped in the kit, so ServiceM8 is the only platform this workflow touches.
+Turns a technician's diagnostic notes and photos into a plain write-up of the fault and the work it needs, filed on the job, then queued to the customer for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` finds Quote-status jobs waiting for a write-up. `draft` files the technician's notes and a photo list on the job as an internal note marked `DRAFT WRITE-UP`. `queue` queues the customer email once the shop has finished the note. None of them sends anything. The email goes out only when a person approves it.

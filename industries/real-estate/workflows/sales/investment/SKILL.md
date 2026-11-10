@@ -5,8 +5,7 @@ description: Investment maths for buyers agents and investment advisers: propert
 
 # Investment maths by hand
 
-Built from five discovery calls (two buyers agents, one investment adviser) where the maths is done by hand for each
-property. Every step except the property constraint check is manual in those calls.
+Checks each watched investment property's record and price estimate, works out gross yield and cash flow from the buyer's assumptions, and records the result as a note on the property. Crons read and draft; nothing reaches the investor without a person.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `property-facts` reads each watched property's VaultRE record and its

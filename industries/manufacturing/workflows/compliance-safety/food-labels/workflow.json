@@ -8,7 +8,6 @@
  "summary": "Turns a product's recipe into a draft ingredient declaration, a per 100 g nutrition panel and the allergens it contains, written as a draft row in the business's own Airtable. Crons read and draft only; a person checks each draft against the Food Standards Code before any label is used.",
  "families": {
   "recipe-to-label": {
-   "evidence": "0 discovery calls for this workflow; 3 platform briefs read (epif, foodworks, mrpeasy), none mapped in the kit",
    "steps": ["trigger-new-product", "recipe-capture", "ingredient-list", "nutrition-calc", "allergen-check", "claims-check", "label-artwork", "compliance-review", "proof-approval", "print-and-pack", "supplier-spec-update", "record-keeping", "other"],
    "covered_by": {"trigger-new-product": "intake (new row in the Products table)", "recipe-capture": "draft (Recipe table)", "ingredient-list": "draft (ingredient declaration by weight)", "nutrition-calc": "draft (per 100 g panel from the Ingredients table)", "allergen-check": "draft (allergens listed on each ingredient)", "claims-check": "skill", "label-artwork": "not covered", "compliance-review": "skill (person checks every draft)", "proof-approval": "not covered", "print-and-pack": "not covered", "supplier-spec-update": "not covered", "record-keeping": "draft (Drafts table row)", "other": "not covered"}
   }
@@ -36,9 +35,5 @@
   "Allergens come from a list a person keeps on each ingredient. This is not a legal allergen declaration and does not handle may-contain statements.",
   "Claims check, label artwork, proof approval, printing, and supplier specification updates are judgment or outside the kit: the agent skill covers the judgment; the rest has no mapped operation.",
   "No live operation is mapped, so nothing is queued for approval. A label sent to a printer or a customer needs a live operation added once a platform for it is mapped."
- ],
- "evidence": {
-  "calls": "0 discovery calls for food labels",
-  "platforms": "3 platform briefs (epif, foodworks, mrpeasy); none is mapped in the kit. Unleashed is mapped for recipes but not callable yet."
- }
+ ]
 }

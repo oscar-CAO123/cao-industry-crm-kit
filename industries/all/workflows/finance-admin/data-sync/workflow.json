@@ -8,7 +8,6 @@
  "summary": "Keeps the business's systems in sync so data is entered once: Xero contacts are mirrored into HubSpot companies, a HubSpot company with no Xero contact gets one, and each supplier bill that arrives as a draft in Xero is queued for a person to authorise. Crons read and draft only; nothing is paid, sent or changed for a customer without approval.",
  "families": {
   "all": {
-   "evidence": "36 of 40 discovery calls describe how they keep data in step; entry and re-entry are 73 to 100 percent manual",
    "steps": ["entry-first-system", "re-enter-elsewhere", "validation-check", "approval-hand-off", "reconcile", "reporting-pull", "automation-setup", "copy-export-import", "other"],
    "covered_by": {
     "entry-first-system": "gap (where data is first typed: email, forms, spreadsheets, paper dockets; no intake adapter here)",
@@ -50,9 +49,5 @@
   "One direction only: Xero is the source for contact names. An edit made in HubSpot does not change Xero.",
   "Duplicate checks beyond an exact name match, validation rules, error queues and payment reconciliation are not covered.",
   "Every adapter is docs-only until a Xero demo company and a HubSpot test portal prove the request shapes on a live account."
- ],
- "evidence": {
-  "calls": "40 calls read for data sync; 36 describe a process, with the most named tools in Microsoft 365, Xero, Simpro and spreadsheets",
-  "platforms": "HubSpot, Make and Xero platform pages read; Xero and HubSpot have mapped operations used here, Make does not have a fully mapped set"
- }
+ ]
 }

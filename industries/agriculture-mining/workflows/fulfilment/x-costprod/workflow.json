@@ -8,7 +8,6 @@
   "summary": "Works out what a grower or livestock producer spends to produce a crop, head or tonne, from the books, and checks it against budget. Crons read and draft into the workflow's own store; nothing leaves the business.",
   "families": {
     "from-the-books": {
-      "evidence": "No discovery call evidence yet (0 calls). Steps come from the x-costprod spec and the Xero docs, not from how owners described it.",
       "steps": ["cost-capture", "costs-by-block", "unit-cost", "budget-compare", "price-margin", "record-keeping"],
       "covered_by": {
         "cost-capture": "draft (accounting.getReportProfitAndLoss, actuals cost lines from Xero)",
@@ -44,12 +43,8 @@
     "Judgment steps stay with the person: scenario and what-if modelling, accountant review and tax treatment, lender and buyer reports, and the decision on crops, stock or selling time.",
     "unit-cost needs settings.volume (hectares, head or tonnes) because Xero does not hold production volume.",
     "Break-even is not computed. Xero holds no estimated yield or market price.",
-    "No call evidence: the variants file for this workflow was not produced (0 calls), so the families above are spec-derived, not call-derived. Re-run the reverse-engineer-workflow stage once calls exist.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
     "Budget compare sums every budget balance against actuals to date. It does not pro-rate the budget by period yet.",
     "No live operation is mapped or needed, so the approval path (queue, approve, re-run) has nothing to run in this workflow."
-  ],
-  "evidence": {
-    "calls": "0 discovery calls for x-costprod (worklist count)",
-    "platforms": "3 platforms in the platforms file: figured (11 partial, 3 unknown), traction-ag (5 yes, 6 partial, 3 unknown), xero (1 yes, 9 partial, 4 unknown). Only xero has a folder in core/sdk/platforms, so only xero is built. Xero's mapped reads: accounts, profit and loss, budget."
-  }
+  ]
 }

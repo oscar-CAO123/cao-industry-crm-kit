@@ -5,7 +5,7 @@ description: Purchase requests to ERP purchase orders and draft supplier bills f
 
 # Purchase request to ERP
 
-Built from how manufacturers described buying on discovery calls: stock falls, someone checks it, an order is raised, a person approves it, the supplier delivers, and the supplier bill is entered twice (once in the ERP, once in accounting).
+Turns a purchase request into an ERP purchase order. Stock under its minimum is raised as a parked order in Unleashed, a person approves it before it is placed with the supplier, and a receipted order becomes a draft supplier bill in Xero for the owner to match and approve. Crons read and draft; nothing reaches a supplier without approval.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

@@ -5,8 +5,7 @@ description: Keeps every prospect from the agency's Agentbox contact list in one
 
 # Prospects found, nothing tracked
 
-Built from three real-estate sales calls where prospects are found but not tracked in one place. Agentbox is the only
-platform in the evidence with mapped operations for this job, and only its contact list and single-contact read are mapped.
+Keeps every prospect from the agency's Agentbox contact list in one tracked pipeline, and lists the untracked prospects due for follow-up. Crons read and keep the record in the workflow's store; nothing is sent, booked or written back to Agentbox.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `pipeline-sync` reads the first page of Agentbox contacts each hour

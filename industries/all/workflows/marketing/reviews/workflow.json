@@ -8,7 +8,6 @@
  "summary": "Asks customers for a review after a finished job, and drafts a reply to each review that needs one. Crons read, draft and queue only: a person approves every review request, and a person posts every reply, because the kit cannot post replies yet.",
  "families": {
   "all": {
-   "evidence": "12 discovery calls describe how the business asks for reviews and answers them; 4 describe a process (job completion, the review request, replies to one-star reviews, a technician checklist)",
    "steps": ["job-complete", "review-monitor", "request-message", "request-channel", "reply-positive", "reply-negative"],
    "covered_by": {
      "job-complete": "ask (completed_jobs, written by the business's job tool or the CRM shell)",
@@ -48,9 +47,5 @@
   "Escalation: neither platform documents passing a poor review to a manager. A low rating is flagged in reply_drafts only.",
   "Review monitor and alerts for new Google reviews on GoHighLevel: not documented and not mapped.",
   "Both adapters are docs-only until a sandbox account (a Podium developer account, a GoHighLevel test sub-account) proves them."
- ],
- "evidence": {
-  "calls": "12 discovery calls read; none rejected. 4 describe a review process; 1 describes a Google review request sent only when a survey scores eight out of ten",
-  "platforms": "GoHighLevel help articles and Podium's API reference and review pages, mapped step by step. The Google Business Profile fetch returned Google Ads pages only"
- }
+ ]
 }

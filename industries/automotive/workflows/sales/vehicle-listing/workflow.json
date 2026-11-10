@@ -8,7 +8,6 @@
   "summary": "Lists vehicles for sale: reads the stock register, counts each vehicle's photos, drafts the listing copy and the ownership transfer checklist, and queues every send for approval. Crons read and draft; a person approves every send and pastes the approved copy into the listing sites.",
   "families": {
     "all": {
-      "evidence": "6 calls read; 1 described the process (a used car dealer checking rival prices weekly and cutting prices by hand). Platform help pages for AutoManager, Carsales and NSW Dealer Online were read.",
       "steps": ["stock-intake", "photograph", "write-description", "price-set", "publish-listing", "ownership-transfer", "sold-and-remove", "record-keeping"],
       "covered_by": {
         "stock-intake": "intake (vehicles marked To list in the stock register)",
@@ -49,9 +48,5 @@
     "The Excel tables have no row update operation in the kit. The register only gets new rows, and the stock register's Status cell is changed by a person, not by this workflow.",
     "Enquiry handling from buyers is not built.",
     "The adapter is docs-only until a Microsoft 365 developer tenant with a test workbook and a OneDrive photo folder proves it."
-  ],
-  "evidence": {
-    "calls": "6 of 6 vehicle listing calls read; 1 described the process. Calls named a used car dealer's weekly stock and price check.",
-    "platforms": "3 platform sources read (AutoManager, Carsales, NSW Dealer Online). None has a mapped operation in the kit, so the workflow uses the kit's mailbox, workbook and OneDrive (Microsoft 365) for the job."
-  }
+  ]
 }

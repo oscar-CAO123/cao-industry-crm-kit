@@ -5,8 +5,7 @@ description: Order fulfilment for a retail business that ships from a warehouse,
 
 # Fulfilment run
 
-Built from six discovery calls where retail businesses described fulfilment. Orders come in, the warehouse picks and packs
-them, they are dispatched and the customer is told where the parcel is. Most of it is still done by hand.
+Runs the order fulfilment cycle: takes new orders in from the business's system, checks stock in the warehouse, and queues each shipment for approval. Crons read and queue; a person approves every shipment. Pick, pack and label steps are not mapped yet.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` stores new sales orders. `stock-check` marks each order

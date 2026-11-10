@@ -50,7 +50,7 @@ export default async function TemplatePreviewPage(props: { params: Promise<{ ind
         </div>
         <div className="sh-card space-y-2">
           <h2 className="font-medium">Planned, not built yet</h2>
-          <p className="text-sm text-muted-foreground">Backed by this industry&apos;s evidence but not built, so not switched on.</p>
+          <p className="text-sm text-muted-foreground">Planned for this industry but not built, so not switched on.</p>
           <ul className="space-y-1 text-sm">{p.planned.map((w) => <li key={w.id}>{w.name} <span className="text-muted-foreground">({departmentOf(w.department)?.title})</span></li>)}</ul>
         </div>
       </section>

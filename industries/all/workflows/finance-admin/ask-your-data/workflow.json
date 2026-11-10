@@ -8,7 +8,6 @@
  "summary": "Answers the owner's questions about the business's own data (cash, profit, who owes what) from Xero, a fixed Power BI query and the numbers pack. Crons read and draft; the owner gets each answer only after a person approves the send.",
  "families": {
   "all": {
-   "evidence": "17 of 20 discovery calls describe how they get answers from their numbers",
    "steps": ["question-asked", "identify-source", "pull-data", "clean-data", "reconcile", "build-report", "verify-numbers", "answer-owner", "record-keeping", "decide-and-act"],
    "covered_by": {"question-asked": "intake (owner's email, read each run)", "identify-source": "skill (which figure set answers it)", "pull-data": "draft (Xero reports and invoices, Power BI query, numbers pack rows)", "clean-data": "skill", "reconcile": "skill", "build-report": "draft (answer built from the latest figures)", "verify-numbers": "skill", "answer-owner": "approval (the send waits for a person)", "record-keeping": "draft (questions and answers held in the store)", "decide-and-act": "not covered (the owner's decision)"}
   }
@@ -29,15 +28,11 @@
  },
  "draft_ops_note": "Draft operations reach nobody outside the business: reads, a DAX query, and an Outlook draft to the owner only. The one send is a live operation and waits for a person.",
  "gaps": [
-  "The mining platforms file was not written, so the platform choice follows the call tool counts and the kit's mapping. Xero, Power BI and Microsoft 365 have adapters here; Shopify (2 calls) needs its GraphQL shopifyql adapter, and Google Workspace, Sync Hub, Deputy, ShiftCare, ELMO, Style Arcade and Buildxact are not used by this job's adapters.",
+  "The mining platforms file was not written, so the platform choice follows the call tool counts and the kit's mapping. Xero, Power BI and Microsoft 365 have adapters here; Shopify needs its GraphQL shopifyql adapter, and Google Workspace, Sync Hub, Deputy, ShiftCare, ELMO, Style Arcade and Buildxact are not used by this job's adapters.",
   "Power BI's executeQueries is a POST that the kit classes as a write, so the cron needs KIT_ALLOW_WRITES=1 on the deploy. A readPost review in core would remove that need, but core is not edited here.",
   "Every adapter is docs-only: Xero, Power BI and Microsoft 365 are status spec in the kit, and each needs a sign-in (Xero refresh flow, a Power BI access token, a Graph access token) before any cron runs live.",
   "Xero needs the accounting.reports.read and invoices scopes on the connected app.",
   "The invoices list reads the first 100 authorised receivables only. Aged debtors by customer need a contact list step that is not built.",
   "Questions are answered from fixed figure sets. Reading a question's meaning, choosing a new query and explaining a figure stay with a person and the SKILL.md steps."
- ],
- "evidence": {
-  "calls": "20 ask-your-data calls read, 17 describe how the owner gets answers from the numbers; 11 pull-data and 15 build-report steps, most of them manual",
-  "platforms": "tool counts from the calls (Power BI 5, Xero 4, Microsoft 365 4); the platforms file was not present"
- }
+ ]
 }

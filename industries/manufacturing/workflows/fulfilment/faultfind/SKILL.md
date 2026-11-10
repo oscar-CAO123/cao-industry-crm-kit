@@ -5,8 +5,7 @@ description: Breakdown fix finder for a manufacturing or fabrication business, r
 
 # Breakdown fix finder
 
-Built from two discovery calls and the platform help pages of MEX Maintenance, MRPeasy and Odoo. The calls gave no steps, so the
-steps below are the general breakdown route: report, make safe, check history, diagnose, source parts, repair, test, escalate, record.
+Takes a machine breakdown from the business's job system to a fix: it logs each open breakdown, drafts a fault-finding note from the same customer's earlier jobs and the parts on hand, escalates a breakdown that stays open past the window, and writes the repair record when the job completes. Crons read and draft; an escalation email waits for a person to approve it.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

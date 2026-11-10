@@ -8,7 +8,6 @@
  "summary": "Onboards a new client: a HubSpot contact record, a checklist of onboarding steps in Google Tasks, team invitations in HubSpot, and a welcome email. Crons read and draft; a person approves every invitation and every email.",
  "families": {
   "all": {
-   "evidence": "24 of 40 onboarding calls describe how they onboard a client; the platform evidence maps steps for Google Workspace and HubSpot only",
    "steps": ["deal-won-handover", "collect-details", "contract-sign", "payment-setup", "account-setup", "data-import", "integrations-setup", "training-session", "welcome-comms", "record-keeping", "other"],
    "covered_by": {"deal-won-handover": "gap (no deal endpoints mapped; the client is listed in settings)", "collect-details": "gap (Typeform steps have no mapped operations)", "contract-sign": "gap (HubSpot quotes and contracts are not mapped)", "payment-setup": "read (payment account status)", "account-setup": "checklist (Google Tasks) and invite (HubSpot team, queued)", "data-import": "draft (one HubSpot contact record)", "integrations-setup": "gap (channel connections are set up in the platform)", "training-session": "gap (no scheduling operation mapped)", "welcome-comms": "welcome (Gmail draft, send queued)", "record-keeping": "draft (HubSpot contact record)", "other": "skill (judgment, not automated)"}
   }
@@ -46,9 +45,5 @@
   "The payment status read: the response is not read, so the workflow records only that the read ran.",
   "The checklist count reads the first 100 steps of each list. Lists longer than that are counted as far as they go.",
   "Every adapter is docs-only until a sandbox Google Workspace account and a HubSpot test portal prove the calls, the checklist, the Gmail draft and an approved invitation."
- ],
- "evidence": {
-  "calls": "40 onboarding calls read; 24 describe how they onboard a client, 13 by hand or unstated, 6 with another tool, 2 spreadsheet, 2 AI assistant, 1 job system",
-  "platforms": "Google Workspace and HubSpot help and onboarding pages, mapped step by step; both have mapped operations for this job. Typeform has steps but no mapped operations, so it is listed in gaps."
- }
+ ]
 }

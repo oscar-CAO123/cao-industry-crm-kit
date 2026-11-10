@@ -8,7 +8,6 @@
  "summary": "Keeps the business's existing landing pages current in Webflow and GoHighLevel. Crons read each site's pages and form results for the owner and queue every page content change for a person's approval. Crons read and queue; a person approves each change and publishes the page in Webflow.",
  "families": {
   "all": {
-   "evidence": "32 discovery calls name this workflow; 15 were read for steps and tools, 6 describe the process",
    "steps": [
     "page-request",
     "brief-and-offer",
@@ -93,9 +92,5 @@
   "Both lists read one page of 100 (Webflow pages and forms, GoHighLevel funnels and forms). A larger account needs paging added.",
   "GoHighLevel's funnel list shape is read as an array. The spec types it as an object, so confirm it on a live sub-account.",
   "Both adapters are docs-only until a sandbox Webflow site and a GoHighLevel sub-account prove each read and the content update."
- ],
- "evidence": {
-  "calls": "32 discovery calls name this workflow; 15 were read for steps and tools, 6 describe the process",
-  "platforms": "Webflow, GoHighLevel and HubSpot have mapped support in the mining run. Webflow and GoHighLevel are built here; HubSpot is listed in gaps."
- }
+ ]
 }

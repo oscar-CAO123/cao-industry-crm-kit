@@ -1,77 +1,58 @@
 {
-  "source": "Discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
   "tools": [
     {
-      "name": "Xero",
-      "calls": 6
+      "name": "Ambition Cloud"
     },
     {
-      "name": "HubSpot",
-      "calls": 5
+      "name": "Apply Online"
     },
     {
-      "name": "Microsoft 365",
-      "calls": 4
+      "name": "Cradle"
     },
     {
-      "name": "Power BI",
-      "calls": 3
+      "name": "Excel"
     },
     {
-      "name": "GoHighLevel",
-      "calls": 3
+      "name": "GoHighLevel"
     },
     {
-      "name": "Ambition Cloud",
-      "calls": 2
+      "name": "Google Workspace"
     },
     {
-      "name": "Meta Ads",
-      "calls": 2
+      "name": "HubSpot"
     },
     {
-      "name": "Apply Online",
-      "calls": 2
+      "name": "Ignition"
     },
     {
-      "name": "WhatsApp",
-      "calls": 2
+      "name": "Mailchimp"
     },
     {
-      "name": "Google Workspace",
-      "calls": 2
+      "name": "Meta Ads"
     },
     {
-      "name": "Zapier",
-      "calls": 2
+      "name": "Microsoft 365"
     },
     {
-      "name": "Slack",
-      "calls": 2
+      "name": "Power Automate"
     },
     {
-      "name": "Excel",
-      "calls": 2
+      "name": "Power BI"
     },
     {
-      "name": "Power Automate",
-      "calls": 2
+      "name": "Slack"
     },
     {
-      "name": "Ignition",
-      "calls": 2
+      "name": "Sync Hub"
     },
     {
-      "name": "Cradle",
-      "calls": 2
+      "name": "WhatsApp"
     },
     {
-      "name": "Sync Hub",
-      "calls": 2
+      "name": "Xero"
     },
     {
-      "name": "Mailchimp",
-      "calls": 2
+      "name": "Zapier"
     }
   ]
 }

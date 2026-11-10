@@ -5,8 +5,7 @@ description: Passing a piece of work between people or teams through Asana and S
 
 # Internal handoffs
 
-Built from how 29 Australian businesses described passing work between people on discovery calls. Nearly all do it by
-hand, by email or by memory. The handovers that do move through a tool use Asana, Slack, a job system or a spreadsheet.
+Passes a piece of work from one person or team to the next through Asana and Slack. Each handover is recorded as an Asana task, assigned with a due date and a note, and sent as a Slack message once a person approves it. Open handovers are chased on a set schedule and a daily status goes to the channel. Crons read and draft; a person approves every assignment and message.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` reads new requests from the Asana intake project and the
@@ -37,6 +36,6 @@ and the Slack message sent. Read the message before approving it: it goes to the
 status post are approved the same way.
 
 ## Not covered yet
-Email handovers, the job systems the calls named (GoHighLevel, ServiceM8, Xero, Airtable, Procore and others), Slack thread replies
+Email handovers, other job systems (GoHighLevel, ServiceM8, Xero, Airtable, Procore and others), Slack thread replies
 as acknowledgement, escalation after the last chase, and deciding what a handover should contain. Do these the business's usual
 way and record the result on the Asana task.

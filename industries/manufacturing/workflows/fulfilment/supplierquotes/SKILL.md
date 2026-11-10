@@ -5,8 +5,7 @@ description: Supplier quote comparison for a manufacturer or fabricator. Supplie
 
 # Supplier quote comparison
 
-Built from 3 manufacturing calls that describe supplier quotes. Two described the process: quantities taken from drawings,
-quotes arriving by email, and the comparison done by hand against supplier pricing.
+Collects supplier quote replies for one item list, logs each reply in a register, and drafts a side-by-side comparison for the buyer to check like for like. Crons read and draft; a person approves every chaser send and makes the award.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` logs each supplier reply to an open comparison in the register.

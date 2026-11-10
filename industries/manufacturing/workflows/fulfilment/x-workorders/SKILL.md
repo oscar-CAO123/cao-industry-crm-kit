@@ -5,8 +5,7 @@ description: Production plan to work orders for a manufacturer that runs product
 
 # Work orders
 
-Built from one discovery call with a food processor that plans production in Unleashed. Its owner sets units per day for each
-product over the next 30 days. Its purchasing plan orders components without checking stock minimums and maximums.
+Turns the production plan into parked work orders in the business's own system, checks component stock against minimums, and queues completion of finished work orders for a person to approve. Crons read and draft; a person approves every completion.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

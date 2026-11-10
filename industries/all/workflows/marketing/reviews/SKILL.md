@@ -5,7 +5,7 @@ description: Asks customers for reviews after a finished job and drafts replies 
 
 # Reviews: ask for them and reply
 
-Built from 12 discovery calls about how businesses ask for reviews and answer them. Most of those calls use Google reviews.
+Asks customers for a review after a finished job, and drafts a reply to each review that needs one. Crons read, draft and queue only: a person approves every review request, and a person posts every reply, because the kit cannot post replies yet.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `reviews` reads the business's reviews from Podium and drafts a reply

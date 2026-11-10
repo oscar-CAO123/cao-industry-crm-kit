@@ -8,7 +8,6 @@
  "summary": "Reads the missed calls on the business's JustCall number, queues one text back to each caller for approval, and logs each missed call as an internal note on the caller's GoHighLevel contact. The crons read, draft and queue; a person approves every text.",
  "families": {
   "all | justcall-with-gohighlevel": {
-   "evidence": "2 of the 5 calls in the worklist were read; neither described the steps, so the steps below come from the JustCall and GoHighLevel docs in the platform map",
    "steps": ["missed-call-detected", "auto-text-sent", "log-in-crm", "manual-callback"]
   }
  },
@@ -53,9 +52,5 @@
   "A caller with no name gets a contact named by phone number. The docs read give no way to take a name from a missed call.",
   "Restrict-once stops a second text to the same number within 24 hours. The approval key also stops a repeat queue for the same call.",
   "Both adapters are docs-only until a JustCall sandbox number and a GoHighLevel test location prove the reads, the text and the note."
- ],
- "evidence": {
-  "calls": "2 of 5 calls in the worklist read; 0 described the process step by step, 0 rejected",
-  "platforms": "JustCall (yes on missed-call detection, manual callback, caller replies and the missed-call list; partial on the text back), GoHighLevel (partial on most steps, mapped operations for contacts and notes), Twilio (unknown on every step, country SMS guidelines only)"
- }
+ ]
 }

@@ -8,12 +8,10 @@
  "summary": "Reconciles payments, bank and payouts: reads bank lines and processor payouts, matches each payout to its deposit and each receipt to its invoice, notes the matches, and queues every payment for approval. Crons read and draft; a person approves every ledger write.",
  "families": {
   "processor-payouts": {
-   "evidence": "8 calls describe pulling the bank feed and recording processor payouts by hand, mostly in Xero",
    "steps": ["pull-bank-feed", "pull-processor-reports", "match-customer-receipts", "record-keeping"],
    "covered_by": {"pull-bank-feed": "pull (Xero bank lines)", "pull-processor-reports": "pull (Stripe payouts)", "match-customer-receipts": "match (payouts to deposits, receipts to invoices, payment queued for approval)", "record-keeping": "match (internal note on the bank line)"}
   },
   "unclear": {
-   "evidence": "11 calls describe supplier payment matching and record keeping done by hand in Xero",
    "steps": ["match-supplier-payments", "chase-unmatched", "record-keeping"],
    "covered_by": {"match-supplier-payments": "not yet (see gaps)", "chase-unmatched": "match (worklist for a person)", "record-keeping": "match (internal note on the bank line)"}
   }
@@ -44,9 +42,5 @@
   "Reviewer sign-off is the approval queue itself: a payment runs only when a person approves it in the CRM shell.",
   "Stripe pagination reads up to 2,000 balance transactions a run. A business with more payouts in the lookback needs a larger window.",
   "Both adapters are docs-only until a sandbox (a Xero demo company and a Stripe test account) proves the field names and the matching rules on real data."
- ],
- "evidence": {
-  "calls": "40 of 52 reconciliation calls read; 19 describe the process; Xero is the most named tool (9 mentions, 7 of them in the record-keeping step)",
-  "platforms": "Xero, Stripe and MYOB help and API pages mapped step by step: Xero supports bank feeds and partly receipts, MYOB supports bank feeds and receipts, Stripe supports payouts only partly"
- }
+ ]
 }

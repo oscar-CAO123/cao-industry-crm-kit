@@ -8,7 +8,6 @@
  "summary": "Keeps each matter's settlement date in one place: the date the solicitors agree goes onto the Smokeball matter calendar, a typed date that disagrees is queued for a person to approve, and the team gets a reminder before settlement. Crons read and draft; nothing moves a settlement date without approval. On Rex it reads the sale contract's expected settlement date, flags a different agreed date for a person, and lists upcoming settlements; it writes nothing to Rex.",
  "families": {
   "all": {
-   "evidence": "3 discovery calls describe this way of working: settlement dates and solicitor liaison are typed by hand on every deal",
    "steps": [
     "settlement-date-agreed",
     "settlement-date-typed",
@@ -87,10 +86,6 @@
   "The solicitor's confirmed date is read by the agent or a person (judgment step in SKILL.md). No mailbox or conveyancer platform is mapped in this workflow.",
   "The offshore team's trust portal deposit requests and the 'agency settlements' tool named in one call have no platform in the kit.",
   "Cooling-off, finance and title dates are not tracked: only the settlement date.",
-  "The evidence is 3 discovery calls, which is thin for a pattern. Re-check this workflow after more calls."
- ],
- "evidence": {
-  "calls": "3 of the real-estate discovery calls on settlement describe this way of working; the variants file reads 7 calls, 3 of them describing the process",
-  "platforms": "Smokeball and Rex help and product pages (real-estate-settlement-platforms.json): Smokeball partial with mapped matter, event and reminder operations; Rex mapped in the kit (the contracts service carries date_expec_settlement and date_actual_settlement)"
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

@@ -5,8 +5,7 @@ description: Marketing numbers for a professional services firm, pulled from its
 
 # Marketing data in five places
 
-Built from one call with a professional services owner who checks ad data by hand. The job is to bring the firm's
-ad, website, search, lead and practice-system numbers into one place. Only the ad account is mapped so far.
+Gathers the firm's marketing numbers, which sit in five places (ads, website, search, leads and the practice system), into one report. Only the ad account is mapped so far: each day it reads Meta campaign spend, leads and cost per lead, and writes a report for the owner to read. Crons read and write the workflow's own store only; nothing is changed in the ad account and nothing is sent.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `pull` reads campaign spend, impressions, clicks and leads from

@@ -35,10 +35,6 @@
     "Requests are not read from a platform. Staff or the CRM shell write each sale or enrolment request into the workflow's store, and the crons act on those. Nothing in Square tells this workflow that a sale was requested.",
     "The kit has no gift card or loyalty capability names. The capabilities above are the nearest existing names and do not describe this job exactly.",
     "Square is status docs-only: its request bodies were checked against Square's official spec, but no call has run against a live account. Both the offline test and the live calls are unproven.",
-    "The mining run read one call for this job, with no families and no steps, so the steps come from the Square help pages in the platform evidence file, not from how businesses described the job on calls."
-  ],
-  "evidence": {
-    "calls": "1 call read for this job in the mining run, with no families, steps or variants recorded",
-    "platforms": "Square help centre pages mapped step by step (sale, issue, activation, delivery, redemption, balance, loyalty earn and reward, expiry, reconciliation, promotion), Lightspeed partner pages, and Fresha pages that were venue listings only"
-  }
+    "Confirm the steps documented in Square's help pages with the business before use."
+  ]
 }

@@ -5,9 +5,7 @@ description: Tender notices to a logged register, expressions of interest and de
 
 # Tenders take weeks
 
-Built from how 40 Australian construction businesses described tendering on discovery calls (46 in the worklist). Tenders
-arrive as portal alerts, principal emails and phone calls; the owner decides go or no-go, takes off quantities, gets trade
-and supplier prices, prices the job, writes the submission and lodges it before the close.
+Tenders take weeks to bid. This catches tender notices in the business's mailbox, logs each one in a tender register, drafts the expression of interest for every tender marked Go, and drafts a reminder for tenders closing soon. Crons read and draft; a person approves every send. Takeoff, pricing and the written submission stay with the estimating team until their platforms are mapped.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` logs each new tender notice in the register,

@@ -5,7 +5,7 @@ description: Bills of materials for a manufacturer, kept in Unleashed. Use when 
 
 # Bills of materials
 
-Built from one discovery call on how a manufacturer builds its bills (4 calls read, 1 described the process), plus the Unleashed API reference. Acumatica and Odoo map no bill operations in the kit, so they are covered by skill steps only.
+Bills of materials: keeps each product's list of components and quantities in the business's own system. Drafts a new bill for each product on the owner's list, checks that its components are active and in stock, and queues any change to a live bill for approval. Crons read and draft; a person approves every change to a live bill.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `check` reads the bills the workflow created and the stock behind them. `draft` creates a bill for each product on the owner's list that has none. `revise` queues a change to a live bill when the list differs from it. Crons read and draft; a change to a live bill waits for a person in the CRM shell. Nothing here sends anything.

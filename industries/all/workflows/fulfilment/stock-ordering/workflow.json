@@ -8,7 +8,6 @@
  "summary": "Tracks stock on hand against each item's minimum and drafts the supplier purchase order when an item runs low, so the owner does not have to check stock and raise orders by hand. Crons read and draft only; a purchase order reaches a supplier only after a person approves it.",
  "families": {
   "all": {
-   "evidence": "25 of the 40 calls read describe how they run stock ordering; the stock count, reorder and purchase order steps are 83 to 100 percent manual",
    "steps": ["stock-count", "reorder-trigger", "demand-forecast", "raise-po", "approve-order", "send-order", "confirm-order", "match-invoice", "chase-delivery", "return-or-credit", "record-keeping", "other"],
    "covered_by": {"stock-count": "draft (Xero stock on hand per item)", "reorder-trigger": "draft (minimum and maximum per item from settings)", "demand-forecast": "gap (no forecasting from sales history; the owner sets minimum and maximum)", "raise-po": "draft (DRAFT purchase order in Xero)", "approve-order": "approval (authorising the purchase order)", "send-order": "gap (the owner sends the purchase order to the supplier)", "confirm-order": "gap (supplier confirmation is not read)", "match-invoice": "gap (supplier bills are not matched to orders)", "chase-delivery": "draft (overdue flag from the purchase order's status and delivery date)", "return-or-credit": "gap", "record-keeping": "draft (the Xero purchase order is the record)", "other": "gap"}
   }
@@ -32,16 +31,12 @@
  },
  "gaps": [
   "Unleashed: its stock on hand and purchase order operations are mapped and are the closest fit for this job, but the kit has no sign-in for it yet (auth type unsupported), so every call is refused. No adapter is built. Adding one needs its HMAC signer in core, which this build does not change.",
-  "Cin7 Core: the kit maps its stock and purchase order operations with a working sign-in, but no call in the evidence names it for this job. No adapter is built. Add one when a client runs Cin7.",
+  "Cin7 Core: the kit maps its stock and purchase order operations with a working sign-in. No adapter is built. Add one when a client runs Cin7.",
   "Fishbowl and Ordermentum: help pages only, with no mapped operations in the kit. Fishbowl's auto-generated purchase orders and approval are described in its help pages but cannot be called.",
   "Xero reports stock on hand only for items tracked as inventory. An untracked item cannot be checked and is listed as missing on each stock check.",
   "Demand forecasting and reorder points from sales history are not built. The owner sets the minimum and maximum for each item in settings.",
   "The purchase order is not emailed to the supplier by this workflow. Authorising it in Xero marks it AUTHORISED, and the owner sends it from Xero or the usual channel.",
   "Supplier confirmation, matching supplier bills to orders, supplier returns and credits: no mapped rule, done by hand.",
   "Every adapter is docs-only until a Xero demo company proves the item and purchase order shapes on a live account."
- ],
- "evidence": {
-  "calls": "40 of the 51 calls listed for stock ordering were read, none rejected; 25 describe the process",
-  "platforms": "Fishbowl, Ordermentum and Unleashed help and API pages mapped step by step; Xero is named across the calls and has a working sign-in and mapped purchase order operations in the kit, so it is the one adapter built"
- }
+ ]
 }

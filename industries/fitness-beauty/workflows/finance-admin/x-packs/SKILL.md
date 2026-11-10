@@ -5,8 +5,7 @@ description: Tracks packs and gift cards for a gym, studio or salon: what value 
 
 # Packs and gift cards
 
-Built from the discovery calls. None of the calls for this workflow described the process, so the steps come from
-the spec's list. Treat this as a docs-only starting point until a client account confirms it.
+Tracks packs and gift cards for a gym, studio or salon: how much value customers still hold, and whether prepaid sales match deferred income in the ledger. Crons read and write only their own snapshots. Selling, drawing down and extending class or session packs is not covered: no platform the kit maps holds them.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

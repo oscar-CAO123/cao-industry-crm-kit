@@ -5,7 +5,7 @@ description: Export shipment documents for an agriculture or mining business, dr
 
 # Export document check
 
-Built from one discovery call about how an export business prepares shipping documents. Status is docs-only.
+Turns an export shipment's details into a DRAFT commercial invoice in Xero, checks that invoice against the shipment record, and queues the authorise-and-email step for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

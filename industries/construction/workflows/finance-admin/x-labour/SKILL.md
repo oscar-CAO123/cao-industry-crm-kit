@@ -5,8 +5,7 @@ description: Labour by person for a construction business that records crew hour
 
 # Labour by person
 
-Built from how 40 Australian construction businesses described tracking labour by person on discovery calls. Crews clock on and
-off in a time app, hours are split across jobs, checked, approved, costed and paid. Most of it is manual.
+Labour by person: turns each person's ServiceM8 clock-on and clock-off times into hours on a Xero Payroll AU draft timesheet for the pay period, and queues each clean timesheet for approval. Crons read and draft only; no timesheet is approved and nobody is paid without a person's approval.
 
 ## Procore instead of ServiceM8
 Set `procore.mirror_status` (the timesheet status whose hours are paid, for example `approved`; there is no default) in settings and

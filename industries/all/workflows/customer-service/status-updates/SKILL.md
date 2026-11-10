@@ -5,7 +5,7 @@ description: Tells customers where their job is up to, using the business's own 
 
 # Status updates
 
-Built from how owners described telling customers where a job, order or matter is up to (6 discovery calls read in full, 4 of them step by step).
+Tells customers where their job, order or matter is up to. Crons read job statuses in the business's job system, draft each customer message and queue it for approval; a person approves every message before it is sent. Unsuccessful jobs and clients with no usable contact go to a person.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `check-status` reads active jobs every 30 minutes and records each change to Work Order or Completed. Its first run only records a baseline, so existing jobs send nothing. `draft-updates` writes the customer message for each change and queues it. `daily-digest` writes an internal list for the office. No cron sends anything. A person approves every message in the CRM shell.

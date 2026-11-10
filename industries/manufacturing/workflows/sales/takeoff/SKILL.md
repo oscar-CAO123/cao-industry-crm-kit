@@ -5,9 +5,7 @@ description: Takeoff requests to priced quotes for a manufacturing or fabricatio
 
 # Takeoff from drawings
 
-Built from how 3 Australian manufacturing and fabrication businesses described taking off drawings on discovery calls.
-The estimator measures the drawings by hand or in a takeoff tool, then the quantities are priced from the business's own
-rate card and the quote goes out in the business's mail.
+Turns a takeoff request into a priced quote, using the quantities the estimator measured from the drawings and the business's own rate card. Crons read and draft; a person approves every send. Measuring the drawings stays with the estimator.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `intake` reads takeoff requests from the estimating mailbox, and

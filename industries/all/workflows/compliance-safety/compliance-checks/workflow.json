@@ -8,7 +8,6 @@
  "summary": "Reads the ID, AML and regulatory check state of each client matter in the business's verification platform, records what is open or still waiting, and queues a case note for a compliance person to approve. Crons read and queue only; a person decides every check result and every change to a case.",
  "families": {
   "aml-matter-onboarding": {
-   "evidence": "6 of the 43 worklist calls were read; 5 describe this way of working (accounting practices, law firms, a real estate agency)",
    "steps": ["client-intake", "identity-check", "beneficial-owner-check", "aml-screening", "risk-assessment", "approval", "remediation", "ongoing-monitoring", "record-keeping", "regulatory-report"],
    "covered_by": {
     "client-intake": "gap (case creation is mapped but no cron starts a case; the matter system is not mapped)",
@@ -46,9 +45,5 @@
   "Running verification checks and creating cases are mapped in the kit but not used by any cron, because each may contact a client or use a paid check.",
   "Field names come from the vendor's sandbox schema. Case ID format, check status values in live data and the reading of the entity status fields are unconfirmed until a sandbox account runs them.",
   "The adapter is docs-only: nothing has run against a First AML account. The FIRST_AML_ACCESS_TOKEN sign-in is not built yet (the platform file says so)."
- ],
- "evidence": {
-  "calls": "6 of 43 worklist calls read, none rejected; the rest are not in the evidence file",
-  "platforms": "First AML vendor docs, mapped step by step (client intake, identity, screening, approval, record-keeping, monitoring, remediation); Smokeball has no platform evidence"
- }
+ ]
 }

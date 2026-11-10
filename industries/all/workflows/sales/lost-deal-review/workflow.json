@@ -8,7 +8,6 @@
  "summary": "Reviews every lost deal, records why it was lost, and rolls up the reasons into what to change. Crons read the pipeline and draft; a person decides every change and every re-open.",
  "families": {
   "all": {
-   "evidence": "6 discovery calls describe how they review lost deals, all by hand",
    "steps": ["ask-the-client", "root-cause-review", "rollup-report"],
    "covered_by": {"ask-the-client": "skill (the owner calls the client; the workflow lists the deal and its recorded reason, and drafts nothing to the client)", "root-cause-review": "draft (a review record per lost deal) plus skill (the owner decides the cause)", "rollup-report": "draft (weekly roll-up of lost and won counts and top lost reasons)"}
   }
@@ -39,9 +38,5 @@
   "Pipeline and stage changes (process-change): not built. Changing a pipeline touches the whole team, so it stays a person's job until a live operation is mapped and approved.",
   "Coaching the rep and sharing lessons with the team: no platform in the evidence documents it.",
   "The adapter is docs-only until a sandbox GoHighLevel sub-account proves the reads and the re-open."
- ],
- "evidence": {
-  "calls": "6 construction and trade discovery calls describe reviewing lost deals; all six are by hand, with no tool named",
-  "platforms": "GoHighLevel: 6 of 16 steps supported, 2 partial, 5 unknown, 1 not supported; HubSpot: 0 supported, 5 partial; Zoho: CRM not documented (Books help only)"
- }
+ ]
 }

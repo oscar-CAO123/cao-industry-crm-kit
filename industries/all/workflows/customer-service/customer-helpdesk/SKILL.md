@@ -5,9 +5,7 @@ description: Answers customer questions from the business's own help content, in
 
 # Customer helpdesk
 
-Built from how 7 customer-service teams described answering questions on discovery calls. The usual path: a question
-arrives, the team looks up the answer in its own knowledge (a help article or a canned macro), sends it, and hands anything
-hard to a person. Sensitive questions go straight to a person.
+Answers customer questions from the business's own help content: a published Front knowledge base article or a Gorgias macro. Crons read, match and queue each reply; a person approves every reply before it is sent. Sensitive questions and anything the business's own answers do not cover go to a person.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` collects open questions, `draft` escalates sensitive ones

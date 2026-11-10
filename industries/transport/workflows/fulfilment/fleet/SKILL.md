@@ -5,8 +5,7 @@ description: Fleet service planning for a transport business on Trackunit. Use w
 
 # Fleet service planner
 
-Built from 2 transport discovery calls and the vendor docs for MTData, Trackunit and WEBFLEET. The calls did not describe
-the steps, so this build is docs-only. Trackunit is the only platform with mapped operations.
+Works out which fleet vehicles are due for a service, reads their open device issues for the workshop, and queues a workshop booking for each due service. Crons read and draft; a person approves every booking.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `status` reads each vehicle's planned services and open device

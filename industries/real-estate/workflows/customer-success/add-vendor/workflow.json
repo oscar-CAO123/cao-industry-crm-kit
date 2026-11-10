@@ -8,7 +8,6 @@
  "summary": "Vendor report in one tap: reads each listing's record and open homes from VaultRE, drafts the report to the vendor in Outlook once the agent has written the commentary, and queues the send for one approval. Crons read and draft; a person approves every send.",
  "families": {
   "listing-report": {
-   "evidence": "no discovery call describes this yet (1 call read, 0 describe a vendor report); steps come from the workflow spec",
    "steps": [
     "stats-export",
     "weekly-figures",
@@ -95,9 +94,5 @@
   "No command or shell form yet writes commentary into the store under commentary. tools/workflow.ts only has propose, which is quoting's. Until one exists, the draft cron waits at needs-commentary.",
   "Commentary, the manager review, vendor questions and price review calls are judgment steps. Vendor questions and price review calls are not covered by any cron or skill.",
   "Both adapters are docs-only: VaultRE is status spec with offline tests only, and the Microsoft 365 token flow is not built (a Graph access token is supplied by hand)."
- ],
- "evidence": {
-  "calls": "1 call read for this workflow; 0 describe how they make a vendor report, so the steps come from the spec",
-  "platforms": "vendor help centres for console-cloud, realestate-com-au and rex read. Rex is mapped in the kit (listing read used here); console-cloud and realestate-com-au have no mapped operations. The workflow runs on VaultRE or Rex for the listing, and Microsoft 365 for the email."
- }
+ ]
 }

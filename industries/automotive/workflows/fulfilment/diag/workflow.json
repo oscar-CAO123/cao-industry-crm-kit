@@ -8,7 +8,6 @@
  "summary": "Turns a technician's diagnostic notes and photos into a plain write-up of the fault and the work it needs, filed on the job, then queued to the customer for approval. Crons read and draft; a person approves every send.",
  "families": {
   "inspection-write-up": {
-   "evidence": "2 automotive diagnostic calls were read and described no steps; the steps below come from the three workshop platform pages",
    "steps": ["booking-intake", "tech-notes", "photos-evidence", "root-cause", "write-up", "customer-approval"],
    "covered_by": {"booking-intake": "intake", "tech-notes": "draft (reads the technician's job notes)", "photos-evidence": "draft (counts and names the job photos)", "root-cause": "skill", "write-up": "draft (internal job note)", "customer-approval": "queue and approval"}
   }
@@ -36,11 +35,7 @@
   "Scan-tool and fault-code readings: no platform in the evidence reads them. The technician types them into the notes, and the write-up only carries what is written there.",
   "Root-cause and recommended-work judgment is an agent-skill step (SKILL.md). Nothing in the crons decides what is wrong with a car.",
   "Photos are counted and named in the note but not attached to the customer email: attaching them needs a live check of the attachment path first.",
-  "The calls evidence is thin: 2 of the 3 workflow calls were read, and neither described steps. Re-mine before trusting the step list.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "No cron changes a job's status. Moving a job to Work Order on approval stays with the shop."
- ],
- "evidence": {
-  "calls": "2 calls read of 3 listed for this workflow, 0 rejected, 0 steps described",
-  "platforms": "autoleap, tekmetric and workshopmate mapped step by step from their own pages; none has kit operations, so ServiceM8 is the only adapter"
- }
+ ]
 }

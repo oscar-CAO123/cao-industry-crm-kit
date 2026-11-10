@@ -5,7 +5,7 @@ description: Scoped enquiries to a draft proposal and engagement letter in HubSp
 
 # Proposal and engagement letter
 
-Built from how 4 Australian professional services firms (legal, environmental monitoring, consulting) describe writing a proposal.
+Turns a scoped enquiry into a draft proposal and engagement letter in HubSpot, queues it for approval, and tracks whether the client accepts. Crons read and draft; a person approves every publish.
 
 ## What runs on its own
 Three crons in `index.ts`: `draft` creates a draft quote in HubSpot for each scoped proposal, `status` reads each quote's status back, and `publish` queues publishing for approval. Crons never publish a quote.

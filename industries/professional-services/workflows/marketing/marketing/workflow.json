@@ -8,7 +8,6 @@
   "summary": "Gathers the firm's marketing numbers, which sit in five places (ads, website, search, leads and the practice system), into one report. Only the ad account is mapped so far: each day it reads Meta campaign spend, leads and cost per lead, and writes a report for the owner to read. Crons read and write the workflow's own store only; nothing is changed in the ad account and nothing is sent.",
   "families": {
     "all": {
-      "evidence": "1 of 1 professional-services marketing call describes this job: the owner checks ad data by hand whenever he needs a look",
       "steps": ["pull-ad-data", "pull-web-data", "pull-search-data", "match-to-matters", "define-metrics", "clean-combine", "build-dashboard", "schedule-refresh", "review-report", "record-keeping", "other"],
       "covered_by": {
         "pull-ad-data": "draft (Meta campaign insights for the window, read only)",
@@ -46,9 +45,5 @@
     "The report lives in the workflow store only. No platform receives it yet, so the owner reads it from the CRM shell.",
     "No live operations: this job changes nothing in an ad account, so there is no approval step. A pause or budget change would need its own build.",
     "The judgment steps stay with the owner: which campaigns to keep, scale or stop, and what a lead is worth to the firm."
-  ],
-  "evidence": {
-    "calls": "1 call describes this job (pull-ad-data, manual, partner-run); 1 tool named (Meta Ads)",
-    "platforms": "Meta Marketing API pages: insights, leads and pixels mapped; professional services steps not described"
-  }
+  ]
 }

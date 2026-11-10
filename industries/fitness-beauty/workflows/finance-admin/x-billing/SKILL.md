@@ -5,7 +5,7 @@ description: Failed or overdue member payments for a gym, studio or salon, in St
 
 # Failed payments
 
-Built from the Stripe and Xero help and API docs, not from owners' calls. No discovery call so far describes how a fitness or beauty business handles a failed payment, so treat the steps as the platforms' documented options until a client confirms them.
+Finds failed or overdue member payments in Stripe and Xero, notes each one in Xero, and queues the retry or reminder for a person to approve. Crons read and note; nothing charges or emails a member until approved.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `detect` finds failed Stripe charges and overdue Xero invoices and writes one internal note per failure in Xero. `reconcile` closes failures that have since been paid. `chase` queues the next step on each open failure that is due: a Stripe retry on the first step (or an invoice email if `retry_stripe` is false), then reminder emails. They read, note and queue only. Every retry, every email and every money movement waits for a person to approve it in the CRM shell.

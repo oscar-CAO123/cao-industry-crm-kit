@@ -5,9 +5,7 @@ description: Safety checklists, incident reports and corrective actions for a co
 
 # Safety forms, inspections and incident reports
 
-Built from how 14 Australian businesses described their safety paperwork on discovery calls: 9 by hand or with no tool named,
-4 with a safety template subscription and Dropbox, 1 with a spreadsheet. Of the platforms the evidence names, only SiteBook has
-mapped operations in the kit, so the crons run there. Everything else is judgment or manual, listed in `workflow.json` under gaps.
+Keeps safety checklists, incident reports and corrective actions in SiteBook: generates the incident and checklist reports for the register once each, and queues a chase email for each overdue corrective action. Crons read and draft; a person approves every email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

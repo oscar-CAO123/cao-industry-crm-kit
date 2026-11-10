@@ -5,8 +5,7 @@ description: Product data checks, low-stock flags and retirement approvals for a
 
 # Product data pipeline
 
-Built from how 7 Australian retail businesses described running product data on discovery calls. Products are set up by hand
-across design, barcodes, the inventory system and a licensor portal, and about 30 SKUs a month get dropped.
+Takes a product from request to a live listing, stock and retirement in the retailer's own system. Crons read product records and stock, flag missing data and low stock, and queue any retirement for approval; nothing reaches a customer without a person approving it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `check` flags product records missing a barcode, description, price or
@@ -30,7 +29,7 @@ Nothing changes on a platform until a person approves the queued item.
 - Product requests, supplier data intake, specs and photos, pricing and margin setting, variants and barcode creation,
   compliance, approval and channel listing. None has a mapped operation in the kit yet.
 - Lightspeed: no operations are mapped.
-- Fishbowl, Shopify, SIN7, Airtable, the licensor portal and spreadsheets: named on calls, not in the platform evidence.
+- Fishbowl, Shopify, SIN7, Airtable, the licensor portal and spreadsheets: no adapter is built for these steps.
 - Unleashed calls are signed (HMAC-SHA256 over the query string). A retirement runs only with KIT_ALLOW_WRITES=1 on the
   deploy and after a person approves it. Tested offline only, not yet against a real Unleashed account.
 - Unleashed and WooCommerce reads return the first page only (200 and 10 records).

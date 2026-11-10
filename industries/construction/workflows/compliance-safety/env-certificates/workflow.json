@@ -8,7 +8,6 @@
  "summary": "Tracks solar and electrical jobs that need network or certificate paperwork, checks each job for the evidence it needs, and queues a chase to the customer when something is missing. Crons read and draft; a person approves every email.",
  "families": {
   "solar-install-paperwork": {
-   "evidence": "2 discovery calls; the variants file is missing from the mining folder, so the step map comes from the platforms file and the workflow spec",
    "steps": ["job-intake", "site-assessment", "network-application-prepare", "network-application-lodge", "network-approval-wait", "install-evidence", "accreditation-check", "stc-calculation", "rec-registry-create", "customer-update", "record-keeping"],
    "covered_by": {"job-intake": "register", "install-evidence": "evidence", "customer-update": "chase (approval)", "record-keeping": "store checklist", "site-assessment": "skill", "network-application-prepare": "skill (not in kit)", "network-application-lodge": "not covered", "network-approval-wait": "not covered", "accreditation-check": "skill (public register only)", "stc-calculation": "skill (public calculators only)", "rec-registry-create": "not covered"}
   }
@@ -36,11 +35,7 @@
   "The REC Registry certificate creation form, evidence upload and claim lodgement are not in the evidence pages. Confirm on a live account before any adapter is written.",
   "VEEC claims (Victorian Energy Upgrades) and LGC claims have no platform in the evidence; they are not covered.",
   "Accreditation checks use the public registered-person search only. Installer accreditation sits with Solar Accreditation Australia, which has no mapped operations.",
-  "The variants file (construction-env-certificates-variants.json) is missing from the mining folder, so the call evidence is 2 calls and the step weights are unverified.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "The ServiceM8 adapter is docs-only until a ServiceM8 trial account proves the job, attachment and contact reads."
- ],
- "evidence": {
-  "calls": "2 discovery calls (per the worklist); variants file missing",
-  "platforms": "rec-registry and solar-accreditation-australia: 0 mapped operations, 0 kit adapters"
- }
+ ]
 }

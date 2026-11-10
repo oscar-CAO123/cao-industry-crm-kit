@@ -5,7 +5,7 @@ description: Labour as a share of sales for each venue, from Deputy, with an ale
 
 # Labour alerts
 
-Built from how 11 hospitality owners described checking labour on discovery calls. Today they check it by hand, a week or two after the period ends.
+Works out each venue's labour cost as a share of its sales from the rosters and timesheets in Deputy, and records an alert the moment a venue runs over its labour target. The crons only read and record; a person changes rosters and targets in Deputy.
 
 ## What runs on its own
 Two crons in `index.ts`: `pull` reads each venue's timesheet cost and sales for today from Deputy every 30 minutes, and `check` works labour out as a share of sales every hour and keeps an alert record open while a venue is over its target. They read and record only. They do not change a roster, a rule or a target, and they send nothing.
@@ -22,4 +22,4 @@ Sales below `min_sales` (default 200 dollars) mean early in the day, so the shar
 Read the venue's alert: its labour share, its target and the time it was raised. Look at the rosters and timesheets for that day in Deputy. Adjust shifts there, a person does it. Do not change a target from the crons.
 
 ## Not covered yet
-Rostering, setting labour targets in Deputy, Looker Studio reports, Xero budgets and payroll, and Employment Hero (the most-named tool in these calls, not yet mapped). See `workflow.json` gaps.
+Rostering, setting labour targets in Deputy, Looker Studio reports, Xero budgets and payroll, and Employment Hero (not connected in this workflow). See `workflow.json` gaps.

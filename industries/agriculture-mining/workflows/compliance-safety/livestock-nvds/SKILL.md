@@ -5,9 +5,7 @@ description: Livestock National Vendor Declarations (NVDs) and movement records 
 
 # Livestock NVDs and movement records
 
-Built from the workflow spec for livestock NVDs. No owner calls were captured for this workflow, so the steps are not yet
-confirmed by how owners actually work. The only platform with mapped operations is AgriWebb, and it covers the stock
-register only.
+Confirm the workflow steps with the business before use. AgriWebb is the only mapped platform here and covers the stock register only.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

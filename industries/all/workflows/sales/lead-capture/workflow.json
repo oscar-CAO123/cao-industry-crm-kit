@@ -8,7 +8,6 @@
  "summary": "Takes each new web form submission and live chat lead into the CRM, tags it, opens it in the new-lead stage, queues a short acknowledgement, and queues follow-ups for leads who have not replied or booked. Crons read and draft; a person approves every message.",
  "families": {
   "all": {
-   "evidence": "21 of 40 lead capture calls describe how they capture leads",
    "steps": ["trigger-capture", "website-form", "chat-enquiry", "crm-create", "auto-reply", "qualify-questions", "book-call", "record-keeping"],
    "covered_by": {"trigger-capture": "intake (form submissions and live chat, GoHighLevel)", "website-form": "intake", "chat-enquiry": "intake (live chat with unread messages and contact details)", "crm-create": "intake (tags and an opportunity in the new-lead stage)", "auto-reply": "acknowledge (queued for approval)", "qualify-questions": "skill (judgment, not automated)", "book-call": "follow-up checks for an appointment before chasing; booking is not written", "record-keeping": "draft (contact tags and opportunity records)"}
   }
@@ -44,9 +43,5 @@
   "Acknowledgement and follow-up send body (subType, status): the send op has no body schema in the kit's captured ops, so the values are not guessed. A sandbox run must confirm them before any send is approved live.",
   "Owner routing: the opportunity is assigned to one owner from settings. Round-robin or territory routing is not built.",
   "Every adapter is docs-only until a sandbox GoHighLevel location proves the reads, the tag, the opportunity and an approved send."
- ],
- "evidence": {
-  "calls": "40 lead capture calls read; 21 describe how their leads are captured",
-  "platforms": "GoHighLevel help centre pages for Google Lead Forms, forms, live chat, workflows and contacts, mapped step by step; HubSpot mapped for steps but not adapted (see gaps)"
- }
+ ]
 }

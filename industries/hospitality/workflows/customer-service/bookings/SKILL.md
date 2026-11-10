@@ -5,7 +5,7 @@ description: Bookings kept in a spreadsheet, checked against the venue's Google 
 
 # Bookings in spreadsheets
 
-Built from 7 hospitality discovery calls about bookings. The spreadsheet is the record, and the venue calendar is the room check.
+Keeps the venue's bookings in its own spreadsheet and calendar: holds an enquiry the calendar has room for, flags clashes, logs every change to a booked value so booked revenue stays true, and queues any calendar move or removal for approval. Crons read and draft; a person approves every calendar change.
 
 ## What runs on its own
 Two crons in `index.ts`. `hold` runs every 15 minutes. For each row marked Enquiry it checks the calendar. If the time is free, it puts an opaque hold on the calendar with no guests invited, then writes Held and the event id back. If the time is busy, it marks the row Clash.

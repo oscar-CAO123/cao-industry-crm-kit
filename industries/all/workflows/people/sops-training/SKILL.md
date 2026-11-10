@@ -5,8 +5,7 @@ description: Know-how pages and walkthrough videos to SOP pages and staff traini
 
 # SOPs and training
 
-Built from how 40 Australian businesses described turning know-how into SOPs and training on discovery calls. Most do it by
-hand or do not name a tool. The ones that do use Confluence, Microsoft 365 (Outlook and Excel), Asana, Loom and an AI assistant.
+Turns know-how pages and walkthrough videos into SOP pages and training. A draft SOP goes into the business's wiki, is published once a person approves it, then each trainee gets an Asana task and a training email, both approved before they go. Crons read and draft; a person approves every publish, assignment and email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` collects know-how pages and walkthrough emails, `draft` turns

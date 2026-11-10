@@ -5,8 +5,7 @@ description: Build a pre-call brief for each deal that closes soon, from the CRM
 
 # Pre-call research
 
-Built from how sales teams prepare for calls, and from the Apollo, Clay and HubSpot help pages. The call notes in the catalogue
-do not describe this routine step by step, so treat the steps as a first draft to check with the client.
+Builds a pre-call brief for each deal that closes soon: the deal, its contact and company from the CRM, plus the company's profile, news and hiring from Apollo. The brief is written once as an internal note on the deal, with discovery questions. A person approves any change to the deal's next step.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `prep` reads the open deals that close within the window, reads each deal's

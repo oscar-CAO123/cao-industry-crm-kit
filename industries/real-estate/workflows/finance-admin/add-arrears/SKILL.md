@@ -5,9 +5,7 @@ description: Rent arrears ladder for a residential property business, run from R
 
 # Arrears ladder
 
-Built from how a residential rentals business described chasing rent arrears on a discovery call: the reminder goes out
-within a day of a missed payment, and a person does the rest by hand. The kit builds the reminder steps. The calls
-do not describe payment plans, escalation or owner updates, so those stay with a person.
+Finds overdue rent in Re-Leased, adds each new arrears invoice to the arrears register, and drafts a reminder at each step of the ladder. Every reminder waits for a person to approve the send from the arrears mailbox.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `scan` reads overdue invoices from Re-Leased and adds each new one to

@@ -18,14 +18,14 @@ const department = z.string().refine((d) => DEPARTMENT_IDS.includes(d), "unknown
 const field = z.object({ key: z.string().regex(/^[a-z][a-z0-9_]{0,30}$/), label: z.string().min(1).max(60), type: z.enum(FIELD_TYPES), options: z.array(z.string().max(60)).max(30).optional() });
 const tab = z.object({ slug: z.string().regex(SLUG), title: z.string().min(1).max(60), view: z.enum(VIEWS), kind: z.string().regex(SLUG), stages: z.array(z.string().min(1).max(40)).max(12).optional(), fields: z.array(field).max(20) });
 const page = z.object({ slug: z.string().regex(SLUG), title: z.string().min(1).max(60), department, tabs: z.array(tab).min(1).max(12) });
-const workflowRef = z.object({ id: z.string().regex(/^[a-z0-9:-]{1,80}$/), dir: z.string().regex(/^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/), department, name: z.string().max(200), status: z.string().max(40), evidence: z.object({ backing: z.string().max(60), sources: z.number().int().min(0) }) });
+const workflowRef = z.object({ id: z.string().regex(/^[a-z0-9:-]{1,80}$/), dir: z.string().regex(/^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/), department, name: z.string().max(200), status: z.string().max(40) });
 export const TemplateSchema = z.object({
   industry: z.string().regex(SLUG), name: z.string().min(1).max(60), version: z.number().int().min(1), source: z.string().max(400),
   pages: z.array(page).max(40),
   workflows: z.array(workflowRef).max(150),
-  planned_workflows: z.array(z.object({ id: z.string().max(80), name: z.string().max(200), department, evidence: z.object({ backing: z.string(), sources: z.number() }) })).max(150),
-  connectors: z.array(z.object({ tool: z.string().max(80), platform: z.string().regex(SLUG), status: z.string().max(40), calls: z.number().int().min(0) })).max(40),
-  missing_connectors: z.array(z.object({ tool: z.string().max(80), calls: z.number().int().min(0) })).max(40),
+  planned_workflows: z.array(z.object({ id: z.string().max(80), name: z.string().max(200), department })).max(150),
+  connectors: z.array(z.object({ tool: z.string().max(80), platform: z.string().regex(SLUG), status: z.string().max(40) })).max(40),
+  missing_connectors: z.array(z.object({ tool: z.string().max(80) })).max(40),
 });
 export type Template = z.infer<typeof TemplateSchema>;
 

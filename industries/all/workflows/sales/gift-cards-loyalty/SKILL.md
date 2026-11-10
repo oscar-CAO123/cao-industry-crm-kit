@@ -5,7 +5,7 @@ description: Gift cards, vouchers and loyalty points in Square for a sales or re
 
 # Gift cards and loyalty
 
-Built from how Square handles gift cards and loyalty, and from the job name in the catalogue. Only Square has mapped operations in the kit, so this is the one platform wired up. Fresha and Lightspeed are listed as gaps in `workflow.json`.
+Issues digital gift cards and enrols members in a loyalty program in Square, activates each card once staff have a paid order for it, and keeps a ledger of gift card sales, loads and redemptions. Crons read, draft and queue; a person approves every card, activation and enrolment.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

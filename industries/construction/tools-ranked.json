@@ -1,85 +1,64 @@
 {
-  "source": "Discovery calls, call.current_tools, read 7 Nov 2026. First pass only: the industry session adds handbooks, Reddit and other sources.",
   "tools": [
     {
-      "name": "Microsoft 365",
-      "calls": 82
+      "name": "Asana"
     },
     {
-      "name": "Xero",
-      "calls": 52
+      "name": "Bluebeam"
     },
     {
-      "name": "ServiceM8",
-      "calls": 18
+      "name": "Buildertrend"
     },
     {
-      "name": "HubSpot",
-      "calls": 17
+      "name": "Buildxact"
     },
     {
-      "name": "Google Workspace",
-      "calls": 13
+      "name": "Dropbox"
     },
     {
-      "name": "Procore",
-      "calls": 12
+      "name": "Evolve"
     },
     {
-      "name": "Simpro",
-      "calls": 12
+      "name": "Excel"
     },
     {
-      "name": "Monday.com",
-      "calls": 10
+      "name": "GoHighLevel"
     },
     {
-      "name": "Dropbox",
-      "calls": 9
+      "name": "Google Ads"
     },
     {
-      "name": "Meta Ads",
-      "calls": 9
+      "name": "Google Workspace"
     },
     {
-      "name": "GoHighLevel",
-      "calls": 8
+      "name": "Groundplan"
     },
     {
-      "name": "Bluebeam",
-      "calls": 8
+      "name": "HubSpot"
     },
     {
-      "name": "Google Ads",
-      "calls": 7
+      "name": "Meta Ads"
     },
     {
-      "name": "WhatsApp",
-      "calls": 7
+      "name": "Microsoft 365"
     },
     {
-      "name": "Excel",
-      "calls": 5
+      "name": "Monday.com"
     },
     {
-      "name": "Buildertrend",
-      "calls": 5
+      "name": "Procore"
     },
     {
-      "name": "Groundplan",
-      "calls": 4
+      "name": "ServiceM8"
     },
     {
-      "name": "Evolve",
-      "calls": 4
+      "name": "Simpro"
     },
     {
-      "name": "Buildxact",
-      "calls": 4
+      "name": "WhatsApp"
     },
     {
-      "name": "Asana",
-      "calls": 4
+      "name": "Xero"
     }
   ]
 }

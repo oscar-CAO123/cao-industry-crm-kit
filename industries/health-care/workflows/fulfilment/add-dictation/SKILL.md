@@ -5,9 +5,7 @@ description: Dictated or transcribed clinical visit notes to a draft treatment n
 
 # Session notes from dictation
 
-Built from how health-care businesses described their notes on discovery calls, and from Cliniko's help centre.
-The kit can write a draft treatment note into Cliniko and lock it once a person approves. It cannot record or transcribe the
-visit. That part is done by the practice's dictation or scribe tool.
+Turns a dictated or transcribed clinical visit into a draft treatment note in Cliniko, and queues the lock for a clinician to approve. Crons read and draft; a clinician approves every lock.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `draft` writes each ready session to Cliniko as a draft note.

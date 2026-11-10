@@ -8,7 +8,6 @@
   "summary": "Follows up open leads and quotes in the business's own CRM on a schedule. Picks up the open leads and quotes in the watched stages, drafts the first contact and each follow-up that is due into the CRM, and queues every message and every move to lost for a person to approve. Crons read and draft; a person approves every send.",
   "families": {
     "lead-followup": {
-      "evidence": "37 of the 40 read calls describe how they follow up leads",
       "steps": [
         "lead-capture",
         "first-contact",
@@ -107,9 +106,5 @@
     "Reads take at most 100 records per stage per run. A longer list skips the stage-exit check for that run, and the next run checks again.",
     "Neither adapter is proven against a real account. Both are offline-tested only, with a fake network.",
     "Kit mapping: the GoHighLevel op opportunities.search-opportunity takes snake_case names (location_id, pipeline_id) that do not match the vendor spec, so this build uses v3__opportunities-v3.search-opportunity. The old op should be fixed in the kit's map."
-  ],
-  "evidence": {
-    "calls": "37 of the 40 read calls describe how they follow up leads (84 calls are tagged to this workflow in the catalogue)",
-    "platforms": "vendor OpenAPI files for Pipedrive and GoHighLevel, mapped step by step; ActiveCampaign is mapped but not built into an adapter"
-  }
+  ]
 }

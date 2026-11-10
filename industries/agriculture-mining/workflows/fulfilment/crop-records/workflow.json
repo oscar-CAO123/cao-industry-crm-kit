@@ -8,7 +8,6 @@
   "summary": "Keeps the season record for crop, vineyard, grain and livestock farms: reads fields, sessions, recent records, animal counts and rainfall from AgriWebb, flags what the record is missing, and queues each rainfall reading for approval. Crons read and draft; a person approves every write to the farm record.",
   "families": {
     "season-records": {
-      "evidence": "1 call describes this way of recording (potato and garlic growing and packing, vineyard lot records)",
       "steps": ["record-operations", "harvest-yield", "review-report", "record-keeping", "plan-season", "weather-soil-data", "livestock-movements"],
       "covered_by": {
         "record-operations": "not covered (AgriWebb's API has no crop-operation write, and the logging tool named on the call is not in the kit)",
@@ -48,9 +47,5 @@
     "AgriWebb sign-in: bearer token from AGRIWEBB_ACCESS_TOKEN only. The token exchange is not built (platform.json), and no live account has been tested.",
     "Judgment stays with the agent and the owner: reading field notes, deciding what a flagged field needs, and choosing which rainfall readings to enter.",
     "Pre-harvest checklist and livestock movements are outside this build."
-  ],
-  "evidence": {
-    "calls": "1 call read (agriculture-mining-crop-records-variants.json). The worklist count of 0 is stale.",
-    "platforms": "agriwebb: 6 steps partial, mapped operations for fields, sessions, records, animal count and rainfall. agworld: 4 steps yes, no kit folder. innovint: 2 steps yes, no kit folder. FreshTrack and CropX: not in the kit."
-  }
+  ]
 }

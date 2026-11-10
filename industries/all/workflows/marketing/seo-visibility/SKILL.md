@@ -5,8 +5,7 @@ description: Search and AI search visibility for a business's website, through A
 
 # Grow search and AI search visibility
 
-Built from how 19 businesses described their search visibility work on discovery calls: goal setting, keyword research,
-site audit, content, backlinks, rankings, AI search and reporting. Most of that work was done by hand, or by an outside agency.
+Grow search and AI search visibility: keyword research, site audits, rankings and backlinks. Four crons read Ahrefs for rankings, keyword research, broken backlinks and AI search share of voice, and save each as a report. The only write, deleting keywords the owner has retired, waits for a person to approve it.
 
 ## What runs on its own
 Four crons in `index.ts`, scheduled by `workflow.json`:

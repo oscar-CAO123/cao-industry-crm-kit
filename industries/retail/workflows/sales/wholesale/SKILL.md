@@ -5,10 +5,7 @@ description: Wholesale accounts and stockist orders for a retail or wholesale bu
 
 # Wholesale accounts and stockists
 
-Built from how retail businesses described wholesale on discovery calls: a warm intro or an email wins a stockist, an
-order arrives as a purchase order, each order is split and filled by hand, every invoice is typed up, and reorders are
-chased by memory. This build covers the account and invoice steps in Xero. Stock, pick and pack, and the reorder check
-are not built yet (see gaps in `workflow.json`).
+Sets up each wholesale stockist in Xero, drafts an invoice for each order the team records, queues the invoice to be authorised and emailed, and queues chases on overdue invoices. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

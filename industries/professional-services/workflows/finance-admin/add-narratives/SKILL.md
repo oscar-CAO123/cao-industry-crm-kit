@@ -5,7 +5,7 @@ description: Billing narratives for an accounting or law practice on Xero Projec
 
 # Billing narratives
 
-Docs-only. Built from how accounting and law practices described writing invoice narratives (3 calls), using the Xero operations mapped in the kit.
+Turns a client's chargeable time into client-ready invoice narratives in Xero. Reads the uninvoiced time entries in Xero Projects, takes the narratives a person writes from them, drafts one invoice per client in Xero, and queues its authorisation for approval. Crons read and draft; a person approves every invoice before it is authorised.
 
 ## What runs on its own
 Three crons in `index.ts`. `capture` runs every 30 minutes and reads each client project's chargeable time entries that are still ACTIVE in Xero Projects. `draft` runs twice an hour: for each client with new entries and a narrative proposal, it creates one DRAFT invoice in Xero, with one line per narrative, and queues its authorisation for approval. `refresh` runs each morning and records which drafted invoices were authorised or voided in Xero.

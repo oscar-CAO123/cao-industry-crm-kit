@@ -5,8 +5,7 @@ description: Reads the ID, AML and regulatory check state of client matters in F
 
 # Compliance checks
 
-Built from how Australian accounting practices, law firms and a real estate agency described AML and ID checks on discovery
-calls. Six of the 43 worklist calls were read. The rest of the evidence is not in this record, so treat the steps as a starting point.
+Reads the ID, AML and regulatory check state of each client matter in the business's verification platform, records what is open or still waiting, and queues a case note for a compliance person to approve. Crons read and queue only; a person decides every check result and every change to a case.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `case-watch` reads cases updated since its last run and records each

@@ -5,9 +5,7 @@ description: Defects found on a construction job, from the defect checklist to a
 
 # Defects
 
-Built from how Australian construction businesses described handling defects on discovery calls (6 of 15 calls
-described the process). Defects are logged as they come in, the trade is chased until each one is fixed, then the
-client signs off. Most of this is done by hand today, and the calls named spreadsheets and Dashpivot as the record.
+Captures each defect as it is found on a job, keeps the trade chased until it is fixed, and asks the client to sign off once every defect on the job is closed. Crons read and draft; every reminder and client email waits for a person to approve it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

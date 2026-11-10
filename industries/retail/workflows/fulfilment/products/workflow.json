@@ -8,7 +8,6 @@
  "summary": "Takes a product from request to a live listing, stock and retirement in the retailer's own system. Crons read product records and stock, flag missing data and low stock, and queue any retirement for approval; nothing reaches a customer without a person approving it.",
  "families": {
   "all": {
-   "evidence": "7 discovery calls describe this way of running product data",
    "steps": ["product-request", "specs-and-photos", "pricing", "data-entry", "variants-and-barcodes", "approval", "stock-sync", "retire-product", "record-keeping"],
    "covered_by": {"product-request": "not yet (no mapped intake platform)", "specs-and-photos": "not yet (no mapped photo or spec operations)", "pricing": "not yet (price tier and bulk price operations unmapped)", "data-entry": "check (flags products with missing records)", "variants-and-barcodes": "check (flags missing barcodes and SKUs)", "approval": "not yet (no mapped sign-off step)", "stock-sync": "stock (low-stock flags)", "retire-product": "retire (queued for approval)", "record-keeping": "check and stock (reads from the system of record)"}
   }
@@ -33,7 +32,7 @@
   "woocommerce": {"status": "docs-only", "covers": "product records (read only, GET /products on the host in WOOCOMMERCE_SITE). Basic auth from WOOCOMMERCE_CONSUMER_KEY and WOOCOMMERCE_CONSUMER_SECRET."}
  },
  "gaps": [
-  "Unleashed calls are signed in core/sdk/call.ts (HMAC-SHA256 over the query string) and tested offline only, against a fake network. Not yet run against a real Unleashed account.",
+  "No adapter is built for Fishbowl stock, Shopify descriptions, Cin7 product setup, Airtable wholesale pricing, licensor approval portals or spreadsheet record keeping.",
   "Lightspeed: no ops file exists, so no operations are mapped. Its docs read covers NuORDER catalogue import, variants and UPC codes, but not barcode setup for non-catalogue products, approval or retirement.",
   "Product request, specs and photos, pricing and margin setting, compliance check, approval and channel listing have no mapped operation, so they stay manual and are not in any cron.",
   "Unleashed GET /Products and GET /StockOnHand are mapped with their filters and pageSize, but the reads send no pageSize and no page number is mapped, so each read returns only the first page (200 records). Paging needs an ops change.",
@@ -41,10 +40,6 @@
   "Unleashed product creation (POST /Products) is mapped but left out: a new product can reach the B2B store, and the owner has not ruled on it.",
   "Retirement is driven by the owner's list of product codes in settings.retire_codes, because the docs read has no discontinue rule to follow.",
   "Unleashed product groups, brands and bulk price changes are not read: the docs read does not show the in-app price steps, and no ops for them are used here.",
-  "Named in the calls but with no mapped platform evidence, so no adapter: Fishbowl (stock, 2 calls), Shopify (descriptions typed by hand, 1 call), SIN7 (product set-up, 1 call), Airtable (wholesale pricing, 1 call), the licensor portal (design approval, 1 call) and spreadsheets (record keeping, 1 call)."
- ],
- "evidence": {
-  "calls": "7 discovery calls describe the process; 9 calls read; 30 SKUs a month are dropped; 7 job types",
-  "platforms": "Lightspeed, Unleashed and WooCommerce docs read (Unleashed and WooCommerce have mapped operations; Lightspeed has none)"
- }
+  "No adapter is built for Fishbowl stock, Shopify descriptions, Cin7 product setup, Airtable wholesale pricing, licensor approval portals or spreadsheet record keeping."
+ ]
 }

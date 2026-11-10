@@ -5,8 +5,7 @@ description: Scores the business's Meta ads and recent Instagram posts by how th
 
 # Content learning
 
-Built from 14 calls about how businesses of all kinds learn from their content. Most of the work was done by hand: someone copied
-ad and sales numbers into a sheet, judged which content worked, and briefed more of it.
+Scores each Meta ad and recent Instagram post by how it performs, names what is working and what is not, and writes that plan for the next brief. Crons read and draft; a pause on a running ad over the cost-per-lead limit is only queued, and a person approves it.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

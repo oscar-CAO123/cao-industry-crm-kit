@@ -8,7 +8,6 @@
  "summary": "Turns a scoped enquiry into a draft proposal and engagement letter in HubSpot, queues it for approval, and tracks whether the client accepts. Crons read and draft; a person approves every publish.",
  "families": {
   "add-proposal": {
-   "evidence": "4 discovery calls describe this way of writing proposals (legal, environmental monitoring, consulting)",
    "steps": ["enquiry-intake", "qualify", "gather-info", "scope-and-fee", "template-draft", "send-proposal"],
    "covered_by": {"enquiry-intake": "skill", "qualify": "skill", "gather-info": "skill", "scope-and-fee": "skill (writes the scope and fee into the proposal store)", "template-draft": "draft", "send-proposal": "approval"}
   }
@@ -33,7 +32,7 @@
  "gaps": [
   "Podio is in the kit with operations, but the only call that names it uses it to rank tenders (qualify), not to write proposals. Not built.",
   "Canva is named for the proposal template in one call and is in the kit, but no Canva page for this job was mapped. Not built.",
-  "ChatGPT is named in two calls for drafting replies. It is not a kit platform, so the drafting is the agent skill's job, not a cron's.",
+  "ChatGPT can be used for drafting replies. It is not a kit platform, so the drafting is the agent skill's job, not a cron's.",
   "HubSpot quote property names (hs_title, hs_expiration_date, hs_quote_amount, hs_status) and status values are not in the vendor spec. They come from settings and must be checked in the live account before any run.",
   "The quote-to-contact association type is not in the vendor spec (AssociationSpec is empty). associationTypeId comes from settings and must be set from the live account.",
   "No intake cron: the vendor pages do not cover how enquiries arrive. The agent writes each scoped proposal into the proposals store.",
@@ -42,9 +41,5 @@
   "A draft create is not idempotent. If the process stops after HubSpot accepts a create but before the store is written, a rerun can make a second draft quote. Check HubSpot before approving a rerun.",
   "A rejected publish approval leaves the proposal at publish-queued. A person resets it to drafted; the next publish run then queues a new approval under a new key.",
   "The adapter is docs-only until a HubSpot test account proves the create, read and update calls."
- ],
- "evidence": {
-  "calls": "4 of 6 add-proposal calls describe how they write proposals; 75 to 100 percent of each step is manual",
-  "platforms": "HubSpot quote and contract help pages, mapped to 3 quote operations in the kit"
- }
+ ]
 }

@@ -5,8 +5,7 @@ description: Customer return requests for a retail business with its own warehou
 
 # Returns
 
-Built from how retail businesses described handling returns on discovery calls. The owner gets a return request in the inbox,
-emails back a returns form, the customer posts the item, and staff check it in, refund or exchange it, and restock it.
+Takes in customer return requests, answers each with the business's own returns form, and queues that reply for approval. Refunds, exchanges, return labels, check-in and restocking stay with the business's staff.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `intake` reads new return requests from Gmail and from Gorgias.

@@ -5,7 +5,7 @@ description: Daily ad audit for an agency running client ad accounts. Use when s
 
 # Daily ad audit
 
-Built from how agency owners described their daily ad audit on discovery calls. The mapped platform for this build is Meta.
+Each morning reads yesterday's results from the client's ad accounts, checks them against the agreed thresholds, and queues any campaign pause for a person to approve. Crons read and queue; nothing changes in an ad account until a person approves it.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `pull` reads yesterday's campaign results for each Meta ad account in settings.

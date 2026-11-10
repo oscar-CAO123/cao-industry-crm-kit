@@ -5,7 +5,7 @@ description: Guest waitlist kept in a spreadsheet for a hospitality venue. Puts 
 
 # Guests and waitlist
 
-Built from one hospitality discovery call that names guests and waitlists. The spreadsheet is the record. The call gave no steps, so the steps here follow the mapped Google Sheets operations and the walk-in pattern used in the bookings workflow.
+Keeps the venue's guest waitlist in its own spreadsheet: puts each waiting party in order and quotes a wait from the minutes per group, logs every seated, no-show or left party once to a guest log, and queues the clearing of those rows for approval. Crons read and draft; a person approves every clear.
 
 ## What runs on its own
 Two crons in `index.ts`. `queue` runs every 10 minutes. It puts each row marked Waiting in order of the time it was added, writes its position, and quotes a wait of minutes per group ahead in the queue. A row it cannot read is marked Check with a note.

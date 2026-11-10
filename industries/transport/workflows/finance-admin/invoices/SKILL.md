@@ -5,8 +5,7 @@ description: Completed transport trips to priced, authorised invoices in Xero, f
 
 # Invoices from rates
 
-Built from how transport businesses described invoicing on discovery calls (5 of 11 calls describe the process). The owner or
-admin looks up rates by hand, chases the signed delivery docket, then types up or builds the invoice.
+Turns each completed transport trip into a priced invoice in the business's accounting software, from the rate card, once its proof of delivery is on file. Queues each invoice to be authorised and emailed for approval, queues reminders for overdue invoices, and keeps the trip records in step with what the accounts say. Crons read and draft; a person approves every authorisation, email and reminder.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

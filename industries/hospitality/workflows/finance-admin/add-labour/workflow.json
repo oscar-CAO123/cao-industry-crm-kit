@@ -8,7 +8,6 @@
  "summary": "Works out each venue's labour cost as a share of its sales from the rosters and timesheets in Deputy, and records an alert the moment a venue runs over its labour target. The crons only read and record; a person changes rosters and targets in Deputy.",
  "families": {
   "all": {
-   "evidence": "11 discovery calls with hospitality owners; 9 describe how labour is checked today, all by hand or unstated",
    "steps": [
     "set-labour-target",
     "build-roster",
@@ -67,8 +66,8 @@
   }
  },
  "gaps": [
-  "Employment Hero is the most-named tool in these calls (four mentions across set-labour-target and alert-raised). The kit maps its labour rules, rostered shift cost and sales data, but the platform evidence has no row for it, so no adapter is built. Mine its support row, then add an adapter.",
-  "Looker Studio (two calls) is where owners set the wages flag today. It is not in the kit and has no adapter.",
+  "Employment Hero maps labour rules, rostered shift cost and sales data in the kit, but this workflow has no adapter. Confirm the required vendor operations before adding one.",
+  "Looker Studio is where owners set the wages flag today. It is not in the kit and has no adapter.",
   "Xero is mapped for budgets and payroll timesheets, but its timesheets carry hours, not dollars, and its budgets are per account rather than per venue, so no adapter is built.",
   "Humanforce is not in the kit.",
   "Setting a labour target in Deputy (labour model rules) is not wired: the vendor spec gives no values for the metric field, so the rule is set by hand in Deputy.",
@@ -77,9 +76,5 @@
   "No live operation: nothing in this job reaches a customer, so the approval path is not exercised. The test covers the refusal of any non-read operation.",
   "Rostering (build-roster) is not covered; Deputy's rostering stays a person step.",
   "Every adapter is docs-only until a Deputy trial account proves it."
- ],
- "evidence": {
-  "calls": "11 calls read; 9 describe how labour is checked today; 4 multi-site hospitality groups among them",
-  "platforms": "Deputy, Xero and Humanforce mapped step by step from vendor docs; Deputy is the only adapter built"
- }
+ ]
 }

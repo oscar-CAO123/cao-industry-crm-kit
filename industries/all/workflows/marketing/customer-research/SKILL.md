@@ -5,9 +5,7 @@ description: Customer surveys and interviews for a business, from the invite to 
 
 # Customer research
 
-Built from how Australian businesses described running customer surveys on discovery calls. The business chooses who to ask,
-writes the questions, and decides what to change. The workflow sends the invites after approval, collects the answers, and
-drafts a summary.
+Runs customer surveys and interviews and summarises them. Sends a survey invite to each customer the owner chooses, collects the answers, and drafts a summary for the owner. Crons read and draft; every email send waits for a person to approve it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `responses` reads new answers from the form (or Calendly routing

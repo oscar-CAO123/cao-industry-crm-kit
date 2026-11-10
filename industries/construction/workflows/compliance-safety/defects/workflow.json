@@ -8,7 +8,6 @@
  "summary": "Captures each defect as it is found on a job, keeps the trade chased until it is fixed, and asks the client to sign off once every defect on the job is closed. Crons read and draft; every reminder and client email waits for a person to approve it.",
  "families": {
   "defects-on-jobs": {
-   "evidence": "6 of 15 construction discovery calls that discuss defects describe how they handle them",
    "steps": ["log-defect", "chase-trade", "rectify", "close-out", "record-keeping"],
    "covered_by": {"log-defect": "log-defects (a defect checklist section becomes a register entry and a task on the job)", "chase-trade": "chase (reminder to the trade, approval before it sends)", "rectify": "chase (fixed status read back from the job checklist)", "close-out": "close-out (sign-off task and client email, approval before it sends)", "record-keeping": "register in the workflow store, plus a task per defect in ServiceM8"}
   }
@@ -43,9 +42,5 @@
   "Trade replies are not read. The chase sends reminders only; it does not parse what the trade says back.",
   "The defect register lives in the workflow store, not in a spreadsheet the owner already uses. Export it if the owner wants it in Excel.",
   "The adapter is docs-only until a ServiceM8 trial account proves the checklist read, the task write and the approved send."
- ],
- "evidence": {
-  "calls": "15 construction discovery calls read for defects, 6 describe the process; manual share 100 percent on log, rectify and close-out",
-  "platforms": "ServiceM8 mapped from its help centre and official spec (checklists, tasks, job, contacts, email); Procore from its help centre only, with no API ops"
- }
+ ]
 }

@@ -5,8 +5,7 @@ description: Delivery tickets (paper dockets) to rows in the business's own tick
 
 # Delivery tickets to data
 
-Built from one discovery call about log and timber export receival (about 500,000 tons a year across 9 to 10 sites), where
-one or two office staff key paper dockets into spreadsheets for a day or two a week.
+Turns paper delivery tickets into rows in the business's own ticket register, checks each grade against the contract, and queues a QC email for approval when a grade is wrong. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

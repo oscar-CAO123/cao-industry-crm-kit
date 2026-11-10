@@ -8,7 +8,6 @@
  "summary": "Keeps the asset register from Trackunit, turns each planned service that is due into a Work Order job in ServiceM8, turns each failed inspection into a defect job, and queues an overdue reminder for approval. Crons read and draft; a person approves every email.",
  "families": {
   "plant-and-vehicle-servicing": {
-   "evidence": "15 calls describe how they track and service equipment, vehicles and machinery",
    "steps": ["register-asset", "log-usage", "pre-start-check", "service-schedule", "book-service", "perform-service", "record-service-history", "defect-report", "compliance-renewal", "parts-order", "sign-off", "track-location", "reminder-follow-up", "decommission"],
    "covered_by": {"register-asset": "register", "log-usage": "gap", "pre-start-check": "defects (failed checks)", "service-schedule": "service-due", "book-service": "service-due (Work Order job)", "perform-service": "scheduling-dispatch workflow", "record-service-history": "gap", "defect-report": "defects", "compliance-renewal": "gap", "parts-order": "gap", "sign-off": "skill (office decides)", "track-location": "gap", "reminder-follow-up": "service-due (queued reminder)", "decommission": "gap"}
   }
@@ -33,7 +32,7 @@
   "servicem8": {"status": "docs-only", "covers": "Work Order jobs for services and defects; overdue reminder email queued for approval"}
  },
  "gaps": [
-  "MEX CMMS (the most-named lightweight CMMS in the calls): no folder in the kit and no API operations mapped. Its asset register, work orders and parts stay manual until its API is mapped.",
+  "MEX CMMS: no folder in the kit and no API operations mapped. Its asset register, work orders and parts stay manual until its API is mapped.",
   "ServiceM8 asset register: the kit has list and update calls for assets but no create call, so Trackunit assets are not copied into ServiceM8.",
   "Trackunit operating hours and fuel (aemp-iso time series): the kit marks these GET operations as writes, so usage logging is not wired. Check that classification before using them.",
   "Parts ordering, compliance and registration renewals, decommissioning, and CMMS service history: not confirmed in the vendor docs read. Office or agent-skill steps.",
@@ -41,9 +40,5 @@
   "Truck GPS and location (Geotab, Trackunit location): not part of this build; the crons do not read positions.",
   "Trackunit array filters (assetIds, inspection statuses) are not used because array query serialisation is unverified; failed statuses are filtered in code.",
   "Every adapter is docs-only until a sandbox account (Trackunit access token, ServiceM8 trial) proves it. The Trackunit token exchange is not built, so an access token must be supplied."
- ],
- "evidence": {
-  "calls": "32 asset-maintenance calls read, 15 describe the process; one call stated a fleet of 15 trucks",
-  "platforms": "Trackunit and ServiceM8 official OpenAPI specs (endpoint-map raw); MEX CMMS vendor pages read but unmapped"
- }
+ ]
 }

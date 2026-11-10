@@ -8,11 +8,9 @@
  "summary": "Alerts the owner the moment a new lead lands, queues one first text for approval if nobody has replied in time, and escalates to a senior person when a lead is still uncontacted. Crons read and draft internal tasks; a person approves every text to a lead.",
  "families": {
   "all | other-tool": {
-   "evidence": "4 of the 6 calls read for this mining pass named a tool (AI agent, GoHighLevel, AI assistant); typical order first contact, then qualify and book",
    "steps": ["lead-arrives", "first-contact", "qualify-book"]
   },
   "all | by-hand-or-unstated": {
-   "evidence": "1 of 6 calls: the owner texts website form inquiries by hand; typical order first contact, then an automated chase",
    "steps": ["lead-arrives", "first-contact", "chase-message"]
   }
  },
@@ -62,9 +60,5 @@
   "Only the SMS channel is built. Email first contact is not built.",
   "A queued first text is rejected by the chase pass once its lead is past the alert window or has been handled. That pass runs every 10 minutes, so a text approved in the gap still goes out. A check at send time in the runtime would close it.",
   "Qualification and booking on the first call are judgment steps for the team, not automated here."
- ],
- "evidence": {
-  "calls": "33 calls tagged for this workflow in the worklist; 6 read for the variants pass, 5 described the process",
-  "platforms": "the mining platform file maps GoHighLevel (yes on lead-arrives, first-contact, chase-message and record-keeping), HubSpot and Pipedrive; only GoHighLevel has confirmed fields for every operation built"
- }
+ ]
 }

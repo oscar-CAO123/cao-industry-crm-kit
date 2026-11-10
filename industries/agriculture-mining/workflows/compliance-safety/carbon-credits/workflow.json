@@ -34,16 +34,12 @@
   "agriwebb": {"status": "docs-only", "covers": "farms, fields and farm records (read only)"}
  },
  "gaps": [
-  "No call evidence: the mining variants file for this workflow is missing, so calls is 0 and the build rests on platform docs only.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Agworld and CropX are in the platform evidence but have no kit platform folder, so no operations exist for them. Their soil sampling and lab results need mapping before they can be used.",
   "Verification, project registration, claims, credits issued, credit sale and payment have no mapped operation on AgriWebb or any other kit platform. They stay with the person.",
   "AgriWebb sign-in is a bearer token only (AGRIWEBB_ACCESS_TOKEN); the token exchange is not built. The platform is spec status and has not run against a live account.",
   "The fields read filters the first 500 fields on the server side and then by farm in the adapter. A farm with more fields than that needs paging, which the kit does not provide for this operation.",
   "Records are counted up to 500 per farm. The checklist shows that cap in its detail text.",
   "No live operation exists, so an approval can never be queued from this workflow. Any carbon submission would need a runtime change or a new platform mapping first."
- ],
- "evidence": {
-  "calls": "0 calls (variants file missing)",
-  "platforms": "3 platforms in the evidence (AgriWebb, Agworld, CropX); 1 has kit operations (AgriWebb, 14 reads and 10 writes in its ops.json); the workflow uses its 3 reads only"
- }
+ ]
 }

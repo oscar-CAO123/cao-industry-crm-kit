@@ -8,7 +8,6 @@
  "summary": "Takes a result the clinic has sent back, drafts the reply letter to the GP as a draft treatment note in Cliniko, and queues a results-review recall for a person to approve. Crons read and draft; a person approves every recall, and sends every letter from the practice's own system.",
  "families": {
   "result-to-gp": {
-   "evidence": "3 discovery calls read; 2 describe the process, and the steps come from those descriptions",
    "steps": ["result-received", "patient-contact", "letter-drafted", "letter-sent"],
    "covered_by": {
     "result-received": "skill (the agent records the filed result against the patient in the CRM shell)",
@@ -42,9 +41,5 @@
   "Jane App: only patient search is mapped (5 read operations, no letter, result or recall operations), so nothing is built for it.",
   "Result triage (urgent or normal) and clinician sign-off on results: the evidence and the platform docs do not describe either, so both stay with the clinician.",
   "Cliniko recall_at format and time zone, and the treatment note sections for a GP letter, need a check on a live account. Cliniko has not been run against a real account."
- ],
- "evidence": {
-  "calls": "3 calls read; 2 describe how results and letters are handled (variants file: one family, all by hand or with Claude)",
-  "platforms": "Genie and ZedMed platform pages read (no ops in the kit); Cliniko mapped (223 ops); Jane App mapped (5 read ops). Only Cliniko has mapped operations for this job."
- }
+ ]
 }

@@ -5,9 +5,7 @@ description: Wastage log from a bin photo for a hospitality business on Square. 
 
 # Wastage log from a bin photo
 
-Built from how hospitality businesses described logging waste on discovery calls, and from the platform pages for Eats365,
-Lightspeed and Square. Only Square has a platform in the kit, so this workflow runs on Square. Eats365 and Lightspeed are not
-covered yet.
+Turns a bin photo into a wastage entry on the stock record: matches the photo to a catalogue item, queues the adjustment to waste for approval, and writes a daily waste summary. Crons read and draft; a person approves every stock change.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

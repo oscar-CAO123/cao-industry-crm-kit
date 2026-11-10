@@ -8,7 +8,6 @@
   "summary": "Collects supplier quote replies for one item list, logs each reply in a register, and drafts a side-by-side comparison for the buyer to check like for like. Crons read and draft; a person approves every chaser send and makes the award.",
   "families": {
     "all": {
-      "evidence": "3 manufacturing supplier quote calls read, 2 describe the process (metal fabrication, both by email, both quantities taken from drawings by hand)",
       "steps": ["specify-item", "receive-quotes", "compare-quotes"],
       "covered_by": {
         "specify-item": "skill (the item list and specs go into the comparison record)",
@@ -40,17 +39,9 @@
     "Acumatica: the evidence names requisitions and RFQs, but the kit has no Acumatica platform folder, so no operations are mapped.",
     "Like-for-like checks, price ranking, negotiation and the award are judgment steps for the agent skill and the estimator. The crons never parse or rank a price.",
     "Writing the comparison record (the item list, the suppliers, the request date) into the store has no CLI command yet. The skill or a person writes it until one exists.",
-    "Chasing suppliers is not in the call evidence. The chase cron follows the same reply rules as the supplier RFQ workflow, so confirm with a buyer before it runs.",
+    "The chase cron follows the same reply rules as the supplier RFQ workflow. Confirm with a buyer before it runs.",
     "Turning an awarded quote into a purchase order is covered by the supplier RFQ workflow (manufacturing and all industries), not this one.",
-    "Takeoff from drawings is done by hand or by freelancers in the calls. The kit has no takeoff adapter.",
+    "Takeoff from drawings is done by hand or by freelancers. The kit has no takeoff adapter.",
     "The adapter is docs-only until a sandbox mailbox proves it."
-  ],
-  "evidence": {
-    "calls": 3,
-    "describe_process": 2,
-    "platforms_with_docs": 2,
-    "platforms_in_kit": "Odoo (docs read only, no RFQ or purchase order operations); Acumatica has no kit folder",
-    "platform_used": "microsoft-365, because the calls say quotes come in by email and it is the mapped mail and register platform",
-    "source": "mining/manufacturing-supplierquotes-variants.json and mining/manufacturing-supplierquotes-platforms.json"
-  }
+  ]
 }

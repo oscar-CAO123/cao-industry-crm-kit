@@ -8,7 +8,6 @@
  "summary": "Takes a maintenance request logged in the property manager's job system, gets it approved and allocated to a maintenance person, keeps the tenant and owner informed, and tells the owner when the work is done. Crons read and draft; every allocation and every message to a person waits for approval.",
  "families": {
   "dispatch-through-job-system": {
-   "evidence": "No call variants file was present when this was built, so the steps come from the ServiceM8 mapping alone",
    "steps": ["request-received", "triage", "owner-approval", "find-tradie", "dispatch", "tenant-access", "job-completed", "invoice-and-payment", "owner-update", "tenant-update", "follow-up", "record-keeping", "other"],
    "covered_by": {"request-received": "intake", "triage": "skill", "owner-approval": "skill (the owner's go-ahead is the job moving to Work Order in ServiceM8)", "find-tradie": "skill (default staff member in settings)", "dispatch": "dispatch (queued for approval)", "tenant-access": "not yet (see gaps)", "job-completed": "follow-up", "invoice-and-payment": "not yet (see gaps)", "owner-update": "follow-up (queued for approval)", "tenant-update": "follow-up (queued for approval)", "follow-up": "follow-up", "record-keeping": "dispatch and follow-up (the workflow store)", "other": "skill"}
   }
@@ -39,11 +38,7 @@
   "Supplier choice: ServiceM8 allocates jobs to staff members, not to outside tradies. The workflow allocates to one default staff member from settings. Choosing a tradie per job needs a proposal command in the workflow runner.",
   "Tenant access and appointments: not described on the pages read, and no ServiceM8 op is mapped for them here.",
   "Invoice and payment: ServiceM8 can record payments, but the contractor invoice check and the owner payment step are not built. The payment op is not in live_ops.",
-  "Call evidence: the variants file real-estate-add-maint-variants.json was not present at build time, so no call counts back this workflow. Rebuild the evidence before relying on the step shares.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Every adapter is docs-only until a ServiceM8 trial account proves the allocation and the message calls."
- ],
- "evidence": {
-  "calls": "not available: the variants file was missing at build time",
-  "platforms": "ServiceM8 mapped step by step from its help centre and API ops (13 steps, 10 with mapped operations). PropertyMe and Tapi help pages were read but are not mapped in the kit."
- }
+ ]
 }

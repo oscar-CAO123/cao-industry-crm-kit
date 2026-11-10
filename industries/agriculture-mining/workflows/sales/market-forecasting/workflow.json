@@ -8,7 +8,6 @@
  "summary": "Forecasts how much of each product the business will sell and what it can charge, from its own invoice history, its price list and buyer enquiries, so the owner can decide what to sell, pack and store. Crons read and draft; the monthly summary is sent only when a person approves it.",
  "families": {
   "all": {
-   "evidence": "2 discovery calls describe this way of forecasting (log, timber and grain exports; potatoes and garlic, packing and storage)",
    "steps": ["demand-signal", "price-watch", "supply-estimate", "build-forecast"],
    "covered_by": {"demand-signal": "demand-signal (Xero sales history and buyer enquiries in Outlook)", "price-watch": "price-watch (list price against last invoiced price)", "supply-estimate": "not yet (see gaps)", "build-forecast": "forecast (trailing average per item, a register row per item and a summary draft)"}
   }
@@ -40,9 +39,5 @@
   "Xero sales are read up to 1,000 invoices per run (10 pages of 100). A business with more invoices in 12 months needs the page cap raised.",
   "Both adapters are docs-only until a sandbox Xero demo company and a Microsoft 365 developer tenant prove them.",
   "Scenario checks, forward commitments, buyer updates and review of forecast accuracy are not built. They are judgment or record steps for the owner's usual process."
- ],
- "evidence": {
-  "calls": "2 of 2 discovery calls describe how they forecast; each step is fully manual (100 percent) and the turnaround stated is next month or one day ahead",
-  "platforms": "Platform docs for google-workspace, microsoft-365 and salesforce did not cover forecasting, pricing or sell decisions. The build uses the mapped Xero and Microsoft 365 operations that hold the same data."
- }
+ ]
 }

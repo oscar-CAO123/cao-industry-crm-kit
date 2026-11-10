@@ -5,8 +5,7 @@ description: One-tap vendor reports for a listing, from VaultRE into an Outlook 
 
 # Vendor report in one tap
 
-Built from the workflow spec and one call. No discovery call yet describes how an agency makes a vendor report, so the
-steps are the spec's, not a measured process. Check them with the client before relying on them.
+Vendor report in one tap: reads each listing's record and open homes from VaultRE, drafts the report to the vendor in Outlook once the agent has written the commentary, and queues the send for one approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `pull` reads each listing's record and open homes from VaultRE,

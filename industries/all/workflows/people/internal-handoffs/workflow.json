@@ -8,7 +8,6 @@
  "summary": "Passes a piece of work from one person or team to the next through Asana and Slack. Each handover is recorded as an Asana task, assigned with a due date and a note, and sent as a Slack message once a person approves it. Open handovers are chased on a set schedule and a daily status goes to the channel. Crons read and draft; a person approves every assignment and message.",
  "families": {
   "all": {
-   "evidence": "23 of 29 calls read describe how they pass work between people, all by hand or without a named tool: 19 pass-on steps, 7 write-handover steps, 6 trigger-event steps, 4 choose-recipient steps",
    "steps": ["trigger-event", "gather-info", "write-handover", "choose-recipient", "pass-on", "acknowledge", "assign-tasks", "status-update", "chase-stalled", "record-keeping"],
    "covered_by": {
     "trigger-event": "intake (a request in the Asana intake project or the Slack handover channel)",
@@ -46,8 +45,8 @@
  },
  "gaps": [
   "Monday.com: the agent pages were the only ones readable (help pages refused the crawl with 403), and no operations are mapped in the kit, so it is not built. Its evidence is one support-agent page, not handover steps.",
-  "Email, the most-named recipient tool (4 calls on choose-recipient): Microsoft 365 is mapped in the kit for the quoting and training workflows, but this workflow builds only Asana and Slack, so email handovers stay with the person.",
-  "GoHighLevel, ServiceM8, Xero, Airtable, Procore, JackApp, Shopify and Canva were named in the calls for handovers. None is built in this workflow, so handovers through them stay with the business's own process.",
+  "Email, the most-named recipient tool: Microsoft 365 is mapped in the kit for the quoting and training workflows, but this workflow builds only Asana and Slack, so email handovers stay with the person.",
+  "GoHighLevel, ServiceM8, Xero, Airtable, Procore, JackApp, Shopify and Canva have no handover adapter here. None is built in this workflow, so handovers through them stay with the business's own process.",
   "No command writes a proposal into the store yet. The agent's routing judgment for a request no route covers needs the CRM shell or a later core change to write the proposals namespace. Until then such a request stays needs-routing with its reason.",
   "Acknowledgement is read from Asana replies only. A Slack thread reply is not read, and the Slack message timestamp of each handover is not kept (the approval results keep only id-like keys), so Slack replies cannot be tied back to a handover yet.",
   "The docs do not describe a formal receipt, an approval or sign-off step for a handover, or escalation after the last chase. The last chase is the end of the chain here, and a person takes it from there.",
@@ -55,9 +54,5 @@
   "Chases go to the Asana record task only. A chase by Slack direct message is not built.",
   "The status-update step is one daily text post for the open handovers. It is not a dashboard, and it does not show progress against revenue or the job system.",
   "Every adapter is docs-only until a sandbox Asana workspace and a Slack workspace with the bot added to the handover channel prove it. The Asana assignee field takes a work email per Asana's official spec, which is confirmed on paper only."
- ],
- "evidence": {
-  "calls": "29 calls read, 23 describe the process; 0 rejected. Volume stated on calls: 100 to 200 jobs a month in a minor works team, and about 80 jobs a day",
-  "platforms": "the vendors' own help pages for Asana and Slack, mapped step by step (Asana rated 3 steps yes, Slack rated 4 yes; the rest partial or unknown). Monday.com's help pages refused the crawl, so it is not built"
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Triages complaints and refund or return requests from the helpdesk: tags the ones that need a person, records the category, and queues a plain acknowledgement for approval. Crons read, categorise and queue; a person approves every reply, and nothing refunds or closes a case by itself.",
  "families": {
   "all": {
-   "evidence": "28 calls read; 8 describe the complaint process step by step",
    "steps": ["complaint-received", "check-order", "assess-validity", "acknowledge-customer", "issue-refund", "escalate", "record-keeping"],
    "covered_by": {"complaint-received": "intake (Gorgias open tickets, every 10 minutes)", "check-order": "not built (Shopify order and return lookup is mapped, no adapter yet)", "assess-validity": "skill (a person or the agent decides who pays)", "acknowledge-customer": "draft, then approval", "issue-refund": "not built (a live Shopify or Stripe operation; no cron refunds)", "escalate": "draft (tag the ticket for a person)", "record-keeping": "draft (category in the ticket's custom field, when configured)"}
   }
@@ -40,13 +39,9 @@
   "Refunds are never issued by a cron. Issuing one (Shopify refund or Stripe refund) is a live operation for a later adapter, and the approval must name the order and the amount.",
   "Judgment steps stay with a person or the agent skill: deciding who pays on a hire or warranty claim, checking purchase date and past visits against a DMS or booking system (neither is mapped here), and writing a reply for a complaint no category matches.",
   "Not built: supplier and carrier claims, customer follow-up after a resolution, closing a complaint, and the process change that comes from repeat complaints. The Gorgias map does not describe these steps.",
-  "Microsoft 365, Google Workspace email and the support form are in the calls, but no platform evidence for them was read for this job, so no adapter. Their complaints reach the helpdesk only where a mailbox is connected to Gorgias.",
+  "Microsoft 365, Google Workspace email and the support form no platform evidence for them was read for this job, so no adapter. Their complaints reach the helpdesk only where a mailbox is connected to Gorgias.",
   "Gorgias: the vendor reference lists messages per ticket without a page size, and intake and overdue read only the newest 25 open tickets. A busy helpdesk can push older open complaints off the first page, so the overdue tag can miss them.",
   "Record-keeping: the category is written only when gorgias.category_field_id is set to a custom field the business has created. Without it, the category lives in the workflow's own store.",
   "The Gorgias adapter is docs-only until a trial account proves the reads and writes. Every call is tested against a fake network only."
- ],
- "evidence": {
-  "calls": "28 calls read for complaints; 8 describe the complaint process step by step; volume stated as about 20 a month with a 3% refund rate in one call",
-  "platforms": "Gorgias, Shopify and Stripe help and reference pages mapped step by step. Gorgias has the most support for this job and has an adapter here; Shopify and Stripe have mapped operations and gaps."
- }
+ ]
 }

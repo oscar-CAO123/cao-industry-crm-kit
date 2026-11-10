@@ -5,7 +5,7 @@ description: Checks bills and sales invoices in Xero against the basics that cat
 
 # Invoices checked by hand
 
-Built from 12 Australian calls about invoicing, 6 described in detail. Staff check each bill and client invoice by hand, chase late payers by phone, and pay bills from the bank. This workflow does the checks a person repeats on every invoice and keeps every payment and reminder behind an approval.
+Checks bills and sales invoices in Xero for the basics that catch errors (supplier, due date, total, account codes, source document, possible duplicates), notes the result on each invoice, and queues bill payments and overdue reminders for approval. Crons read and note; a person approves every payment and every email to a customer.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

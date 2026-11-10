@@ -8,7 +8,6 @@
  "summary": "Sorts the property manager's unread email into urgent, maintenance, owner, tenant, other and noise, drafts approved template replies for a person to approve, and leaves one morning summary as a Gmail draft. Crons read and draft; a person approves every reply before it is sent.",
  "families": {
   "all": {
-   "evidence": "2 of 4 calls read for this workflow describe the process step by step: a bot that sorts morning mail, and two VAs who handle maintenance email",
    "steps": ["email-intake", "triage", "reply-tenant-or-owner", "log-request", "record-keeping"],
    "covered_by": {"email-intake": "intake (polls every 15 minutes; no webhook)", "triage": "intake (keyword rules flag urgent mail)", "reply-tenant-or-owner": "draft (approved templates) and approval", "log-request": "not built (see gaps)", "record-keeping": "digest (summary draft); the property record is not built"}
   }
@@ -41,9 +40,5 @@
   "Reply wording: the owner approves each template. Templates must not promise a date or a price.",
   "The workflow has no alert when a cron stops. The call that described a morning bot stopping for days after it was moved is the reason to check the run log each morning.",
   "Google Workspace is docs-only until a Gmail account proves the reads and drafts."
- ],
- "evidence": {
-  "calls": "4 calls read for this workflow; 2 describe the process step by step (one bot that sorts morning email and flags urgent mail, one with two VAs handling maintenance email)",
-  "platforms": "Console and PropertyMe help pages checked: neither has operations mapped in the kit, so Gmail is the only mailbox used; VaultRE and Re-Leased are mapped but no adapter is built for them"
- }
+ ]
 }

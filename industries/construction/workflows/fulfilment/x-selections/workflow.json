@@ -8,7 +8,6 @@
   "summary": "Turns a client's selections (tiles, fittings, colours and other options) into a pack the client chooses from, keeps each choice against its allowance, and chases what is still undecided. Crons read and draft; a person approves every send.",
   "families": {
     "by-hand": {
-      "evidence": "3 of 5 construction calls read describe client selections done by hand: the allowance is set in the estimate, the owner emails a form and reference booklet, and the client's answers land in a sheet",
       "steps": ["allowance-set", "selection-pack-issued", "client-browse", "client-chooses", "record-keeping", "check-against-allowance", "variation-note", "client-sign-off", "order-item", "chase-undecided", "lead-time-check", "install-coordinate"],
       "covered_by": {
         "allowance-set": "intake (the owner records the allowance in the register; the agent reads it)",
@@ -53,9 +52,5 @@
     "Judgment steps (answering a client's question from the booklet, deciding whether a request is an extra that needs a variation, choosing the chase tone) belong to the agent skill, not the crons.",
     "Every adapter is docs-only until a sandbox Google Workspace account proves it. Its platform status is spec, tested offline only.",
     "A rejected pack is not queued again: a person redoes it by hand."
-  ],
-  "evidence": {
-    "calls": "5 construction calls read; 3 describe client selections (process steps, tools named, and who does each step). Allowance and pack steps are 100 percent manual; client browsing and choosing are client-side.",
-    "platforms": "Buildxact's help centre mapped step by step (construction-x-selections-platforms.json): every selection step is covered in its docs, but no operation is mapped in the kit. Procore's pages cover none of the selection steps."
-  }
+  ]
 }

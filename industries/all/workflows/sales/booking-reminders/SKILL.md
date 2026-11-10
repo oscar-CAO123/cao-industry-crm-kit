@@ -5,9 +5,7 @@ description: Appointment book for a service business on Calendly: reads the next
 
 # Booking, reminders and no-shows
 
-Built from how 40 Australian booking calls described their appointments: clinics, salons, trade site visits and
-venues, most of it still by hand. This build covers Calendly only. Booking a new slot, reminder texts and
-cancel or reschedule from a client's message are not built (see workflow.json gaps).
+Works through the appointment book in Calendly: reads each booking into the workflow's book, and queues a yes or no on every finished booking so a person can mark a no-show. Booking a new slot and sending reminders are not covered yet (see gaps). Crons read and queue; a person decides every no-show.
 
 ## What runs on its own
 Two crons in `index.ts`:

@@ -2,7 +2,7 @@
  "industry": "health-care",
  "name": "Health Care",
  "version": 1,
- "source": "Pages and tabs follow the health-care demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -855,374 +855,238 @@
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 6
-   }
+   "status": "docs-only"
   },
   {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
    "name": "Book appointments, send reminders, handle no-shows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "email-marketing",
    "dir": "industries/all/workflows/marketing/email-marketing",
    "department": "marketing",
    "name": "Send newsletters and automated email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:add-dictation",
    "dir": "industries/health-care/workflows/fulfilment/add-dictation",
    "department": "fulfilment",
    "name": "Session notes from dictation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "checkins-winback",
    "dir": "industries/all/workflows/customer-success/checkins-winback",
    "department": "customer-success",
    "name": "Check in, renew or win back customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "documents",
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:reconciliation",
    "dir": "industries/all/workflows/finance-admin/reconciliation",
    "department": "finance-admin",
    "name": "Reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "job-tracking",
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
    "name": "Track jobs or projects from start to finish",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "stock-ordering",
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:shiftnotes",
    "dir": "industries/health-care/workflows/compliance-safety/shiftnotes",
    "department": "compliance-safety",
    "name": "Shift note reader",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:support",
    "dir": "industries/health-care/workflows/customer-service/support",
    "department": "customer-service",
    "name": "Patient support desk",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "after-hours-calls",
    "dir": "industries/all/workflows/customer-service/after-hours-calls",
    "department": "customer-service",
    "name": "Answer or triage calls out of hours",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "status-updates",
    "dir": "industries/all/workflows/customer-service/status-updates",
    "department": "customer-service",
    "name": "Tell customers where their job, order or matter is up to",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "invoicing",
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "staff-helpdesk",
    "dir": "industries/all/workflows/people/staff-helpdesk",
    "department": "people",
    "name": "Answer staff questions from SOPs and policies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "call-coaching",
    "dir": "industries/all/workflows/owner/call-coaching",
    "department": "owner",
    "name": "Score and coach sales and service calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:rebates",
    "dir": "industries/health-care/workflows/finance-admin/rebates",
    "department": "finance-admin",
    "name": "Missed rebates finder",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:add-reminders",
    "dir": "industries/health-care/workflows/customer-service/add-reminders",
    "department": "customer-service",
    "name": "Appointment reminders and waitlist",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:x-agreements",
    "dir": "industries/health-care/workflows/customer-success/x-agreements",
    "department": "customer-success",
    "name": "Service agreements",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:x-budget",
    "dir": "industries/health-care/workflows/finance-admin/x-budget",
    "department": "finance-admin",
    "name": "Plan budget burn",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:careplan",
    "dir": "industries/health-care/workflows/fulfilment/careplan",
    "department": "fulfilment",
    "name": "Care plan from intake",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "health-care:results-and-letters",
    "dir": "industries/health-care/workflows/fulfilment/results-and-letters",
    "department": "fulfilment",
    "name": "Action results, send referrals and reply letters to GPs",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1230,26 +1094,22 @@
   {
    "tool": "GoHighLevel",
    "platform": "gohighlevel",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "HubSpot",
    "platform": "hubspot",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Cliniko",
    "platform": "cliniko",
-   "status": "docs-read",
-   "calls": 2
+   "status": "docs-read"
   }
  ],
  "missing_connectors": []

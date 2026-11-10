@@ -5,9 +5,7 @@ description: Collect, name and file incoming client and supplier documents in th
 
 # Document intake
 
-Built from how 28 Australian businesses described handling incoming documents on discovery calls. Almost all of it was
-by hand: documents arrive by email and WhatsApp, get saved and renamed by staff, go into master copies on SharePoint or
-Dropbox, and missing ones get chased one by one.
+Collects incoming client and supplier documents from the intake folder, renames each to a standard name and files it by its rule in the business's own Dropbox, parks unmatched files for a person, and queues a file request for each missing document on the checklist. Crons read and file inside the business; every request that reaches a client or supplier waits for a person to approve it.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

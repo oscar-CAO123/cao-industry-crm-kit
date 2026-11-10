@@ -8,7 +8,6 @@
  "summary": "Takes the day's stops from the business's dispatch platform, finds the stops not yet in a route, and queues a dispatch of each team's routes for approval. Crons read and draft; a person approves every dispatch that sends a driver out.",
  "families": {
   "stops-to-dispatched-runs": {
-   "evidence": "0 of 3 discovery calls described how they route; steps come from the platform docs of Onfleet, Locate2u and Webfleet",
    "steps": ["job-intake", "gather-stops", "check-capacity", "build-routes", "optimise-sequence", "check-constraints", "dispatch-routes", "customer-notify", "mid-day-changes", "proof-of-delivery", "record-keeping", "follow-up"],
    "covered_by": {
     "job-intake": "intake (reads tasks from Onfleet)",
@@ -43,7 +42,7 @@
   "onfleet": {"status": "docs-only", "covers": "task list, route plans, team auto-dispatch (Scale plan or higher per the Onfleet docs)"}
  },
  "gaps": [
-  "Call evidence: the 3 discovery calls read for this workflow did not describe how they route stops, so every step is from platform docs, not from owners.",
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Locate2u: the route planning and driver app are documented on marketing and training pages, but the kit has no ops file for it, so no adapter is built.",
   "Webfleet: its pages are vehicle tracking marketing, not route planning or dispatch documentation, and the kit has no ops file for it. No adapter is built.",
   "Onfleet auto-dispatch is a Scale plan feature per its docs. A business on a lower plan cannot run the dispatch step until it upgrades or uses another route.",
@@ -56,9 +55,5 @@
   "Onfleet metadata queries (workers, teams, tasks metadata) are POST reads that the kit marks as writes, so they are not used by the crons.",
   "Every adapter is docs-only until a sandbox account proves it. The offline test covers the workflow's rules, not a real Onfleet account."
  ],
- "settings_note": "settings.example.json names the team ids and where each route ends. The team ids must be set per client.",
- "evidence": {
-  "calls": "3 discovery calls read for transport route planning; 0 described their process, so no step or variant is confirmed by owners",
-  "platforms": "3 platforms mapped step by step from their docs (Locate2u, Onfleet, Webfleet); 1 (Onfleet) has mapped operations in the kit"
- }
+ "settings_note": "settings.example.json names the team ids and where each route ends. The team ids must be set per client."
 }

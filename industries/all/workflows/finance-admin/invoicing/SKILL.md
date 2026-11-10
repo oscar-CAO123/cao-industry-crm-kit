@@ -5,9 +5,7 @@ description: Completed jobs to invoices in Xero, with ServiceM8 as the job syste
 
 # Invoicing from completed work
 
-Built from how 44 Australian businesses described invoicing on discovery calls. Most type invoices up by hand
-after the job, check them against what was quoted, and chase payment by hand. This workflow covers the part
-ServiceM8 and Xero can do through their APIs.
+Turns completed jobs into invoices in the business's own system, queues each one to be authorised and emailed for approval, records the payments the trade takes on site, and queues reminders for overdue invoices. Crons read and draft; a person approves every authorisation, email, payment and reminder.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

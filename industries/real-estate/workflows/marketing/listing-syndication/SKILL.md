@@ -5,8 +5,7 @@ description: Vacant rental to listing in VaultRE, with portal enquiries answered
 
 # Listing syndication
 
-Built from two discovery calls about rental listings and the VaultRE API. The calls did not describe the steps in
-detail, so the steps come from the platform evidence and are marked unverified until a live account confirms them.
+Turns a vacant rental in VaultRE into one listing draft for a person to check, and drafts the reply to each portal enquiry. Crons read and draft; a person approves every reply and sets every listing live.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

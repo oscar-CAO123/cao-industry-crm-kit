@@ -5,9 +5,7 @@ description: Spray and harvest records for a grain or cropping business. Use whe
 
 # Spray and harvest records
 
-Built from one discovery call and the guidance pages of two spray record apps. The one call describes a grain business that
-re-keys paper dockets into a spreadsheet by hand. No platform in the kit maps spray or grain record operations, so the
-workflow keeps the owner's own register workbook current and lists what is missing. It does not read a spray platform.
+Keeps the spray and harvest register in the business's own workbook from the records the owner enters, and lists any record missing a required field for a quality check. Crons read and draft; a person approves the one email that goes out.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

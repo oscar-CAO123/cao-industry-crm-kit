@@ -5,7 +5,7 @@ description: Daily checks of a business's connections, keys, scenarios and Micro
 
 # Systems monitoring
 
-Built from how 34 Australian businesses described checking their systems. Most check by hand, and none checks a website.
+Checks every connection, key, data feed and platform service status once a day, and queues an alert email to the owner for each new failure. Crons read and draft; a person approves every alert send. No mapped platform checks a public website, so website checks are a gap.
 
 ## What runs on its own
 Two crons in `index.ts`. `check` reads Make connections, scenarios and the last day of error logs, and Microsoft 365 service health, and records what is failing. `alert` drafts one email for each new failure in the client's mailbox and queues its send for approval. Nothing reconnects, re-runs, fixes or sends on its own.

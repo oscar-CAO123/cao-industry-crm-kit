@@ -5,8 +5,7 @@ description: Portfolio reviews for a financial adviser business in HubSpot. Flag
 
 # Portfolio reviews
 
-Built from how financial advisers describe running reviews on discovery calls, with the platform steps mapped in the kit.
-Only HubSpot is wired so far, so the crons cover the client record and the meeting invite. The portfolio itself is not read.
+Finds the client portfolios whose review date has come, prepares a review pack from the client record, and queues the review meeting invite for an adviser to approve. Crons read and draft; a person approves every invite.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `review-due` flags the clients whose review date has come.

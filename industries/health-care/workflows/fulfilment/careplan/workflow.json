@@ -8,7 +8,6 @@
   "summary": "Takes a new patient from the practice system, drafts a care plan note from the clinic's own template for a clinician to finish, and queues the intake assessment form for approval. Crons read and draft; a person approves every form sent and a clinician signs off every note.",
   "families": {
     "clinic-intake-to-plan": {
-      "evidence": "0 discovery calls describe this way of working; built from the Cliniko help centre pages (docs read)",
       "steps": ["intake-received", "intake-assessment", "eligibility-check", "goals-set", "plan-draft", "clinician-review", "client-consent", "plan-sent", "team-allocation", "plan-review", "record-keeping", "other"],
       "covered_by": {
         "intake-received": "intake cron (reads new patients and their referral source)",
@@ -54,10 +53,6 @@
     "Whether creating a patient form emails the patient is not stated in the API spec, so the form create stays in live_ops and a person sends it from Cliniko if it does not.",
     "Splose (the second platform in the evidence) has no mapping in the kit: its help centre was read, but there is no ops.json or adapter, so it is not built.",
     "The Cliniko list filter (created_at on q[]) and the treatment note template behaviour are tested offline only; a live Cliniko account is needed to confirm them.",
-    "Zero owner calls describe this workflow, so the steps come from the vendor help centre, not from how clinics run intake."
-  ],
-  "evidence": {
-    "calls": "0 health care calls describe care plans from intake (the variants file has no steps)",
-    "platforms": "Cliniko help centre (docs read, mapped in the kit: 223 operations); Splose help centre (docs read, not mapped in the kit)"
-  }
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+  ]
 }

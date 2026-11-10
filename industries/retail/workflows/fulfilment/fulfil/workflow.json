@@ -8,7 +8,6 @@
  "summary": "Runs the order fulfilment cycle: takes new orders in from the business's system, checks stock in the warehouse, and queues each shipment for approval. Crons read and queue; a person approves every shipment. Pick, pack and label steps are not mapped yet.",
  "families": {
   "online-orders-from-a-warehouse": {
-   "evidence": "6 calls read (4 described the process): 3 online-store only, 1 store plus online, stated volumes of 5 to 150 orders a day",
    "steps": ["order-received", "order-check", "stock-check", "pick", "pack", "dispatch-label", "tracking-notify", "record-keeping"],
    "covered_by": {"order-received": "intake", "order-check": "skill (admin checks the order by hand)", "stock-check": "stock-check", "pick": "not yet (see gaps)", "pack": "not yet (see gaps)", "dispatch-label": "dispatch (shipment record only, label not made)", "tracking-notify": "not yet (see gaps)", "record-keeping": "dispatch (shipment record in Unleashed)"}
   }
@@ -37,15 +36,11 @@
   "Shipping labels and courier handover: Unleashed Advanced Shipping is marketing copy only in the docs read; its scope and add-on status need a live account.",
   "Customer tracking and delay emails: Unleashed has no messaging operation. Customers are emailed by hand until a mailbox adapter exists.",
   "Xero: the ops file covers purchase orders and tracking categories only, not sales orders or shipments, so record-keeping in Xero is not automated here.",
-  "Fishbowl and MaxShip appear in the call evidence but have no kit platform. Shopify is in the kit but was not in the platform evidence, so it has no adapter here.",
+  "Fishbowl and MaxShip have no kit platform. Shopify is mapped in the kit but has no adapter in this workflow.",
   "Paging: only the first page of 200 sales orders is read. The paged path is not in the ops file.",
   "The SDK (core/sdk/call.ts, the required-body check near line 375) is skipped whenever a body is passed, so a missing required body field is sent to Unleashed and refused there. The shipment body sets Guid and ShipmentStatus itself, and a test checks every required body field against the ops file. Needs core: the SDK should check required body fields.",
   "A shipment created by hand in Unleashed is not seen before a queued dispatch is approved. The approval summary asks the approver to check.",
   "The sales order status for ready orders (settings.unleashed.order_status) is unverified on a live account. The example value is 'Placed'.",
   "Judgment steps stay with people: the order check, short-stock calls, and purchase orders the owner raises when a SKU runs low."
- ],
- "evidence": {
-  "calls": "6 retail fulfilment calls read; 4 described the process; 5 tools named across the calls",
-  "platforms": "Starshipit, Unleashed and Xero help and API pages read (endpoint-map/raw/unleashed for the ops used)"
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Reads the agency's trust accounts and each configured sale's trust ledger from VaultRE, adds new ledger entries to the trust register, and drafts one email to the principal listing entries that are missing a receipt number, contact or trust account. Bank matching, the three-way check, owner payments, sign-off and lodgement stay with a person.",
  "families": {
   "all": {
-   "evidence": "4 real estate trust calls: 3 describe the process (residential sales and property management agencies, trust receipts split by an accountant, owner payments made by the principal, offshore VA steps that repeat errors)",
    "steps": ["bank-feed-import", "allocate-receipts", "allocate-payments", "match-bank", "three-way-check", "resolve-differences", "owner-disbursement", "sign-off", "lodge-report", "record-keeping"],
    "covered_by": {
     "bank-feed-import": "not covered (no mapped VaultRE bank import operation)",
@@ -52,9 +51,5 @@
   "The ledger reads only the sales listed in settings (sale_lives). The VaultRE sale list operation is mapped, but its response shape is not confirmed here, so the list is entered by hand for now.",
   "VaultRE transaction type and category are named objects in the spec with no sign or fixed list of values, so totals are the amounts as reported, not debits minus credits.",
   "Both adapters are docs-only until a VaultRE sandbox and a Microsoft 365 developer tenant prove them."
- ],
- "evidence": {
-  "calls": "4 real estate trust calls read; 3 describe the process; 1 names agency settlements software",
-  "platforms": "Console, MantisProperty and PropertyMe trust pages checked: none has a mapped operation in the kit, so no adapter from that evidence. VaultRE is mapped with trust account and trust ledger read operations and is used."
- }
+ ]
 }

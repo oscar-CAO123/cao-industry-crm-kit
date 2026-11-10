@@ -8,7 +8,6 @@
  "summary": "Turns a takeoff request into a priced quote, using the quantities the estimator measured from the drawings and the business's own rate card. Crons read and draft; a person approves every send. Measuring the drawings stays with the estimator.",
  "families": {
   "takeoff-from-drawings": {
-   "evidence": "3 discovery calls describe this way of taking off",
    "steps": ["measure-quantities", "supplier-prices", "price-build", "write-quote", "send-quote"],
    "covered_by": {"measure-quantities": "skill (the estimator measures the drawings and enters quantities in the takeoff table)", "supplier-prices": "draft (rate card table kept by the business)", "price-build": "draft", "write-quote": "draft", "send-quote": "approval"}
   }
@@ -38,9 +37,5 @@
   "Supplier price requests (emailing suppliers for prices) have no adapter. The rate card table is the supplier price list until one exists.",
   "Cut lists, sheet and bar sizing, labour hours, margin review, internal sign-off of the takeoff and production hand-off are not covered by any platform in the evidence.",
   "The adapter is docs-only until a Microsoft 365 developer tenant proves the Excel table and Outlook draft calls."
- ],
- "evidence": {
-  "calls": "3 of 3 manufacturing discovery calls that discuss takeoffs describe how they do it; every step is manual",
-  "platforms": "Bluebeam, Buildxact and PlanSwift help pages and ops files read for each step; Microsoft 365 mapped in the kit for the register, rate card and draft"
- }
+ ]
 }

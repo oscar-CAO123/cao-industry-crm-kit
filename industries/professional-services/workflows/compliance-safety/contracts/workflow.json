@@ -8,7 +8,6 @@
  "summary": "Contracts read by hand: contract emails are logged from the inbox, the owner gets a drafted review note with a register row, and unsigned signers on envelopes out for signature get reminders queued for approval. Crons read and draft; a person approves every email.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes reading contracts by hand (health advisory consulting)",
    "steps": ["contract-received", "other"],
    "covered_by": {"contract-received": "intake (contract emails logged from the folder)", "other": "review (note to the owner); the clause reading itself is skill work"}
   }
@@ -32,15 +31,11 @@
   "docusign": {"status": "docs-only", "covers": "envelopes out for signature and each signer's status (read only)"}
  },
  "gaps": [
-  "Only one discovery call mentions reading contracts by hand, so the evidence steps are thin. Clause reading, redlines, specialist advice, negotiation and approval are judgment in SKILL.md, not mined steps.",
+  "Clause reading, redlines, specialist advice, negotiation and approval require human judgment. Confirm the workflow steps with the business before use.",
   "No platform had help-centre docs in the mining evidence, so the two adapters were chosen by job fit from the kit, not by support.",
   "No cron reads contract text. The intake logs attachment names and sizes only; reading the document is the owner's or the agent's step.",
   "PandaDoc and Clio have mapped operations in the kit but no adapter here: no evidence this owner uses them, and Clio is a legal matter system. Leap is not in the kit.",
   "Storing the signed copy, tracking renewal and notice dates, and sending for signature are not built.",
   "Both adapters are docs-only. DocuSign is marked spec in the kit, and the Microsoft 365 sign-in is a supplied Graph access token. Prove both against a sandbox before any client."
- ],
- "evidence": {
-  "calls": "1 of 1 discovery call that discusses contracts describes reading them by hand; step codes contract-received and other",
-  "platforms": "the mining platforms file is empty: no platform had docs for this workflow"
- }
+ ]
 }

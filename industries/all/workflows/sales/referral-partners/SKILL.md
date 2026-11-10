@@ -5,7 +5,7 @@ description: Leads that partners refer into the business's pipeline, with a rece
 
 # Referral partners
 
-Built from 12 discovery calls. Five describe how referrals work: brokers, accountants, planners and car dealers send clients they cannot serve, and the business sends progress back. Pipedrive holds the referred lead and its deal. ActiveCampaign holds the partner and sends the update through an automation the business builds.
+Takes leads that partners refer into the business's pipeline, keeps each referring partner in the partner list, and queues a receipt and stage updates for that partner. Crons read and draft; a person approves every tag or contact change that reaches a partner.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` records referred leads. `acknowledge` queues one receipt per new referral. `progress` queues a stage tag when a referred deal reaches a mapped stage. They read and queue only. Nothing reaches a partner until a person approves the queued item in the CRM shell.

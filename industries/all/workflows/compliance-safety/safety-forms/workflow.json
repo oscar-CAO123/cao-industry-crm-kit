@@ -8,17 +8,14 @@
  "summary": "Keeps safety checklists, incident reports and corrective actions in SiteBook: generates the incident and checklist reports for the register once each, and queues a chase email for each overdue corrective action. Crons read and draft; a person approves every email.",
  "families": {
   "by-hand-or-unstated": {
-   "evidence": "9 discovery calls describe pre-start and safety forms done by hand, or name no tool",
    "steps": ["pre-start-check"],
    "covered_by": {"pre-start-check": "read only (checklist templates); creating the form waits for a confirmed SiteBook request schema"}
   },
   "other-tool": {
-   "evidence": "4 calls use a safety template subscription and Dropbox for inspections, photos and records",
    "steps": ["site-inspection", "other", "record-keeping", "photo-evidence"],
    "covered_by": {"site-inspection": "cron checklists (generates the checklist report once it is completed)", "other": "skill (SWMS are read from SiteBook; no cron)", "record-keeping": "crons checklists and incidents (reports generated into SiteBook)", "photo-evidence": "skill (photos are taken in the SiteBook app)"}
   },
   "spreadsheet": {
-   "evidence": "1 call logs incidents in a Microsoft 365 spreadsheet and chases follow-ups by hand",
    "steps": ["other", "incident-report", "record-keeping", "follow-up"],
    "covered_by": {"other": "skill (SWMS are read from SiteBook; no cron)", "incident-report": "cron incidents (generates the incident report once)", "record-keeping": "crons incidents and checklists", "follow-up": "cron actions (queues a chase email for approval)"}
   }
@@ -52,9 +49,5 @@
   "SiteBook is docs-read and unproven: every call is offline-tested only, not run against a real account.",
   "Deploy: tools/deploy.ts lists secret names only from intake, quotes, rate_card and messages settings, so SITEBOOK_API_KEY will not appear in the rendered deploy files, and deployed SiteBook calls run with no key and fail until that helper reads the keys of every platform the operations use (or sitebook is added to the settings list for this deploy). Needs a change in tools/deploy.ts, which is outside this workflow folder.",
   "Photos and site notes stay in the SiteBook app; the workflow does not move them."
- ],
- "evidence": {
-  "calls": "14 discovery calls describe the process across three variants (9 by hand or unstated, 4 other tool, 1 spreadsheet)",
-  "platforms": "Procore, SiteBook and Sitemate help pages mapped step by step; SiteBook is the only one with operations in the kit"
- }
+ ]
 }

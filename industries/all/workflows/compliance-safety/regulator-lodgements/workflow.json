@@ -8,7 +8,6 @@
  "summary": "Supports lodging reports, notices, permits and disputes with regulators. Reads regulator correspondence from the compliance mailbox, logs each item in a lodgement register with its due date, and drafts reminders for the owner. Crons read and draft; a person makes every lodgement in the regulator's portal and approves every email.",
  "families": {
   "regulator-lodgement": {
-   "evidence": "16 worklist calls were read, none described steps or variants. The steps come from the ASIC, NHVR and QBCC vendor docs, which map each step but no operations.",
    "steps": ["deadline-check", "gather-information", "prepare-report", "check-content", "internal-approval", "lodge-online", "pay-fee", "receive-confirmation", "respond-to-regulator", "objection-or-dispute", "outcome-and-follow-up", "record-keeping"],
    "covered_by": {
     "deadline-check": "reminders (due dates come from the business's notice rules; the regulator docs give none)",
@@ -51,9 +50,5 @@
   "Intake depends on the search word. A regulator notice that does not carry it is not read.",
   "The Microsoft 365 adapter is docs-only: it has not run against a tenant. Field names come from the Microsoft Graph OpenAPI spec in endpoint-map/raw/microsoft-365.",
   "Excel may reformat a typed date on write. The reminder reads a text date or a serial number, and a sandbox run should confirm the Due column comes back in either form."
- ],
- "evidence": {
-  "calls": "16 worklist calls read, none rejected; the evidence file holds no steps, variants or tools for this workflow",
-  "platforms": "ASIC, NHVR and QBCC vendor docs mapped step by step; none has operations in the kit. Microsoft 365 is the only mapped platform used, for the mailbox and the register."
- }
+ ]
 }

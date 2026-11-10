@@ -2,7 +2,7 @@
  "industry": "real-estate",
  "name": "Real Estate",
  "version": 1,
- "source": "Pages and tabs follow the real-estate demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "enquiries",
@@ -837,539 +837,343 @@
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 22
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 15
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "email-marketing",
    "dir": "industries/all/workflows/marketing/email-marketing",
    "department": "marketing",
    "name": "Send newsletters and automated email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 6
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 6
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:speed-to-lead",
    "dir": "industries/all/workflows/sales/speed-to-lead",
    "department": "sales",
    "name": "Alert and chase when a new lead is not contacted fast",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "precall-research",
    "dir": "industries/all/workflows/sales/precall-research",
    "department": "sales",
    "name": "Research a lead before a call",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:investment",
    "dir": "industries/real-estate/workflows/sales/investment",
    "department": "sales",
    "name": "Investment maths by hand",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "job-tracking",
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
    "name": "Track jobs or projects from start to finish",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "competitor-watch",
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "scheduling-dispatch",
    "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
    "department": "fulfilment",
    "name": "Schedule and dispatch jobs, staff or vehicles",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "meeting-actions",
    "dir": "industries/all/workflows/owner/meeting-actions",
    "department": "owner",
    "name": "Turn meetings and calls into notes and actions",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:add-maint",
    "dir": "industries/real-estate/workflows/fulfilment/add-maint",
    "department": "fulfilment",
    "name": "Maintenance dispatch",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:pipeline",
    "dir": "industries/real-estate/workflows/sales/pipeline",
    "department": "sales",
    "name": "Prospects found, nothing tracked",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:settlement",
    "dir": "industries/real-estate/workflows/fulfilment/settlement",
    "department": "fulfilment",
    "name": "Settlement dates typed by hand",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
    "name": "Book appointments, send reminders, handle no-shows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "after-hours-calls",
    "dir": "industries/all/workflows/customer-service/after-hours-calls",
    "department": "customer-service",
    "name": "Answer or triage calls out of hours",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "call-coaching",
    "dir": "industries/all/workflows/owner/call-coaching",
    "department": "owner",
    "name": "Score and coach sales and service calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:condition",
    "dir": "industries/real-estate/workflows/fulfilment/condition",
    "department": "fulfilment",
    "name": "Condition reports cost too much",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "status-updates",
    "dir": "industries/all/workflows/customer-service/status-updates",
    "department": "customer-service",
    "name": "Tell customers where their job, order or matter is up to",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "stock-ordering",
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "rostering",
    "dir": "industries/all/workflows/people/rostering",
    "department": "people",
    "name": "Build rosters from demand and availability",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:expiry-alerts",
    "dir": "industries/all/workflows/compliance-safety/expiry-alerts",
    "department": "compliance-safety",
    "name": "Track licences, certificates and document expiry",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:add-arrears",
    "dir": "industries/real-estate/workflows/finance-admin/add-arrears",
    "department": "finance-admin",
    "name": "Arrears ladder",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:owners",
    "dir": "industries/real-estate/workflows/sales/owners",
    "department": "sales",
    "name": "Owner contacts, built from scratch",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:pminbox",
    "dir": "industries/real-estate/workflows/customer-service/pminbox",
    "department": "customer-service",
    "name": "Mornings lost to manager email",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:x-rentalcompliance",
    "dir": "industries/real-estate/workflows/compliance-safety/x-rentalcompliance",
    "department": "compliance-safety",
    "name": "Rental compliance",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:add-vendor",
    "dir": "industries/real-estate/workflows/customer-success/add-vendor",
    "department": "customer-success",
    "name": "Vendor report in one tap",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:add-trust",
    "dir": "industries/real-estate/workflows/finance-admin/add-trust",
    "department": "finance-admin",
    "name": "Trust reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:bond-lodgement",
    "dir": "industries/real-estate/workflows/finance-admin/bond-lodgement",
    "department": "finance-admin",
    "name": "Lodge and claim rental bonds",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:inspections",
    "dir": "industries/real-estate/workflows/fulfilment/inspections",
    "department": "fulfilment",
    "name": "Inspections need a trip each",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:listing-syndication",
    "dir": "industries/real-estate/workflows/marketing/listing-syndication",
    "department": "marketing",
    "name": "Create a rental listing once and syndicate it to every portal",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:calls",
    "dir": "industries/real-estate/workflows/sales/calls",
    "department": "sales",
    "name": "Calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "real-estate:tenant-screening",
    "dir": "industries/real-estate/workflows/sales/tenant-screening",
    "department": "sales",
    "name": "Screen tenants and sign leases",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1377,96 +1181,78 @@
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 14
+   "status": "spec"
   },
   {
    "tool": "WhatsApp",
    "platform": "whatsapp",
-   "status": "spec",
-   "calls": 7
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 6
+   "status": "spec"
   },
   {
    "tool": "GoHighLevel",
    "platform": "gohighlevel",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "DocuSign",
    "platform": "docusign",
-   "status": "spec",
-   "calls": 4
+   "status": "spec"
   },
   {
    "tool": "Meta Ads",
    "platform": "meta-ads",
-   "status": "spec",
-   "calls": 3
+   "status": "spec"
   },
   {
    "tool": "Zoho",
    "platform": "zoho",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "AgentBox",
    "platform": "agentbox",
-   "status": "docs-read",
-   "calls": 2
+   "status": "docs-read"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   },
   {
    "tool": "Monday.com",
    "platform": "monday",
-   "status": "spec",
-   "calls": 2
+   "status": "spec"
   }
  ],
  "missing_connectors": [
   {
-   "tool": "CoreLogic RP Data",
-   "calls": 9
+   "tool": "CoreLogic RP Data"
   },
   {
-   "tool": "Rex",
-   "calls": 4
+   "tool": "Rex"
   },
   {
-   "tool": "Excel",
-   "calls": 3
+   "tool": "Excel"
   },
   {
-   "tool": "RealWorks",
-   "calls": 3
+   "tool": "RealWorks"
   },
   {
-   "tool": "realestate.com",
-   "calls": 2
+   "tool": "realestate.com"
   },
   {
-   "tool": "Console Cloud",
-   "calls": 2
+   "tool": "Console Cloud"
   },
   {
-   "tool": "Inspection Express",
-   "calls": 2
+   "tool": "Inspection Express"
   },
   {
-   "tool": "Realtair",
-   "calls": 2
+   "tool": "Realtair"
   }
  ]
 }

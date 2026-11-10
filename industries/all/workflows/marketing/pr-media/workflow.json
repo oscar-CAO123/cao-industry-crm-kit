@@ -8,7 +8,6 @@
  "summary": "Pitches journalists, sends media releases and tracks replies to each pitch, through the agency's Gmail. Crons draft each pitch and follow-up, check threads for replies, and draft one joined report to the owner. A person approves every send. Published coverage is not tracked yet.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes this way of doing PR: an agency pitches the business to publications and sends results to the owner",
    "steps": ["media-list", "write-release", "pitch-journalist", "approve-release", "send-release", "follow-up", "monitor-coverage", "report-results"],
    "covered_by": {"media-list": "settings (a list the owner or agency approves; no media database is mapped)", "write-release": "skill", "pitch-journalist": "draft", "approve-release": "approval", "send-release": "approval (the pitch is the release text)", "follow-up": "follow-up", "monitor-coverage": "not built (see gaps); replies only", "report-results": "report"}
   }
@@ -33,14 +32,10 @@
  "gaps": [
   "Cision and Meltwater: their help pages name media lists, pitching, Smart Alerts and reporting, but the kit maps no operations for them (no platform folder). Media lists, story spotting and coverage alerts stay manual until those platforms are mapped.",
   "Published coverage (articles, mentions, share of voice) is not tracked. The report shows replies in the pitch thread only, because no mapped platform reads published coverage.",
-  "Results are not tied to bookings or revenue. Nothing in the call evidence or the kit links a placement to a booking.",
+  "Results are not tied to bookings or revenue. The kit does not link a placement to a booking.",
   "Journalist lists come from settings that a person writes. There is no media database step.",
   "Writing the release and each pitch, and choosing who to pitch, is judgment work for the agent skill. The cron sends only the release text it is given.",
   "Google Workspace is docs-only: its platform status is spec and it is tested offline. A live Workspace account has to prove the draft, thread-read and send calls.",
   "Reply detection looks only in the sending mailbox. A reply that lands in another mailbox is not seen, so the chase may run once more than it should."
- ],
- "evidence": {
-  "calls": "1 call in the worklist (all-pr-media); it describes an agency pitching and reporting results, with no tool named",
-  "platforms": "Cision, Meltwater and Google Workspace help pages mapped by step. Only Google Workspace has operations in the kit (Gmail drafts, threads and sends); Cision and Meltwater have none"
- }
+ ]
 }

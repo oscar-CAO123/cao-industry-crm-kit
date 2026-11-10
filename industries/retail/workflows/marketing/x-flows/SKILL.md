@@ -5,9 +5,7 @@ description: Email flows for a retail or D2C business run in Klaviyo. Use when s
 
 # Email flows
 
-Built from how retail owners described running their email flows on discovery calls (2 of 5 read calls go into it).
-The owner reviews the emails due out, checks the numbers by hand against benchmarks each day, and works out which flow to
-fix next on a 30 to 90 day sprint. One call puts the full rewrite at about 90 days at two emails a week.
+Runs a retailer's email flows in Klaviyo: reads how each flow performs, opens a sprint on the weakest live flow under target, and queues the switch to live for each replacement the owner has marked ready. Crons read and record; a person approves every switch to live.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

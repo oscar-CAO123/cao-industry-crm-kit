@@ -5,8 +5,7 @@ description: Agreements sent for e-signature through DocuSign, with the signed s
 
 # Contracts for e-signature
 
-Built from 16 Australian calls about sending contracts and agreements for signature. Most send through DocuSign,
-some through a spreadsheet or an AI assistant. This workflow covers the DocuSign part.
+Takes a prepared agreement, builds it as a DocuSign envelope kept in draft, queues the send for a person to approve, and tracks the signatures until the envelope is complete. Filing the signed copy into the business's own records is not built yet. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

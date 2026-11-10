@@ -8,7 +8,6 @@
  "summary": "Takes in customer return requests, answers each with the business's own returns form, and queues that reply for approval. Refunds, exchanges, return labels, check-in and restocking stay with the business's staff.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes this way of handling returns (online store with its own warehouse)",
    "steps": ["return-request", "return-label", "item-received", "refund-or-exchange"],
    "covered_by": {"return-request": "intake and draft (reply with the returns form)", "return-label": "draft (the form asks for the return details; the label itself stays manual)", "item-received": "not automated (staff check-in)", "refund-or-exchange": "not automated (staff decide; any customer message waits for approval)"}
   }
@@ -41,9 +40,5 @@
   "Gorgias: the reply is posted with channel email and from_agent true. The recipient is left to Gorgias to set from the ticket, and no live account has confirmed that yet.",
   "Google Workspace: the mailbox comes from GOOGLE_MAILBOX in the secret store. Not run against a live account yet.",
   "Platform evidence file (retail-x-returns-platforms.json) says Gorgias has no ops file. The kit now has one with 111 operations, including tickets and messages, so Gorgias is mapped for this workflow."
- ],
- "evidence": {
-  "calls": "4 retail returns calls read, 1 variant described in full; every step is manual in that call, and the call runs on Google Workspace",
-  "platforms": "3 platforms checked from their vendor docs (Gorgias, Shopify, WooCommerce); 2 mapped for this workflow (Google Workspace, Gorgias)"
- }
+ ]
 }

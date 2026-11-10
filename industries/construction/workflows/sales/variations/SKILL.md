@@ -5,8 +5,7 @@ description: Extra work found on an accepted job, priced, sent to the client for
 
 # Variations
 
-Built from how 6 Australian construction businesses described raising variations on discovery calls. The work is extra work
-found on site after the contract starts: a foreman notes it, someone prices it, the client approves it, and it is invoiced.
+Turns extra work found on an accepted job into a priced variation, queues it to the client for approval, chases it, and records it on the job. Crons read and draft; a person approves every send. On Procore (a procore block in settings instead) it only tracks change events and logs the ones open too long; the draft, client email and follow-up email steps are ServiceM8's.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` reads job notes on accepted (Work Order) jobs that say the

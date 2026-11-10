@@ -8,7 +8,6 @@
  "summary": "Watches competitors' ads, prices and posts. This build covers their public Facebook posts and their search authority (Semrush backlink scores), and reports what changed. Competitor ads and prices have no mapped operation in the kit yet, so they stay with the owner. Crons read and draft; the one live act, creating the Semrush tracking project, waits for a person to approve it.",
  "families": {
   "all": {
-   "evidence": "2 competitor-watch calls were read; neither describes a process, so the steps below come from the platform evidence",
    "steps": ["set-watchlist", "find-ads", "check-prices", "check-posts", "capture-evidence", "analyse-changes", "share-insights", "adjust-own-marketing", "set-alerts", "record-keeping"],
    "covered_by": {
     "set-watchlist": "cron (discover: Semrush similar domains as suggestions; the watchlist itself is set in settings)",
@@ -57,9 +56,5 @@
   "Set-alerts, dated evidence captures and sending the report to the team are not built. Sending the report needs a mailbox adapter for this job.",
   "Adjusting the client's own ads or posts in response to a competitor is a judgment step for the owner. No live operation for it is built here.",
   "Every adapter is docs-only until a sandbox or live account proves it. The workflow is tested on a fake network only."
- ],
- "evidence": {
-  "calls": "2 competitor-watch calls were read; 0 described a step, 0 were rejected",
-  "platforms": "linkedin and semrush platform evidence (semrush partial or yes on the watchlist, ad research, posts, analysis and alerts; linkedin partial on posts, mostly unknown elsewhere); Semrush's mapped competitor operations and the kit's Meta Page post operation"
- }
+ ]
 }

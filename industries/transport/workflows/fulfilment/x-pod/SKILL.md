@@ -5,9 +5,7 @@ description: Proof of delivery for a transport or delivery business that runs it
 
 # Proof of delivery
 
-Built from how three Australian transport businesses described proof of delivery on discovery calls: drivers send slip
-photos into a WhatsApp group, signings and dockets stay on paper, the admin uploads photos to Drive by hand each month,
-and customers chase missing proof. This build covers the part Onfleet holds.
+Keeps a register of proof of delivery for every completed stop, flags stops finished without a photo or signature, and queues a re-attempt for failed stops for approval. Crons read and draft; a person approves every re-attempt.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

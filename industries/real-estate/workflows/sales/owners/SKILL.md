@@ -5,8 +5,7 @@ description: Building an owner contact list from VaultRE's current owners, check
 
 # Owner contacts, built from scratch
 
-Built from one real-estate sales call that describes building owner contacts from nothing: check the owner's details, check
-they can be contacted, then reach out. The kit does the list, the consent check and the drafting. A person does the rest.
+Builds the agency's owner contact list from VaultRE's current owners, checks each owner's recorded email consent and do-not-call flag, and drafts an outreach email to owners who may be contacted. Crons read and draft; a person approves every email send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

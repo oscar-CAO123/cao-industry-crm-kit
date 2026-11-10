@@ -8,12 +8,10 @@
  "summary": "Checks bills and sales invoices in Xero for the basics that catch errors (supplier, due date, total, account codes, source document, possible duplicates), notes the result on each invoice, and queues bill payments and overdue reminders for approval. Crons read and note; a person approves every payment and every email to a customer.",
  "families": {
   "service-bills": {
-   "evidence": "4 calls describe accounting practice client invoices and collections, checked by hand",
    "steps": ["check-amounts", "coding", "query-supplier", "approval", "payment-run", "chase-collections", "record-keeping"],
    "covered_by": {"check-amounts": "check (flags lines that do not add to the subtotal)", "coding": "check (flags lines with no account code)", "query-supplier": "not covered (judgment and phone calls)", "approval": "approval (every payment and reminder waits for a person)", "payment-run": "payments (one queued payment per bill, approved one at a time)", "chase-collections": "chase (next reminder queued for approval)", "record-keeping": "check (a note on each invoice and a source document check)"}
   },
   "unclear": {
-   "evidence": "2 calls describe classing SMSF bank transactions by hand",
    "steps": ["coding", "reconcile"],
    "covered_by": {"coding": "not covered (bank transaction classing)", "reconcile": "not covered"}
   }
@@ -37,7 +35,7 @@
  },
  "gaps": [
   "Dext: no operations are mapped in the kit, so bill intake from Dext eInvoices is not covered. Its help pages describe the intake for the business to set up.",
-  "MYOB: two operations are mapped (purchase bill read, supplier payment) but their field names are not confirmed against the official spec and no call named MYOB, so there is no MYOB adapter.",
+  "MYOB: two operations are mapped (purchase bill read, supplier payment) but their field names are not confirmed against the official spec, so there is no MYOB adapter.",
   "Ignition, XPM and Class software are not in the kit's platform list. The job and invoice data those tools hold stays with the bookkeeper.",
   "Purchase order matching: the mapped Xero invoice schema has no purchase order number field, so matching a bill to its order is a judgment step.",
   "Supplier queries: a bill has no mapped email operation, so asking a supplier for a statement or document is done by hand or by phone.",
@@ -47,9 +45,5 @@
   "A reminder a person rejects still counts as sent, so the next reminder is measured from the day it was queued. A reminder the invoice check rejects is queued again for the amount then owed.",
   "Tax types and GST are not set by this workflow. Confirm the account tax settings with the business before the first payment is approved.",
   "The payment and reminder calls are unverified against a live Xero demo company. The workflow stays docs-only until one proves them."
- ],
- "evidence": {
-  "calls": "12 invoicing calls read; 6 describe the invoice process in detail (4 service bills, 2 SMSF bank transactions)",
-  "platforms": "Dext, MYOB and Xero mapped step by step from their help pages and the kit's operation maps; Xero has the adapter"
- }
+ ]
 }

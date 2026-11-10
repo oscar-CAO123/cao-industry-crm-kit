@@ -8,7 +8,6 @@
  "summary": "Reports each day what the business spends on Meta ads, what each ad costs per lead and how many leads it brings in, and queues a pause for any running ad over the owner's cost-per-lead limit. Return on ad spend needs the business's sales records, so that step stays with the owner. Crons read and draft; a person approves every pause.",
  "families": {
   "all": {
-   "evidence": "40 of 49 ad-reporting calls were read; 23 describe how they report, and most steps are done by hand",
    "steps": [
     "pull-spend",
     "pull-leads",
@@ -81,13 +80,9 @@
   "The active-ads list is one page. When Meta returns a next page the report is marked partial, and a running ad past that page cannot be paused by this job.",
   "Google Ads is mapped in the kit and appears in some calls, but this workflow has no Google Ads adapter because the platform evidence file does not list it for this job.",
   "TikTok Ads has no operations mapped in the kit, so it has no adapter. Its reporting steps are in the platform evidence as partial, from TikTok's marketing pages only.",
-  "Roller, BigQuery and Looker Studio carry booking and dashboard data in the calls but are not mapped for this job. Build the report view in the business's own dashboard.",
-  "Google Sheets (record-keeping in some calls) is not mapped for this job; the workflow store holds the record.",
+  "Roller, BigQuery and Looker Studio carry booking and dashboard data but are not mapped for this job. Build the report view in the business's own dashboard.",
+  "Google Sheets is not mapped for this job; the workflow store holds the record.",
   "Meta's ad rule history and preview (AdAccount.get.adrules_history, AdRule.post.preview) are mapped but not used; the pause rule is the owner's cost-per-lead limit.",
   "The Meta token needs the ads read permission for reads and the ads management permission for the pause. Checked offline only, not against a real account."
- ],
- "evidence": {
-  "calls": "49 ad-reporting calls for the all-industries workflow; 40 were read and 23 describe the process, with manual share at 100 percent on pull-spend, review-decide, compare-periods, adjust-campaigns and calculate-return",
-  "platforms": "the Meta and TikTok Ads developer and marketing pages, mapped step by step; Meta has operations in the kit, TikTok does not"
- }
+ ]
 }

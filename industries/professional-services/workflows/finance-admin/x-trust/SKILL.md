@@ -5,8 +5,7 @@ description: Trust accounting for a professional services practice on Smokeball.
 
 # Trust accounting
 
-Docs-only. Built from the trust-accounting spec and the Smokeball docs. No discovery call evidence exists for this
-workflow yet, so the steps are the spec's steps, not how owners describe their own process.
+Trust accounting: reads trust balances and receipts, and queues disbursement requisitions for approval. Crons read and flag; a person approves every payment out of trust.
 
 ## What runs on its own
 Three crons in `index.ts`. `balances` reads matter balances on each trust account each morning and flags any matter

@@ -5,8 +5,7 @@ description: Client workout, meal and habit programs for a fitness or beauty bus
 
 # Client programs
 
-Built from how fitness and beauty businesses describe building and assigning client programs. The business's own Airtable base
-holds the clients, programs, sessions and progress. Gmail holds the check-in drafts.
+Builds and assigns client workout, meal and habit programs, and tracks progress against them. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

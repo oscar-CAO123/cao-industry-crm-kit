@@ -5,8 +5,7 @@ description: Scans property listings for sites or land that match the business's
 
 # Site sourcing
 
-Built from how 8 Australian businesses described finding sites on discovery calls: land for residential development, franchise sites,
-and property transactions after an expression of interest. Listing scans were manual in every call that described one.
+Scans property listings for sites or land that match the criteria the business sets, reads the suburb statistics and nearby schools for each new one, and queues an enquiry to the listing agent for each site the owner shortlists. Crons read and draft; a person approves every enquiry.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `scan` searches each configured location on Domain each night and stores the

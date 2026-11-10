@@ -8,7 +8,6 @@
   "summary": "Moves open deals along the pipeline from what actually happened, not from what someone meant to do. A daily scan reads the open deals and drafts a register of deals with no recorded change for the set number of days. Each stage move, recorded from the deal's notes and activity, is queued for approval, and a person approves it before the CRM changes. Nothing moves in the CRM until a person approves it.",
   "families": {
     "pipeline-advance": {
-      "evidence": "21 of 40 calls describe how they move deals through the pipeline; 3 name GoHighLevel and 1 names Pipedrive",
       "steps": [
         "signal-received",
         "decide-move",
@@ -86,7 +85,7 @@
   },
   "gaps": [
     "Nothing records a stage-move decision yet. The workflow CLI's propose command only takes quote lines, and core/ is not changed by this build. Until a decide command or a CRM shell form writes the moves store, the queue cron has nothing to queue.",
-    "The judgment that moves a deal (reading its notes, calls and emails) is an agent step in SKILL.md. No mapped operation reads call transcripts or emails tied to a deal on either platform, so the agent reads them by hand or through the CRM.",
+    "The judgment that moves a deal is an agent step in SKILL.md. No mapped operation reads call transcripts or emails tied to a deal on either platform, so the agent reads them by hand or through the CRM.",
     "Zoho CRM: its deal endpoints are not mapped (only link-email operations are), so there is no adapter.",
     "Stage gates (for example a deposit paid before the job starts) are not built. The platforms' If/Else steps cannot express a required field that blocks a stage change.",
     "Set next action (creating a task or activity) is not built: task creation is not a mapped draft operation on GoHighLevel, and Pipedrive activity creation is not wired here.",
@@ -95,9 +94,5 @@
     "GoHighLevel's last action date is the platform's own field. Whether it moves on every call or email needs a check on a real account.",
     "The stage order is typed in settings. Pipedrive's stage list (order_nr) is mapped but not read, so a reorder in the CRM is not picked up.",
     "Both adapters are offline-tested only, with a fake network. Neither is proven against a real account."
-  ],
-  "evidence": {
-    "calls": "40 pipeline calls read; 21 describe how they move deals, 21 are in the all family; manual share is 57 to 100 percent on every step",
-    "platforms": "GoHighLevel and Pipedrive help pages mapped step by step, with their OpenAPI operations; Zoho mapped without deal operations, so it has no adapter"
-  }
+  ]
 }

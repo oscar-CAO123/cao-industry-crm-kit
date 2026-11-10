@@ -8,7 +8,6 @@
   "summary": "Automatic time capture: reads each fee earner's time entries and running timer in Clio, flags entries with no matter or note, and queues each time entry a person records for approval. Crons read, flag and queue; a person approves every entry before it reaches Clio.",
   "families": {
     "all": {
-      "evidence": "3 discovery calls describe how time is captured (variants file, 5 calls read); the worklist counts 2 calls",
       "steps": ["capture-passive", "classify-matter", "review-entries", "gap-fill", "record-keeping"],
       "covered_by": {"capture-passive": "capture (reads the day's time entries Clio already holds)", "classify-matter": "capture flags entries with no matter; matters cron offers the open matters", "review-entries": "capture flags entries with no note; a person edits them in Clio", "gap-fill": "entries cron (a person records missed time in the workflow store, which queues it for approval)", "record-keeping": "approval (the approved entry lands in Clio)"}
     }
@@ -40,10 +39,6 @@
     "Clio's timer endpoint shows only the running timer. A stopped timer is not read directly, so captured time comes from the day's time entries.",
     "No intake route yet for missed time: the entries cron reads requests a person records in the workflow store, and the CRM shell does not write them yet.",
     "Judgment stays with the fee earner in Clio: which matter an entry belongs to, the billable decision, write-offs, period submission, partner approval, and invoice handover. None of these are automated.",
-    "The call count differs: the worklist says 2 calls, the variants file says 5 read with 3 describing the process. Check the mining run before relying on the count."
-  ],
-  "evidence": {
-    "calls": "variants file: 5 calls read, 3 describe the process (law firm 2, business coaching 1); worklist: 2",
-    "platforms": "actionstep and harvest docs read, neither mapped in the kit; clio mapped (time entries, timer, billable matters); no platform docs were read for clio"
-  }
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+  ]
 }

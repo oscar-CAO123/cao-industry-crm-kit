@@ -8,7 +8,6 @@
  "summary": "Runs customer surveys and interviews and summarises them. Sends a survey invite to each customer the owner chooses, collects the answers, and drafts a summary for the owner. Crons read and draft; every email send waits for a person to approve it.",
  "families": {
   "all": {
-   "evidence": "1 of 3 discovery calls read describes this way of running customer surveys",
    "steps": ["decide-to-ask", "write-questions", "pick-audience", "recruit-participants", "send-survey", "run-interview", "capture-responses", "transcribe-notes", "analyse-themes", "summarise-findings", "share-insights", "act-on-findings", "follow-up-customers", "record-keeping"],
    "covered_by": {
     "decide-to-ask": "owner decision (not automated)",
@@ -55,9 +54,5 @@
   "Theme coding of free-text answers: the agent skill reads the responses. The summary cron only counts identical answers.",
   "Google write scopes: the SDK takes the first listed scope for a write, which is broad. Confirm a narrower scope works on a live Workspace account before relying on it.",
   "Every adapter is docs-only until a sandbox Google Workspace account and a Calendly account prove the reads and the approved send."
- ],
- "evidence": {
-  "calls": "3 calls read in the mining evidence; 1 describes running a customer survey (send survey, follow up with customers, Google reviews).",
-  "platforms": "Calendly and Google Workspace help and API spec mapped step by step; Jotform's help pages mapped, its API operations not confirmed"
- }
+ ]
 }

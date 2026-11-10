@@ -5,8 +5,7 @@ description: Finds missed Medicare, DVA and health fund rebates in a clinic's pr
 
 # Missed rebates finder
 
-Built from one discovery call about how a clinic finds rebates it has not claimed or been paid. The finder runs on
-Cliniko (invoices and items) and Xero (payments). It does not reach Tyro Health, HiCaps or any payer.
+Finds Medicare, DVA and health fund rebates a clinic has not been paid, from its practice system and its ledger, and lists them for a person to check. Crons read and list only; nothing is lodged, chased or changed.
 
 ## What runs on its own
 Two crons in `index.ts`. `pull` (every 6 hours) reads invoices and their items from Cliniko and payments from Xero.

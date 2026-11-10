@@ -8,7 +8,6 @@
  "summary": "Scores each Meta ad and recent Instagram post by how it performs, names what is working and what is not, and writes that plan for the next brief. Crons read and draft; a pause on a running ad over the cost-per-lead limit is only queued, and a person approves it.",
  "families": {
   "all": {
-   "evidence": "14 content-learning calls were read; 7 describe the process, and most steps are done by hand",
    "steps": ["pull-metrics", "score-content", "spot-patterns", "keep-or-drop", "brief-next-content", "content-plan-update", "record-keeping"],
    "covered_by": {
     "pull-metrics": "draft (ad results by ad for the window, running ads, and recent Instagram posts with reach and interactions)",
@@ -39,7 +38,7 @@
  },
  "gaps": [
   "Metricool was read for this job (planner, post analytics, Posts Library) but has no operations mapped in the kit, so it has no adapter. Several owners run their content review there today.",
-  "Polar Analytics, the data lake and SuperGrow are named in the calls but are not mapped in the kit.",
+  "Polar Analytics, the data lake and SuperGrow are are not mapped in the kit.",
   "Google Ads and LinkedIn are mapped in the kit, but the platform evidence for this job does not cover them, so this workflow has no adapter for either.",
   "Facebook Page post results are not read. PagePost.get.insights is mapped, but its metric names are not confirmed in the spec.",
   "Instagram metric support varies by media type (reels, carousels, images). The five metrics used must be confirmed on a live account before the first run.",
@@ -52,9 +51,5 @@
   "Creating new ads or posts is not part of this job. content-posting covers publishing.",
   "Instagram post reads are capped at 50 per run; a post whose insights fail is left out and the run is marked partial.",
   "The Meta token needs the ads read and ads management permissions for reads and the pause, and the Instagram insights permission for posts. Checked offline only, not against a real account."
- ],
- "evidence": {
-  "calls": "14 content-learning calls were read with none rejected; 7 describe the process, with manual share at 100 percent on score-content, keep-or-drop and content-plan-update",
-  "platforms": "the Meta Marketing API v27 notes and Metricool's help pages were read; Meta has operations in the kit and Metricool does not"
- }
+ ]
 }

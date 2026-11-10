@@ -5,8 +5,7 @@ description: Condition reports for a property management business, starting from
 
 # Condition reports
 
-Built from how real-estate businesses described condition reports on discovery calls (3 calls read, 2 describe their process).
-Staff inspect on site, take photos and notes, then record the report in the business's software by hand.
+Cuts what a condition report costs in staff time by keeping the property and contact lists it needs current in the business's property system. The crons read only. The person still inspects, photographs, writes, and signs off every report.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `properties` reads the property list every 30 minutes, and `contacts`

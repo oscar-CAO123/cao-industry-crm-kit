@@ -8,7 +8,6 @@
  "summary": "Tenders take weeks to bid. This catches tender notices in the business's mailbox, logs each one in a tender register, drafts the expression of interest for every tender marked Go, and drafts a reminder for tenders closing soon. Crons read and draft; a person approves every send. Takeoff, pricing and the written submission stay with the estimating team until their platforms are mapped.",
  "families": {
   "tender-bid": {
-   "evidence": "40 calls read and described tendering step by step (46 in the worklist)",
    "steps": ["tender-notice", "go-no-go", "register-interest", "read-documents", "site-visit", "takeoff", "subcontractor-quotes", "supplier-prices", "price-build", "compliance-docs", "write-submission", "internal-approval", "submit", "award-debrief", "record-keeping"],
    "covered_by": {"tender-notice": "intake", "go-no-go": "register (owner marks Go or No-go)", "register-interest": "interest", "read-documents": "not covered (see gaps)", "site-visit": "not covered (see gaps)", "takeoff": "not covered (see gaps)", "subcontractor-quotes": "not covered (see gaps)", "supplier-prices": "not covered (see gaps)", "price-build": "not covered (see gaps)", "compliance-docs": "not covered (see gaps)", "write-submission": "not covered (see gaps)", "internal-approval": "owner, outside the workflow", "submit": "deadlines (reminder before close); lodging by hand", "award-debrief": "not covered (see gaps)", "record-keeping": "intake (register row)"}
   }
@@ -39,9 +38,5 @@
   "Closing dates are not read from notices (the notice wording varies). The owner types each closing date into the register as an ISO date (YYYY-MM-DD); rows without one are listed in the reminder.",
   "Award debrief and contract negotiation after an award have no mapped step.",
   "Every adapter is docs-only until a sandbox Microsoft 365 developer tenant proves the Outlook and Excel operations."
- ],
- "evidence": {
-  "calls": "40 of the 46 worklist calls read and described tendering step by step, none rejected; the tender-notice and price-build steps carry the most calls",
-  "platforms": "the help centres for Buildxact, EstimateOne and PlanSwift were read step by step; only Buildxact is in the kit, and only its sign-in is mapped. Microsoft 365 is named on the calls for takeoff, pricing and writing, and is the one mapped platform this workflow uses."
- }
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Finds upcoming appointments that Cliniko sent no reminder for and drafts the text to send by hand, turns cancelled appointments into waitlist offers, and queues a booking for a waitlisted patient once a person has marked them accepted. Crons read and draft; a person approves every booking.",
  "families": {
   "reminders": {
-   "evidence": "3 discovery calls read (2 describe the process; a pharmacy and a wellness clinic); Cliniko help pages read step by step",
    "steps": ["booking-made", "reminder-sent", "patient-confirms", "cancellation-received", "waitlist-offer", "waitlist-fill"],
    "covered_by": {"booking-made": "skill (staff book in Cliniko; the crons only read it)", "reminder-sent": "reminders (drafts the gaps Cliniko left)", "patient-confirms": "not automated (see gaps)", "cancellation-received": "cancellations (reads the cancelled appointment)", "waitlist-offer": "cancellations (drafts the offer text)", "waitlist-fill": "waitlist-book (queues the booking for approval)"}
   }
@@ -36,14 +35,10 @@
   "Nothing in the CRM shell yet records that a waitlisted patient accepted an opening. The waitlist-book cron has nothing to queue until a person can set an opening to accepted.",
   "HotDoc: its reminders and online confirm are well documented, but the kit has no HotDoc ops file, so no adapter is built.",
   "Jane App: the kit's one mapped operation (List Appointments) points at treatments, not appointments, so no adapter is built.",
-  "GoHighLevel: the calls say it sends the reminders and holds the bookings, but it is not in this workflow's platform evidence, so it is not built here.",
+  "GoHighLevel: it is not in this workflow's platform evidence, so it is not built here.",
   "Runtime change needed: core/sdk/call.ts sends every array parameter as one JSON string, so Cliniko's repeated date-range filter cannot be sent. The adapter sends the start filter only, checks the end in code, and refuses a book of more than 1,000 future appointments rather than reading part of it.",
   "The Cliniko adapter is tested on a fake network only. Field names come from Cliniko's docs pages, and the cancelled-appointment read is unverified on a live account.",
   "Runtime change needed: a waitlist booking is queued after the slot is checked, but the approval can run hours later, after someone else has booked the slot. The approval path (core/workflows/runtime.ts) would need to re-read the slot before the create runs, or the live slot state shown in the approval summary. Not built here, so a double booking is possible until then.",
-  "Evidence is thin: three calls, two of them describing the process, and no waitlist call at all. The waitlist steps come from Cliniko's help pages, not from owners."
- ],
- "evidence": {
-  "calls": "3 health-care discovery calls read for reminders (pharmacy, wellness clinic); 2 describe the process",
-  "platforms": "Cliniko, HotDoc and Jane App help pages mapped step by step; only Cliniko has mapped operations for these steps"
- }
+  "Confirm the waitlist steps from Cliniko's help pages with the business before use."
+ ]
 }

@@ -8,7 +8,6 @@
  "summary": "Reads what clients type into their forms so the adviser never retypes it. Checks each submission for the fields the business needs, drafts a chase email for anything missing and queues it for approval, and marks complete submissions ready for entry. Crons read and draft; a person approves every send and enters every record.",
  "families": {
   "matter-intake": {
-   "evidence": "3 of 4 financial services calls that read this workflow describe the process (2 loan applications, 1 client matter intake)",
    "steps": ["form-received", "locate-client-data", "check-entries", "chase-missing-info", "retype-into-system", "verify-identity", "prepare-for-signature", "submit-to-provider", "other"],
    "covered_by": {"form-received": "intake", "check-entries": "draft (required fields checked)", "chase-missing-info": "draft and follow-up (approval sends)", "locate-client-data": "not yet (see gaps)", "retype-into-system": "not yet (see gaps: the adviser enters ready submissions)", "verify-identity": "not yet (see gaps)", "prepare-for-signature": "not yet (see gaps)", "submit-to-provider": "not yet (see gaps)", "other": "not yet (see gaps)"}
   }
@@ -32,15 +31,11 @@
  },
  "gaps": [
   "Jotform: the richest form intake (form-received is supported in its docs), but the endpoint-map has no confirmed submission fields (answers, created_at). Its adapter is left out until those fields are confirmed from its vendor spec.",
-  "Smokeball: the tool named on the calls for retyping matters. It is in the kit at spec status, but no write operation for matter intake is evidenced in the platform evidence, so the adviser enters ready submissions by hand.",
+  "Smokeball: It is in the kit at spec status, but no write operation for matter intake is evidenced in the platform evidence, so the adviser enters ready submissions by hand.",
   "Microsoft 365: its docs describe screen-reader guides for Forms and Word, not intake or signing. No mapped operations are evidenced for this job, so no adapter.",
   "Locate client data, verify identity (KYC), prepare for signature, send for signature and submit to a lender or provider are judgment or platform steps the evidence does not map. They stay with the adviser.",
   "Uploaded files on forms (fileUploadAnswers) are not read. Only text answers are.",
   "Google Forms reads are paged up to 1,000 responses per form per run. A form with more responses needs a cursor added in the adapter.",
   "Every adapter is docs-only until a Workspace test account proves the Forms, Gmail draft and send calls end to end."
- ],
- "evidence": {
-  "calls": "4 financial services calls read for this workflow (3 describe the process); Smokeball is named once",
-  "platforms": "the vendors' help centres for Google Workspace, Jotform and Microsoft 365 mapped step by step, plus the kit's endpoint map"
- }
+ ]
 }

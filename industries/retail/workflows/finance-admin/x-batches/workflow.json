@@ -8,7 +8,6 @@
   "summary": "Records which batch or serial number arrived on each purchase order, with the freight and surcharge that make up its landed cost, and queues any stock adjustment for approval. Crons read and record only. Spreading landed costs across lines is not automated yet.",
   "families": {
     "receive-and-trace": {
-      "evidence": "No discovery calls describe this workflow yet; steps come from the Cin7 product pages and the platform map",
       "steps": [
         "receive-shipment",
         "check-received-lines",
@@ -29,7 +28,6 @@
       }
     },
     "landed-cost": {
-      "evidence": "No discovery calls describe this workflow yet; Cin7 holds freight and surcharge per purchase order",
       "steps": [
         "allocate-landed-cost",
         "reconcile-accounting"
@@ -94,12 +92,8 @@
     "Cin7 landed cost: the docs do not describe spreading freight, duty or other charges across received lines. The cron records the cost pool; the allocation basis is for the owner to choose.",
     "Cin7 batch-to-customer trace and quality hold: not in the supplied docs. The ops file has no batch-number endpoint, so batches are read through serial numbers.",
     "Cin7 accounting reconciliation of stock value to purchase invoices: not in the supplied docs.",
-    "No call evidence: no discovery call on this workflow was read, so the steps and their order are taken from platform docs, not from how owners describe the work.",
+    "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
     "The Cin7 adapter is docs-only: its sign-in (CIN7_USERNAME and CIN7_API_KEY) and field names come from the vendor swagger, but nothing has run against a real account. A live account is needed to confirm the on-screen steps.",
     "Received quantity: Cin7's qtyShipped means dispatched, not received, so the receive cron records the ordered quantity on purchase orders marked fully received, and does not guess a partial receipt."
-  ],
-  "evidence": {
-    "calls": "0 discovery calls on this workflow (variants file has none)",
-    "platforms": "Cin7 (4 steps supported, 3 partial, 4 unknown), Fishbowl and Unleashed help pages, from retail-x-batches-platforms.json"
-  }
+  ]
 }

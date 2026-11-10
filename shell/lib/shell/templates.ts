@@ -29,7 +29,7 @@ export async function preview(industry: string): Promise<Preview> {
     })),
     ...t.workflows.map((w): Change => ({
       type: "workflow", key: w.id, title: w.name, department: w.department,
-      detail: `${w.status}; ${w.evidence.sources} sources (${w.evidence.backing})`, state: haveWf.has(w.id) ? "already-on" : "add",
+      detail: w.status, state: haveWf.has(w.id) ? "already-on" : "add",
     })),
   ];
   return { industry, name: t.name, version: t.version, changes, planned: t.planned_workflows, connectors: t.connectors, missing: t.missing_connectors, applied };

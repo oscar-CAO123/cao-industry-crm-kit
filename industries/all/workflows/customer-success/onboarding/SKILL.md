@@ -5,8 +5,7 @@ description: Onboarding a new client into the business's own systems: a HubSpot 
 
 # Onboarding
 
-Built from how 40 Australian businesses described onboarding on discovery calls. Most of them do it by hand, across several
-systems, with the owner as the bottleneck. This build covers the part that Google Workspace and HubSpot can do.
+Onboards a new client: a HubSpot contact record, a checklist of onboarding steps in Google Tasks, team invitations in HubSpot, and a welcome email. Crons read and draft; a person approves every invitation and every email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

@@ -8,7 +8,6 @@
  "summary": "Runs production with overseas factories: takes each new order from the production board, drafts the factory purchase order in Xero, flags orders whose delivery date is close, and queues the deposit payment for approval. Crons read and draft; a person approves every purchase order, bill and payment. Tech packs, samples, licensor approval and freight are not covered by this build yet.",
  "families": {
   "all": {
-   "evidence": "4 discovery calls describe this way of running production (licensed and private-label apparel, wholesale and B2C)",
    "steps": ["brief-and-tech-pack", "sample-request", "licence-approval", "quote-and-order", "production-monitor", "booking-freight", "shipping-to-warehouse", "record-keeping"],
    "covered_by": {"brief-and-tech-pack": "skill (tech pack and CAD stay with the designer)", "sample-request": "skill (licensor portal by hand)", "licence-approval": "skill (licensor decides)", "quote-and-order": "draft (purchase order in Xero)", "production-monitor": "monitor (board flags at-risk orders)", "booking-freight": "not covered (see gaps)", "shipping-to-warehouse": "not covered (see gaps)", "record-keeping": "draft (board status and Xero records)", "deposit-payment": "deposit (bill and payment queued for approval)"}
   }
@@ -40,15 +39,11 @@
   "Samples and licensor approval: the licensor portal and the approval step are not mapped. A person does both.",
   "Freight: Cario has no operations file in the kit, so booking, tracking and customs entries are not built. Its help pages do not show product screens.",
   "Dropbox: the pages mapped cover billing only. File sharing for tech packs is not built.",
-  "SIN7 (named on two calls, probably Cin7): its operations are mapped in the kit, but the platform evidence has no entry for it, so no adapter was built. Inventory records stay manual.",
+  "SIN7: its operations are mapped in the kit, but the platform evidence has no entry for it, so no adapter was built. Inventory records stay manual.",
   "Airtable (pricing and margin): mapped in the kit, not built for this workflow.",
   "Supplier email: a factory receives its purchase order from Xero by hand. The kit has no mailbox step for this workflow.",
   "The propose command in tools/workflow.ts only accepts enquiry ids. Jobs need the proposal written to the proposals store by id, which needs a runtime change (core/ is not edited here).",
   "Live Xero account needed to confirm: the purchase order and bill status changes, the bank account code and the purchase account code. The mapped Xero pages are general guides, not product screens.",
   "Monday column ids and status labels differ per board: they must be set in settings.json before any cron runs."
- ],
- "evidence": {
-  "calls": "4 discovery calls read, 4 describe how production runs; 0 rejected",
-  "platforms": "help pages mapped for Cario, Dropbox and Xero (3 platforms). Monday is named in the calls and built from its kit operations, not from the platform evidence file."
- }
+ ]
 }

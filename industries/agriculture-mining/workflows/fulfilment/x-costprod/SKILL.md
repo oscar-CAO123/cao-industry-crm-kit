@@ -5,7 +5,7 @@ description: Cost of production for a grower or livestock producer, read from th
 
 # Cost of production
 
-Status: docs-only. Built from the x-costprod spec and the Xero docs. No discovery calls have been coded yet (0 calls).
+Works out what a grower or livestock producer spends to produce a crop, head or tonne, from the books, and checks it against budget. Crons read and draft into the workflow's own store; nothing leaves the business.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

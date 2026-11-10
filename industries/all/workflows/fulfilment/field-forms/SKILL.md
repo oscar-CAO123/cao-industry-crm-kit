@@ -5,8 +5,7 @@ description: Field forms, checklists and photos from the crew's app into records
 
 # Field forms, checklists and photos into records
 
-Built from how 29 Australian trade and construction businesses described their forms, checklists and photos on discovery
-calls. The crew fills in the forms on site, the office needs the records, and the client wants the completed PDF.
+Turns the forms, checklists and photos a crew fills in on site into records the office and the client can use. Crons read forms and checklists and queue each completed form's PDF email for approval; a person sends every one.
 
 ## What runs on its own
 Three crons in `index.ts`: `intake` keeps a row for each form changed since the last run, `checklists` counts open items on

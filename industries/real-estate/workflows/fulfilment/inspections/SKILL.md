@@ -5,9 +5,7 @@ description: Property inspections from booked visit to owner report, in the busi
 
 # Inspections need a trip each
 
-Built from how 6 Australian real estate businesses described inspections on discovery calls. The common shape: an office
-allocates an inspector, the inspector visits and records findings, someone types up the report, a person checks it, and it
-goes to the owner.
+Keeps property inspections moving from booked visit to report: spots inspections waiting on an inspector, drafts the findings from the staff notes and photos on the job, and queues the owner's report for approval. Crons read and draft; a person approves every email.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` finds inspection jobs booked in ServiceM8 and notes whether an

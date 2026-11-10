@@ -5,7 +5,7 @@ description: Budget burn for a health-care business, read from its Xero budgets 
 
 # Plan budget burn
 
-Built from the workflow spec for health-care budgeting. The call evidence file for this workflow is missing, so the steps are not yet checked against how owners describe their budgets on calls.
+Plans and tracks budget burn for a health-care business: reads the budgets and the budget summary report from Xero every day and stores them for the owner's burn read. Nothing is changed, sent or approved by a cron.
 
 ## What runs on its own
 Two crons in `index.ts`: `budget-read` copies the Xero budgets (planned amounts per account and period) into the store, and `burn-check` stores the Xero budget summary report under today's date. They read only. They change nothing in Xero, send nothing and queue nothing.

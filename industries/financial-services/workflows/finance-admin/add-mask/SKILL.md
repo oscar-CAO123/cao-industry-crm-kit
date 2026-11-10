@@ -5,7 +5,7 @@ description: Mask client personal details in documents before they are shared, i
 
 # Mask details
 
-Built from one discovery call about mortgage applications and settlements (about 30 applications a month), where masking is done by hand or not stated. Dropbox has no masking operation, so the masking itself is a person's job. The kit handles the folders around it: finding new documents, checking who can see each masked copy, and queuing each share for approval.
+Keeps client personal details out of documents before they are shared. It finds new documents in the raw folder, records who can see each masked copy, and queues a view share to each approved recipient for a person to approve. A person masks each copy in the business's own tool and places it in the masked folder. Crons read and queue only: no cron changes a file's contents or sends anything.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

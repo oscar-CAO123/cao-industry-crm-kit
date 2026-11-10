@@ -8,7 +8,6 @@
  "summary": "Takes supplier bills into the accounting system, matches each bill line to a SKU (an item code in Xero), flags unmatched lines and price changes for a person, and queues each clean bill for authorisation. Crons read and draft; a person authorises every bill.",
  "families": {
   "all": {
-   "evidence": "3 process descriptions across print manufacturing, steel trading and concrete batching",
    "steps": ["doc-intake", "read-and-extract", "check-and-approve", "publish-to-systems", "other"],
    "covered_by": {"doc-intake": "intake (supplier bills land in Xero as drafts)", "read-and-extract": "match (bill lines against Xero items; reading the PDF itself is a skill step)", "check-and-approve": "approval (a person reviews the flagged bills and the queued ones)", "publish-to-systems": "approval (authorise the bill in Xero)", "other": "not yet (attaching the supplier PDF needs a raw upload the SDK does not send)"}
   }
@@ -42,9 +41,5 @@
   "Units of measure, pack sizes and conversions: none of the evidence covers them, so a bill line is taken as billed.",
   "Reading the supplier PDF for lines the bill does not carry (scanned invoices): a skill step, described in SKILL.md.",
   "The Xero adapter is docs-only until a Xero demo company proves it."
- ],
- "evidence": {
-  "calls": "7 calls read for manufacturing supplier documents, 3 describe the process, 0 rejected",
-  "platforms": "dext, mrpeasy and unleashed help docs and endpoint maps read; Xero fields confirmed against Xero's official accounting spec"
- }
+ ]
 }

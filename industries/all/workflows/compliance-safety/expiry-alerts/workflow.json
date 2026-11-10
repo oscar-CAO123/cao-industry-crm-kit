@@ -8,7 +8,6 @@
  "summary": "Tracks licences, certificates and document expiry from one register: reads each expiry date, drafts a renewal reminder to each holder inside the window and queues its send for a person's approval, and drafts a weekly owner digest of lapsed and soon-due items. Crons read and draft; a person sends every reminder.",
  "families": {
   "all": {
-   "evidence": "13 calls read; 4 describe the process in detail (trades and construction 2, healthcare 1, real estate 1)",
    "steps": ["expiry-captured", "reminder-sent", "chase-holder", "other"],
    "covered_by": {
     "expiry-captured": "scan (reads the expiry register)",
@@ -35,7 +34,7 @@
   "microsoft-365": {"status": "docs-only", "covers": "expiry register (Excel table read), holder reminder drafts with approval-queued sends, owner digest draft"}
  },
  "gaps": [
-  "Simpro: the calls say worker tickets and expiry dates sit in the job software, but Simpro is not mapped in the kit, so there is no adapter. Its dates must be copied into the register.",
+  "Simpro: Simpro is not mapped in the kit, so there is no adapter. Its dates must be copied into the register.",
   "HammerTech and SiteBook: the vendor pages describe holding licences and expiry dates, but neither has operations mapped in the kit, so neither has an adapter. Their reminders and chasing are not built.",
   "Recording a renewal: the platforms in the evidence do not describe receiving a renewed document back. A person updates the Expiry cell in the register after the renewal arrives, and the next scan picks it up.",
   "Escalation: only the owner digest exists. No alert goes to a client, a manager or an overdue subcontractor.",
@@ -43,9 +42,5 @@
   "The register must be one Excel table with four columns (Holder, Email, Item, Expiry). A business with another layout must reshape its table first.",
   "A reminder whose draft was created but whose queue call failed is drafted again on the next run. Nothing can be sent from that duplicate.",
   "Field names come from the Microsoft Graph spec. Nothing has run against a live Microsoft 365 tenant, and the token flow is not built: M365_ACCESS_TOKEN is supplied directly."
- ],
- "evidence": {
-  "calls": "13 calls read, 4 describe the process; 0 rejected; one call states a volume of 500 contracts",
-  "platforms": "HammerTech and SiteBook vendor pages read; neither has operations mapped in the kit. Microsoft 365 is the one mapped platform used."
- }
+ ]
 }

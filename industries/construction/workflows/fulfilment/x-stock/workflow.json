@@ -8,12 +8,10 @@
  "summary": "Keeps the materials a construction business buys in stock: reads stock on hand in Xero, drafts a purchase order for each item at or below its reorder level, queues the award for approval, and checks supplier bills against their purchase orders. Crons read and draft; a person approves every award.",
  "families": {
   "job-materials": {
-   "evidence": "22 of the 29 stock calls read describe buying materials for jobs",
    "steps": ["stock-count", "allocate-to-job", "check-price-availability", "raise-po", "approve-order", "send-order", "receive-goods", "match-invoice", "update-stock", "record-keeping", "other"],
    "covered_by": {"stock-count": "stock-levels (reads stock on hand in Xero; counts kept outside Xero are not read)", "allocate-to-job": "not covered (see gaps)", "check-price-availability": "po-draft (unit price from the Xero item)", "raise-po": "po-draft (draft purchase order in Xero)", "approve-order": "approval (award set AUTHORISED in Xero)", "send-order": "not covered (see gaps)", "receive-goods": "not covered (see gaps)", "match-invoice": "bill-match", "update-stock": "stock-levels (the next read shows the new on-hand)", "record-keeping": "bill-match (a log of each bill's match)", "other": "skill"}
   },
   "yard-stock": {
-   "evidence": "3 of the 29 stock calls read describe a yard or storeroom",
    "steps": ["stock-count", "update-stock", "send-order", "match-invoice"],
    "covered_by": {"stock-count": "stock-levels", "update-stock": "stock-levels", "send-order": "not covered (see gaps)", "match-invoice": "bill-match"}
   }
@@ -41,7 +39,7 @@
   "Receiving goods (receive-goods) is not built: no Xero receiving operation is mapped, so deliveries are checked and receipted in Xero by hand.",
   "Buildxact has no mapped operations in the kit beyond sign-in, so no adapter is built for it.",
   "MYOB's inventory adjustments (the stock-count step on its docs) are not wired to this workflow; it has no adapter here.",
-  "ServiceM8, JackApp, Simpro, FoxIQ, IP Solution, Buildertrend and Dropbox are named on the calls but have no mapped stock operations for this job, so no adapter is built.",
+  "ServiceM8, JackApp, Simpro, FoxIQ, IP Solution, Buildertrend and Dropbox have no mapped stock operations for this job, so no adapter is built.",
   "Reorder levels and supplier emails come from settings. An item without a rule is never reordered.",
   "A skipped request (no unit price, no supplier contact, or a rejected award) stays until someone clears it; the CRM shell has no screen for that yet.",
   "An award that is still pending when its item comes back above its level is closed by the stock check; reject that award in the shell if the stock is no longer needed.",
@@ -49,9 +47,5 @@
   "Bill matching uses supplier and total only, because the docs do not describe matching a bill to a purchase order number.",
   "The kit's capability list has no purchase-order capability, so this workflow lists orders.list and products.list instead.",
   "The Xero adapter is docs-only until a Xero demo company proves it."
- ],
- "evidence": {
-  "calls": "29 construction stock calls read: 25 describe how they track stock and order materials, 22 for jobs and 3 for yard or storeroom stock",
-  "platforms": "the Xero purchase order and bill operations are mapped in the kit; Buildxact and MYOB appear in construction-x-stock-platforms.json, but neither has a mapped operation for this workflow's steps"
- }
+ ]
 }

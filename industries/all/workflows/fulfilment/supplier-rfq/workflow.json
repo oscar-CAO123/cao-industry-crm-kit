@@ -8,7 +8,6 @@
   "summary": "Sends a request for quote to each supplier for an item list, logs every reply in a register, and raises a purchase order once a person has awarded the job. Crons read and draft; a person approves every send and every authorised purchase order.",
   "families": {
     "all": {
-      "evidence": "10 of 21 supplier-RFQ discovery calls describe their process; 7 send RFQs by hand or by email",
       "steps": ["need-identified", "specify-item", "pick-suppliers", "send-rfq", "chase-quotes", "receive-quotes", "compare-quotes", "check-like-for-like", "negotiate", "approve-award", "raise-po", "delivery-follow-up", "record-keeping"],
       "covered_by": {
         "need-identified": "skill (the owner or estimator lists the items)",
@@ -58,12 +57,5 @@
     "Supplier award sign-off is not documented in the platform evidence. The award is a person's decision recorded on the RFQ record.",
     "Delivery follow-up, late-delivery chasing and receipt matching have no mapped operations in this kit.",
     "Every adapter is docs-only until a sandbox mailbox and a Xero demo company prove it."
-  ],
-  "evidence": {
-    "calls": 21,
-    "describe_process": 10,
-    "platforms_with_docs": 3,
-    "platforms_mapped_in_kit": 2,
-    "source": "mining/all-supplier-rfq-variants.json and mining/all-supplier-rfq-platforms.json"
-  }
+  ]
 }

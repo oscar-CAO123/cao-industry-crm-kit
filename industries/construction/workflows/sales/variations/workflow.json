@@ -8,7 +8,6 @@
  "summary": "Turns extra work found on an accepted job into a priced variation, queues it to the client for approval, chases it, and records it on the job. Crons read and draft; a person approves every send. On Procore (a procore block in settings instead) it only tracks change events and logs the ones open too long; the draft, client email and follow-up email steps are ServiceM8's.",
  "families": {
   "all": {
-   "evidence": "6 of 25 discovery calls describe how they raise variations; every step in those calls is done by hand",
    "steps": [
     "variation-trigger",
     "site-check",
@@ -102,9 +101,5 @@
   "The job note's related_object value 'job' is not spelled out in the ServiceM8 spec. Confirm it on a live account. Job notes are assumed to be internal; confirm the client portal does not show them.",
   "The adapter is docs-only until a ServiceM8 trial account proves it.",
   "Procore not confirmed on a live account: the status words a change event returns (only 'open' is shown on the page, so only 'open' counts as open), the maximum per_page, (the Procore-Company-Id header is required on the page and is sent). Prime and commitment change order pages were rendered and read on 11 Nov; reads are built, with no pricing, approval or send operations."
- ],
- "evidence": {
-  "calls": "6 of 25 construction discovery calls describe how they raise variations; every step in those calls is manual",
-  "platforms": "the vendors' own help centres for Buildxact, Procore and ServiceM8; ServiceM8 has 241 operations mapped in the kit, Buildxact 5 (sign-in only), Procore none"
- }
+ ]
 }

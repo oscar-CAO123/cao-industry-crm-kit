@@ -8,12 +8,10 @@
   "summary": "Takes a client email to the right matter in Smokeball: matches the sender to an open matter (or opens a lead for an unknown sender when the firm allows it), records a note and a follow-up task, and queues any reply to the client's portal for approval. Crons read and draft; a person approves every message that reaches a client.",
   "families": {
     "ai-assistant": {
-      "evidence": "4 of 5 calls: the owner triages inquiries and drafts replies with ChatGPT, with no matter history",
       "steps": ["email-received", "triage", "reply-client"],
       "covered_by": {"email-received": "intake (sender matched to a matter)", "triage": "intake (one open matter) or a person", "reply-client": "reply (queued portal message after a person writes it)"}
     },
     "other-tool": {
-      "evidence": "1 of 5 calls: the owner opens matters by hand in Smokeball at intake",
       "steps": ["other", "new-matter-open"],
       "covered_by": {"new-matter-open": "intake (lead matter for an unknown sender, when lead_matter_type_id is set)", "other": "person"}
     }
@@ -51,9 +49,5 @@
     "Actionstep: its docs were read but the kit has no Actionstep operations, so it is not mapped. LEAP has no kit platform and no docs were read for it.",
     "Smokeball is spec-only: the operations come from the vendor OpenAPI file and are tested offline. Every adapter stays docs-only until a Smokeball sandbox or trial account proves it.",
     "Capability keys: core/capabilities.json has no key for creating a matter or a memo, so those writes are described here only."
-  ],
-  "evidence": {
-    "calls": "5 discovery calls read for this workflow (variants file; the catalogue row said 1), 0 rejected. Every step except the inbound email is manual in the calls.",
-    "platforms": "Smokeball product pages and blog posts mapped to kit operations (249 operations in the kit). Actionstep docs read but unmapped. LEAP not in the kit."
-  }
+  ]
 }

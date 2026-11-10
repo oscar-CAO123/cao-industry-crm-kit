@@ -5,8 +5,7 @@ description: Patient and client enquiries from the help desk to a holding reply 
 
 # Patient support desk
 
-Built from how 3 Australian health-care businesses described support on discovery calls: enquiries land in one inbox,
-the receptionist or owner finds the patient, answers or books, and follows up by hand.
+Takes patient and client enquiries from the help desk, checks the enquirer against the clinic's patient records, and queues a holding reply for a person to approve. Clinical enquiries go to a clinician and never get an automatic reply. Crons read and draft; a person approves every reply that reaches a patient.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `intake` collects new tickets, `draft` matches the enquirer to a

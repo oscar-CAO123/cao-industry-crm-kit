@@ -8,7 +8,6 @@
   "summary": "Reactivates old leads and past customers. Reads the contacts the business has marked as lapsed in GoHighLevel, enrols them in a reactivation campaign or sends one Klaviyo campaign to its lapsed segment, and tasks a person to check on each enrolled contact after a set number of days. Crons read, draft and queue; a person approves every send.",
   "families": {
     "lapsed-contacts": {
-      "evidence": "6 of the 12 read calls describe reactivating lapsed leads or past clients; 29 calls are tagged to this job in the catalogue",
       "steps": ["list-build", "send-campaign", "offer-or-quote", "schedule-next", "other"],
       "covered_by": {
         "list-build": "draft (reads the lapsed contacts from GoHighLevel; no write)",
@@ -50,9 +49,5 @@
     "Offer or repricing of a past client's job, call outreach and phone booking have no mapped operations for this job, so they are person steps.",
     "HubSpot has a mapped lead-object list and update, but no contact-list or send operation for this job, so it has no adapter here.",
     "Neither adapter is proven against a real account. Both are offline-tested only, with a fake network."
-  ],
-  "evidence": {
-    "calls": "12 read calls, 6 of which describe reactivating lapsed leads or past clients; 29 calls are tagged to this job in the catalogue",
-    "platforms": "GoHighLevel and Klaviyo official OpenAPI files, mapped step by step with each platform's own support for list, consent, send and schedule steps"
-  }
+  ]
 }

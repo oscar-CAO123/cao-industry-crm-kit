@@ -5,8 +5,7 @@ description: Stock and materials for a construction business in Xero: reorder re
 
 # Stock
 
-Built from 29 construction discovery calls that describe tracking stock and ordering materials.
-Most do it by hand: counts on a sheet, purchase orders typed from emailed quotes, and bills matched to orders by someone in the office.
+Keeps the materials a construction business buys in stock: reads stock on hand in Xero, drafts a purchase order for each item at or below its reorder level, queues the award for approval, and checks supplier bills against their purchase orders. Crons read and draft; a person approves every award.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

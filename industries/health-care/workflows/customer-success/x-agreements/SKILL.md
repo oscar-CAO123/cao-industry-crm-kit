@@ -5,7 +5,7 @@ description: Service agreements for a health-care practice on Cliniko. Use when 
 
 # Service agreements
 
-Built from Cliniko's official API and help-centre pages. No discovery calls describe this workflow yet, so the steps rest on the docs.
+Service agreements for a health-care practice: each active patient case gets its agreement form queued for approval, then created unsent in the patient record; an agreement still unsigned after the set days gets an expiry queued for approval; a completed agreement is logged once to the register. Crons read and draft; nobody's agreement is sent by a cron, and a person approves every change a patient sees.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` queues one agreement form per active patient case, once per patient and template. Once a person approves it, the form is created unsent in the patient record. `chase` queues an expiry for any agreement still unsigned after `expire_after_days`. `file-record` logs each completed agreement once to the internal register. Nothing is sent by a cron. Creating a form and expiring one both change what the patient sees, so both wait for approval in the CRM shell.

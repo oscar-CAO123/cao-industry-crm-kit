@@ -8,7 +8,6 @@
  "summary": "Traces each batch and serial from receipt through production to dispatch, keeps the stock and audit records current, and queues a quarantine move for any lot put on hold. Crons read and record internally; a person approves every stock movement.",
  "families": {
   "all": {
-   "evidence": "1 discovery call describes lot tracing, and it is filed by hand",
    "steps": ["raw-material-receipt", "production-run", "finished-goods-labelling", "stock-storage", "dispatch-record", "complaint-intake", "trace-lookup", "quarantine-hold", "customer-notify", "recall-action", "corrective-action", "audit-records", "supplier-follow-up"],
    "covered_by": {"raw-material-receipt": "not yet (no receipt adapter)", "production-run": "not yet", "finished-goods-labelling": "not yet", "stock-storage": "stock-position cron", "dispatch-record": "not yet", "complaint-intake": "skill", "trace-lookup": "lot-sync cron and skill", "quarantine-hold": "quarantine cron (approval)", "customer-notify": "skill (a person sends)", "recall-action": "skill", "corrective-action": "skill", "audit-records": "audit-register cron", "supplier-follow-up": "skill"}
   }
@@ -41,10 +40,6 @@
   "MRPeasy: not in the kit, so no adapter. It shows the most lot support in its docs (lot numbers at receipt, batch records, recall through RMA), so it is the strongest candidate for a new platform build. Its API operation ids are not mapped.",
   "Receipt, production run, finished-goods labelling and dispatch lot capture: no mapped Unleashed operations, so these steps stay manual.",
   "Customer notification, recall (rework, return, destruction), complaint intake and corrective action: judgment steps for the agent in SKILL.md. No platform in the kit records them.",
-  "Evidence is thin: one manufacturing call, metal fabrication, and the platform docs. Confirm the steps with the client before building further."
- ],
- "evidence": {
-  "calls": "1 manufacturing discovery call mentions lot traceability filed by hand",
-  "platforms": "fishbowl, mrpeasy and unleashed docs; 1 of the 3 is in the kit with mapped operations (unleashed)"
- }
+  "Confirm the workflow steps and default settings with the business before use."
+ ]
 }

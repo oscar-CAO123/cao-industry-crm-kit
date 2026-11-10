@@ -5,9 +5,7 @@ description: Chasing unpaid invoices for any business that invoices in Xero and 
 
 # Chase unpaid invoices
 
-Built from how 30 Australian businesses described chasing late payers on discovery calls. Most of them chase by hand,
-or not at all, and the stated turnaround is 7 days overdue. This workflow reads what is overdue in Xero, drafts the
-reminder at the right step of a ladder in the business's own mailbox, and queues each send for a person to approve.
+Chases unpaid invoices: reads what is overdue in Xero, drafts each reminder at the right step of the ladder in the business's mailbox, and queues the send for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

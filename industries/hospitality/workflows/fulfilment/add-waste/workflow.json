@@ -48,9 +48,5 @@
   "COGS and profit margin: Square's COGS report is in the dashboard only, so cost-value is not automated.",
   "Purchase orders, staff feedback and 86 availability are not automated.",
   "The Square adapter is docs-only until a Square sandbox account proves it. The offline test uses a fake network only."
- ],
- "evidence": {
-   "calls": "3 calls read in the variants file; none described how waste is logged, so the steps come from the platform pages. The worklist counts 1 call.",
-   "platforms": "3 platforms with pages read (Eats365, Lightspeed, Square). Only Square has a kit platform, with mapped inventory operations for catalogue, adjustment reasons, changes and adjustments to WASTE."
- }
+ ]
 }

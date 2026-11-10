@@ -5,8 +5,7 @@ description: Pitching journalists with a media release through the agency's Gmai
 
 # PR and media
 
-Built from one discovery call where an agency pitches the business to publications and reports results to the owner.
-Coverage tracking is partial: the kit can see replies in the pitch thread, not published articles.
+Pitches journalists, sends media releases and tracks replies to each pitch, through the agency's Gmail. Crons draft each pitch and follow-up, check threads for replies, and draft one joined report to the owner. A person approves every send. Published coverage is not tracked yet.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `pitch` drafts one pitch to each approved journalist,

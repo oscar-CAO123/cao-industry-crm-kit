@@ -31,10 +31,6 @@
   "Trackunit: the access token must be supplied by hand (no token exchange is built). The operations are spec-level and have not run against a live account.",
   "MTData (Talon, Workshop Software): help pages only, with no operation file. Its service triggers, job cards and work orders need a live account and a mapped adapter.",
   "WEBFLEET: marketing and support pages only, with no operation file. Workshop, service and cost steps are not covered.",
-  "Call evidence: 2 calls were read and neither described the steps, so the step list and families come from the platform docs, not from owners."
- ],
- "evidence": {
-  "calls": "2 discovery calls read; 0 steps described by owners",
-  "platforms": "Trackunit: 23 mapped operations named in the evidence, 2 reads and 1 booking used here; MTData and WEBFLEET: vendor pages only, no operation files"
- }
+  "Confirm the workflow steps and platform coverage with the business before enabling its crons."
+ ]
 }

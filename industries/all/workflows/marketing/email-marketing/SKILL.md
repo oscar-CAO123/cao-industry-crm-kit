@@ -5,8 +5,7 @@ description: Newsletters and automated email flows for a business, in its own em
 
 # Email marketing
 
-Built from how 31 businesses described sending email marketing on discovery calls. Sends are done by hand or by a
-platform's own tools: a weekly newsletter, abandoned cart and welcome flows, and results checked against benchmarks.
+Writes and schedules newsletters, and starts or pauses automated email flows, in the business's own email platform. Crons read, draft and queue; a person approves every scheduled send and every flow change.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `sync` reads recent sends and flows and flags any send under the

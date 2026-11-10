@@ -5,9 +5,7 @@ description: Missing documents for an accounting practice's clients in Xero. Use
 
 # Missing documents finder
 
-Finds the bank transactions and bills in Xero that have no document attached, lists them by client, and drafts one
-chase email per client. Built from the discovery call that described this job and Xero's own API. Docs-only until a
-Xero demo organisation proves the reads.
+Finds the bank transactions and bills in an accounting practice's Xero file that have no document attached, lists them by client, and drafts one chase email per client for approval. Crons read and draft; a person approves every email before it leaves.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

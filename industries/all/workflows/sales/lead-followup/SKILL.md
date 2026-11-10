@@ -5,8 +5,7 @@ description: Follow up open leads and quotes on a schedule in the business's own
 
 # Lead follow-up
 
-Built from how 37 businesses described following up leads and quotes on discovery calls. Most of it is manual today: the first contact
-is made by hand, follow-ups depend on someone remembering, and nobody records a decision on a quote.
+Follows up open leads and quotes in the business's own CRM on a schedule. Picks up the open leads and quotes in the watched stages, drafts the first contact and each follow-up that is due into the CRM, and queues every message and every move to lost for a person to approve. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`. `intake` picks up the open leads and quotes in the watched stages and marks

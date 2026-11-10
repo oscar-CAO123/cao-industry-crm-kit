@@ -2,7 +2,7 @@
  "industry": "construction",
  "name": "Construction",
  "version": 1,
- "source": "Pages and tabs follow the construction demo app's page map; workflows are the kit's built workflows that this industry's evidence backs.",
+ "source": "Reusable industry pages, workflows and platform coverage.",
  "pages": [
   {
    "slug": "pipeline",
@@ -1093,660 +1093,420 @@
    "dir": "industries/all/workflows/fulfilment/job-tracking",
    "department": "fulfilment",
    "name": "Track jobs or projects from start to finish",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 66
-   }
+   "status": "docs-only"
   },
   {
    "id": "quote-build",
    "dir": "industries/all/workflows/sales/quote-build",
    "department": "sales",
    "name": "Build a quote or proposal from notes, photos or plans",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 55
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:quoting",
    "dir": "industries/construction/workflows/sales/quoting",
    "department": "sales",
    "name": "Quoting",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 50
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:tenders",
    "dir": "industries/construction/workflows/sales/tenders",
    "department": "sales",
    "name": "Tenders take weeks",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 46
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:ask-your-data",
    "dir": "industries/all/workflows/finance-admin/ask-your-data",
    "department": "finance-admin",
    "name": "Ask your data",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 44
-   }
+   "status": "docs-only"
   },
   {
    "id": "numbers-pack",
    "dir": "industries/all/workflows/finance-admin/numbers-pack",
    "department": "finance-admin",
    "name": "Weekly or monthly numbers and profit pack for the owner",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 43
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-followup",
    "dir": "industries/all/workflows/sales/lead-followup",
    "department": "sales",
    "name": "Follow up leads and quotes on a schedule",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 40
-   }
+   "status": "docs-only"
   },
   {
    "id": "scheduling-dispatch",
    "dir": "industries/all/workflows/fulfilment/scheduling-dispatch",
    "department": "fulfilment",
    "name": "Schedule and dispatch jobs, staff or vehicles",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 36
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:takeoff",
    "dir": "industries/construction/workflows/sales/takeoff",
    "department": "sales",
    "name": "The tender reader behind Tenders",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 34
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-campaigns",
    "dir": "industries/all/workflows/marketing/ad-campaigns",
    "department": "marketing",
    "name": "Build and review ad campaigns",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 31
-   }
+   "status": "docs-only"
   },
   {
    "id": "content-posting",
    "dir": "industries/all/workflows/marketing/content-posting",
    "department": "marketing",
    "name": "Create and schedule social content",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 28
-   }
+   "status": "docs-only"
   },
   {
    "id": "inbox-triage",
    "dir": "industries/all/workflows/customer-service/inbox-triage",
    "department": "customer-service",
    "name": "Sort the shared inbox and draft replies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 25
-   }
+   "status": "docs-only"
   },
   {
    "id": "documents",
    "dir": "industries/all/workflows/fulfilment/documents",
    "department": "fulfilment",
    "name": "Produce letters, reports and documents from records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 22
-   }
+   "status": "docs-only"
   },
   {
    "id": "sops-training",
    "dir": "industries/all/workflows/people/sops-training",
    "department": "people",
    "name": "Turn know-how and videos into SOPs and training",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 22
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:lead-capture",
    "dir": "industries/all/workflows/sales/lead-capture",
    "department": "sales",
    "name": "Capture leads from ads, forms and chat into the CRM",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 21
-   }
+   "status": "docs-only"
   },
   {
    "id": "invoicing",
    "dir": "industries/all/workflows/finance-admin/invoicing",
    "department": "finance-admin",
    "name": "Raise invoices from completed work",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 21
-   }
+   "status": "docs-only"
   },
   {
    "id": "payroll-timesheets",
    "dir": "industries/all/workflows/finance-admin/payroll-timesheets",
    "department": "finance-admin",
    "name": "Turn timesheets into payroll",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 21
-   }
+   "status": "docs-only"
   },
   {
    "id": "bills-expenses",
    "dir": "industries/all/workflows/finance-admin/bills-expenses",
    "department": "finance-admin",
    "name": "Capture bills, receipts and supplier invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 19
-   }
+   "status": "docs-only"
   },
   {
    "id": "hiring",
    "dir": "industries/all/workflows/people/hiring",
    "department": "people",
    "name": "Advertise, screen and onboard staff",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 17
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:speed-to-lead",
    "dir": "industries/all/workflows/sales/speed-to-lead",
    "department": "sales",
    "name": "Alert and chase when a new lead is not contacted fast",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 15
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:reconciliation",
    "dir": "industries/all/workflows/finance-admin/reconciliation",
    "department": "finance-admin",
    "name": "Reconciliation",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 13
-   }
+   "status": "docs-only"
   },
   {
    "id": "booking-reminders",
    "dir": "industries/all/workflows/sales/booking-reminders",
    "department": "sales",
    "name": "Book appointments, send reminders, handle no-shows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "stock-ordering",
    "dir": "industries/all/workflows/fulfilment/stock-ordering",
    "department": "fulfilment",
    "name": "Track stock and order from suppliers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:compliance-checks",
    "dir": "industries/all/workflows/compliance-safety/compliance-checks",
    "department": "compliance-safety",
    "name": "ID, AML and regulatory checks and audits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:safety",
    "dir": "industries/construction/workflows/compliance-safety/safety",
    "department": "compliance-safety",
    "name": "Safety paperwork on paper",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 11
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:costs",
    "dir": "industries/construction/workflows/fulfilment/costs",
    "department": "fulfilment",
    "name": "Costs blow out unseen",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 10
-   }
+   "status": "docs-only"
   },
   {
    "id": "lead-reactivation",
    "dir": "industries/all/workflows/sales/lead-reactivation",
    "department": "sales",
    "name": "Reactivate old leads and past customers",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "after-hours-calls",
    "dir": "industries/all/workflows/customer-service/after-hours-calls",
    "department": "customer-service",
    "name": "Answer or triage calls out of hours",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:onboarding",
    "dir": "industries/all/workflows/customer-success/onboarding",
    "department": "customer-success",
    "name": "Onboard a new customer or client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 9
-   }
+   "status": "docs-only"
   },
   {
    "id": "field-forms",
    "dir": "industries/all/workflows/fulfilment/field-forms",
    "department": "fulfilment",
    "name": "Field forms, checklists and photos into records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
+   "status": "docs-only"
   },
   {
    "id": "knowledge-base",
    "dir": "industries/all/workflows/owner/knowledge-base",
    "department": "owner",
    "name": "Keep a searchable knowledge base of the business",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 8
-   }
+   "status": "docs-only"
   },
   {
    "id": "payment-chasing",
    "dir": "industries/all/workflows/finance-admin/payment-chasing",
    "department": "finance-admin",
    "name": "Chase unpaid invoices",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 7
-   }
+   "status": "docs-only"
   },
   {
    "id": "ad-reporting",
    "dir": "industries/all/workflows/marketing/ad-reporting",
    "department": "marketing",
    "name": "Report ad spend, cost per lead and return",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 6
-   }
+   "status": "docs-only"
   },
   {
    "id": "crm-hygiene",
    "dir": "industries/all/workflows/sales/crm-hygiene",
    "department": "sales",
    "name": "Clean, dedupe and enrich CRM records",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "landing-pages",
    "dir": "industries/all/workflows/marketing/landing-pages",
    "department": "marketing",
    "name": "Build and update landing pages",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "status-updates",
    "dir": "industries/all/workflows/customer-service/status-updates",
    "department": "customer-service",
    "name": "Tell customers where their job, order or matter is up to",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:expiry-alerts",
    "dir": "industries/all/workflows/compliance-safety/expiry-alerts",
    "department": "compliance-safety",
    "name": "Track licences, certificates and document expiry",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:wip",
    "dir": "industries/construction/workflows/finance-admin/wip",
    "department": "finance-admin",
    "name": "WIP and retention",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 5
-   }
+   "status": "docs-only"
   },
   {
    "id": "customer-helpdesk",
    "dir": "industries/all/workflows/customer-service/customer-helpdesk",
    "department": "customer-service",
    "name": "Answer customer questions from the business's own knowledge",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "staff-helpdesk",
    "dir": "industries/all/workflows/people/staff-helpdesk",
    "department": "people",
    "name": "Answer staff questions from SOPs and policies",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "all:safety-forms",
    "dir": "industries/all/workflows/compliance-safety/safety-forms",
    "department": "compliance-safety",
    "name": "Safety forms, inspections and incident reports",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-labour",
    "dir": "industries/construction/workflows/finance-admin/x-labour",
    "department": "finance-admin",
    "name": "Labour by person",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-rfis",
    "dir": "industries/construction/workflows/fulfilment/x-rfis",
    "department": "fulfilment",
    "name": "RFIs and drawings",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 4
-   }
+   "status": "docs-only"
   },
   {
    "id": "email-marketing",
    "dir": "industries/all/workflows/marketing/email-marketing",
    "department": "marketing",
    "name": "Send newsletters and automated email flows",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "rostering",
    "dir": "industries/all/workflows/people/rostering",
    "department": "people",
    "name": "Build rosters from demand and availability",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "meeting-actions",
    "dir": "industries/all/workflows/owner/meeting-actions",
    "department": "owner",
    "name": "Turn meetings and calls into notes and actions",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:paperwork",
    "dir": "industries/construction/workflows/fulfilment/paperwork",
    "department": "fulfilment",
    "name": "Letters and reports by hand",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:procurement",
    "dir": "industries/construction/workflows/fulfilment/procurement",
    "department": "fulfilment",
    "name": "Trade quotes miss scope",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-selections",
    "dir": "industries/construction/workflows/fulfilment/x-selections",
    "department": "fulfilment",
    "name": "Client selections",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "backed",
-    "sources": 3
-   }
+   "status": "docs-only"
   },
   {
    "id": "reviews",
    "dir": "industries/all/workflows/marketing/reviews",
    "department": "marketing",
    "name": "Ask for reviews and reply to them",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "competitor-watch",
    "dir": "industries/all/workflows/marketing/competitor-watch",
    "department": "marketing",
    "name": "Watch competitors' ads, prices and posts",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-plant",
    "dir": "industries/construction/workflows/fulfilment/x-plant",
    "department": "fulfilment",
    "name": "Plant and equipment",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 2
-   }
+   "status": "docs-only"
   },
   {
    "id": "missed-call-textback",
    "dir": "industries/all/workflows/sales/missed-call-textback",
    "department": "sales",
    "name": "Text back missed calls and log them",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "call-coaching",
    "dir": "industries/all/workflows/owner/call-coaching",
    "department": "owner",
    "name": "Score and coach sales and service calls",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-stock",
    "dir": "industries/construction/workflows/fulfilment/x-stock",
    "department": "fulfilment",
    "name": "Stock",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:x-subbies",
    "dir": "industries/construction/workflows/compliance-safety/x-subbies",
    "department": "compliance-safety",
    "name": "Subcontractors",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "thin",
-    "sources": 1
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:approvals",
    "dir": "industries/construction/workflows/compliance-safety/approvals",
    "department": "compliance-safety",
    "name": "Prepare, lodge and chase council approvals and permits",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:defects",
    "dir": "industries/construction/workflows/compliance-safety/defects",
    "department": "compliance-safety",
    "name": "Capture defects and quality inspections and close them out with trades",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:env-certificates",
    "dir": "industries/construction/workflows/compliance-safety/env-certificates",
    "department": "compliance-safety",
    "name": "Solar and electrical paperwork: network connection applications and environmental certificates (STCs, VEECs, LGCs)",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   },
   {
    "id": "construction:variations",
    "dir": "industries/construction/workflows/sales/variations",
    "department": "sales",
    "name": "Raise, price and approve variations with the client",
-   "status": "docs-only",
-   "evidence": {
-    "backing": "built for this industry",
-    "sources": 0
-   }
+   "status": "docs-only"
   }
  ],
  "planned_workflows": [],
@@ -1754,96 +1514,79 @@
   {
    "tool": "Microsoft 365",
    "platform": "microsoft-365",
-   "status": "spec",
-   "calls": 82
+   "status": "spec"
   },
   {
    "tool": "Xero",
    "platform": "xero",
-   "status": "spec",
-   "calls": 52
+   "status": "spec"
   },
   {
    "tool": "ServiceM8",
    "platform": "servicem8",
-   "status": "spec",
-   "calls": 18
+   "status": "spec"
   },
   {
    "tool": "HubSpot",
    "platform": "hubspot",
-   "status": "spec",
-   "calls": 17
+   "status": "spec"
   },
   {
    "tool": "Google Workspace",
    "platform": "google-workspace",
-   "status": "spec",
-   "calls": 13
+   "status": "spec"
   },
   {
    "tool": "Procore",
    "platform": "procore",
-   "status": "docs-read",
-   "calls": 12
+   "status": "docs-read"
   },
   {
    "tool": "Monday.com",
    "platform": "monday",
-   "status": "spec",
-   "calls": 10
+   "status": "spec"
   },
   {
    "tool": "Dropbox",
    "platform": "dropbox",
-   "status": "docs-read",
-   "calls": 9
+   "status": "docs-read"
   },
   {
    "tool": "Meta Ads",
    "platform": "meta-ads",
-   "status": "spec",
-   "calls": 9
+   "status": "spec"
   },
   {
    "tool": "GoHighLevel",
    "platform": "gohighlevel",
-   "status": "spec",
-   "calls": 8
+   "status": "spec"
   },
   {
    "tool": "Bluebeam",
    "platform": "bluebeam",
-   "status": "spec",
-   "calls": 8
+   "status": "spec"
   },
   {
    "tool": "Google Ads",
    "platform": "google-ads",
-   "status": "spec",
-   "calls": 7
+   "status": "spec"
   }
  ],
  "missing_connectors": [
   {
-   "tool": "Simpro",
-   "calls": 12
+   "tool": "Simpro"
   },
   {
-   "tool": "Excel",
-   "calls": 5
+   "tool": "Excel"
   },
   {
-   "tool": "Buildertrend",
-   "calls": 5
+   "tool": "Buildertrend"
   },
   {
-   "tool": "Groundplan",
-   "calls": 4
+   "tool": "Groundplan"
   },
   {
-   "tool": "Evolve",
-   "calls": 4
+   "tool": "Evolve"
   }
  ]
 }

@@ -5,9 +5,7 @@ description: Applications for a role into a business's own mailbox and candidate
 
 # Hiring: applications, screening and replies
 
-Built from 40 discovery calls about hiring. Most hire by hand: the owner decides a role is
-needed, posts an ad on a job board, reads the applications, shortlists, interviews, checks references, offers and onboards.
-This workflow covers the applications and the replies. It does not post ads and does not onboard.
+Takes applications for a role into the business's own mailbox and candidate register, drafts the acknowledgement and any interview invitation or decline the owner decides on, and queues each email for approval. Crons read and draft; a person approves every email. Advertising the role and onboarding the hire are not automated here.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `intake` reads new applications from the business mailbox, adds a

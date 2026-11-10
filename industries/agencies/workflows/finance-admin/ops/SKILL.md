@@ -5,9 +5,7 @@ description: New client briefs, budget watch and invoices due to go out for an a
 
 # Agency ops board
 
-Built from how Australian agencies described running client jobs on discovery calls, plus the Productive API. Calls named quoting big
-briefs, status reporting from dashboards and building ads, so this workflow covers the ops board itself: brief in, scope it, watch the
-budget, bill it.
+Turns a new client brief into a scoping task on the agency's ops board, flags projects whose budget is running out, and queues invoices that are due to go out for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

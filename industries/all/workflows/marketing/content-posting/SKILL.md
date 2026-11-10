@@ -5,8 +5,7 @@ description: Planned social posts to scheduled posts on Instagram and the Facebo
 
 # Content posting
 
-Built from how 31 businesses described making and posting social content on discovery calls. Almost every step
-was manual: the owner or an outside contractor made the picture, wrote the caption and posted it by hand.
+Creates and schedules social posts: each planned post becomes an unpublished Instagram draft and its publish is queued for approval, and recent posts are read back. Crons read and draft; a person approves every publish.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`:

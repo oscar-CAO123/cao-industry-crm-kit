@@ -8,7 +8,6 @@
  "summary": "Scores and coaches sales and service calls. Crons read new call transcripts from Fireflies and voice-AI call logs from GoHighLevel, and draft a coaching note on the contact. The agent scores each call against one rubric. A coaching email to a rep is queued for a person to approve, never sent by a cron.",
  "families": {
   "all": {
-   "evidence": "13 call transcripts read; every one describes scoring and coaching by hand or without a named tool",
    "steps": ["call-capture", "listen-review", "transcribe", "score", "script-check", "coach-feedback", "action-items", "crm-update"],
    "covered_by": {"call-capture": "capture", "listen-review": "skill (the agent reads transcripts)", "transcribe": "capture (platform transcript read)", "score": "skill (the agent writes a score per call)", "script-check": "not yet (see gaps)", "coach-feedback": "coach (note on the contact, rep email queued)", "action-items": "not yet (see gaps)", "crm-update": "coach (contact note)"}
   }
@@ -32,7 +31,7 @@
   "gohighlevel": {"status": "docs-only", "covers": "voice-AI call logs with transcript (read), contact note (internal), rep email (queued)"}
  },
  "gaps": [
-  "Zoho and the custom CRM named in the calls: no adapter. Zoho has operations in the kit but no call-coaching platform evidence was mined for it.",
+  "Zoho and the custom CRM: no adapter. Zoho has operations in the kit but no call-coaching platform evidence was mined for it.",
   "HubSpot: call records, transcripts and notes are mapped with support rated partial to yes, but no adapter is built in this pass. It is the next adapter to add.",
   "GoHighLevel human-rep calls: the call logs cover voice-AI calls. Recordings and transcripts of human calls sit behind conversation messages (conversations.get-message-transcription), which need a conversation lookup that is not built.",
   "Script check (10-step call structure): no platform checks a call against a script. This is a judgment step the agent can take from the transcript, not a cron.",
@@ -41,9 +40,5 @@
   "Score recording: the core runtime has no command that records a score (quoting has propose for its lines). The agent writes scores with a short script on the file store (see SKILL.md). A runtime command would be cleaner.",
   "Rep email: each rep must exist as a GoHighLevel contact, and their Fireflies work email must match a key in settings.reps. Until then coaching stays in the store.",
   "Credentials and accounts: both adapters are tested offline against a fake network only. Neither has run against a real account. Keys are FIREFLIES_API_KEY and GHL_ACCESS_TOKEN."
- ],
- "evidence": {
-  "calls": "13 of 14 calls read (calls_read 13, rejected 0); the worklist names 14",
-  "platforms": "Fireflies and GoHighLevel vendor docs mapped step by step; HubSpot and Zoho platform maps also read but not built as adapters"
- }
+ ]
 }

@@ -5,9 +5,7 @@ description: Tender notices to a bid register, plan markups to takeoff rows, and
 
 # The tender reader
 
-Built from how 37 Australian construction businesses described tendering on discovery calls. The owner or estimator reads
-the tender, measures the plans, builds the estimate and submits. This workflow does the logging and the measuring
-groundwork. It does not price the job or submit the tender.
+Reads tender notices from the Outlook folder, logs each one in the bid register, turns the plan's Bluebeam markups into takeoff rows in Excel, and drafts one tender digest for approval. Crons read and draft; a person approves every send.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`:

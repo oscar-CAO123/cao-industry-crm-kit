@@ -5,8 +5,7 @@ description: Batches and landed costs for a retail business that receives stock 
 
 # Batches and landed costs
 
-Built from the Cin7 product pages and the platform map. No discovery calls describe this workflow yet, so the steps are
-not yet confirmed by how owners do it. Check them against a first client before relying on them.
+Records which batch or serial number arrived on each purchase order, with the freight and surcharge that make up its landed cost, and queues any stock adjustment for approval. Crons read and record only. Spreading landed costs across lines is not automated yet.
 
 ## What runs on its own
 Three crons in `index.ts`, scheduled by `workflow.json`: `receive` records each purchase-order line once its order is fully
