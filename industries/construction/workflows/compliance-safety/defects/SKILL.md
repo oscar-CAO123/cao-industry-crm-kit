@@ -35,7 +35,7 @@ They read and draft internal records only. Every email to a trade or a client wa
 ## Procore instead of ServiceM8
 Set `procore.projects` (each project's Procore id and a name for the summaries) in settings instead of `defect_section`; both together are
 refused. The defects are the project's punch items. `log-defects` records them (the punch item is the task, so no task is created),
-`chase` queues a comment on each open item that is due (Procore sends it to the people on the item) for a person to approve, and
+`chase` queues a comment on each open item that is due (visible to the people on the item, and it may notify them) for a person to approve, and
 `close-out` records when every item is closed; sign-off stays with the item's final approver in Procore. There are no trade emails
 or client emails. Example: `"procore": {"projects": [{"id": "123456", "name": "12 Smith St"}]}`. The token is `PROCORE_ACCESS_TOKEN`
 and the company id `PROCORE_COMPANY_ID`.

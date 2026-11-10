@@ -59,12 +59,12 @@ test("setting both defect_section and procore is refused before any call", async
 
 test("log-defects records each punch item once, with the company header, creating no task and writing nothing", async () => {
   const store = new MemoryStore(), ctx = context(WF, SETTINGS, store, NOW, () => {});
-  assert.deepEqual(await logDefects(ctx), { logged: 2, tasks: 2 }, "the task counter counts the no-op task reference");
+  assert.deepEqual(await logDefects(ctx), { logged: 2, tasks: 0 }, "the punch item is the task: none is created or counted");
   const d = (await store.get<any>("defects", "501")) as any;
   assert.equal(d.name, "Cracked tile in bathroom"); assert.equal(d.status, "open"); assert.equal(d.job_uuid, "4242"); assert.equal(d.address, "12 Smith St");
   assert.equal(writes().length, 0, "reads only");
   const first = hits[0];
-  assert.equal(first.query.get("project_id"), "4242"); assert.equal(first.query.get("page"), "1");
+  assert.equal(first.query.get("project_id"), "4242"); assert.equal(first.query.get("page"), "1"); assert.equal(first.query.get("sort"), "id", "sorted by id so paging is stable");
   assert.equal(first.headers.get("procore-company-id"), "777"); assert.equal(first.headers.get("authorization"), "Bearer pc-token");
   assert.deepEqual(await logDefects(ctx), { logged: 0, tasks: 0 }, "a rerun logs nothing new");
 });
@@ -135,6 +135,26 @@ test("close-out records the project once when every item is closed, and sends no
   assert.deepEqual(await closeOut(ctx), { tasks: 0, sign_off_queued: 0 }, "recorded once");
   assert.equal(Object.values(await store.list("approvals")).length, 0, "no email and no approval");
   assert.equal(writes().length, 0);
+});
+
+test("an item missing from a list read is left as it was, never withdrawn; a deleted item is withdrawn", async () => {
+  const store = new MemoryStore();
+  await logDefects(context(WF, SETTINGS, store, NOW, () => {}));
+  punch = punch.filter((x) => x.id !== 501);          // 501 falls out of the list (a shifted page, a short read)
+  punch[0].deleted_at = "2026-11-10T00:00:00Z";       // 502 is marked deleted
+  await chase(context(WF, SETTINGS, store, LATER, () => {}));
+  assert.equal(((await store.get<any>("defects", "501")) as any).status, "open", "missing is not removed");
+  assert.equal(((await store.get<any>("defects", "502")) as any).status, "withdrawn", "deleted is withdrawn");
+});
+
+test("close-out re-reads the live list: an item added since the last log run keeps the project open", async () => {
+  const store = new MemoryStore();
+  await logDefects(context(WF, SETTINGS, store, NOW, () => {}));
+  for (const x of punch) { x.status = "Closed"; x.closed_at = "2026-11-10T00:00:00Z"; }
+  punch.push({ id: 599, name: "New crack", status: "Open", closed_at: null, deleted_at: null });  // never logged, so not in the register
+  const ctx = context(WF, SETTINGS, store, LATER, () => {});
+  assert.deepEqual(await closeOut(ctx), { tasks: 0, sign_off_queued: 0 });
+  assert.equal(await store.get("jobs", "4242"), undefined, "nothing recorded while an item is open");
 });
 
 test("a project id that is not a number is refused before any call", async () => {

@@ -31,6 +31,8 @@ async function refresh(ctx: Ctx<Settings>) {
     const items = new Map((await platform(ctx).defectItems!(ctx, job)).map((i) => [i.uuid, i]));
     for (const d of ds) {
       const it = items.get(d.id);
+      // Procore: an item missing from the list is not taken as removed (a list read can shift or fall short); only an item Procore marks deleted is withdrawn.
+      if (!it && ctx.settings.procore) { ctx.log(`defects: item ${d.id} was not in the Procore list this run; left as it was`); continue; }
       if (!it || !it.active) d.status = "withdrawn";
       else if (it.completed_at) { d.status = "fixed"; d.fixed_at = it.completed_at; }
       else continue;
@@ -54,7 +56,11 @@ export async function logDefects(ctx: Ctx<Settings>) {
         logged++;
       }
       // A task that failed to create is tried again; one that was created is never repeated ("created" when the platform gave no id).
-      if (!d.task_ref && d.status !== "withdrawn") {
+      if (!d.task_ref && d.status !== "withdrawn" && ctx.settings.procore) {
+        // Procore: the punch item is itself the task, so none is created or counted.
+        d.task_ref = "none";
+        await ctx.store.put("defects", it.uuid, d);
+      } else if (!d.task_ref && d.status !== "withdrawn") {
         d.task_ref = (await A.createTask!(ctx, j.uuid, `Defect: ${d.name}`.slice(0, 200), `Logged from the ${ctx.settings.defect_section} checklist on this job.`)) ?? "created";
         await ctx.store.put("defects", it.uuid, d);
         tasks++;
@@ -77,7 +83,7 @@ export async function chase(ctx: Ctx<Settings>) {
     const dueAt = last ? Date.parse(last) + every * DAY : Date.parse(d.logged) + first * DAY;
     if (ctx.now.getTime() < dueAt) continue;
     if (reminder) {
-      // Procore: the trade is the punch item's assignee, so the reminder is a comment on the item that Procore sends to them.
+      // Procore: the trade is the punch item's assignee, so the reminder is a comment on the item, queued for approval.
       await reminder.queueReminder(ctx, { project: d.job_uuid, item: d.id, key: `chase-${d.id}-${d.reminders.length + 1}`,
         summary: `Procore comment on punch item "${d.name}" at ${d.address} (Procore notifies the people on it)`,
         text: "Reminder: this punch item is still open. Please fix it and mark it ready to close in Procore." });
@@ -117,7 +123,10 @@ export async function closeOut(ctx: Ctx<Settings>) {
     const co = (await ctx.store.get<JobCloseOut>("jobs", job)) ?? { job_uuid: job };
     if (co.client_notified) continue;
     if (ctx.settings.procore) {
-      // Procore: every punch item is closed. Sign-off is the items' own final approver in Procore; nothing is created or sent.
+      // Procore: the register says every punch item is closed. Check the live list too, so an item added since the last log run keeps the job open.
+      const live = await A.defectItems!(ctx, job);
+      if (live.some((i) => i.active && !i.completed_at)) continue;
+      // Sign-off is the items' own final approver in Procore; nothing is created or sent.
       if (!co.task_ref) { co.task_ref = "closed-in-procore"; await ctx.store.put("jobs", job, co); closed++; ctx.log(`close-out: every punch item on project ${job} is closed (${ds.length})`); }
       continue;
     }

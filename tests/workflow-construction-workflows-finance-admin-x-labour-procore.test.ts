@@ -95,6 +95,7 @@ test("mirror reads Procore timecards read-only, and only approved, undeleted hou
   assert.ok(procoreHits().every((h) => h.method === "GET"), "nothing is written to Procore");
   const sheet = Object.values(xts).find((t) => t.employeeID === EMP_A)!;
   assert.equal(sheet.totalHours, 12, "8 + 4; the pending 6 and the deleted 5 are left out");
+  assert.equal(Object.values(xts).length, 1, "only 701 reached Xero");
   assert.equal(Object.values(xts).some((t) => t.employeeID === EMP_B), false, "the 14 hour entry is held, not written");
   assert.equal(xeroWrites().length, 2, "701: one timesheet create carrying the first entry, then one line for the second");
 });
@@ -129,6 +130,49 @@ test("a row that does not check out holds every mapped person and writes nothing
   for (const bad of [entry(3, "not-a-date", "8.0"), entry(4, "2026-11-02", "25"), entry(5, "2026-11-02", "-1"), { id: "x", date: "2026-11-02", hours: "1", timesheet_status: { status: "approved" } }]) {
     fake(); pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [bad] }]];
     assert.deepEqual(await wf.mirror(ctxFor(new MemoryStore())), { blocked: 1 }, JSON.stringify(bad));
+  }
+});
+
+test("the status is read from approval_status when the entry has one, and from the deprecated timesheet_status otherwise", async () => {
+  pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [
+    { id: 31, date: "2026-11-02", hours: "2.0", deleted_at: null, approval_status: "approved", timesheet_status: { status: "pending" } },
+    { id: 32, date: "2026-11-03", hours: "3.0", deleted_at: null, approval_status: "pending", timesheet_status: { status: "approved" } },
+    { id: 33, date: "2026-11-04", hours: "4.0", deleted_at: null, timesheet_status: { status: "approved" } }] }]];
+  await wf.mirror(ctxFor(new MemoryStore()));
+  assert.equal(Object.values(xts)[0].totalHours, 6, "entry 31 (approval_status approved) and 33 (only the old field says approved); 32 is pending");
+});
+
+test("a mirror_status that is not one of Procore's documented words is refused before any call", async () => {
+  await assert.rejects(wf.mirror(ctxFor(new MemoryStore(), { ...S, procore: { mirror_status: "paid" } })), /must be one of pending, reviewed, approved, completed, rejected/);
+  assert.equal(hits.length, 0);
+});
+
+test("missing hours (null, empty, absent) hold everyone; they are not read as zero", async () => {
+  for (const hours of [null, "", undefined]) {
+    fake(); pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [{ id: 41, date: "2026-11-02", hours, deleted_at: null, timesheet_status: { status: "approved" } }] }]];
+    assert.deepEqual(await wf.mirror(ctxFor(new MemoryStore())), { blocked: 1 }, String(hours));
+  }
+});
+
+test("the same entry id on two pages is counted once", async () => {
+  const e = entry(51, "2026-11-02", "8.0");
+  pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [e] }], [{ party: { id: 701, name: "A" }, timecard_entries: [e] }], []];
+  await wf.mirror(ctxFor(new MemoryStore()));
+  assert.equal(Object.values(xts)[0].totalHours, 8);
+});
+
+test("an entry mirrored and then reverted, deleted or edited in Procore holds that person from approval", async () => {
+  for (const change of ["revert", "delete", "edit"]) {
+    fake(); pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [entry(61, "2026-11-02", "8.0")] }]];
+    const store = new MemoryStore();
+    await wf.mirror(ctxFor(store));
+    const first = Object.values(xts)[0].timesheetID;
+    pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [change === "revert" ? entry(61, "2026-11-02", "8.0", "pending") : change === "delete" ? entry(61, "2026-11-02", "8.0", "approved", { deleted_at: "2026-11-06T00:00:00Z" }) : entry(61, "2026-11-02", "9.0")] }]];
+    const r = await wf.mirror(ctxFor(store)) as any;
+    assert.equal(r.held, 1, change);
+    const holds = (await store.get<any>("timesheet-holds", Object.keys(await store.list("timesheet-holds"))[0])) as any;
+    assert.deepEqual(holds.employees, [EMP_A], `${change}: the person is held from approval`);
+    assert.ok(first);
   }
 });
 

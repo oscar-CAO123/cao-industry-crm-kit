@@ -14,8 +14,8 @@ export interface Settings {
   earnings_rate_id: string;
   /** One shift above this many hours is held for a person. Defaults to 12. */
   max_hours_per_shift?: number;
-  /** Set this instead of ServiceM8 to read hours from Procore timecards. mirror_status is the timesheet status whose hours are paid
-   *  (checked against the status Procore reports; there is no default). The employee_map keys are then Procore user ids. */
+  /** Set this instead of ServiceM8 to read hours from Procore timecards. mirror_status is the timecard approval status whose hours are paid
+   *  (pending, reviewed, approved, completed or rejected; there is no default). The employee_map keys are then Procore user ids. */
   procore?: { mirror_status: string };
 }
 
@@ -25,6 +25,8 @@ export interface Shift { key: string; staff: string; date: string; hours: number
 /** What the store keeps for each shift: mirrored into Xero, held for a person, or needing a check. */
 export interface ShiftRec {
   state: "creating" | "mirrored" | "flagged" | "needs-check";
+  /** "procore" when the hours came from a Procore timecard entry, so a later run can tell when that entry changed. */
+  source?: "procore";
   period: string; staff: string; date: string; hours: number;
   xero_timesheet?: string; reason?: string; at: string;
 }

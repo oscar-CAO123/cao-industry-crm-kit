@@ -61,7 +61,7 @@ export async function mirror(ctx: Ctx<Settings>) {
     }
     const employee = (s.employee_map ?? {})[sh.staff];
     if (!employee || !GUID.test(employee)) { unmapped++; continue; }
-    const base = { period: p.start, staff: sh.staff, date: sh.date, hours: sh.hours, at };
+    const base = { period: p.start, staff: sh.staff, date: sh.date, hours: sh.hours, at, ...(src ? { source: "procore" as const } : {}) };
     if (sh.hours > max) {
       flagged++;
       await ctx.store.put("shifts", rk, { ...base, state: "flagged", reason: `${sh.hours} hours in one shift, over ${max}` } satisfies ShiftRec);
@@ -92,6 +92,16 @@ export async function mirror(ctx: Ctx<Settings>) {
   }
   // Held from approval: anyone still clocked on, with a clock problem, or with a shift that is flagged, creating or needs a check.
   const held = new Set<string>([...open, ...problem]);
+  if (src) {
+    // An entry mirrored while it was in the paid status can change in Procore afterwards: reverted, deleted, or its hours edited. The Xero draft
+    // line stays, so that person is held from approval until a person checks, instead of approving hours Procore no longer shows.
+    const current = new Map(src.shifts.map((sh) => [keyFor("shift", sh.key), sh]));
+    for (const [rk, rec] of Object.entries(await ctx.store.list<ShiftRec>("shifts"))) {
+      if (rec.source !== "procore" || rec.period !== p.start || rec.state !== "mirrored") continue;
+      const now = current.get(rk);
+      if (!now || now.hours !== rec.hours) { held.add(rec.staff); ctx.log(`mirror: a mirrored Procore entry for ${rec.staff} on ${rec.date} changed or left the paid status: held from approval`); }
+    }
+  }
   for (const r of Object.values(await ctx.store.list<ShiftRec>("shifts"))) if (r.period === p.start && r.state !== "mirrored") held.add(r.staff);
   const employees = [...held].map((st) => s.employee_map?.[st]).filter((g): g is string => !!g && GUID.test(g));
   await ctx.store.put(HOLDS_NS, holdKey, { employees, at, start: p.start, end: p.end } satisfies Holds);
