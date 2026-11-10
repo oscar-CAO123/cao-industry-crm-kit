@@ -1,6 +1,6 @@
 ---
 name: construction-defects
-description: Defects found on a construction job, from the defect checklist to a trade fix and the client's sign-off, in ServiceM8. Use when setting up defect tracking for a client, when a trade has not fixed a defect, or when an owner asks why a job has not been signed off.
+description: Defects found on a construction job, from the defect checklist to a trade fix and the client's sign-off, in ServiceM8 or Procore. Use when setting up defect tracking for a client, when a trade has not fixed a defect, or when an owner asks why a job has not been signed off.
 ---
 
 # Defects
@@ -32,11 +32,19 @@ They read and draft internal records only. Every email to a trade or a client wa
 - A reminder that is queued but not approved stays in the approval queue. A rejected one is not queued again.
 - A close-out that never queued usually has a defect still open or withdrawn. Check the checklist in ServiceM8.
 
+## Procore instead of ServiceM8
+Set `procore.projects` (each project's Procore id and a name for the summaries) in settings instead of `defect_section`; both together are
+refused. The defects are the project's punch items. `log-defects` records them (the punch item is the task, so no task is created),
+`chase` queues a comment on each open item that is due (Procore sends it to the people on the item) for a person to approve, and
+`close-out` records when every item is closed; sign-off stays with the item's final approver in Procore. There are no trade emails
+or client emails. Example: `"procore": {"projects": [{"id": "123456", "name": "12 Smith St"}]}`. The token is `PROCORE_ACCESS_TOKEN`
+and the company id `PROCORE_COMPANY_ID`.
+
 ## Judgment that stays with people
 - Whether a defect is real, how serious it is, and whether a fix is good enough.
 - Whether to sign off a job and what to tell the client.
 - Any backcharge to a trade, and any re-inspection. The workflow does not do these.
 
 ## Not covered yet
-Procore punch lists, spreadsheet or Dashpivot defect registers, pricing small defects, backcharges, pass or fail
+Spreadsheet or Dashpivot defect registers, pricing small defects, backcharges, pass or fail
 re-inspection, booking a trade to attend, and reading trade replies. See `gaps` in `workflow.json`.
