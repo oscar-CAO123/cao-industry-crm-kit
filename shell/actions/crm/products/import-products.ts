@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import Papa from "papaparse";
 import { writeAuditLog } from "@/lib/audit-log";
@@ -11,7 +11,7 @@ const MAX_ROWS = 500;
 export async function importProducts(
   formData: FormData
 ): Promise<{ imported: number; skipped: number; errors: string[] }> {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
   const userId = session.user.id;

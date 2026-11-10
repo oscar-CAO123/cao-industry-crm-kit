@@ -121,6 +121,27 @@ test("re-runs never double-queue: a second scan and queue add nothing", async ()
   assert.ok(Object.values(await store.list<any>("findings")).every((f) => f.status === "queued"));
 });
 
+test("a merge whose record holds capitals or spaces still passes its own live check (the check compares the address exactly as HubSpot holds it)", async () => {
+  hsContacts = [
+    { id: "101", email: "ann@example.com", createdAt: "2024-01-01T00:00:00Z" },
+    { id: "102", email: " Ann@Example.com ", createdAt: "2024-06-01T00:00:00Z" },
+  ];
+  const store = new MemoryStore();
+  await scan(ctxFor(HS, store)); await queue(ctxFor(HS, store));
+  const merge = (await approvals(store)).find((a) => a.acts[0].op.endsWith("merge_merge"))!;
+  assert.equal(merge.acts[0].check?.expect[0].equals, " Ann@Example.com ", "the expected value is the raw address");
+  assert.equal((await approve(WF, store, merge.id, "owner", NOW)).status, "done");
+  hsContacts[1].email = "someone-else@example.com";   // the record changed after queueing
+  const second = new MemoryStore();
+  hsContacts[1].email = " Ann@Example.com ";
+  await scan(ctxFor(HS, second)); await queue(ctxFor(HS, second));
+  const again = (await approvals(second)).find((a) => a.acts[0].op.endsWith("merge_merge"))!;
+  hsContacts[1].email = "someone-else@example.com";
+  const r = await approve(WF, second, again.id, "owner", NOW);
+  assert.equal(r.status, "rejected", "a merge never runs once the address is gone");
+  assert.equal(hits.filter((h) => h.path === "/crm/v3/objects/contacts/merge").length, 1, "only the first merge was sent");
+});
+
 test("approving the merge runs it; the tidies wait for their own approval", async () => {
   const store = new MemoryStore();
   await scan(ctxFor(HS, store)); await queue(ctxFor(HS, store));

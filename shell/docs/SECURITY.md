@@ -33,3 +33,9 @@ LLM Top 10 2025 and CIS Controls v8.1.
 ## Owner's duties
 Name a security owner. Keep the vault's access list current and rotate on departures. Back up the database and
 rehearse a restore. Write down the incident and breach-notification path for the business's jurisdiction.
+
+## Known limits (pen test of 10 Nov 2026)
+
+- **The 1Password service token reaches the container as an environment variable.** Anyone who can run `docker inspect` on the host (the docker group, root) can read it, and it opens the whole business vault. That is the same reach as root on the host, but keep the vault to this business's keys only, give the token read access only, and rotate it when anyone with host access leaves. Only a secret mounted as a file (a Docker secret, a Kubernetes secret volume) stays out of the container's environment; platform variables such as Railway's are still environment. Launcher: `shell/scripts/with-secrets.sh` drops the token before the service starts.
+- **The base images are tags, not digests.** Pin `node:22.18-slim` and `postgres:17-alpine` by digest at the first real deploy, after checking them on the registry.
+- **`better-auth` rate limits and cookie flags** are set in `lib/auth.ts` but were never run against a live server. Check them on the first shell run.

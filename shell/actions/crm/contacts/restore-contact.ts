@@ -1,11 +1,11 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { writeAuditLog } from "@/lib/audit-log";
 
 export const restoreContact = async (contactId: string) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session) return { error: "Unauthorized" };
   if (session.user.role !== "admin") return { error: "Forbidden" };
   if (!contactId) return { error: "contactId is required" };

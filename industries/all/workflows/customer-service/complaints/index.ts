@@ -33,7 +33,8 @@ export async function draft(ctx: Ctx<Settings>) {
   let acks = 0, escalated = 0, categorised = 0, triage = 0;
   for (const e of todo) {
     const text = `${e.subject} ${e.complaint}`;
-    const word = hit(escalateWords, text);
+    // A message that fills the whole cap may hide words past it, so a person reads it.
+    const word = hit(escalateWords, text) ?? (e.complaint.length >= 20000 ? "a message too long to check" : null);
     if (word) {
       await gorgias.escalate(ctx, e);
       await ctx.store.put("enquiries", e.id, { ...e, status: "escalated", reason: `escalation word "${word}": a person handles it` } satisfies Enquiry);

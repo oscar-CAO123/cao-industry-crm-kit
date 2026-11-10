@@ -130,7 +130,7 @@ test("an approved live act without KIT_ALLOW_WRITES fails closed: nothing is sen
 
 // ---- Access control, outbound calls, schema --------------------------------------------------------------------
 // getUser (actions/get-user.ts) throws without an active session, so it counts.
-const AUTH = /\b(getSession|requireSession|requireRole|requireAdmin|requireOwnerOrAdmin|assertActionSession|getUser)\b/;
+const AUTH = /\b(getSession|requireSession|requireRole|requireAdmin|requireOwnerOrAdmin|assertActionSession|getUser|getStaffUser)\b/;
 
 test("every API route checks a session (sign-in, the 404 catch-all and the token-checked trigger excepted)", () => {
   const routes = code.filter((f) => /app\/api\/.*\/route\.ts$/.test(f));

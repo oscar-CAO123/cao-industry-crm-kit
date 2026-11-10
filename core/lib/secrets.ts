@@ -6,6 +6,7 @@
 // operator's home directory with owner-only permissions. The shell CRM swaps in its own store.
 
 import fs from "node:fs";
+import { randomBytes } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 
@@ -49,8 +50,10 @@ export class FileTokenStore implements TokenStore {
   async set(key: string, value: string): Promise<void> {
     fs.mkdirSync(this.dir, { recursive: true, mode: 0o700 });
     const f = this.file(key);
-    const tmp = `${f}.${process.pid}.tmp`;
-    fs.writeFileSync(tmp, value, { mode: 0o600 });
+    // A random name opened with O_EXCL and O_NOFOLLOW: a link planted in the token folder cannot redirect the write.
+    const tmp = `${f}.${process.pid}.${randomBytes(6).toString("hex")}.tmp`;
+    const fd = fs.openSync(tmp, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o600);
+    try { fs.writeSync(fd, value); } finally { fs.closeSync(fd); }
     fs.renameSync(tmp, f);
   }
 }

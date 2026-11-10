@@ -1,6 +1,7 @@
 {
  "family": "priced-job-from-site-visit",
  "business_name": "Example Services Co",
+ "price_tolerance_pct": 25,
  "intake": ["servicem8", "microsoft-365"],
  "quotes": "servicem8",
  "rate_card": "servicem8",

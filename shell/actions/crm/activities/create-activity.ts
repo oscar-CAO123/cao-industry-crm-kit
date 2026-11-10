@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -23,7 +23,7 @@ export const createActivity = async (data: {
   links: Array<{ entityType: string; entityId: string }>;
 }) => {
   try {
-    const session = await getSession();
+    const session = await assertActionSession();
     if (!session) return { error: "Unauthorized" };
 
     const activity = await prismadb.$transaction(async (tx) => {

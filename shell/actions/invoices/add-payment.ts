@@ -1,14 +1,14 @@
 "use server";
 
 import { prismadb } from "@/lib/prisma";
-import { getUser } from "@/actions/get-user";
+import { getStaffUser } from "@/actions/get-user";
 import { Decimal } from "decimal.js";
 import { addPaymentSchema } from "@/types/invoice";
 import { canAddPayment, type InvoiceStatus } from "@/lib/invoices/permissions";
 import { serializeDecimals } from "@/lib/serialize-decimals";
 
 export async function addPayment(raw: unknown) {
-  const user = await getUser();
+  const user = await getStaffUser();
   const input = addPaymentSchema.parse(raw);
 
   return prismadb.$transaction(async (tx) => {
@@ -20,7 +20,7 @@ export async function addPayment(raw: unknown) {
     if (
       !canAddPayment(
         { status: invoice.status as InvoiceStatus, createdBy: invoice.createdBy },
-        { id: user.id, isAdmin: user.is_admin }
+        { id: user.id, isAdmin: user.role === "admin" }
       )
     ) {
       throw new Error("Cannot add payment to this invoice");
@@ -62,5 +62,5 @@ export async function addPayment(raw: unknown) {
     });
 
     return serializeDecimals(updated);
-  });
+  }, { isolationLevel: "Serializable" }); // two payments at once must not overwrite each other's total
 }

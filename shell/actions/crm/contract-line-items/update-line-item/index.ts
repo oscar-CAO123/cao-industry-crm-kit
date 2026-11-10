@@ -1,5 +1,5 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { UpdateContractLineItem } from "./schema";
 import { InputType, ReturnType } from "./types";
@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 import { calculateLineTotal, sumLineTotals } from "@/lib/line-items";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session?.user?.id) {
     return { error: "Unauthorized" };
   }

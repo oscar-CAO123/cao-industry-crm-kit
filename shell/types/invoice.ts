@@ -35,7 +35,7 @@ export const createInvoiceSchema = z.object({
   type: z.enum(INVOICE_TYPES).default("INVOICE"),
   accountId: z.string().uuid("Invalid account ID"),
   seriesId: z.string().uuid().optional().nullable(),
-  currency: z.string().length(3, "Currency must be a 3-letter code"),
+  currency: z.string().regex(/^[A-Z]{3}$/, "Currency must be a 3-letter code in capitals"),
   issueDate: z.coerce.date().optional().nullable(),
   taxableSupplyDate: z.coerce.date().optional().nullable(),
   dueDate: z.coerce.date().optional().nullable(),
@@ -58,7 +58,7 @@ export type CreateInvoiceInput = z.infer<typeof createInvoiceSchema>;
 
 export const updateInvoiceSchema = z.object({
   accountId: z.string().uuid().optional(),
-  currency: z.string().length(3).optional(),
+  currency: z.string().regex(/^[A-Z]{3}$/).optional(),
   issueDate: z.coerce.date().optional().nullable(),
   taxableSupplyDate: z.coerce.date().optional().nullable(),
   dueDate: z.coerce.date().optional().nullable(),

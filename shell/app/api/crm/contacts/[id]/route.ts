@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth-server";
+import { hasRole, STAFF_ROLES } from "@/lib/security/session-status";
 import { prismadb } from "@/lib/prisma";
 
 const FIELD_MAP: Record<string, string> = {
@@ -14,6 +15,8 @@ const FIELD_MAP: Record<string, string> = {
   mobile_phone:    "mobile_phone",
 };
 
+const URL_FIELDS = new Set(["website", "social_linkedin", "social_twitter", "social_facebook", "social_instagram"]);
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -23,6 +26,9 @@ export async function PATCH(
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!hasRole(session.user, STAFF_ROLES)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const { enrichmentFields } = await request.json();
   if (!enrichmentFields || typeof enrichmentFields !== "object") {
@@ -30,9 +36,19 @@ export async function PATCH(
   }
 
   const updates: Record<string, string> = {};
+  const rejected: string[] = [];
   for (const [key, value] of Object.entries(enrichmentFields)) {
     const column = FIELD_MAP[key];
-    if (column) updates[column] = String(value);
+    if (!column) continue;
+    const text = String(value).slice(0, 2000);
+    // Links are shown as clickable hrefs, so only http(s) addresses are stored. A bare address like "acme.com.au" gets https://.
+    if (URL_FIELDS.has(column) && text !== "") {
+      const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(text) || /^(mailto|tel|javascript|data|file):/i.test(text) ? text : /^[\w-]+(\.[\w-]+)+(:\d{1,5})?(\/\S*)?$/.test(text) ? `https://${text}` : "";
+      if (!/^https?:\/\/[^\s]+$/i.test(withScheme)) { rejected.push(key); continue; }
+      updates[column] = withScheme;
+      continue;
+    }
+    updates[column] = text;
   }
 
   if (Object.keys(updates).length === 0) {
@@ -45,5 +61,5 @@ export async function PATCH(
     select: { id: true },
   });
 
-  return NextResponse.json({ success: true, id: contact.id });
+  return NextResponse.json({ success: true, id: contact.id, ...(rejected.length ? { rejected } : {}) });
 }

@@ -2,11 +2,11 @@
 // Apply and undo industry templates. Admins only. The preview the admin saw is recomputed on the server before
 // writing, so what is applied is always the template in the repo, never a list sent by the browser.
 import { revalidatePath } from "next/cache";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { apply, undo } from "@/lib/shell/templates";
 
 async function admin() {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session || session.user.role !== "admin") throw new Error("Only an admin can change templates");
   return session;
 }

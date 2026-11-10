@@ -39,11 +39,17 @@ export const stripe: Adapter = {
   async chase(ctx: Ctx<Settings>, f, n) {
     const id = sid(f.invoice), label = f.number ?? id, who = f.contact.name ?? f.contact.email ?? "the member";
     if (n === 1 && ctx.settings.retry_stripe !== false) {
-      return ctx.queue({ platform: P, op: "openapi_spec3.PostInvoicesInvoicePay", key: `chase1:${f.key}`, input: { params: { invoice: id } }, summary: `retry the card on invoice ${label}` },
+      // Stripe charges what is owed when the click lands, so the approval runs only while the invoice is still open for exactly
+      // the amount shown. The key carries the amount: a changed invoice is queued afresh and never collides with a closed approval.
+      const cents = Math.round(f.amount_due * 100);
+      return ctx.queue({ platform: P, op: "openapi_spec3.PostInvoicesInvoicePay", key: `chase1:${f.key}:${cents}`, input: { params: { invoice: id } }, summary: `retry the card on invoice ${label}`,
+        check: { platform: P, op: "openapi_spec3.GetInvoicesInvoice", input: { params: { invoice: id } }, expect: [{ path: "status", equals: "open" }, { path: "amount_remaining", equals: cents }] } },
         `Retry the card on invoice ${label}: ${money(f.amount_due, f.currency)} from ${who}`);
     }
     if (!f.contact.email) return "";
-    return ctx.queue({ platform: P, op: "openapi_spec3.PostInvoicesInvoiceSend", key: `chase${n}:${f.key}`, input: { params: { invoice: id } }, summary: `send invoice ${label} for payment` },
+    const owed = Math.round(f.amount_due * 100);
+    return ctx.queue({ platform: P, op: "openapi_spec3.PostInvoicesInvoiceSend", key: `chase${n}:${f.key}:${owed}`, input: { params: { invoice: id } }, summary: `send invoice ${label} for payment`,
+      check: { platform: P, op: "openapi_spec3.GetInvoicesInvoice", input: { params: { invoice: id } }, expect: [{ path: "status", equals: "open" }, { path: "amount_remaining", equals: owed }] } },
       `Send invoice ${label} for payment to ${f.contact.email}: ${money(f.amount_due, f.currency)} (step ${n})`);
   },
 };

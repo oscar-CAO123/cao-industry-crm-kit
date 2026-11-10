@@ -1,11 +1,11 @@
 "use server";
-import { getSession } from "@/lib/auth-server";
+import { assertActionSession } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit-log";
 import { revalidatePath } from "next/cache";
 
 export const removeAssignment = async (id: string) => {
-  const session = await getSession();
+  const session = await assertActionSession();
   if (!session?.user?.id) {
     return { error: "Unauthorized" };
   }

@@ -1,7 +1,9 @@
 import type { ChartDataPoint } from "./types";
 
 function escapeCSV(value: string | number): string {
-  const str = String(value);
+  let str = String(value);
+  // A text cell that starts with = + - @ or a tab or return would run as a formula when the file is opened in a spreadsheet.
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(str)) str = `'${str}`;
   if (str.includes(",") || str.includes('"') || str.includes("\n")) {
     return `"${str.replace(/"/g, '""')}"`;
   }

@@ -14,10 +14,11 @@ const BATCH_UPDATE = "crm-contacts-3.post-/crm/v3/objects/contacts/batch/update_
 const MERGE = "crm-contacts-3.post-/crm/v3/objects/contacts/merge_merge";
 
 /** The valid address a contact holds, normalised. undefined when the contact is gone (a merged or deleted record). */
-async function currentEmails(ctx: Ctx<Settings>, id: string): Promise<string[] | undefined> {
+async function currentEmails(ctx: Ctx<Settings>, id: string, raw?: { value?: string }): Promise<string[] | undefined> {
   try {
     const r = await ctx.draft<any>({ platform: H, op: GET, summary: `re-read contact ${id} before merging`,
       input: { params: { contactId: id, properties: ["email"] } } });
+    if (raw && typeof r.data?.properties?.email === "string") raw.value = r.data.properties.email; // exactly as HubSpot holds it, for the approval's check
     const e = typeof r.data?.properties?.email === "string" ? norm(r.data.properties.email) : "";
     return valid(e) ? [e] : [];
   } catch (err) {
@@ -44,10 +45,14 @@ export const hubspot: Adapter = {
   async queueMerge(ctx: Ctx<Settings>, f: Finding, key: string): Promise<string | undefined> {
     if (!ID.test(f.id) || !f.with || !ID.test(f.with)) throw new Error("crm-hygiene: merge needs two plain record ids");
     // Re-read both records: the scan may be days old. The merge is queued only while they still share an address.
-    const a = await currentEmails(ctx, f.id), b = await currentEmails(ctx, f.with);
+    const rawA: { value?: string } = {};
+    const a = await currentEmails(ctx, f.id, rawA), b = await currentEmails(ctx, f.with);
     if (!a || !b || !a.some((e) => b.includes(e))) return undefined;
+    // A merge cannot be undone and the approval may run a day later: it runs only while the record still holds the shared address.
+    if (!rawA.value) return undefined;
     return ctx.queue({ platform: H, op: MERGE, key, summary: f.summary,
-      input: { body: { primaryObjectId: f.with, objectIdToMerge: f.id } } }, f.summary);
+      input: { body: { primaryObjectId: f.with, objectIdToMerge: f.id } },
+      check: { platform: H, op: GET, input: { params: { contactId: f.id, properties: ["email"] } }, expect: [{ path: "properties.email", equals: rawA.value }] } }, f.summary);
   },
 
   async queueTidy(ctx: Ctx<Settings>, f: Finding, key: string) {

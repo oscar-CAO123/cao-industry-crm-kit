@@ -36,7 +36,9 @@ warn() { echo "==> 1Password: $1" >&2; }
 blocked_name() {
   case "$1" in
     PATH | IFS | ENV | BASH_ENV | HOME | SHELL | PS4 | CDPATH | TMPDIR | GCONV_PATH | GLIBC_TUNABLES | LOCPATH | NLSPATH | HOSTALIASES | \
-    NODE_* | NPM_CONFIG_* | SSL_* | OPENSSL_* | *_PROXY | *_proxy | PYTHON* | LD_* | DYLD_* | OP_* | BASH_FUNC_* | MALLOC_* ) return 0 ;;
+    BASHOPTS | SHELLOPTS | BROWSER | EDITOR | VISUAL | PAGER | ZDOTDIR | \
+    NODE_* | NPM_* | YARN_* | PNPM_* | BUN_* | DENO_* | SSL_* | OPENSSL_* | *_PROXY | *_proxy | PYTHON* | LD_* | DYLD_* | OP_* | BASH_FUNC_* | MALLOC_* | \
+    GIT_* | PERL* | RUBY* | JAVA_* | GEM_* | PIP_* | COREPACK_* | CURL_* | XDG_* | ELECTRON_* ) return 0 ;;
     *) return 1 ;;
   esac
 }

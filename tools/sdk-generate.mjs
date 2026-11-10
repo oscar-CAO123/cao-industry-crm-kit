@@ -6,11 +6,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { scanData } from "../core/lib/sanitise.mjs";
+import { hostEntry, sameHosts } from "./sdk-host-lock.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = process.argv[2];
 if (!src || !fs.existsSync(src)) { console.error("usage: node tools/sdk-generate.mjs <endpoints dir>"); process.exit(2); }
 const OUT = path.join(root, "core/sdk/platforms");
+// The hosts an app's key may be sent to are a reviewed list, not something a spec can widen. A spec that names a new server
+// changes the generated host list, the run stops, and a person reads the change in tools/sdk-hosts.lock.json before accepting it
+// (SDK_ACCEPT_HOSTS=1 rewrites the lock entry; the lock change then shows in the pull request).
+const LOCK_FILE = path.join(root, "tools/sdk-hosts.lock.json");
+const hostLock = fs.existsSync(LOCK_FILE) ? JSON.parse(fs.readFileSync(LOCK_FILE, "utf8")) : {};
+let lockChanged = false;
 
 const SUB = "[a-z0-9-]+";
 // Sign-in per platform. env names are what the client puts in their secret store.
@@ -400,6 +408,18 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
+  // Host list: must equal the reviewed lock. A new or widened list stops the run until a person accepts it.
+  const gotHosts = hostEntry(platform);
+  if (!sameHosts(hostLock[id], gotHosts)) {
+    if (process.env.SDK_ACCEPT_HOSTS !== "1") {
+      console.error(`${id}: the host list changed (${JSON.stringify(gotHosts)}). The key is sent to these hosts. Read them, then rerun with SDK_ACCEPT_HOSTS=1 to update tools/sdk-hosts.lock.json.`);
+      process.exit(1);
+    }
+    hostLock[id] = gotHosts; lockChanged = true;
+  }
+  // Text an agent will read: stop on hidden characters or an instruction aimed at an agent, in any summary, tag or doc line.
+  const injected = scanData(ops, { maxStrings: 1e9 }).filter((f) => ["override", "hidden-characters"].includes(f.flag));
+  if (injected.length) { console.error(`${id}: endpoint text carries instruction-like or hidden text: ${JSON.stringify(injected)}`); process.exit(1); }
   // index.ts: one named function per endpoint
   const used = new Set(["sdk"]);
   const lines = [
@@ -426,6 +446,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
   }
   summary.push({ id, ops: ops.length, status: m.status, auth: cfg.proof });
 }
+if (lockChanged) fs.writeFileSync(LOCK_FILE, JSON.stringify(hostLock, null, 1) + "\n");
 fs.writeFileSync(path.join(OUT, "index.json"), JSON.stringify({ generated: new Date().toISOString().slice(0, 10), platforms: summary }, null, 1) + "\n");
 const total = summary.reduce((a, s) => a + s.ops, 0);
 console.log(`${summary.filter((s) => s.ops).length} platforms, ${total} endpoints; nothing public for: ${summary.filter((s) => !s.ops).map((s) => s.id).join(", ")}`);

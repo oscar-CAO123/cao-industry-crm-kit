@@ -132,6 +132,9 @@ export function describe(id: string, opId: string): Op {
 }
 
 const FORBIDDEN_HEADERS = /^(authorization|cookie|host|proxy-authorization|x-api-key|x-shopify-access-token)$/i;
+// Acting as another user or overriding the method is never a caller param: that is a decision for the secret store, not an agent.
+// (A vendor SDK that sends one of these is refused loudly in sendPrepared, which is why this list is separate.)
+const FORBIDDEN_PARAM_HEADERS = /^(x-impersonate-[a-z-]+|on-behalf-of|stripe-account|stripe-context|x-http-method-override|x-method-override|x-http-method)$/i;
 
 function serverUrl(p: Platform, o: Op, input: CallInput, withKeys = true): string {
   let s = o.server.replace(/:443(?=\/|$)/, "");
@@ -172,6 +175,20 @@ function gqlType(t: string): string {
 }
 
 const GQL_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
+/** Braces and brackets must close in order and never close more than they opened, so a select cannot end the field it sits in and start a new root field. */
+export function balanced(s: string): boolean {
+  let brace = 0, paren = 0, inStr = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) { if (c === "\\") i++; else if (c === '"') inStr = false; continue; }
+    if (c === '"') inStr = true;
+    else if (c === "{") brace++;
+    else if (c === "}") { if (--brace < 0) return false; }
+    else if (c === "(") paren++;
+    else if (c === ")") { if (--paren < 0) return false; }
+  }
+  return brace === 0 && paren === 0 && !inStr;
+}
 const SELECT_OK = /^[A-Za-z0-9_\s{}():,"$.\-]*$/;
 
 /** Split a GraphQL document into tokens the way a GraphQL server does: strings and block strings first,
@@ -398,7 +415,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
       else query[k] = typeof v === "object" ? JSON.stringify(v) : String(v);
     }
     else if (x.in === "header") {
-      if (FORBIDDEN_HEADERS.test(k)) throw new Error(`${id} ${opId}: ${k} comes from the secret store, not a param`);
+      if (FORBIDDEN_HEADERS.test(k) || FORBIDDEN_PARAM_HEADERS.test(k)) throw new Error(`${id} ${opId}: ${k} comes from the secret store, not a param`);
       headers[k] = String(v);
     } else if (x.in === "formData") (form ??= {})[k] = String(v);
     else (bodyFields ??= {})[k] = v; // body, argument
@@ -408,6 +425,8 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   // Supermetrics /enterprise/v2). Join them once, never twice.
   const basePath = new URL(base).pathname.replace(/\/+$/, "");
   if (basePath && route.startsWith(basePath + "/")) route = route.slice(basePath.length);
+  // A dot segment in an operation path would let a declared route resolve to a different one on the same host.
+  if (route.split("/").some((seg) => seg === "." || seg === ".." || /^%2e/i.test(seg))) throw new Error(`${id} ${opId}: dot segments in the path are refused`);
   const target = { url: `${base}/${route.replace(/^\/+/, "")}` };
   const auth = withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
   const method = (o.method === "QUERY" || o.method === "MUTATION" ? "POST" : o.method) as Method;
@@ -497,7 +516,7 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
   else {
     if (!GQL_NAME.test(o.path)) throw new Error(`${p.id}: bad field ${o.path}`);
     if (!o.params.length && p.status === "index-only") throw new Error(`${p.id} ${o.id}: arguments are not mapped yet; pass a full document`);
-    if (input.select && (!SELECT_OK.test(input.select) || /\b(mutation|subscription|fragment)\b/.test(input.select))) throw new Error("select may only list fields");
+    if (input.select && (!SELECT_OK.test(input.select) || /\b(mutation|subscription|fragment)\b/.test(input.select) || !balanced(input.select))) throw new Error("select may only list fields");
     const used = o.params.filter((x) => input.params?.[x.name] !== undefined);
     const decl = used.map((x) => `$${x.name}: ${gqlType(x.type)}`).join(", ");
     const args = used.map((x) => `${x.name}: $${x.name}`).join(", ");

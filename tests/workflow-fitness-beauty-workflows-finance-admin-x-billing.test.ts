@@ -89,6 +89,11 @@ test("chase queues a Stripe retry and a Xero reminder once each; approval runs t
   const approvals = Object.values(await store.list<Approval>("approvals"));
   assert.equal(approvals.length, 2);
   assert.deepEqual(approvals.map((a) => a.acts[0].op).sort(), ["accounting.emailInvoice", "openapi_spec3.PostInvoicesInvoicePay"].sort());
+  const pay = approvals.find((a) => a.acts[0].op.endsWith("PostInvoicesInvoicePay"))!.acts[0];
+  assert.deepEqual(pay.check?.expect.map((e) => e.path), ["status", "amount_remaining"]);
+  assert.equal(pay.check?.expect[0].equals, "open");
+  assert.ok(Number.isInteger(pay.check?.expect[1].equals), "the amount is in minor units, as Stripe holds it");
+  assert.ok(pay.key!.endsWith(`:${pay.check?.expect[1].equals}`), "the key carries the amount, so a changed invoice queues afresh");
   assert.deepEqual(await chase(context(WF, SET, store, day1, () => {})), { queued: 0, skipped: 0 }, "the next step is not due until its day");
   assert.equal(Object.keys(await store.list("approvals")).length, 2, "re-runs never queue twice");
   for (const ap of approvals) assert.equal((await approve(WF, store, ap.id, "owner", day1)).status, "done");

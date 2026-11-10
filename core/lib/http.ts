@@ -12,6 +12,8 @@
 // - Errors carry the status and path, never the response body: bodies can hold client data.
 // - Logs never print query values, bodies or keys.
 
+import { scanData } from "./sanitise.mjs";
+
 export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export interface AppSpec {
@@ -56,6 +58,8 @@ export interface CallOptions {
 }
 
 export interface Reply<T> {
+  /** Set when text in the answer looks like instructions aimed at an AI agent (see core/lib/sanitise.mjs). The data is unchanged. */
+  untrusted?: { flag: string; strings: number }[];
   status: number;
   headers: Headers;
   data: T;
@@ -103,7 +107,7 @@ export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1"
 
 const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
-const KEY_NAMES = new Set(["accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer", "signature", "sig", "auth", "authorization", "credential", "credentials", "jwt"]);
+const KEY_NAMES = new Set(["secretkey", "accesskey", "privatekey", "apisecret", "xaccesstoken", "xapikey", "authkey", "accesstoken", "refreshtoken", "idtoken", "sessiontoken", "token", "apikey", "key", "secret", "clientsecret", "password", "authtoken", "bearer", "signature", "sig", "auth", "authorization", "credential", "credentials", "jwt"]);
 const RETRY_STATUS = new Set([429, 502, 503, 504]);
 
 function buildUrl(o: CallOptions): URL {
@@ -116,7 +120,8 @@ function buildUrl(o: CallOptions): URL {
 function redactPath(p: string): string {
   let d = p;
   try { d = decodeURIComponent(p); } catch { /* keep as is */ }
-  return d.replace(/[^\s/@]+@[^\s/@]+\.[^\s/@]+/g, "[email]");
+  if (d.length > 2000) d = d.slice(0, 2000);   // caller path values have no length cap, and the pattern below must stay fast
+  return d.replace(/[^\s/@]{1,128}@[^\s/@]{1,255}\.[^\s/@]{1,24}/g, "[email]");
 }
 
 function where(spec: AppSpec, method: Method, u: URL): string {
@@ -141,6 +146,41 @@ export function isRead(spec: AppSpec, method: Method, u: URL): boolean {
   return (spec.readPosts ?? []).some((p) => target === p || target.startsWith(p.endsWith("/") ? p : `${p}/`));
 }
 
+/** Longest wait for a vendor, and the most bytes read from one answer, unless the caller sets its own. */
+const TIMEOUT_MS = 30_000;
+const DOWNLOAD_TIMEOUT_MS = 300_000;   // a file up to the byte cap may take longer than a JSON answer
+const MAX_BYTES = 50 * 1024 * 1024;
+
+/** A download redirect may leave the app's hosts, but never to a machine name that is not a public host. */
+function publicHostname(h: string): boolean {
+  if (!h || h === "localhost" || /\.(local|localhost|internal|lan|home|corp)$/i.test(h)) return false;
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(h) || h.includes(":") || /^\[/.test(h)) return false;   // IP addresses, v4 and v6
+  return h.includes(".");
+}
+
+/** Reads an answer up to a byte limit, so a vendor cannot stream the process out of memory. */
+async function readBody(res: Response, binary: boolean, max: number): Promise<string | ArrayBuffer> {
+  const declared = Number(res.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > max) throw new Error(`response larger than ${max} bytes refused`);
+  const reader = (res as any).body?.getReader?.();
+  if (!reader) {   // a test transport without a stream
+    const v = binary ? await res.arrayBuffer() : await res.text();
+    if ((binary ? (v as ArrayBuffer).byteLength : (v as string).length) > max) throw new Error(`response larger than ${max} bytes refused`);
+    return v;
+  }
+  const chunks: Uint8Array[] = []; let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > max) { try { await reader.cancel(); } catch { /* already closed */ } throw new Error(`response larger than ${max} bytes refused`); }
+    chunks.push(value);
+  }
+  const all = new Uint8Array(total); let at = 0;
+  for (const c of chunks) { all.set(c, at); at += c.byteLength; }
+  return binary ? all.buffer : new TextDecoder().decode(all);
+}
+
 export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<Reply<T>> {
   const method = o.method ?? "GET";
   const u = buildUrl(o);
@@ -154,11 +194,16 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
   else if (o.form) { body = new URLSearchParams(o.form).toString(); headers["Content-Type"] = "application/x-www-form-urlencoded"; }
   else if (o.body !== undefined) body = o.body;
 
+  // A header value with a line break cannot be sent, and the error the runtime raises for it prints the value (a key).
+  // Name the header and nothing else.
+  for (const [name, v] of Object.entries(headers)) if (/[\r\n\u0000]/.test(String(v))) throw new Error(`${spec.app}: the ${name} header holds a line break; re-save that key as one line in the secret store`);
   const write = !isRead(spec, method, u);
   const max = o.retries ?? 3;
   for (let attempt = 0; ; attempt++) {
     const t0 = Date.now();
-    let res = await transport.fetch(u.toString(), { method, headers, body, redirect: "manual", signal: o.signal });
+    const clock = AbortSignal.timeout(o.binary ? DOWNLOAD_TIMEOUT_MS : TIMEOUT_MS);
+    const signal = o.signal ? AbortSignal.any([o.signal, clock]) : clock; // each try gets its own clock
+    let res = await transport.fetch(u.toString(), { method, headers, body, redirect: "manual", signal });
     transport.log(`[${spec.app}] ${w} ${res.status} ${Date.now() - t0}ms`);
     if (o.followDownloadRedirects && method === "GET") {
       let at = u;
@@ -169,10 +214,11 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
         if (next.protocol !== "https:") throw new Error(`${spec.app}: redirect to ${next.protocol} refused`);
         if (next.port !== "" || next.username || next.password) throw new Error(`${spec.app}: redirect to a non-standard port or a URL with credentials refused`);
         const own = spec.hosts.includes(next.hostname) || !!spec.hostPattern?.test(next.hostname);
+        if (!own && !publicHostname(next.hostname)) throw new Error(`${spec.app}: redirect to a non-public host refused`);
         if (own) checkUrl(spec, next);  // an own-host hop gets the key, so it passes every check the first request did
         // Another host gets only harmless headers: every sign-in header (Authorization, X-Api-Key, any vendor key header) stays behind.
         const h2 = own ? headers : Object.fromEntries(Object.entries(headers).filter(([k]) => /^(accept|accept-encoding|accept-language|user-agent|range|if-none-match|if-modified-since)$/i.test(k)));
-        res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal: o.signal });
+        res = await transport.fetch(next.toString(), { method: "GET", headers: h2, redirect: "manual", signal });
         transport.log(`[${spec.app}] redirect to ${own ? next.hostname : "storage host"} ${res.status}`);
         at = next;
       }
@@ -187,14 +233,16 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
     }
     if (res.status >= 300) throw new ApiError(spec.app, res.status, w);
     let data: unknown;
-    if (o.binary) data = await res.arrayBuffer();
+    if (o.binary) data = await readBody(res, true, MAX_BYTES);
     else if (res.status === 204) data = null;
     else {
-      const text = await res.text();
+      const text = (await readBody(res, false, MAX_BYTES)) as string;
       const type = res.headers.get("content-type") ?? "";
       data = type.includes("json") || /^\s*[[{]/.test(text) ? safeJson(text) : text;
     }
-    return { status: res.status, headers: res.headers, data: data as T };
+    const untrusted = o.binary ? [] : scanData(data);
+    if (untrusted.length) transport.log(`[${spec.app}] ${w} answer carries text marked untrusted: ${untrusted.map((u) => `${u.flag} x${u.strings}`).join(", ")}`);
+    return { status: res.status, headers: res.headers, data: data as T, ...(untrusted.length ? { untrusted } : {}) };
   }
 }
 

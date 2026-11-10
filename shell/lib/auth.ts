@@ -9,6 +9,16 @@ import { APIError } from "better-auth/api";
 import { isAllowedSignupEmail } from "@/lib/security/signup-allowlist";
 
 export const auth = betterAuth({
+  // Sign-in codes are guessable if tries are unlimited: three sends and ten checks a minute for any one visitor.
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+    customRules: {
+      "/email-otp/send-verification-otp": { window: 60, max: 3 },
+      "/sign-in/email-otp": { window: 60, max: 10 },
+    },
+  },
   database: prismaAdapter(prismadb, { provider: "postgresql" }),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
@@ -68,6 +78,10 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       sendVerificationOTP: async ({ email, otp, type }) => {
+        // A code is only ever mailed to an address that may sign in: an allowed domain, or someone already in this CRM
+        // (an admin can invite outside the domains). Any other address gets no mail and the same reply as a real one.
+        const known = await prismadb.users.findUnique({ where: { email: String(email).toLowerCase() }, select: { id: true } });
+        if (!known && !isAllowedSignupEmail(email)) return;
         try {
           const mail = await mailer({ signIn: true });
           await mail.emails.send({

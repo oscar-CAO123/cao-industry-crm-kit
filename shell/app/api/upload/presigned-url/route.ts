@@ -5,6 +5,8 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { minioClient, MINIO_BUCKET, MINIO_PUBLIC_URL } from "@/lib/minio";
 import { randomUUID } from "crypto";
+import { signKey } from "@/lib/documents/key-signature";
+import { hasRole, STAFF_ROLES } from "@/lib/security/session-status";
 
 const ALLOWED_FOLDERS = ["avatars", "images", "documents", "uploads"] as const;
 type AllowedFolder = (typeof ALLOWED_FOLDERS)[number];
@@ -12,8 +14,10 @@ type AllowedFolder = (typeof ALLOWED_FOLDERS)[number];
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Uploading is a write: the read-only viewer role gets no upload URL (a member's own avatar still goes through here).
+  if (!hasRole(session.user, STAFF_ROLES)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { filename: rawFilename, contentType, folder: rawFolder = "uploads" } = await req.json();
+  const { filename: rawFilename, contentType, folder: rawFolder = "uploads", size } = await req.json();
 
   // Sanitize: strip any path components to prevent path traversal
   const filename = path.basename(rawFilename ?? "");
@@ -37,13 +41,22 @@ export async function POST(req: NextRequest) {
   }
 
   // Fall back to "bin" if filename has no extension or extension is empty (e.g., ".")
-  const ext = filename.includes(".") ? filename.split(".").pop()?.trim() || "bin" : "bin";
+  // The extension must be 1 to 10 letters or digits (the same rule createDocument applies); anything else becomes "bin".
+  const rawExt = filename.includes(".") ? filename.split(".").pop()?.trim() ?? "" : "";
+  const ext = /^[A-Za-z0-9]{1,10}$/.test(rawExt) ? rawExt : "bin";
   const key = `${folder}/${randomUUID()}.${ext}`;
+
+  // The size is required and signed into the upload, so the storage service refuses a larger body.
+  const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+  if (!Number.isInteger(size) || size < 1 || size > MAX_UPLOAD_BYTES) {
+    return NextResponse.json({ error: "File too large (25 MB limit)" }, { status: 413 });
+  }
 
   const command = new PutObjectCommand({
     Bucket: MINIO_BUCKET,
     Key: key,
     ContentType: contentType,
+    ContentLength: size,
   });
 
   // Presigned URL valid for 10 minutes
@@ -53,7 +66,7 @@ export async function POST(req: NextRequest) {
     // The public URL where the file will be accessible after upload
     const fileUrl = `${MINIO_PUBLIC_URL}/${MINIO_BUCKET}/${key}`;
 
-    return NextResponse.json({ presignedUrl, fileUrl, key });
+    return NextResponse.json({ presignedUrl, fileUrl, key, keySig: signKey(key, session.user.id) });
   } catch (err) {
     console.error("Failed to generate presigned URL:", err);
     return NextResponse.json({ error: "Failed to generate upload URL" }, { status: 500 });
