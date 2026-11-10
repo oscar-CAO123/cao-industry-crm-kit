@@ -82,7 +82,7 @@ test("an approved shipment is attempted and blocked: the write gate, then the mi
   const store = new MemoryStore();
   await runAll(store);
   const id = (await store.get<Order>("orders", "ord-SO-1001"))!.dispatch_approval!;
-  const ap = await approve(WF, store, id, "oscar@test", NOW);
+  const ap = await approve(WF, store, id, "owner@test", NOW);
   assert.equal(ap.status, "failed");
   assert.match(ap.error ?? "", /write blocked|not wired/);
 });

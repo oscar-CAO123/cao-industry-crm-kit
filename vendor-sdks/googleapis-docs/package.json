@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-googleapis-docs",
+  "name": "kit-sdk-googleapis-docs",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @googleapis/docs@14.1.1, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

@@ -1,10 +1,10 @@
-// Source, from the CAO CRM at commit 28aa5d91 unless marked NEW:
-//   delegated login    scripts/lib-google-dwd.ts getDWDToken, scripts/cao-crm-email-drafter.ts getGoogleAccessToken
+// Source, from the reference CRM at commit 28aa5d91 unless marked NEW:
+//   delegated login    scripts/lib-google-dwd.ts getDWDToken, scripts/crm-email-drafter.ts getGoogleAccessToken
 //   OAuth refresh mode NEW: from Google's OAuth docs, not yet run in production
 //
 // Google login, two ways:
 // 1. Workspace domain-wide delegation (GOOGLE_SERVICE_ACCOUNT_JSON, raw or base64): a service
-//    account acts as one mailbox. This is how the CAO CRM reads and drafts (scripts/lib-google-dwd.ts).
+//    account acts as one mailbox. This is how the reference CRM reads and drafts (scripts/lib-google-dwd.ts).
 // 2. A user's OAuth refresh token (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and the token saved in the
 //    token store as google.refresh_token.<mailbox with @ as _>), for businesses without Workspace admin access.
 // Ask for the narrowest scope a workflow needs. DWD scope matching is exact, so the admin console

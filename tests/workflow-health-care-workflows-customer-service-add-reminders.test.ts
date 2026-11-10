@@ -128,7 +128,7 @@ test("waitlist-book queues a booking only after a person marks the opening accep
   assert.deepEqual(await waitlistBook(ctx), { queued: 0, booked: 0 });   // a second run does not queue it again
   assert.equal(Object.keys(await store.list("approvals")).length, 1);
 
-  const done = await approve(WF, store, id, "Oscar", NOW);
+  const done = await approve(WF, store, id, "Owner", NOW);
   assert.equal(done.status, "done");
   const post = writes();
   assert.equal(post.length, 1);
@@ -170,7 +170,7 @@ test("a booking with writes blocked fails closed and is not retried", async () =
   await store.put("openings", "103", { ...(await store.get<any>("openings", "103")), status: "accepted", accepted_by: "5551" });
   await waitlistBook(ctx);
   delete process.env.KIT_ALLOW_WRITES;
-  const ap = await approve(WF, store, approvalId(WF.id, "book:103"), "Oscar", NOW);
+  const ap = await approve(WF, store, approvalId(WF.id, "book:103"), "Owner", NOW);
   assert.equal(ap.status, "failed");
   assert.match(ap.error ?? "", /write blocked/);
   assert.equal(writes().length, 0);

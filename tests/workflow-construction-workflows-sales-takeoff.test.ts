@@ -36,7 +36,7 @@ function fake() {
       if (p.endsWith(`/files/${FILE}/jobs/markuplist/${JOB}`)) {
         markupReads++;
         return json(markupReads < 2 ? { JobStatus: 1, JobStatusMessage: "running" }
-          : { JobStatus: 2, JobStatusMessage: "done", Markups: [{ Id: "a1", Page: 3, Type: "Area", Subject: "Demolition", Comment: "slab", Author: "Oscar", DateCreated: "2026-11-08T02:00:00Z" }, { Id: "a2", Page: 4, Type: "Length", Subject: "Fence line", Comment: "" }] });
+          : { JobStatus: 2, JobStatusMessage: "done", Markups: [{ Id: "a1", Page: 3, Type: "Area", Subject: "Demolition", Comment: "slab", Author: "Owner", DateCreated: "2026-11-08T02:00:00Z" }, { Id: "a2", Page: 4, Type: "Length", Subject: "Fence line", Comment: "" }] });
       }
       return new Response("not faked: " + p, { status: 404 });
     }) as any,

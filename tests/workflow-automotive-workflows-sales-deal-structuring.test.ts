@@ -104,7 +104,7 @@ test("approval runs the send, then moves the deal to the lender-submitted stage"
   await store.put("proposals", "101", PROP);
   await draft(ctx);
   const id = approvalId(WF.id, "submit:101:lender-a");
-  const done = await approve(WF, store, id, "oscar", NOW);
+  const done = await approve(WF, store, id, "owner", NOW);
   assert.equal(done.status, "done");
   assert.equal(sends().length, 1);
   assert.equal(stageMoves().length, 1);
@@ -138,7 +138,7 @@ test("follow-up marks a deal submitted once its send is done, then chases after 
   await intake(context(WF, SETTINGS, store, NOW, () => {}));
   await store.put("proposals", "101", PROP);
   await draft(context(WF, SETTINGS, store, NOW, () => {}));
-  await approve(WF, store, approvalId(WF.id, "submit:101:lender-a"), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, "submit:101:lender-a"), "owner", NOW);
 
   await followUp(context(WF, SETTINGS, store, NOW, () => {}));
   const deal = await store.get<any>("deals", "101");
@@ -170,7 +170,7 @@ test("follow-up never reverts a deal that a draft wrote after follow-up read the
   await intake(context(WF, SETTINGS, store, NOW, () => {}));
   await store.put("proposals", "101", PROP);
   await draft(context(WF, SETTINGS, store, NOW, () => {}));
-  await approve(WF, store, approvalId(WF.id, "submit:101:lender-a"), "oscar", NOW);
+  await approve(WF, store, approvalId(WF.id, "submit:101:lender-a"), "owner", NOW);
   await followUp(context(WF, SETTINGS, store, NOW, () => {}));
   store.armed = true;
   await followUp(context(WF, SETTINGS, store, FOUR_DAYS, () => {}));

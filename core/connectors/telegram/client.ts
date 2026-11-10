@@ -1,8 +1,8 @@
 // Telegram helper: send a message to a chat, for owner reports and alerts.
 // Key: TELEGRAM_BOT_TOKEN. Telegram puts the key in the URL path, so logs redact the path.
 //
-// Source, from the CAO CRM at commit 28aa5d91:
-//   sendMessage        scripts/lib-alerts.ts and scripts/lib-unga-telegram.ts (sendMessage, plain text).
+// Source, from the reference CRM at commit 28aa5d91:
+//   sendMessage        scripts/lib-alerts.ts and scripts/lib-telegram.ts (sendMessage, plain text).
 //                      Changed on purpose: the CRM cuts text at 3,900 characters; the kit splits it so nothing is lost.
 //                      Link previews are off through link_preview_options, the field Telegram documents now.
 //   chunk              NEW: splits text under Telegram's documented 4,096-character limit. Not yet run in production.

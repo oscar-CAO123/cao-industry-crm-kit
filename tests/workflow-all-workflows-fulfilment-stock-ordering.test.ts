@@ -123,7 +123,7 @@ test("an approved authorisation is the only act that reaches the supplier, and p
   const ctx = (d: Date) => context(WF, SETTINGS, store, d, () => {});
   await stockCheck(ctx(NOW)); await reorderDraft(ctx(NOW));
   const id = approvalId(WF.id, `authorise:${PO}`);
-  const ap = await approve(WF, store, id, "oscar", NOW);
+  const ap = await approve(WF, store, id, "owner", NOW);
   assert.equal(ap.status, "done");
   assert.ok(hits.some((h) => h.method === "POST" && h.path.endsWith(`/PurchaseOrders/${PO}`) && h.body.PurchaseOrders[0].Status === "AUTHORISED"));
   await poCheck(ctx(NOW));
@@ -150,7 +150,7 @@ test("a rejected authorisation closes its order, so the item can be drafted agai
   const store = new MemoryStore();
   const ctx = (d: Date) => context(WF, SETTINGS, store, d, () => {});
   await stockCheck(ctx(NOW)); await reorderDraft(ctx(NOW));
-  const ap = await reject(WF, store, approvalId(WF.id, `authorise:${PO}`), "oscar", NOW).then(() => store.get<Approval>("approvals", approvalId(WF.id, `authorise:${PO}`)));
+  const ap = await reject(WF, store, approvalId(WF.id, `authorise:${PO}`), "owner", NOW).then(() => store.get<Approval>("approvals", approvalId(WF.id, `authorise:${PO}`)));
   assert.equal(ap?.status, "rejected");
   await stockCheck(ctx(NEXT)); await reorderDraft(ctx(NEXT));
   assert.equal(writes().filter((h) => h.method === "PUT").length, 2, "a new draft is made once the rejected order is closed");

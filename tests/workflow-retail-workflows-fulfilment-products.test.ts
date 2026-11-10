@@ -176,7 +176,7 @@ test("an approved retirement is blocked by the write gate, and no request leaves
   const store = new MemoryStore();
   await retire(fakeCtx(store, [], { ...S, retire_codes: ["SKU-A"] }));
   const [ap] = Object.values(await store.list<Approval>("approvals"));
-  const done = await approve(WF, store, ap.id, "oscar@test", NOW);
+  const done = await approve(WF, store, ap.id, "owner@test", NOW);
   assert.equal(done.status, "failed");
   assert.match(done.error ?? "", /write blocked/);
 });
@@ -191,7 +191,7 @@ test("a retirement is sent, signed, only after approval and only with writes all
   process.env.KIT_ALLOW_WRITES = "1";
   let done: Approval;
   try {
-    done = await approve(WF, store, ap.id, "oscar@test", NOW);
+    done = await approve(WF, store, ap.id, "owner@test", NOW);
   } finally {
     delete process.env.KIT_ALLOW_WRITES;
   }

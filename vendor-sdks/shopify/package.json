@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-shopify",
+  "name": "kit-sdk-shopify",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to @shopify/admin-api-client@2.0.1, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

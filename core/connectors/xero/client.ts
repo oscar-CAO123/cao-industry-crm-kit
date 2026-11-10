@@ -1,15 +1,15 @@
 // Xero helper.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   accessToken        lib/xero.ts getXeroToken (single-use refresh tokens, retry once on invalid_grant).
 //                      The CRM keeps the token in its database config table; the kit uses its token store.
 //   listInvoices       lib/xero-invoices.ts fetchAccrecInvoices (Type in a where clause, 100 a page)
-//   findOrCreateContact, createInvoice, getInvoicePdf   app/api/cao/pipeline/[id]/send-invoice/route.ts.
+//   findOrCreateContact, createInvoice, getInvoicePdf   app/api/pipeline/[id]/send-invoice/route.ts.
 //                      Changed on purpose: Xero's own invoice email is not offered; a person sends it.
 //                      Changed on purpose: the CRM creates invoices AUTHORISED; the kit defaults to DRAFT.
 //   toInvoiceRecord    lib/xero-invoices.ts exGst idea, as a shared record
 //   listContacts, listPayments, runReport   NEW: from Xero's API docs, not yet run in production
-// CAO's invoice classes, fee table and lead matching are left out.
+// The original invoice classes, fee table and lead matching are left out.
 //
 // Keys: XERO_CLIENT_ID, XERO_CLIENT_SECRET, XERO_TENANT_ID, and a first XERO_REFRESH_TOKEN.
 // Xero refresh tokens are single use, so each new one is saved to the token store at once. If two

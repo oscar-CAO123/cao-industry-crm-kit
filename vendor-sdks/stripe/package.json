@@ -1,5 +1,5 @@
 {
-  "name": "cao-kit-sdk-stripe",
+  "name": "kit-sdk-stripe",
   "version": "0.0.0",
   "private": true,
   "description": "Pinned pointer to stripe@23.1.0, audited 8 Nov 2026. Installed only on demand by tools/sdk-install.mjs.",

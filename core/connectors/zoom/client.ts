@@ -2,12 +2,12 @@
 // Keys: ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET, from a Server-to-Server OAuth app with
 // recording read scope. Nothing here records, starts or changes a meeting.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   accessToken        lib/zoom-pmr.ts (account credentials grant)
 //   personalMeetingUrl lib/zoom-pmr.ts getRepPersonalMeetingUrl (users/{email}, personal_meeting_url or pmi, cached)
 //   listRecordings     the CRM's Zoom call scorer script (users/{user}/recordings, next_page_token)
-//   meetingRecording   scripts/cao-crm-zoom-attendance.ts timelineFor (meetings/{uuid}/recordings, same-call check)
-//   download           scripts/cao-crm-zoom-attendance.ts (key in a header, Zoom hosts only, read whole). The
+//   meetingRecording   scripts/crm-zoom-attendance.ts timelineFor (meetings/{uuid}/recordings, same-call check)
+//   download           scripts/crm-zoom-attendance.ts (key in a header, Zoom hosts only, read whole). The
 //                      scorer's 10 MB Range cap is an option for audio. The older scorer put the key in the URL; refused here.
 //   getTimeline, attendance, tsSeconds, encodeUuid   scripts/lib-zoom-attendance.ts
 //   getTranscript      the CRM's Zoom call scorer script (the TRANSCRIPT file)

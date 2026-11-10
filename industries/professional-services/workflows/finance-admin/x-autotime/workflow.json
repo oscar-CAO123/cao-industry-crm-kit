@@ -33,7 +33,7 @@
   },
   "gaps": [
     "Actionstep: its docs describe Trace (time capture, announced as upcoming, live availability unverified) and timers. No Actionstep ops exist in the kit, so nothing is mapped.",
-    "Harvest: its docs describe timers, per-user approvals and invoices, which fit this job well. No Harvest ops exist in the kit, so nothing is mapped. Adding Harvest is the next step if Oscar wants it.",
+    "Harvest: its docs describe timers, per-user approvals and invoices, which fit this job well. No Harvest ops exist in the kit, so nothing is mapped. Adding Harvest is the next step if the owner wants it.",
     "WorkflowMax: timesheet reads are mapped in the kit, but no vendor field spec was checked in this pass, so no adapter is built.",
     "Clio is the only mapped platform. Its status is spec, tested offline only, and sign-in is an access token in CLIO_ACCESS_TOKEN (no token exchange yet).",
     "Clio quantity unit: the vendor spec says seconds on the latest API version and hours on 4.0.3 and earlier. The adapter sends seconds with no version header. A sandbox must confirm this before any approval runs.",

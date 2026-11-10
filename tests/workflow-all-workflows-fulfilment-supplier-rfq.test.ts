@@ -96,10 +96,10 @@ test("approval sends each RFQ once and a second approval is refused", async () =
   const store = new MemoryStore();
   await store.put("rfqs", "rfq-001", rfq());
   await run("issue", store);
-  for (const a of await approvals(store)) await approve(WF, store, a.id, "oscar", NOW);
+  for (const a of await approvals(store)) await approve(WF, store, a.id, "owner", NOW);
   assert.equal(sends().length, 2);
   assert.ok((await approvals(store)).every((a) => a.status === "done"));
-  await assert.rejects(approve(WF, store, (await approvals(store))[0].id, "oscar", NOW), /already done/);
+  await assert.rejects(approve(WF, store, (await approvals(store))[0].id, "owner", NOW), /already done/);
   assert.equal(sends().length, 2);
 });
 
@@ -138,7 +138,7 @@ test("chase: a due chaser goes only to a supplier who has not replied, and a re-
   const store = new MemoryStore();
   await store.put("rfqs", "rfq-001", rfq());
   await run("issue", store);
-  for (const a of await approvals(store)) await approve(WF, store, a.id, "oscar", NOW);
+  for (const a of await approvals(store)) await approve(WF, store, a.id, "owner", NOW);
   await store.put("rfqs", "rfq-001", { ...(await store.get<any>("rfqs", "rfq-001")), replied: [ARI] });
   const later = new Date(NOW.getTime() + 4 * 864e5);
   hits = [];
@@ -161,8 +161,8 @@ test("chase: a supplier whose RFQ send was rejected or is still waiting gets no 
   await store.put("rfqs", "rfq-001", rfq());
   await run("issue", store);
   const [ariSend, samSend] = [`send:rfq-001:${ARI}`, `send:rfq-001:${SAM}`].map((k) => approvalId(WF.id, k));
-  await approve(WF, store, ariSend, "oscar", NOW);
-  await reject(WF, store, samSend, "oscar", NOW);
+  await approve(WF, store, ariSend, "owner", NOW);
+  await reject(WF, store, samSend, "owner", NOW);
   const later = new Date(NOW.getTime() + 4 * 864e5);
   hits = [];
   await run("chase", store, later);
@@ -193,7 +193,7 @@ test("purchase order: drafted in Xero, authorise only queued, and it runs only o
   assert.equal(hits.filter((h) => h.method === "PUT").length, 0, "a re-run never drafts a second purchase order");
   assert.equal((await approvals(store)).length, 1);
 
-  await approve(WF, store, aps[0].id, "oscar", NOW);
+  await approve(WF, store, aps[0].id, "owner", NOW);
   const authorised = hits.find((h) => h.method === "POST" && h.path.endsWith(`/PurchaseOrders/${PO}`));
   assert.ok(authorised, "approval authorises the purchase order");
   assert.equal(authorised!.body.PurchaseOrders[0].Status, "AUTHORISED");

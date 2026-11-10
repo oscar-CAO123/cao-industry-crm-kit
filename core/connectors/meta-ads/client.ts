@@ -4,10 +4,10 @@
 // The ads token can spend money, so nothing here creates, edits or starts an ad. The only write is
 // sending conversion events, and that needs KIT_ALLOW_WRITES=1.
 //
-// Source of each function, from the CAO CRM at commit 28aa5d91 unless marked NEW:
-//   insights, timeParams, leadCount, totals   scripts/cao-crm-meta-ads.ts insights and scripts/lib-meta-insights.ts (aggregateRows)
-//   listLeadForms, listLeads          scripts/cao-crm-meta-leadform-sync.ts (forms, then leads since a time)
-//   sendConversions, userData         scripts/cao-crm-meta-crm-events.ts, with its inactive-test-code stop
+// Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
+//   insights, timeParams, leadCount, totals   scripts/crm-meta-ads.ts insights and scripts/lib-meta-insights.ts (aggregateRows)
+//   listLeadForms, listLeads          scripts/crm-meta-leadform-sync.ts (forms, then leads since a time)
+//   sendConversions, userData         scripts/crm-meta-crm-events.ts, with its inactive-test-code stop
 // Changed on purpose: the CRM puts the key in the URL and follows paging links that carry it. The
 // kit sends the key in a header and strips any key from a paging link, so a saved link never holds one.
 

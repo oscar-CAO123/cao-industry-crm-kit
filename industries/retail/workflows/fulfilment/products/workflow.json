@@ -38,7 +38,7 @@
   "Product request, specs and photos, pricing and margin setting, compliance check, approval and channel listing have no mapped operation, so they stay manual and are not in any cron.",
   "Unleashed GET /Products and GET /StockOnHand are mapped with their filters and pageSize, but the reads send no pageSize and no page number is mapped, so each read returns only the first page (200 records). Paging needs an ops change.",
   "WooCommerce's product list is mapped with page and per_page, but the read sends neither, so it returns WooCommerce's default first page of 10 products. PUT /products/{id} is mapped now, but no cron queues a WooCommerce write.",
-  "Unleashed product creation (POST /Products) is mapped but left out: a new product can reach the B2B store, and Oscar has not ruled on it.",
+  "Unleashed product creation (POST /Products) is mapped but left out: a new product can reach the B2B store, and the owner has not ruled on it.",
   "Retirement is driven by the owner's list of product codes in settings.retire_codes, because the docs read has no discontinue rule to follow.",
   "Unleashed product groups, brands and bulk price changes are not read: the docs read does not show the in-app price steps, and no ops for them are used here.",
   "Named in the calls but with no mapped platform evidence, so no adapter: Fishbowl (stock, 2 calls), Shopify (descriptions typed by hand, 1 call), SIN7 (product set-up, 1 call), Airtable (wholesale pricing, 1 call), the licensor portal (design approval, 1 call) and spreadsheets (record keeping, 1 call)."
