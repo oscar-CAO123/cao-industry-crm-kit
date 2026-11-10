@@ -15,7 +15,7 @@ export const MAX_TIMECARD_PAGES = 20;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 /** The approval statuses Procore documents for a timecard entry. A setting outside this list would mirror nothing, so it is refused. */
 export const APPROVAL_STATUSES = ["pending", "reviewed", "approved", "completed", "rejected"];
-const statusOf = (e: any) => String(e?.approval_status ?? e?.timesheet_status?.status ?? "").trim().toLowerCase();
+const statusOf = (e: any) => String(e?.approval_status || e?.timesheet_status?.status || "").trim().toLowerCase();
 
 /** Hours in one entry above this are not hours: a day has 24. Anything else that is not a positive number is a bad row. */
 const MAX_ENTRY_HOURS = 24;

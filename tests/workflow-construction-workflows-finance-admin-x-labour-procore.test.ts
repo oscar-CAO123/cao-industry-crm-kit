@@ -173,7 +173,23 @@ test("an entry mirrored and then reverted, deleted or edited in Procore holds th
     const holds = (await store.get<any>("timesheet-holds", Object.keys(await store.list("timesheet-holds"))[0])) as any;
     assert.deepEqual(holds.employees, [EMP_A], `${change}: the person is held from approval`);
     assert.ok(first);
+    // The hold does not clear by itself: with the entry back as it was, the person is still held until a person looks.
+    pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [entry(61, "2026-11-02", "8.0")] }]];
+    assert.equal(((await wf.mirror(ctxFor(store))) as any).held, 1, `${change}: still held`);
+    const rec = Object.values(await store.list<any>("shifts"))[0] as any;
+    assert.equal(rec.state, "needs-check"); assert.match(rec.reason, /changed or left the paid status/);
   }
+  fake(); pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [entry(71, "2026-11-02", "8.0")] }]];
+  const store = new MemoryStore();
+  await wf.mirror(ctxFor(store));
+  pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [entry(71, "2026-11-09", "8.0")] }]];
+  assert.equal(((await wf.mirror(ctxFor(store))) as any).held, 1, "an entry moved to another date holds the person too");
+});
+
+test("an empty approval_status falls back to the older status field", async () => {
+  pages = [[{ party: { id: 701, name: "A" }, timecard_entries: [{ id: 81, date: "2026-11-02", hours: "5.0", deleted_at: null, approval_status: "", timesheet_status: { status: "approved" } }] }]];
+  await wf.mirror(ctxFor(new MemoryStore()));
+  assert.equal(Object.values(xts)[0].totalHours, 5);
 });
 
 test("without procore.mirror_status the run stops before any call", async () => {

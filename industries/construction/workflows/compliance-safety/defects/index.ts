@@ -85,7 +85,7 @@ export async function chase(ctx: Ctx<Settings>) {
     if (reminder) {
       // Procore: the trade is the punch item's assignee, so the reminder is a comment on the item, queued for approval.
       await reminder.queueReminder(ctx, { project: d.job_uuid, item: d.id, key: `chase-${d.id}-${d.reminders.length + 1}`,
-        summary: `Procore comment on punch item "${d.name}" at ${d.address} (Procore notifies the people on it)`,
+        summary: `Procore comment on punch item "${d.name}" at ${d.address} (visible to the people on it)`,
         text: "Reminder: this punch item is still open. Please fix it and mark it ready to close in Procore." });
       d.reminders = [...d.reminders, ctx.now.toISOString()];
       await ctx.store.put("defects", d.id, d);

@@ -99,7 +99,11 @@ export async function mirror(ctx: Ctx<Settings>) {
     for (const [rk, rec] of Object.entries(await ctx.store.list<ShiftRec>("shifts"))) {
       if (rec.source !== "procore" || rec.period !== p.start || rec.state !== "mirrored") continue;
       const now = current.get(rk);
-      if (!now || now.hours !== rec.hours) { held.add(rec.staff); ctx.log(`mirror: a mirrored Procore entry for ${rec.staff} on ${rec.date} changed or left the paid status: held from approval`); }
+      if (!now || now.hours !== rec.hours || now.date !== rec.date) {
+        // Recorded as needs-check, like any shift with an unclear outcome: that holds the person on every run until a person looks, and it is logged once.
+        await ctx.store.put("shifts", rk, { ...rec, state: "needs-check", reason: "the Procore entry changed or left the paid status after it was mirrored", at } satisfies ShiftRec);
+        ctx.log(`mirror: a mirrored Procore entry for ${rec.staff} on ${rec.date} changed or left the paid status: held from approval`);
+      }
     }
   }
   for (const r of Object.values(await ctx.store.list<ShiftRec>("shifts"))) if (r.period === p.start && r.state !== "mirrored") held.add(r.staff);

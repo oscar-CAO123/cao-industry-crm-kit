@@ -38,7 +38,8 @@ export const procore: Adapter & { queueReminder(ctx: Ctx<Settings>, a: { project
       if (!Array.isArray(r.data)) throw new Error("procore: the punch item list did not come back as a list");
       if (r.data.length === 0) return [...seen.values()];
       for (const x of r.data) {
-        if (!Number.isInteger(x?.id) || x.id <= 0) continue;
+        // An item with no usable id cannot be tracked, and leaving it out could let a project close with it still open: the list is refused whole.
+        if (!Number.isInteger(x?.id) || x.id <= 0) throw new Error("procore: a punch item came back with no usable id; the list is refused whole");
         const closed = String(x.status ?? "").toLowerCase() === "closed";
         seen.set(String(x.id), { uuid: String(x.id), name: clean(x.name, 200), active: !x.deleted_at, completed_at: closed ? clean(x.closed_at || x.updated_at, 40) || undefined : undefined });
       }

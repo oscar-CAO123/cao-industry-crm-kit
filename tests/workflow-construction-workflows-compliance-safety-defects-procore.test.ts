@@ -91,6 +91,13 @@ test("paging runs to an empty page and a project with too many pages is refused 
   assert.deepEqual(Object.keys(await store.list("defects")), [], "a refused list records nothing");
 });
 
+test("a punch item with no usable id refuses the whole list, so a project cannot close with it open", async () => {
+  punch.push({ id: "x", name: "No id", status: "Open", deleted_at: null });
+  const store = new MemoryStore();
+  await assert.rejects(logDefects(context(WF, SETTINGS, store, NOW, () => {})), /no usable id; the list is refused whole/);
+  assert.deepEqual(Object.keys(await store.list("defects")), []);
+});
+
 test("a 200 that is not a list fails the read", async () => {
   setTransport({ sleep: async () => {}, log: () => {}, fetch: (async () => new Response(JSON.stringify({ errors: "rate limited" }), { status: 200, headers: { "content-type": "application/json" } })) as any });
   const ctx = context(WF, SETTINGS, new MemoryStore(), NOW, () => {});
