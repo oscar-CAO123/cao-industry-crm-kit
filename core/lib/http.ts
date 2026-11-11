@@ -12,6 +12,7 @@
 // - Errors carry the status and path, never the response body: bodies can hold client data.
 // - Logs never print query values, bodies or keys.
 
+import { composioEnabled } from "./connection-provider.ts";
 import { scanData } from "./sanitise.mjs";
 
 export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -187,6 +188,10 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
   checkUrl(spec, u);
   const w = where(spec, method, u);
   if (!isRead(spec, method, u) && !writesAllowed()) throw new WriteBlocked(w);
+  if (spec.app !== "composio" && composioEnabled(spec.app)) {
+    const { composioHttpCall } = await import("../sdk/composio.ts");
+    return composioHttpCall<T>(spec, { ...o, url: u.toString(), query: undefined }, isRead(spec, method, u));
+  }
 
   const headers: Record<string, string> = { Accept: o.binary ? "*/*" : "application/json", ...(o.headers ?? {}) };
   let body: string | Uint8Array | undefined;

@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Meta helper: ad insights, lead form leads, and conversion events back to the pixel.
 // Keys: META_ADS_TOKEN (a system user token that can read the ad account), META_PAGE_TOKEN (a page
 // token, needed for lead forms), META_PIXEL_ID for conversions.
@@ -16,10 +17,10 @@ import { call, checkUrl, type AppSpec } from "../../lib/http.ts";
 import { secret } from "../../lib/secrets.ts";
 import { collect } from "../../lib/paging.ts";
 
-export const spec: AppSpec = { app: "meta", hosts: ["graph.facebook.com"] };
+export const spec: AppSpec = { app: "meta-ads", hosts: ["graph.facebook.com"] };
 const API = "https://graph.facebook.com/v21.0";
 
-const bearer = (name: "META_ADS_TOKEN" | "META_PAGE_TOKEN") => ({ Authorization: `Bearer ${secret(name)}` });
+const bearer = (name: "META_ADS_TOKEN" | "META_PAGE_TOKEN") => composioEnabled("meta-ads") ? {} : ({ Authorization: `Bearer ${secret(name)}` });
 
 /** A paging link without any key in it. */
 export function cleanNext(next: string | undefined | null): string | null {
@@ -31,11 +32,14 @@ export function cleanNext(next: string | undefined | null): string | null {
 }
 
 async function all<T>(path: string, query: Record<string, string | number | undefined>, token: "META_ADS_TOKEN" | "META_PAGE_TOKEN", maxPages = 100): Promise<T[]> {
+  const managed = composioEnabled("meta-ads");
+  if (managed && token === "META_PAGE_TOKEN" && !composioEnabled("meta-page")) throw new Error("meta-ads: configure the separate meta-page managed connection for page leads");
+  const targetSpec = managed && token === "META_PAGE_TOKEN" ? { ...spec, app: "meta-page" } : spec;
   const h = bearer(token);
   const first = new URL(`${API}/${path}`);
   for (const [k, v] of Object.entries(query)) if (v !== undefined) first.searchParams.set(k, String(v));
   return collect<T, string>(first.toString(), async (url) => {
-    const r = await call<any>(spec, { url, headers: h });
+    const r = await call<any>(targetSpec, { url, headers: h });
     return { items: r.data?.data ?? [], next: cleanNext(r.data?.paging?.next) };
   }, { maxPages });
 }

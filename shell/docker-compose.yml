@@ -13,6 +13,11 @@ services:
       POSTGRES_DB: shell
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?pass it in through op-scoped}
     volumes: [db:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shell -d shell"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   migrate:
     build: { context: .., dockerfile: shell/Dockerfile }
     command: ["node", "shell/scripts/db-apply.mjs"]
@@ -20,7 +25,8 @@ services:
     secrets: &op_token [{ source: shell_op_token, uid: "1000", gid: "1000", mode: 0400 }]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    depends_on: [db]
+    depends_on:
+      db: { condition: service_healthy }
   shell:
     build: { context: .., dockerfile: shell/Dockerfile }
     environment: [SHELL_VAULT, KIT_ALLOW_WRITES, NEXT_PUBLIC_APP_NAME, AUTH_SIGNUP_DOMAINS, BETTER_AUTH_URL]
@@ -29,7 +35,8 @@ services:
     ports: ["127.0.0.1:3000:3000"]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    depends_on: [migrate]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
 secrets:
   shell_op_token:
     environment: SHELL_OP_TOKEN

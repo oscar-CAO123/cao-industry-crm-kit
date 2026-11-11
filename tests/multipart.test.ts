@@ -108,10 +108,10 @@ test("multipart endpoints cannot fall back to JSON bodies or implicit empty bodi
   assert.equal(hits.length, 0);
 });
 
-test("authUnsupported multipart mappings stay refused before network even with writes allowed", async () => {
+test("ServiceM8 multipart refuses missing add-on credentials before network even with writes allowed", async () => {
   process.env.KIT_ALLOW_WRITES = "1";
   await assert.rejects(callOperation("servicem8", UNSUPPORTED_UPLOAD, {
     params: { slug: "demo-addon" }, multipart: [{ name: "manifest", value: "{}" }],
-  }), /calls are not wired yet.*OAuth add-on token/);
+  }), /SERVICEM8_ADDON_ACCESS_TOKEN is not set/);
   assert.equal(hits.length, 0);
 });

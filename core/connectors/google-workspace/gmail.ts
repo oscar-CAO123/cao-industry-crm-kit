@@ -11,7 +11,7 @@
 
 import { call } from "../../lib/http.ts";
 import { collect } from "../../lib/paging.ts";
-import { accessToken, SCOPES, spec } from "./auth.ts";
+import { authHeaders, SCOPES, spec } from "./auth.ts";
 
 const API = "https://gmail.googleapis.com/gmail/v1/users/me";
 
@@ -48,7 +48,7 @@ export function bodyText(payload?: Part): string {
 
 /** Message ids matching a Gmail search such as `from:a@b.com after:2026/11/01`. */
 export async function search(mailbox: string, q: string, limit = 200): Promise<{ id: string; threadId: string }[]> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.gmailRead)}` };
+  const h = await authHeaders(mailbox, SCOPES.gmailRead);
   return collect<{ id: string; threadId: string }, string>("", async (pageToken) => {
     const r = await call<any>(spec, { url: `${API}/messages`, headers: h, query: { q, maxResults: Math.min(limit, 100), pageToken: pageToken || undefined } });
     return { items: r.data?.messages ?? [], next: r.data?.nextPageToken ?? null };
@@ -56,7 +56,7 @@ export async function search(mailbox: string, q: string, limit = 200): Promise<{
 }
 
 export async function getMessage(mailbox: string, id: string): Promise<Mail> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.gmailRead)}` };
+  const h = await authHeaders(mailbox, SCOPES.gmailRead);
   const m = (await call<any>(spec, { url: `${API}/messages/${encodeURIComponent(id)}`, headers: h, query: { format: "full" } })).data;
   const head = (n: string) => (m.payload?.headers ?? []).find((x: any) => x.name.toLowerCase() === n.toLowerCase())?.value ?? "";
   const sender = parseFrom(head("From"));
@@ -96,7 +96,7 @@ export function rawMessage(d: { from: string; to: string; subject: string; text:
 
 /** Creates a draft in the mailbox. Needs KIT_ALLOW_WRITES=1. Never sends. */
 export async function createDraft(mailbox: string, d: { to: string; subject: string; text: string; cc?: string; threadId?: string; inReplyTo?: string; fromName?: string; toName?: string }): Promise<{ id: string; threadId: string }> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.gmailDraft)}` };
+  const h = await authHeaders(mailbox, SCOPES.gmailDraft);
   const raw = rawMessage({ from: mailbox, ...d });
   const r = await call<any>(spec, { method: "POST", url: `${API}/drafts`, headers: h, json: { message: { raw, ...(d.threadId ? { threadId: d.threadId } : {}) } } });
   return { id: r.data.id, threadId: r.data.message?.threadId };

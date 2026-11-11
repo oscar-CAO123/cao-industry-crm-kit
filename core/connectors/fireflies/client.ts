@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Fireflies helper: list and read meeting transcripts.
 //
 // Source, from the reference CRM at commit 28aa5d91 unless marked NEW:
@@ -17,7 +18,7 @@ const PAGE = 50; // Fireflies caps a page at 50
 
 export async function query<T>(gql: string, variables: Record<string, unknown> = {}, signal?: AbortSignal): Promise<T> {
   if (!/^\s*(query\b|\{)/.test(gql) || /\bmutation\b/i.test(gql)) throw new Error("fireflies: only read queries are allowed");
-  const r = await call<any>(spec, { method: "POST", url: ENDPOINT, headers: { Authorization: `Bearer ${secret("FIREFLIES_API_KEY")}` }, json: { query: gql, variables }, signal });
+  const r = await call<any>(spec, { method: "POST", url: ENDPOINT, headers: composioEnabled("fireflies") ? {} : { Authorization: `Bearer ${secret("FIREFLIES_API_KEY")}` }, json: { query: gql, variables }, signal });
   if (r.data?.errors?.length) throw new Error(`fireflies: ${r.data.errors[0]?.message ?? "query failed"}`);
   return r.data?.data as T;
 }

@@ -263,7 +263,9 @@
   "hostFromEnv": false,
   "hostPatterns": [],
   "hosts": [
-   "api.dropboxapi.com"
+   "api.dropboxapi.com",
+   "content.dropboxapi.com",
+   "notify.dropboxapi.com"
   ]
  },
  "employment-hero": {
@@ -473,7 +475,9 @@
   "hostPatterns": [
    "(?:us[0-9]{1,3})\\.api\\.mailchimp\\.com"
   ],
-  "hosts": []
+  "hosts": [
+   "mandrillapp.com"
+  ]
  },
  "make": {
   "hostFromEnv": false,
@@ -502,9 +506,7 @@
   "hostFromEnv": false,
   "hostPatterns": [],
   "hosts": [
-   "campaign.api.bingads.microsoft.com",
-   "clientcenter.api.bingads.microsoft.com",
-   "reporting.api.bingads.microsoft.com"
+   "campaign.api.bingads.microsoft.com"
   ]
  },
  "midwinter-adviceos": {

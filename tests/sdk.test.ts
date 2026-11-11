@@ -31,6 +31,7 @@ function fakeNetwork() {
 }
 
 const ENV: Record<string, string> = {
+  MSADS_ACCOUNT_ID: "123", MSADS_CUSTOMER_ID: "456",
   HUBSPOT_ACCESS_TOKEN: "hs-test", FIREFLIES_API_KEY: "ff-test", MONDAY_API_TOKEN: "mo-test", TELEGRAM_BOT_TOKEN: "123456:ABCdef_test",
   ZENDESK_SUBDOMAIN: "acme", ZENDESK_EMAIL: "ops-at-acme", ZENDESK_API_TOKEN: "zd-test", DEPUTY_SUBDOMAIN: "acme", DEPUTY_REGION: "au",
   DEPUTY_ACCESS_TOKEN: "dp-test", SHOPIFY_SHOP: "acme", SHOPIFY_ACCESS_TOKEN: "sh-test", WORDPRESS_SITE: "example.org", WORDPRESS_USER: "u",
@@ -38,7 +39,7 @@ const ENV: Record<string, string> = {
   ZOOM_ACCOUNT_ID: "a", ZOOM_CLIENT_ID: "b", ZOOM_CLIENT_SECRET: "c", GOOGLE_MAILBOX: "ops-mailbox", GOOGLE_CLIENT_ID: "g", GOOGLE_CLIENT_SECRET: "h",
   GOOGLE_ADS_DEVELOPER_TOKEN: "dev", DOCUSIGN_INTEGRATION_KEY: "ik", DOCUSIGN_USER_ID: "u1", DOCUSIGN_ACCOUNT_ID: "acct-1",
   AIRCALL_API_ID: "a", AIRCALL_API_TOKEN: "b", CALENDLY_API_TOKEN: "c", META_ADS_TOKEN: "m", WHATSAPP_ACCESS_TOKEN: "w", M365_ACCESS_TOKEN: "ms",
-  GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
+  GHL_ACCESS_TOKEN: "gh", SLACK_BOT_TOKEN: "sl", SLACK_USER_TOKEN: "slu", SLACK_CONFIG_TOKEN: "slc", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth", ASANA_ACCESS_TOKEN: "as", KLAVIYO_API_KEY: "kl", SERVICEM8_API_KEY: "s8",
   SMOKEBALL_ACCESS_TOKEN: "sb", SMOKEBALL_API_KEY: "sbk", CANVA_ACCESS_TOKEN: "cv", FERGUS_ACCESS_TOKEN: "fg", BLUEBEAM_ACCESS_TOKEN: "bb",
   BLUEBEAM_CLIENT_ID: "bc", CLINIKO_API_KEY: "ck", CLINIKO_USER_AGENT: "Kit test", DROPBOX_ACCESS_TOKEN: "db", REAPIT_ACCESS_TOKEN: "rp",
   BUILDXACT_ACCESS_TOKEN: "bx", BUILDXACT_SUBSCRIPTION_KEY: "bxk", UNLEASHED_API_ID: "uid-1", UNLEASHED_API_KEY: "ukey-1", UNLEASHED_CLIENT_TYPE: "acme/kit", BULLHORN_CLIENT_ID: "bh-id", BULLHORN_CLIENT_SECRET: "bh-secret", BULLHORN_USERNAME: "api.user", BULLHORN_REFRESH_TOKEN: "bh-r1", AROFLO_SECRET_KEY: "asecret", AROFLO_UENCODED: "u=1", AROFLO_PENCODED: "p&2", AROFLO_ORGENCODED: "o 3",
@@ -194,7 +195,7 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
         ? p.pattern.replace(/^\^|\$$/g, "").replace(/\[\^\/\]\+/g, "x1").replace(/\.\*|\.\+/g, "x1").replace(/\\/g, "")
         : p.in === "path" ? "v1" : dummy(p.type);  // a path part is one plain segment
       const params = Object.fromEntries(o.params.filter((p) => p.required && !(platform.pinned ?? {})[p.name]).map((p) => [p.name, sample(p)]));
-      const input = platform.status === "index-only" ? { document: `${o.method === "MUTATION" ? "mutation" : "query"} { ${o.path} { __typename } }` } : { params, body: o.body && o.method !== "GET" ? {} : undefined };
+      const input = platform.status === "index-only" ? { document: `${o.method === "MUTATION" ? "mutation" : "query"} { ${o.path} { __typename } }` } : o.dropboxContent ? { params, ...(o.dropboxContent === "upload" ? { contentBase64: "" } : {}) } : { params, body: o.body && o.method !== "GET" ? {} : undefined };
       hits = [];
       try {
         await callOperation(id, o.id, input);
@@ -536,7 +537,10 @@ test("review 4: unmapped inputs can never carry key-shaped names; signed links a
   assert.equal(gl?.kind, "write");
   for (const o of [...load("hubspot").ops.values()].filter((x) => /signed-url/.test(x.path))) assert.equal(o.kind, "write", o.id);
   for (const id of listPlatforms()) for (const o of load(id).ops.values()) {
-    if (o.readPost) assert.match(o.path, READPOST_PATH, `${id} ${o.id}`);
+    if (o.readPost && id === "microsoft-advertising" && o.id === "campaign-management.GetCampaignsByAccountId") {
+      assert.equal(o.path, "/CampaignManagement/v13/Campaigns/QueryByAccountId");
+      assert.equal(o.msadsRest, true);
+    } else if (o.readPost) assert.match(o.path, READPOST_PATH, `${id} ${o.id}`);
   }
 });
 
@@ -592,15 +596,18 @@ test("coverage: no platform's host allowlist accepts an outside domain, and Zoom
   assert.equal(hits.length, 0);
 });
 
-test("coverage: Slack user-only methods sign in with the user token, config methods refuse, Smokeball follows region, Klaviyo never asks for push tokens", async () => {
+test("coverage: Slack user-only methods sign in with the user token, config methods use their token, Smokeball follows region, Klaviyo never asks for push tokens", async () => {
   const sl = load("slack").ops;
   await callOperation("slack", "search_messages", { params: { query: "x" } });
   assert.equal(hits[0].headers.Authorization, "Bearer slu");
   await callOperation("slack", "conversations_list");
   assert.equal(hits[1].headers.Authorization, "Bearer sl");
-  const cfg = [...sl.values()].find((o) => o.authUnsupported?.includes("configuration"))!;
-  process.env.KIT_ALLOW_WRITES = "1";
-  try { await assert.rejects(() => callOperation("slack", cfg.id), /not wired yet/); } finally { delete process.env.KIT_ALLOW_WRITES; }
+  const cfg = sl.get("apps_manifest_export")!;
+  assert.equal(cfg.tokenEnv, "SLACK_CONFIG_TOKEN");
+  assert.equal((await plan("slack", cfg.id, { params: { app_id: "A123" } }, true)).headers.Authorization, "Bearer slc");
+  assert.equal((await plan("servicem8", "addon-sdk-api.list_account_key_values", {}, true)).headers.Authorization, "Bearer s8-oauth");
+  assert.equal((await plan("servicem8", "messaging-api.send_sms", { body: {} }, true)).headers.Authorization, "Bearer s8-oauth");
+  assert.equal((await plan("servicem8", "servicem8-api.listJobs", {}, true)).headers["X-API-Key"], "s8");
   assert.equal(hits.length, 2);
   const sb = firstOp("smokeball", (x) => x.kind === "read" && !x.params.some((p) => p.required));
   await callOperation("smokeball", sb.id);
@@ -634,14 +641,14 @@ test("wave 3: template sign-in, per-endpoint sign-in, refused hosts, regional an
   await callOperation("twilio", sg.id);
   assert.match(hits[0].headers.Authorization, /^Basic /);
   assert.equal(hits[1].headers.Authorization, "Bearer t-sendgrid_api_key");
-  // Mandrill (key in the body) and a server with no stated host are refused before any network call.
+  // Mandrill takes its key from the secret store; a server with no stated host is refused.
   // (Cloudbeds Group Profile's localhost:8700 is now its real host, per Cloudbeds' own reference; Guest Profiles has no host.)
   const mandrill = firstOp("mailchimp", (x) => x.server.startsWith("https://mandrillapp.com"));
   const local = firstOp("cloudbeds", (x) => x.server === "/guest-profiles/v1");
   process.env.KIT_ALLOW_WRITES = "1";
   hits = [];
   try {
-    await assert.rejects(() => callOperation("mailchimp", mandrill.id, { body: {} }), /not wired yet/);
+    assert.equal(((await plan("mailchimp", mandrill.id, { body: {} }, true)).json as any).key, "t-mandrill_api_key");
     await assert.rejects(() => callOperation("cloudbeds", local.id, { params: Object.fromEntries(local.params.filter((p) => p.required).map((p) => [p.name, "v1"])) }), /relative server/);
   } finally { delete process.env.KIT_ALLOW_WRITES; }
   assert.equal(hits.length, 0);

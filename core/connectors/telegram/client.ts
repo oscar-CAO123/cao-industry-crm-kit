@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Telegram helper: send a message to a chat, for owner reports and alerts.
 // Key: TELEGRAM_BOT_TOKEN. Telegram puts the key in the URL path, so logs redact the path.
 //
@@ -28,6 +29,7 @@ export function chunk(text: string, max = 4000): string[] {
 
 /** Sends plain text to one chat. Needs KIT_ALLOW_WRITES=1. */
 export async function sendMessage(chatId: string, text: string): Promise<number> {
+  if (composioEnabled("telegram")) throw new Error("telegram: managed connections do not support the bot token required in the URL path");
   let sent = 0;
   for (const part of chunk(text)) {
     const r = await call<any>(spec, { method: "POST", url: `https://api.telegram.org/bot${secret("TELEGRAM_BOT_TOKEN")}/sendMessage`, json: { chat_id: chatId, text: part, link_preview_options: { is_disabled: true } } });

@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Source, from the reference CRM at commit 28aa5d91 unless marked NEW:
 //   delegated login    scripts/lib-google-dwd.ts getDWDToken, scripts/crm-email-drafter.ts getGoogleAccessToken
 //   OAuth refresh mode NEW: from Google's OAuth docs, not yet run in production
@@ -15,7 +16,7 @@ import { optional, secret, tokenStore } from "../../lib/secrets.ts";
 import { jsonKey, pem, signJwt } from "../../lib/jwt.ts";
 
 export const spec: AppSpec = {
-  app: "google",
+  app: "google-workspace",
   hosts: ["oauth2.googleapis.com", "gmail.googleapis.com", "www.googleapis.com", "sheets.googleapis.com"],
   readPosts: ["oauth2.googleapis.com/token", "www.googleapis.com/calendar/v3/freeBusy"],
 };
@@ -60,3 +61,13 @@ export async function accessToken(mailbox: string, scope: string): Promise<strin
 }
 
 export function clearTokenCache(): void { cache.clear(); }
+
+/** The managed connection is bound to one mailbox, including calls using me or primary. */
+export async function authHeaders(mailbox: string, scope: string): Promise<Record<string, string>> {
+  if (composioEnabled("google-workspace")) {
+    const pinned = secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX");
+    if (mailbox.trim().toLowerCase() !== pinned.trim().toLowerCase()) throw new Error("google-workspace: mailbox does not match the managed connection");
+    return {};
+  }
+  return { Authorization: `Bearer ${await accessToken(mailbox, scope)}` };
+}

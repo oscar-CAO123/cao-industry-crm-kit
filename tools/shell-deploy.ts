@@ -78,7 +78,7 @@ export function render(target: Target, js: Job[], keys: string[]): Record<string
   switch (target) {
     case "docker":
       return { ...common, "config.env.example": env,
-        "run-web.sh": `#!/bin/sh\n${note}# /etc/crm-shell/op-token holds ONLY the token, owned by uid 1000 (the image's node user), chmod 400. It is mounted as a file, so it never appears in the container's environment or in docker inspect.\nexec docker run -d --name crm-shell --restart unless-stopped -p 3000:3000 --env-file config.env --mount type=bind,src=/etc/crm-shell/op-token,dst=/run/secrets/shell_op_token,readonly crm-shell\n`,
+        "run-web.sh": `#!/bin/sh\n${note}# /etc/crm-shell/op-token holds ONLY the token, owned by uid 1000 (the image's node user), chmod 400. It is mounted as a file, so it never appears in the container's environment or in docker inspect.\nexec docker run -d --name crm-shell --restart unless-stopped -p 127.0.0.1:3000:3000 --env-file config.env --mount type=bind,src=/etc/crm-shell/op-token,dst=/run/secrets/shell_op_token,readonly crm-shell\n`,
         "crontab": note + js.map((j) => `${j.schedule} docker run --rm --env-file /opt/crm-shell/config.env --mount type=bind,src=/etc/crm-shell/op-token,dst=/run/secrets/shell_op_token,readonly crm-shell node shell/workflows/run.ts run ${j.dir} ${j.entry} >> /var/log/crm-shell-${j.slug}.log 2>&1`).join("\n") + "\n" };
     case "server":
       return { ...common, "config.env.example": env,

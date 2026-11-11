@@ -14,8 +14,9 @@
 # - A short-lived child (node with-secrets.mjs --print) reads the keys and prints each as NAME plus its value in
 #   base64, then exits. This script decodes each value straight into its variable. There is no eval, so nothing a
 #   value contains can ever be read as shell code, and no value is written to a file.
-# - It then drops the token and REPLACES ITSELF with the command (exec). No process is left running that holds the
-#   token. A launcher that stayed alive as the service's parent would keep the token in its start-up environment,
+# - It drops the token and REPLACES ITSELF with the command (exec), so the launcher does not remain as a process
+#   holding the token in its environment. A mounted token file remains readable by the service user. A launcher
+#   that stayed alive as the service's parent would keep the token in its start-up environment,
 #   which any process of the same user (the service, a cron, a script an agent wrote) can read, and the token opens
 #   the whole vault, not just the keys listed.
 # - A mapped name is always cleared first (the resolver's --names step needs no token), so an old host copy can never

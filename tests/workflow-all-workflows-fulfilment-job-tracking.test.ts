@@ -58,7 +58,7 @@ const BOTH: any = { ...S8, intake: ["servicem8", "asana"], asana: { workspace_gi
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8-secret-value-123", ASANA_ACCESS_TOKEN: "as-secret-value-456", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8-secret-value-123", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", ASANA_ACCESS_TOKEN: "as-secret-value-456", KIT_ALLOW_WRITES: "1" });
 });
 
 test("workflow record: no live operation is also a draft operation, and every cron has an entry", () => {

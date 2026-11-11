@@ -18,7 +18,8 @@
  },
  "keys": [
   "SLACK_BOT_TOKEN",
-  "SLACK_USER_TOKEN (for methods that take only a user token)"
+  "SLACK_USER_TOKEN (for methods that take only a user token)",
+  "SLACK_CONFIG_TOKEN (for configuration-only methods)"
  ],
  "sources": [
   {

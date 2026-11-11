@@ -75,7 +75,7 @@ const writes = () => hits.filter((h) => h.method !== "GET");
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
   tuPages = [TU_ITEMS];
-  Object.assign(process.env, { TRACKUNIT_ACCESS_TOKEN: "tu", SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { TRACKUNIT_ACCESS_TOKEN: "tu", SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", KIT_ALLOW_WRITES: "1" });
 });
 
 test("runtime: a cron cannot send from a draft and cannot queue a read", async () => {

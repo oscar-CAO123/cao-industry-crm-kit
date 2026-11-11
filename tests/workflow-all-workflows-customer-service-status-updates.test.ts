@@ -46,7 +46,7 @@ const S: any = { channel: "sms", notify_statuses: ["Work Order", "Completed"], b
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", KIT_ALLOW_WRITES: "1" });
   jobs = [job(A, "Work Order")];
   contacts = { [CO_A]: [{ first: "Sam", last: "Lee", email: "sam@example.com", mobile: "0412 345 678", is_primary_contact: "1" }] };
 });

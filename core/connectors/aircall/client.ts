@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Aircall helper: calls, transcripts, users, numbers, contacts and SMS.
 // Keys: AIRCALL_API_ID and AIRCALL_API_TOKEN (basic auth). Aircall allows about 60 requests a
 // minute, so a 429 waits 15s, then 30s, as the CRM's reconciler does.
@@ -21,7 +22,7 @@ import { collect } from "../../lib/paging.ts";
 export const spec: AppSpec = { app: "aircall", hosts: ["api.aircall.io"], retryBaseMs: 15_000 };
 const API = "https://api.aircall.io/v1";
 
-const auth = () => ({ Authorization: `Basic ${Buffer.from(`${secret("AIRCALL_API_ID")}:${secret("AIRCALL_API_TOKEN")}`).toString("base64")}` });
+const auth = () => composioEnabled("aircall") ? {} : ({ Authorization: `Basic ${Buffer.from(`${secret("AIRCALL_API_ID")}:${secret("AIRCALL_API_TOKEN")}`).toString("base64")}` });
 
 export const normalisePhone = (p: string): string => p.replace(/[\s\-().]/g, "");
 

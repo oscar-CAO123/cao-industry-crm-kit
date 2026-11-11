@@ -4,13 +4,13 @@
 // so this is often the first place a workflow reads from or reports to.
 
 import { call } from "../../lib/http.ts";
-import { accessToken, SCOPES, spec } from "./auth.ts";
+import { authHeaders, SCOPES, spec } from "./auth.ts";
 
 const API = "https://sheets.googleapis.com/v4/spreadsheets";
 const enc = encodeURIComponent;
 
 export async function readRange(mailbox: string, sheetId: string, range: string): Promise<string[][]> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.sheetsRead)}` };
+  const h = await authHeaders(mailbox, SCOPES.sheetsRead);
   const r = await call<any>(spec, { url: `${API}/${enc(sheetId)}/values/${enc(range)}`, headers: h });
   return r.data?.values ?? [];
 }
@@ -23,7 +23,7 @@ export function asRecords(values: string[][]): Record<string, string>[] {
 
 /** Appends rows under a table. Needs KIT_ALLOW_WRITES=1. Values go in as typed, not as formulas. */
 export async function appendRows(mailbox: string, sheetId: string, range: string, rows: (string | number)[][]): Promise<number> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.sheetsWrite)}` };
+  const h = await authHeaders(mailbox, SCOPES.sheetsWrite);
   const r = await call<any>(spec, {
     method: "POST", url: `${API}/${enc(sheetId)}/values/${enc(range)}:append`, headers: h,
     query: { valueInputOption: "RAW", insertDataOption: "INSERT_ROWS" }, json: { values: rows },
