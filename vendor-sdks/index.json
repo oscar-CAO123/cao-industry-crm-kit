@@ -239,8 +239,10 @@
         "GitHub API 19:35: org onfleet is_verified on onfleet.com",
         "npm maintainer email on onfleet.com"
       ],
-      "status": "pinned, not wired yet",
-      "adapter_note": "The pinned package imports node-fetch directly in ESM. A safe adapter needs an isolated loader or another verified transport seam."
+      "status": "wired",
+      "adapter_note": "The pinned package imports node-fetch directly in ESM. A safe adapter needs an isolated loader or another verified transport seam.",
+      "adapter": "core/sdk/vendor/onfleet.ts",
+      "tested": "offline only: actual pinned SDK, isolated fetch transport, frozen resource-method facade; no live account proof"
     },
     {
       "app": "shopify",
@@ -323,8 +325,10 @@
         "github-verified: org zapier is_verified, website zapier.com",
         "npm maintainer email on zapier.com"
       ],
-      "status": "pinned, not wired yet",
-      "adapter_note": "The pinned SDK uses sdkapi.zapier.com proxy routes that are absent from the mapped api.zapier.com operations."
+      "status": "wired",
+      "adapter_note": "The pinned SDK uses sdkapi.zapier.com proxy routes that are absent from the mapped api.zapier.com operations.",
+      "adapter": "core/sdk/vendor/zapier.ts",
+      "tested": "offline only: actual pinned SDK profile/app/action catalogue reads; relay and action execution refused; no live account proof"
     },
     {
       "app": "zoom",
@@ -389,8 +393,10 @@
         "github-verified: org docusign is_verified, website developers.docusign.com",
         "npm maintainer email on docusign.com"
       ],
-      "status": "blocked: moves requests to each account's own host; the SDK route refuses that yet",
-      "adapter_note": "The SDK gate refuses the connector\u2019s resolved account-host rewrite; supporting it needs account-host validation in the shared gate."
+      "status": "wired",
+      "adapter_note": "The SDK gate refuses the connector\u2019s resolved account-host rewrite; supporting it needs account-host validation in the shared gate.",
+      "adapter": "core/sdk/vendor/docusign.ts",
+      "tested": "offline only: actual pinned eSignature SDK, account-pinned authenticated regional host; no live account proof"
     },
     {
       "app": "dropbox",

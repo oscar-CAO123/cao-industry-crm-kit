@@ -387,6 +387,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     if (gates.has(o)) { o.kind = "write"; o.override = `gated: ${clean(gates.get(o))}`; }
     else if (readPosts.has(o) && o.method === "POST" && READPOST_PATH.test(o.path) && !CREDENTIAL.test(words(`${o.id} ${o.path}`))) { o.kind = "read"; o.readPost = true; o.override = `read-only POST: ${clean(readPosts.get(o))}`; }
   }
+  if (id === "zapier") for (const [name, route] of [["profile", "profile/"], ["implementations", "implementations/"], ["lookup", "implementations-meta/lookup/"], ["search", "implementations-meta/search/"]]) ops.push({ id: `sdk.${name}`, api: "sdk", method: "GET", path: `/api/v0/sdk/zapier/api/v4/${route}`, server: "https://sdkapi.zapier.com", summary: `SDK ${name} read`, tags: ["SDK"], params: [], body: false, scopes: [], deprecated: false, doc_url: "https://docs.zapier.com/sdk/reference", kind: "read" });
   if (id === "microsoft-advertising") mapMicrosoftRest(ops);
   const seenIds = new Map();
   for (const o of ops) {  // every id unique, so no endpoint is shadowed
@@ -408,7 +409,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
     pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}), ...(cfg.queryObjects ? { queryObjects: cfg.queryObjects } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
-    sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
+    sources: [...m.sources.map((s) => ({ url: s.url, official: s.official })), ...(id === "zapier" ? [{ url: "https://docs.zapier.com/sdk/reference", official: "vendor-domain: docs.zapier.com" }] : [])], gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
   // Host list: must equal the reviewed lock. A new or widened list stops the run until a person accepts it.

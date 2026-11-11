@@ -1,0 +1,24 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import http from "node:http";
+import https from "node:https";
+import { setTransport } from "../core/lib/http.ts";
+import { onfleet } from "../core/sdk/vendor/onfleet.ts";
+const bypass: string[] = [];
+for (const mod of [http, https]) for (const fn of ["request", "get"]) (mod as any)[fn] = () => { bypass.push(fn); throw Error("network bypass"); };
+(globalThis as any).fetch = () => { bypass.push("fetch"); throw Error("network bypass"); };
+let hits: { url: string; headers: Headers }[] = [];
+setTransport({ sleep: async () => {}, log: () => {}, fetch: (async (url: any, init: any) => { hits.push({ url: String(url), headers: new Headers(init.headers) }); return Response.json({ tasks: [] }); }) as any });
+test("Onfleet SDK uses the kit transport and blocks writes", async () => {
+  process.env.ONFLEET_API_KEY = "test-onfleet-key"; delete process.env.KIT_ALLOW_WRITES;
+  const [client, other] = await Promise.all([onfleet(), onfleet()]);
+  assert.notEqual(client, other);
+  await client.tasks.get({from: 1});
+  assert.equal(hits.length, 1);
+  assert.equal(new URL(hits[0].url).hostname, "onfleet.com");
+  assert.equal(hits[0].headers.get("authorization"), `Basic ${Buffer.from("test-onfleet-key:").toString("base64")}`);
+  await assert.rejects(client.tasks.create({destination: "x"}) as Promise<unknown>, /write blocked/i);
+  assert.equal(hits.length, 1);
+  assert.equal((client as any).api, undefined);
+  assert.deepEqual(bypass, []);
+});

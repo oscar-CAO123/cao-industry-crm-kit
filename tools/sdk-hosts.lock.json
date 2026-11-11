@@ -929,7 +929,8 @@
   "hostFromEnv": false,
   "hostPatterns": [],
   "hosts": [
-   "api.zapier.com"
+   "api.zapier.com",
+   "sdkapi.zapier.com"
   ]
  },
  "zendesk": {

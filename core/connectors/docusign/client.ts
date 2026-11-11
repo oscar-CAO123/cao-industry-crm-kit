@@ -43,10 +43,9 @@ async function login(extraScopes: string[] = []): Promise<{ token: string; base:
     const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo` });
     const acct = (info.data?.accounts ?? []).find((a: any) => a.account_id === account);
     if (!acct?.base_uri) throw new Error("DocuSign account not found for this user");
-    const base = `${acct.base_uri}/restapi/v2.1/accounts/${encodeURIComponent(account)}`;
-    const u = new URL(base);
-    if (u.protocol !== "https:" || u.port || u.username || u.password || !spec.hostPattern?.test(u.hostname)) throw new Error("docusign: account base URL refused");
-    return { token: "", base };
+    const u = new URL(acct.base_uri);
+    if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !spec.hostPattern?.test(u.hostname)) throw new Error("docusign: account base URL refused");
+    return { token: "", base: `${u.origin}/restapi/v2.1/accounts/${encodeURIComponent(account)}` };
   }
   const scope = [...new Set([...BASE_SCOPES, ...extraScopes.filter((s) => /^[a-z0-9_.]+$/i.test(s))])].sort().join(" ");
   const cached = cache.get(scope);
@@ -59,7 +58,9 @@ async function login(extraScopes: string[] = []): Promise<{ token: string; base:
   const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo`, headers: token ? { Authorization: `Bearer ${token}` } : {} });
   const acct = (info.data?.accounts ?? []).find((a: any) => a.account_id === secret("DOCUSIGN_ACCOUNT_ID"));
   if (!acct?.base_uri) throw new Error("DocuSign account not found for this user");
-  const fresh = { token, base: `${acct.base_uri}/restapi/v2.1/accounts/${secret("DOCUSIGN_ACCOUNT_ID")}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
+  const u = new URL(acct.base_uri);
+  if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !spec.hostPattern?.test(u.hostname)) throw new Error("docusign: account base URL refused");
+  const fresh = { token, base: `${u.origin}/restapi/v2.1/accounts/${encodeURIComponent(secret("DOCUSIGN_ACCOUNT_ID"))}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
   cache.set(scope, fresh);
   return fresh;
 }

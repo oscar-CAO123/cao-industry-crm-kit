@@ -72,7 +72,6 @@ test("unmapped, scope and unsupported auth paths refuse without fallback", async
   hits = [];
   await assert.rejects(sendPrepared("stripe", { method: "GET", url: "https://api.stripe.com/v1/not-real", headers: {} }), /mapped endpoint/);
   await assert.rejects(sendPrepared("microsoft-advertising", { method: "GET", url: "https://example.com", headers: {} }), /scope/);
-  await assert.rejects(callOperation("docusign", "esignature.ServiceInformation_GetServiceInformation"), /not supported/);
   assert.equal(hits.length, 0);
 });
 

@@ -444,6 +444,10 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   if (route.split("/").some((seg) => seg === "." || seg === ".." || /^%2e/i.test(seg))) throw new Error(`${id} ${opId}: dot segments in the path are refused`);
   const target = { url: `${base}/${route.replace(/^\/+/, "")}` };
   const auth = managed ? {} : withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
+  if (managed && id === "docusign" && new URL(target.url).hostname === "www.docusign.net") {
+    const session = await (await import("../connectors/docusign/client.ts")).session(o.scopes ?? []);
+    target.url = target.url.replace("https://www.docusign.net", new URL(session.base).origin);
+  }
   const method = (o.method === "QUERY" || o.method === "MUTATION" ? "POST" : o.method) as Method;
   let json: unknown = undefined;
   if (input.body !== undefined || bodyFields) {
@@ -587,7 +591,7 @@ function managedHeaders(p: Platform, o: Op, input?: CallInput): Record<string, s
   const a = o.auth ?? p.auth;
   if (p.id === "google-workspace") secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX");
   if (["body-key", "path-token", "template", "unsupported"].includes(a.type) ||
-      (a.type === "custom" && !["google", "xero", "zoom"].includes(a.provider ?? "")) || p.keyInPath ||
+      (a.type === "custom" && !["google", "xero", "zoom", "docusign"].includes(a.provider ?? "")) || p.keyInPath ||
       Object.values(p.serverVars).some((v) => v.secret) || input?.as ||
       Object.keys(a.optionalHeaders ?? {}).length)
     throw new Error(`${p.id}: this operation or authentication is not supported by Composio transport`);
@@ -716,7 +720,13 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   const target = { url: req.url };
   const auth = managed ? managedHeaders(p, o) : await authHeaders(p, o, {}, target);
-  if (target.url !== req.url) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
+  if (managed && id === "docusign" && u.origin === "https://www.docusign.net") {
+    const session = await (await import("../connectors/docusign/client.ts")).session(o.scopes ?? []);
+    target.url = req.url.replace("https://www.docusign.net", new URL(session.base).origin);
+  }
+  const resolved = new URL(target.url);
+  const permittedDocuSignRewrite = id === "docusign" && u.origin === "https://www.docusign.net" && resolved.protocol === "https:" && !resolved.port && !resolved.username && !resolved.password && /^[a-z0-9-]+\.docusign\.net$/.test(resolved.hostname) && resolved.pathname === u.pathname && resolved.search === u.search && resolved.hash === u.hash;
+  if (target.url !== req.url && !permittedDocuSignRewrite) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
   const fixed = Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k)));
   const ours = new Set([...Object.keys(auth), ...Object.keys(fixed)].map((k) => k.toLowerCase()));
   const mapped = new Set(o.params.filter((x) => x.in === "header").map((x) => x.name.toLowerCase()));

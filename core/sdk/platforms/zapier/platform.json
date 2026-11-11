@@ -6,7 +6,8 @@
  "authProof": "docs",
  "style": "rest",
  "hosts": [
-  "api.zapier.com"
+  "api.zapier.com",
+  "sdkapi.zapier.com"
  ],
  "hostFromEnv": false,
  "hostPatterns": [],
@@ -36,12 +37,16 @@
   {
    "url": "https://docs.zapier.com/api-reference/specs/trigger-inbox.yaml",
    "official": "vendor-domain: docs.zapier.com"
+  },
+  {
+   "url": "https://docs.zapier.com/sdk/reference",
+   "official": "vendor-domain: docs.zapier.com"
   }
  ],
  "gaps": [],
  "counts": {
-  "operations": 32,
-  "read": 10,
+  "operations": 36,
+  "read": 14,
   "write": 22
  }
 }

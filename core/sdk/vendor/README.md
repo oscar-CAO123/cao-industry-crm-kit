@@ -2,7 +2,7 @@
 
 Workflows already call the shared connection layer through their platform adapters. Official SDK adapters are an optional interface to that same gate. Installing a pinned SDK does not create a new workflow or prove a client account works.
 
-Thirty-two pinned SDKs have adapters: Stripe, Square, Xero, Slack, Dropbox, Google Analytics, Pylon, Microsoft Graph, GoHighLevel, Make, Pipedrive, WooCommerce, Jotform, Plaid, HubSpot alpha, Airtable, Shopify, PandaDoc, Asana, Mailchimp, Twilio, Zoom, Klaviyo, Meta Ads, BigQuery dataset listing, HubSpot’s generated resource APIs, and Google's Admin Directory, Calendar, Docs, Drive, Gmail and Sheets clients. Other pointers in `vendor-sdks/index.json` retain their current status. Installed packages must match their audited lockfile. No package versions changed in this update.
+Thirty-five pinned SDKs have adapters: Stripe, Square, Xero, Slack, Dropbox, Google Analytics, Pylon, Microsoft Graph, GoHighLevel, Make, Pipedrive, WooCommerce, Jotform, Plaid, HubSpot alpha, Airtable, Shopify, PandaDoc, Asana, Mailchimp, Twilio, Zoom, Klaviyo, Meta Ads, Onfleet, Zapier catalogue reads, DocuSign eSignature, BigQuery dataset listing, HubSpot’s generated resource APIs, and Google's Admin Directory, Calendar, Docs, Drive, Gmail and Sheets clients. Other pointers in `vendor-sdks/index.json` retain their current status. Installed packages must match their audited lockfile. No package versions changed in this update.
 
 Install only the package needed, for example `node tools/sdk-install.mjs googleapis-drive`. Then import `googleWorkspace` from `core/sdk/vendor/google-workspace.ts` and call `googleWorkspace("drive").files.list({pageSize: 10})`. Services are `admin`, `calendar`, `docs`, `drive`, `gmail` and `sheets`. Admin uses Directory v1. The kit owns authentication, mailbox restrictions and network transport; SDK HTTP/2 is refused. Use the normal kit Google connection setup. Candidates supply their business credentials through 1Password and grant the required scopes.
 
@@ -43,10 +43,12 @@ Asana and Mailchimp use their adapters in `core/sdk/vendor/`. Mailchimp uses the
 
 The Twilio adapter is restricted to the v2010 API for the account in `TWILIO_ACCOUNT_SID`; other Twilio products are refused.
 
-The remaining SDK pointers are not wired. Onfleet imports node-fetch directly; Zapier uses SDK proxy routes absent from the operation map; DocuSign requires a validated account-host rewrite; monday uses an app-host message bridge and needs operation-bound GraphQL routing. See `vendor-sdks/index.json` for the per-package notes.
+The monday pointer still targets the browser app-host SDK. Replacing it with the official Node.js SDK is pending review. See `vendor-sdks/index.json` for the per-package notes.
 
 The Zoom adapter uses kit-managed OAuth. Some mapped Zoom GET operations are conservatively classified as writes and require the write flag.
 
 Klaviyo uses a per-session gated transport.
 
 The BigQuery adapter only lists dataset IDs in `GOOGLE_CLOUD_PROJECT`. It does not expose the SDK client, queries, writes, Arrow or storage streams. Meta Ads uses its adapter in `core/sdk/vendor/meta-ads.ts`, with plain-data request bodies and kit-owned credentials.
+
+Onfleet uses an isolated copy of the pinned SDK with its direct fetch imports routed through the kit. The facade exposes frozen resource methods, not the mutable client. Zapier exposes profile and app/action catalogue reads only; arbitrary relay and action execution are refused. DocuSign exposes the eSignature SDK behind the configured account and its authenticated regional host. All three were exercised with fake network responses; no live account is claimed.
