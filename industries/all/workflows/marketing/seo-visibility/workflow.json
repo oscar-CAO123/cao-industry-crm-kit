@@ -55,12 +55,12 @@
  },
  "gaps": [
   "Google Ads is paid search, not organic visibility. It belongs to the ad-campaigns and ad-reporting workflows.",
-  "Semrush: its operations are mapped, but the kit holds no parameter names for its keyword and backlink endpoints, and the vendor pages in endpoint-map/raw/semrush are HTML without a spec. No adapter until those names can be confirmed.",
+  "Semrush: its operations are mapped, but the kit holds no parameter names for its keyword and backlink endpoints, and the vendor pages are HTML without a spec. No adapter until those names can be confirmed.",
   "Google Business Profile, reviews and local listings: no kit platform for Google Business Profile. Semrush's local operations cover posts, reviews and listings, but there is no adapter for them yet.",
   "Site audit: Ahrefs site-audit.issues is mapped but no cron calls it yet. Content Helper topics (content-helper.topics) is mapped but not called.",
   "Publishing page copy and blog posts: neither platform puts website copy live. A person does this in the business's website software.",
   "Judgment steps stay with the agent skill: choosing target terms, writing pages and posts, deciding what to ask reviewers for, and reading the AI answers.",
   "Brand Radar prompts and cited pages: the report and its prompts are set up in the Ahrefs app first. Cited pages are not read yet.",
-  "Docs-only until an Ahrefs account proves each read. Column names in the select parameters follow the response schema in endpoint-map/raw/ahrefs; confirm them in a live account before relying on the reports."
+  "Docs-only until an Ahrefs account proves each read. Column names in the select parameters follow the response schema; confirm them in a live account before relying on the reports."
  ]
 }

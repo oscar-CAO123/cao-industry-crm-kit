@@ -35,7 +35,7 @@
   "Unleashed: core/sdk signs every call (api-auth-id, api-auth-signature, client-type from the UNLEASHED_* keys). Tested offline against a fake network only; no live reply has been seen.",
   "Acumatica: no operations mapped in the kit and its help pages describe no API calls. Covered by skill steps only.",
   "Odoo: the kit holds one operation (docs.get_web_version), so the bill of materials model has no mapped operations. Its forum pages describe the BoM form and export only. Covered by skill steps only.",
-  "Design drawings or CAD import: no platform evidence. Skill step only.",
+  "Design drawings or CAD import: no platform docs. Skill step only.",
   "Supplier part matching, costing roll-up, routing and work centres, production orders (Assemblies), change handover and sign-off: not described as a bill step by the Unleashed pages. Left to people.",
   "Units of measure: each bill line takes the product's own unit. The workflow does not convert units.",
   "The capabilities list in core/capabilities.json has no bill-of-materials entry. The bill operations are named in workflow.json only.",

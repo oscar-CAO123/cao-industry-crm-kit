@@ -1,5 +1,5 @@
 // JustCall: the missed-call log (read) and texts (live: a text reaches a caller, so it is only ever queued).
-// Field names come from the vendor's official spec (endpoint-map/raw/justcall): call_type INCOMING_MISSED, justcall_number,
+// Field names come from the vendor's official spec: call_type INCOMING_MISSED, justcall_number,
 // call_date, call_time (UTC), contact_number; texts/new takes justcall_number, contact_number, body, restrict_once.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../../core/workflows/runtime.ts";

@@ -1,6 +1,6 @@
 // Xero for due dates: sales invoices still owed (reads), open projects and their deadlines (reads), one internal task per
 // project deadline in Xero Projects (drafted), and Xero's own invoice email for an overdue invoice (queued for approval).
-// Field names come from the vendor spec in endpoint-map/raw/xero/spec: Invoice (InvoiceID, InvoiceNumber, DueDate,
+// Field names come from the vendor spec: Invoice (InvoiceID, InvoiceNumber, DueDate,
 // AmountDue, Status, Type, Contact) and Project (projectId, name, deadlineUtc, status), Task (taskId, name up to 100 characters).
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../../core/workflows/runtime.ts";

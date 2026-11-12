@@ -42,7 +42,7 @@
  },
  "gaps": [
   "Usage capture and telematics pull: Trackunit is mapped in the kit and has fuel-used and distance series, but its GET time-series operations are marked kind write in core/sdk/platforms/trackunit/ops.json, so they cannot run as reads. Fix the mapping in core/ before this step is built. WEBFLEET has no ops file in the kit.",
-  "Split on and off public road: no platform in the evidence describes this step. A person records off-road litres per period in the usage record until a source exists.",
+  "Split on and off public road: no documented platform describes this step. A person records off-road litres per period in the usage record until a source exists.",
   "Apply rates: the ATO sets the rate per litre twice a year. The rate is recorded by a person, not looked up by a cron.",
   "Lodge claim: MYOB enters the amount by hand in the BAS fields (BASlink links them to accounts). Xero has no fuel tax credit field in the docs read. Neither platform is written to here.",
   "Posting the received credit as a MYOB general journal: the journal line fields (Account UID, Amount, Memo) are confirmed in the vendor docs, but the sign convention for debit and credit lines is not. Build this as a live operation only after a live account confirms it.",

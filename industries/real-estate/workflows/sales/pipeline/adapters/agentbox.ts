@@ -1,5 +1,5 @@
 // AgentBox (Reapit Foundations): the contact list the prospects come from. Reads only: GET /contacts and GET /contact/{id}.
-// Field names come from the vendor docs example in endpoint-map/raw/agentbox/pages/api-documentation.md.
+// Field names come from the vendor docs example.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Settings, VendorContact } from "../types.ts";
 

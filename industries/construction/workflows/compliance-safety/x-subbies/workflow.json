@@ -44,8 +44,8 @@
   "dropbox": {"status": "docs-only", "covers": "one job folder listing, read only"}
  },
  "gaps": [
-  "Hammertech, Procore and WHS Monitor, the three platforms the evidence checked for subcontractor compliance: none has a platform file in the kit, so nothing is mapped and no adapter exists. Their help pages do cover prequalification, induction, inspection, incident and document tracking, so they are the next platforms to map.",
-  "Telegram: the Telegram platform is mapped, and one call used it to book subcontractors, but this workflow has no Telegram adapter. Its bot and chat ids need confirming on a real bot before one is written.",
+  "Hammertech, Procore and WHS Monitor, the three platforms checked for subcontractor compliance: none has a platform file in the kit, so nothing is mapped and no adapter exists. Their help pages do cover prequalification, induction, inspection, incident and document tracking, so they are the next platforms to map.",
+  "Telegram: the Telegram platform is mapped, and some businesses use it to book subcontractors, but this workflow has no Telegram adapter. Its bot and chat ids need confirming on a real bot before one is written.",
   "Subcontractor tender outreach and job packs: not built. Writing the tender and reading the answers is judgment work, so it stays with the owner for now.",
   "Safety plans, SWMS and pre-start forms: the calls use a paid template subscription and print the forms by hand. No mapped platform covers them, so they stay with the business and the agent skill.",
   "Site inductions and site inspections: done on site or in Procore, Hammertech or WHS Monitor. No adapter here.",

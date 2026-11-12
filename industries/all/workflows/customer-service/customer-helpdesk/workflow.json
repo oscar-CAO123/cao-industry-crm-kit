@@ -33,7 +33,7 @@
   "gorgias": {"status": "docs-only", "covers": "helpdesk tickets: read open tickets and the latest customer message, answer from a macro's response text after approval, tag a ticket for a person"}
  },
  "gaps": [
-  "Intercom: named in the platform evidence, but no operations are mapped for it in the kit, so there is no adapter. Its help-centre pages do not show the API steps.",
+  "Intercom: named in the platform docs, but no operations are mapped for it in the kit, so there is no adapter. Its help-centre pages do not show the API steps.",
   "Zendesk: mapped in the kit, but no platform help evidence was read for this job, so no adapter.",
   "Chat widgets and the overflow service: a chat widget answers FAQs on the website and is not a platform the kit reads; the overflow service is a person, so it stays out of the automatic path.",
   "Judgment answers: a question no answer rule covers is parked, and the agent skill writes the reply. The kit has no proposal step for helpdesk replies yet, so a reply the agent writes goes through the platform's own draft, then a person sends it.",

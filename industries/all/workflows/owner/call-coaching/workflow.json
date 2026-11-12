@@ -31,7 +31,7 @@
   "gohighlevel": {"status": "docs-only", "covers": "voice-AI call logs with transcript (read), contact note (internal), rep email (queued)"}
  },
  "gaps": [
-  "Zoho and the custom CRM: no adapter. Zoho has operations in the kit but no call-coaching platform evidence was mined for it.",
+  "Zoho and the custom CRM: no adapter. Zoho has operations in the kit but no call-coaching platform docs were read for it.",
   "HubSpot: call records, transcripts and notes are mapped with support rated partial to yes, but no adapter is built in this pass. It is the next adapter to add.",
   "GoHighLevel human-rep calls: the call logs cover voice-AI calls. Recordings and transcripts of human calls sit behind conversation messages (conversations.get-message-transcription), which need a conversation lookup that is not built.",
   "Script check (10-step call structure): no platform checks a call against a script. This is a judgment step the agent can take from the transcript, not a cron.",

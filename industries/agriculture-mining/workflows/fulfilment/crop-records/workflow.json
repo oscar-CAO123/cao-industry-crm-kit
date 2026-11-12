@@ -10,7 +10,7 @@
     "season-records": {
       "steps": ["record-operations", "harvest-yield", "review-report", "record-keeping", "plan-season", "weather-soil-data", "livestock-movements"],
       "covered_by": {
-        "record-operations": "not covered (AgriWebb's API has no crop-operation write, and the logging tool named on the call is not in the kit)",
+        "record-operations": "not covered (AgriWebb's API has no crop-operation write, and the business's logging tool is not in the kit)",
         "harvest-yield": "not covered (FreshTrack bin scans are not in the kit)",
         "review-report": "draft (the review flags missing crop types, stale records and rainfall gaps into the store)",
         "record-keeping": "draft (snapshots and reviews kept in the workflow store)",
@@ -42,7 +42,7 @@
     "agworld (record-operations, compliance-records, review-report and record-keeping rated yes on the platform file): no kit platform folder, so nothing is read or drafted through it. Owners on Agworld keep their records there.",
     "innovint (compliance-records and storage-stock rated yes): no kit platform folder and no mapped operations.",
     "FreshTrack (harvest bins scanned at the packing shed): not in the kit, so harvest-yield is not covered.",
-    "CropX (soil and sensor data) and the operations centre named on the call: not in the kit.",
+    "CropX (soil and sensor data) and the business's operations centre: not in the kit.",
     "AgriWebb's rainfall write needs the rain gauge sensorId (mapFeatures, type RAIN_GAUGE). The agent or owner must enter it on each proposal; the adapter does not look it up.",
     "AgriWebb sign-in: bearer token from AGRIWEBB_ACCESS_TOKEN only. The token exchange is not built (platform.json), and no live account has been tested.",
     "Judgment stays with the agent and the owner: reading field notes, deciding what a flagged field needs, and choosing which rainfall readings to enter.",

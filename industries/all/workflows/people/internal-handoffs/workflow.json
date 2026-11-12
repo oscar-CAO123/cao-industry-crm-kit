@@ -45,7 +45,7 @@
  },
  "gaps": [
   "Monday.com: the agent pages were the only ones readable (help pages refused the crawl with 403), and no operations are mapped in the kit, so it is not built. Its evidence is one support-agent page, not handover steps.",
-  "Email, the most-named recipient tool: Microsoft 365 is mapped in the kit for the quoting and training workflows, but this workflow builds only Asana and Slack, so email handovers stay with the person.",
+  "Email, the most common recipient tool: Microsoft 365 is mapped in the kit for the quoting and training workflows, but this workflow builds only Asana and Slack, so email handovers stay with the person.",
   "GoHighLevel, ServiceM8, Xero, Airtable, Procore, JackApp, Shopify and Canva have no handover adapter here. None is built in this workflow, so handovers through them stay with the business's own process.",
   "No command writes a proposal into the store yet. The agent's routing judgment for a request no route covers needs the CRM shell or a later core change to write the proposals namespace. Until then such a request stays needs-routing with its reason.",
   "Acknowledgement is read from Asana replies only. A Slack thread reply is not read, and the Slack message timestamp of each handover is not kept (the approval results keep only id-like keys), so Slack replies cannot be tied back to a handover yet.",

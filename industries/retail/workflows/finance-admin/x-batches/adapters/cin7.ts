@@ -1,5 +1,5 @@
 // Cin7 Omni: purchase-order receipts, serial and batch numbers, stock on hand, and stock adjustments.
-// Field names come from the vendor's swagger (endpoint-map/raw/cin7/spec). Reads run as drafts; the one write,
+// Field names come from the vendor's swagger. Reads run as drafts; the one write,
 // a stock adjustment, is only ever queued for a person to approve.
 import type { Ctx } from "../../../../../../../core/workflows/runtime.ts";
 import type { ReceiptLine, Settings, SerialRecord, StockSnapshot, Proposal } from "../types.ts";

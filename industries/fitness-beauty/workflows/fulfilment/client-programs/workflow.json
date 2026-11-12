@@ -47,7 +47,7 @@
  },
  "gaps": [
   "Mindbody: the help pages describe bookings, waivers and check-ins, not program assignment or measurements. No Mindbody platform folder exists in the kit, so nothing is mapped for it.",
-  "Hapana: named in the mining spec, but no Hapana platform folder exists in the kit, so nothing is mapped for it.",
+  "Hapana: a common platform, but no Hapana platform folder exists in the kit, so nothing is mapped for it.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Renewal and close-out of a program has no mapped operation. Airtable has no documented program lifecycle.",
   "Measurements and progress photos: Airtable holds only text and attachments here, and no photo upload is mapped for this job.",

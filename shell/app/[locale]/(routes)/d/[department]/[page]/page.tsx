@@ -7,7 +7,7 @@ import { departmentOf, isDepartment } from "@/lib/shell/departments";
 import { getPage, tabOf } from "@/lib/shell/pages";
 import { RecordViews, type Rec } from "@/components/shell/RecordViews";
 
-/** A template page: one core function, its ancillary pieces as tabs (the demo apps' rule). */
+/** A template page: one core function, its ancillary pieces as tabs. */
 export default async function TemplatePage(props: { params: Promise<{ department: string; page: string }>; searchParams: Promise<{ tab?: string }> }) {
   const { department, page: slug } = await props.params;
   const { tab: tabSlug } = await props.searchParams;

@@ -1,4 +1,4 @@
-// HubSpot: deals are the unit of a call. Field names come from HubSpot's official CRM specs in endpoint-map/raw/hubspot/spec:
+// HubSpot: deals are the unit of a call. Field names come from HubSpot's official CRM specs:
 // crm-deals-2026-09 (search, associations, patch), crm-companies-2026-09 (get), crm-notes-2026-09 (create, default association),
 // and crm-contacts-3 (get). Reads and the internal note are draft operations; the next-step change is a live operation.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";

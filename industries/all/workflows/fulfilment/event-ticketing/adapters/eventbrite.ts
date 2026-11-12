@@ -1,6 +1,6 @@
 // Eventbrite: the one platform this workflow maps. Reads events, ticket types, attendees and teams for drafts, and queues
 // publishing for approval. Every operation id here is in core/sdk/platforms/eventbrite/ops.json. Parameter and field
-// names come from the vendor spec (endpoint-map/raw/eventbrite/spec.apib).
+// names come from the vendor spec.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Attendee, EventRow, Settings, Team, TicketClass } from "../types.ts";
 

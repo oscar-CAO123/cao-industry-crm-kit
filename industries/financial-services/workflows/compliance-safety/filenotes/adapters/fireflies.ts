@@ -1,5 +1,5 @@
 // Fireflies: the list of recent meetings and the finished summary of each one. Read only.
-// Field and argument names come from the vendor's docs in endpoint-map/raw/fireflies (the transcripts and transcript
+// Field and argument names come from the vendor's docs (the transcripts and transcript
 // queries and the Transcript type). Replies are GraphQL, so the data sits under data.<field>.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Meeting, Settings, Transcript } from "../types.ts";

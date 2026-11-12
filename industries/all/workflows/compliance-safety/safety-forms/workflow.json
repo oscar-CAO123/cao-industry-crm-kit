@@ -38,14 +38,14 @@
   "sitebook": {"status": "docs-only", "covers": "incident reports, checklist reports, overdue corrective actions and their chase emails"}
  },
  "gaps": [
-  "Procore and Sitemate: their help pages are mapped in the evidence, but the kit has no Procore or Sitemate platform, so no operations can run. Procore's docs do not name a pre-start form; Sitemate's docs conflict on attachments.",
+  "Procore and Sitemate: their help pages are mapped in the platform docs, but the kit has no Procore or Sitemate platform, so no operations can run. Procore's docs do not name a pre-start form; Sitemate's docs conflict on attachments.",
   "SiteBook creates: the Reporting API docs name the request models (PostIncidentCmd and the others) but do not list their fields. Creating incidents, checklists, SWMS, sign-offs and toolbox talks is not built until the request schema is confirmed on a live account.",
   "Pre-start checks: SiteBook builds them from checklist templates in the app. Starting one from this workflow waits for the create schema above.",
   "Toolbox talk sign-in and supervisor sign-off: the sign-off endpoints need a confirmed request body, so they are not built.",
   "Regulator submission, near-miss reports and incident investigation: no mapped SiteBook endpoint, and the pages do not describe them. Judgment and manual for now.",
   "Checklist report email to a recipient: the email endpoint needs a recipient field the docs do not list, so it is not built.",
   "SWMS three-monthly review: the SWMS template list is mapped, but the docs do not confirm a review-date field, so no cron checks it.",
-  "Dropbox and Microsoft 365 filing: the evidence names them for records and registers, but no platform step evidence was given for them, so no adapter.",
+  "Dropbox and Microsoft 365 filing: the docs name them for records and registers, but no platform step was documented for them, so no adapter.",
   "SiteBook is docs-read and unproven: every call is offline-tested only, not run against a real account.",
   "Deploy: tools/deploy.ts lists secret names only from intake, quotes, rate_card and messages settings, so SITEBOOK_API_KEY will not appear in the rendered deploy files, and deployed SiteBook calls run with no key and fail until that helper reads the keys of every platform the operations use (or sitebook is added to the settings list for this deploy). Needs a change in tools/deploy.ts, which is outside this workflow folder.",
   "Photos and site notes stay in the SiteBook app; the workflow does not move them."

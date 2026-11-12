@@ -32,7 +32,7 @@
  "gaps": [
   "PropertyMe: its pages were read and it has no ops file in the kit, so no adapter. Needs its API mapped and a live account.",
   "Tapi: its pages were read and it has no ops file in the kit, so no adapter. Needs its API mapped and a live account.",
-  "Console: named in the mining spec and has no mining platform file or kit ops, so it is not built.",
+  "Console: a common platform with no platform docs or kit ops, so it is not built.",
   "Owner approval: the owner's spend limit is not described on any page read. The workflow treats the job moving to Work Order in ServiceM8 as the approval. A person makes that move.",
   "Triage: no urgency triage is described on the pages read. The skill handles it by hand.",
   "Supplier choice: ServiceM8 allocates jobs to staff members, not to outside tradies. The workflow allocates to one default staff member from settings. Choosing a tradie per job needs a proposal command in the workflow runner.",

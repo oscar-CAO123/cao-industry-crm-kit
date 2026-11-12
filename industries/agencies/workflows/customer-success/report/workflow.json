@@ -43,7 +43,7 @@
  },
  "gaps": [
   "Agency Analytics and Reportz have no platform in the kit and no operations mapped. Clients who report from them need their numbers in Supermetrics, or a platform mapping added to the kit.",
-  "The Supermetrics export operation in the evidence (exportTableGroup) returns a data model, not numbers, so it is not used.",
+  "The Supermetrics export operation in the platform docs (exportTableGroup) returns a data model, not numbers, so it is not used.",
   "Commentary is judgment. No command yet writes it into the workflow store, so the draft cron waits until a store write exists (a runtime change, not made here).",
   "Check-data (cross-source reconciliation) is not built. The vendor docs describe anomaly alerts only.",
   "Client questions and action-item tracking are not built. Agency Analytics describes a client login and goal alerts, not a task tracker.",

@@ -1,5 +1,5 @@
 // VaultRE: the property record the investment check is filed against. Reads the property; writes one note on it (internal only).
-// Field names come from the vendor spec (endpoint-map/raw/vaultre): addPropertyNote takes body, readOnly and type.
+// Field names come from the vendor spec: addPropertyNote takes body, readOnly and type.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Settings } from "../types.ts";
 

@@ -1,7 +1,7 @@
 // DocuSign: where the agreement is signed. An agreement becomes a DRAFT envelope (status "created": DocuSign emails
 // no one), and sending it is a live operation that only runs after a person approves it. Operation ids are in
 // core/sdk/platforms/docusign/ops.json. Field names (emailSubject, documents, recipients.signers, routingOrder) are
-// from DocuSign's eSignature spec in endpoint-map/raw/docusign. The account id is filled from DOCUSIGN_ACCOUNT_ID by the SDK.
+// from DocuSign's eSignature spec. The account id is filled from DOCUSIGN_ACCOUNT_ID by the SDK.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Agreement, type Settings, cleanText, GUID } from "../types.ts";
 

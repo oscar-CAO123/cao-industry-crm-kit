@@ -38,7 +38,7 @@
   "PlanSwift, EstimateOne, Buildxact and TenderLata: named by owners, but no operations are mapped in the kit for tender or takeoff work (Buildxact has sign-in only). Owners using them keep their usual route and record the result as a takeoff row by hand.",
   "Tender downloads from portals (Tenders, government portals, email attachments of addenda) are not automated. The plans-download step is a person's job until a portal adapter exists.",
   "Build-estimate and submit-tender need a pricing workflow: the rates, the trade quotes and the Word proposal are judgment steps, not crons.",
-  "Microsoft 365 is included because owners name it in 12 to 13 of these calls and its operations are mapped in the kit. It is not one of the platforms in the platform evidence file.",
+  "Microsoft 365 is included because its operations are mapped in the kit. It is not one of the platforms in the platform docs.",
   "Every adapter is docs-only until a sandbox account (Microsoft 365 developer tenant and a Bluebeam trial) proves it."
  ]
 }

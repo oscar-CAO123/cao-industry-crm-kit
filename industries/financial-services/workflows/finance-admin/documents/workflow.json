@@ -30,8 +30,8 @@
   "google-workspace": {"status": "docs-only", "covers": "form responses in, chase drafts out, chase sends after approval"}
  },
  "gaps": [
-  "Jotform: the richest form intake (form-received is supported in its docs), but the endpoint-map has no confirmed submission fields (answers, created_at). Its adapter is left out until those fields are confirmed from its vendor spec.",
-  "Smokeball: It is in the kit at spec status, but no write operation for matter intake is evidenced in the platform evidence, so the adviser enters ready submissions by hand.",
+  "Jotform: the richest form intake (form-received is supported in its docs), but its mapped docs have no confirmed submission fields (answers, created_at). Its adapter is left out until those fields are confirmed from its vendor spec.",
+  "Smokeball: It is in the kit at spec status, but no write operation for matter intake is evidenced in the platform docs, so the adviser enters ready submissions by hand.",
   "Microsoft 365: its docs describe screen-reader guides for Forms and Word, not intake or signing. No mapped operations are evidenced for this job, so no adapter.",
   "Locate client data, verify identity (KYC), prepare for signature, send for signature and submit to a lender or provider are judgment or platform steps the evidence does not map. They stay with the adviser.",
   "Uploaded files on forms (fileUploadAnswers) are not read. Only text answers are.",

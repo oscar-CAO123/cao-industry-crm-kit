@@ -1,5 +1,5 @@
 // Xero: payments against invoices. Reads only. Field names come from the Xero accounting spec
-// (endpoint-map raw/xero/spec, accounting): a Payment carries Invoice.InvoiceNumber, Amount, Date and Status.
+// (accounting): a Payment carries Invoice.InvoiceNumber, Amount, Date and Status.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { PaymentRow, Settings } from "../types.ts";
 

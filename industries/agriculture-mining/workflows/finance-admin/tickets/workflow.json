@@ -31,12 +31,12 @@
  },
  "gaps": [
   "Agworld and John Deere Operations Center: the fetched docs describe field records and machine data only. No delivery ticket, weighbridge, grade, contract or invoicing step is described, and neither platform has a mapped operation for this job. No adapter built; a live account is needed to confirm.",
-  "Dock list check (driver checked against the inducted list before unloading): no mapped platform in the evidence. Agent skill step for now.",
-  "WhatsApp QC group (named on the call): WhatsApp operations are mapped in the kit, but this build sends the QC alert by email. Add a WhatsApp adapter only after the group send is confirmed.",
+  "Dock list check (driver checked against the inducted list before unloading): no mapped platform in the platform docs. Agent skill step for now.",
+  "WhatsApp QC group: WhatsApp operations are mapped in the kit, but this build sends the QC alert by email. Add a WhatsApp adapter only after the group send is confirmed.",
   "Reading the paper docket (photo to fields): a person or the agent reads it and enters the fields in the shell. The kit has no OCR step.",
   "Weighbridge weights: no mapped platform. Net tonnes come only from what the docket says.",
-  "Carrier payment and grower or supplier statements: not in the evidence and not built.",
+  "Carrier payment and grower or supplier statements: not in the platform docs and not built.",
   "Microsoft 365 adapter is docs-only until a developer tenant and a real workbook prove the Excel table and mailbox calls.",
-  "The evidence file for platforms lists two platforms with no mapped operations, so the only adapter is Microsoft 365, the platform the call names."
+  "The platform docs list two platforms with no mapped operations, so the only adapter is Microsoft 365, the one mapped platform."
  ]
 }

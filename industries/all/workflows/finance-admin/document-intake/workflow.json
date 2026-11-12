@@ -8,7 +8,6 @@
  "summary": "Collects incoming client and supplier documents from the intake folder, renames each to a standard name and files it by its rule in the business's own Dropbox, parks unmatched files for a person, and queues a file request for each missing document on the checklist. Crons read and file inside the business; every request that reaches a client or supplier waits for a person to approve it.",
  "families": {
   "by-hand-or-unstated": {
-   "calls": 28,
    "steps": ["document-arrives", "identify-document", "name-document", "file-document", "extract-data", "check-complete", "chase-missing", "share-with-team", "record-keeping", "archive-or-dispose", "scan-paper"],
    "covered_by": {
     "document-arrives": "intake (the Dropbox intake folder; email and WhatsApp are not read yet, see gaps)",
@@ -47,7 +46,7 @@
   "Email intake: mailbox attachments are not read. the Microsoft 365 adapter is not built in this pass.",
   "Microsoft 365 and OneDrive or SharePoint filing: not built. Dropbox has the stronger support and mapped operations, so it is the one adapter here.",
   "Sharing a folder with a team member is not a cron. It reaches people outside the business, so it stays with the owner in Dropbox for now.",
-  "Data extraction (amounts, supplier, dates into accounts or a register) and record keeping are not built. The calls name Xero, Attache and spreadsheets for this, and none is mapped as a step here.",
+  "Data extraction (amounts, supplier, dates into accounts or a register) and record keeping are not built. Businesses in this industry commonly use Xero, Attache and spreadsheets for this, and none is mapped as a step here.",
   "Archive and disposal: no retention rule is set and none is built.",
   "Only the first page of the intake folder is read per run. The continuation route (files.list_folder/continue) is not mapped in the kit.",
   "Undo is not built: each move records its from and to paths in the store, so a person can move a file back by hand.",

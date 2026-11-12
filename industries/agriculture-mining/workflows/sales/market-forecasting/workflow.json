@@ -32,7 +32,7 @@
   "microsoft-365": {"status": "docs-only", "covers": "buyer enquiries from Outlook, the price list and register in Excel tables, the summary as an Outlook draft"}
  },
  "gaps": [
-  "The platform evidence for this step came back unknown on google-workspace, microsoft-365 and salesforce: the fetched pages were marketing and accessibility guides, not forecasting or pricing docs. Salesforce has no platform in the kit, so no operations are mapped for it.",
+  "The platform docs for this step came back unknown on google-workspace, microsoft-365 and salesforce: the fetched pages were marketing and accessibility guides, not forecasting or pricing docs. Salesforce has no platform in the kit, so no operations are mapped for it.",
   "Supply estimate (how many pallets or tonnes to pack, from the packing whiteboard or stock counts) has no mapped source: the whiteboard is not a platform, and no stock or packing platform was evidenced for this job. The owner enters it, or it is a skill step.",
   "Buyer and retailer portals and the phone calls that set next month's price are not mapped. Only what lands in Xero or the Outlook folder is read.",
   "Season, weather, crop and market judgment is the owner's. The cron forecast is a trailing average of invoiced volume and nothing more.",

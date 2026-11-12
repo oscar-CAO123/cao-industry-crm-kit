@@ -25,7 +25,7 @@
     "square": {"status": "docs-only", "covers": "gift card activity and ledger (read), loyalty program and member balance (read), digital gift card creation, gift card activation against a paid order, and loyalty enrolment (queued)"}
   },
   "gaps": [
-    "Fresha: the kit has no ops file for it, and its pages in the mining run were venue listings with no gift card or loyalty help, so no adapter is built. Fresha's own help centre was not reached.",
+    "Fresha: the kit has no ops file for it, and its pages read were venue listings with no gift card or loyalty help, so no adapter is built. Fresha's own help centre was not reached.",
     "Lightspeed: the kit has no ops file for it. Its gift cards and vouchers run through partner apps (VoucherCart, Gift Up, Giftpro, Gift-it, Voucher Connect), and each would need its own adapter once a live account confirms which app a business uses.",
     "Taking payment for a sale is not built. Square takes it at the till, or through a payment link. CreatePayment moves money, and the runtime does not keep a payment link's URL, so neither is queued here.",
     "Redeeming a gift card or a reward at checkout is done by staff in Square POS. Looking up a card by its code (RetrieveGiftCardFromGAN) and searching loyalty rewards are POST endpoints that the kit marks as writes, so a cron cannot read them without KIT_ALLOW_WRITES=1 on the deploy. The kit needs a read-only POST flag in core/ before these can be drafts. That change is not made here.",

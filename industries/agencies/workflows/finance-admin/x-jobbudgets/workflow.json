@@ -43,7 +43,7 @@
   "capabilities": ["read the job list and totals in Xero", "keep burn and overrun snapshots in the workflow store"],
   "adapters": ["xero"],
   "gaps": [
-    "Harvest and Teamwork (budget-led time and budget tools in the mining evidence) have no platform in the kit, so their budget and time steps are not mapped.",
+    "Harvest and Teamwork (budget-led time and budget tools common in this industry) have no platform in the kit, so their budget and time steps are not mapped.",
     "Xero accounting budgets (accounting.getBudgets) are not read: a budget set in Xero's accounting module is not compared yet.",
     "Only the first page of Xero projects is read; paging is not added.",
     "Job setup (creating the project and assigning people) is not mapped as a live op: it needs an approval design first.",

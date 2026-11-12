@@ -36,7 +36,7 @@
  },
  "gaps": [
   "The re-attempt approval shows the short id, the failure reason and the failure date, not the stop's street address (the address stays out of logs). The approver finds the stop in Onfleet by its short id. Showing the address in the approval view needs a shell change.",
-  "locate2u and starshipit: their proof-of-delivery pages were read in the mining file, but neither is in core/sdk/platforms, so there is no adapter. Their proof steps are recorded in the mining file for the next build.",
+  "locate2u and starshipit: their proof-of-delivery pages were read, but neither is in core/sdk/platforms, so there is no adapter.",
   "Google Workspace uploads of slip photos and WhatsApp photo messages have no adapter in this workflow; filing remains manual.",
   "Proof photos and signatures are referenced by upload ids only. No download operation for them is mapped, so the register holds the ids and the image stays in Onfleet.",
   "Onfleet failure reasons: only NONE and UNABLE_TO_LOCATE appear in the docs read. Any other non-NONE value counts as a failure.",

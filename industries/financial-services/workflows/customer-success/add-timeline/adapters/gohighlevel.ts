@@ -1,5 +1,5 @@
 // GoHighLevel: the client record (notes, tasks), its opportunity (followers, status). Field names from GoHighLevel's official
-// spec in endpoint-map/raw/gohighlevel/spec: NotesDTO, CreateTaskParams, FollowersDTO, UpdateStatusDto, and the note, task and
+// spec: NotesDTO, CreateTaskParams, FollowersDTO, UpdateStatusDto, and the note, task and
 // task-list response schemas. Reads and internal writes go through ctx.draft; a status change is only ever returned as an Act to queue.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { checkId, clip, type Note, type Settings, type Task } from "../types.ts";

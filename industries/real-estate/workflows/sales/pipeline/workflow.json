@@ -70,8 +70,8 @@
   "Paging: the kit's get:/contacts operation maps no query parameters, so only the first page (25 contacts by default) is read. Mapping pageSize and pageNumber needs an ops file change, which this workflow does not make.",
   "Stages, tasks and follow-ups: the Agentbox docs describe appraisal follow-up tasks inside the product but expose no API operation for stages, tasks or sending. The stage lives in the workflow store, and follow-up is judgment in SKILL.md.",
   "Live operations: none. No Agentbox operation with confirmed fields sends, books or changes a contact, so nothing is queued for approval.",
-  "Field names: taken from the Reapit Foundations docs example for GET /contact/{id}. The OpenAPI schema is not in endpoint-map/raw/agentbox, so the contact list fields are confirmed only as the _embedded list.",
-  "Tools owners use: GoHighLevel, WhatsApp and Trello are the most-named tools in the wider mining file. None is mapped as an adapter for this job, since the platform evidence did not check them. GoHighLevel is the strongest next adapter.",
+  "Field names: taken from the Reapit Foundations docs example for GET /contact/{id}. The OpenAPI schema was not available here, so the contact list fields are confirmed only as the _embedded list.",
+  "GoHighLevel, WhatsApp and Trello: none is mapped as an adapter for this job, since the platform docs did not check them. GoHighLevel is the strongest next adapter.",
   "Store visibility: the pipeline record lives in the workflow store. No view of it is built in the CRM shell here.",
   "Live verification: every read is unverified against a live Agentbox account (the platform is docs-read)."
  ]

@@ -101,7 +101,7 @@
  },
  "gaps": [
   "Inspection Express, Property Tree and 360 cameras: not in the kit's platform set, so nothing reads or writes them here.",
-  "Re-leased (inspection endpoints) and Vaultre (tenancy inspections) are mapped in the kit but no call or platform page in the evidence names them for this job. Not built here.",
+  "Re-leased (inspection endpoints) and Vaultre (tenancy inspections) are mapped in the kit but no platform page names them for this job. Not built here.",
   "Assigning the inspector is a judgment step. The workflow flags the job; a person allocates the inspector in ServiceM8.",
   "The inspection report PDF: ServiceM8 templated documents only produce Quote, Work Order and Invoice, so the report is a findings note plus photos, not a formatted PDF.",
   "The cron cannot look at photos or judge condition. The findings are the staff notes; the person checks the photos before approving the email.",

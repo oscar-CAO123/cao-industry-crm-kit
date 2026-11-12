@@ -39,7 +39,7 @@
   "Result intake: Cliniko has no result inbox in the kit. The agent or the CRM shell records the filed result (patient id, filed date, letter) in the results store. No runtime change was made.",
   "Genie (Magentus) and ZedMed: their pages describe results, letters and referrals, but neither has an ops file in core/sdk/platforms, so neither has an adapter.",
   "Jane App: only patient search is mapped (5 read operations, no letter, result or recall operations), so nothing is built for it.",
-  "Result triage (urgent or normal) and clinician sign-off on results: the evidence and the platform docs do not describe either, so both stay with the clinician.",
+  "Result triage (urgent or normal) and clinician sign-off on results: the platform docs do not describe either, so both stay with the clinician.",
   "Cliniko recall_at format and time zone, and the treatment note sections for a GP letter, need a check on a live account. Cliniko has not been run against a real account."
  ]
 }

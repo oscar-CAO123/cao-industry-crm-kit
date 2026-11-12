@@ -32,7 +32,7 @@
  "gaps": [
   "Autoleap, Tekmetric and WorkshopMate: their pages describe a write-up step, but none has operations mapped in the kit, so no adapter is built. Their help pages do not say how a booking or inspection reaches the write-up.",
   "Fergus and AroFlo: the kit maps job notes and attachments for both, but no adapter is built here. Check sign-in and field names against their specs before adding one.",
-  "Scan-tool and fault-code readings: no platform in the evidence reads them. The technician types them into the notes, and the write-up only carries what is written there.",
+  "Scan-tool and fault-code readings: no documented platform reads them. The technician types them into the notes, and the write-up only carries what is written there.",
   "Root-cause and recommended-work judgment is an agent-skill step (SKILL.md). Nothing in the crons decides what is wrong with a car.",
   "Photos are counted and named in the note but not attached to the customer email: attaching them needs a live check of the attachment path first.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",

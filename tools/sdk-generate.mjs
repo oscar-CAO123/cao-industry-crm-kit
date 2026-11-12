@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generate the agent SDK from the endpoint map. One package per platform in core/sdk/platforms/<id>/.
-// Usage: node tools/sdk-generate.mjs <endpoint-map/endpoints dir>
+// Usage: node tools/sdk-generate.mjs <endpoints dir>
 // The endpoint map is built and verified outside this repo (official sources only, scrubbed in and out).
 // This script re-checks every string it writes for secrets, emails, hidden characters and em dashes.
 import fs from "node:fs";
@@ -121,7 +121,7 @@ const STRONG =/secret|private[ _-]?key|password|credential|verification code|hma
 function words(s) { return String(s).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_./{}-]+/g, " "); }
 // DocuSign API families: production host (developers.docusign.com/platform/api-endpoint-base-paths) and, where the
 // family's own spec names no per-endpoint scope, the scopes DocuSign lists for it (/platform/auth/reference/scopes).
-// Both pages read 8 Nov 2026 through endpoint-map/model_guard.py; watcher models found them clean. Families whose specs
+// Both pages read 8 Nov 2026. Families whose specs
 // carry per-endpoint scopes (Admin, Workspaces, Web Forms, Maestro, Workflow Builder, Navigator, Agreement Manager,
 // Connected Fields) keep those. Click runs on the account's own server, like eSignature (rewritten at call time).
 const ROOMS_READ = ["dtr.rooms.read", "dtr.documents.read", "dtr.profile.read", "dtr.company.read"];
@@ -226,7 +226,7 @@ function hostRules(servers, vars) {
   return { hosts: [...hosts].sort(), patterns: [...patterns].sort() };
 }
 
-// Reviewed per-endpoint corrections from the assessment workers (endpoint-map/assess_merge.py).
+// Reviewed per-endpoint corrections.
 const OVERRIDES = fs.existsSync(path.join(root, "tools/sdk-overrides.json")) ? JSON.parse(fs.readFileSync(path.join(root, "tools/sdk-overrides.json"), "utf8")) : {};
 
 fs.mkdirSync(OUT, { recursive: true });

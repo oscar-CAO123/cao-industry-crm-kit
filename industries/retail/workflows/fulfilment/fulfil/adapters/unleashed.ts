@@ -1,6 +1,6 @@
 // Unleashed: the sales orders a business fulfils from. Reads sales orders and stock on hand, and builds the sales
 // shipment that the dispatch cron queues for approval. Field names come from the vendor spec
-// (endpoint-map/raw/unleashed/pages: SalesOrders, StockOnHand, SalesShipments). Every list reply is { Pagination, Items }.
+// (SalesOrders, StockOnHand, SalesShipments). Every list reply is { Pagination, Items }.
 import { randomUUID } from "node:crypto";
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Order, type OrderLine, type Settings, type Stock, GUID, ORDER_NO, SKU, day, units } from "../types.ts";

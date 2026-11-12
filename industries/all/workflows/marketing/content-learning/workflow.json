@@ -39,7 +39,7 @@
  "gaps": [
   "Metricool was read for this job (planner, post analytics, Posts Library) but has no operations mapped in the kit, so it has no adapter. Several owners run their content review there today.",
   "Polar Analytics, the data lake and SuperGrow are are not mapped in the kit.",
-  "Google Ads and LinkedIn are mapped in the kit, but the platform evidence for this job does not cover them, so this workflow has no adapter for either.",
+  "Google Ads and LinkedIn are mapped in the kit, but the platform docs for this job do not cover them, so this workflow has no adapter for either.",
   "Facebook Page post results are not read. PagePost.get.insights is mapped, but its metric names are not confirmed in the spec.",
   "Instagram metric support varies by media type (reels, carousels, images). The five metrics used must be confirmed on a live account before the first run.",
   "Linking a post or ad to an enquiry, lead or sale needs the business's own sales or CRM records. The job does not read them, so return is a judgment step for the owner.",

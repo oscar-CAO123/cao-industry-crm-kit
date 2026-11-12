@@ -36,7 +36,7 @@
  "gaps": [
   "Simpro: Simpro is not mapped in the kit, so there is no adapter. Its dates must be copied into the register.",
   "HammerTech and SiteBook: the vendor pages describe holding licences and expiry dates, but neither has operations mapped in the kit, so neither has an adapter. Their reminders and chasing are not built.",
-  "Recording a renewal: the platforms in the evidence do not describe receiving a renewed document back. A person updates the Expiry cell in the register after the renewal arrives, and the next scan picks it up.",
+  "Recording a renewal: the documented platforms do not describe receiving a renewed document back. A person updates the Expiry cell in the register after the renewal arrives, and the next scan picks it up.",
   "Escalation: only the owner digest exists. No alert goes to a client, a manager or an overdue subcontractor.",
   "Smoke alarm and equipment renewal visits, and grouping those jobs by travel route: judgment and job-system work that this workflow does not cover.",
   "The register must be one Excel table with four columns (Holder, Email, Item, Expiry). A business with another layout must reshape its table first.",

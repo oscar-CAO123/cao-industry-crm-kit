@@ -1,5 +1,5 @@
 // Podium: the reviews the business holds, and the review invite that asks a customer for one.
-// Field names come from Podium's official reference (review, review invite and review objects; endpoint-map/raw/podium).
+// Field names come from Podium's official reference (review, review invite and review objects).
 // Reading reviews is a draft. An invite reaches a customer, so it is only ever queued for a person to approve.
 // Replying to a review is not wired here: its path needs {uid}, and the kit maps no parameters for that Podium operation.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";

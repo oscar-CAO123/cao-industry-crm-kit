@@ -38,7 +38,7 @@
  },
  "gaps": [
   "Cliniko: its appointments, attendee cancel and reminder flags are mapped, but the captured vendor docs show only the equality filter form (q[]=field:=value). A time window (starts_at from and to) needs a comparison filter that is not confirmed, so no adapter is built. Confirm it on a Cliniko trial account, then build the adapter.",
-  "Acuity: the evidence names it, but the kit has no Acuity platform folder, so no operations are mapped.",
+  "Acuity: the docs name it, but the kit has no Acuity platform folder, so no operations are mapped.",
   "Calendly cannot tell who attended. The no-show cron therefore queues every finished booking for a person to decide, and a rejected one stays rejected. A cron that knows attendance (a clinic system flag such as Cliniko's did_not_arrive) would replace this once that adapter exists.",
   "Booking a new slot (availability-check, book-slot, confirm-booking): not built. It needs the client's answers and a slot choice a person should make. Calendly's invitee create is in the kit but is not a live or draft op of this workflow.",
   "Reminders: the kit sends no reminder. Calendly's own invitee reminders carry this step, and Calendly does not expose whether a reminder went out, so the kit cannot confirm it. Text reminders need an SMS adapter (Twilio, MobileMessage or JustCall have mapped operations here); none is built.",

@@ -1,5 +1,5 @@
 // Shared shapes for the event ticketing workflow. The Eventbrite adapter speaks these; field names come from Eventbrite's
-// vendor spec (endpoint-map/raw/eventbrite/spec.apib): Event, Ticket Class, Attendee, Team and Pagination objects.
+// vendor spec: Event, Ticket Class, Attendee, Team and Pagination objects.
 
 export interface Settings {
   business_name?: string;

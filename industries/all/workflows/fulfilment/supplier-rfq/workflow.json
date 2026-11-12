@@ -48,13 +48,13 @@
     "xero": {"status": "docs-only", "covers": "purchase order drafted in DRAFT, moved to AUTHORISED only on approval"}
   },
   "gaps": [
-    "Buildxact: runs RFQs, quote receipt and purchase orders in product (the evidence rates send-rfq, receive-quotes and raise-po as supported), but the kit maps only its sign-in. Its RFQ and purchase order endpoints are needed before an adapter can be built.",
-    "Procore and EstimateOne: captured in the platform evidence, but neither has a kit platform folder, so no operations are mapped.",
-    "ServiceM8 supplier and material lists are mapped in the kit but not used here: the evidence names no ServiceM8 RFQ step.",
+    "Buildxact: runs RFQs, quote receipt and purchase orders in product (the docs rate send-rfq, receive-quotes and raise-po as supported), but the kit maps only its sign-in. Its RFQ and purchase order endpoints are needed before an adapter can be built.",
+    "Procore and EstimateOne: captured in the platform docs, but neither has a kit platform folder, so no operations are mapped.",
+    "ServiceM8 supplier and material lists are mapped in the kit but not used here: the docs name no ServiceM8 RFQ step.",
     "Writing the RFQ record (items, suppliers, needed-by date) into the store has no CLI command yet. tools/workflow.ts is core and is not edited by this workflow.",
     "Recording an award (the supplier, its Xero ContactID and the agreed unit prices) also has no CLI command yet. Until one exists, the CRM shell or a person writes it to the RFQ record.",
     "Comparing prices, checking like-for-like scope and negotiating are judgment steps for the agent skill and the estimator. The crons never parse or rank a price.",
-    "Supplier award sign-off is not documented in the platform evidence. The award is a person's decision recorded on the RFQ record.",
+    "Supplier award sign-off is not documented in the platform docs. The award is a person's decision recorded on the RFQ record.",
     "Delivery follow-up, late-delivery chasing and receipt matching have no mapped operations in this kit.",
     "Every adapter is docs-only until a sandbox mailbox and a Xero demo company prove it."
   ]

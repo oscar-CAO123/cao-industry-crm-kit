@@ -1,6 +1,6 @@
 // Clio: the time entries (activities), the running timer and the matters a fee earner bills against.
 // Reads are draft operations. Creating a time entry is a live operation: a cron queues it and a person approves it.
-// Field names come from docs.developers.clio.com (endpoint-map/raw/clio/spec, Activity and Timer schemas).
+// Field names come from docs.developers.clio.com (Activity and Timer schemas).
 // Open item for a live account: the quantity unit. The vendor spec says seconds on the latest API version and hours on
 // version 4.0.3 and earlier. This adapter sends seconds with no version header, so a sandbox must confirm it first.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";

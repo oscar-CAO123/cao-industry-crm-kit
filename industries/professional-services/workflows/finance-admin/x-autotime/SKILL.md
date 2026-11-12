@@ -5,7 +5,7 @@ description: Automatic time capture for a professional services practice on Clio
 
 # Automatic time capture
 
-Docs-only. Built from the Clio docs and the mining run for this job. Clio is the only platform with mapped operations in the kit.
+Docs-only. Built from the Clio docs. Clio is the only platform with mapped operations in the kit.
 
 ## What runs on its own
 Three crons in `index.ts`. `capture` runs every 30 minutes. It reads the fee earner's time entries for today and the running timer, then flags any entry with no matter and any entry with no note. `matters` runs each morning and reads the open matters, so an entry can be checked against a real matter. `entries` runs every 15 minutes. It takes each time entry a person recorded in the workflow store and queues it in Clio for approval.
@@ -24,4 +24,4 @@ None of the crons writes a time entry. A queued entry waits for a person to appr
 - A queued entry shows in the approvals list with its matter, date and hours. Approve it only if those are right.
 
 ## Not covered
-Timers starting and stopping, the billable decision, write-offs, period timesheet submission, partner approval, and invoice handover. These stay with the fee earner and the practice's own process. Actionstep and Harvest are documented in the evidence but have no kit operations, so they are not mapped.
+Timers starting and stopping, the billable decision, write-offs, period timesheet submission, partner approval, and invoice handover. These stay with the fee earner and the practice's own process. Actionstep and Harvest are documented in the platform docs but have no kit operations, so they are not mapped.

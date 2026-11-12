@@ -38,7 +38,7 @@
   "Active-ad reads cover the first page only. Following paging.next needs core: AdAccount.get.ads in core/sdk/platforms/meta-ads/ops.json maps no limit or after parameter, and the SDK refuses unmapped params. Until then a losing ad past that page is not paused (the safe direction).",
   "The review cron uses the snapshot from the last monitor run, which can be up to six hours old.",
   "Thresholds (minimum spend, CTR floor, pause cap) are starting values. The owner sets them per client before the review cron is relied on.",
-  "Every Meta step is partial in the platform evidence and the docs are developer docs, not product help. Each step needs a check in Ads Manager before it is relied on.",
+  "Every Meta step is partial in the platform docs and the docs are developer docs, not product help. Each step needs a check in Ads Manager before it is relied on.",
   "The workflow is docs-only until a sandbox or test ad account proves the read and pause operations."
  ]
 }

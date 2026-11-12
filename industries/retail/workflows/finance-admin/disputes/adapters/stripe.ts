@@ -1,7 +1,7 @@
 // Stripe: disputes and refunds read as drafts. A refund and the evidence submission are live operations: they are only
 // ever queued, and run when a person approves them. Field names come from Stripe's own OpenAPI spec (the dispute object,
 // dispute_evidence, the update-dispute body, the refund create body and GET /v1/disputes, /v1/refunds), read from
-// endpoint-map/raw/stripe/spec. Stripe takes form-encoded bodies; the SDK encodes them the way stripe-node does.
+// Stripe's official spec. Stripe takes form-encoded bodies; the SDK encodes them the way stripe-node does.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, type DisputeRecord, type RefundRecord, type RefundDecision, type EvidenceNote, type Money,
          CURRENCY, EVIDENCE_TYPES, id, cents, money } from "../types.ts";

@@ -45,6 +45,6 @@
     "Serviceability, credit checks, lender selection and lender lodgement have no mapped operation. The agent does these as judgment, or the broker does them in the lender portal.",
     "Approval and decline letters, settlement tasks and the chase of outstanding documents need the platform's status, which is not built. Only the first document request is drafted.",
     "HubSpot and Zoho are in the kit but are not mapped for loan steps, so they are not built. Add them when a client names the CRM they use.",
-    "The adapter is docs-only until a Microsoft 365 developer tenant proves it. Field names were checked against the Microsoft Graph spec in endpoint-map/raw/microsoft-365."
+    "The adapter is docs-only until a Microsoft 365 developer tenant proves it. Field names were checked against the Microsoft Graph spec."
   ]
 }

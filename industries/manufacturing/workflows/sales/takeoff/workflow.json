@@ -35,7 +35,7 @@
   "PlanSwift: no platform folder and no ops file in the kit. Its pages are marketing pages, not a user manual.",
   "Reading the drawing files attached to a request needs users.mailFolders.messages.ListAttachments added to draft_ops with a fetch step. Not in this build, so the drawings are read by the estimator.",
   "Supplier price requests (emailing suppliers for prices) have no adapter. The rate card table is the supplier price list until one exists.",
-  "Cut lists, sheet and bar sizing, labour hours, margin review, internal sign-off of the takeoff and production hand-off are not covered by any platform in the evidence.",
+  "Cut lists, sheet and bar sizing, labour hours, margin review, internal sign-off of the takeoff and production hand-off are not covered by any platform in the platform docs.",
   "The adapter is docs-only until a Microsoft 365 developer tenant proves the Excel table and Outlook draft calls."
  ]
 }

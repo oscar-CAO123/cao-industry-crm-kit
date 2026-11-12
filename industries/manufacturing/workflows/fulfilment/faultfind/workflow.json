@@ -34,7 +34,7 @@
   "MEX Maintenance (mex-cmms) is the closest fit to this job, but the kit has no mex-cmms platform and no mapped operations. Its help pages describe work requests and inventory, not a fault-diagnosis flow.",
   "MRPeasy: its help pages describe no breakdown or repair workflow, and the kit has no mrpeasy platform.",
   "Odoo: the kit maps one read (a version check), so its maintenance module is not mapped.",
-  "AroFlo: the kit maps its task and quote operations, but its signer is not built (auth type unsupported), so nothing can be called yet. Its endpoint-map folder holds pages, not a schema.",
+  "AroFlo: the kit maps its task and quote operations, but its signer is not built (auth type unsupported), so nothing can be called yet. Its docs are pages, not a schema.",
   "Lockout and isolation: no mapped platform holds the procedure. The note reminds the crew to make the machine safe first; the site's own procedure governs.",
   "Fault diagnosis and the return-to-production sign-off are judgment steps at the machine. The drafted note lists history and parts only; it does not name a cause.",
   "Breakdown status name: ServiceM8 status names are set per business. settings.breakdown_status must match the client's own name for an open breakdown.",

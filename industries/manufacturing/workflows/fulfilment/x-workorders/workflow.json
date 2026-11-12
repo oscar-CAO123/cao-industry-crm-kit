@@ -37,7 +37,7 @@
   "Unleashed: a parked work order is created without lines; the bill of materials or the buyer must fill them. Confirm on a live account.",
   "Unleashed: Complete is sent with no body; whether it needs quantities or lines is not confirmed against a live account.",
   "Unleashed: list calls read the first page only (200 records); paging is not wired.",
-  "Labour time, downtime windows and quality release are not covered: the evidence does not describe them for this business and no mapped platform records them.",
+  "Labour time, downtime windows and quality release are not covered: the docs do not describe them for this business and no mapped platform records them.",
   "Supplier orders for shortfalls are not placed: the materials cron lists them for the buyer. Ordering from a supplier is a judgment step."
  ]
 }

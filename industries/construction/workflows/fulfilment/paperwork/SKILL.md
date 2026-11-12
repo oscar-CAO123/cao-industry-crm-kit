@@ -35,6 +35,6 @@ CRM shell. Nothing in this skill changes that.
 - `held`: the draft has open comments. Resolve them in the Doc, and the next draft run drafts the email.
 
 ## Not covered yet
-Procore, Monday.com, Simpro, Sitemate and NEO, which the calls name but the kit does not map for this job. PDF
+Procore, Monday.com, Simpro, Sitemate and NEO, which businesses use but the kit does not map for this job. PDF
 attachments, eSignature, scheduled cadences such as plant pre-starts, and the five-business-day deadline on extension
 of time claims.

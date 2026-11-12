@@ -17,7 +17,7 @@
   "status": "record-only",
   "terms_checked": true,
   "terms": {
-    "checked": "2026-11-08, HubSpot developer terms (legal.hubspot.com/hs-developer-terms) and account types page, read through model_guard with a clean watcher verdict",
+    "checked": "2026-11-08, HubSpot developer terms (legal.hubspot.com/hs-developer-terms) and account types page",
     "forbids": ["reverse engineering HubSpot products and services", "storing HubSpot account passwords", "charging end users for use of or access to HubSpot functionality", "reselling the developer tools"],
     "test_account": "free developer test account, created inside a standard HubSpot account under Development, Testing, Test Accounts; no real data, cannot sync with other accounts, expires after 90 days with no API calls",
     "open": "the no-charging clause needs the PID legal read before the kit reaches a client"

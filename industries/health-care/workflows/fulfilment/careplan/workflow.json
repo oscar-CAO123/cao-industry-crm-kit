@@ -51,7 +51,7 @@
     "Cliniko has no care plan document, goals, funding or eligibility check, clinician sign-off, team allocation or plan review in the docs read: those steps are skill work or manual until a live account shows otherwise.",
     "Client consent: the docs say patients accept the privacy policy when booking online, but no consent endpoint is mapped for an intake consent record, so consent is not covered.",
     "Whether creating a patient form emails the patient is not stated in the API spec, so the form create stays in live_ops and a person sends it from Cliniko if it does not.",
-    "Splose (the second platform in the evidence) has no mapping in the kit: its help centre was read, but there is no ops.json or adapter, so it is not built.",
+    "Splose (the second platform in the platform docs) has no mapping in the kit: its help centre was read, but there is no ops.json or adapter, so it is not built.",
     "The Cliniko list filter (created_at on q[]) and the treatment note template behaviour are tested offline only; a live Cliniko account is needed to confirm them.",
     "Confirm the workflow steps and platform coverage with the business before enabling its crons."
   ]

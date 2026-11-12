@@ -30,9 +30,9 @@
   "google-workspace": {"status": "docs-only", "covers": "records tab (read), Doc copy from a template, plain-text fill, comment check, document log row, share to the client after approval"}
  },
  "gaps": [
-  "Microsoft 365 (Word, Excel, OneDrive, Outlook): no adapter. The platform evidence maps no operations for it, so templates and shares do not run there yet.",
+  "Microsoft 365 (Word, Excel, OneDrive, Outlook): no adapter. The platform docs map no operations for it, so templates and shares do not run there yet.",
   "Record sources other than a Google Sheet (Simpro, Xero, Monday.com, Style Arcade, ShiftCare and similar): not mapped here. Ready rows must be put into the records tab first.",
-  "PandaDoc: its document operations are mapped in the kit, but the platform evidence has no support rows for this job, so no adapter is built. Worth a go-ahead before building.",
+  "PandaDoc: its document operations are mapped in the kit, but the platform docs have no support rows for this job, so no adapter is built. Worth a go-ahead before building.",
   "Canva (named for template picking): not mapped as a document platform here.",
   "Reports that need judgment (progress reports from quoting ratios, financial commentary, letters that answer a specific question) are agent-skill work. The cron only fills named fields from the record.",
   "Templates are plain Google Docs with {{Header}} placeholders. Tables, images and headers or footers are not filled; a placeholder left in them is not caught.",

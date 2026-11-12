@@ -48,6 +48,6 @@
   "Xero's own invoice reminders: if they are switched on for the same invoices, the client gets two chasers. Check and switch off one before go live.",
   "Phone chasing, payment plans, disputes and write-offs stay with a person. The workflow only lists who is past the last reminder.",
   "Reconciliation is manual and is not integrated with Xero here, so it is not covered.",
-  "Both adapters are docs-only until a Xero demo company and a Microsoft 365 developer tenant prove them. The platform evidence file (all-payment-chasing-platforms.json) was not present, so platform support was taken from the kit's ops.json and the vendor specs only."
+  "Both adapters are docs-only until a Xero demo company and a Microsoft 365 developer tenant prove them. No platform docs were available, so platform support was taken from the kit's ops.json and the vendor specs only."
  ]
 }

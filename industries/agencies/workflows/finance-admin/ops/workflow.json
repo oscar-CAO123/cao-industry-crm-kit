@@ -32,7 +32,7 @@
  "gaps": [
   "Productive filters and includes: the kit sends a filter as one JSON string, not Productive's filter[field][op] syntax, so every read here is unfiltered (the first page the server returns) and the code filters in memory. Filtered reads and paging need a change in core/sdk/call.ts, which this workflow does not make.",
   "Productive is a spec-only platform, tested offline. Field names come from its official OpenAPI spec, not a live account. budget_usage is read as a percentage, as the spec describes it; unverified on a real account.",
-  "Monday.com and Slack are mapped in the kit but have no adapter here. Teamwork and Harvest are named in the spec's platform list and are not in the kit at all.",
+  "Monday.com and Slack are mapped in the kit but have no adapter here. Teamwork and Harvest are not in the kit at all.",
   "Reporting dashboards, the tool most, have no platform in the kit.",
   "Client status updates, scope-and-estimate and resource planning are judgment steps for the agent, not crons.",
   "Time capture is not built: no cron reads or writes time entries.",

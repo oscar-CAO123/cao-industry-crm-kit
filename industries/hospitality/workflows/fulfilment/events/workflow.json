@@ -29,8 +29,8 @@
    "google-workspace": {"status": "docs-only", "covers": "enquiry email list and headers, calendar free-busy checks and holds with no guests, reply drafts in the thread, reply sends (approval only)"}
  },
  "gaps": [
-   "Typeform is not built: the mining run has no Typeform platform evidence for this workflow, so enquiries arrive by Gmail only.",
-   "Microsoft 365: the mined pages hold no event or booking content and no kit operation covers events, so Outlook is not built.",
+   "Typeform is not built: there are no Typeform platform docs for this workflow, so enquiries arrive by Gmail only.",
+   "Microsoft 365: the pages read hold no event or booking content and no kit operation covers events, so Outlook is not built.",
    "Roller has no platform in the kit (core/sdk/platforms/roller is absent), so Roller bookings cannot be read or changed.",
    "Menus, set-menu choices and dietary versions (menu-and-quote) have no mapped platform, so they stay a judgment step.",
    "Entering the booking details (date, times, guest count) for each enquiry needs a screen in the CRM shell: nothing writes the bookings namespace yet. Until it exists, the agent or a person writes it into the store.",

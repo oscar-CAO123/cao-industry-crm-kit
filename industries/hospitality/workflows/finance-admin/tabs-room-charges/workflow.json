@@ -36,7 +36,7 @@
  "draft_ops_note": "Reads only. A guest's bill never changes from a cron: creating a folio, moving or routing a charge are live operations and wait for a person.",
  "adapters": {},
  "gaps": [
-  "No tab or POS source is mapped. Lightspeed (Tableside, Foratable) and Mews are not in the kit's platform list, and the mining pages for them are restaurant POS, blog or press text. Oracle Opera was fetched with the wrong pages entirely.",
+  "No tab or POS source is mapped. Lightspeed (Tableside, Foratable) and Mews are not in the kit's platform list, and the pages read for them are restaurant POS, blog or press text. Oracle Opera was fetched with the wrong pages entirely.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Cloudbeds is the only mapped property system here, and its ops are spec status, not proven against a real account. No adapter file is written: a live Cloudbeds account and the request body for moveTransactions and routeTransactions are needed first.",
   "The folio-post cron is not wired. It needs the tab feed, the charge body fields confirmed from the vendor spec, and a sandbox property.",

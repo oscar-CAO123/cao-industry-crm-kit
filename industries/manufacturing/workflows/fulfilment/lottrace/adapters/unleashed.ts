@@ -1,6 +1,6 @@
 // Unleashed: batch, serial, stock and count records. Reads are draft operations. A warehouse transfer is a live operation and is only queued.
 // Calls go through the SDK, which signs each Unleashed request with the sign-in keys from the environment (core/sdk/call.ts, provider "unleashed").
-// Field names come from the vendor's docs pages in endpoint-map/raw/unleashed.
+// Field names come from the vendor's docs pages.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, type Lot, type Serial, type Position, type AuditEntry, type Hold, PRODUCT, text, num, guidOf, warehouseOf } from "../types.ts";
 

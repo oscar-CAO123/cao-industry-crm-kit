@@ -1,5 +1,5 @@
 // Shared shapes for the spray and harvest records workflow. The register's columns are the owner's own workbook
-// table, written through Microsoft 365 (the platform the one call names). Records enter the local store from the
+// table, written through Microsoft 365. Records enter the local store from the
 // owner's words or paper dockets (see SKILL.md); nothing here reads a spray or grain platform.
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 

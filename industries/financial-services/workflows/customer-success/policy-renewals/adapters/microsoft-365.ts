@@ -1,6 +1,6 @@
 // Microsoft 365 for the renewals workflow: the broker's Outlook folder, the policy register (an Excel table) and
 // Outlook drafts. A send is never made here: draftMail returns the send act and the caller queues it for approval.
-// Operation ids and body fields are the ones in core/sdk/platforms/microsoft-365 and the Graph spec in endpoint-map/raw.
+// Operation ids and body fields are the ones in core/sdk/platforms/microsoft-365 and the Graph spec.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { EMAIL, type MailMessage, type Policy, type Settings } from "../types.ts";
 

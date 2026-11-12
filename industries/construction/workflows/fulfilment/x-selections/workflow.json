@@ -48,7 +48,7 @@
     "ProCalc (allowances in the estimate) and Constructive (client portal): no platform folder in the kit, so the allowance and portal steps are the owner's own tools for now. The register holds the allowance values the owner types in.",
     "Google Form: the form itself is not mapped. Its answers are read from the linked sheet through the register, so the form must keep writing to the register's columns.",
     "Client browsing and choosing happen in the client's own booklet or portal. The agent cannot see what the client looked at, only what they chose.",
-    "Allowance comparison, variation or change order, sign-off, supplier ordering, lead times and installation scheduling have no mapped operation on any platform in the evidence. Each is a person's step.",
+    "Allowance comparison, variation or change order, sign-off, supplier ordering, lead times and installation scheduling have no mapped operation on any platform in the platform docs. Each is a person's step.",
     "Judgment steps (answering a client's question from the booklet, deciding whether a request is an extra that needs a variation, choosing the chase tone) belong to the agent skill, not the crons.",
     "Every adapter is docs-only until a sandbox Google Workspace account proves it. Its platform status is spec, tested offline only.",
     "A rejected pack is not queued again: a person redoes it by hand."

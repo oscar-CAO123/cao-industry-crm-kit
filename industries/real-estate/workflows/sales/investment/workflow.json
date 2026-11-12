@@ -35,7 +35,7 @@
  },
  "gaps": [
   "Comparable sales: no mapped per-property comparables lookup. Domain's listings search is a POST that the kit classes as a write, so it is not a draft operation here. The price estimate is the only valuation read.",
-  "Domain price estimate response: the vendor page in endpoint-map/raw does not show the response fields (the OpenAPI spec was not downloaded), so the adapter stores the reply as returned and nothing reads named fields from it.",
+  "Domain price estimate response: the vendor page does not show the response fields (the OpenAPI spec was not downloaded), so the adapter stores the reply as returned and nothing reads named fields from it.",
   "Present to investor: no mapped platform sends email or messages for this job. google-workspace and microsoft-365 have no mail or Sheets operations in the kit's ops files. Four-property shortlists go out by hand until a sending adapter is mapped.",
   "Live operations: none. The only outward step (sending properties to the investor) has no mapped operation, so nothing is queued for approval.",
   "CoreLogic RP Data: the pages supplied are market insight articles with no product or API docs, so it is not mapped.",

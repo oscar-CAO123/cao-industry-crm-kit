@@ -25,7 +25,7 @@
     "smokeball": {"status": "docs-only", "covers": "lead list, parties on a matter, related parties, contact name search, open a lead as a matter"}
   },
   "gaps": [
-    "Actionstep: the platform evidence describes a conflict check, but the kit has no Actionstep platform and no mapped operations, so it is not built here.",
+    "Actionstep: the platform docs describe a conflict check, but the kit has no Actionstep platform and no mapped operations, so it is not built here.",
     "Smokeball's docs describe no conflict check, party list, ethical wall, client notice, recheck or conflict register. The name search in this workflow is our own match against Smokeball contacts, not Smokeball's conflict engine. Confirm the search covers what the practice needs on a sandbox account.",
     "Smokeball is spec status and tested offline only. It needs a sandbox account before any cron runs against a real practice.",
     "No partner sign-off or decline is recorded by this workflow. The runtime has no decision entry point, so a partner reviews name matches in Smokeball and approves the open-matter queue item. Recording a decline needs a core addition.",

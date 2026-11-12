@@ -1,6 +1,6 @@
 // Calendly: the appointment book. Reads scheduled events and their invitees (draft operations), and a no-show mark
-// (a live operation: a person approves it). Field names come from Calendly's official spec in
-// endpoint-map/raw/calendly/spec: a list returns {collection, pagination}; an event has uri, start_time, end_time, name;
+// (a live operation: a person approves it). Field names come from Calendly's official spec:
+// a list returns {collection, pagination}; an event has uri, start_time, end_time, name;
 // an invitee has uri, email, name, status and no_show; the no-show body is {invitee: <invitee uri>}.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, EMAIL, EVENT_URI, INVITEE_URI, text } from "../types.ts";

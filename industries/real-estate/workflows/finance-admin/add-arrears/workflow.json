@@ -36,7 +36,7 @@
   "VaultRE: the kit maps tenancies, tenants and contact email, but no rent ledger or arrears operation. Its tenancy list carries no amount owing, so no adapter.",
   "Payment plans, disputes and collectors: Re-Leased keeps an arrears status on the tenancy, but an invoice does not name its tenancy in the spec, so the reminder cannot see it. The person approving each send must check the account first.",
   "Tenant calls, notice to remedy, owner arrears updates, escalation to a collector or tribunal, and bond recovery at exit: judgment steps, not automated.",
-  "Reminder wording and timing: the one call gives 1 to 7 days, so the default steps are 1 and 7 days. Wording is a template the business should approve.",
+  "Reminder wording and timing: the default steps are 1 and 7 days. Wording is a template the business should approve.",
   "Re-Leased notes cannot be written (only read), so each reminder is recorded in the register workbook, not on the Re-Leased account.",
   "The Re-Leased spec's list example and its schema disagree on whether Data is one invoice or an array. The adapter accepts both; confirm on a sandbox.",
   "Both adapters are docs-only until a Re-Leased sandbox and a Microsoft 365 developer tenant prove them."

@@ -49,7 +49,7 @@
   "Fireflies action items are the platform's own summary output. Their quality needs a live check. The kit maps no owner or due date inside Fireflies, so those come only from a proposal.",
   "Chasing actions: no mapped operation messages a staff member or a client. Overdue actions are flagged in the store and the chase is a person's step.",
   "Meeting booked and prepare: the calendar booking and any pre-meeting brief are outside this workflow. Fireflies AskFred answers questions about past meetings and is not a brief.",
-  "Logging to a CRM and task tools: the calls name Ignition, Podio, ServiceM8, Simpro, Deputy, Microsoft 365, WhatsApp, Telegram and others. None is an adapter here. Fireflies' own CRM sync is set in Fireflies, not run from this workflow.",
+  "Logging to a CRM and task tools: businesses commonly use Ignition, Podio, ServiceM8, Simpro, Deputy, Microsoft 365, WhatsApp, Telegram and others. None is an adapter here. Fireflies' own CRM sync is set in Fireflies, not run from this workflow.",
   "Proposals: tools/workflow.ts has a propose command for quoting only. An agent's action list for a meeting goes into the proposals namespace through the CRM shell until a meeting command exists.",
   "Review and other steps: not covered.",
   "Granola transcripts are read up to settings.granola.max_transcript_pages pages of 100 items and capped at 30,000 characters. Longer meetings are cut.",

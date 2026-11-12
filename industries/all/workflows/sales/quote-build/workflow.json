@@ -62,13 +62,13 @@
   "microsoft-365": {"status": "docs-only", "covers": "Outlook intake and drafts, Excel rate card and register; needed by the Xero adapter to send", "reused_from": "industries/construction/workflows/sales/quoting/adapters/microsoft-365.ts"}
  },
  "gaps": [
-  "HubSpot has the most support in the evidence (7 steps yes, 3 partial, 6 mapped operations for quotes and line items), but it has no adapter yet. Quote and line-item property names (title, expiry, amount, product) are not in the HubSpot spec in the endpoint map, so they cannot be checked. Add an adapter once they are confirmed there.",
-  "MYOB: 4 steps are supported in the evidence, but the kit maps only a read of a sale quote. No write, so no adapter.",
+  "HubSpot has the most support in the platform docs (7 steps yes, 3 partial, 6 mapped operations for quotes and line items), but it has no adapter yet. Quote and line-item property names (title, expiry, amount, product) are not in the mapped HubSpot spec, so they cannot be checked. Add an adapter once they are confirmed there.",
+  "MYOB: 4 steps are supported in the platform docs, but the kit maps only a read of a sale quote. No write, so no adapter.",
   "Supplier and subcontractor price requests: agent skill. The owner's usual way, recorded as a proposal.",
   "Measure-scope and takeoff: agent skill. Quantities go into a proposal. The kit has no takeoff adapter (Bluebeam, PlanSwift, Groundplan, Tally) for this workflow.",
   "Revisions after a send: not covered. Handled by hand.",
   "The CRM entry 'proposal-web' has no kit adapter. Proposals enter through the propose command and the store.",
-  "Microsoft 365 is not in the platform evidence file. It is included because the Xero adapter sends through it.",
+  "Microsoft 365 is not in the platform docs. It is included because the Xero adapter sends through it.",
   "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it.",
   "Done in quote-build's own copy of the ServiceM8 quote step (adapters/servicem8.ts). Lines are written only when missing, and the send is not queued until every quote line is read back on the job, so a retry cannot leave the job short of the quote total. The construction adapter it imports is unchanged, and its own draftQuote still has the older check.",
   "Done in quote-build's own copy (adapters/servicem8.ts): the stored job id is UUID-checked before it goes into any OData filter on the job-lines and attachments reads."

@@ -1,5 +1,5 @@
-// Sign-in, keys and hosts for the approved-scope tools (9 Nov 2026), from each vendor's own reference pages
-// (endpoint-map/extracted/<tool>.json, each grounded by its reader's check). All are proof "docs": unproven until a sandbox run.
+// Sign-in, keys and hosts for the approved-scope tools (9 Nov 2026), from each vendor's own reference pages.
+// All are proof "docs": unproven until a sandbox run.
 // Shapes match the platform table in tools/sdk-generate.mjs.
 // A DNS name whose last label is letters: never a bare IP address (a private or metadata address).
 const HOST = "([a-z0-9-]+\\.)+[a-z]{2,63}";

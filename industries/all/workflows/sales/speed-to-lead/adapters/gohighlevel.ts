@@ -1,5 +1,5 @@
 // GoHighLevel: where the new lead, the conversation and the owner's task live. Field names come from the vendor's
-// official spec (endpoint-map/raw/gohighlevel/spec). Reads and internal tasks are draft operations; a text to the lead is
+// official spec. Reads and internal tasks are draft operations; a text to the lead is
 // live and only ever queued by index.ts.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, clean, id, phoneOf, ID } from "../types.ts";

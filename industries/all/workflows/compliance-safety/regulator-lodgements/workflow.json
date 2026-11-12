@@ -48,7 +48,7 @@
   "The kit has no operation that updates a register row. A person marks an item Lodged in Excel, and the reminders stop only then.",
   "Judgment steps stay with a person: gathering information, preparing and checking the report, responding to a regulator, and any objection or dispute.",
   "Intake depends on the search word. A regulator notice that does not carry it is not read.",
-  "The Microsoft 365 adapter is docs-only: it has not run against a tenant. Field names come from the Microsoft Graph OpenAPI spec in endpoint-map/raw/microsoft-365.",
+  "The Microsoft 365 adapter is docs-only: it has not run against a tenant. Field names come from the Microsoft Graph OpenAPI spec.",
   "Excel may reformat a typed date on write. The reminder reads a text date or a serial number, and a sandbox run should confirm the Due column comes back in either form."
  ]
 }

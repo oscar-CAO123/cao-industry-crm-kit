@@ -33,12 +33,12 @@
   "Unleashed: the SKU master and purchase orders most of these businesses run on, but its request signing (HMAC-SHA256) is not built in the kit, so no adapter can call it yet. Its docs read is in the endpoint map (status docs-read).",
   "Dext: a bill capture tool for bookkeepers. Its intake (email, Dropbox, PayPal) and its line extraction are described in the docs, but it is not in core/sdk/platforms, so no adapter.",
   "MRPeasy: its docs are in the endpoint map (status docs-read) and it can create products, but it is not in core/sdk/platforms, so no adapter.",
-  "Acumatica and PrintIQ, which the calls name for publishing and for supplier invoices against purchase orders: neither is in core/sdk/platforms.",
+  "Acumatica and PrintIQ, which businesses use for publishing and for supplier invoices against purchase orders: neither is in core/sdk/platforms.",
   "Microsoft 365 spreadsheet route (an Excel table as the register and the SKU list): the kit has the platform, but this build adds only the Xero adapter.",
   "Attaching the supplier PDF to the Xero bill: the attachment endpoint takes raw file bytes, and the SDK sends JSON bodies only. Needs a runtime change in core/, so it is not built.",
   "A bill changed in Xero after matching is held (needs-review, with the change noted) and is not matched again. No command clears that hold yet: a person must clear the stored change before the bill can be queued. Needs a runtime command in core/.",
   "Matching a bill to a purchase order before it is accepted: not built.",
-  "Units of measure, pack sizes and conversions: none of the evidence covers them, so a bill line is taken as billed.",
+  "Units of measure, pack sizes and conversions: none of the docs cover them, so a bill line is taken as billed.",
   "Reading the supplier PDF for lines the bill does not carry (scanned invoices): a skill step, described in SKILL.md.",
   "The Xero adapter is docs-only until a Xero demo company proves it."
  ]

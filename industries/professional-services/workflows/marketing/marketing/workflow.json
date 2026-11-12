@@ -39,7 +39,7 @@
     "meta-ads": {"status": "docs-only", "covers": "campaign-level insights for one ad account: spend, impressions, clicks, lead actions, date range"}
   },
   "gaps": [
-    "Only one of the five places is mapped. The evidence names Meta Ads alone, so website analytics, search visibility, lead sources and the practice system are not wired.",
+    "Only one of the five places is mapped. The docs name Meta Ads alone, so website analytics, search visibility, lead sources and the practice system are not wired.",
     "The Meta platform pages describe no professional services steps: matter matching, dashboards, a refresh schedule and a leadership review are not covered by the platform. The refresh here is the cron schedule, not a Meta feature.",
     "The meta-ads platform is spec status and tested offline only (platform.json). The insights field names are confirmed against the vendor spec (AdsInsights), but no live ad account has been read.",
     "The report lives in the workflow store only. No platform receives it yet, so the owner reads it from the CRM shell.",

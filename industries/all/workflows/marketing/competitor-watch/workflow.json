@@ -12,7 +12,7 @@
    "covered_by": {
     "set-watchlist": "cron (discover: Semrush similar domains as suggestions; the watchlist itself is set in settings)",
     "find-ads": "not built (no ad library operation mapped for Meta, Google or Semrush's ad research)",
-    "check-prices": "not built (no platform in the evidence has a mapped price operation)",
+    "check-prices": "not built (no documented platform has a mapped price operation)",
     "check-posts": "cron (watch: public Facebook Page posts; LinkedIn competitor posts not mapped)",
     "capture-evidence": "not built (no dated screenshots; the store keeps the post text and link)",
     "analyse-changes": "cron (watch: new posts since last run; authority: score and backlink change week on week)",
@@ -45,9 +45,9 @@
  },
  "gaps": [
   "Competitor ads: no ad library operation is mapped for Meta (no ads_archive), Google or Semrush's ad research (AdClarity). Ad watching is not built.",
-  "Competitor prices, packages and offers: no platform in the evidence has a mapped operation for them, and a competitor's pricing page is a web page, not an API. Not built.",
+  "Competitor prices, packages and offers: no documented platform has a mapped operation for them, and a competitor's pricing page is a web page, not an API. Not built.",
   "LinkedIn: the mapped LinkedIn operations read the client's own posts, analytics and ads. None reads a competitor's posts or ads, so there is no LinkedIn adapter.",
-  "Meta Page posts: the meta-ads adapter comes from the kit's mapped operations, not from this job's platform evidence file, because it is the only mapped read of competitor posts. Reading another Page's public posts needs a token with Page Public Content Access, which is not checked against a live account.",
+  "Meta Page posts: the meta-ads adapter comes from the kit's mapped operations, not from this job's platform docs, because it is the only mapped read of competitor posts. Reading another Page's public posts needs a token with Page Public Content Access, which is not checked against a live account.",
   "Page.get.posts has no fields parameter in the kit, so Graph returns its default post fields. The message or permalink can be missing; confirm in a live run.",
   "Semrush's Backlinks API v4 is in Early Access per its own docs. Endpoints, responses and pricing can change before general availability.",
   "The Semrush project create (POST /apis/v4/projects/v1/projects) is mapped from the vendor docs. The project id is read from the response as data.id, which is not confirmed against a live account.",

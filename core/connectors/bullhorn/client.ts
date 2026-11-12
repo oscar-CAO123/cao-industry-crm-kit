@@ -1,6 +1,6 @@
 import { composioEnabled } from "../../lib/connection-provider.ts";
-// Bullhorn sign-in (NEW, 8 Nov 2026). From Bullhorn's own docs, read through endpoint-map/model_guard.py with a watcher
-// model: bullhorn.github.io/rest-api-docs and bullhorn.github.io/Getting-Started-with-REST (bullhorn.com links them).
+// Bullhorn sign-in (NEW, 8 Nov 2026). From Bullhorn's own docs:
+// bullhorn.github.io/rest-api-docs and bullhorn.github.io/Getting-Started-with-REST (bullhorn.com links them).
 //
 //   1. Data centre: GET https://rest.bullhornstaffing.com/rest-services/loginInfo?username={API username}. Its answer
 //      holds the user's OAuth and REST URLs. The kit takes them by shape (https://auth-*.bullhornstaffing.com/oauth and

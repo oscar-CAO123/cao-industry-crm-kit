@@ -29,7 +29,7 @@
  },
  "gaps": [
   "MYOB: no adapter. The journal list is paged (400 rows by default, 5000 at most) and no paging parameter is mapped, so a full period's totals cannot be read safely. MYOB access-token exchange is also not built.",
-  "Shopify, Meta Ads, Deputy, Roller, Sync Hub, Style Arcade, ELMO, Microsoft 365 (Excel), Power BI, Looker Studio and BigQuery appear but have no platform evidence for this pack, so no adapter is built for them.",
+  "Shopify, Meta Ads, Deputy, Roller, Sync Hub, Style Arcade, ELMO, Microsoft 365 (Excel), Power BI, Looker Studio and BigQuery appear but have no platform docs for this pack, so no adapter is built for them.",
   "Cost check against budget and job or product profit: no mapped operation for Xero. The owner does these by hand or in the ledger.",
   "Forecast and cash flow: Xero's cash flow statement and budget summary are mapped but not read in this version.",
   "Commentary is judgment. The pack leaves it for the owner or the agent skill to write.",

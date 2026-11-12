@@ -43,7 +43,7 @@
  },
  "gaps": [
   "MYOB: three operations are mapped (Payroll Timesheet read and write, and the super fund read), and the pages say STP and super only. No adapter is built; the MYOB pages do not confirm hours capture or a pay run approval step.",
-  "Deputy's timesheet and payroll help-centre articles returned HTTP 403 during mining, so Deputy's own approval flow and pay run screens are not confirmed. The adapter uses the resource timesheet fields in Deputy's published spec only.",
+  "Deputy's timesheet and payroll help-centre articles returned HTTP 403 when read, so Deputy's own approval flow and pay run screens are not confirmed. The adapter uses the resource timesheet fields in Deputy's published spec only.",
   "Deputy's TotalTime is a number with no unit in the spec. It is read as hours and must be confirmed on a live Deputy account before the first run.",
   "Deputy's date filter format is not confirmed on a live account. The period is sent as YYYY-MM-DD.",
   "Deputy to Xero needs two settings the owner fills in: employee_map (Deputy employee id to Xero employeeID) and earnings_rate_id. No cron matches people by name.",

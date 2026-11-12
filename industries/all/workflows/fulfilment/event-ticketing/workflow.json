@@ -49,15 +49,15 @@
   "eventbrite": {"status": "docs-only", "covers": "event status and times, ticket types, attendees, check-in teams, and publishing (approval only)"}
  },
  "gaps": [
-  "Venue hire, supplier booking and catering orders: no platform in the evidence covers them, and Eventbrite holds only venue records. Not built.",
+  "Venue hire, supplier booking and catering orders: no documented platform covers them, and Eventbrite holds only venue records. Not built.",
   "Promotion, attendee reminders, thank-you messages and surveys: no send operation is mapped for Eventbrite, and no mailbox adapter is part of this workflow.",
   "Run sheets: Eventbrite's schedule operation is a write and is not used. The drafted run sheet holds times, check-in teams and team sizes only.",
   "Check-in: the Eventbrite check-in app is described from help text only. The crons read team sizes and checked-in flags, not live scans.",
   "Paging: attendee lists are followed through Eventbrite's continuation token, up to 20 pages (about 1,000 attendees at the default page size). A longer list is refused whole: its register is not updated and its wrap-up is not drafted, and the crons log it. last_item_seen is an ID cutoff used with changed_since, not the page token, so it is not used.",
   "Refunds: the refund operation is mapped in the kit, but no cron queues one. A refund needs a person's request first, which is not wired.",
-  "Humanitix and Moshtix: no operations are mapped in the kit, so there is no adapter. Typeform, named on one call for registration forms, has mapped operations but no platform evidence here, so it is not built.",
+  "Humanitix and Moshtix: no operations are mapped in the kit, so there is no adapter. Typeform, sometimes used for registration forms, has mapped operations but no platform docs here, so it is not built.",
   "Confirm the default cron times with the client.",
-  "Eventbrite field names come from the vendor spec in endpoint-map/raw. Not yet run against a live account. Needs EVENTBRITE_TOKEN.",
+  "Eventbrite field names come from the vendor spec. Not yet run against a live account. Needs EVENTBRITE_TOKEN.",
   "Only setup queues anything. The other three crons read and draft, because no other mapped step needs a person to approve a platform change."
  ]
 }

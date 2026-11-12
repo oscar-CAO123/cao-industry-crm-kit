@@ -1,5 +1,5 @@
 // Cliniko: the practice system that holds the invoices and their items. Reads only: nothing here changes a record.
-// Field names come from the vendor's API reference (endpoint-map raw/cliniko/pages/invoice.html, invoice-item.html):
+// Field names come from the vendor's API reference (the invoice and invoice-item pages):
 // invoices list under "invoices", items under "invoice_items"; invoice status is a number (10 Open, 20 Paid, 30 Closed, 40 Open credit).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { InvoiceRow, Settings } from "../types.ts";

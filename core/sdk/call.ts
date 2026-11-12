@@ -510,8 +510,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   };
 }
 
-// Schemes that sign each request over its final URL (8 Nov 2026, each from the vendor's own docs, read through
-// endpoint-map/model_guard.py with a watcher model):
+// Schemes that sign each request over its final URL (8 Nov 2026, each from the vendor's own docs):
 // - Unleashed (apidocs.unleashedsoftware.com/AuthenticationHelp): api-auth-signature = base64 HMAC-SHA256 of the query
 //   string only (no "?", empty when there is none) keyed with the API key, plus api-auth-id, client-type, and JSON
 //   Content-Type and Accept on every request.

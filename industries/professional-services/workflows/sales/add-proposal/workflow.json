@@ -31,7 +31,7 @@
  },
  "gaps": [
   "Podio is in the kit with operations, but the only call that names it uses it to rank tenders (qualify), not to write proposals. Not built.",
-  "Canva is named for the proposal template in one call and is in the kit, but no Canva page for this job was mapped. Not built.",
+  "Canva is often used for the proposal template and is in the kit, but no Canva page for this job was mapped. Not built.",
   "ChatGPT can be used for drafting replies. It is not a kit platform, so the drafting is the agent skill's job, not a cron's.",
   "HubSpot quote property names (hs_title, hs_expiration_date, hs_quote_amount, hs_status) and status values are not in the vendor spec. They come from settings and must be checked in the live account before any run.",
   "The quote-to-contact association type is not in the vendor spec (AssociationSpec is empty). associationTypeId comes from settings and must be set from the live account.",

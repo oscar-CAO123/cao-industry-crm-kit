@@ -52,7 +52,7 @@
   "Cliniko: whether a form moves from sent to completed, and how a signed copy is kept long term, need a live account to confirm.",
   "Cliniko: rates-check, plan manager or funder sending, renewal dates and end-of-agreement handling are not covered by the docs read.",
   "Halaxy: only one general marketing page was read. It describes no agreements, forms or signatures, and no ops file is mapped, so no Halaxy adapter was built. Its help-centre pages on forms, consent and invoicing need reading first.",
-  "DocuSign and PandaDoc are mapped in the kit, but no call or platform evidence for this workflow names them, so no adapter was built for them.",
+  "DocuSign and PandaDoc are mapped in the kit, but no platform docs for this workflow name them, so no adapter was built for them.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons."
  ]
 }

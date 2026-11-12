@@ -39,7 +39,7 @@
   "Samples and licensor approval: the licensor portal and the approval step are not mapped. A person does both.",
   "Freight: Cario has no operations file in the kit, so booking, tracking and customs entries are not built. Its help pages do not show product screens.",
   "Dropbox: the pages mapped cover billing only. File sharing for tech packs is not built.",
-  "SIN7: its operations are mapped in the kit, but the platform evidence has no entry for it, so no adapter was built. Inventory records stay manual.",
+  "SIN7: its operations are mapped in the kit, but the platform docs have no entry for it, so no adapter was built. Inventory records stay manual.",
   "Airtable (pricing and margin): mapped in the kit, not built for this workflow.",
   "Supplier email: a factory receives its purchase order from Xero by hand. The kit has no mailbox step for this workflow.",
   "The propose command in tools/workflow.ts only accepts enquiry ids. Jobs need the proposal written to the proposals store by id, which needs a runtime change (core/ is not edited here).",

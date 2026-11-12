@@ -1,4 +1,4 @@
-// SiteBook: the safety paperwork record. Field names come from SiteBook's developer docs (endpoint-map/raw/sitebook):
+// SiteBook: the safety paperwork record. Field names come from SiteBook's developer docs:
 // POST /v1/checklists takes CheckListId, JobId, Title; POST /v1/checklists/{checkListId}/swms takes SwmsId;
 // POST /v1/actions takes ActionId (client-supplied), ActionRequired, DueDate, AssignedToPersonnelId;
 // POST /v1/actions/{actionId}/email takes EmailTemplateId. Only the operations listed in workflow.json run from a cron.

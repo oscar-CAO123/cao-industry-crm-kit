@@ -34,9 +34,9 @@
   "Zoho: the supplied docs are Zoho Books help pages, not Zoho CRM deal pages. No lost-deal step is documented, so no adapter.",
   "Ask the client why they went elsewhere: this is a person's call. No approved reply template exists, so the kit drafts nothing to the client.",
   "Root-cause review and the decision on each change: the owner makes them. The kit has no write path for the owner's notes or decisions yet; they are recorded by hand until a review tool exists.",
-  "Price comparison against a winning offer or competitor: no platform in the evidence documents it.",
+  "Price comparison against a winning offer or competitor: no platform documents it.",
   "Pipeline and stage changes (process-change): not built. Changing a pipeline touches the whole team, so it stays a person's job until a live operation is mapped and approved.",
-  "Coaching the rep and sharing lessons with the team: no platform in the evidence documents it.",
+  "Coaching the rep and sharing lessons with the team: no platform documents it.",
   "The adapter is docs-only until a sandbox GoHighLevel sub-account proves the reads and the re-open."
  ]
 }
