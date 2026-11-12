@@ -506,7 +506,9 @@
   "hostFromEnv": false,
   "hostPatterns": [],
   "hosts": [
-   "campaign.api.bingads.microsoft.com"
+   "campaign.api.bingads.microsoft.com",
+   "clientcenter.api.bingads.microsoft.com",
+   "reporting.api.bingads.microsoft.com"
   ]
  },
  "midwinter-adviceos": {
@@ -729,7 +731,6 @@
   "hostFromEnv": false,
   "hostPatterns": [],
   "hosts": [
-   "api.siteminder.com",
    "directbooking.siteminder.com"
   ]
  },

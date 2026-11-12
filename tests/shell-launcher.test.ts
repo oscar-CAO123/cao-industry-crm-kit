@@ -150,12 +150,19 @@ test("a token in a mounted secret file reaches only the resolver, never the comm
   assert.ok(!r.stderr.includes("file-token-1"));
 });
 
-test("a token variable wins over the token file, and a missing, empty or unreadable file never stops the start", () => {
+test("the token file wins over a token variable, and a missing, empty or unreadable file never stops the start", () => {
   const s = stubNode();
   const f = path.join(s.dir, "op-token");
   fs.writeFileSync(f, "file-token");
   const both = run(s, show, { STUB_OUT: `V FOO ${b64("v")}\n`, OP_SERVICE_ACCOUNT_TOKEN: "env-token", SHELL_OP_TOKEN_FILE: f });
   assert.equal(both.status, 0);
+  assert.equal(both.stdout, "v|unset|gone|gone", "the variable is still dropped before the service starts");
+  assert.equal(fs.readFileSync(s.seen, "utf8"), "file-token");
+  fs.rmSync(s.seen);
+  // An empty file falls back to the variable, so a platform that offers only variables still starts with its keys.
+  const empty = path.join(s.dir, "empty-first"); fs.writeFileSync(empty, "\n");
+  const fallback = run(s, show, { STUB_OUT: `V FOO ${b64("v")}\n`, OP_SERVICE_ACCOUNT_TOKEN: "env-token", SHELL_OP_TOKEN_FILE: empty });
+  assert.equal(fallback.status, 0);
   assert.equal(fs.readFileSync(s.seen, "utf8"), "env-token");
   fs.rmSync(s.seen);
   for (const [label, file] of [["missing", path.join(s.dir, "nope")], ["empty", (() => { const e = path.join(s.dir, "empty"); fs.writeFileSync(e, "  \n"); return e; })()], ["a directory", s.dir]] as const) {
@@ -165,6 +172,16 @@ test("a token variable wins over the token file, and a missing, empty or unreada
     assert.match(r.stderr, /starting without 1Password keys/, label);
     assert.ok(!fs.existsSync(s.seen), `${label}: the resolver was not started`);
   }
+});
+
+test("systemd's credential (LoadCredential=op-token:...) is read from CREDENTIALS_DIRECTORY and wins over a variable", () => {
+  const s = stubNode();
+  const creds = path.join(s.dir, "creds"); fs.mkdirSync(creds);
+  fs.writeFileSync(path.join(creds, "op-token"), "systemd-token\n");
+  const r = run(s, show, { STUB_OUT: `V FOO ${b64("val")}\n`, CREDENTIALS_DIRECTORY: creds, OP_SERVICE_ACCOUNT_TOKEN: "env-token" });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.stdout, "val|unset|gone|gone");
+  assert.equal(fs.readFileSync(s.seen, "utf8"), "systemd-token");
 });
 
 test("a mapped name is cleared even when nothing loads: no token, or a resolver that fails", () => {

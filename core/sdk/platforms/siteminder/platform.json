@@ -6,7 +6,6 @@
  "authProof": "docs",
  "style": "rest",
  "hosts": [
-  "api.siteminder.com",
   "directbooking.siteminder.com"
  ],
  "hostFromEnv": false,
@@ -14,11 +13,12 @@
  "pinned": {},
  "serverVars": {},
  "auth": {
-  "type": "unsupported",
-  "note": "SiteMinder signs in differently per product (Basic, Bearer, API id headers); not wired yet"
+  "type": "header",
+  "header": "x-sm-api-key",
+  "env": "SITEMINDER_API_KEY"
  },
  "keys": [
-  "SITEMINDER_CREDENTIALS"
+  "SITEMINDER_API_KEY"
  ],
  "sources": [
   {

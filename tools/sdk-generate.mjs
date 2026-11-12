@@ -71,9 +71,16 @@ const P = {
     serverVars: { shop: { env: "SHOPIFY_SHOP", pattern: SUB }, version: { env: "SHOPIFY_API_VERSION", default: "2026-10", pattern: "[0-9]{4}-[0-9]{2}", callerMay: true } } },
 };
 
+// SiteMinder's partner APIs, from its own quick-start pages: each needs a signed SiteMinder partnership, its credentials
+// come from the Partner Portal, and only a pre-production host is published (the live one is issued on certification).
+const SITEMINDER_PARTNER = {
+  "channels-plus-api": "SiteMinder Channels Plus is for booking channels with a SiteMinder partnership (x-sm-api-id and x-sm-api-key from the Partner Portal; live host issued on certification); a hotel cannot get these credentials",
+  "smx-api": "SiteMinder SMX is for subscribers with a SiteMinder partnership (Bearer token from the Partner Portal; live host issued on certification); a hotel cannot get this token",
+  "pmsxchange-api": "SiteMinder pmsXchange is for PMS vendors with a SiteMinder partnership (Basic credentials per PMS; some endpoints are called by SiteMinder on the PMS's own server); a hotel cannot get these credentials",
+};
 // Wave 3 platforms (8 Nov): their sign-in and hosts live in their own file.
 import { W3 } from "./sdk-platforms-wave3.mjs";
-import { mapMicrosoftRest } from "./sdk-microsoft-rest.mjs";
+import { mapMicrosoftRest, MSADS_SOURCES } from "./sdk-microsoft-rest.mjs";
 for (const [k, v] of Object.entries(W3)) if (!P[k]) P[k] = v;
 // Approved-scope tools (9 Nov): their own file too.
 import { APPROVED } from "./sdk-platforms-approved.mjs";
@@ -316,6 +323,13 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       if (missing.length && !o.authUnsupported) o.authUnsupported = `needs ${missing.join(", ")} from the secret store, which this platform's sign-in does not map yet`;
       delete o.secretHeaders;
     }
+    if (id === "siteminder") {
+      // Five products, each with its own host and sign-in. Only Direct Booking is for the hotel itself: its key comes from the
+      // hotel's own SiteMinder account and every endpoint sits under https://directbooking.siteminder.com/public-api/api.
+      const product = (String(o.doc_url).match(/developer\.siteminder\.com\/([a-z-]+-api)\//) ?? [])[1];
+      if (product === "direct-booking-api") { if (!o.path.startsWith("/public-api/api/")) o.server = "https://directbooking.siteminder.com/public-api/api"; }
+      else o.authUnsupported = SITEMINDER_PARTNER[product] ?? "SiteMinder product not identified from its page; not wired";
+    }
     if (id === "zoom" && o.server.includes("{keyConnectorLb}"))
       o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";
     if (id === "plaid") o.fixedHeaders = { ...o.fixedHeaders, "Plaid-Version": "2020-09-14" }; // Match the pinned Plaid API schema.
@@ -409,7 +423,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
     pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}), ...(cfg.queryObjects ? { queryObjects: cfg.queryObjects } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
-    sources: [...m.sources.map((s) => ({ url: s.url, official: s.official })), ...(id === "zapier" ? [{ url: "https://docs.zapier.com/sdk/reference", official: "vendor-domain: docs.zapier.com" }] : [])], gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
+    sources: [...m.sources.map((s) => ({ url: s.url, official: s.official })), ...(id === "zapier" ? [{ url: "https://docs.zapier.com/sdk/reference", official: "vendor-domain: docs.zapier.com" }] : []), ...(id === "microsoft-advertising" ? MSADS_SOURCES : [])], gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
   // Host list: must equal the reviewed lock. A new or widened list stops the run until a person accepts it.

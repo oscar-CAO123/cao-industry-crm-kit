@@ -43,7 +43,7 @@ Asana and Mailchimp use their adapters in `core/sdk/vendor/`. Mailchimp uses the
 
 The Twilio adapter is restricted to the v2010 API for the account in `TWILIO_ACCOUNT_SID`; other Twilio products are refused.
 
-The monday pointer still targets the browser app-host SDK. Replacing it with the official Node.js SDK is pending review. See `vendor-sdks/index.json` for the per-package notes.
+monday has no SDK pointer; its workflows use the mapped GraphQL API in `core/sdk/platforms/monday/`. Other pointers' notes are in `vendor-sdks/index.json`.
 
 The Zoom adapter uses kit-managed OAuth. Some mapped Zoom GET operations are conservatively classified as writes and require the write flag.
 

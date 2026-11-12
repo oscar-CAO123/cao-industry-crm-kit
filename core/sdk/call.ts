@@ -579,10 +579,12 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
 /** Call an endpoint. Reads go straight through; writes need KIT_ALLOW_WRITES=1. */
 // Only a GET or a GraphQL query can be a read, whatever the label says.
 // Square names its searches /search-catalog-items and its batch reads /batch-retrieve or /bulk-retrieve (9 Nov 2026).
+// Microsoft Advertising REST reads are POSTs: Gets, and report requests that only queue a report file for the configured account.
+const MSADS_READ = /^(campaign-management\.Get|customer-management\.Get|reporting\.(Submit|Poll)GenerateReport$)/;
 export const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_|\/search-[a-z-]+$|-retrieve$)/i;
 function opIsRead(p: Platform, o: Op): boolean {
   return o.kind === "read" && (o.method === "GET" || (o.method === "QUERY" && p.style === "graphql")
-    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && (READPOST_PATH.test(o.path) || (p.id === "microsoft-advertising" && o.msadsRest === true && o.id.startsWith("campaign-management.Get")))))));
+    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && (READPOST_PATH.test(o.path) || (p.id === "microsoft-advertising" && o.msadsRest === true && MSADS_READ.test(o.id)))))));
 }
 
 // Only ordinary OAuth/bearer-style sign-ins can be replaced by a managed connection.

@@ -103,7 +103,9 @@ export const W3 = {
   "richpanel": d("Richpanel", H("x-richpanel-key", "RICHPANEL_API_KEY")),
   "semrush": d("Semrush", H("Authorization", "SEMRUSH_API_KEY", "Apikey ")),
   "sitebook": d("SiteBook", H("x-api-key", "SITEBOOK_API_KEY")),
-  "siteminder": d("SiteMinder", { type: "unsupported", note: "SiteMinder signs in differently per product (Basic, Bearer, API id headers); not wired yet" }, { keys: ["SITEMINDER_CREDENTIALS"] }),
+  // Only Direct Booking takes a key the hotel generates itself (Platform or MP Extranet > Direct Booking > API). Channels Plus,
+  // SMX and pmsXchange are partner APIs; sdk-generate.mjs refuses them with the reason.
+  "siteminder": d("SiteMinder", { type: "header", header: "x-sm-api-key", env: "SITEMINDER_API_KEY" }, { keys: ["SITEMINDER_API_KEY"] }),
   "square": d("Square", B("SQUARE_ACCESS_TOKEN")),
   "stripe": d("Stripe", B("STRIPE_SECRET_KEY")),
   "supermetrics": d("Supermetrics", B("SUPERMETRICS_API_KEY")),

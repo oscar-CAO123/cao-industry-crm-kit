@@ -1,6 +1,7 @@
 // Three vendor SDK pointers were removed on 10 Nov 2026 after the full audit: each ships a dependency with a known
 // advisory that has no fix (Monday: zod memory exhaustion; SendGrid: deepmerge; Webflow: elliptic) and each is already
 // on its latest release. Their apps stay reachable through the generated endpoint layer in core/sdk/platforms/.
+// The monday browser SDK pointer (monday-sdk-js) was removed on 12 Nov 2026: monday is not needed as an SDK.
 // Bringing one back needs a fresh audit that shows the advisory is gone.
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -8,9 +9,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const REMOVED = ["mondaydotcomorg-api", "sendgrid-mail", "webflow"];
+const REMOVED = ["mondaydotcomorg-api", "monday-sdk-js", "sendgrid-mail", "webflow"];
 
-test("the three removed SDK pointers are gone from the folder and the index", () => {
+test("the removed SDK pointers are gone from the folder and the index", () => {
   const index = JSON.parse(fs.readFileSync(path.join(ROOT, "vendor-sdks/index.json"), "utf8"));
   for (const f of REMOVED) {
     assert.ok(!fs.existsSync(path.join(ROOT, "vendor-sdks", f)), `${f} folder is back`);

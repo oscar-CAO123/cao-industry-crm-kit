@@ -6,7 +6,9 @@
  "authProof": "docs",
  "style": "rest",
  "hosts": [
-  "campaign.api.bingads.microsoft.com"
+  "campaign.api.bingads.microsoft.com",
+  "clientcenter.api.bingads.microsoft.com",
+  "reporting.api.bingads.microsoft.com"
  ],
  "hostFromEnv": false,
  "hostPatterns": [],
@@ -35,6 +37,18 @@
  ],
  "sources": [
   {
+   "url": "https://campaign.api.bingads.microsoft.com/Api/Advertiser/CampaignManagement/v13/CampaignManagementService.svc?singleWsdl",
+   "official": "vendor-domain: campaign.api.bingads.microsoft.com"
+  },
+  {
+   "url": "https://clientcenter.api.bingads.microsoft.com/Api/CustomerManagement/v13/CustomerManagementService.svc?singleWsdl",
+   "official": "vendor-domain: clientcenter.api.bingads.microsoft.com"
+  },
+  {
+   "url": "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc?singleWsdl",
+   "official": "vendor-domain: reporting.api.bingads.microsoft.com"
+  },
+  {
    "url": "https://github.com/BingAds/BingAds-Python-SDK/tree/main/openapi_client",
    "official": "vendor GitHub: BingAds"
   },
@@ -43,14 +57,18 @@
    "official": "vendor-domain: learn.microsoft.com"
   },
   {
-   "url": "https://learn.microsoft.com/en-us/advertising/campaign-management-service/addcampaigns?view=bingads-13",
+   "url": "https://learn.microsoft.com/en-us/advertising/customer-management-service/getaccount?view=bingads-13",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/advertising/reporting-service/submitgeneratereport?view=bingads-13",
    "official": "vendor-domain: learn.microsoft.com"
   }
  ],
  "gaps": [],
  "counts": {
   "operations": 236,
-  "read": 1,
-  "write": 235
+  "read": 85,
+  "write": 151
  }
 }

@@ -168,11 +168,20 @@ test("server variables must match their pattern, and site hosts come only from t
   await assert.rejects(() => callOperation("wordpress", w.id, { server: { site: "attacker.example" } }), /set WORDPRESS_SITE/);
 });
 
-test("platforms with unbuilt sign-in refuse to call", async () => {
-  // AroFlo, Unleashed and Bullhorn are built now (8 Nov); SiteMinder's per-product sign-in is not yet.
-  const a = firstOp("siteminder", (x) => x.kind === "read");
-  await assert.rejects(() => callOperation("siteminder", a.id), /not wired yet/);
+test("SiteMinder: Direct Booking sends the hotel's key to its own host; the partner APIs refuse with the reason", async () => {
+  // Channels Plus, SMX and pmsXchange need a SiteMinder partnership, so their calls never leave the kit.
+  for (const [path, why] of [["/reservations", /Channels Plus is for booking channels/], ["/publishers", /SMX is for subscribers/],
+    ["/core-api/pmses/{pmsCode}/hotels/{hotelCode}/room-rates", /pmsXchange is for PMS vendors/]] as const) {
+    const o = firstOp("siteminder", (x) => x.path === path && x.method === "GET");
+    await assert.rejects(() => callOperation("siteminder", o.id, { params: { pmsCode: "p", hotelCode: "h" } }), why);
+  }
   assert.equal(hits.length, 0);
+  const db = firstOp("siteminder", (x) => x.path === "/properties/{propertyUuid}/room-types");
+  await callOperation("siteminder", db.id, { params: { propertyUuid: "prop-1" } });
+  const u = new URL(hits[0].url);
+  assert.equal(u.origin + u.pathname, "https://directbooking.siteminder.com/public-api/api/properties/prop-1/room-types");
+  assert.equal(hits[0].headers["x-sm-api-key"], process.env.SITEMINDER_API_KEY);
+  assert.equal(hits[0].method, "GET");
 });
 
 // The sweep: every endpoint of every platform through the real call path, on the fake network.
@@ -214,6 +223,8 @@ test("sweep: every read reaches only its own host with a complete URL; every wri
         if (e instanceof WriteBlocked && o.kind === "write") { if (hits.length) problems.push(`${id} ${o.id}: write touched the network`); writes++; continue; }
         if (/not wired yet|not supported|no envelope builder|signer is not built/.test(e.message) && (platform.auth.type === "unsupported" || (o as any).auth?.type === "unsupported" || o.authUnsupported)) { refused++; continue; }
         if (/no sign-in scope is mapped/.test(e.message) && id === "google-workspace") { refused++; continue; }
+        // A report request must name the configured account; the sweep's blank inputs cannot (tests/sdk-microsoft-rest.test.ts covers it).
+        if (/a report request must name the configured account/.test(e.message) && id === "microsoft-advertising") { refused++; continue; }
         problems.push(`${id} ${o.id}: ${e.message.slice(0, 120)}`);
       }
     }
@@ -537,9 +548,10 @@ test("review 4: unmapped inputs can never carry key-shaped names; signed links a
   assert.equal(gl?.kind, "write");
   for (const o of [...load("hubspot").ops.values()].filter((x) => /signed-url/.test(x.path))) assert.equal(o.kind, "write", o.id);
   for (const id of listPlatforms()) for (const o of load(id).ops.values()) {
-    if (o.readPost && id === "microsoft-advertising" && o.id === "campaign-management.GetCampaignsByAccountId") {
-      assert.equal(o.path, "/CampaignManagement/v13/Campaigns/QueryByAccountId");
-      assert.equal(o.msadsRest, true);
+    if (o.readPost && id === "microsoft-advertising") {
+      assert.equal(o.msadsRest, true, o.id);
+      assert.match(o.id, /^(campaign-management\.Get|customer-management\.Get|reporting\.(Submit|Poll)GenerateReport$)/);
+      assert.match(o.path, /^\/(CampaignManagement|CustomerManagement|Reporting)\/v13\//);
     } else if (o.readPost) assert.match(o.path, READPOST_PATH, `${id} ${o.id}`);
   }
 });

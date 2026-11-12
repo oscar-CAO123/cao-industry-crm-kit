@@ -464,22 +464,6 @@
       "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
-      "app": "monday",
-      "folder": "monday-sdk-js",
-      "package": "monday-sdk-js",
-      "version": "1.0.0-beta",
-      "repo": "mondaycom/monday-sdk-js",
-      "provenance": false,
-      "packages_in_tree": 5,
-      "vendor_proof": [
-        "vendor docs name it: https://developer.monday.com/apps/docs/introduction-to-the-sdk",
-        "github-verified: org mondaycom is_verified, website monday.com",
-        "npm maintainer email on monday.com"
-      ],
-      "status": "blocked: GraphQL, and built for monday apps",
-      "adapter_note": "The pinned SDK uses the monday app host postMessage bridge for browser calls; its GraphQL requests need an operation-bound transport."
-    },
-    {
       "app": "pandadoc",
       "folder": "pandadoc",
       "package": "pandadoc-node-client",
