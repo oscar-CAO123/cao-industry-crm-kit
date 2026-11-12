@@ -1,5 +1,5 @@
 "use client";
-// One tab of a template page, drawn in its view. Views follow the industry demo apps' grammar: a board of stage lanes
+// One tab of a template page, drawn in its view. Views follow one grammar: a board of stage lanes
 // for anything that moves through steps, a table for lists, a week for anything with a date, a feed for incoming
 // messages and calls, and a numbers page. Every change goes through actions/shell/records.ts.
 import { useMemo, useState, useTransition } from "react";

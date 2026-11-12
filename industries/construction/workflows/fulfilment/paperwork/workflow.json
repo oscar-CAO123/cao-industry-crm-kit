@@ -37,7 +37,7 @@
  },
  "gaps": [
   "Procore (its Correspondence tool and Daily Log hold the notices and site facts): no platform folder in the kit, so nothing is mapped. The requests tab is the intake instead.",
-  "Microsoft 365 (Word and Outlook named for drafting and sending): the platform evidence for this job maps no document or mail operations, so no adapter is built.",
+  "Microsoft 365 (Word and Outlook named for drafting and sending): the platform docs for this job map no document or mail operations, so no adapter is built.",
   "Monday.com (work-in-progress reports), Simpro, Sitemate Dashpivot and NEO have no adapter for this workflow.",
   "Letter requests are entered through the requests tab, as in the documents workflow.",
   "Judgment steps are agent-skill work: progress reports built from quoting ratios, tender responses reworded for each set of selection criteria, subcontractor claims checked against subcontract agreements, and the wording of an extension of time claim.",

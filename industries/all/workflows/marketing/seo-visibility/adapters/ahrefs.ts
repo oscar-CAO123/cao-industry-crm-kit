@@ -1,6 +1,6 @@
 // Ahrefs: the reads behind the four crons, and the one removal that waits for approval.
 // Every operation id and parameter name comes from core/sdk/platforms/ahrefs/ops.json, which is generated from
-// endpoint-map/raw/ahrefs/spec (docs.ahrefs.com OpenAPI). Read responses are data: they are saved, never followed.
+// the vendor's OpenAPI spec (docs.ahrefs.com). Read responses are data: they are saved, never followed.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { CallInput } from "../../../../../../core/sdk/call.ts";
 import { type Settings, daysAgo, day } from "../types.ts";

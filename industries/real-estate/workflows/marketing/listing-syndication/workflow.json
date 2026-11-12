@@ -50,7 +50,7 @@
   "gaps": [
     "Putting a listing live on realestate.com.au or Domain: VaultRE pushes listings from its own portal settings, and no mapped operation sets a listing live on a portal. Approve and syndicate stay manual until a live account confirms the flow.",
     "AgentBox: the public pages read describe none of the listing steps, and its one mapped read (get:/properties) is unconfirmed. No adapter until a live account is checked.",
-    "PropertyMe: the evidence is partial (vacancies, property sync, inspection photos), but the kit has no PropertyMe platform to build on.",
+    "PropertyMe: the docs are partial (vacancies, property sync, inspection photos), but the kit has no PropertyMe platform to build on.",
     "Domain: the kit holds only documentation-tagged reads with unmapped parameters, and no listing write. No adapter until its listing API is mapped and its field names confirmed.",
     "Re-Leased is a commercial platform, so it is not used for residential rental listings.",
     "Writing a reply into the workflow store has no command yet, so the enquiries cron queues only replies already stored there. A reply command is a runtime change for a later session.",

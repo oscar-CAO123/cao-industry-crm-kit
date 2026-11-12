@@ -30,7 +30,7 @@
   "bookeo": {"status": "docs-only", "covers": "product list, seats per class, bookings, room blocks, booking cancellation with customer notice"}
  },
  "gaps": [
-  "Platforms in the mining evidence (Gymdesk, GymMaster, Mindbody) are not in this kit, so none of them has an adapter. Gymdesk and GymMaster publish timetables and bookings; Mindbody sells the same through ClassPass. Each needs an OpenAPI spec and an adapter before it can run here.",
+  "Common platforms in this industry (Gymdesk, GymMaster, Mindbody) are not in this kit, so none of them has an adapter. Gymdesk and GymMaster publish timetables and bookings; Mindbody sells the same through ClassPass. Each needs an OpenAPI spec and an adapter before it can run here.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Creating or editing a class, assigning or swapping instructors, and moving a class to a new time have no mapped Bookeo operation. They stay manual in the platform.",
   "Check-in and attendance records have no mapped Bookeo operation.",

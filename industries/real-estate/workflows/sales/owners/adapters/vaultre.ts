@@ -1,5 +1,5 @@
 // VaultRE: the current owners list, owner details and GDPR consent records. Reads only: every call here is a draft operation.
-// Field names come from the vendor's spec (endpoint-map/raw/vaultre: Contact, GdprOptin, currentOwners).
+// Field names come from the vendor's spec (Contact, GdprOptin, currentOwners).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Consent, Contact, Settings } from "../types.ts";
 

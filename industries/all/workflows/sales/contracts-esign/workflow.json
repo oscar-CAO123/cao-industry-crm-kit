@@ -36,7 +36,7 @@
   "Filing the signed copy: the signed PDF can be read through DocuSign's document operation, but no destination (ShiftCare participant folders, a document store) is mapped, so nothing is filed.",
   "Record keeping: the register that auditors read is not built.",
   "Chasing signers: a reminder needs the recipient resend operation, which is live and not built here.",
-  "Zoho: the Zoho docs in the platform evidence cover PDF templates and mail merge only, with no signature fields, signer order or signed-copy storage described. No Zoho adapter.",
+  "Zoho: the Zoho docs in the platform docs cover PDF templates and mail merge only, with no signature fields, signer order or signed-copy storage described. No Zoho adapter.",
   "PandaDoc, Ignition, RealWorks, Adobe Sign: not built here. Ignition, RealWorks and Adobe Sign are not in the kit's platform list. PandaDoc is mapped in the kit but has no adapter here.",
   "The workflow is docs-only until a DocuSign developer sandbox (DOCUSIGN_ENV=demo) proves it against a real account. The DocuSign platform is marked offline-tested only, and its sign-in needs a one-time consent by the user."
  ]

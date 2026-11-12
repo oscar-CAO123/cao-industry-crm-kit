@@ -44,7 +44,7 @@
  "gaps": [
   "MYOB: the help pages support payroll entry, but the kit's MYOB operations are docs reads and timesheet get and put only, and MYOB auth (token exchange) is not built. No MYOB adapter.",
   "Google Workspace: no commission, payroll or sales operation is mapped in the kit. No adapter.",
-  "Commission plan tiers, targets and product bonuses are not in the evidence. The tiers in settings are an assumption to confirm with the client.",
+  "Commission plan tiers, targets and product bonuses are not in the platform docs. The tiers in settings are an assumption to confirm with the client.",
   "Chargebacks, refunds and credit notes after payment are not read, so they are not netted off commission.",
   "Splitting commission between staff is not built.",
   "Staff statements: payslips are part of the pay run, but sending them to staff is not in the API. The person sends them.",

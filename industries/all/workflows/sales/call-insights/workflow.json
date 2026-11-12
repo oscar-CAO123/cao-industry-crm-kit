@@ -39,8 +39,8 @@
     "hubspot": {"status": "docs-only", "covers": "contact lookup by email (read only)"}
   },
   "gaps": [
-    "Otter: the mining pass found it names call capture and transcripts, but the kit has no ops file for it, so no adapter is built.",
-    "Aircall AI, GoHighLevel, the SMS agent, the ERP and Zoho are, but no platform support evidence was mined for them in this pass, so no adapter is built.",
+    "Otter: its docs name call capture and transcripts, but the kit has no ops file for it, so no adapter is built.",
+    "Aircall AI, GoHighLevel, the SMS agent, the ERP and Zoho are, but no platform support docs were read for them, so no adapter is built.",
     "Pains, objections, offers and buying signals are not a feature of Fireflies or HubSpot in the pages read. The tagging is the agent's reading, and each quote is checked against the transcript before it is kept.",
     "Writing a HubSpot note on the contact is not built: the note body property and the note-to-contact association type are not confirmed in the vendor spec mapped here. Confirm on a live account before adding it.",
     "Fireflies sharing (shareMeeting) and live action items (createLiveActionItem) are not built. Their input shapes are not mapped, and a share reaches people outside the business, so it would need a live approval flow first.",

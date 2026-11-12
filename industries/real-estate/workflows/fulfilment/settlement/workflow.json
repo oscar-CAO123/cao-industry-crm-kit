@@ -84,7 +84,7 @@
   "Smokeball is spec-only: the sign-in comes from vendor docs and is unproven, and nothing has run against a real account. It needs a sandbox or live test.",
   "Reminders need the firm's Smokeball offset type, offset type id and staff ids (settings.reminder). Until they are set, the reminders cron drafts nothing.",
   "The solicitor's confirmed date is read by the agent or a person (judgment step in SKILL.md). No mailbox or conveyancer platform is mapped in this workflow.",
-  "The offshore team's trust portal deposit requests and the 'agency settlements' tool named in one call have no platform in the kit.",
+  "The offshore team's trust portal deposit requests and the 'agency settlements' tool have no platform in the kit.",
   "Cooling-off, finance and title dates are not tracked: only the settlement date.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons."
  ]

@@ -5,8 +5,7 @@ description: Pack-out to grower statement and grower payment in Xero, for a pack
 
 # Grower statements
 
-Docs-only. Built from the mining evidence folder, which has no call transcripts for this job yet, so the steps come from the
-catalogue job and the platform file. Xero is the only platform with any mapping, and its guides cover only the payment side.
+Docs-only. The steps come from the job description and the vendor docs. Xero is the only platform with any mapping, and its guides cover only the payment side.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`: `statement` checks each new pack-out against the grower's supplier bill in

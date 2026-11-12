@@ -1,6 +1,6 @@
 // Xero: where the order is entered, as a DRAFT invoice. A draft invoice reaches nobody outside the business, so it is a
 // draft operation. Authorising it and emailing it to the customer are not in this workflow; the owner does that in Xero.
-// Field names are from the Xero accounting spec (endpoint-map raw/xero/spec, xero_accounting): Invoice.Type, Contact,
+// Field names are from the Xero accounting spec (xero_accounting): Invoice.Type, Contact,
 // Status, Reference, LineItems; LineItem.ItemCode, Description, Quantity, UnitAmount; Contact.ContactID, Name, EmailAddress.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { safeKey } from "../../../../../../core/workflows/runtime.ts";

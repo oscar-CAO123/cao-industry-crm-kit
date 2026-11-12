@@ -31,7 +31,7 @@
  },
  "gaps": [
   "Unleashed request signing (HMAC-SHA256) is not built in core/sdk, so every call throws 'calls are not wired yet' until the signer ships. No core change was made here.",
-  "Starshipit is in the evidence for pick, pack, labels, carrier handover and returns, but the kit has no starshipit platform. Those steps stay manual until it is added.",
+  "Starshipit is in the platform docs for pick, pack, labels, carrier handover and returns, but the kit has no starshipit platform. Those steps stay manual until it is added.",
   "Pick and pack: the Unleashed docs do not describe them. Warehouse picking is manual.",
   "Shipping labels and courier handover: Unleashed Advanced Shipping is marketing copy only in the docs read; its scope and add-on status need a live account.",
   "Customer tracking and delay emails: Unleashed has no messaging operation. Customers are emailed by hand until a mailbox adapter exists.",

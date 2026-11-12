@@ -35,5 +35,5 @@ or phone. Record each one done on the checklist in Google Tasks. The `progress` 
 
 ## Not covered
 Deal and quote intake, contract signing, invoices and payments, Typeform intake, training scheduling, channel connections,
-bulk data import, and the tools the calls name that have no mapped onboarding steps (Microsoft 365, GoHighLevel, Xero, Slack,
+bulk data import, and the common tools that have no mapped onboarding steps (Microsoft 365, GoHighLevel, Xero, Slack,
 Deputy, Monday.com, ELMO, Procore, AgentBox, Fill Out). Do these the business's usual way.

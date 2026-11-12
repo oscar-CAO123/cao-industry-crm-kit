@@ -1,6 +1,6 @@
 // Shared shapes for the paddock records workflow. The job register is the owner's own workbook table, written through
-// Microsoft 365. Paddock names and crop types come from AgriWebb's official schema (endpoint-map/raw/agriwebb/schema.graphql:
-// Field { id name farmId totalArea unit landUse cropType lastModifiedDate }). Job records enter the local store from the
+// Microsoft 365. Paddock names and crop types come from AgriWebb's official schema
+// (Field { id name farmId totalArea unit landUse cropType lastModifiedDate }). Job records enter the local store from the
 // owner's words (see SKILL.md); nothing here writes to AgriWebb.
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 

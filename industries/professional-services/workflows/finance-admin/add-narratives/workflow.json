@@ -35,8 +35,8 @@
     "xero": {"status": "docs-only", "covers": "chargeable time entries and tasks from Xero Projects (reads); a DRAFT sales invoice with narrative lines (draft); authorising that invoice (queued for approval)"}
   },
   "gaps": [
-    "No platform docs were read for this job: the platforms evidence file is missing. The adapter uses Xero only, because Xero Projects holds the time entries and Xero holds the invoices. Xero is the accounting-practice platform in the kit.",
-    "Clio (the law firm call) has mapped billing operations (bill index, show, update, mark as sent) and time activities, but the field names for bill line descriptions were not checked against the Clio spec in this pass, so no Clio adapter is built. Clio is the next adapter to add for law firms.",
+    "No platform docs were read for this job. The adapter uses Xero only, because Xero Projects holds the time entries and Xero holds the invoices. Xero is the accounting-practice platform in the kit.",
+    "Clio (the law firm's practice system) has mapped billing operations (bill index, show, update, mark as sent) and time activities, but the field names for bill line descriptions were not checked against the Clio spec in this pass, so no Clio adapter is built. Clio is the next adapter to add for law firms.",
     "Time recorded on paper or Excel worksheets is not read. The worksheet detail must be entered into Xero Projects first, because the capture cron reads only what Xero Projects holds.",
     "The narrative is a judgment step. The agent writes the narrative proposal into the store for each client (collection proposals, keyed by the Xero project id). tools/workflow.ts has no command for that yet: its propose command only writes quote lines. Adding a narrative command belongs in tools/workflow.ts, which this build does not edit.",
     "The kit writes array query values as JSON, so the states filter is sent as one value, ACTIVE. Listing several states at once needs a runtime change in core/sdk/call.ts.",

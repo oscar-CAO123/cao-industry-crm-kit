@@ -1,6 +1,6 @@
 // Granola: notes its app recorded, with its AI summary and transcript. Read only. The kit maps no Granola operation that
 // sends or shares a note, so a Granola meeting never gets a recap share from this workflow.
-// Field names: the OpenAPI spec in endpoint-map/raw/granola (ListNotesOutput, Note, GetTranscriptOutput, Transcript).
+// Field names: the OpenAPI spec (ListNotesOutput, Note, GetTranscriptOutput, Transcript).
 import { createHash } from "node:crypto";
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Meeting, type Notetaker, type Settings, GRANOLA_ID, clamp, cut, keyOf } from "../types.ts";

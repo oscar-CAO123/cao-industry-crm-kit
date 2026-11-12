@@ -51,7 +51,7 @@
   },
   "gaps": [
     "BrightHR: only record-keeping is partly supported, and its mapped operations (employee query, external reference) do not cover a useful step. Not built.",
-    "Microsoft 365 spreadsheets and folders hold the register in 2 calls, but no platform evidence was mined for this workflow, so no adapter is built here.",
+    "Microsoft 365 spreadsheets and folders often hold the register, but no platform docs were read for this workflow, so no adapter is built here.",
     "ELMO has no platform in the kit. Procore covers timesheets and site diaries, not employee records.",
     "Qualifications and expiry: Employment Hero's certification reads are mapped, but the vendor examples do not show their response fields, so no expiry check is built until a sandbox confirms them.",
     "Filing a document into the employee file (Create Document Config) is a multipart upload with access permissions. Not built, because who can see an uploaded file is not confirmed.",

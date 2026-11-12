@@ -43,7 +43,7 @@
     "microsoft-365": {"status": "docs-only", "covers": "lender pack drafts, chase drafts, sends through approval, deal register rows"}
   },
   "gaps": [
-    "AutoManager (DeskManager, the platform the one call names): its help pages were read, but the kit has no ops file for it. Credit pulls, the lender network and deal build are unmapped. A live account is needed.",
+    "AutoManager (DeskManager): its help pages were read, but the kit has no ops file for it. Credit pulls, the lender network and deal build are unmapped. A live account is needed.",
     "Autosoft: the 30 pages read were marketing and blog posts with no deal or lender workflow. Not mapped.",
     "Mercury: a commercial and asset finance broker, not a dealer system. Its pages were blog articles. Not mapped to automotive deal structuring.",
     "Lender decisions do not return to the CRM by any mapped platform. A person or the agent records the decision on the deal, and the chase stops then.",

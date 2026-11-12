@@ -30,7 +30,7 @@
   "xero": {"status": "docs-only", "covers": "commercial invoice draft, cross-check read, authorise and email (queued)"}
  },
  "gaps": [
-  "Microsoft 365: the evidence says the docs do not cover export shipping steps, and no shipping operation is mapped for it. No adapter built.",
+  "Microsoft 365: its docs do not cover export shipping steps, and no shipping operation is mapped for it. No adapter built.",
   "Packing lists and export certificates (phytosanitary, certificate of origin, inspection): no mapped operation. Agent skill steps for now.",
   "Xero's guide says a commercial invoice is a different document from a sales invoice. This draft uses a sales invoice, so confirm the format with the buyer or forwarder before use.",
   "GST and export tax type are not set on the draft lines. Confirm the correct tax treatment with the client's accountant before any invoice is authorised.",

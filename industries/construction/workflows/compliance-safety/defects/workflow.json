@@ -38,7 +38,7 @@
   "Backcharging a trade for rework or delay, pass or fail re-inspection, and booking a trade to attend or quote a fix are not covered. The ServiceM8 docs describe none of them.",
   "Defect quotes and the pricing of small defects (the pain that quotes are not followed up) are a judgment step. Nothing here prices a defect.",
   "A client walkthrough of a defects list is not covered.",
-  "Fieldwire is mapped in the kit, but no call or platform evidence named it for this job, so it is not built here.",
+  "Fieldwire is mapped in the kit, but no platform docs named it for this job, so it is not built here.",
   "Trade replies are not read. The chase sends reminders only; it does not parse what the trade says back.",
   "The defect register lives in the workflow store, not in a spreadsheet the owner already uses. Export it if the owner wants it in Excel.",
   "The adapter is docs-only until a ServiceM8 trial account proves the checklist read, the task write and the approved send."

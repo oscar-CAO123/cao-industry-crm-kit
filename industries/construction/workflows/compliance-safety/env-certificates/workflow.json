@@ -30,10 +30,10 @@
   "servicem8": {"status": "docs-only", "covers": "job list, job attachments as the evidence check, primary contact, queued chase email"}
  },
  "gaps": [
-  "No platform in the evidence has a mapped operation. The REC Registry and Solar Accreditation Australia pages describe certificates and installer accreditation only, and the kit has no adapter for either.",
+  "No platform in the platform docs have a mapped operation. The REC Registry and Solar Accreditation Australia pages describe certificates and installer accreditation only, and the kit has no adapter for either.",
   "Network connection applications (prepare and lodge) and distributor approval waits have no mapped platform. They stay manual, with the agent skill helping with the form content.",
-  "The REC Registry certificate creation form, evidence upload and claim lodgement are not in the evidence pages. Confirm on a live account before any adapter is written.",
-  "VEEC claims (Victorian Energy Upgrades) and LGC claims have no platform in the evidence; they are not covered.",
+  "The REC Registry certificate creation form, evidence upload and claim lodgement are not in the platform docs pages. Confirm on a live account before any adapter is written.",
+  "VEEC claims (Victorian Energy Upgrades) and LGC claims have no documented platform; they are not covered.",
   "Accreditation checks use the public registered-person search only. Installer accreditation sits with Solar Accreditation Australia, which has no mapped operations.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "The ServiceM8 adapter is docs-only until a ServiceM8 trial account proves the job, attachment and contact reads."

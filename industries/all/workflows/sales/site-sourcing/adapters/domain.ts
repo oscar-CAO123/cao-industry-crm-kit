@@ -1,5 +1,5 @@
 // Domain (developer.domain.com.au): the listing search, suburb statistics, nearby schools and the enquiry to an agent.
-// Field names come from the vendor's spec (endpoint-map/raw/domain): the search body listingType and locations,
+// Field names come from the vendor's spec: the search body listingType and locations,
 // the response listing.id and listing.propertyDetails, and the enquiry body. Anything not in that spec is not used.
 // The enquiry is a live operation: this adapter only builds it, and the runtime queues it for a person to approve.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";

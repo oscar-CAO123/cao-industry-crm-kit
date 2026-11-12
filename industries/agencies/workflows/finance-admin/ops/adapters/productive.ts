@@ -1,5 +1,5 @@
 // Productive: the agency's project, budget and invoice record. JSON:API bodies; field names from the vendor's OpenAPI spec
-// (endpoint-map/raw/productive/spec). Reads are unfiltered because the kit cannot send Productive's filter[...] syntax yet.
+// Reads are unfiltered because the kit cannot send Productive's filter[...] syntax yet.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { ID, clean, type BudgetRow, type Brief, type Invoice, type Settings } from "../types.ts";
 

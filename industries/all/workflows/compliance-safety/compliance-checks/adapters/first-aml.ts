@@ -1,5 +1,5 @@
 // First AML: the verification platform that holds a regulated business's cases, checks and screening results.
-// Field names come from the vendor's sandbox schema (endpoint-map/raw/first-aml/schema.graphql). Every result is a union,
+// Field names come from the vendor's sandbox schema. Every result is a union,
 // so each read selects through inline fragments. The kit's document path sends no variables, so every value written
 // into a document is checked here first and written as a GraphQL literal.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";

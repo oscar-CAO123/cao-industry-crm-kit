@@ -43,8 +43,8 @@
     "slack": {"status": "docs-only", "covers": "channel questions, file search, replies in the question's thread"}
   },
   "gaps": [
-    "Confluence holds SOPs, but no platform help evidence for it was mined in this run, so it has no adapter yet.",
-    "Microsoft 365: the mined help pages are Word and Windows accessibility guides, so nothing supports this workflow. Its operations are mapped in the kit but no adapter was built.",
+    "Confluence holds SOPs, but no platform help docs for it were read, so it has no adapter yet.",
+    "Microsoft 365: the help pages read are Word and Windows accessibility guides, so nothing supports this workflow. Its operations are mapped in the kit but no adapter was built.",
     "No runtime command writes an answer into the store. The agent skill needs an answer command in tools/workflow.ts (a core change) before a reply can be queued from a real question.",
     "Slack file search needs a user token with search:read. Confirm the scope before the first live run.",
     "The question register logs each question once, at the status it has then. A later reply is not written back to its row.",

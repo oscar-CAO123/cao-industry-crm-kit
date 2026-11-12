@@ -1,6 +1,6 @@
 // HubSpot: the partner client record (read, as draft operations) and the calendar meeting that invites the client
 // (a live operation: the invite reaches the client, so this file only makes a queue entry for approval).
-// Field names come from the vendor spec at endpoint-map/raw/hubspot/spec/scheduler-meetings-3.json.
+// Field names come from the vendor spec.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Settings, Slot } from "../types.ts";
 

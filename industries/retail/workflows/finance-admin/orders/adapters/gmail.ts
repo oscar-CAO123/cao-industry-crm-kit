@@ -1,6 +1,6 @@
 // Gmail: where order emails arrive, and where the confirmation is drafted. Reads and drafts go through ctx.draft, so the
 // runtime's draft list is the gate. The only send is gmail.users.drafts.send, which the cron queues and a person approves.
-// Field names come from the Gmail spec (endpoint-map raw/google-workspace/spec/gmail_v1.json): Message.threadId,
+// Field names come from the Gmail spec: Message.threadId,
 // MessagePart.headers, MessagePartHeader.name/value, Draft.id, Draft.message.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { rawMessage } from "../../../../../../core/connectors/google-workspace/gmail.ts";

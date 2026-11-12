@@ -33,12 +33,12 @@
   "hubspot": {"status": "docs-only", "covers": "client contact record, payment setup read, team invitations after approval"}
  },
  "gaps": [
-  "New clients come from the settings list. A signed deal does not start onboarding yet: the HubSpot deal and quote endpoints are not in the platform evidence for this job, so they are not mapped here.",
-  "The calls name Microsoft 365, GoHighLevel, Xero, Slack, Deputy, Monday.com, ELMO, Procore, AgentBox and Fill Out. The platform evidence maps no onboarding steps for them, so none has an adapter in this build.",
-  "Typeform: it supports the collect-details and record-keeping steps, but the evidence maps no operation to them. Its forms-response read exists in the kit, but it is not wired to any step until a sandbox confirms the form-to-client link.",
+  "New clients come from the settings list. A signed deal does not start onboarding yet: the HubSpot deal and quote endpoints are not in the platform docs for this job, so they are not mapped here.",
+  "Businesses in this industry commonly use Microsoft 365, GoHighLevel, Xero, Slack, Deputy, Monday.com, ELMO, Procore, AgentBox and Fill Out. The platform docs map no onboarding steps for them, so none has an adapter in this build.",
+  "Typeform: it supports the collect-details and record-keeping steps, but the docs map no operation to them. Its forms-response read exists in the kit, but it is not wired to any step until a sandbox confirms the form-to-client link.",
   "Contract signing and quotes: the HubSpot quote and contract endpoints are not mapped, so the agreement is still signed in the platform or outside it.",
   "Payment setup: only a read of payment account status. Creating invoices or taking payment is not built.",
-  "Training sessions: no scheduling operation is mapped in the evidence, so the training step is a checklist item for a person.",
+  "Training sessions: no scheduling operation is mapped in the platform docs, so the training step is a checklist item for a person.",
   "Integrations: connecting a client's email, calendar, phone or chat is done inside HubSpot. The channel-account read is mapped but not used, because its response fields are not confirmed.",
   "Data import: only one contact record per client is created. The HubSpot batch create is not used, so bulk imports stay manual.",
   "HubSpot contact property names (company, firstname, email) follow HubSpot's standard names. The mapped operation takes a free set of properties, so a sandbox portal must confirm them before a live run.",

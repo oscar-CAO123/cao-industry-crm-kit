@@ -34,12 +34,12 @@
   "gorgias": {"status": "docs-only", "covers": "helpdesk tickets: read open tickets and the latest customer message, tag a ticket for a person or as overdue, write the category into a custom field, queue the acknowledgement for approval"}
  },
  "gaps": [
-  "Shopify: returns and refunds are mapped (order return lookup, return request, approve or decline, refund), but no adapter is built. The GraphQL field names cannot be confirmed from the endpoint-map record, which holds only the reference URLs. Build the adapter from Shopify's official schema before any cron reads an order or moves money.",
+  "Shopify: returns and refunds are mapped (order return lookup, return request, approve or decline, refund), but no adapter is built. The GraphQL field names cannot be confirmed from the mapped docs, which hold only the reference URLs. Build the adapter from Shopify's official schema before any cron reads an order or moves money.",
   "Stripe: refunds, charge refunds and dispute evidence are mapped, but no adapter is built. The Stripe pages read cover Stripe's own complaints and refund fraud guides, not a merchant's step-by-step. A refund needs a charge lookup that is not mapped in this workflow.",
   "Refunds are never issued by a cron. Issuing one (Shopify refund or Stripe refund) is a live operation for a later adapter, and the approval must name the order and the amount.",
   "Judgment steps stay with a person or the agent skill: deciding who pays on a hire or warranty claim, checking purchase date and past visits against a DMS or booking system (neither is mapped here), and writing a reply for a complaint no category matches.",
   "Not built: supplier and carrier claims, customer follow-up after a resolution, closing a complaint, and the process change that comes from repeat complaints. The Gorgias map does not describe these steps.",
-  "Microsoft 365, Google Workspace email and the support form no platform evidence for them was read for this job, so no adapter. Their complaints reach the helpdesk only where a mailbox is connected to Gorgias.",
+  "Microsoft 365, Google Workspace email and the support form: no platform docs for them were read for this job, so no adapter. Their complaints reach the helpdesk only where a mailbox is connected to Gorgias.",
   "Gorgias: the vendor reference lists messages per ticket without a page size, and intake and overdue read only the newest 25 open tickets. A busy helpdesk can push older open complaints off the first page, so the overdue tag can miss them.",
   "Record-keeping: the category is written only when gorgias.category_field_id is set to a custom field the business has created. Without it, the category lives in the workflow's own store.",
   "The Gorgias adapter is docs-only until a trial account proves the reads and writes. Every call is tested against a fake network only."

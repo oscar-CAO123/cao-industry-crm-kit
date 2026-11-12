@@ -45,11 +45,11 @@
  },
  "gaps": [
   "Websites: no mapped platform checks a public website. An uptime tool is needed, and none is in the kit. Not built.",
-  "Google Workspace (named in the evidence): its mapped operations read and delete third-party access tokens and set up push watches, but no mined page describes a check. Not built.",
+  "Google Workspace (a mapped platform): its mapped operations read and delete third-party access tokens and set up push watches, but no page read describes a check. Not built.",
   "Key expiry for Google Workspace and Microsoft 365 tokens: not built. Make's API token and OAuth listings are marked as writes in the kit, so they are not daily reads. Only Make connection expiry dates are read.",
   "Fix (reconnect a connection, re-authorise, restart a scenario, clear the dead-letter queue): a person does this on the platform. No cron changes anything.",
   "Triage and escalation are judgment steps in SKILL.md, not cron steps.",
-  "Support is unknown for most steps. The mined pages are integration listings, blog posts and one helpdesk how-to, and none describes a monitoring procedure. Confirm on a live Make account and a Microsoft 365 admin centre.",
+  "Support is unknown for most steps. The pages read are integration listings, blog posts and one helpdesk how-to, and none describes a monitoring procedure. Confirm on a live Make account and a Microsoft 365 admin centre.",
   "Make log reads take the first page the API returns for each scenario. A log with no timestamp is not counted.",
   "Alerts go by Microsoft 365 email only. A business without a Microsoft 365 mailbox needs another alert route, which is not built.",
   "Other data feeds (ServiceM8, Xero, Aircall and the rest) are not in this workflow's evidence. Add one only when a client names it.",

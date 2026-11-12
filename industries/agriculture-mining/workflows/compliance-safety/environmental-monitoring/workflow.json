@@ -25,7 +25,7 @@
  "gaps": [
   "Scheduling a monitoring plan or sampling round: no mapped platform covers it in this kit. ESdat's Field Management does, but the kit has no ESdat platform, so the schedule stays with the people.",
   "ESdat, the closest monitoring platform: the kit has no platform folder for it, so nothing is read from or written to it. Its pages cover lab results and exceedance notices, not the sampling steps.",
-  "GoCanvas: the kit maps 94 operations for it, so field forms could feed readings in. No adapter is built, because the vendor docs confirm submission and form fields but not how a submission's answers come back. The evidence file's note that no ops file exists is out of date.",
+  "GoCanvas: the kit maps 94 operations for it, so field forms could feed readings in. No adapter is built, because the vendor docs confirm submission and form fields but not how a submission's answers come back.",
   "Sitemate: the kit has no platform folder for it.",
   "Field sampling, sampling kit preparation, on-site instrument readings and instrument calibration are people's steps. The workflow records what they enter and does not run them.",
   "Exceedance response (retest, isolate the source, escalate, stop discharge) is a person's decision. The workflow lists the exceedance and nothing more.",

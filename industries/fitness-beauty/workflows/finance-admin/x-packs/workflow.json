@@ -34,7 +34,7 @@
   "Vagaro was named in the platform list but is not in the kit at all.",
   "Expiry reminders and customer messages about packs: no messaging operation is mapped for this job, so nothing is queued for approval.",
   "Issuing, redeeming, refunding or extending a gift card or pack: these move money or change a customer's balance, so they are live operations and are not built.",
-  "Square: no call or platform-doc evidence for this workflow. The read operations come from the kit's ops file and the response fields from Square's published spec. Unverified against a live account.",
+  "Square: no platform docs for this workflow. The read operations come from the kit's ops file and the response fields from Square's published spec. Unverified against a live account.",
   "Xero: the trial balance docs do not mention pack or deferred income lines, so the bookkeeper matches it by hand. Unverified against a live Xero demo company.",
   "Confirm the workflow steps and platform coverage with the business before enabling its crons."
  ]

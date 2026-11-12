@@ -26,7 +26,7 @@
  "gaps": [
   "Confirm the workflow steps and platform coverage with the business before enabling its crons.",
   "Xero is the only platform with any mapping, and its guides cover none of packhouse intake, grading, rejects, pack-out totals, pool pricing, grower charges or statement approval. Those steps stay with the business.",
-  "ABC Pack, PackManager and FarmSoft are in the spec but produced no platform evidence and have no mapped operations in the kit, so no adapter was built for them.",
+  "ABC Pack, PackManager and FarmSoft are common tools but have no platform docs and have no mapped operations in the kit, so no adapter was built for them.",
   "Sending the statement to the grower is not wired. This job has no mailbox adapter, so the statement is drafted in the store and the email stays with the business.",
   "Recording a pack-out has no command. tools/workflow.ts only proposes enquiries, so the packouts record is written into the store by the CRM shell.",
   "One payment per statement against one bill. A grower owed across several bills is held until the bill is split by hand.",

@@ -33,9 +33,9 @@
   "fireflies": {"status": "docs-only", "covers": "meeting list and summary read; transcript share and revoke are queued for approval only, and no cron uses them"}
  },
  "gaps": [
-  "HubSpot: the note body property (hs_note_body) is not declared in the mapped vendor spec (endpoint-map/raw/hubspot), and the notes create body takes free-form properties. No HubSpot adapter is built until the property name is confirmed on a live account. Drafts stay in the workflow store.",
+  "HubSpot: the note body property (hs_note_body) is not declared in the mapped vendor spec, and the notes create body takes free-form properties. No HubSpot adapter is built until the property name is confirmed on a live account. Drafts stay in the workflow store.",
   "Microsoft 365 and OneNote: no OneNote operation is mapped in the kit, and Outlook mail is not read for file notes in this build. Notes from emails are not covered.",
-  "Phone calls and texts: no platform in the evidence records them automatically. A dialer integration (Aircall, CloudTalk or JustCall are mapped in the kit) would be the next source; not built.",
+  "Phone calls and texts: no documented platform records them automatically. A dialer integration (Aircall, CloudTalk or JustCall are mapped in the kit) would be the next source; not built.",
   "Adviser review and sign-off: no mapped operation on any platform records an adviser sign-off. The adviser checks and files each draft by hand.",
   "Chasing missing details, sending a client copy of a note, and filing notes into a client file: the vendor docs do not describe these steps, so they are not built.",
   "Runtime (core, not changed here): an approved GraphQL write that returns HTTP 200 with an errors array is recorded as done, because core/sdk/call.ts and core/lib/http.ts do not read the errors array. A share that Fireflies refuses this way would show as done. Needs a core change before any live Fireflies write is approved: callOperation (core/lib/http.ts or the approval runner) must throw when a 200 body carries a non-empty errors array, and a test must cover a 200 with errors.",

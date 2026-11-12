@@ -1,5 +1,5 @@
 // Smokeball: sender lookup, open matters, lead matters, notes, follow-up tasks and portal replies.
-// Field names come from docs.smokeball.com/openapi.json (the vendor spec in endpoint-map/raw/smokeball).
+// Field names come from docs.smokeball.com/openapi.json.
 // A portal reply is the only message to a client, so it is a live act: the cron queues it and a person approves it.
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import type { Email, Settings } from "../types.ts";

@@ -33,7 +33,7 @@
   "google-workspace": {"status": "docs-only", "covers": "Gmail: read unread inbox threads, label, draft reply, send the draft after approval"}
  },
  "gaps": [
-  "Microsoft 365 (Outlook): no adapter here. The kit maps the mailbox calls, but the mining file says no user-mailbox operation is mapped for reading, moving or replying; check that before building one.",
+  "Microsoft 365 (Outlook): no adapter here. The kit maps the mailbox calls, but no user-mailbox operation is mapped for reading, moving or replying; check that before building one.",
   "WhatsApp, ConnectWise, OnRent, Sling and Asana: not mapped as triage steps. Follow-up by WhatsApp and the record-keeping copies stay with the owner.",
   "Front approval sends the template text as a new reply. It does not send a Front draft, so an edit made in Front does not change what is sent. Gmail approval sends the draft itself.",
   "Front and Google Workspace are docs-only until a live account proves the reads and writes. Front's help pages describe the inbox but not its reply, assign or reminder screens.",

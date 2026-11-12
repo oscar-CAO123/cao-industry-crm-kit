@@ -42,9 +42,9 @@
  "gaps": [
   "MYOB: only the GST tax-code operations are mapped in the kit. Bank feed, categorise, reconcile and BAS draft steps have no mapped operation, so no MYOB adapter is built. Confirm on a live MYOB file.",
   "Xero: the bank feed connection, the reconciliation status and the GST return report are not built. The reconciliation flag is read only.",
-  "Xero: the BAS form fields (G1, 1A, 1B) are not on the Xero pages in the evidence, so the BAS itself is prepared by the accountant, not by a cron.",
-  "Document scanning: the evidence says about 30 of the 50 minutes is scanning, but no operation reads attachment contents. The exceptions list flags missing documents only.",
-  "Partner sign-off, lodgement and client communication are judgment and human steps. The evidence does not show a platform step for them.",
+  "Xero: the BAS form fields (G1, 1A, 1B) are not on the Xero pages in the platform docs, so the BAS itself is prepared by the accountant, not by a cron.",
+  "Document scanning: the docs say about 30 of the 50 minutes is scanning, but no operation reads attachment contents. The exceptions list flags missing documents only.",
+  "Partner sign-off, lodgement and client communication are judgment and human steps. The docs do not show a platform step for them.",
   "Coding rules are per client and must be agreed with the accountant before code-lines queues anything. With no rules, nothing is queued.",
   "Needs core: an approved coding change is sent exactly as it was queued, with no re-read, so a line the accountant coded by hand after queueing is overwritten. The runtime's approve step must re-read the transaction and refuse unless it is still a single uncoded, unreconciled line. The cron cannot close this window: it runs once a day and approval can come sooner.",
   "The Xero adapter is docs-only until a Xero demo organisation proves the reads and the coding update."

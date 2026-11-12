@@ -1,6 +1,6 @@
 // GoHighLevel: where the caller's contact and the internal note about the missed call live. Both are draft operations:
 // they reach nobody outside the business. No text is sent through GoHighLevel in this workflow.
-// Field names come from the vendor's official spec (endpoint-map/raw/gohighlevel/spec): contacts/upsert takes locationId
+// Field names come from the vendor's official spec: contacts/upsert takes locationId
 // and phone; contacts/{contactId}/notes takes body.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, clean, id, masked } from "../types.ts";

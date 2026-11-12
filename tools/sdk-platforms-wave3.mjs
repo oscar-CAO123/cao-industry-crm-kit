@@ -1,4 +1,4 @@
-// Sign-in, keys and hosts for the wave 3 platforms (8 Nov 2026), from each vendor's own spec or docs (endpoint-map/survey-wave3).
+// Sign-in, keys and hosts for the wave 3 platforms (8 Nov 2026), from each vendor's own spec or docs.
 // All are proof "docs": unproven until a sandbox run. Shapes match the platform table in tools/sdk-generate.mjs, plus:
 //   rewrite: server prefix -> replacement (regional or tenant hosts the published spec leaves out)
 //   opRules: [{ server, auth } | { server, unsupported }]: a different sign-in, or a refusal, for endpoints on one server
@@ -38,8 +38,8 @@ export const W3 = {
   "cloudbeds": d("Cloudbeds", H("x-api-key", "CLOUDBEDS_API_KEY"), { server: "https://api.cloudbeds.com",
     serverVars: { environment: { env: "CLOUDBEDS_ENVIRONMENT", default: "cloudbeds", pattern: "cloudbeds", example: "cloudbeds" },
       ota: { env: "CLOUDBEDS_OTA", pattern: SUB, envOnly: true, example: "acme" } },
-    // Group Profile: Cloudbeds' own reference (developers.cloudbeds.com/reference/listallprofiles, read 8 Nov 2026 through
-    // model_guard, watcher clean) gives https://api.cloudbeds.com; the GitHub spec still says localhost:8700.
+    // Group Profile: Cloudbeds' own reference (developers.cloudbeds.com/reference/listallprofiles, read 8 Nov 2026)
+    // gives https://api.cloudbeds.com; the GitHub spec still says localhost:8700.
     rewrite: { "http://localhost:8700": "https://api.cloudbeds.com" },
     opRules: [{ server: "/guest-profiles/v1", unsupported: "Cloudbeds' own reference gives only a relative server (/guest-profiles/v1) and no host; not wired until Cloudbeds names it" },
       { server: "https://api.myallocator.com/callback", unsupported: "Cloudbeds OTA callback: the booking channel implements it for Cloudbeds to call; a client never calls it" },

@@ -83,7 +83,7 @@
  },
  "gaps": [
   "Webflow publish is not queued: its endpoint publishes every staged change on the site and takes no page id, so a page-only publish cannot be approved safely. Add a page-level publish or a list of staged changes before it can be queued.",
-  "HubSpot: the landing page CMS endpoints (create, update draft, push live) are mapped in the kit, but no adapter is built. Its build and publish support is partial in the mining run, so it ranks third.",
+  "HubSpot: the landing page CMS endpoints (create, update draft, push live) are mapped in the kit, but no adapter is built. Its build and publish support is partial in its docs, so it ranks third.",
   "New pages are not created. The Webflow operations mapped here include no create-page operation, and GoHighLevel's AI Studio and Funnel AI build operations are not mapped. An owner builds a new page in the platform, and the next inventory run lists it.",
   "Copy, offer, brief and audience decisions, page request intake and template choice are judgment steps. The agent writes the content as DOM nodes into a change record; nothing in the workflow decides the offer.",
   "Adding a change record needs a writer. The CRM shell adds each change to the store collection changes. core/ is not edited, so there is no command for it yet.",

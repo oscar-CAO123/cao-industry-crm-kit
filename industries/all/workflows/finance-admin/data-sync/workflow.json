@@ -43,7 +43,7 @@
  },
  "gaps": [
   "Make: 11 operations are mapped, 8 of them SDK-only with inputs unmapped and not in the published spec, so no adapter is built. Make scenarios are the usual bridge to the other apps; they are not built here.",
-  "Microsoft 365, ServiceM8, Simpro, Deputy, Procore, Podio, MYOB, FlowLogic and the other systems the calls name have no platform evidence for this workflow in the pages read, so no adapter is built for them.",
+  "Microsoft 365, ServiceM8, Simpro, Deputy, Procore, Podio, MYOB, FlowLogic and the other systems businesses commonly use have no platform docs for this workflow in the pages read, so no adapter is built for them.",
   "Intake: supplier bills must already be drafts in Xero (through Xero Connect partners or the Xero API) before the bills cron can queue them. The workflow does not read PDFs, email or paper dockets.",
   "HubSpot needs a unique company property named by settings.hubspot.idProperty (the example uses xero_contact_id). This workflow does not create it; the owner creates it in HubSpot before the first run.",
   "One direction only: Xero is the source for contact names. An edit made in HubSpot does not change Xero.",

@@ -94,9 +94,9 @@
  "gaps": [
   "Procore: the workflow tracks change events and snapshots prime and commitment change orders. It reads each project's change events, records each once and logs the ones open past stale_after_days. The page read shows change items and the change event's origin but nothing on approval, so this workflow assumes pricing and approval happen in Procore and makes no rate card, client email or follow-up email. A business sets either the procore block or the ServiceM8 variation settings, not both.",
   "Buildxact: only its sign-in is mapped (5 operations, none for jobs or variations). Its help centre covers variations on a job, so its variation and change-order endpoints are the first thing to map.",
-  "Client approval: ServiceM8 keeps no variation or change-order record and no acceptance flow, per the platform evidence. The client approves by reply or signature outside the platform, and a person records it. The kit has no command for that yet, so follow-ups stop after the set count.",
+  "Client approval: ServiceM8 keeps no variation or change-order record and no acceptance flow, per the platform docs. The client approves by reply or signature outside the platform, and a person records it. The kit has no command for that yet, so follow-ups stop after the set count.",
   "Invoicing an approved variation: ServiceM8 invoices sync to Xero. A person adds the approved lines to the job. No cron does this.",
-  "Site check: a skill step (photos and notes from the site). ServiceM8 has no site-inspection support in the evidence.",
+  "Site check: a skill step (photos and notes from the site). ServiceM8 has no site-inspection support in the platform docs.",
   "Variation PDF: the Quote template prints the whole job rather than the variation alone, so the email carries the priced lines as an HTML table and no PDF is attached. A variation-only template needs checking on a live account.",
   "The job note's related_object value 'job' is not spelled out in the ServiceM8 spec. Confirm it on a live account. Job notes are assumed to be internal; confirm the client portal does not show them.",
   "The adapter is docs-only until a ServiceM8 trial account proves it.",

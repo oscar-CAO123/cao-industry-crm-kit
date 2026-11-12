@@ -34,8 +34,8 @@
  "gaps": [
   "Identity or credit check on an owner (the ID screen in the call): no mapped platform operation. Done by hand before any owner is worked.",
   "Do-not-call register check: no mapped operation. The workflow never places a call; it only reads VaultRE's onDoNotCallList flag.",
-  "Text (SMS) outreach to owners who were never contacted first: not built. The call said a reply counts as consent, and the kit does not accept that. SMS waits until VaultRE's SMS consent flag is confirmed as the consent record.",
-  "The platform evidence file for this workflow is missing, so platform support comes from the kit's mapped operations only.",
+  "Text (SMS) outreach to owners who were never contacted first: not built. A reply does not count as consent in the kit. SMS waits until VaultRE's SMS consent flag is confirmed as the consent record.",
+  "No platform docs were available for this workflow, so platform support comes from the kit's mapped operations only.",
   "Both adapters are docs-only until a VaultRE sandbox account and a Microsoft 365 developer tenant prove them. The Microsoft 365 token flow is not built; a Graph access token must be supplied."
  ]
 }

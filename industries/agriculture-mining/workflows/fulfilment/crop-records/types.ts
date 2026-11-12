@@ -1,5 +1,5 @@
 // Shared shapes for the crop and livestock records workflow. Field names come from AgriWebb's official GraphQL schema
-// (endpoint-map/raw/agriwebb/schema.graphql): Farm, Field, Session, Record, AnimalsWithCount, Rainfall, AddRainfallInput.
+// Farm, Field, Session, Record, AnimalsWithCount, Rainfall, AddRainfallInput.
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 
 export type Platform = "agriwebb";

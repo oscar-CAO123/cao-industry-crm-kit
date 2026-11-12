@@ -1,5 +1,5 @@
 // Apollo: outside research on the contact, the company, its news and its hiring. Field names come from Apollo's official REST
-// spec in endpoint-map/raw/apollo/spec: people/match, organizations/enrich, news_articles/search and job_postings.
+// spec: people/match, organizations/enrich, news_articles/search and job_postings.
 // Read only. No personal email or phone is revealed (reveal flags are never sent), and nothing is added to a sequence, list or task.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, type Article, type Job, type Company, APOLLO_ID, clip, iso, safeUrl } from "../types.ts";

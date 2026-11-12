@@ -5,7 +5,7 @@ description: Due dates for a professional services practice on Xero. Reads the i
 
 # Due dates
 
-Docs-only. Built from the mining run for this job. Xero is the only platform with mapped operations for due dates in the kit. Ignition and Karbon were read but have no operations mapped.
+Docs-only. Built from the vendor docs. Xero is the only platform with mapped operations for due dates in the kit. Ignition and Karbon were read but have no operations mapped.
 
 ## What runs on its own
 Two crons in `index.ts`. `scan` runs each morning at 21:00 UTC. It reads the invoices still owed (AUTHORISED sales invoices) and the open projects with their deadlines, and keeps both in the workflow store. For each project deadline inside the window (14 days by default), it drafts one internal task in Xero Projects named with the deadline. Each deadline gets one task, ever.

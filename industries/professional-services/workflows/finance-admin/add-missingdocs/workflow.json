@@ -38,10 +38,10 @@
  "gaps": [
   "Dext: the pages cover receiving documents and the missing paperwork report, but no Dext operation is mapped in the kit, so there is no Dext adapter. The report can be exported by hand until one is mapped. Its report needs a live Practice Advanced account to confirm.",
   "Dext: its pages show no client chasing, so the chase here is the Outlook email. Dext's missing period alerts (bank statements) are not read.",
-  "Microsoft 365: the evidence pages were Word accessibility articles, not this job, and no Microsoft operation is mapped to a step. Chase emails reuse the quoting workflow's Outlook adapter (a draft, then an approved send). Confirm the practice uses Outlook in a live account first.",
+  "Microsoft 365: the pages read were Word accessibility articles, not this job, and no Microsoft operation is mapped to a step. Chase emails reuse the quoting workflow's Outlook adapter (a draft, then an approved send). Confirm the practice uses Outlook in a live account first.",
   "Xero: the bank feed connection status is not checked. A dropped feed shows as no new transactions, so the scan can miss items until the feed is fixed.",
   "Xero: the Files inbox is not read, so a document sitting in the Xero inbox but not yet attached still counts as missing.",
-  "Xero: the Xero pages in the evidence do not cover document requests or client portals, so email is the only request channel.",
+  "Xero: the Xero pages in the platform docs do not cover document requests or client portals, so email is the only request channel.",
   "Judgment: whether an item really needs a document (bank fees, transfers, small cash) stays with the accountant. The list includes every unattached item in the lookback.",
   "Chase emails go to settings.client_email, the client's own address. The Xero contact on each item (a supplier or customer) is never chased, and the chase cron refuses to run without client_email.",
   "A rejected chase still counts as sent for its stage, so the next reminder follows on schedule. Resending a rejected chase needs a runtime change.",

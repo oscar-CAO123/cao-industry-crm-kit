@@ -1,6 +1,6 @@
 // GoHighLevel: the review request is a workflow in the sub-account. Asking a customer means adding the finished job's
 // contact to that workflow, then tagging the contact so it is never asked twice. Both writes are queued as one approval,
-// and the approval runs them in order. Field names come from GoHighLevel's official spec (endpoint-map/raw/gohighlevel).
+// and the approval runs them in order. Field names come from GoHighLevel's official spec.
 // The kit has no GoHighLevel read for Google reviews, so reviews() returns none, and replies are not wired (see SKILL.md).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type CompletedJob, type ReviewAdapter, type Settings, ID, clean } from "../types.ts";

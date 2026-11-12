@@ -1,5 +1,5 @@
 // Shared shapes for the shop-floor workflow. The only platform is Unleashed; its field names come from the vendor's
-// own pages (endpoint-map/raw/unleashed): Assemblies, StockOnHand.
+// own pages: Assemblies, StockOnHand.
 export interface Settings {
   business_name?: string;
   ready_status: string;                 // the status the floor sets on a build when it is ready to complete

@@ -1,6 +1,6 @@
 // Onfleet: the platform that holds the tasks and the routes. Reads run on their own; dispatching a team sends its
 // routes to the drivers, so that is a live operation and only ever queued for a person to approve.
-// Field names come from the vendor's docs in endpoint-map/raw/onfleet (list tasks, create task, route plans, dispatch).
+// Field names come from the vendor's docs (list tasks, create task, route plans, dispatch).
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { ID, type Settings, type Stop } from "../types.ts";
 

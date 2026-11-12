@@ -1,6 +1,6 @@
 // Cin7 Omni: the order book, stock and purchase orders. Reads are draft operations. A purchase order goes to a
 // supplier, so it is only ever queued for a person to approve. Field names come from the vendor's OpenAPI spec
-// (endpoint-map/raw/cin7/spec), not from guesses.
+// not from guesses.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Order, type OrderLine, type Reorder, type Settings, SAFE_CODE, EMAIL, num, text, ms } from "../types.ts";
 

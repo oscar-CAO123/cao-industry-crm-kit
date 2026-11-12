@@ -32,4 +32,4 @@ similar). No reply is queued. The clinician or owner writes the reply by hand. D
 
 ## Not covered yet
 Rescheduling, reminders and SMS in Cliniko, Medicare and health fund claims, complaints, and hand-off between staff. Booking
-changes through the API are mapped but not wired, because who may change a booking is not in the evidence.
+changes through the API are mapped but not wired, because who may change a booking is not in the platform docs.

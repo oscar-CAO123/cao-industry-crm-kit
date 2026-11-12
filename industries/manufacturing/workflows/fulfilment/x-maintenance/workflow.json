@@ -34,7 +34,7 @@
   "MEX Maintenance (mex-cmms): the closest fit to this job (work orders, preventive triggers from meter readings, inspections), but the kit has no mex-cmms platform and no mapped operations.",
   "MRPeasy: maintenance cycles by operating hours and service orders, but the kit has no MRPeasy platform and nothing is mapped.",
   "Odoo: the kit maps one read (a version check), so its maintenance module is not mapped.",
-  "Sitebook and AroFlo: the kit has asset-maintenance and task operations, but their endpoint-map folders hold pages, not a schema, so no field name can be confirmed and no adapter is written.",
+  "Sitebook and AroFlo: the kit has asset-maintenance and task operations, but their docs are pages, not a schema, so no field name can be confirmed and no adapter is written.",
   "Meter readings and service-due checks (check-service-due): no mapped platform operation holds meter values or service intervals for this job, so the check stays a skill step.",
   "Lockout and isolation: the checklist holds the steps the owner enters in settings; no platform supplies the procedure.",
   "Technician booking (schedule-work): the job allocation operations are not mapped into a cron, so the planner still books the technician by hand.",

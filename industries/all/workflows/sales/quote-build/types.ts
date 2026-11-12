@@ -11,7 +11,7 @@ export type {
   Adapter, Platform, Contact, Enquiry, Line, Quote, RateItem,
 } from "../../../../../industries/construction/workflows/sales/quoting/types.ts";
 
-/** The two ways owners described quoting on the calls (see workflow.json families). */
+/** The two common ways of quoting (see workflow.json families). */
 export type Family = "priced-job-from-site-visit" | "proposal-scope-services";
 
 export interface Settings extends Omit<ReusedSettings, "family"> {

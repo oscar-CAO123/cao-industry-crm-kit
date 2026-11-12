@@ -1,6 +1,6 @@
 // Fireflies: meetings its bot recorded, with the platform's own summary and action list. The one write is a recap share
 // (mutation.shareMeeting), which emails the transcript to the addresses in settings. It only ever runs after approval.
-// Field names: the GraphQL pages in endpoint-map/raw/fireflies (Transcript, ShareMeetingInput).
+// Field names: the GraphQL pages (Transcript, ShareMeetingInput).
 import { createHash } from "node:crypto";
 import type { Act, Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Meeting, type Notetaker, type Settings, FIREFLIES_ID, clamp, cut, keyOf } from "../types.ts";

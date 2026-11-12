@@ -41,7 +41,7 @@
   "GoCanvas: forms and submissions are mapped, but their parameters are unmapped and no raw spec is on file, so no adapter is built. Submissions are the likely intake once the parameters are confirmed.",
   "AgriWebb: its schema covers livestock records only (no spray, crop or grain record types), so it is not used here.",
   "Records enter only through the local store. No spray or grain platform is mapped as an intake source, so the owner's paper dockets and spray diary are entered by the agent skill.",
-  "Weather at application, withholding-period calculation, label-rate validation and harvest yield, bin and tonnage fields are not documented by any platform in the evidence. The owner enters them.",
+  "Weather at application, withholding-period calculation, label-rate validation and harvest yield, bin and tonnage fields are not documented by any platform in the platform docs. The owner enters them.",
   "The register read takes the first 1,000 rows. A longer register needs paging before this ships.",
   "Driver induction checks, quality photos to the group and downgrade or price talks with suppliers are judgment steps for people, not workflow steps.",
   "WhatsApp, where quality photos go, has no adapter in the kit.",

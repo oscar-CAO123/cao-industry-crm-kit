@@ -39,7 +39,7 @@
   "first-aml": {"status": "docs-only", "covers": "case search and paging, case check state for people and entities, case notes (queued)"}
  },
  "gaps": [
-  "Smokeball, the matter system where owners key intake by hand: the platform evidence did not cover it, so no adapter. Intake from it is not built.",
+  "Smokeball, the matter system where owners key intake by hand: the platform docs did not cover it, so no adapter. Intake from it is not built.",
   "Beneficial owner identification, licence checks, enhanced due diligence, second-reviewer approval, audit sampling and AUSTRAC lodgement: the First AML docs do not describe them, so they stay with the business.",
   "Risk assessment: the platform gives check results only. The rating is a person's judgment and is not drafted by any cron.",
   "Running verification checks and creating cases are mapped in the kit but not used by any cron, because each may contact a client or use a paid check.",

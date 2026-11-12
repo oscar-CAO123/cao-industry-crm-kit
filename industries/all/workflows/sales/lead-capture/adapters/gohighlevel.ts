@@ -1,5 +1,5 @@
 // GoHighLevel: where web form and live chat leads already land. Every field name below is confirmed in the vendor's
-// spec (endpoint-map/raw/gohighlevel/spec): submissions (submissions, id, contactId, createdAt, email), chats
+// spec: submissions (submissions, id, contactId, createdAt, email), chats
 // (conversations, id, contactId, unreadCount, fullName, email, phone), tags, opportunities (pipelineId, locationId,
 // name, status, contactId, pipelineStageId, assignedTo), appointments (events, status) and messages (type, contactId,
 // subject, html, message). Reads and internal records are draft operations; a message to a lead is only ever built

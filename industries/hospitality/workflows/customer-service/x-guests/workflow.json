@@ -33,7 +33,7 @@
    "Guest notification when a table is ready (email or SMS): no mapped send operation with confirmed vendor fields is built. Gmail drafts are mapped, but this step has no adapter yet.",
    "Seating and table choice, no-show chasing, VIP or priority handling, repeat-guest lookup and marketing consent: no mapped platform describes them in the docs given. They are judgment steps in SKILL.md.",
    "Walk-in and phone intake: no intake channel is mapped, so the host adds each row by hand.",
-   "Google Workspace: the customer-service and note-taking pages describe no waitlist, so the sheet is the only record. The adapter's field names come from the Sheets spec in endpoint-map/raw and it has not run against a real Google Workspace account.",
+   "Google Workspace: the customer-service and note-taking pages describe no waitlist, so the sheet is the only record. The adapter's field names come from the Sheets spec and it has not run against a real Google Workspace account.",
    "The quoted wait is an estimate (minutes per group ahead in the queue), not a measured wait.",
    "The clear re-reads the row before it runs, but the sheet drops empty cells at the end of a row, so an empty Note (or Outcome time) cannot be checked. A note typed into such an empty cell after queueing is cleared with the row. Check the row before approving a clear that has waited a long time."
  ]

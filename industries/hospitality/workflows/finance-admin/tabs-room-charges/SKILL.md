@@ -5,7 +5,7 @@ description: Guest tabs and room charges posted to the guest folio in a hotel or
 
 # Run guest tabs and post room charges to the folio
 
-Status: docs-only. Built from the mining pages for three property and POS vendors. Only Cloudbeds is mapped in the kit, and it is not yet proven against a real account.
+Status: docs-only. Built from the docs of three property and POS vendors. Only Cloudbeds is mapped in the kit, and it is not yet proven against a real account.
 
 ## What runs on its own
 Two crons in `index.ts`, scheduled by `workflow.json`. `folio-config` reads the property's folio setup every 30 minutes. `reconcile` reads the trial balance each night. Both read and draft only, and neither changes a guest's bill.

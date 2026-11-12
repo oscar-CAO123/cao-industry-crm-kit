@@ -31,7 +31,7 @@
  },
  "gaps": [
   "Buildxact: the tender estimate, quote and request-for-quote endpoints are not mapped; only its sign-in is. Subcontractor and supplier quote requests stay with the owner until they are.",
-  "EstimateOne, which the calls name most for tender notices and submission, and PlanSwift, which its help centre covers for takeoff: neither is in the kit, so no adapter or operation exists for them.",
+  "EstimateOne, which businesses use most for tender notices and submission, and PlanSwift, which its help centre covers for takeoff: neither is in the kit, so no adapter or operation exists for them.",
   "Tender portals (EstimateOne, TenderLata, the principals' own portals): the portal alerts must be forwarded to the mailbox folder the intake reads. Portal lodgement is browser-only and not mapped.",
   "Takeoff (Groundplan, Blu, Microsoft 365 spreadsheets) and reading the tender documents (Copilot, Claude, ChatGPT): judgment steps the owner or estimator does; no mapped takeoff operation.",
   "Go or no-go, site visits, internal approval and the written submission are judgment steps. The workflow records the owner's decision in the register and does not make it.",

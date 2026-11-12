@@ -1,5 +1,5 @@
 // Shared shapes for the livestock NVD workflow. Field names come from AgriWebb's official GraphQL schema
-// (endpoint-map/raw/agriwebb/schema.graphql): Animal.animalId, Animal.identity, Animal.managementGroupId, ManagementGroup.
+// Animal.animalId, Animal.identity, Animal.managementGroupId, ManagementGroup.
 import { safeKey } from "../../../../../core/workflows/runtime.ts";
 
 export type Platform = "agriwebb";

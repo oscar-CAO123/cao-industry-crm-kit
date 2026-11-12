@@ -1,5 +1,5 @@
 // Re-Leased: the applicant contacts (read by tag) and the tenancy created once a person approves it.
-// Field names come from the vendor's Swagger file (endpoint-map/raw/re-leased/spec): Contacts_Get, Contacts_Get.get,
+// Field names come from the vendor's Swagger file: Contacts_Get, Contacts_Get.get,
 // and Tenancies_Post with CreateTenancyRequest. Nothing here sends anything; a tenancy is a live operation.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, type Applicant, UUID, DATE, EMAIL, clean, keyOf } from "../types.ts";

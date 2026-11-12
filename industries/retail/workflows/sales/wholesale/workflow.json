@@ -45,10 +45,10 @@
     "xero": {"status": "docs-only", "covers": "stockist contact, DRAFT invoice per order, authorise and email, overdue chase"}
   },
   "gaps": [
-    "Unleashed: most of its wholesale steps are the strongest support in the evidence (sales orders, stock on hand, reorder report, pack and ship), and its 146 operations are mapped, but its calls are not wired: the HMAC sign-in is not built in core/sdk/call.ts, so an adapter would throw before any request. No adapter until the signer exists.",
+    "Unleashed: most of its wholesale steps are the strongest support in the platform docs (sales orders, stock on hand, reorder report, pack and ship), and its 146 operations are mapped, but its calls are not wired: the HMAC sign-in is not built in core/sdk/call.ts, so an adapter would throw before any request. No adapter until the signer exists.",
     "Shopify: B2B customer, company and draft-order steps are mapped, but its operations take no mapped arguments (index-only, a full GraphQL document is needed) and the vendor schema is not in the endpoint map. No adapter until a development store confirms the field names.",
     "No intake platform: wholesale enquiries and orders arrive by email, JAW or Shopify. JAW, Indigo 8 and eSuite have no platform in the kit. The team records accounts and orders into the store until an intake adapter exists.",
-    "Not covered: pitch samples and lookbooks (JAW), trade price lists (Shopify catalogue), stock allocation and pack-dispatch (Indigo 8 or Unleashed), reorder checks (Unleashed reorder report, not wired), and wholesale margins in Airtable (mapped in the kit, but no Airtable platform evidence was read for this workflow, so not built).",
+    "Not covered: pitch samples and lookbooks (JAW), trade price lists (Shopify catalogue), stock allocation and pack-dispatch (Indigo 8 or Unleashed), reorder checks (Unleashed reorder report, not wired), and wholesale margins in Airtable (mapped in the kit, but no Airtable platform docs were read for this workflow, so not built).",
     "Xero is docs-only until a demo company proves the calls, as in the quoting workflow. The chase re-sends the invoice email through Xero, using Xero's own invoice template; Xero's reminder settings are not read.",
     "Payment-chasing reads only AUTHORISED invoices and pages through at most 1,000 of them per run."
   ]

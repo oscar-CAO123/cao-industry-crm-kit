@@ -1,6 +1,6 @@
 // SiteBook: the safety checklists, incidents and corrective actions a construction business keeps in it.
 // Operation ids are in core/sdk/platforms/sitebook/ops.json. Field names come from SiteBook's Reporting API docs
-// (endpoint-map/raw/sitebook/pages): query filters on the list reads, the path id on report generation, and the
+// query filters on the list reads, the path id on report generation, and the
 // EmailTemplateId body on the action email. Creating records needs a request schema the docs do not list, so none is built here.
 import type { Ctx } from "../../../../../../core/workflows/runtime.ts";
 import { type Settings, guid, str, rowsOf, DAY } from "../types.ts";
