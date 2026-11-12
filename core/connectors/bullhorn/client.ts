@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Bullhorn sign-in (NEW, 8 Nov 2026). From Bullhorn's own docs, read through endpoint-map/model_guard.py with a watcher
 // model: bullhorn.github.io/rest-api-docs and bullhorn.github.io/Getting-Started-with-REST (bullhorn.com links them).
 //
@@ -69,6 +70,7 @@ async function accessToken(): Promise<string> {
 
 /** The current REST session, logging in only when there is none (Bullhorn rate-limits logins). */
 export async function login(): Promise<{ token: string; restUrl: string }> {
+  if (composioEnabled("bullhorn")) throw new Error("bullhorn: managed connections do not support the required REST session bootstrap");
   if (session) return session;
   const { rest } = await dataCentre();
   const loginUrl = new URL(`${rest}/login`);

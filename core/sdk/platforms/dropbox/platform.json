@@ -6,7 +6,9 @@
  "authProof": "docs",
  "style": "rpc",
  "hosts": [
-  "api.dropboxapi.com"
+  "api.dropboxapi.com",
+  "content.dropboxapi.com",
+  "notify.dropboxapi.com"
  ],
  "hostFromEnv": false,
  "hostPatterns": [],

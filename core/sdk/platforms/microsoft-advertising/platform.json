@@ -12,11 +12,22 @@
  ],
  "hostFromEnv": false,
  "hostPatterns": [],
- "pinned": {},
+ "pinned": {
+  "AccountId": {
+   "allow": [],
+   "env": "MSADS_ACCOUNT_ID",
+   "fill": "$env"
+  }
+ },
  "serverVars": {},
  "auth": {
-  "type": "unsupported",
-  "note": "Microsoft Advertising is a SOAP API; the kit has no envelope builder yet"
+  "type": "bearer",
+  "env": "MSADS_ACCESS_TOKEN",
+  "extraHeaders": {
+   "DeveloperToken": "MSADS_DEVELOPER_TOKEN",
+   "CustomerId": "MSADS_CUSTOMER_ID",
+   "CustomerAccountId": "MSADS_ACCOUNT_ID"
+  }
  },
  "keys": [
   "MSADS_ACCESS_TOKEN",
@@ -36,12 +47,28 @@
   {
    "url": "https://reporting.api.bingads.microsoft.com/Api/Advertiser/Reporting/v13/ReportingService.svc?singleWsdl",
    "official": "vendor-domain: reporting.api.bingads.microsoft.com"
+  },
+  {
+   "url": "https://github.com/BingAds/BingAds-Python-SDK/tree/main/openapi_client",
+   "official": "vendor GitHub: BingAds"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/advertising/campaign-management-service/getcampaignsbyaccountid?view=bingads-13",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/advertising/customer-management-service/getaccount?view=bingads-13",
+   "official": "vendor-domain: learn.microsoft.com"
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/advertising/reporting-service/submitgeneratereport?view=bingads-13",
+   "official": "vendor-domain: learn.microsoft.com"
   }
  ],
  "gaps": [],
  "counts": {
   "operations": 236,
-  "read": 0,
-  "write": 236
+  "read": 85,
+  "write": 151
  }
 }

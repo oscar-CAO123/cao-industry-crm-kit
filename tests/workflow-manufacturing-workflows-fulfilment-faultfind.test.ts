@@ -49,7 +49,7 @@ const LATER = new Date("2026-11-09T05:00:00Z");
 
 beforeEach(() => {
   fake();
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", KIT_ALLOW_WRITES: "1" });
 });
 
 test("runtime: a cron cannot run the email, and cannot queue a note", async () => {

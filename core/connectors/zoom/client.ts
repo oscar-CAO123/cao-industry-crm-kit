@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Zoom helper: cloud recordings, transcripts, and who attended a call.
 // Keys: ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET, from a Server-to-Server OAuth app with
 // recording read scope. Nothing here records, starts or changes a meeting.
@@ -32,7 +33,7 @@ export async function accessToken(): Promise<string> {
   return cached.token;
 }
 export function clearTokenCache(): void { cached = null; }
-const auth = async () => ({ Authorization: `Bearer ${await accessToken()}` });
+const auth = async () => composioEnabled("zoom") ? {} : ({ Authorization: `Bearer ${await accessToken()}` });
 
 const pmrCache = new Map<string, { url: string; at: number }>();
 

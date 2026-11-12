@@ -10,7 +10,7 @@
 
 import { call } from "../../lib/http.ts";
 import { collect } from "../../lib/paging.ts";
-import { accessToken, SCOPES, spec } from "./auth.ts";
+import { authHeaders, SCOPES, spec } from "./auth.ts";
 
 const API = "https://www.googleapis.com/calendar/v3";
 
@@ -31,7 +31,7 @@ function toEvent(e: any): CalEvent {
 }
 
 export async function listEvents(mailbox: string, calendarId: string, timeMin: string, timeMax: string): Promise<CalEvent[]> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.calendarRead)}` };
+  const h = await authHeaders(mailbox, SCOPES.calendarRead);
   return collect<CalEvent, string>("", async (pageToken) => {
     const r = await call<any>(spec, {
       url: `${API}/calendars/${encodeURIComponent(calendarId)}/events`, headers: h,
@@ -42,7 +42,7 @@ export async function listEvents(mailbox: string, calendarId: string, timeMin: s
 }
 
 export async function freeBusy(mailbox: string, calendars: string[], timeMin: string, timeMax: string): Promise<Record<string, { start: string; end: string }[]>> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.calendarRead)}` };
+  const h = await authHeaders(mailbox, SCOPES.calendarRead);
   const r = await call<any>(spec, { method: "POST", url: `${API}/freeBusy`, headers: h, json: { timeMin, timeMax, items: calendars.map((id) => ({ id })) } });
   const out: Record<string, { start: string; end: string }[]> = {};
   for (const [id, v] of Object.entries<any>(r.data?.calendars ?? {})) out[id] = v.busy ?? [];
@@ -56,7 +56,7 @@ export async function freeBusy(mailbox: string, calendars: string[], timeMin: st
  * the guest sees one link. A failed strip is reported, not thrown: the booking itself stands.
  */
 export async function createEvent(mailbox: string, e: { summary: string; start: string; end: string; timeZone?: string; attendees?: (string | { email: string; name?: string })[]; description?: string; location?: string; meetingUrl?: string; notify?: boolean }): Promise<CalEvent & { meetStripFailed?: boolean }> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.calendarWrite)}` };
+  const h = await authHeaders(mailbox, SCOPES.calendarWrite);
   const tz = e.timeZone ?? "Australia/Sydney";
   const description = e.meetingUrl ? [`Join: ${e.meetingUrl}`, "", e.description ?? ""].join("\n").trim() : e.description;
   const r = await call<any>(spec, {
@@ -83,7 +83,7 @@ export async function createEvent(mailbox: string, e: { summary: string; start: 
 
 /** Cancels an event and tells the guests. Needs KIT_ALLOW_WRITES=1. An event already gone counts as cancelled. */
 export async function cancelEvent(mailbox: string, eventId: string, notify = true): Promise<void> {
-  const h = { Authorization: `Bearer ${await accessToken(mailbox, SCOPES.calendarWrite)}` };
+  const h = await authHeaders(mailbox, SCOPES.calendarWrite);
   try {
     await call(spec, { method: "DELETE", url: `${API}/calendars/primary/events/${encodeURIComponent(eventId)}`, headers: h, query: { sendUpdates: notify ? "all" : "none" } });
   } catch (err: any) {

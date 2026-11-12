@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Calendly helper: who has booked, and when. Read only.
 // Key: CALENDLY_API_TOKEN (a personal access token).
 //
@@ -13,7 +14,7 @@ import { secret } from "../../lib/secrets.ts";
 import { collect } from "../../lib/paging.ts";
 
 export const spec: AppSpec = { app: "calendly", hosts: ["api.calendly.com"] };
-const auth = () => ({ Authorization: `Bearer ${secret("CALENDLY_API_TOKEN")}` });
+const auth = () => composioEnabled("calendly") ? {} : ({ Authorization: `Bearer ${secret("CALENDLY_API_TOKEN")}` });
 
 export async function me(): Promise<{ uri: string; email: string; organization: string }> {
   const r = await call<any>(spec, { url: "https://api.calendly.com/users/me", headers: auth() });

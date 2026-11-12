@@ -17,3 +17,7 @@ Workflows ask for capabilities in `core/capabilities.json`, never a vendor by na
 9. Admin, Templates applies the industry: `industries/<industry>/crm-shell/template.json` switches on its pages and its built workflows, after a preview of every change, and can be undone. It never adds records.
 10. Keys live in the business's one 1Password vault. On your laptop every key reaches a command through `tools/op-scoped` (Touch ID). The deployed CRM and its crons start through `shell/scripts/with-secrets.sh` and hold only the 1Password service account token. Never write a key to a file.
 11. Deploy anywhere with `node tools/shell-deploy.ts <target> <out-dir> <industry>` (docker, server, railway, aws, gcp, azure, vercel, supabase, cloudflare, netlify).
+
+## Licence
+
+The kit is available under the [MIT licence](LICENSE). The CRM shell retains its upstream [MIT notice](shell/LICENSE). Third-party packages retain their own licences.

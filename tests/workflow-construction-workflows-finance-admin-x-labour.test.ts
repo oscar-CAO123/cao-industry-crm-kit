@@ -102,7 +102,7 @@ const pendingApprovals = async (store: MemoryStore) => Object.values(await store
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
   Object.assign(process.env, {
-    SERVICEM8_API_KEY: "s8", XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1",
+    SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1",
   });
 });
 

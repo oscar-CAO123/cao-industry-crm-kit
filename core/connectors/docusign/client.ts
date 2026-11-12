@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // DocuSign helper: envelopes from a template, their status, and the signed copy.
 // Keys: DOCUSIGN_INTEGRATION_KEY, DOCUSIGN_USER_ID (the user the app acts as), DOCUSIGN_ACCOUNT_ID,
 // DOCUSIGN_PRIVATE_KEY (PEM), and DOCUSIGN_ENV=demo for the free developer sandbox.
@@ -37,6 +38,15 @@ const cache = new Map<string, { token: string; until: number; base: string }>();
 const BASE_SCOPES = ["signature", "impersonation"];
 
 async function login(extraScopes: string[] = []): Promise<{ token: string; base: string }> {
+  if (composioEnabled("docusign")) {
+    const account = secret("DOCUSIGN_ACCOUNT_ID");
+    const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo` });
+    const acct = (info.data?.accounts ?? []).find((a: any) => a.account_id === account);
+    if (!acct?.base_uri) throw new Error("DocuSign account not found for this user");
+    const u = new URL(acct.base_uri);
+    if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !spec.hostPattern?.test(u.hostname)) throw new Error("docusign: account base URL refused");
+    return { token: "", base: `${u.origin}/restapi/v2.1/accounts/${encodeURIComponent(account)}` };
+  }
   const scope = [...new Set([...BASE_SCOPES, ...extraScopes.filter((s) => /^[a-z0-9_.]+$/i.test(s))])].sort().join(" ");
   const cached = cache.get(scope);
   if (cached && cached.until > Date.now() + 60_000) return cached;
@@ -45,10 +55,12 @@ async function login(extraScopes: string[] = []): Promise<{ token: string; base:
   const t = await call<any>(spec, { method: "POST", url: `https://${authHost()}/oauth/token`, form: { grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion }, retries: 1 });
   const token = t.data?.access_token;
   if (!token) throw new Error("DocuSign login failed. The user must grant consent to the integration key once.");
-  const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo`, headers: { Authorization: `Bearer ${token}` } });
+  const info = await call<any>(spec, { url: `https://${authHost()}/oauth/userinfo`, headers: token ? { Authorization: `Bearer ${token}` } : {} });
   const acct = (info.data?.accounts ?? []).find((a: any) => a.account_id === secret("DOCUSIGN_ACCOUNT_ID"));
   if (!acct?.base_uri) throw new Error("DocuSign account not found for this user");
-  const fresh = { token, base: `${acct.base_uri}/restapi/v2.1/accounts/${secret("DOCUSIGN_ACCOUNT_ID")}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
+  const u = new URL(acct.base_uri);
+  if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !spec.hostPattern?.test(u.hostname)) throw new Error("docusign: account base URL refused");
+  const fresh = { token, base: `${u.origin}/restapi/v2.1/accounts/${encodeURIComponent(secret("DOCUSIGN_ACCOUNT_ID"))}`, until: Date.now() + (t.data.expires_in ?? 3600) * 1000 };
   cache.set(scope, fresh);
   return fresh;
 }
@@ -77,7 +89,7 @@ function shape(e: any, signers?: any[], custom?: any): Envelope {
 export async function listEnvelopes(fromDate: string, status?: string): Promise<Envelope[]> {
   const { token, base } = await login();
   return collect<Envelope, number>(0, async (start) => {
-    const r = await call<any>(spec, { url: `${base}/envelopes`, headers: { Authorization: `Bearer ${token}` }, query: { from_date: fromDate, count: 100, start_position: start, include: "recipients,custom_fields", status } });
+    const r = await call<any>(spec, { url: `${base}/envelopes`, headers: token ? { Authorization: `Bearer ${token}` } : {}, query: { from_date: fromDate, count: 100, start_position: start, include: "recipients,custom_fields", status } });
     const page = r.data?.envelopes ?? [];
     return { items: page.map((e: any) => shape(e)), next: page.length < 100 ? null : start + 100 };
   }, { maxPages: 200 });
@@ -85,7 +97,7 @@ export async function listEnvelopes(fromDate: string, status?: string): Promise<
 
 export async function getEnvelope(id: string): Promise<Envelope | null> {
   const { token, base } = await login();
-  const H = { Authorization: `Bearer ${token}` };
+  const H = token ? { Authorization: `Bearer ${token}` } : {};
   let e: any;
   try { e = (await call<any>(spec, { url: `${base}/envelopes/${encodeURIComponent(id)}`, headers: H, query: { include: "recipients,custom_fields" } })).data; }
   catch (err: any) { if (err?.status === 404) return null; throw err; }
@@ -98,7 +110,7 @@ export async function getEnvelope(id: string): Promise<Envelope | null> {
 /** The signed document with its certificate, as PDF bytes. */
 export async function downloadSigned(id: string): Promise<Buffer> {
   const { token, base } = await login();
-  const r = await call<ArrayBuffer>(spec, { url: `${base}/envelopes/${encodeURIComponent(id)}/documents/combined`, headers: { Authorization: `Bearer ${token}` }, query: { certificate: true }, binary: true, followDownloadRedirects: true });
+  const r = await call<ArrayBuffer>(spec, { url: `${base}/envelopes/${encodeURIComponent(id)}/documents/combined`, headers: token ? { Authorization: `Bearer ${token}` } : {}, query: { certificate: true }, binary: true, followDownloadRedirects: true });
   return Buffer.from(r.data);
 }
 
@@ -109,7 +121,7 @@ export async function downloadSigned(id: string): Promise<Buffer> {
 export async function createFromTemplate(o: { templateId: string; roles: { roleName: string; name: string; email: string; tabs?: Record<string, unknown> }[]; emailSubject?: string; customFields?: Record<string, string>; send?: boolean }): Promise<string> {
   const { token, base } = await login();
   const r = await call<any>(spec, {
-    method: "POST", url: `${base}/envelopes`, headers: { Authorization: `Bearer ${token}` },
+    method: "POST", url: `${base}/envelopes`, headers: token ? { Authorization: `Bearer ${token}` } : {},
     json: {
       templateId: o.templateId, templateRoles: o.roles, emailSubject: o.emailSubject, status: o.send ? "sent" : "created",
       customFields: o.customFields ? { textCustomFields: Object.entries(o.customFields).map(([name, value]) => ({ name, value, show: "false" })) } : undefined,

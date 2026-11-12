@@ -18,7 +18,8 @@
   "env": "SERVICEM8_API_KEY"
  },
  "keys": [
-  "SERVICEM8_API_KEY"
+  "SERVICEM8_API_KEY",
+  "SERVICEM8_ADDON_ACCESS_TOKEN (OAuth add-on and messaging methods)"
  ],
  "sources": [
   {

@@ -1,3 +1,4 @@
+import { composioEnabled } from "../../lib/connection-provider.ts";
 // Xero helper.
 //
 // Source of each function, from the reference CRM at commit 28aa5d91 unless marked NEW:
@@ -73,7 +74,7 @@ export async function getToken(): Promise<{ accessToken: string; tenantId: strin
 export function clearTokenCache(): void { cached = null; }
 
 async function headers(): Promise<Record<string, string>> {
-  return { Authorization: `Bearer ${await accessToken()}`, "Xero-Tenant-Id": secret("XERO_TENANT_ID") };
+  return { ...(composioEnabled("xero") ? {} : { Authorization: `Bearer ${await accessToken()}` }), "Xero-Tenant-Id": secret("XERO_TENANT_ID") };
 }
 
 export interface XeroContact { ContactID: string; Name: string; EmailAddress?: string; Phones?: { PhoneNumber?: string; PhoneType?: string }[]; TaxNumber?: string; IsCustomer?: boolean; IsSupplier?: boolean }

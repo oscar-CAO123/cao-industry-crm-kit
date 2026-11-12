@@ -48,7 +48,7 @@ const DAY = 864e5;
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", KIT_ALLOW_WRITES: "1" });
 });
 
 test("runtime: a cron cannot draft a live operation, and cannot queue a read", async () => {

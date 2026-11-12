@@ -43,13 +43,13 @@ const P = {
   "hubspot": { name: "HubSpot", auth: { type: "bearer", env: "HUBSPOT_ACCESS_TOKEN" }, keys: ["HUBSPOT_ACCESS_TOKEN"], proof: "docs" },
   "microsoft-365": { name: "Microsoft 365 (Graph)", auth: { type: "bearer", env: "M365_ACCESS_TOKEN", note: "token flow not built yet: supply a Graph access token" }, keys: ["M365_ACCESS_TOKEN"], proof: "docs" },
   "gohighlevel": { name: "GoHighLevel", auth: { type: "bearer", env: "GHL_ACCESS_TOKEN", extraHeaders: { Version: "=2021-07-28" } }, keys: ["GHL_ACCESS_TOKEN"], proof: "docs" },
-  "slack": { name: "Slack", auth: { type: "bearer", env: "SLACK_BOT_TOKEN" }, keys: ["SLACK_BOT_TOKEN", "SLACK_USER_TOKEN (for methods that take only a user token)"], proof: "docs" },
+  "slack": { name: "Slack", auth: { type: "bearer", env: "SLACK_BOT_TOKEN" }, keys: ["SLACK_BOT_TOKEN", "SLACK_USER_TOKEN (for methods that take only a user token)", "SLACK_CONFIG_TOKEN (for configuration-only methods)"], proof: "docs" },
   "asana": { name: "Asana", auth: { type: "bearer", env: "ASANA_ACCESS_TOKEN" }, keys: ["ASANA_ACCESS_TOKEN"], proof: "docs" },
   "klaviyo": { name: "Klaviyo", auth: { type: "header", header: "Authorization", prefix: "Klaviyo-API-Key ", env: "KLAVIYO_API_KEY" }, keys: ["KLAVIYO_API_KEY"], proof: "docs" },
   "zendesk": { name: "Zendesk", server: "https://{subdomain}.{domain}.com", auth: { type: "basic", user: "ZENDESK_EMAIL+=/token", pass: "ZENDESK_API_TOKEN" }, keys: ["ZENDESK_SUBDOMAIN", "ZENDESK_EMAIL", "ZENDESK_API_TOKEN"], proof: "docs",
     serverVars: { subdomain: { env: "ZENDESK_SUBDOMAIN", pattern: SUB }, domain: { env: "ZENDESK_DOMAIN", default: "zendesk", pattern: "zendesk" } } },
   "monday": { name: "monday.com", style: "graphql", auth: { type: "header", header: "Authorization", env: "MONDAY_API_TOKEN" }, keys: ["MONDAY_API_TOKEN"], proof: "docs" },
-  "servicem8": { name: "ServiceM8", auth: { type: "header", header: "X-API-Key", env: "SERVICEM8_API_KEY" }, keys: ["SERVICEM8_API_KEY"], proof: "docs" },
+  "servicem8": { name: "ServiceM8", auth: { type: "header", header: "X-API-Key", env: "SERVICEM8_API_KEY" }, keys: ["SERVICEM8_API_KEY", "SERVICEM8_ADDON_ACCESS_TOKEN (OAuth add-on and messaging methods)"], proof: "docs" },
   "deputy": { name: "Deputy", auth: { type: "bearer", env: "DEPUTY_ACCESS_TOKEN" }, keys: ["DEPUTY_ACCESS_TOKEN", "DEPUTY_SUBDOMAIN", "DEPUTY_REGION"], proof: "docs",
     serverVars: { subdomain: { env: "DEPUTY_SUBDOMAIN", pattern: SUB }, region: { env: "DEPUTY_REGION", pattern: "[a-z]{2,6}" }, install: { env: "DEPUTY_SUBDOMAIN", pattern: SUB }, geo: { env: "DEPUTY_REGION", pattern: "[a-z]{2,6}" } } },
   "smokeball": { name: "Smokeball", server: "https://api.smokeball.{tld}", forceServer: true,
@@ -71,8 +71,16 @@ const P = {
     serverVars: { shop: { env: "SHOPIFY_SHOP", pattern: SUB }, version: { env: "SHOPIFY_API_VERSION", default: "2026-10", pattern: "[0-9]{4}-[0-9]{2}", callerMay: true } } },
 };
 
+// SiteMinder's partner APIs, from its own quick-start pages: each needs a signed SiteMinder partnership, its credentials
+// come from the Partner Portal, and only a pre-production host is published (the live one is issued on certification).
+const SITEMINDER_PARTNER = {
+  "channels-plus-api": "SiteMinder Channels Plus is for booking channels with a SiteMinder partnership (x-sm-api-id and x-sm-api-key from the Partner Portal; live host issued on certification); a hotel cannot get these credentials",
+  "smx-api": "SiteMinder SMX is for subscribers with a SiteMinder partnership (Bearer token from the Partner Portal; live host issued on certification); a hotel cannot get this token",
+  "pmsxchange-api": "SiteMinder pmsXchange is for PMS vendors with a SiteMinder partnership (Basic credentials per PMS; some endpoints are called by SiteMinder on the PMS's own server); a hotel cannot get these credentials",
+};
 // Wave 3 platforms (8 Nov): their sign-in and hosts live in their own file.
 import { W3 } from "./sdk-platforms-wave3.mjs";
+import { mapMicrosoftRest, MSADS_SOURCES } from "./sdk-microsoft-rest.mjs";
 for (const [k, v] of Object.entries(W3)) if (!P[k]) P[k] = v;
 // Approved-scope tools (9 Nov): their own file too.
 import { APPROVED } from "./sdk-platforms-approved.mjs";
@@ -276,22 +284,22 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
              ...(() => { const [kind, why] = readKind(id, o); return why ? { kind, override: `write: ${why}` } : { kind }; })() };
   });
   // Endpoints that must not carry the platform key, or whose sign-in is not mapped yet.
-  // Dropbox routes its own spec marks host="content"/"notify" or style upload/download (endpoint-map/raw/dropbox/spec/*.stone).
-  const DROPBOX_SPECIAL = new Set(["/account/get_photo", "/files/download", "/files/download_zip", "/files/export", "/files/list_folder/longpoll",
-    "/files/paper/create", "/files/paper/update", "/files/get_preview", "/files/get_thumbnail", "/files/get_thumbnail_batch", "/files/get_thumbnail_v2",
-    "/files/upload", "/files/upload_session/start", "/files/upload_session/append", "/files/upload_session/append_v2", "/files/upload_session/append_batch",
-    "/files/upload_session/finish", "/files/alpha/upload", "/paper/docs/download", "/paper/docs/create", "/paper/docs/update",
-    "/riviera/download_transform_output", "/sharing/get_shared_link_file"]);
+  // Host and transfer style from the official Dropbox JavaScript SDK routes.js.
+  const DROPBOX_ROUTES = {"/account/get_photo":{"host":"content","style":"download"},"/files/download":{"host":"content","style":"download"},"/files/download_zip":{"host":"content","style":"download"},"/files/export":{"host":"content","style":"download"},"/files/list_folder/longpoll":{"host":"notify","style":"rpc","noAuth":true},"/files/paper/create":{"host":"api","style":"upload"},"/files/paper/update":{"host":"api","style":"upload"},"/files/get_preview":{"host":"content","style":"download"},"/files/get_thumbnail":{"host":"content","style":"download"},"/files/get_thumbnail_batch":{"host":"content","style":"rpc"},"/files/get_thumbnail_v2":{"host":"content","style":"download"},"/files/upload":{"host":"content","style":"upload"},"/files/upload_session/start":{"host":"content","style":"upload"},"/files/upload_session/append":{"host":"content","style":"upload"},"/files/upload_session/append_v2":{"host":"content","style":"upload"},"/files/upload_session/append_batch":{"host":"content","style":"upload"},"/files/upload_session/finish":{"host":"content","style":"upload"},"/files/alpha/upload":{"host":"content","style":"upload"},"/paper/docs/download":{"host":"api","style":"download"},"/paper/docs/create":{"host":"api","style":"upload"},"/paper/docs/update":{"host":"api","style":"upload"},"/riviera/download_transform_output":{"host":"content","style":"download"},"/sharing/get_shared_link_file":{"host":"content","style":"download"}};
   for (const o of ops) {
-    if (id === "dropbox" && DROPBOX_SPECIAL.has(o.path))
-      o.authUnsupported = "Dropbox content or notify route: needs content.dropboxapi.com or notify.dropboxapi.com and the Dropbox-API-Arg header; not wired yet";
-    if (id === "servicem8" && (o.api === "addon-sdk-api" || /AddonDiary/i.test(o.id)))
-      o.authUnsupported = "ServiceM8 add-on route: needs an OAuth add-on token, not the API key; not wired yet";
+    if (id === "dropbox" && DROPBOX_ROUTES[o.path]) {
+      const d = DROPBOX_ROUTES[o.path];
+      o.server = `https://${d.host}.dropboxapi.com/2`;
+      if (d.style === "upload" || d.style === "download") o.dropboxContent = d.style;
+      if (d.noAuth) o.noAuth = true;
+    }
+    if (id === "servicem8" && (o.api === "addon-sdk-api" || o.api === "messaging-api" || /AddonDiary/i.test(o.id)))
+      o.auth = { type: "bearer", env: "SERVICEM8_ADDON_ACCESS_TOKEN" };
     // Slack lists the token types each method takes: user-only methods sign in with the user token, and methods that
-    // take only an app configuration token are refused until that sign-in is mapped.
+    // take only an app configuration token use their own secret.
     if (id === "slack" && o.tokens?.includes("user") && !o.tokens.includes("bot")) o.tokenEnv = "SLACK_USER_TOKEN";
     if (id === "slack" && o.tokens?.length && o.tokens.every((t) => t === "configuration"))
-      o.authUnsupported = "Slack app configuration method: needs an app configuration token, not the bot or user token; not wired yet";
+      o.tokenEnv = "SLACK_CONFIG_TOKEN";
     // Klaviyo profile reads can include raw device push tokens; the kit never asks for them.
     if (id === "klaviyo") {
       o.params = o.params.filter((p) => p.name !== "fields[push-token]");
@@ -315,8 +323,16 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
       if (missing.length && !o.authUnsupported) o.authUnsupported = `needs ${missing.join(", ")} from the secret store, which this platform's sign-in does not map yet`;
       delete o.secretHeaders;
     }
+    if (id === "siteminder") {
+      // Five products, each with its own host and sign-in. Only Direct Booking is for the hotel itself: its key comes from the
+      // hotel's own SiteMinder account and every endpoint sits under https://directbooking.siteminder.com/public-api/api.
+      const product = (String(o.doc_url).match(/developer\.siteminder\.com\/([a-z-]+-api)\//) ?? [])[1];
+      if (product === "direct-booking-api") { if (!o.path.startsWith("/public-api/api/")) o.server = "https://directbooking.siteminder.com/public-api/api"; }
+      else o.authUnsupported = SITEMINDER_PARTNER[product] ?? "SiteMinder product not identified from its page; not wired";
+    }
     if (id === "zoom" && o.server.includes("{keyConnectorLb}"))
       o.authUnsupported = "Zoom customer-managed key route: runs on the client's own key connector and decrypts key material; never called by the kit";
+    if (id === "plaid") o.fixedHeaders = { ...o.fixedHeaders, "Plaid-Version": "2020-09-14" }; // Match the pinned Plaid API schema.
     if (id === "microsoft-365" && o.path.includes("/$count")) o.fixedHeaders = { ConsistencyLevel: "eventual" };  // Graph needs it for $count
     if (id === "gohighlevel" && /^(v3__|index-v3)/.test(o.api)) o.fixedHeaders = { Version: "v3" };  // v3 endpoints need their version header
     if (id === "klaviyo" && o.path.startsWith("/client/")) o.noAuth = true;  // public client API: company_id, never the private key
@@ -385,6 +401,8 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     if (gates.has(o)) { o.kind = "write"; o.override = `gated: ${clean(gates.get(o))}`; }
     else if (readPosts.has(o) && o.method === "POST" && READPOST_PATH.test(o.path) && !CREDENTIAL.test(words(`${o.id} ${o.path}`))) { o.kind = "read"; o.readPost = true; o.override = `read-only POST: ${clean(readPosts.get(o))}`; }
   }
+  if (id === "zapier") for (const [name, route] of [["profile", "profile/"], ["implementations", "implementations/"], ["lookup", "implementations-meta/lookup/"], ["search", "implementations-meta/search/"]]) ops.push({ id: `sdk.${name}`, api: "sdk", method: "GET", path: `/api/v0/sdk/zapier/api/v4/${route}`, server: "https://sdkapi.zapier.com", summary: `SDK ${name} read`, tags: ["SDK"], params: [], body: false, scopes: [], deprecated: false, doc_url: "https://docs.zapier.com/sdk/reference", kind: "read" });
+  if (id === "microsoft-advertising") mapMicrosoftRest(ops);
   const seenIds = new Map();
   for (const o of ops) {  // every id unique, so no endpoint is shadowed
     const n = seenIds.get(o.id) ?? 0;
@@ -405,7 +423,7 @@ for (const file of fs.readdirSync(src).filter((f) => f.endsWith(".json")).sort()
     hostPatterns: cfg.hostFromEnv ? [] : [...new Set([...patterns, ...(cfg.hostPatterns ?? [])])],
     pinned: cfg.pinned ?? {}, defaultScope: cfg.defaultScope, ...(FORM_ARRAYS[id] ? { formArrays: FORM_ARRAYS[id] } : {}), ...(cfg.queryArrays ? { queryArrays: cfg.queryArrays } : {}), ...(cfg.queryObjects ? { queryObjects: cfg.queryObjects } : {}),
     serverVars: vars, auth: cfg.auth, keys: cfg.keys ?? autoKeys(cfg), keyInPath: cfg.keyInPath,
-    sources: m.sources.map((s) => ({ url: s.url, official: s.official })), gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
+    sources: [...m.sources.map((s) => ({ url: s.url, official: s.official })), ...(id === "zapier" ? [{ url: "https://docs.zapier.com/sdk/reference", official: "vendor-domain: docs.zapier.com" }] : []), ...(id === "microsoft-advertising" ? MSADS_SOURCES : [])], gaps: [...(m.gaps ?? []), ...(cfg.gaps ?? [])],
     counts: { operations: ops.length, read: ops.filter((o) => o.kind === "read").length, write: ops.filter((o) => o.kind === "write").length },
   };
   // Host list: must equal the reviewed lock. A new or widened list stops the run until a person accepts it.

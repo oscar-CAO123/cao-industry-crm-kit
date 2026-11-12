@@ -14,7 +14,9 @@
         "github-verified: org GoHighLevel is_verified, website gohighlevel.com",
         "npm maintainer email on gohighlevel.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/gohighlevel.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "google-analytics",
@@ -28,7 +30,9 @@
         "vendor docs name it: https://developers.google.com/analytics/devguides/reporting/data/v1/client-libraries, https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart",
         "npm maintainer email on google.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/google-analytics.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "bigquery",
@@ -42,7 +46,9 @@
         "vendor docs name it: https://docs.cloud.google.com/bigquery/docs/reference/libraries, https://docs.cloud.google.com/nodejs/docs/reference/bigquery/latest",
         "npm maintainer email on google.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/bigquery.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof; restricted to configured project dataset listing only"
     },
     {
       "app": "google-workspace",
@@ -152,7 +158,9 @@
         "vendor docs name it: https://developers.hubspot.com/blog/introducing-hubspot-go-a-community-go-sdk-for-hubspot-developers",
         "npm maintainer email on hubspot.com"
       ],
-      "status": "blocked: no transport seam: always uses the process-wide fetch"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/hubspot-legacy.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "hubspot",
@@ -166,7 +174,9 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "npm maintainer email on hubspot.com"
       ],
-      "status": "blocked: alpha; no wrapper yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/hubspot-alpha.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "mailchimp",
@@ -180,7 +190,9 @@
         "GitHub API 19:35: org mailchimp is_verified on mailchimp.com",
         "npm maintainer email on mailchimp.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/mailchimp.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "make",
@@ -195,7 +207,9 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "npm maintainer email on make.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/make.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "microsoft-365",
@@ -209,7 +223,9 @@
         "vendor docs name it: https://learn.microsoft.com/en-us/graph/sdks/sdks-overview, https://learn.microsoft.com/en-us/graph/sdks/sdk-installation",
         "npm maintainer email on microsoft.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/additional-clients.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "onfleet",
@@ -223,7 +239,10 @@
         "GitHub API 19:35: org onfleet is_verified on onfleet.com",
         "npm maintainer email on onfleet.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter_note": "The pinned package imports node-fetch directly in ESM. A safe adapter needs an isolated loader or another verified transport seam.",
+      "adapter": "core/sdk/vendor/onfleet.ts",
+      "tested": "offline only: actual pinned SDK, isolated fetch transport, frozen resource-method facade; no live account proof"
     },
     {
       "app": "shopify",
@@ -238,7 +257,9 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "npm maintainer email on shopify.com"
       ],
-      "status": "blocked: GraphQL: the SDK route does not handle GraphQL yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/shopify.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "slack",
@@ -254,7 +275,9 @@
         "github-verified: org slackapi is_verified, website slack.com",
         "npm maintainer email on slack.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/fetch-clients.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "pylon",
@@ -269,7 +292,9 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "npm maintainer email on usepylon.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/additional-clients.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "woocommerce",
@@ -283,7 +308,9 @@
         "vendor docs name it: https://developer.woocommerce.com/docs/apis/rest-api/, https://developer.woocommerce.com/llms-full.txt",
         "npm maintainer email on automattic.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/woocommerce.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "zapier",
@@ -298,7 +325,10 @@
         "github-verified: org zapier is_verified, website zapier.com",
         "npm maintainer email on zapier.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter_note": "The pinned SDK uses sdkapi.zapier.com proxy routes that are absent from the mapped api.zapier.com operations.",
+      "adapter": "core/sdk/vendor/zapier.ts",
+      "tested": "offline only: actual pinned SDK profile/app/action catalogue reads; relay and action execution refused; no live account proof"
     },
     {
       "app": "zoom",
@@ -312,7 +342,9 @@
         "github-verified: org zoom is_verified, website developers.zoom.us",
         "npm maintainer email on zoom.us"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/zoom.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "airtable",
@@ -326,7 +358,9 @@
         "github-verified: org Airtable is_verified, website airtable.com",
         "npm maintainer email on airtable.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/airtable.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "asana",
@@ -342,7 +376,9 @@
         "github-verified: org Asana is_verified, website asana.com",
         "npm maintainer email on asana.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/asana.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "docusign",
@@ -357,7 +393,10 @@
         "github-verified: org docusign is_verified, website developers.docusign.com",
         "npm maintainer email on docusign.com"
       ],
-      "status": "blocked: moves requests to each account's own host; the SDK route refuses that yet"
+      "status": "wired",
+      "adapter_note": "The SDK gate refuses the connector\u2019s resolved account-host rewrite; supporting it needs account-host validation in the shared gate.",
+      "adapter": "core/sdk/vendor/docusign.ts",
+      "tested": "offline only: actual pinned eSignature SDK, account-pinned authenticated regional host; no live account proof"
     },
     {
       "app": "dropbox",
@@ -371,7 +410,9 @@
         "github-verified: org dropbox is_verified, website dropbox.com",
         "npm maintainer email on dropbox.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/fetch-clients.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "meta-ads",
@@ -385,7 +426,9 @@
         "vendor docs name it: https://developers.facebook.com/documentation/business-sdk/getting-started, https://developers.facebook.com/documentation/business-sdk/getting-started.md",
         "npm maintainer email on fb.com, meta.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/meta-ads.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "jotform",
@@ -399,7 +442,9 @@
         "vendor docs name it: https://api.jotform.com/docs/",
         "npm maintainer email on jotform.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/jotform.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "klaviyo",
@@ -414,22 +459,9 @@
         "github-verified: org klaviyo is_verified, website www.klaviyo.com",
         "npm maintainer email on klaviyo.com"
       ],
-      "status": "pinned, not wired yet"
-    },
-    {
-      "app": "monday",
-      "folder": "monday-sdk-js",
-      "package": "monday-sdk-js",
-      "version": "1.0.0-beta",
-      "repo": "mondaycom/monday-sdk-js",
-      "provenance": false,
-      "packages_in_tree": 5,
-      "vendor_proof": [
-        "vendor docs name it: https://developer.monday.com/apps/docs/introduction-to-the-sdk",
-        "github-verified: org mondaycom is_verified, website monday.com",
-        "npm maintainer email on monday.com"
-      ],
-      "status": "blocked: GraphQL, and built for monday apps"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/klaviyo.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "pandadoc",
@@ -443,7 +475,9 @@
         "vendor docs name it: https://developers.pandadoc.com/reference/sdk",
         "npm maintainer email on pandadoc.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/pandadoc.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "pipedrive",
@@ -458,7 +492,9 @@
         "vendor site links its GitHub org, and npm provenance shows CI built it from that org's repo",
         "npm maintainer email on pipedrive.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/pipedrive.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "plaid",
@@ -474,7 +510,9 @@
         "github-verified: org plaid is_verified, website plaid.com",
         "npm maintainer email on plaid.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/plaid.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof"
     },
     {
       "app": "square",
@@ -520,7 +558,9 @@
         "github-verified: org twilio is_verified, website www.twilio.com",
         "npm maintainer email on twilio.com"
       ],
-      "status": "pinned, not wired yet"
+      "status": "wired",
+      "adapter": "core/sdk/vendor/twilio.ts",
+      "tested": "offline only: pinned SDK with fake network; no live account proof; restricted to configured account v2010 API"
     },
     {
       "app": "xero",

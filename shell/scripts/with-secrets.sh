@@ -5,17 +5,19 @@
 #   sh shell/scripts/with-secrets.sh -- node shell/server.js
 #
 # The host holds exactly one secret, the token of a read-only 1Password service account for the business's own vault,
-# plus SHELL_VAULT, the vault's name. It arrives in one of two ways: as the variable OP_SERVICE_ACCOUNT_TOKEN
-# (SHELL_OP_TOKEN is the same thing under a name op-scoped may set on a laptop), or, preferred in a container, as a
-# mounted secret file (/run/secrets/shell_op_token, or the path in SHELL_OP_TOKEN_FILE), which never appears in the
-# container's environment. The variable wins when both are set.
+# plus SHELL_VAULT, the vault's name. It arrives, preferably, as a mounted secret file, which never appears in the
+# container's environment: the path in SHELL_OP_TOKEN_FILE, else systemd's credential ($CREDENTIALS_DIRECTORY/op-token,
+# from LoadCredential=op-token:...), else /run/secrets/shell_op_token. Only on a platform that offers nothing but
+# variables does it arrive as OP_SERVICE_ACCOUNT_TOKEN (SHELL_OP_TOKEN is the same thing under a name op-scoped may set
+# on a laptop). The file wins when both are present, so a forgotten variable never overrides the mounted token.
 #
 # How it works, and why it is a shell script:
 # - A short-lived child (node with-secrets.mjs --print) reads the keys and prints each as NAME plus its value in
 #   base64, then exits. This script decodes each value straight into its variable. There is no eval, so nothing a
 #   value contains can ever be read as shell code, and no value is written to a file.
-# - It then drops the token and REPLACES ITSELF with the command (exec). No process is left running that holds the
-#   token. A launcher that stayed alive as the service's parent would keep the token in its start-up environment,
+# - It drops the token and REPLACES ITSELF with the command (exec), so the launcher does not remain as a process
+#   holding the token in its environment. A mounted token file remains readable by the service user. A launcher
+#   that stayed alive as the service's parent would keep the token in its start-up environment,
 #   which any process of the same user (the service, a cron, a script an agent wrote) can read, and the token opens
 #   the whole vault, not just the keys listed.
 # - A mapped name is always cleared first (the resolver's --names step needs no token), so an old host copy can never
@@ -64,13 +66,16 @@ clear_mapped() {
 }
 
 load_secrets() {
-  token="${OP_SERVICE_ACCOUNT_TOKEN:-${SHELL_OP_TOKEN:-}}"
+  token=
   # A mounted secret file keeps the token out of the container's environment, where `docker inspect` and the host's
   # process list can show it. The file is read here, once, by this script; the service is started without it.
-  if [ -z "$token" ]; then
-    tokfile="${SHELL_OP_TOKEN_FILE:-/run/secrets/shell_op_token}"
+  for tokfile in "${SHELL_OP_TOKEN_FILE:-}" "${CREDENTIALS_DIRECTORY:+$CREDENTIALS_DIRECTORY/op-token}" /run/secrets/shell_op_token; do
+    [ -n "$tokfile" ] || continue
     if [ -f "$tokfile" ] && [ -r "$tokfile" ]; then token=$(tr -d ' \t\r\n' < "$tokfile" 2>/dev/null) || token=; fi
-  fi
+    [ -n "$token" ] && break
+  done
+  # A platform that offers only variables (Railway, Vercel, AWS ECS, Azure jobs) passes the token this way.
+  [ -n "$token" ] || token="${OP_SERVICE_ACCOUNT_TOKEN:-${SHELL_OP_TOKEN:-}}"
   if [ -z "$token" ]; then warn "OP_SERVICE_ACCOUNT_TOKEN missing (and no token file); starting without 1Password keys"; return; fi
   if ! command -v base64 >/dev/null 2>&1; then warn "base64 not found; starting without 1Password keys"; return; fi
   if ! out=$(OP_SERVICE_ACCOUNT_TOKEN="$token" node "$HERE/with-secrets.mjs" --print </dev/null); then

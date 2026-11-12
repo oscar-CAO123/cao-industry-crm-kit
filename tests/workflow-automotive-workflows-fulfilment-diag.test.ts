@@ -68,7 +68,7 @@ const S: any = { business_name: "Test Auto", intake_status: "Quote", min_note_ch
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", KIT_ALLOW_WRITES: "1" });
 });
 
 test("runtime: a draft cannot run a send and a cron cannot queue a note", async () => {

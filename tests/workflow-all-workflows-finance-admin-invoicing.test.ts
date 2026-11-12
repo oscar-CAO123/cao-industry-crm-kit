@@ -70,7 +70,7 @@ async function sentInvoice(store: MemoryStore) {
 
 beforeEach(() => {
   fake(); setTokenStore(new MemoryTokenStore());
-  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1" });
+  Object.assign(process.env, { SERVICEM8_API_KEY: "s8", SERVICEM8_ADDON_ACCESS_TOKEN: "s8-oauth-test", XERO_CLIENT_ID: "x", XERO_CLIENT_SECRET: "y", XERO_TENANT_ID: "t", XERO_REFRESH_TOKEN: "r1", KIT_ALLOW_WRITES: "1" });
 });
 
 test("guard: a draft cannot run a live operation, and a live operation cannot be queued as a draft", async () => {

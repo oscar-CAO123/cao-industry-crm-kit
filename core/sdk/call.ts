@@ -1,3 +1,5 @@
+import { microsoftInput } from "./microsoft-scope.ts";
+import { composioEnabled, composioHttpCall } from "./composio.ts";
 import { encodeMultipart, type UploadPart } from "./multipart.ts";
 // The agent SDK runtime: one gated way to call ANY mapped endpoint of ANY platform.
 //
@@ -51,9 +53,11 @@ export interface Op {
   /** Query or form fields the endpoint always sends (AroFlo's zone), set by the generator, first in order. */
   fixedQuery?: Record<string, string>;
   fixedForm?: Record<string, string>;
+  dropboxContent?: "upload" | "download";
+  msadsRest?: boolean;
 }
 export interface Auth {
-  type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported" | "template";
+  type: "bearer" | "basic" | "header" | "path-token" | "custom" | "unsupported" | "template" | "body-key";
   /** template: the header value with {ENV_NAME} placeholders, each filled from the secret store (Trello, JustCall). */
   template?: string;
   env?: string; user?: string; pass?: string; passEmpty?: boolean; header?: string; prefix?: string;
@@ -92,6 +96,8 @@ export interface CallInput {
   /** Google: the mailbox to act as (defaults to GOOGLE_MAILBOX). */
   as?: string;
   binary?: boolean;
+  /** Base64 file bytes for a mapped Dropbox content upload. */
+  contentBase64?: string;
   signal?: AbortSignal;
 }
 export interface Planned { method: Method; url: string; headers: Record<string, string>; json?: unknown; form?: Record<string, string> | [string, string][]; body?: string | Uint8Array; multipart?: { name: string; bytes: number; filename?: string; contentType?: string }[]; kind: "read" | "write"; readPost: boolean }
@@ -279,6 +285,7 @@ async function authHeaders(p: Platform, o: Op, input: CallInput, base: { url: st
       h.Authorization = `Basic ${Buffer.from(`${user}:${pass}`).toString("base64")}`;
       break;
     }
+    case "body-key": break; // injected into the JSON body after caller inputs are checked
     case "path-token": break; // filled into the server URL; logs redact it
     case "template": h[a.header!] = String(a.template).replace(/\{([A-Z][A-Z0-9_]+)\}/g, (_, n: string) => secret(n)); break;
     case "custom": Object.assign(h, await customAuth(a.provider!, p, o, input, base)); break;
@@ -365,9 +372,11 @@ function deepPairs(id: string, opId: string, name: string, v: unknown, depth = 0
 }
 
 /** Build the request for an endpoint without sending it. Keys are shown as [redacted]. */
-export async function plan(id: string, opId: string, input: CallInput = {}, withKeys = false): Promise<Planned> {
+export async function plan(id: string, opId: string, input: CallInput = {}, withKeys = false, managed = false): Promise<Planned> {
   const { platform: p } = load(id);
   const o = describe(id, opId);
+  if (id === "microsoft-advertising" && o.msadsRest) input = microsoftInput(o, input);
+  if (input.contentBase64 !== undefined && o.dropboxContent !== "upload") throw new Error(`${id} ${opId}: file content is not accepted`);
   if (input.multipart !== undefined && o.bodyType !== "multipart") throw new Error(`${id} ${opId}: this operation is not mapped as multipart`);
   if (o.bodyType === "multipart" && (input.multipart === undefined || input.body !== undefined)) throw new Error(`${id} ${opId}: supply multipart parts instead of a JSON body`);
   const params: Record<string, unknown> = { ...(input.params ?? {}) };
@@ -375,6 +384,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     if (!o.params.some((x) => x.name === name) && !(o.paramsUnmapped && name in params)) continue;
     let allowed = new Set([...pin.allow, optional(pin.env), ...(pin.envList ? (optional(pin.envList) ?? "").split(",") : [])]
       .map((x) => String(x ?? "").trim().toLowerCase()).filter(Boolean));
+    if (managed && id === "google-workspace" && name === "userId") allowed = new Set(["me", secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX").trim().toLowerCase()]);
     // The Gmail user must be the mailbox that signs in: "me", or exactly the mailbox chosen with `as`.
     if (name === "userId" && input.as) allowed = new Set(["me", input.as.toLowerCase()]);
     if (params[name] === undefined) params[name] = pin.fill === "$env" ? optional(pin.env) : pin.fill;
@@ -396,8 +406,8 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   for (const x of o.params) if (x.required && x.in === "path" && (params[x.name] === undefined || params[x.name] === null)) throw new Error(`${id} ${opId}: missing required ${x.name}`);
   for (const x of o.params) if (x.required && x.in !== "path" && params[x.name] === undefined && !(x.in === "body" && input.body !== undefined) && !(o.bodyType === "multipart" && ["body", "form", "formData"].includes(x.in) && input.multipart?.some((part) => part.name === x.name))) throw new Error(`${id} ${opId}: missing required ${x.name}`);
 
-  const base = serverUrl(p, o, input, withKeys);
-  if (p.style === "graphql") return planGraphql(p, o, input, base, withKeys);
+  const base = serverUrl(p, o, input, withKeys || managed);
+  if (p.style === "graphql") return planGraphql(p, o, input, base, withKeys, managed);
 
   let route = o.path;
   const query: Record<string, string> = {};
@@ -433,11 +443,35 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
   // A dot segment in an operation path would let a declared route resolve to a different one on the same host.
   if (route.split("/").some((seg) => seg === "." || seg === ".." || /^%2e/i.test(seg))) throw new Error(`${id} ${opId}: dot segments in the path are refused`);
   const target = { url: `${base}/${route.replace(/^\/+/, "")}` };
-  const auth = withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
+  const auth = managed ? {} : withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
+  if (managed && id === "docusign" && new URL(target.url).hostname === "www.docusign.net") {
+    const session = await (await import("../connectors/docusign/client.ts")).session(o.scopes ?? []);
+    target.url = target.url.replace("https://www.docusign.net", new URL(session.base).origin);
+  }
   const method = (o.method === "QUERY" || o.method === "MUTATION" ? "POST" : o.method) as Method;
   let json: unknown = undefined;
   if (input.body !== undefined || bodyFields) {
     json = bodyFields && input.body && typeof input.body === "object" && !Array.isArray(input.body) ? { ...(input.body as object), ...bodyFields } : (input.body ?? bodyFields);
+  }
+  const scheme = o.auth ?? p.auth;
+  if (scheme.type === "body-key") {
+    if (method !== "POST" || (json !== undefined && (!json || typeof json !== "object" || Array.isArray(json)))) throw new Error(`${id} ${opId}: expected a JSON object`);
+    if (json && Object.keys(json).some((k) => k.toLowerCase() === "key")) throw new Error(`${id} ${opId}: key comes from the secret store`);
+    json = { ...(json as Record<string, unknown> ?? {}), key: withKeys ? secret(scheme.env!) : `[from ${scheme.env}]` };
+  }
+  let dropboxBytes: Uint8Array | undefined;
+  if (o.dropboxContent) {
+    if (input.body !== undefined || (json !== undefined && (!json || typeof json !== "object" || Array.isArray(json)))) throw new Error(`${id} ${opId}: supply mapped file arguments as params`);
+    const arg = JSON.stringify(json ?? {}).replace(/[\u007f-\uffff]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
+    headers["Dropbox-API-Arg"] = arg;
+    json = undefined;
+    if (o.dropboxContent === "upload") {
+      const b = input.contentBase64;
+      if (b === undefined || b.length > 13981016 || b.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(b)) throw new Error(`${id} ${opId}: supply valid base64 content up to 10 MiB`);
+      dropboxBytes = Buffer.from(b, "base64");
+      if (Buffer.from(dropboxBytes).toString("base64") !== b || dropboxBytes.byteLength > 10 * 1024 * 1024) throw new Error(`${id} ${opId}: content exceeds 10 MiB`);
+      headers["Content-Type"] = "application/octet-stream";
+    }
   }
   const u = new URL(target.url);
   for (const [k, v] of Object.entries(o.fixedQuery ?? {})) u.searchParams.set(k, v);
@@ -470,9 +504,9 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     upload = await encodeMultipart(input.multipart!);
   }
   return {
-    method, url: u.toString(), json, form: formOut, body: upload ? (withKeys ? upload.body : undefined) : rawBody, ...(upload ? { multipart: upload.summary } : {}), kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
+    method, url: u.toString(), json, form: formOut, body: upload ? (withKeys ? upload.body : undefined) : (dropboxBytes ? (withKeys ? dropboxBytes : undefined) : rawBody), ...(upload ? { multipart: upload.summary } : dropboxBytes ? { multipart: [{ name: "content", bytes: dropboxBytes.byteLength }] } : {}), kind: o.kind, readPost: o.kind === "read" && method === "POST" && (p.style === "rpc" || o.readPost === true),
     // A vendor-required header on this endpoint (Version, ConsistencyLevel) may replace the platform default, never the key.
-    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(withKeys ? signRequest(p, o, u, rawBody) : signPreview(p, o)), ...(upload ? { "Content-Type": upload.contentType } : {}) },
+    headers: { ...headers, ...auth, ...Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k))), ...(managed ? {} : withKeys ? signRequest(p, o, u, rawBody) : signPreview(p, o)), ...(upload ? { "Content-Type": upload.contentType } : {}) },
   };
 }
 
@@ -518,7 +552,7 @@ function signPreview(p: Platform, o: Op): Record<string, string> {
   return {};
 }
 
-async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, withKeys: boolean): Promise<Planned> {
+async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, withKeys: boolean, managed = false): Promise<Planned> {
   const kind = o.method === "MUTATION" ? "mutation" : "query";
   let document = input.document;
   let variables: Record<string, unknown> = {};
@@ -535,7 +569,7 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
     checkDocument(document, kind, o.path);
   }
   const target = { url: base };
-  const auth = withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
+  const auth = managed ? {} : withKeys ? await authHeaders(p, o, input, target) : authPreview(p, o);
   return {
     method: "POST", url: target.url, json: { query: document, variables }, kind: o.kind, readPost: kind === "query",
     headers: auth,
@@ -545,10 +579,32 @@ async function planGraphql(p: Platform, o: Op, input: CallInput, base: string, w
 /** Call an endpoint. Reads go straight through; writes need KIT_ALLOW_WRITES=1. */
 // Only a GET or a GraphQL query can be a read, whatever the label says.
 // Square names its searches /search-catalog-items and its batch reads /batch-retrieve or /bulk-retrieve (9 Nov 2026).
+// Microsoft Advertising REST reads are POSTs: Gets, and report requests that only queue a report file for the configured account.
+const MSADS_READ = /^(campaign-management\.Get|customer-management\.Get|reporting\.(Submit|Poll)GenerateReport$)/;
 export const READPOST_PATH = /(\/search$|\/batch\/read$|\/query$|\/_search$|\/search\/|\/query_|\/search-[a-z-]+$|-retrieve$)/i;
 function opIsRead(p: Platform, o: Op): boolean {
   return o.kind === "read" && (o.method === "GET" || (o.method === "QUERY" && p.style === "graphql")
-    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && READPOST_PATH.test(o.path)))));
+    || (o.method === "POST" && (p.style === "rpc" || (o.readPost === true && (READPOST_PATH.test(o.path) || (p.id === "microsoft-advertising" && o.msadsRest === true && MSADS_READ.test(o.id)))))));
+}
+
+// Only ordinary OAuth/bearer-style sign-ins can be replaced by a managed connection.
+// Tenant headers are configuration, not credentials; keep this allowlist deliberately narrow.
+function managedHeaders(p: Platform, o: Op, input?: CallInput): Record<string, string> {
+  const a = o.auth ?? p.auth;
+  if (p.id === "google-workspace") secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX");
+  if (["body-key", "path-token", "template", "unsupported"].includes(a.type) ||
+      (a.type === "custom" && !["google", "xero", "zoom", "docusign"].includes(a.provider ?? "")) || p.keyInPath ||
+      Object.values(p.serverVars).some((v) => v.secret) || input?.as ||
+      Object.keys(a.optionalHeaders ?? {}).length)
+    throw new Error(`${p.id}: this operation or authentication is not supported by Composio transport`);
+  const allowed = /^(api-version|version|notion-version|x-myobapi-version|procore-company-id|x-organization-id|account_id|x-tenant)$/i;
+  const headers: Record<string, string> = {};
+  if (a.type === "custom" && a.provider === "xero") headers["Xero-Tenant-Id"] = secret("XERO_TENANT_ID");
+  for (const [name, env] of Object.entries(a.extraHeaders ?? {})) {
+    if (!allowed.test(name)) throw new Error(`${p.id}: required header ${name} is not supported by Composio transport`);
+    headers[name] = env.startsWith("=") ? env.slice(1) : secret(env);
+  }
+  return headers;
 }
 
 export async function callOperation<T = unknown>(id: string, opId: string, input: CallInput = {}): Promise<Reply<T>> {
@@ -558,9 +614,16 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   if (!isRead && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
+  if (composioEnabled(id)) {
+    const extra = managedHeaders(p, o, input);
+    const request = await plan(id, opId, input, true, true);
+    const managedNames = new Set(Object.keys(extra).map((name) => name.toLowerCase()));
+    request.headers = { ...Object.fromEntries(Object.entries(request.headers).filter(([name]) => !managedNames.has(name.toLowerCase()))), ...extra };
+    return composioHttpCall<T>(appSpec(p, new URL(request.url), request.readPost), { method: request.method, url: request.url, headers: request.headers, json: request.json, form: request.form, body: request.body, binary: input.binary || o.dropboxContent === "download", signal: input.signal }, isRead);
+  }
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
-  const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary, signal: input.signal });
+  const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary || describe(id, opId).dropboxContent === "download", signal: input.signal });
   try {
     return await send(r);
   } catch (e) {
@@ -580,6 +643,13 @@ export interface Prepared { method: string; url: string; headers: Record<string,
 
 const ROUTES = new Map<string, { o: Op; base: string; re: RegExp; literal: number }[]>();
 const PATH_PART = /^(\{[^}]+\}|:[A-Za-z_]\w*)$/;
+function routePattern(o: Op): string {
+  return o.path.split(/(\{[^}]+\}|:[A-Za-z_]\w*)/).map((part) => {
+    if (!PATH_PART.test(part)) return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const name = part[0] === "{" ? part.slice(1, -1) : part.slice(1);
+    return o.params.some((p) => p.in === "path" && p.name === name && p.reserved) ? "(.+?)" : "([^/]+)";
+  }).join("");
+}
 function routes(p: Platform, ops: Map<string, Op>) {
   let r = ROUTES.get(p.id);
   if (r) return r;
@@ -587,8 +657,7 @@ function routes(p: Platform, ops: Map<string, Op>) {
   for (const o of ops.values()) {
     let base: string;
     try { base = serverUrl(p, o, {}, true).replace(/\/+$/, ""); } catch { continue; }
-    const src = o.path.replace(/^\/+/, "").split(/(\{[^}]+\}|:[A-Za-z_]\w*)/)
-      .map((s) => (PATH_PART.test(s) ? "[^/]+" : s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("");
+    const src = routePattern(o).replace(/^\/+/, "");
     r.push({ o, base, re: new RegExp(`^/${src}/?$`), literal: o.path.replace(/\{[^}]+\}|:[A-Za-z_]\w*/g, "").length });
   }
   ROUTES.set(p.id, r);
@@ -605,6 +674,8 @@ const SDK_ALLOW = /^(accept|content-type|idempotency-key|stripe-version|square-v
 
 export async function sendPrepared(id: string, req: Prepared): Promise<Reply<ArrayBuffer>> {
   const { platform: p, ops } = load(id);
+  if (id === "microsoft-advertising") throw new Error(`${id}: vendor SDK requests are not routed until account scope can be validated`);
+  const managed = composioEnabled(id);
   if (p.style === "graphql") throw new Error(`${id}: vendor SDK requests are not routed for GraphQL platforms`);
   const method = req.method.toUpperCase();
   const u = new URL(req.url);
@@ -615,6 +686,8 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   // The path is not echoed: it can hold client ids or emails.
   if (!match) throw new Error(`${id}: this ${method} is not a mapped endpoint, refused`);
   const o = match.o;
+  if (o.dropboxContent) throw new Error(`${id}: vendor SDK content requests are not routed`);
+  if ((o.auth ?? p.auth).type === "body-key") throw new Error(`${id}: vendor SDK requests with body-key authentication are not routed`);
   // An id that decodes to a slash, a backslash or a dot segment could reach another endpoint once the
   // vendor decodes it, so it is refused (our own layer refuses dot segments the same way).
   for (const seg of at.slice(match.base.length).split("/").filter(Boolean)) {
@@ -624,13 +697,23 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   }
   // Recover named path values to apply the same client-account pins as plan().
   const names: string[] = [];
-  const pathPattern = o.path.replace(/\{([^}]+)\}|:([A-Za-z_]\w*)/g, (_, a, b) => { names.push(a ?? b); return "___PARAM___"; })
-    .split("___PARAM___").map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("([^/]+)");
-  const captures = new RegExp(`^${pathPattern}/?$`).exec(at.slice(match.base.length));
+  for (const part of o.path.matchAll(/\{([^}]+)\}|:([A-Za-z_]\w*)/g)) names.push(part[1] ?? part[2]);
+  const captures = new RegExp(`^${routePattern(o)}/?$`).exec(at.slice(match.base.length));
+  if (!captures) throw new Error(`${id}: a path value is not allowed`);
+  names.forEach((name, i) => {
+    const param = o.params.find((x) => x.in === "path" && x.name === name);
+    if (!param?.reserved) return;
+    let value: string;
+    try { value = captures[i + 1].split("/").map(decodeURIComponent).join("/"); }
+    catch { throw new Error(`${id}: a path value is not allowed`); }
+    encodePathValue(name, value, true, param.pattern ?? "");
+  });
   for (const [name, pin] of Object.entries(p.pinned ?? {})) {
     const ix = names.indexOf(name);
     const values = [...(ix >= 0 && captures ? [decodeURIComponent(captures[ix + 1])] : []), ...u.searchParams.getAll(name)];
-    const allowed = new Set([...pin.allow, optional(pin.env), ...(pin.envList ? (optional(pin.envList) ?? "").split(",") : [])].map((x) => String(x ?? "").trim().toLowerCase()).filter(Boolean));
+    const allowed = managed && id === "google-workspace" && name === "userId"
+      ? new Set(["me", secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX").trim().toLowerCase()])
+      : new Set([...pin.allow, optional(pin.env), ...(pin.envList ? (optional(pin.envList) ?? "").split(",") : [])].map((x) => String(x ?? "").trim().toLowerCase()).filter(Boolean));
     if (values.some((value) => !allowed.has(value.toLowerCase()))) throw new Error(`${id}: ${name} must be the client's own (set by ${pin.env})`);
   }
   const read = opIsRead(p, o);
@@ -638,8 +721,14 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   const target = { url: req.url };
-  const auth = await authHeaders(p, o, {}, target);
-  if (target.url !== req.url) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
+  const auth = managed ? managedHeaders(p, o) : await authHeaders(p, o, {}, target);
+  if (managed && id === "docusign" && u.origin === "https://www.docusign.net") {
+    const session = await (await import("../connectors/docusign/client.ts")).session(o.scopes ?? []);
+    target.url = req.url.replace("https://www.docusign.net", new URL(session.base).origin);
+  }
+  const resolved = new URL(target.url);
+  const permittedDocuSignRewrite = id === "docusign" && u.origin === "https://www.docusign.net" && resolved.protocol === "https:" && !resolved.port && !resolved.username && !resolved.password && /^[a-z0-9-]+\.docusign\.net$/.test(resolved.hostname) && resolved.pathname === u.pathname && resolved.search === u.search && resolved.hash === u.hash;
+  if (target.url !== req.url && !permittedDocuSignRewrite) throw new Error(`${id}: this platform moves requests to an account host; not routed for vendor SDKs yet`);
   const fixed = Object.fromEntries(Object.entries(o.fixedHeaders ?? {}).filter(([k]) => !/^(authorization|cookie|x-api-key)$/i.test(k)));
   const ours = new Set([...Object.keys(auth), ...Object.keys(fixed)].map((k) => k.toLowerCase()));
   const mapped = new Set(o.params.filter((x) => x.in === "header").map((x) => x.name.toLowerCase()));
