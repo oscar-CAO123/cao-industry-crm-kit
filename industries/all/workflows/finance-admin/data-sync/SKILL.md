@@ -36,5 +36,5 @@ The first two only write internal records. `bills` only queues. Nothing is paid,
 
 ## Not covered
 Intake from email, PDFs or paper dockets; HubSpot edits flowing back to Xero; payment reconciliation; validation rules; duplicate checks
-beyond an exact name match; Make, Microsoft 365, ServiceM8, Simpro and the other systems in the calls. Every adapter is docs-only until a
+beyond an exact name match; Make, Microsoft 365, ServiceM8, Simpro and other systems. Every adapter is docs-only until a
 Xero demo company and a HubSpot test portal prove the request shapes on a live account.
