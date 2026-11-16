@@ -1,0 +1,16 @@
+# Read by BuildKit next to demo/Dockerfile (the build context is the kit root). The demo build needs only
+# industries/ and demo/, so everything else stays out of the context.
+.git
+**/node_modules
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*token*.json
+**/*credential*
+core
+shell
+tests
+tools
+vendor-sdks
+demo/dist
