@@ -4,7 +4,7 @@ import { emailOTP, testUtils } from "better-auth/plugins";
 import { admin as adminPlugin } from "better-auth/plugins";
 import { prismadb } from "@/lib/prisma";
 import { ac, admin, member, viewer } from "@/lib/auth-permissions";
-import mailer from "@/lib/mail";
+import mailer, { MailNotConfigured } from "@/lib/mail";
 import { APIError } from "better-auth/api";
 import { isAllowedSignupEmail } from "@/lib/security/signup-allowlist";
 
@@ -78,6 +78,8 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       sendVerificationOTP: async ({ email, otp, type }) => {
+        // No mail server: every address gets the same error, before any lookup, so the reply never shows who has an account.
+        if (!process.env.SMTP_URL && process.env.NODE_ENV === "production") throw new MailNotConfigured();
         // A code is only ever mailed to an address that may sign in: an allowed domain, or someone already in this CRM
         // (an admin can invite outside the domains). Any other address gets no mail and the same reply as a real one.
         const known = await prismadb.users.findUnique({ where: { email: String(email).toLowerCase() }, select: { id: true } });
@@ -93,9 +95,10 @@ export const auth = betterAuth({
         } catch (e) {
           // In dev/test, email sending may fail — OTP is captured by testUtils plugin
           if (process.env.NODE_ENV !== "production") {
-            console.log(`[Auth] OTP email send failed for ${email}, but captured by testUtils`);
+            console.log("[Auth] sign-in code email not sent (dev or test); the testUtils plugin holds the code"); // never the address or code
           } else {
-            throw e;
+            // Same reply as for an address that gets no mail, so a failed send never shows who has an account.
+            console.error("[Auth] sign-in code email not sent:", e instanceof Error ? e.name : "error");
           }
         }
       },

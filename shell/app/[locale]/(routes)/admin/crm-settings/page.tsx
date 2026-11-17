@@ -1,7 +1,9 @@
+import { requireAdminPage } from "@/lib/auth-server";
 import { getConfigValues } from "./_actions/crm-settings";
 import { CrmSettingsTabs } from "./_components/CrmSettingsTabs";
 
 export default async function CrmSettingsPage() {
+  await requireAdminPage(); // admins only: these pages show bank details and business settings
   const [
     industries,
     contactTypes,

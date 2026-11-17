@@ -127,7 +127,7 @@ export const createTaskInBoard = async (data: {
           }
         }
       } catch (emailError) {
-        console.log("[CREATE_TASK_IN_BOARD_EMAIL]", emailError);
+        console.log("[CREATE_TASK_IN_BOARD_EMAIL]", emailError instanceof Error ? emailError.name : "error"); // never the message: it can name the recipient
       }
     }
 

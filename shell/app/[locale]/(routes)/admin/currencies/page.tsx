@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/auth-server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrencies, getExchangeRatesAdmin, getEcbAutoUpdate } from "./_actions/currencies";
 import { CurrencyTable } from "./_components/CurrencyTable";
@@ -5,6 +6,7 @@ import { ExchangeRatesTable } from "./_components/ExchangeRatesTable";
 import { ECBToggle } from "./_components/ECBToggle";
 
 export default async function CurrenciesPage() {
+  await requireAdminPage(); // admins only: these pages show bank details and business settings
   const [currencies, rates, ecbEnabled] = await Promise.all([
     getCurrencies(),
     getExchangeRatesAdmin(),

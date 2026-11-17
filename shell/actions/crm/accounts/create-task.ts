@@ -26,8 +26,8 @@ export const createTask = async (data: {
   let resend;
   try {
     resend = await mailer();
-  } catch (error: any) {
-    return { error: error?.message || "Resend API key is not configured" };
+  } catch {
+    resend = null; // mail not set up: the task is still created, only the notice is skipped
   }
 
   try {
@@ -53,7 +53,7 @@ export const createTask = async (data: {
           where: { id: user },
         });
 
-        await resend.emails.send({
+        if (resend) await resend.emails.send({
           from:
             process.env.NEXT_PUBLIC_APP_NAME +
             " <" +
@@ -73,7 +73,7 @@ export const createTask = async (data: {
           }),
         });
       } catch (error) {
-        console.log(error);
+        console.log("[CRM_TASK_EMAIL]", error instanceof Error ? error.name : "error"); // never the message: it can name the recipient
       }
     }
 
@@ -88,7 +88,7 @@ export const createTask = async (data: {
       });
 
       for (const watcher of accountWatchers) {
-        await resend.emails.send({
+        if (resend) await resend.emails.send({
           from:
             process.env.NEXT_PUBLIC_APP_NAME +
             " <" +

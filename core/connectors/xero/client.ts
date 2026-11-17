@@ -51,6 +51,7 @@ async function refresh(refreshToken: string): Promise<{ access_token?: string; r
 export async function accessToken(): Promise<string> {
   if (cached && cached.until > Date.now() + 60_000) return cached.token;
   const store = tokenStore();
+  store.ready?.(); // Xero refresh tokens are single use: never spend one that could not then be saved
   const first = (await store.get(STORE_KEY)) ?? optional("XERO_REFRESH_TOKEN");
   if (!first) throw new Error("No Xero refresh token. Connect Xero once and save the refresh token as XERO_REFRESH_TOKEN.");
   let data = await refresh(first);

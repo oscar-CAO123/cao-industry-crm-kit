@@ -1,8 +1,10 @@
+import { requireAdminPage } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SeriesTable } from "./_components/SeriesTable";
 
 export default async function InvoiceSeriesPage() {
+  await requireAdminPage(); // admins only: these pages show bank details and business settings
   const series = await prismadb.invoice_Series.findMany({
     orderBy: { createdAt: "desc" },
   });

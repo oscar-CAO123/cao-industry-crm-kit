@@ -17,7 +17,10 @@ LLM Top 10 2025 and CIS Controls v8.1.
 - **Data:** Postgres over verified TLS on any provider (`lib/db-ssl.ts`), additive-only schema changes
   (`scripts/db-apply.mjs`), soft deletes, an audit log of every change, template apply and approval decision.
 - **Outbound actions (LLM06 excessive agency):** nothing reaches outside without the approval click (`APPROVALS.md`).
-- **Mail:** the CRM mails only its own users. Customer mail is a workflow act, approved first.
+  The click is signed, and `KIT_ALLOW_WRITES` alone opens nothing, so an agent cannot approve its own drafts.
+- **Admin area:** admins only, checked on every admin page, not just its layout. Invoice PDFs are for admins and members.
+- **Mail:** the CRM mails only its own users. Customer mail is a workflow act, approved first. With no `SMTP_URL`,
+  mail fails visibly (nothing is reported as sent) and nothing about the message, sign-in codes included, is logged.
 - **Scheduler trigger:** one route, a 32+ character bearer token compared in constant time, enabled workflows and
   declared crons only, one run at a time.
 
@@ -34,7 +37,7 @@ LLM Top 10 2025 and CIS Controls v8.1.
 Name a security owner. Keep the vault's access list current and rotate on departures. Back up the database and
 rehearse a restore. Write down the incident and breach-notification path for the business's jurisdiction.
 
-## Known limits (pen test of 10 Nov 2026)
+## Known limits
 
 - **The 1Password service token is a mounted file wherever the platform allows it, and an environment variable only where it does not.** Docker (the compose file and the `docker` target of `tools/shell-deploy.ts`) mounts it as `/run/secrets/shell_op_token` (owned by the image's `node` user, mode 0400); the `server` target hands it over with systemd's `LoadCredential=op-token:/etc/crm-shell/op-token` (read from `$CREDENTIALS_DIRECTORY`) and its crons point `SHELL_OP_TOKEN_FILE` at the same file; Google Cloud Run mounts the Secret Manager secret as `/run/secrets/shell_op_token` for the service and every job; the Azure web app mounts its Key Vault secret with `--secret-volume-mount` and reads `/run/secrets/op-token`. `shell/scripts/with-secrets.sh` reads the file once and starts the service without it, so `docker inspect` and the container environment never show it. When a file and a variable are both present, the file wins. A process inside the container running as the same user can still read that file; the token opens the whole business vault, so keep the vault to this business's keys only, give the token read access only, and rotate it when anyone with host access leaves. Railway, Vercel, AWS ECS and Azure scheduled jobs offer only variables (ECS injects secrets as variables; the `az containerapp job` command has no secret file mount), so there the token is a platform secret variable that the launcher drops before the service starts. The compose secret needs Docker Compose 2.23.1 or newer and has never been run here (no Docker on the build machine).
 - **The base images are tags, not digests.** Pin `node:22.18-slim` and `postgres:17-alpine` by digest at the first real deploy, after checking them on the registry.

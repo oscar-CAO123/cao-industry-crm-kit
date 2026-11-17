@@ -89,7 +89,7 @@ export const updateTask = async (data: {
           }
         }
       } catch (emailError) {
-        console.log("[UPDATE_TASK_EMAIL]", emailError);
+        console.log("[UPDATE_TASK_EMAIL]", emailError instanceof Error ? emailError.name : "error"); // never the message: it can name the recipient
       }
     }
 

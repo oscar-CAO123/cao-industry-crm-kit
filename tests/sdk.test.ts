@@ -267,6 +267,7 @@ test("review 1: an email mailbox works with the file token store", async () => {
   const { refreshKey } = await import("../core/connectors/google-workspace/auth.ts");
   const os = await import("node:os"); const fs = await import("node:fs"); const path = await import("node:path");
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kit-tokens-"));
+  process.env.KIT_TOKEN_KEY = "k".repeat(40);
   const store = new FileTokenStore(dir);
   await store.set(refreshKey("Ops.Team@example.com"), "gr3");
   assert.equal(await store.get(refreshKey("ops.team@example.com")), "gr3");

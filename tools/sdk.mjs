@@ -6,8 +6,11 @@
 //   node tools/sdk.mjs plan <platform> <operationId> [--params '{"id":"1"}'] [--body '{...}'] [--select 'id name']
 //   node tools/sdk.mjs call <platform> <operationId> --live [same options]
 // plan shows the request with keys hidden and sends nothing. call needs --live, the platform's keys in the
-// environment (from the client's secret store), and KIT_ALLOW_WRITES=1 for anything that is not a read.
+// environment (from the client's secret store), and KIT_ALLOW_WRITES=1 for anything that is not a read. A write also
+// asks the person at the terminal (/dev/tty, never stdin) to type yes; an agent never answers that prompt.
 import { listPlatforms, load, search, describe, plan, callOperation } from "../core/sdk/call.ts";
+import { grantWrites } from "../core/lib/http.ts";
+import { askTerminal } from "../core/workflows/approval-proof.ts";
 
 const [cmd, id, ...rest] = process.argv.slice(2);
 const opt = (name) => { const i = rest.indexOf(`--${name}`); return i >= 0 ? rest[i + 1] : undefined; };
@@ -23,6 +26,14 @@ try {
   else if (cmd === "plan") out(await plan(id, rest[0], input()));
   else if (cmd === "call") {
     if (!rest.includes("--live")) fail("call sends a real request: add --live (use plan to preview)");
+    const op = describe(id, rest[0]);
+    if (op.kind !== "read" && process.env.KIT_ALLOW_WRITES === "1") {
+      const p = await plan(id, rest[0], input());
+      const answer = askTerminal(`${id} ${op.method} ${op.path} is a write: ${String(op.summary ?? "").slice(0, 200)}\n${JSON.stringify(p).slice(0, 600)}\nType yes to send it now: `);
+      if (answer === null) fail("a write needs a person: run this command yourself in a terminal (it asks there, not on stdin)");
+      if (answer !== "yes") fail("not confirmed: nothing was sent");
+      grantWrites(`sdk call ${id} ${rest[0]} (terminal)`);
+    }
     const r = await callOperation(id, rest[0], input());
     out({ status: r.status, data: r.data });
   } else fail("usage: platforms | search <platform> <words> | describe <platform> <op> | plan <platform> <op> [--params JSON] | call <platform> <op> --live");

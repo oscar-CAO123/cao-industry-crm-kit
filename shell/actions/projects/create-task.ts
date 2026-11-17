@@ -99,7 +99,7 @@ export const createTask = async (data: {
           }
         }
       } catch (emailError) {
-        console.log("[CREATE_TASK_EMAIL]", emailError);
+        console.log("[CREATE_TASK_EMAIL]", emailError instanceof Error ? emailError.name : "error"); // never the message: it can name the recipient
       }
     }
 

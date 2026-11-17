@@ -2,3 +2,5 @@
 # Copy to keys.map, fill in, then run install.sh. A bare name not on this list is refused.
 # DATABASE_URL=op://YOUR_VAULT/crm-database/url
 # XERO_CLIENT_ID=op://YOUR_VAULT/xero/client-id
+# KIT_TOKEN_KEY encrypts saved sign-in tokens: a random value of 32+ characters (a 1Password generated password).
+# KIT_TOKEN_KEY=op://YOUR_VAULT/kit-token-key/credential

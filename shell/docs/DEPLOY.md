@@ -16,6 +16,6 @@ never a value.
 2. `sh scripts/with-secrets.sh -- node scripts/db-apply.mjs` applies `db/` in order.
 3. Start the web app. The first person to sign in becomes admin. Admin, Templates: apply the industry.
 4. Fill `settings/<workflow>.json` for each workflow switched on, then schedule its crons with the target's files.
-5. Set `KIT_ALLOW_WRITES=1` only when the business is ready for approved acts to run.
+5. Generated files start with `KIT_ALLOW_WRITES=0`. Set it to 1 only when the business is ready for approved acts to run.
 
 Every change after that: a pull request, checks green, then the host redeploys the image.

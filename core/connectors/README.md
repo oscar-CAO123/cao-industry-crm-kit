@@ -14,7 +14,9 @@ All network calls go through `core/lib/http.ts`, which enforces them:
 
 - https only, to the hosts the app declares. Keys go in headers, never in a URL.
 - Redirects are refused, except file downloads, which drop the key when they leave the app's hosts.
-- Anything that changes data needs `KIT_ALLOW_WRITES=1`. Without it the call stops before it is sent and says what it would have done.
+- Anything that changes data needs `KIT_ALLOW_WRITES=1` AND a grant from one of the kit's entry points (a workflow cron,
+  an approval, or an SDK call a person confirms at the terminal). Without both the call stops before it is sent and says
+  what it would have done. Calling a helper from a script of your own never writes.
 - Emails are drafts only. There is no send function. Invoices and agreements are drafts by default.
 - Errors give the status, never the response body. Logs never print keys, queries or bodies.
 - Rotating tokens live in a token store outside the repo (`~/.kit-tokens`, or the shell CRM's store).

@@ -5,7 +5,8 @@
 #   op-scoped items          (every item's op:// references, names only, never a value)
 #   op-scoped [--cli] run KEY_NAME [KEY_NAME2 ...] [NAME=plain-value ...] -- <command> [args]
 #   op-scoped [--cli] run NAME="op://<vault>/<item>/<field>" ... -- <command> [args]
-# A bare KEY_NAME is looked up in keys.map (the approved list); a name not on it is refused.
+# A bare KEY_NAME is looked up in keys.map (the approved list); a name not on it is refused. A full op:// reference
+# must also be on keys.map (under any name): nothing outside the approved list is ever read.
 #
 # --cli is the explicit fallback: the signed 1Password CLI (root-owned copy, caching off).
 # It is weaker, because op holds the token in its environment while it reads.
@@ -50,7 +51,8 @@ case "$1" in
     while [[ $# -gt 0 && "$1" != -- ]]; do
       if [[ $1 =~ ^[A-Z_][A-Z0-9_]*$ ]]; then
         n="$1"; v=""
-        while IFS= read -r line; do
+        while IFS= read -r line || [[ -n $line ]]; do
+          line="${line%$'\r'}"
           [[ $line == "$n="* ]] && { v="${line#*=}"; break; }
         done < "$DIR/keys.map"
         [[ -n $v ]] || die "$n is not in the key map ($DIR/keys.map)"
@@ -63,6 +65,13 @@ case "$1" in
         [[ $v == "op://$VAULT/"* ]] || die "$n points outside the $VAULT vault"
         [[ $v != *..* ]] || die "$n: '..' is not allowed in a reference"
         [[ $v != *[[:cntrl:]]* ]] || die "$n: control characters are not allowed in a reference"
+        # Only references on the approved list: the vault may hold keys this laptop's agent should never see.
+        listed=0
+        while IFS= read -r line || [[ -n $line ]]; do
+          line="${line%$'\r'}"
+          [[ $line == [A-Z_]*=* && ${line#*=} == "$v" ]] && { listed=1; break; }
+        done < "$DIR/keys.map"
+        [[ $listed == 1 ]] || die "$n: that reference is not in the key map ($DIR/keys.map); add NAME=$v there and reinstall"
         names+=("$n"); refs+=("$v")
       else
         plain+=("$1")

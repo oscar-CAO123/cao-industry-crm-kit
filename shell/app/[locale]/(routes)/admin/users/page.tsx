@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
 
 const AdminUsersPage = async () => {
-  const users: Users[] = await getUsers();
   const t = await getTranslations("AdminPage");
 
   const session = await getSession();
