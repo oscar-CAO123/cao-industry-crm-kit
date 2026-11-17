@@ -2,7 +2,9 @@
 //   node tools/workflow.ts run       <workflow-dir> <cron>
 //   node tools/workflow.ts approvals <workflow-dir>                 pending approvals, newest first
 //   node tools/workflow.ts approve   <workflow-dir> <id> <who> [done|retry]   runs it (needs KIT_ALLOW_WRITES=1); done|retry only
-//                                                                              after checking the platform on a needs-check approval
+//                                                                              after checking the platform on a needs-check approval.
+//                                                                              A person must stand behind it: the CRM's signed click,
+//                                                                              or a person typing approve at the terminal (core/workflows/approval-proof.ts).
 //   node tools/workflow.ts reject    <workflow-dir> <id> <who>
 //   node tools/workflow.ts propose   <workflow-dir> <enquiry-id> <lines.json>
 // Settings come from KIT_SETTINGS (a file path) or KIT_SETTINGS_JSON. State lives in KIT_STATE_DIR (default ./state).
@@ -11,6 +13,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { context, approve, reject, redactForPrint, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { FileStore, type Store } from "../core/workflows/store.ts";
+import { requirePerson } from "../core/workflows/approval-proof.ts";
+import { grantWrites } from "../core/lib/http.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SAFE_DIR = /^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/;
@@ -30,18 +34,26 @@ export function settings(): unknown {
   throw new Error("set KIT_SETTINGS (file) or KIT_SETTINGS_JSON");
 }
 
-export async function main(argv: string[], store: Store = new FileStore()) {
+export async function main(argv: string[], store: Store = new FileStore(), ask?: (q: string) => string | null) {
   const [cmd, dir, a, b] = argv;
   const { record, crons } = await load(dir ?? "");
   if (cmd === "run") {
     if (!record.crons.some((c) => c.entry === a) || !crons[a]) throw new Error(`no cron ${a} in ${record.id}`);
+    grantWrites(`cron ${record.id} ${a}`); // the runtime lets a cron run only its draft operations
     return crons[a](context(record, settings(), store));
   }
   if (cmd === "approvals") {
     const all = Object.values(await store.list<Approval>("approvals")).filter((x) => x.workflow === record.id && ["pending", "running", "failed", "needs-check"].includes(x.status));
     return all.sort((x, y) => y.created.localeCompare(x.created)).map((x) => ({ id: x.id, status: x.status, summary: x.summary, created: x.created, ...(x.error ? { error: x.error } : {}) }));
   }
-  if (cmd === "approve") return approve(record, store, a, b ?? "unknown", new Date(), (["done", "retry"].includes(argv[4]) ? argv[4] : undefined) as any);
+  if (cmd === "approve") {
+    const who = b ?? "unknown";
+    const confirm = (["done", "retry"].includes(argv[4]) ? argv[4] : undefined) as "done" | "retry" | undefined;
+    const ap = await store.get<Approval>("approvals", a ?? "");
+    const how = requirePerson({ id: a ?? "", decision: "approve", who, confirm }, ap?.summary ?? "", ask);
+    grantWrites(`approval ${a} (${how})`);
+    return approve(record, store, a, who, new Date(), confirm);
+  }
   if (cmd === "reject") return reject(record, store, a, b ?? "unknown");
   if (cmd === "propose") {
     if (!(await store.get("enquiries", a))) throw new Error(`no enquiry ${a}`);
@@ -55,5 +67,9 @@ export async function main(argv: string[], store: Store = new FileStore()) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main(process.argv.slice(2)).then((r) => console.log(JSON.stringify(redactForPrint(r ?? null), null, 1)), (e) => { console.error(String(e?.message ?? e)); process.exit(1); });
+  main(process.argv.slice(2)).then((r) => {
+    console.log(JSON.stringify(redactForPrint(r ?? null), null, 1));
+    const ap = r as { status?: string; error?: string } | null; // a refused or failed act is recorded, not thrown
+    if (process.argv[2] === "approve" && ap?.status && ap.status !== "done") { console.error(`${ap.status}: ${String(ap.error ?? "").slice(0, 280)}`); process.exit(1); }
+  }, (e) => { console.error(String(e?.message ?? e)); process.exit(1); });
 }

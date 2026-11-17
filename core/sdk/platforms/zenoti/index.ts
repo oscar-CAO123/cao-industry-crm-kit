@@ -340,7 +340,7 @@ export const docsGetClassesMemberships = (input: CallInput & { params?: { "searc
 export const docsGetClassesPackages = (input: CallInput & { params?: { "search_type": string; "page"?: number; "size"?: number; "item_ids": unknown[] } } = {}) => sdk.call("docs.get_classes_packages", input);
 /** GET /Catalog/Invoices/{invoice_id}/Cancel: Cancel the payment transaction of a class booking [write] */
 export const docsGetCatalogInvoicesInvoiceIdCancel = (input: CallInput & { params?: { "invoice_id": string } } = {}) => sdk.call("docs.get_Catalog_Invoices_invoice_id_Cancel", input);
-/** GET /Catalog/Payments/Invoice/IntializePayment: Collect payment for a class booking by using a new credit/debit card [read] */
+/** GET /Catalog/Payments/Invoice/IntializePayment: Collect payment for a class booking by using a new credit/debit card [write] */
 export const docsGetCatalogPaymentsInvoiceIntializePayment = (input: CallInput & { params?: { "transactionDetails"?: unknown; "billingInfo"?: unknown; "shippingInfo"?: unknown; "paymentDetails"?: unknown } } = {}) => sdk.call("docs.get_Catalog_Payments_Invoice_IntializePayment", input);
 /** GET /Appointments/Sessions: Retrieve the session registrations of a guest [read] */
 export const docsGetAppointmentsSessions = (input: CallInput & { params?: { "user_id": string; "startDate"?: string; "endDate"?: string; "center_id"?: string; "sorters[0].Property"?: string; "sorters[0].Ascending"?: boolean } } = {}) => sdk.call("docs.get_Appointments_Sessions", input);

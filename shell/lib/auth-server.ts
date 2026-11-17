@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
 import { hasRole, isActiveUser, STAFF_ROLES } from "@/lib/security/session-status";
 
 /**
@@ -71,5 +72,15 @@ export async function requireRole(
 export async function assertActionSession() {
   const session = await getSession();
   if (!session || !hasRole(session.user, STAFF_ROLES)) throw new Error("Unauthorized");
+  return session;
+}
+
+/**
+ * For admin pages: the session of an active admin, or a redirect home. The admin area shows bank details and
+ * business settings, so every admin page calls this itself (a layout check alone does not stop a page's own data load).
+ */
+export async function requireAdminPage() {
+  const session = await getSession();
+  if (session?.user?.role !== "admin") redirect("/");
   return session;
 }

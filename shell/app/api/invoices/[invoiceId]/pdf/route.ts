@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth-server";
+import { requireRole } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { getInvoicePdfPresignedUrl } from "@/lib/invoices/storage";
 
@@ -8,10 +8,9 @@ export async function GET(
   { params }: { params: Promise<{ invoiceId: string }> }
 ) {
   const { invoiceId } = await params;
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Staff only: an invoice PDF carries the business's bank details and the customer's details. Viewers are refused.
+  const denied = await requireRole();
+  if (denied) return denied;
 
   const invoice = await prismadb.invoices.findUnique({
     where: { id: invoiceId },

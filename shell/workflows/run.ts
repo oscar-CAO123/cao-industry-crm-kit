@@ -34,5 +34,10 @@ export async function run(argv: string[]): Promise<unknown> {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  run(process.argv.slice(2)).then((r) => console.log(JSON.stringify(redactForPrint(r ?? null))), (e) => { console.error(String(e?.message ?? e).slice(0, 300)); process.exit(1); });
+  run(process.argv.slice(2)).then((r) => {
+    console.log(JSON.stringify(redactForPrint(r ?? null)));
+    // approve records a refused or failed act on the approval instead of throwing; exit non-zero so the click shows it
+    const ap = r as { status?: string; error?: string } | null;
+    if (process.argv[2] === "approve" && ap?.status && ap.status !== "done") { console.error(`${ap.status}: ${String(ap.error ?? "").slice(0, 280)}`); process.exit(1); }
+  }, (e) => { console.error(String(e?.message ?? e).slice(0, 300)); process.exit(1); });
 }

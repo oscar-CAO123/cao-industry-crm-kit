@@ -127,6 +127,7 @@ test("email: no header can be injected through any field", () => {
 
 test("token store: a key name cannot walk out of the token folder", async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kit-tok-"));
+  process.env.KIT_TOKEN_KEY = "k".repeat(40);
   const s = new FileTokenStore(dir);
   for (const k of ["../escape", "a/b", "..", "/etc/passwd", "x\u0000y", "x y"]) {
     await assert.rejects(s.set(k, "v"), /bad token key/, k);

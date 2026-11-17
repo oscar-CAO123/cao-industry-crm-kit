@@ -6,7 +6,9 @@
 //   it goes through a workflow's approval queue (core/workflows/runtime.ts), never through this module.
 // - Plain SMTP, so it works with any provider. SMTP_URL (smtp://user:pass@host:587) comes from the secret store
 //   at process start (shell/scripts/with-secrets.sh); it is never written to a file or a log.
-// - With no SMTP_URL the message is dropped and logged by subject only, so a deploy without mail still runs.
+// - With no SMTP_URL, mailer() throws MailNotConfigured, so no caller can report a message as sent when it was not.
+//   Call sites that treat mail as optional (task notices) already skip it; an invite or a sign-in code fails visibly.
+//   Nothing about the message is logged: a subject can carry a sign-in code.
 import nodemailer, { type Transporter } from "nodemailer";
 import { render } from "@react-email/render";
 import type { ReactElement } from "react";
@@ -22,6 +24,9 @@ export interface MailMessage {
 }
 
 export class MailRefused extends Error {}
+export class MailNotConfigured extends Error {
+  constructor() { super("Mail is not set up for this CRM (SMTP_URL): nothing was sent"); this.name = "MailNotConfigured"; }
+}
 
 let transport: Transporter | null | undefined;
 function smtp(): Transporter | null {
@@ -43,11 +48,12 @@ async function send(m: MailMessage, signIn: boolean): Promise<void> {
   if (!signIn) await internalOnly(to);
   const html = m.html ?? (m.react ? await render(m.react) : undefined);
   const t = smtp();
-  if (!t) { console.log(`[mail] SMTP_URL not set; dropped "${m.subject.slice(0, 80)}"`); return; }
+  if (!t) throw new MailNotConfigured();
   await t.sendMail({ from: m.from ?? process.env.EMAIL_FROM, to, subject: m.subject, text: m.text, html });
 }
 
 /** The mailer, in the shape the CRM's call sites use: `const mail = await mailer(); await mail.emails.send({...})`. */
 export default async function mailer(opts: { signIn?: boolean } = {}) {
+  if (!smtp()) throw new MailNotConfigured();
   return { emails: { send: (m: MailMessage) => send(m, !!opts.signIn) } };
 }

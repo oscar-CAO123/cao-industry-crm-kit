@@ -103,7 +103,7 @@ export const addCommentToTask = async (data: {
           }
         }
       } catch (emailError) {
-        console.log("[ADD_COMMENT_EMAIL]", emailError);
+        console.log("[ADD_COMMENT_EMAIL]", emailError instanceof Error ? emailError.name : "error"); // never the message: it can name the recipient
       }
 
       revalidatePath("/[locale]/(routes)/projects", "page");

@@ -12,14 +12,14 @@ business's one 1Password vault through this helper, never from a file. Nothing i
 - Each run asks for **Touch ID** (the box shows the exact command and key names), then the **Mac password** for
   the Keychain item that holds the service account token. Deny any password box that comes without a Touch ID box.
 - The command starts with a clean environment plus the named keys only, and its output is masked.
-- References outside the installed vault are refused. A bare name not in `keys.map` is refused.
+- References outside the installed vault are refused, and so is any reference or bare name not in `keys.map`.
 
 ## Set up (once per laptop)
 
 1. In 1Password, the business owner creates a vault for the business and a **read-only service account** for it.
 2. Install python.org Python 3.13, then put the service account token in the login Keychain yourself, in Terminal
    (the token never goes in a file): `security add-generic-password -a "$USER" -s op-service-account -w`
-3. Optional: copy `keys.map.example` to `keys.map` and list the approved key names.
+3. Copy `keys.map.example` to `keys.map` and list the approved keys. Only these are ever read; an empty map reads nothing.
 4. `sudo tools/op-scoped/install.sh "<vault name>"` installs it root-owned and read-only.
 5. Check: `/usr/local/libexec/op-scoped/op-scoped vault list` shows only the business's vault.
 

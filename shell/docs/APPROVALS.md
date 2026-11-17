@@ -19,3 +19,14 @@ operation fails. An approval holds one to five acts, run in order, stopping at t
 - Reject: closes it. Every decision is in the audit log with who made it.
 
 Admins and members approve; viewers see. Writes also need `KIT_ALLOW_WRITES=1` on the deploy, checked before a socket opens.
+
+## A person, never the agent
+The runtime accepts an approval only with proof that a person made it (`core/workflows/approval-proof.ts`):
+- the click on this page, which signs a two-minute ticket bound to the approval, the decision and who clicked, or
+- a person at a terminal running `node tools/workflow.ts approve ...` and typing `approve` when it asks. The question
+  is asked on the terminal itself, not on stdin, so piping an answer in does nothing. A program that opens its own
+  pseudo-terminal could still answer, so this stops an agent using the kit's commands, not one deliberately working
+  around them. The hard limit is the keys: on a laptop they arrive only through op-scoped, behind Touch ID.
+
+`KIT_ALLOW_WRITES=1` alone opens nothing: the agent can set a variable as easily as a person. An AI agent never
+approves, never answers that prompt and never builds a ticket.

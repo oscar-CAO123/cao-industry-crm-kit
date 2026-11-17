@@ -57,6 +57,7 @@ async function dataCentre(): Promise<{ oauth: string; rest: string }> {
 async function accessToken(): Promise<string> {
   const { oauth } = await dataCentre();
   const store = tokenStore();
+  store.ready?.(); // a rotated refresh token must be saved, so check before spending the old one
   const refresh = (await store.get(STORE_KEY)) ?? secret("BULLHORN_REFRESH_TOKEN");
   const tokenUrl = `${oauth}/token`;
   const r = await call<any>({ ...spec, readPosts: [`${new URL(tokenUrl).hostname}${new URL(tokenUrl).pathname}`] }, {

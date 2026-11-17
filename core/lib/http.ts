@@ -5,8 +5,9 @@
 // - https only, and only to the hosts the app declares.
 // - A token in the query string is refused. Keys go in headers.
 // - Redirects are not followed, so a header carrying a key is never replayed to another host.
-// - Anything that changes data needs KIT_ALLOW_WRITES=1. Without it the call is refused before a
-//   socket opens and a WriteBlocked error describes what would have been sent.
+// - Anything that changes data needs KIT_ALLOW_WRITES=1 AND a grant from an entry point a person stands behind
+//   (grantWrites below). Without both the call is refused before a socket opens and a WriteBlocked error describes
+//   what would have been sent.
 // - POST-shaped reads (GraphQL queries, token exchanges, free/busy) are allowed only on the exact
 //   paths the app lists in readPosts.
 // - Errors carry the status and path, never the response body: bodies can hold client data.
@@ -69,7 +70,7 @@ export interface Reply<T> {
 export class WriteBlocked extends Error {
   planned: string;
   constructor(planned: string) {
-    super(`write blocked (set KIT_ALLOW_WRITES=1 to allow): ${planned}`);
+    super(`write blocked (needs KIT_ALLOW_WRITES=1 on the deploy and a person behind the run: a cron, an approval or a confirmed call): ${planned}`);
     this.name = "WriteBlocked";
     this.planned = planned;
   }
@@ -104,7 +105,22 @@ export function setTransport(t: Partial<Transport> | null): void {
   transport = t ? { ...realTransport, ...t } : realTransport;
 }
 
-export const writesAllowed = (): boolean => process.env.KIT_ALLOW_WRITES === "1";
+// KIT_ALLOW_WRITES is the deploy's master switch, and an agent can set an environment variable as easily as a person.
+// So the switch alone opens nothing: the process must also hold a grant, given only by the kit's own entry points:
+// a workflow cron (no person needed, because the runtime limits it to draft operations, which reach nobody outside
+// the business), an approval carrying the CRM's signed click or a person's answer at the terminal, and an SDK call a
+// person confirms at the terminal. Setting the
+// variable and running a kit command or a connector is no longer enough. What a gate inside the process cannot stop:
+// code written on purpose to call grantWrites or swap in its own transport, or any code holding a raw key. That is why
+// keys reach a laptop run only through op-scoped, behind Touch ID, with the command shown. Under a fake network (tests),
+// nothing can reach a real app.
+let writeGrant: string | null = null;
+/** Called by an entry point after its own check. The reason is kept for errors; it is not a secret. */
+export function grantWrites(reason: string): void { writeGrant = reason || "granted"; }
+/** Drop the grant again (tests, and an entry point that has finished its write). */
+export function revokeWrites(): void { writeGrant = null; }
+export const writesAllowed = (): boolean =>
+  process.env.KIT_ALLOW_WRITES === "1" && (writeGrant !== null || transport.fetch !== realTransport.fetch);
 
 const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */

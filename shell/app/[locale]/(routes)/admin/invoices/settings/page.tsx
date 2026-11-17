@@ -1,8 +1,10 @@
+import { requireAdminPage } from "@/lib/auth-server";
 import { prismadb } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InvoiceSettingsForm } from "./_components/InvoiceSettingsForm";
 
 export default async function InvoiceSettingsPage() {
+  await requireAdminPage(); // admins only: these pages show bank details and business settings
   const [settings, currencies, series, taxRates] = await Promise.all([
     prismadb.invoice_Settings.findFirst(),
     prismadb.invoice_Currencies.findMany({

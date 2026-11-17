@@ -1,7 +1,7 @@
 #!/bin/bash
 # Installs op-scoped root-owned and read-only into /usr/local/libexec/op-scoped.
 # Run in your own Terminal:  sudo tools/op-scoped/install.sh "<1Password vault name>"
-# keys.map (your approved key names) is optional; copy keys.map.example to keys.map and fill it first.
+# keys.map is the approved list: only the keys on it are ever read. Copy keys.map.example to keys.map and fill it first.
 # The 1Password Python SDK and its dependencies install from requirements.lock, checked by sha256.
 set -euo pipefail
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
@@ -14,6 +14,7 @@ PY="$PYFW/bin/python3.13"
 VAULT="${1:-}"
 [[ $VAULT =~ ^[A-Za-z0-9][A-Za-z0-9\ ._-]{0,63}$ ]] || { echo "Give the 1Password vault name: install.sh \"<vault name>\"" >&2; exit 1; }
 [[ -f "$SRC/keys.map" ]] || : > "$SRC/keys.map"
+grep -q '^[A-Z_][A-Z0-9_]*=op://' "$SRC/keys.map" || echo "Warning: keys.map lists no keys, so every run will be refused until you add them and reinstall." >&2
 [[ -x $PY ]] || { echo "Install python.org Python 3.13 first." >&2; exit 1; }
 
 # python.org's installer leaves its framework writable by the admin group, which
