@@ -17,7 +17,7 @@ const MAX_DOWNLOAD = 50 * 1024 * 1024;
 export async function composioHttpCall<T>(vendorSpec: AppSpec, request: CallOptions, read: boolean): Promise<Reply<T>> {
   const id = vendorSpec.app;
   const prefix = `KIT_${id.toUpperCase().replace(/-/g, "_")}_COMPOSIO`;
-  if (!read && !writesAllowed()) throw new WriteBlocked(`${id} ${request.method ?? "GET"}`);
+  if (!read && !writesAllowed(request.target)) throw new WriteBlocked(`${id} ${request.method ?? "GET"}`);
   const account = secret(`${prefix}_ACCOUNT_ID`), user = secret(`${prefix}_USER_ID`);
   if (!SAFE_ID.test(account) || !SAFE_ID.test(user)) throw new Error(`${id}: invalid Composio account or user configuration`);
   const endpoint = new URL(request.url);
@@ -50,7 +50,8 @@ export async function composioHttpCall<T>(vendorSpec: AppSpec, request: CallOpti
   });
   const spec: AppSpec = { app: "composio", hosts: [HOST], readPosts: read ? [`${HOST}${PATH}`] : [] };
   const response = await call<{status?: unknown; data?: unknown; headers?: unknown; binary_data?: unknown}>(spec, {
-    method: "POST", url: `https://${HOST}${PATH}`, headers: { "x-api-key": secret("COMPOSIO_API_KEY") },
+    // The proxy request is the same operation, so it carries its id to the gate (a scoped grant opens only that).
+    target: request.target, method: "POST", url: `https://${HOST}${PATH}`, headers: { "x-api-key": secret("COMPOSIO_API_KEY") },
     json: { connected_account_id: account, user_id: user, endpoint: endpoint.toString(), method, ...payload, parameters },
     signal: request.signal, retries: 0,
   });

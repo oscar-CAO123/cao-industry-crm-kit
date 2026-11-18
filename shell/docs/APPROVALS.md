@@ -22,11 +22,20 @@ Admins and members approve; viewers see. Writes also need `KIT_ALLOW_WRITES=1` o
 
 ## A person, never the agent
 The runtime accepts an approval only with proof that a person made it (`core/workflows/approval-proof.ts`):
-- the click on this page, which signs a two-minute ticket bound to the approval, the decision and who clicked, or
-- a person at a terminal running `node tools/workflow.ts approve ...` and typing `approve` when it asks. The question
-  is asked on the terminal itself, not on stdin, so piping an answer in does nothing. A program that opens its own
-  pseudo-terminal could still answer, so this stops an agent using the kit's commands, not one deliberately working
-  around them. The hard limit is the keys: on a laptop they arrive only through op-scoped, behind Touch ID.
+- the click on this page, which signs a two-minute ticket bound to the approval, the decision, who clicked and a digest
+  of the headline and the exact acts shown (each act's platform, operation and full inputs are listed on the page,
+  with hidden and direction characters written out), or
+- a person at a terminal running `node tools/workflow.ts approve ...`, who reads the acts in full (an approval too long to show in full at a terminal is refused there), types `approve` and then
+  gives the computer account's password. The question is asked on the terminal itself, not on stdin, so piping an
+  answer in does nothing; the password is checked by the operating system (`sudo -k`, which caches nothing and grants
+  nothing), so an agent that opens its own pseudo-terminal still cannot approve. Where sudo needs no password, or is
+  missing, terminal approval is refused: approve on this page.
+
+Either way the approval runs only the acts that were shown: their digest is checked again when the run starts, so an
+act changed in the store afterwards runs nothing. The grant that opens writes names those acts' exact
+operation ids, which the SDK's own requests carry, and a request that names no operation is not opened by it; a cron's grant names its
+own draft operations. A reject from this page or the command line takes the same lock as an approve. What a gate inside the process cannot stop is code written on purpose
+around it, or any code holding a raw key; on a laptop keys arrive only through op-scoped, behind Touch ID.
 
 `KIT_ALLOW_WRITES=1` alone opens nothing: the agent can set a variable as easily as a person. An AI agent never
 approves, never answers that prompt and never builds a ticket.

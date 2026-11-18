@@ -38,6 +38,8 @@ export interface AppSpec {
 
 export interface CallOptions {
   method?: Method;
+  /** The SDK operation this request is, so a grant scoped to operations can open it (connector requests leave it out). */
+  target?: WriteTarget;
   url: string;
   headers?: Record<string, string>;
   query?: Record<string, string | number | boolean | undefined | null>;
@@ -107,20 +109,34 @@ export function setTransport(t: Partial<Transport> | null): void {
 
 // KIT_ALLOW_WRITES is the deploy's master switch, and an agent can set an environment variable as easily as a person.
 // So the switch alone opens nothing: the process must also hold a grant, given only by the kit's own entry points:
-// a workflow cron (no person needed, because the runtime limits it to draft operations, which reach nobody outside
-// the business), an approval carrying the CRM's signed click or a person's answer at the terminal, and an SDK call a
-// person confirms at the terminal. Setting the
+// a workflow cron (no person needed: its grant names only its draft operations, which reach nobody outside the
+// business), an approval carrying the CRM's signed click or a person's answer and account password at the terminal
+// (its grant names only the approved acts), and an SDK call a person confirms the same way (that one call). Setting the
 // variable and running a kit command or a connector is no longer enough. What a gate inside the process cannot stop:
 // code written on purpose to call grantWrites or swap in its own transport, or any code holding a raw key. That is why
 // keys reach a laptop run only through op-scoped, behind Touch ID, with the command shown. Under a fake network (tests),
 // nothing can reach a real app.
-let writeGrant: string | null = null;
+// A grant can name the exact operations it covers (a cron: its draft operations; an approval: its own acts; a confirmed
+// SDK call: that one call). An SDK request carries its operation's exact id, and a scoped grant opens only those; a
+// request that names no operation (a connector's own) is opened only by an unscoped grant. The id is the SDK's own
+// label for the request, not checked against the URL here: code that calls this layer directly can claim any label,
+// which is the same in-process limit described above.
+export interface WriteTarget { platform: string; op: string }
+let writeGrant: { reason: string; scope: WriteTarget[] | null } | null = null;
 /** Called by an entry point after its own check. The reason is kept for errors; it is not a secret. */
-export function grantWrites(reason: string): void { writeGrant = reason || "granted"; }
+export function grantWrites(reason: string, scope?: WriteTarget[]): void {
+  writeGrant = { reason: reason || "granted", scope: scope ? scope.map((s) => ({ platform: s.platform, op: s.op })) : null };
+}
 /** Drop the grant again (tests, and an entry point that has finished its write). */
 export function revokeWrites(): void { writeGrant = null; }
-export const writesAllowed = (): boolean =>
-  process.env.KIT_ALLOW_WRITES === "1" && (writeGrant !== null || transport.fetch !== realTransport.fetch);
+export const writesAllowed = (target?: WriteTarget): boolean => {
+  if (process.env.KIT_ALLOW_WRITES !== "1") return false;
+  if (transport.fetch !== realTransport.fetch) return true; // a fake network (tests): nothing can reach a real app
+  if (!writeGrant) return false;
+  if (!writeGrant.scope) return true;
+  if (!target) return false;
+  return writeGrant.scope.some((s) => s.platform === target.platform && s.op === target.op);
+};
 
 const TOKEN_IN_QUERY = /(^|[?&])(access_token|refresh_token|id_token|token|access-token|api_key|apikey|key)=/i;
 /** Key-like parameter names, compared after decoding and dropping punctuation, so access%5Ftoken and Api-Key are caught. */
@@ -203,7 +219,7 @@ export async function call<T = unknown>(spec: AppSpec, o: CallOptions): Promise<
   const u = buildUrl(o);
   checkUrl(spec, u);
   const w = where(spec, method, u);
-  if (!isRead(spec, method, u) && !writesAllowed()) throw new WriteBlocked(w);
+  if (!isRead(spec, method, u) && !writesAllowed(o.target)) throw new WriteBlocked(w);
   if (spec.app !== "composio" && composioEnabled(spec.app)) {
     const { composioHttpCall } = await import("../sdk/composio.ts");
     return composioHttpCall<T>(spec, { ...o, url: u.toString(), query: undefined }, isRead(spec, method, u));

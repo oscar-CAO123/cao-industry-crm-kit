@@ -9,15 +9,16 @@ import { approvalTicket } from "./approval-ticket";
 const DIR = /^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/;
 const ID = /^[a-z0-9:._-]{1,120}$/i;
 
-export function runDecision(dir: string, cmd: "approve" | "reject", approvalId: string, who: string, confirm?: "done" | "retry"): Promise<{ ok: boolean; out: string }> {
+export function runDecision(dir: string, cmd: "approve" | "reject", approvalId: string, who: string, confirm?: "done" | "retry", acts = ""): Promise<{ ok: boolean; out: string }> {
   if (!DIR.test(dir) || !ID.test(approvalId)) return Promise.resolve({ ok: false, out: "bad approval" });
   const root = kitRoot();
   const by = who.replace(/[^\w@.+-]/g, "").slice(0, 120) || "unknown";
   const args = [path.join(root, "shell/workflows/run.ts"), cmd, dir, approvalId, by, ...(confirm ? [confirm] : [])];
-  // The runtime runs a CRM approval only with the click's signed ticket (core/workflows/approval-proof.ts).
+  // The runtime runs a CRM approval only with the click's signed ticket (core/workflows/approval-proof.ts), bound to the
+  // digest of the acts the person was shown.
   let env: NodeJS.ProcessEnv = process.env;
   if (cmd === "approve") {
-    try { env = { ...process.env, KIT_APPROVAL_TICKET: approvalTicket(approvalId, by, confirm) }; }
+    try { env = { ...process.env, KIT_APPROVAL_TICKET: approvalTicket(approvalId, by, acts, confirm) }; }
     catch (e) { return Promise.resolve({ ok: false, out: e instanceof Error ? e.message : "cannot sign the approval" }); }
   }
   return new Promise((resolve) => {

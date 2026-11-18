@@ -10,7 +10,7 @@
 // asks the person at the terminal (/dev/tty, never stdin) to type yes; an agent never answers that prompt.
 import { listPlatforms, load, search, describe, plan, callOperation } from "../core/sdk/call.ts";
 import { grantWrites } from "../core/lib/http.ts";
-import { askTerminal } from "../core/workflows/approval-proof.ts";
+import { askTerminal, accountPassword, showInFull, printable } from "../core/workflows/approval-proof.ts";
 
 const [cmd, id, ...rest] = process.argv.slice(2);
 const opt = (name) => { const i = rest.indexOf(`--${name}`); return i >= 0 ? rest[i + 1] : undefined; };
@@ -29,10 +29,15 @@ try {
     const op = describe(id, rest[0]);
     if (op.kind !== "read" && process.env.KIT_ALLOW_WRITES === "1") {
       const p = await plan(id, rest[0], input());
-      const answer = askTerminal(`${id} ${op.method} ${op.path} is a write: ${String(op.summary ?? "").slice(0, 200)}\n${JSON.stringify(p).slice(0, 600)}\nType yes to send it now: `);
+      // The whole request, escaped, or nothing: a part cut off would be sent unseen (too long: send it through a CRM approval).
+      let shown;
+      try { shown = showInFull([printable(`${id} ${op.method} ${op.path} is a write: ${op.summary ?? ""}`), ...JSON.stringify(p, null, 1).split("\n")].join("\n")); } catch (e) { fail(e.message); }
+      const answer = askTerminal(`${shown}\nType yes to send it now: `);
       if (answer === null) fail("a write needs a person: run this command yourself in a terminal (it asks there, not on stdin)");
       if (answer !== "yes") fail("not confirmed: nothing was sent");
-      grantWrites(`sdk call ${id} ${rest[0]} (terminal)`);
+      // An agent that opens its own terminal could type yes; it does not know the account password.
+      if (!accountPassword("Your computer password, to confirm it is you: ")) fail("not confirmed: the account password was not given (where sudo needs no password, writes go through a CRM approval)");
+      grantWrites(`sdk call ${id} ${rest[0]} (terminal)`, [{ platform: id, op: op.id }]);
     }
     const r = await callOperation(id, rest[0], input());
     out({ status: r.status, data: r.data });

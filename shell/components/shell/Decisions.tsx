@@ -7,10 +7,10 @@ import { decide } from "@/actions/shell/approvals";
 import { applyTemplate, undoTemplate } from "@/actions/shell/templates";
 
 /** Approve or reject one queued act. A needs-check item is confirmed as done (it already happened) or retried. */
-export function ApprovalButtons({ id, status }: { id: string; status: string }) {
+export function ApprovalButtons({ id, status, acts }: { id: string; status: string; acts: string }) {
   const [busy, start] = useTransition();
   const router = useRouter();
-  const go = (d: "approve" | "reject", c?: "done" | "retry") => start(async () => { const r = await decide(id, d, c); (r.ok ? toast.success : toast.error)(r.message); router.refresh(); });
+  const go = (d: "approve" | "reject", c?: "done" | "retry") => start(async () => { const r = await decide(id, d, c, acts); (r.ok ? toast.success : toast.error)(r.message); router.refresh(); });
   if (status === "needs-check") return (
     <div className="flex flex-wrap gap-2">
       <Button size="sm" variant="outline" disabled={busy} onClick={() => go("approve", "done")}>It happened: mark done</Button>

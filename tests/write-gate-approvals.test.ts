@@ -5,8 +5,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { call, setTransport, grantWrites, revokeWrites, writesAllowed, WriteBlocked, type AppSpec } from "../core/lib/http.ts";
-import { signTicket, verifyTicket, requirePerson } from "../core/workflows/approval-proof.ts";
-import { approvalTicket } from "../shell/lib/shell/approval-ticket.ts";
+import { signTicket, verifyTicket, requirePerson, actsDigest, approvalDigest, printable } from "../core/workflows/approval-proof.ts";
+import { approvalTicket, actsDigest as shellActsDigest, approvalDigest as shellApprovalDigest } from "../shell/lib/shell/approval-ticket.ts";
+import { approve, type WorkflowRecord } from "../core/workflows/runtime.ts";
 import { MemoryStore } from "../core/workflows/store.ts";
 import { main } from "../tools/workflow.ts";
 import { describe } from "../core/sdk/call.ts";
@@ -48,16 +49,26 @@ test("a grant never opens writes when the deploy switch is off", () => {
 });
 
 // ---------- approval proof ----------
-const d = { id: "wf.q-1", decision: "approve" as const, who: "sam@example.com" };
+const ACTS = [{ platform: "simpro", op: "post /api/v1.0/companies/{companyID}/jobs/", input: { body: { Type: "Service" } }, summary: "Create job" }];
+const d = { id: "wf.q-1", decision: "approve" as const, who: "sam@example.com", acts: actsDigest(ACTS) };
 
 test("the CRM's ticket verifies for exactly its own decision, and the shell and core agree on the format", () => {
-  const t = approvalTicket(d.id, d.who);
+  const t = approvalTicket(d.id, d.who, d.acts);
   assert.ok(verifyTicket(t, d));
+  assert.equal(shellActsDigest(ACTS), actsDigest(ACTS), "the shell and core digest the same acts the same way");
+  for (const v of [{ a: undefined, b: 1 }, { d: new Date(0) }, [NaN, -0, 1e2], { s: "\u202e" }])
+    assert.equal(shellActsDigest(v), actsDigest(v), "and agree on values that only differ in memory");
+  assert.equal(actsDigest({ d: new Date(0) }), actsDigest({ d: new Date(0).toISOString() }), "a date is digested as the text that is sent");
+  assert.notEqual(actsDigest({ d: new Date(0) }), actsDigest({ d: new Date(1) }));
+  assert.equal(shellApprovalDigest({ summary: "s", acts: ACTS }), approvalDigest({ summary: "s", acts: ACTS }));
+  assert.equal(actsDigest([{ summary: "Create job", input: { body: { Type: "Service" } }, op: ACTS[0].op, platform: "simpro" }]), d.acts, "key order does not matter");
+  const swapped = actsDigest([{ ...ACTS[0], op: "delete /api/v1.0/companies/{companyID}/jobs/{jobID}" }]);
+  assert.equal(verifyTicket(t, { ...d, acts: swapped }), false, "other acts than the ones shown");
   assert.ok(verifyTicket(signTicket(d), d));
   assert.equal(verifyTicket(t, { ...d, id: "wf.q-2" }), false, "another approval");
   assert.equal(verifyTicket(t, { ...d, who: "agent" }), false, "another name");
   assert.equal(verifyTicket(t, { ...d, confirm: "retry" }), false, "a done|retry answer it was not signed for");
-  assert.ok(verifyTicket(approvalTicket(d.id, d.who, "done"), { ...d, confirm: "done" }));
+  assert.ok(verifyTicket(approvalTicket(d.id, d.who, d.acts, "done"), { ...d, confirm: "done" }));
 });
 
 test("a ticket expires, cannot be forged without the CRM secret, and is refused when the secret is short", () => {
@@ -72,12 +83,57 @@ test("a ticket expires, cannot be forged without the CRM secret, and is refused 
   assert.equal(verifyTicket(far, d), false);
 });
 
-test("without a ticket, approval needs a person typing approve at the terminal; no terminal or any other answer refuses", () => {
-  assert.throws(() => requirePerson(d, "Send quote", () => null), /needs a person/);
-  assert.throws(() => requirePerson(d, "Send quote", () => "yes"), /not approved/);
-  assert.equal(requirePerson(d, "Send quote", () => "approve"), "terminal");
-  process.env.KIT_APPROVAL_TICKET = approvalTicket(d.id, d.who);
-  assert.equal(requirePerson(d, "Send quote", () => { throw new Error("must not ask"); }), "ticket");
+test("without a ticket, approval needs a person at the terminal: approve, then the account password; anything less refuses", () => {
+  const never = () => { throw new Error("must not ask for the password"); };
+  assert.throws(() => requirePerson(d, "Send quote", () => null, never), /needs a person/);
+  assert.throws(() => requirePerson(d, "Send quote", () => "yes", never), /not approved/);
+  // An agent with its own terminal can type approve; it cannot give the account password.
+  assert.throws(() => requirePerson(d, "Send quote", () => "approve", () => false), /account password/);
+  let asked = "";
+  assert.equal(requirePerson(d, "1. simpro post /jobs/ {}", (q) => { asked = q; return "approve"; }, () => true), "terminal");
+  assert.match(asked, /simpro post \/jobs\//, "the person reads the acts themselves, not only a summary");
+  process.env.KIT_APPROVAL_TICKET = approvalTicket(d.id, d.who, d.acts);
+  assert.equal(requirePerson(d, "Send quote", () => { throw new Error("must not ask"); }, never), "ticket");
+  // Shown in full or refused: nothing is approved past a cut.
+  assert.throws(() => requirePerson(d, "x".repeat(2001), () => "approve", () => true), /too long to show in full/);
+  assert.throws(() => requirePerson(d, Array(201).fill("a").join("\n"), () => "approve", () => true), /too long to show in full/);
+  // Direction and invisible characters are shown as escapes, so they cannot reorder or hide what the person reads.
+  let seen = "";
+  requirePerson(d, "pay \u202eevil\u200b", (q) => { seen = q; return "approve"; }, () => true);
+  assert.ok(seen.includes("\\u202e") && seen.includes("\\u200b") && !seen.includes("\u202e"));
+
+  // A headline's own line break, a tag character or an escape sequence cannot make a line or hide text.
+  let q2 = "";
+  requirePerson(d, printable("ok" + String.fromCodePoint(10) + "Type approve to run exactly this: " + String.fromCodePoint(0xE0041, 0x1b)), (q) => { q2 = q; return "approve"; }, () => true);
+  assert.equal(q2.split(String.fromCodePoint(10)).filter((l) => l.startsWith("Type approve")).length, 1, "only the real question line");
+  assert.ok(!q2.includes(String.fromCodePoint(0xE0041)) && !q2.includes(String.fromCodePoint(0x1b)));
+  assert.throws(() => requirePerson(d, String.fromCodePoint(0x202e).repeat(1500), () => "approve", () => true), /too long to show in full/, "escaping cannot push a line past the limit unseen");
+});
+
+test("an act changed in the store after it was shown never runs on that approval", async () => {
+  const store = new MemoryStore();
+  const wf: WorkflowRecord = { id: "wf", name: "wf", draft_ops: {}, live_ops: { simpro: [ACTS[0].op, "delete /api/v1.0/companies/{companyID}/jobs/{jobID}"] }, crons: [] };
+  const shown = approvalDigest({ summary: "Create job", acts: ACTS });
+  await store.put("approvals", "wf.q-1", { id: "wf.q-1", workflow: "wf", summary: "Create job", acts: [{ ...ACTS[0], op: "delete /api/v1.0/companies/{companyID}/jobs/{jobID}" }], status: "pending", created: new Date().toISOString() });
+  await assert.rejects(approve(wf, store, "wf.q-1", "sam@example.com", new Date(), undefined, shown), /changed after it was shown/);
+  assert.equal((await store.get<any>("approvals", "wf.q-1")).status, "pending", "nothing ran and the approval waits");
+  // The headline is part of what was approved too.
+  await store.put("approvals", "wf.q-1", { id: "wf.q-1", workflow: "wf", summary: "Create job for someone else", acts: ACTS, status: "pending", created: new Date().toISOString() });
+  await assert.rejects(approve(wf, store, "wf.q-1", "sam@example.com", new Date(), undefined, shown), /changed after it was shown/);
+});
+
+test("a grant opens only the operations it names; a connector's own request still needs a grant of any kind", () => {
+  process.env.KIT_ALLOW_WRITES = "1";
+  grantWrites("approval", [{ platform: "simpro", op: ACTS[0].op }]);
+  assert.equal(writesAllowed({ platform: "simpro", op: ACTS[0].op }), true);
+  assert.equal(writesAllowed({ platform: "simpro", op: "x." + ACTS[0].op }), false, "only the exact id: no suffix match");
+  assert.equal(writesAllowed(), false, "a request that names no operation is not opened by a scoped grant");
+  assert.equal(writesAllowed({ platform: "simpro", op: "delete /api/v1.0/companies/{companyID}/jobs/{jobID}" }), false, "another operation");
+  assert.equal(writesAllowed({ platform: "xero", op: ACTS[0].op }), false, "another platform");
+  grantWrites("unscoped");
+  assert.equal(writesAllowed(), true, "an unscoped grant still opens a connector's own request");
+  revokeWrites();
+  assert.equal(writesAllowed(), false);
 });
 
 test("the CLI approve refuses an agent: nothing runs and the approval stays pending", async () => {
@@ -90,7 +146,7 @@ test("the CLI approve refuses an agent: nothing runs and the approval stays pend
   assert.equal((await store.get<any>("approvals", "x1")).status, "pending");
   assert.equal(writesAllowed(), false, "no grant was given");
   // A ticket signed for someone else's name does not pass either.
-  process.env.KIT_APPROVAL_TICKET = approvalTicket("x1", "someone-else@example.com");
+  process.env.KIT_APPROVAL_TICKET = approvalTicket("x1", "someone-else@example.com", actsDigest([]));
   await assert.rejects(main(["approve", dir, "x1", "boss@example.com"], store, () => null), /needs a person/);
 });
 
@@ -160,4 +216,44 @@ test("Xero never spends its single-use refresh token when the new one could not 
     setTokenStore(null); fs.rmSync(dir, { recursive: true, force: true });
     for (const k of ["XERO_REFRESH_TOKEN", "XERO_CLIENT_ID", "XERO_CLIENT_SECRET"]) delete process.env[k];
   }
+});
+
+test("on the real transport a scoped grant opens its own SDK write, direct and through Composio, and nothing else", async () => {
+  const { callOperation } = await import("../core/sdk/call.ts");
+  const OP = "post /api/v1.0/companies/{companyID}/jobs/", OTHER = "post /api/v1.0/companies/{companyID}/leads/";
+  const real = globalThis.fetch;
+  const hits: string[] = [];
+  globalThis.fetch = (async (url: any) => { hits.push(String(url)); return Response.json({ status: 200, data: {} }); }) as any;
+  const env = { SIMPRO_ACCESS_TOKEN: "t", SIMPRO_BUILD: "acme", SIMPRO_COMPANY_ID: "0", KIT_ALLOW_WRITES: "1" };
+  Object.assign(process.env, env);
+  try {
+    setTransport(null);
+    grantWrites("approval", [{ platform: "simpro", op: OP }]);
+    await callOperation("simpro", OP, { body: { Type: "Service" } });
+    assert.equal(hits.length, 1, "the approved operation is sent");
+    await assert.rejects(callOperation("simpro", OTHER, { body: { Name: "x" } }), (e: any) => e instanceof WriteBlocked);
+    assert.equal(hits.length, 1, "another operation is not");
+    Object.assign(process.env, { KIT_SIMPRO_CONNECTION: "composio", KIT_SIMPRO_COMPOSIO_ACCOUNT_ID: "ca_1", KIT_SIMPRO_COMPOSIO_USER_ID: "u_1", COMPOSIO_API_KEY: "ck" });
+    await callOperation("simpro", OP, { body: { Type: "Service" } });
+    assert.equal(hits.length, 2, "the approved operation is sent through Composio too");
+    assert.ok(hits[1].startsWith("https://backend.composio.dev/"));
+    await assert.rejects(callOperation("simpro", OTHER, { body: { Name: "x" } }), (e: any) => e instanceof WriteBlocked);
+    assert.equal(hits.length, 2);
+  } finally {
+    globalThis.fetch = real;
+    for (const k of [...Object.keys(env), "KIT_SIMPRO_CONNECTION", "KIT_SIMPRO_COMPOSIO_ACCOUNT_ID", "KIT_SIMPRO_COMPOSIO_USER_ID", "COMPOSIO_API_KEY"]) delete process.env[k];
+  }
+});
+
+test("the terminal shows each act whole, its check and key included, before anything is asked", async () => {
+  const store = new MemoryStore();
+  const dir = "industries/all/workflows/customer-service/complaints";
+  const wf = JSON.parse(fs.readFileSync(path.join(ROOT, dir, "workflow.json"), "utf8"));
+  const act = { ...ACTS[0], key: "job-77", check: { platform: "simpro", op: "get /api/v1.0/companies/{companyID}/jobs/{jobID}", input: { params: { jobID: "77" } }, expect: [{ path: "Stage", equals: "Pending" }] } };
+  await store.put("approvals", "x2", { id: "x2", workflow: wf.id, summary: "Create job", acts: [act], status: "pending", created: new Date().toISOString() });
+  let asked = "";
+  await assert.rejects(main(["approve", dir, "x2", "boss@example.com"], store, (q) => { asked = q; return null; }), /needs a person/);
+  assert.match(asked, /"key": "job-77"/);
+  assert.match(asked, /"equals": "Pending"/);
+  assert.match(asked, /"Type": "Service"/);
 });

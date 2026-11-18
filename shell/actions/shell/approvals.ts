@@ -7,19 +7,23 @@ import { prismadb } from "@/lib/prisma";
 import { assertActionSession } from "@/lib/auth-server";
 import { writeAuditLog } from "@/lib/audit-log";
 import { runDecision } from "@/lib/shell/runner";
+import { approvalDigest } from "@/lib/shell/approval-ticket";
 
-export async function decide(approvalId: string, decision: "approve" | "reject", confirm?: "done" | "retry"): Promise<{ ok: boolean; message: string }> {
+export async function decide(approvalId: string, decision: "approve" | "reject", confirm?: "done" | "retry", shown?: string): Promise<{ ok: boolean; message: string }> {
   try {
     const session = await assertActionSession();
     if (decision !== "approve" && decision !== "reject") throw new Error("Unknown decision");
     if (confirm !== undefined && confirm !== "done" && confirm !== "retry") throw new Error("Unknown answer");
     const row = await prismadb.shell_State.findUnique({ where: { ns_key: { ns: "approvals", key: approvalId } } });
-    const ap = row?.value as { workflow?: string; status?: string } | undefined;
+    const ap = row?.value as { workflow?: string; status?: string; summary?: unknown; acts?: unknown } | undefined;
     if (!ap?.workflow) throw new Error("No such approval");
+    // The person approves the headline and acts the page showed them: if either changed since, nothing runs.
+    const acts = approvalDigest(ap);
+    if (decision === "approve" && shown !== acts) throw new Error("This approval changed after the page loaded: reload and check it again");
     const wf = await prismadb.shell_Workflows.findUnique({ where: { id: ap.workflow } });
     if (!wf?.enabled) throw new Error("That workflow is switched off");
     const who = session.user.email ?? session.user.id;
-    const r = await runDecision(wf.dir, decision, approvalId, who, confirm);
+    const r = await runDecision(wf.dir, decision, approvalId, who, confirm, acts);
     await writeAuditLog({ entityType: "approval", entityId: approvalId, action: decision === "approve" ? "approved" : "rejected", changes: [{ field: "result", old: ap.status ?? null, new: r.ok ? "ok" : "failed" }], userId: session.user.id });
     revalidatePath("/[locale]/(routes)/approvals", "page");
     return { ok: r.ok, message: r.ok ? (decision === "approve" ? "Approved and run." : "Rejected.") : r.out.split("\n")[0].slice(0, 200) };
