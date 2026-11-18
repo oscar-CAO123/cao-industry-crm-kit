@@ -4,7 +4,7 @@ import test, { beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { setTransport, WriteBlocked } from "../core/lib/http.ts";
 import { MemoryTokenStore, setTokenStore } from "../core/lib/secrets.ts";
-import { load, callOperation, plan } from "../core/sdk/call.ts";
+import { load, callOperation, plan, sendPrepared } from "../core/sdk/call.ts";
 
 type Hit = { url: string; method: string; headers: Record<string, string> };
 let hits: Hit[] = [];
@@ -44,6 +44,18 @@ test("simpro: a read goes to the client's own build with the bearer key, and com
 
 test("simpro: another company in a multi-company build is refused before the network", async () => {
   await assert.rejects(() => callOperation("simpro", JOBS, { params: { companyID: "5" } }), /must be the client's own/);
+  // A value that answers "0" when checked and "5" when the address is built: it is turned into text once.
+  let n = 0;
+  const shifty = { toString: () => (n++ ? "5" : "0") };
+  await callOperation("simpro", JOBS, { params: { companyID: shifty } }).catch(() => {});
+  assert.ok(hits.every((h) => h.url.includes("/companies/0/")), "the checked value is the value sent");
+  hits = [];
+  for (const k of ["company_id", "Company-ID", "COMPANY_ID"]) await assert.rejects(() => callOperation("simpro", JOBS, { params: { [k]: "5" } }), /not allowed/, k);
+  // In a write body, at the top level and in any spelling, the company is the client's own too.
+  const POST = "post /api/v1.0/companies/{companyID}/jobs/";
+  for (const k of ["companyID", "CompanyID", "company_id"]) await assert.rejects(() => plan("simpro", POST, { body: { [k]: "5", Type: "Service" } }), /in the body must be the client's own/, k);
+  await assert.rejects(() => plan("simpro", POST, { body: { CompanyID: { id: 0 } } }), /in the body must be the client's own/);
+  await plan("simpro", POST, { body: { CompanyID: 0, Type: "Service" } });
   assert.equal(hits.length, 0);
 });
 
@@ -101,4 +113,13 @@ test("simpro: writes are blocked before the network", async () => {
   await assert.rejects(() => callOperation("simpro", "post /api/v1.0/companies/{companyID}/jobs/", { body: { Type: "Service" } }), WriteBlocked);
   await assert.rejects(() => callOperation("simpro", "delete /api/v1.0/companies/{companyID}/schedules/", { body: { IDs: [1] } }), WriteBlocked);
   assert.equal(hits.length, 0);
+});
+
+test("simpro: a prepared request cannot name another company in any spelling", async () => {
+  const base = "https://acme-electrical.simprosuite.com/api/v1.0/companies/0/jobs/";
+  for (const q of ["?CompanyID=5", "?companyid=5", "?companyID=0&company_id=5"])
+    await assert.rejects(() => sendPrepared("simpro", { url: base + q, method: "GET", headers: {} } as any), /must be the client's own/, q);
+  assert.equal(hits.length, 0);
+  await sendPrepared("simpro", { url: base + "?companyID=0", method: "GET", headers: {} } as any);
+  assert.equal(hits.length, 1);
 });

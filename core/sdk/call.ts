@@ -70,7 +70,7 @@ export interface Platform {
   /** The host is exactly the one in the secret store (WordPress): nothing else is allowed. */
   hostFromEnv?: boolean;
   /** Params whose value must be the client's own (a mailbox, an account). Filled automatically when left out. */
-  pinned?: Record<string, { allow: string[]; env: string; envList?: string; fill?: string }>;
+  pinned?: Record<string, { allow: string[]; env: string; envList?: string; fill?: string; body?: boolean }>;
   defaultScope?: string;
   /** How form-encoded lists are written: a[0]=x (default, Stripe) or a=x&a=y (Twilio). */
   formArrays?: FormArrays;
@@ -159,6 +159,12 @@ function serverUrl(p: Platform, o: Op, input: CallInput, withKeys = true): strin
     return v.secret && !withKeys ? "REDACTED" : val;
   });
   return s.replace(/\/+$/, "");
+}
+
+/** Two input names a server could read as the same field: case, "_" and "-" ignored (companyID, CompanyId, company_id). */
+function sameName(a: string, b: string): boolean {
+  const f = (s: string) => s.toLowerCase().replace(/[_-]/g, "");
+  return f(a) === f(b);
 }
 
 function encodePathValue(name: string, v: unknown, reserved = false, pattern = ""): string {
@@ -388,7 +394,13 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     // The Gmail user must be the mailbox that signs in: "me", or exactly the mailbox chosen with `as`.
     if (name === "userId" && input.as) allowed = new Set(["me", input.as.toLowerCase()]);
     if (params[name] === undefined) params[name] = pin.fill === "$env" ? optional(pin.env) : pin.fill;
+    // Turned into text once, and that text is what is checked and what is sent (an object could answer differently each time).
+    if (params[name] !== undefined) params[name] = String(params[name]);
     if (params[name] !== undefined && !allowed.has(String(params[name]).toLowerCase())) throw new Error(`${id} ${opId}: ${name} must be the client's own (set by ${pin.env})`);
+    // A pin marked body also holds for the same name at the top of a JSON body, in any spelling (Simpro's companyID).
+    if (pin.body && input.body && typeof input.body === "object" && !Array.isArray(input.body))
+      for (const [k, v] of Object.entries(input.body as Record<string, unknown>))
+        if (sameName(k, name) && !(typeof v !== "object" && allowed.has(String(v).toLowerCase()))) throw new Error(`${id} ${opId}: ${k} in the body must be the client's own (set by ${pin.env})`);
   }
   // A name can appear as both a path part and a query param in some specs: the path part wins.
   const known = new Map<string, Param>();
@@ -399,7 +411,7 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     if (declaredPath && /^[A-Za-z_][A-Za-z0-9_]*$/.test(k) && !/^(token|access_?token|api_?key|key|secret|client_?secret|password|passwd|pwd)$/i.test(k)) continue;
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k) || (/token|secret|pass(word|wd)?|key|auth|credential|session|cookie|signature|jwt|bearer|refresh/i.test(k) || /(^|_)(pwd|code|sig)(_|$)/i.test(k))) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
     // A free-form name may not shadow a pinned one in another case (CompanyID beside the pinned companyID), nor ask the server to swap the method.
-    if (Object.keys(p.pinned ?? {}).some((n) => n !== k && n.toLowerCase() === k.toLowerCase()) || /^(_method|_?http_?method|x_?http_?method(_?override)?)$/i.test(k)) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
+    if (Object.keys(p.pinned ?? {}).some((n) => n !== k && sameName(n, k)) || /^(_method|_?http_?method|x_?http_?method(_?override)?)$/i.test(k)) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
     if (!known.has(k)) known.set(k, { name: k, in: o.method === "GET" ? "query" : "body", required: false, type: "unknown" });
   }
   if (p.style !== "graphql" || o.params.length) {
@@ -711,7 +723,7 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   });
   for (const [name, pin] of Object.entries(p.pinned ?? {})) {
     const ix = names.indexOf(name);
-    const values = [...(ix >= 0 && captures ? [decodeURIComponent(captures[ix + 1])] : []), ...u.searchParams.getAll(name)];
+    const values = [...(ix >= 0 && captures ? [decodeURIComponent(captures[ix + 1])] : []), ...[...u.searchParams.keys()].filter((k) => sameName(k, name)).flatMap((k) => u.searchParams.getAll(k))];
     const allowed = managed && id === "google-workspace" && name === "userId"
       ? new Set(["me", secret("KIT_GOOGLE_WORKSPACE_COMPOSIO_MAILBOX").trim().toLowerCase()])
       : new Set([...pin.allow, optional(pin.env), ...(pin.envList ? (optional(pin.envList) ?? "").split(",") : [])].map((x) => String(x ?? "").trim().toLowerCase()).filter(Boolean));

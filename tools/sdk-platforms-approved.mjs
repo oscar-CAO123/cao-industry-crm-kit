@@ -47,7 +47,7 @@ export const APPROVED = {
     { server: "https://{build}.{domain}", forceServer: true,
       serverVars: { build: { env: "SIMPRO_BUILD", pattern: "[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?", envOnly: true },
         domain: { env: "SIMPRO_DOMAIN", default: "simprosuite.com", pattern: "simprosuite\\.com|simprocloud\\.com" } },
-      pinned: { companyID: { allow: [], env: "SIMPRO_COMPANY_ID", fill: "$env" } },
+      pinned: { companyID: { allow: [], env: "SIMPRO_COMPANY_ID", fill: "$env", body: true } },
       // columns and orderby are comma lists in Simpro's spec (collectionFormat csv).
       queryArrays: "comma",
       keys: ["SIMPRO_ACCESS_TOKEN", "SIMPRO_BUILD", "SIMPRO_COMPANY_ID (0 on a single-company build)", "SIMPRO_DOMAIN (optional: simprosuite.com default, simprocloud.com)"],
