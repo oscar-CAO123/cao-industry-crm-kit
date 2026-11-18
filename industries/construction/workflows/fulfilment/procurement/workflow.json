@@ -35,7 +35,7 @@
  },
  "gaps": [
   "Buildxact: sends RFQs and holds returned quotes in product, but its ops file is empty, so no adapter is built. Its RFQ is the natural home for request-quotes once it is mapped.",
-  "Simpro, JackApp, Buildertrend and SprintSuite: the kit has no platform for them. Dropbox and Google Workspace are named for filing quotes; the kit has those platforms but this workflow has no adapter for them, so quotes are logged in the Microsoft 365 workbook instead.",
+  "JackApp, Buildertrend and SprintSuite: the kit has no platform for them. Simpro's calls are in the kit (core/sdk/platforms/simpro), but this workflow has no Simpro adapter yet. Dropbox and Google Workspace are named for filing quotes; the kit has those platforms but this workflow has no adapter for them, so quotes are logged in the Microsoft 365 workbook instead.",
   "MYOB: its docs describe customer quotes and bill payments only, not supplier RFQs, PO approval or goods receipt, so no adapter is built.",
   "Scope breakdown from plans and specs, and the trade list for request-quotes, are judgment work for the agent skill. Requests to trades still go out by hand.",
   "Scope check is a keyword check against the scope list in settings. Judging whether an exclusion or allowance really changes the price is the owner's call.",

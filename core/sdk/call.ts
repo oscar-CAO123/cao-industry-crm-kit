@@ -398,6 +398,8 @@ export async function plan(id: string, opId: string, input: CallInput = {}, with
     const declaredPath = o.params.some((x) => x.name === k && x.in === "path");
     if (declaredPath && /^[A-Za-z_][A-Za-z0-9_]*$/.test(k) && !/^(token|access_?token|api_?key|key|secret|client_?secret|password|passwd|pwd)$/i.test(k)) continue;
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(k) || (/token|secret|pass(word|wd)?|key|auth|credential|session|cookie|signature|jwt|bearer|refresh/i.test(k) || /(^|_)(pwd|code|sig)(_|$)/i.test(k))) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
+    // A free-form name may not shadow a pinned one in another case (CompanyID beside the pinned companyID), nor ask the server to swap the method.
+    if (Object.keys(p.pinned ?? {}).some((n) => n !== k && n.toLowerCase() === k.toLowerCase()) || /^(_method|_?http_?method|x_?http_?method(_?override)?)$/i.test(k)) throw new Error(`${id} ${opId}: param ${k} is not allowed`);
     if (!known.has(k)) known.set(k, { name: k, in: o.method === "GET" ? "query" : "body", required: false, type: "unknown" });
   }
   if (p.style !== "graphql" || o.params.length) {

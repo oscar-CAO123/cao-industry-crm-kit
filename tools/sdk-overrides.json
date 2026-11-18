@@ -335,6 +335,14 @@
     },
     "readPost": {}
   },
+  "simpro": {
+    "forceWrite": {
+      "get /api/v1.0/companies/{companyID}/setup/webhooks/{webhookID}": "Returns the subscription's Secret, the key Simpro signs every webhook message with (Message Verification in Simpro's spec), so reading it needs a person's approval. (simpro.json)",
+      "get /api/v1.0/companies/{companyID}/invoices/{invoiceID}/getInvoicePaymentLink/": "Returns PaymentLink, a live payment URL carrying a token (the spec's example ends payment.php?token=...). Treat as a credential-bearing link. (simpro.json)",
+      "get /api/v1.0/companies/{companyID}/customers/{customerID}/statements/paymentLink/": "Returns PaymentLink for every open invoice on the statement, the same token-bearing payment URL. (simpro.json)"
+    },
+    "readPost": {}
+  },
   "slack": {
     "forceWrite": {
       "core.slackLists_download_get": "Returns a download URL for a list export (docs: 'Retrieve List download URL'). It hands back a link to list contents. The docs do not say whether the link is si (slack.json)"

@@ -966,5 +966,12 @@
    "api.zoom.us",
    "fileapi.zoom.us"
   ]
+ },
+ "simpro": {
+  "hosts": [],
+  "hostPatterns": [
+   "(?:[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)\\.(?:simprosuite\\.com|simprocloud\\.com)"
+  ],
+  "hostFromEnv": false
  }
 }
