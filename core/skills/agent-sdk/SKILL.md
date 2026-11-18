@@ -19,7 +19,8 @@ In a script, import the app's named functions: `import { accountingGetInvoices }
 
 - Keys come from the client's secret store under the names `platforms` lists. Never put a key in a param, a script or a log.
 - Reads run as they are. Anything that changes data needs `KIT_ALLOW_WRITES=1`, set by a person for that run, and the
-  person types yes at the terminal when `call` asks (it asks on the terminal, not stdin). Never answer it yourself.
+  person types yes at the terminal when `call` asks (it asks on the terminal, not stdin) and then gives the computer
+  account's password, which the operating system checks. Never answer either yourself.
 - Prefer a hand-written helper in `core/connectors/<app>/` when one exists for the job: those are proven in production.
 - Status is honest: `spec` and `docs-read` endpoints have run only against a fake network until a sandbox run says otherwise. Shopify lists names only; pass a full GraphQL `--document`.
 - Rebuild after the endpoint map changes: `node tools/sdk-generate.mjs <endpoints dir>`, then `npm test`.

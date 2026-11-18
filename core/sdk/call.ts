@@ -624,7 +624,7 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
   const { platform: p } = load(id);
   const o = describe(id, opId);
   const isRead = opIsRead(p, o);
-  if (!isRead && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
+  if (!isRead && !writesAllowed({ platform: p.id, op: o.id })) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   if (composioEnabled(id)) {
@@ -632,11 +632,11 @@ export async function callOperation<T = unknown>(id: string, opId: string, input
     const request = await plan(id, opId, input, true, true);
     const managedNames = new Set(Object.keys(extra).map((name) => name.toLowerCase()));
     request.headers = { ...Object.fromEntries(Object.entries(request.headers).filter(([name]) => !managedNames.has(name.toLowerCase()))), ...extra };
-    return composioHttpCall<T>(appSpec(p, new URL(request.url), request.readPost), { method: request.method, url: request.url, headers: request.headers, json: request.json, form: request.form, body: request.body, binary: input.binary || o.dropboxContent === "download", signal: input.signal }, isRead);
+    return composioHttpCall<T>(appSpec(p, new URL(request.url), request.readPost), { target: { platform: p.id, op: o.id }, method: request.method, url: request.url, headers: request.headers, json: request.json, form: request.form, body: request.body, binary: input.binary || o.dropboxContent === "download", signal: input.signal }, isRead);
   }
   const r = await plan(id, opId, input, true);
   const spec = appSpec(p, new URL(r.url), r.readPost);
-  const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary || describe(id, opId).dropboxContent === "download", signal: input.signal });
+  const send = (q: Planned) => httpCall<T>(appSpec(p, new URL(q.url), q.readPost), { target: { platform: p.id, op: o.id }, method: q.method, url: q.url, headers: q.headers, json: q.json, form: q.form, body: q.body, binary: input.binary || describe(id, opId).dropboxContent === "download", signal: input.signal });
   try {
     return await send(r);
   } catch (e) {
@@ -730,7 +730,7 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
     if (values.some((value) => !allowed.has(value.toLowerCase()))) throw new Error(`${id}: ${name} must be the client's own (set by ${pin.env})`);
   }
   const read = opIsRead(p, o);
-  if (!read && !writesAllowed()) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
+  if (!read && !writesAllowed({ platform: p.id, op: o.id })) throw new WriteBlocked(`${p.id} ${o.method} ${o.path}`);
   if (p.auth.type === "unsupported") throw new Error(`${p.id}: calls are not wired yet (${p.auth.note ?? "auth not supported"})`);
   if (o.authUnsupported) throw new Error(`${p.id}: calls are not wired yet (${o.authUnsupported})`);
   const target = { url: req.url };
@@ -755,7 +755,7 @@ export async function sendPrepared(id: string, req: Prepared): Promise<Reply<Arr
   const spec = appSpec(p, new URL(target.url), read && method === "POST");
   // xero-node sends "{}" on a GET; real fetch refuses a GET with a body, so it is dropped here.
   const body = method === "GET" ? undefined : req.body;
-  return httpCall<ArrayBuffer>(spec, { method: method as Method, url: target.url, headers, body, binary: true, signal: req.signal });
+  return httpCall<ArrayBuffer>(spec, { target: { platform: p.id, op: o.id }, method: method as Method, url: target.url, headers, body, binary: true, signal: req.signal });
 }
 
 /** A platform handle: what each generated index.ts uses. */

@@ -8,7 +8,7 @@ import { ApiError, WriteBlocked, writesAllowed } from "../../lib/http.ts";
 export async function shopify(opId: string, input: CallInput) {
   const fixed: CallInput = structuredClone({ ...input, signal: undefined });
   const preview = await plan("shopify", opId, fixed);
-  if (preview.kind === "write" && !writesAllowed()) throw new WriteBlocked(`shopify ${opId}`);
+  if (preview.kind === "write" && !writesAllowed({ platform: "shopify", op: opId })) throw new WriteBlocked(`shopify ${opId}`);
   const expected = preview.json as { query: string; variables: Record<string, unknown> };
   const url = new URL(preview.url);
   const version = url.pathname.split("/")[3];

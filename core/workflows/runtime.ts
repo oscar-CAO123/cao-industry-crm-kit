@@ -12,6 +12,7 @@ import { callOperation, describe, plan, type CallInput } from "../sdk/call.ts";
 import { ApiError, WriteBlocked, type Reply } from "../lib/http.ts";
 import type { Store } from "./store.ts";
 import crypto from "node:crypto";
+import { approvalDigest } from "./approval-proof.ts";
 
 export interface Act { platform: string; op: string; input?: CallInput; summary: string; /** de-duplicates queued approvals */ key?: string;
   /** Read the live record just before this act runs (a draft op of this workflow) and send only if each value is still as
@@ -118,11 +119,13 @@ function refsOf(data: unknown, headers?: Headers): Record<string, string> {
   return out;
 }
 export async function approve(workflow: WorkflowRecord, store: Store, id: string, decidedBy: string, now = new Date(),
-                              confirmUnknown?: "done" | "retry"): Promise<Approval> {
+                              confirmUnknown?: "done" | "retry", approvedActs?: string): Promise<Approval> {
   const claim = async () => {
     const ap = await store.get<Approval>("approvals", id);
     if (!ap) throw new Error(`no approval ${id}`);
     if (ap.workflow !== workflow.id || !ap.acts.every((a) => allowed(workflow.live_ops, a))) throw new Error(`approval ${id} is not a live operation of ${workflow.id}`);
+    // What a person approved (headline and acts, as a digest), checked again under the lock: a change after it was shown runs nothing.
+    if (approvedActs !== undefined && approvalDigest(ap) !== approvedActs) throw new Error(`approval ${id} changed after it was shown: nothing was run; look at it again`);
     const stuck = ap.status === "running" && now.getTime() - Date.parse(ap.started ?? ap.created) > STUCK_MS;
     const results = [...(ap.results ?? [])];
     const unknown = stuck || results.some((x) => x.status === "started");
@@ -190,6 +193,8 @@ export async function approve(workflow: WorkflowRecord, store: Store, id: string
 }
 
 export async function reject(workflow: WorkflowRecord, store: Store, id: string, decidedBy: string, now = new Date()): Promise<void> {
+  // Callers hold the approve lock (store.locked("approve-claims")) around this, as tools/workflow.ts does for a person's
+  // reject, so it cannot overwrite an approval someone has just started running. The lock does not nest, so it is not taken here.
   const ap = await store.get<Approval>("approvals", id);
   if (!ap || !["pending", "failed", "needs-check"].includes(ap.status) || ap.workflow !== workflow.id) throw new Error(`no open approval ${id} in ${workflow.id}`);
   await store.put("approvals", id, { ...ap, status: "rejected", decided: now.toISOString(), decided_by: decidedBy });

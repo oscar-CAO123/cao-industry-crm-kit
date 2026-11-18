@@ -13,8 +13,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { context, approve, reject, redactForPrint, type WorkflowRecord, type Approval } from "../core/workflows/runtime.ts";
 import { FileStore, type Store } from "../core/workflows/store.ts";
-import { requirePerson } from "../core/workflows/approval-proof.ts";
-import { grantWrites } from "../core/lib/http.ts";
+import { requirePerson, approvalDigest, printable } from "../core/workflows/approval-proof.ts";
+import { describe } from "../core/sdk/call.ts";
+import { grantWrites, revokeWrites } from "../core/lib/http.ts";
+
+/** An operation's exact id, which is what a scoped grant compares; an id the SDK does not map grants nothing. */
+const exactOps = (list: { platform: string; op: string }[]) => list.flatMap(({ platform, op }) => { try { return [{ platform, op: describe(platform, op).id }]; } catch { return []; } });
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SAFE_DIR = /^industries\/[a-z-]+\/workflows\/[a-z-]+\/[a-z0-9-]+$/;
@@ -39,7 +43,8 @@ export async function main(argv: string[], store: Store = new FileStore(), ask?:
   const { record, crons } = await load(dir ?? "");
   if (cmd === "run") {
     if (!record.crons.some((c) => c.entry === a) || !crons[a]) throw new Error(`no cron ${a} in ${record.id}`);
-    grantWrites(`cron ${record.id} ${a}`); // the runtime lets a cron run only its draft operations
+    // A cron may write only its own draft operations; the grant names them, so no other operation opens.
+    grantWrites(`cron ${record.id} ${a}`, exactOps(Object.entries(record.draft_ops).flatMap(([platform, ops]) => ops.map((op) => ({ platform, op })))));
     return crons[a](context(record, settings(), store));
   }
   if (cmd === "approvals") {
@@ -50,11 +55,19 @@ export async function main(argv: string[], store: Store = new FileStore(), ask?:
     const who = b ?? "unknown";
     const confirm = (["done", "retry"].includes(argv[4]) ? argv[4] : undefined) as "done" | "retry" | undefined;
     const ap = await store.get<Approval>("approvals", a ?? "");
-    const how = requirePerson({ id: a ?? "", decision: "approve", who, confirm }, ap?.summary ?? "", ask);
-    grantWrites(`approval ${a} (${how})`);
-    return approve(record, store, a, who, new Date(), confirm);
+    if (!ap) throw new Error(`no approval ${a}`);
+    // What the person approves is exactly these acts: the ticket or the terminal answer is bound to their digest, and
+    // approve() checks the digest again under its lock, so an act changed in the store after this cannot run.
+    const digest = approvalDigest(ap);
+    // Every act whole (inputs, its check and key included), never cut: a part the person cannot see is never approved
+    // (too long for a terminal: the CRM shows it all).
+    const shown = [printable(ap.summary), ...ap.acts.flatMap((x, i) => [printable(`${i + 1}. ${x.platform} ${x.op}`), ...JSON.stringify(x, null, 1).split("\n")])].join("\n");
+    const how = requirePerson({ id: a ?? "", decision: "approve", who, confirm, acts: digest }, shown, ask);
+    grantWrites(`approval ${a} (${how})`, exactOps(ap.acts.map((x) => ({ platform: x.platform, op: x.op }))));
+    try { return await approve(record, store, a, who, new Date(), confirm, digest); } finally { revokeWrites(); }
   }
-  if (cmd === "reject") return reject(record, store, a, b ?? "unknown");
+  // Under the approve lock, so a reject cannot overwrite an approval someone has just started running.
+  if (cmd === "reject") return store.locked("approve-claims", () => reject(record, store, a, b ?? "unknown"));
   if (cmd === "propose") {
     if (!(await store.get("enquiries", a))) throw new Error(`no enquiry ${a}`);
     const lines = JSON.parse(fs.readFileSync(b, "utf8"));
