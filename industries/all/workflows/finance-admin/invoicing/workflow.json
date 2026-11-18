@@ -42,7 +42,7 @@
  },
  "gaps": [
   "MYOB: the kit maps invoice reads and customer payments, but not creating or authorising an invoice (Sale/Invoice is GET only in ops.json), so there is no MYOB adapter. Invoices stay in MYOB until those operations are mapped.",
-  "Simpro, Jobpac, Ignition, Hubdoc, Base44 and Google Workspace job sheets: not in the kit's platform list. Collecting job data and checking it against the quote stay with the business.",
+  "Jobpac, Ignition, Hubdoc, Base44 and Google Workspace job sheets: not in the kit's platform list. Simpro's calls are in the kit (core/sdk/platforms/simpro), but this workflow has no Simpro adapter yet. Collecting job data and checking it against the quote stay with the business.",
   "Reminders: Xero's API has no reminder-send operation mapped, so a reminder is the invoice email again. Custom reminder wording is not available through this workflow.",
   "Progress claims and staged billing against a contract: no operations mapped in ServiceM8 or Xero for claims. Stage-billing businesses invoice by hand until a claim operation is mapped.",
   "Supplier and subcontractor bills, bank-detail checks and payment runs: out of scope here (the bills operations are not built).",

@@ -40,7 +40,7 @@
     "record-keeping"
    ],
    "covered_by": {
-    "record-keeping": "not covered (SimPro is not in the kit's platform list)"
+    "record-keeping": "not covered (Simpro's calls are in the kit, but this workflow has no Simpro adapter yet)"
    }
   }
  },
@@ -93,7 +93,7 @@
  "gaps": [
   "Buildxact: the kit maps only its sign-in for this job. Estimates, jobs, WIP reports, completion-percent invoices and retention have no operations, so there is no adapter. Its help pages describe all of these, so this is the first platform to map.",
   "MYOB: the kit maps time-billing activities and a read of sales invoices. The pages read are for professional time billing, not construction progress, retention or WIP, so there is no adapter.",
-  "Simpro: not in the kit's platform list. Job costs and the Monday WIP report built from SimPro data stay manual.",
+  "Simpro: its calls are in the kit (core/sdk/platforms/simpro), but this workflow has no Simpro adapter yet. Job costs and the Monday WIP report built from Simpro data stay manual.",
   "Cost to date: the snapshot compares billing with earned value only. Job cost is not read from Xero until a demo company confirms the shape of the profit and loss report by tracking category.",
   "Retention: each claim records the retention it holds in the store, but the Xero invoice carries the gross claim. Netting retention off needs a negative invoice line, which is not confirmed on a demo company. Retention owed to subcontractors and retention release at completion are not covered.",
   "Percent complete comes from settings (the owner or the site report). The workflow does not read measurements or site photos.",

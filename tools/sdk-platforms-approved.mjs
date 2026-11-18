@@ -40,4 +40,17 @@ export const APPROVED = {
     // company_id (path, query or body on 209 routes) is pinned to the client's own, like QuickBooks' realmID (pen test, 9 Nov).
     { pinned: { company_id: { allow: [], env: "PROCORE_COMPANY_ID", fill: "$env" } },
       gaps: ["Sandbox host not read from Procore's pages: only the production host api.procore.com is mapped"] }),
+  // Each client runs its own build (https://BUILD.simprosuite.com, or simprocloud.com), from the Getting Started pages in
+  // Simpro's own spec. The API key and the client-credentials token are both sent as "Authorization: Bearer". companyID
+  // (0 on a single-company build) is pinned to the client's own, like Procore's company_id.
+  "simpro": d("Simpro", { type: "bearer", env: "SIMPRO_ACCESS_TOKEN", note: TOKEN },
+    { server: "https://{build}.{domain}", forceServer: true,
+      serverVars: { build: { env: "SIMPRO_BUILD", pattern: "[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?", envOnly: true },
+        domain: { env: "SIMPRO_DOMAIN", default: "simprosuite.com", pattern: "simprosuite\\.com|simprocloud\\.com" } },
+      pinned: { companyID: { allow: [], env: "SIMPRO_COMPANY_ID", fill: "$env" } },
+      // columns and orderby are comma lists in Simpro's spec (collectionFormat csv).
+      queryArrays: "comma",
+      keys: ["SIMPRO_ACCESS_TOKEN", "SIMPRO_BUILD", "SIMPRO_COMPANY_ID (0 on a single-company build)", "SIMPRO_DOMAIN (optional: simprosuite.com default, simprocloud.com)"],
+      gaps: ["The OAuth token exchange is not built: supply an API key or a client-credentials token from the client's own build (System, Setup, API, Applications)",
+        "Partner-level credentials and the Simpro sandbox need a Simpro partnership"] }),
 };

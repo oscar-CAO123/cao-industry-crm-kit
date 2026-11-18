@@ -42,7 +42,7 @@
  },
  "gaps": [
   "Monday.com: mapped in the kit but only two of its ten steps are fully supported, so no adapter this pass. Its ops are in the kit for a later adapter.",
-  "Simpro, Buildertrend, Vericon, Procore, Groundplan and Telegram job groups: their APIs are not mapped in the kit, so nothing reads or writes them here.",
+  "Buildertrend, Vericon, Procore, Groundplan and Telegram job groups: their APIs are not mapped in the kit, so nothing reads or writes them here. Simpro's calls are in the kit (core/sdk/platforms/simpro), but this workflow has no Simpro adapter yet.",
   "Scheduling and crew allocation: ServiceM8 allocations are mapped, but this build does not book crews or move jobs on a calendar.",
   "Job setup (project plan, Gantt, job codes, cost centres): not built. Asana sections and Monday status columns would cover it once a person picks the structure.",
   "Time and cost matching, materials ordering, variations and RFIs, and progress claims or invoices: not built. Owners keep these in Xero, spreadsheets or the job system by hand.",

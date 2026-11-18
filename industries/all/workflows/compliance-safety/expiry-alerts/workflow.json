@@ -34,7 +34,7 @@
   "microsoft-365": {"status": "docs-only", "covers": "expiry register (Excel table read), holder reminder drafts with approval-queued sends, owner digest draft"}
  },
  "gaps": [
-  "Simpro: Simpro is not mapped in the kit, so there is no adapter. Its dates must be copied into the register.",
+  "Simpro: its calls are in the kit (core/sdk/platforms/simpro), but no adapter reads its dates yet. They must be copied into the register.",
   "HammerTech and SiteBook: the vendor pages describe holding licences and expiry dates, but neither has operations mapped in the kit, so neither has an adapter. Their reminders and chasing are not built.",
   "Recording a renewal: the documented platforms do not describe receiving a renewed document back. A person updates the Expiry cell in the register after the renewal arrives, and the next scan picks it up.",
   "Escalation: only the owner digest exists. No alert goes to a client, a manager or an overdue subcontractor.",

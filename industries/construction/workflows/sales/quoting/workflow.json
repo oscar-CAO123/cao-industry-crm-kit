@@ -43,7 +43,7 @@
  },
  "gaps": [
   "Buildxact: runs the whole tender quote in product, but only its sign-in is mapped; its estimate and quote endpoints are needed.",
-  "Simpro and Buildertrend: help guides render only in a browser and the APIs are unmapped; free accounts needed.",
+  "Buildertrend: help guides render only in a browser and the API is unmapped; a free account is needed. Simpro: its calls are in the kit (core/sdk/platforms/simpro), but this workflow has no Simpro adapter yet.",
   "Takeoff (Bluebeam markups export, Groundplan pushes) and subcontractor quote requests are agent-skill steps until their adapters exist.",
   "Every adapter is docs-only until a sandbox account (ServiceM8 trial, Xero demo company, Microsoft 365 developer tenant) proves it."
  ]

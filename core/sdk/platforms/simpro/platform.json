@@ -1,0 +1,59 @@
+{
+ "id": "simpro",
+ "name": "Simpro",
+ "status": "spec",
+ "tested": "offline only (fake network); not yet run against a real account",
+ "authProof": "docs",
+ "style": "rest",
+ "hosts": [],
+ "hostFromEnv": false,
+ "hostPatterns": [
+  "(?:[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)\\.(?:simprosuite\\.com|simprocloud\\.com)"
+ ],
+ "pinned": {
+  "companyID": {
+   "allow": [],
+   "env": "SIMPRO_COMPANY_ID",
+   "fill": "$env"
+  }
+ },
+ "queryArrays": "comma",
+ "serverVars": {
+  "build": {
+   "env": "SIMPRO_BUILD",
+   "pattern": "[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?",
+   "envOnly": true
+  },
+  "domain": {
+   "env": "SIMPRO_DOMAIN",
+   "default": "simprosuite.com",
+   "pattern": "simprosuite\\.com|simprocloud\\.com"
+  }
+ },
+ "auth": {
+  "type": "bearer",
+  "env": "SIMPRO_ACCESS_TOKEN",
+  "note": "token exchange not built yet: supply an access token"
+ },
+ "keys": [
+  "SIMPRO_ACCESS_TOKEN",
+  "SIMPRO_BUILD",
+  "SIMPRO_COMPANY_ID (0 on a single-company build)",
+  "SIMPRO_DOMAIN (optional: simprosuite.com default, simprocloud.com)"
+ ],
+ "sources": [
+  {
+   "url": "https://developer.simprogroup.com/apidoc/swagger.zip",
+   "official": "vendor-domain: developer.simprogroup.com (saved by hand in a browser: the site's Cloudflare check refuses headless reads)"
+  }
+ ],
+ "gaps": [
+  "The OAuth token exchange is not built: supply an API key or a client-credentials token from the client's own build (System, Setup, API, Applications)",
+  "Partner-level credentials and the Simpro sandbox need a Simpro partnership"
+ ],
+ "counts": {
+  "operations": 1494,
+  "read": 718,
+  "write": 776
+ }
+}
