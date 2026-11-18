@@ -14,7 +14,8 @@
   "companyID": {
    "allow": [],
    "env": "SIMPRO_COMPANY_ID",
-   "fill": "$env"
+   "fill": "$env",
+   "body": true
   }
  },
  "queryArrays": "comma",
